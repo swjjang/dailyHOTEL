@@ -616,26 +616,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                    if (isDailyUser == true)
+                    if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == true)
-                        {
-                            processBooking(mSelectedTicketInformation, mCheckInSaleTime);
-                        } else
-                        {
-                            // 정보 업데이트 화면으로 이동.
-                            moveToUserInfoUpdate(user, recommender, isDailyUser);
-                        }
+                        processBooking(mSelectedTicketInformation, mCheckInSaleTime);
                     } else
                     {
-                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
-                        {
-                            processBooking(mSelectedTicketInformation, mCheckInSaleTime);
-                        } else
-                        {
-                            // 정보 업데이트 화면으로 이동.
-                            moveToUserInfoUpdate(user, recommender, isDailyUser);
-                        }
+                        // 정보 업데이트 화면으로 이동.
+                        moveToUserInfoUpdate(user, recommender, isDailyUser);
                     }
                 } else
                 {
