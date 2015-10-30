@@ -247,40 +247,9 @@ public class HotelDetailLayout
     ;
     private OnScrollListener mOnScrollListener = new OnScrollListener()
     {
-        //		private int mDirection;
-        //		private int mScrollState;
-        //		private float mAlphaFactor;
-
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState)
         {
-            //			mScrollState = scrollState;
-            //
-            //			ExLog.d("scrollState : " + scrollState);
-            //
-            //			if(scrollState == OnScrollListener.SCROLL_STATE_IDLE)
-            //			{
-            //				if(mListView.getFirstVisiblePosition() == 0)
-            //				{
-            //					switch(mDirection)
-            //					{
-            //						case MotionEvent.ACTION_UP:
-            //
-            //							if(Float.compare(mAlphaFactor, 0.5f) <= 0)
-            //							{
-            //								mListView.smoothScrollToPosition(1);
-            //							}
-            //							break;
-            //
-            //						case MotionEvent.ACTION_DOWN:
-            //							if(Float.compare(mAlphaFactor, 0.4f) >= 0)
-            //							{
-            //								mListView.smoothScrollToPosition(0);
-            //							}
-            //							break;
-            //					}
-            //				}
-            //			}
         }
 
         @Override
@@ -884,8 +853,8 @@ public class HotelDetailLayout
     {
         mBookingStatus = status;
 
-        TextView bookingView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
-        View soldoutView = mBottomLayout.findViewById(R.id.soldoutTextView);
+        TextView bookingView = (TextView) mViewRoot.findViewById(R.id.bookingTextView);
+        View soldoutView = mViewRoot.findViewById(R.id.soldoutTextView);
 
         if (bookingView == null || soldoutView == null)
         {

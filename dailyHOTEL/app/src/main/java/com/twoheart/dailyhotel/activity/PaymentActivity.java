@@ -49,7 +49,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -170,16 +169,16 @@ public class PaymentActivity extends BaseActivity implements Constants
                 return;
             }
 
-            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_PAYMENT_SESSION_COMMON_PAYMENT)).toString();
+            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_V1_HOTEL_PAYMENT_SESSION_COMMON)).toString();
 
             SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
-            ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("room_idx", "payment_type", "checkin_date", "length_stay", "bonus", "guest_name", "guest_phone", "guest_email"));
+            ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("room_idx", "payment_type", "checkin_date", "nights", "bonus", "guest_name", "guest_phone", "guest_email"));
             ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(saleRoomInformation.roomIndex), //
                 mPay.getType().name(), //
-                mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), //
+                mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), //
                 String.valueOf(saleRoomInformation.nights), //
-                String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone.replace("-", ""), guest.email));
+                String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone.replace("-", "").replace("+", "%2B"), guest.email));
 
             byte[] postParameter = parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()]));
 
@@ -210,10 +209,11 @@ public class PaymentActivity extends BaseActivity implements Constants
             try
             {
                 base64 = value[i].getBytes("BASE64");
-            } catch (final UnsupportedEncodingException e)
+            } catch (Exception e)
             {
                 base64 = value[i].getBytes();
             }
+
             postParameters.put(key[i], base64);
             //            postParameters.put(key[i], EncodingUtils.getBytes(value[i], "BASE64"));
         }
@@ -962,6 +962,20 @@ public class PaymentActivity extends BaseActivity implements Constants
             setResult(resultCode, payData);
             finish();
         }
-    }
 
+        // 서버로부터 받은 결제 결과 메시지를 처리함.
+        // 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
+        @JavascriptInterface
+        public void paymentFeed(String result)
+        {
+            ExLog.e("paymentFeed : " + result);
+
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, result);
+
+            setResult(CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
+            finish();
+        }
+    }
 }

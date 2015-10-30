@@ -172,10 +172,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.VersionActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.BookingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

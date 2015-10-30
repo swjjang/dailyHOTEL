@@ -864,12 +864,12 @@ public class HotelDetailActivity extends BaseActivity
                     }
 
                     // 호텔 정보를 가져온다.
-                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
+                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mHotelDetail.nights);
 
-                    //						if (DEBUG == true)
-                    //						{
-                    //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                    //						}
+                    //                    if (DEBUG == true)
+                    //                    {
+                    //                        showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+                    //                    }
 
                     mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mSaleDetailJsonResponseListener, HotelDetailActivity.this));
                 } else
@@ -896,10 +896,10 @@ public class HotelDetailActivity extends BaseActivity
                     // 호텔 정보를 가져온다.
                     String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mHotelDetail.nights);
 
-                    //						if (DEBUG == true)
-                    //						{
-                    //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                    //						}
+                    if (DEBUG == true)
+                    {
+                        showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+                    }
 
                     mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mSaleDetailJsonResponseListener, HotelDetailActivity.this));
                 }
