@@ -110,7 +110,10 @@ public interface Constants
 
     // DailyHOTEL Reservation Controller WebAPI URL
     // api/payment/session/common_payment
-    public static final String URL_WEBAPI_PAYMENT_SESSION_COMMON_PAYMENT = UNENCRYPTED_URL ? "api/payment/session/common_payment" : "OTQkNjEkMzckMTAxJDc2JA==$ODlCMTUwRkZFNEY2ODFFNzNDMDIzMUZENjY4QBzYwQzlENjFBMzYwREM5OURFNPjY1NzM4N0E3QjNRGMzg1MUVCM0JEMjIzQkUFFRkHY5NTlGQzgxN0Q3Q0I5OUU3OTYzRjZE$";
+    //    public static final String URL_WEBAPI_PAYMENT_SESSION_COMMON_PAYMENT = UNENCRYPTED_URL ? "api/payment/session/common_payment" : "OTQkNjEkMzckMTAxJDc2JA==$ODlCMTUwRkZFNEY2ODFFNzNDMDIzMUZENjY4QBzYwQzlENjFBMzYwREM5OURFNPjY1NzM4N0E3QjNRGMzg1MUVCM0JEMjIzQkUFFRkHY5NTlGQzgxN0Q3Q0I5OUU3OTYzRjZE$";
+
+    // api/v1/hotel/payment/session/common
+    public static final String URL_WEBAPI_V1_HOTEL_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/v1/hotel/payment/session/common" : "MTExJDU0JDQ1JDEwNSQyMCQ=$MDk3MUMwRDEzQTgzNzFBCNUMwNTgzQjgzMkFBRDI2N0VFMNEJGRTdEMTWk4MjU1RENEREREMzM1ODFDN0RBNkRFMTZDMUEzMTQ2QjgwNzQV0RDY3M0MC4MjBCNDQ0MzQ0RjRF$";
 
     //"reserv/mine/detail";
     public static final String URL_WEBAPI_RESERV_MINE_DETAIL = UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
@@ -402,6 +405,7 @@ public interface Constants
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED = 114; // 예약을 하려 버튼을 눌렀는데 주문 시간이 지난경우.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR = 115; // 알수 없는 에러.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE = 116;
+    public static final int CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK = 117;
     public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT = 201;
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCEL = 202;
     public static final int CODE_RESULT_ACTIVITY_SETTING_LOCATION = 210;

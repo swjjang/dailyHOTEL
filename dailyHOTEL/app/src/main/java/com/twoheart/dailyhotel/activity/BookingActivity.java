@@ -739,11 +739,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             String posTitle = getString(R.string.dialog_btn_text_confirm);
             View.OnClickListener posListener = null;
 
-            if (resultCode != CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE && resultCode != CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS)
-            {
-                mAliveCallSource = "";
-            }
-
             switch (resultCode)
             {
                 // 결제가 성공한 경우 GA와 믹스패널에 등록
@@ -768,31 +763,45 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
+
+                    mAliveCallSource = "";
                     msg = getString(R.string.act_toast_payment_soldout);
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
+                    mAliveCallSource = "";
+
                     title = getString(R.string.dialog_notice2);
                     msg = getString(R.string.act_toast_payment_not_available);
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
+                    mAliveCallSource = "";
+
                     msg = getString(R.string.act_toast_payment_network_error);
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+                    mAliveCallSource = "";
+
                     VolleyHttpClient.createCookie(); // 쿠키를 다시 생성 시도
                     return;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
+                    mAliveCallSource = "";
+
                     msg = getString(R.string.act_toast_payment_invalid_date);
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
+                    mAliveCallSource = "";
+
                     msg = getString(R.string.act_toast_payment_fail);
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
+                    mAliveCallSource = "";
+
                     msg = getString(R.string.act_toast_payment_canceled);
 
                     posListener = new View.OnClickListener()
@@ -806,6 +815,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                    mAliveCallSource = "";
+
                     /**
                      * 가상계좌선택시 해당 가상계좌 정보를 보기위해 화면 스택을 쌓으면서 들어가야함. 이를 위한 정보를 셋팅.
                      * 예약 리스트 프래그먼트에서 찾아 들어가기 위해서 필요함. 들어간 후에는 다시 프리퍼런스를 초기화해줌.
@@ -845,18 +856,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
+                    mAliveCallSource = "";
+
                     msg = getString(R.string.act_toast_payment_account_time_error);
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
+                    mAliveCallSource = "";
+
                     msg = getString(R.string.act_toast_payment_account_duplicate);
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                    mAliveCallSource = "";
+
                     msg = getString(R.string.act_toast_payment_account_timeover);
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR:
+                    mAliveCallSource = "";
+
                     if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
                     {
                         msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
@@ -865,6 +884,101 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         msg = getString(R.string.act_toast_payment_fail);
                     }
                     break;
+
+                case CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK:
+                {
+                    if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE))
+                    {
+                        String result = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
+                        String[] message = result.split("\\^");
+
+                        try
+                        {
+                            int msgCode = Integer.parseInt(message[0]);
+                            msg = message[1];
+
+                            // 5	해당 객실의 판매가 마감되었습니다.
+                            // 1000	결제가 정상적으로 이루어졌습니다.(적립금으로만 결제하는 경우)
+                            // 1001	결제가 취소되었습니다.
+                            // 1002	호텔 예약 중 문제가 발생하였습니다. \n고객센터(1800-9120)로 문의 주시기 바랍니다.
+                            // 1003	이미 입금대기 중인 호텔입니다.
+                            // 1004	모든 객실이 판매되었습니다. \n다음에 이용해주세요.
+                            // 1005	마지막 상품을 다른 고객님이 결제중입니다.\n추가 상품 확보를 위해 노력하고 있으니 잠시 후 다시 확인해주세요!
+                            switch (msgCode)
+                            {
+                                case 5:
+                                {
+                                    mAliveCallSource = "";
+
+                                    posListener = new OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            mDoReload = true;
+
+                                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                            finish();
+                                        }
+                                    };
+                                    break;
+                                }
+
+                                // 적립금으로만 결제하는 경우
+                                case 1000:
+                                {
+                                    writeLogPaid(mPay);
+
+                                    posListener = new View.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View view)
+                                        {
+                                            mDoReload = true;
+                                            mAliveCallSource = "";
+
+                                            setResult(RESULT_OK);
+                                            finish();
+                                        }
+                                    };
+                                    break;
+                                }
+
+                                case 1003:
+                                case 1004:
+                                    mAliveCallSource = "";
+
+                                    posListener = new OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            mDoReload = true;
+                                        }
+                                    };
+                                    break;
+
+                                case 1001:
+                                case 1002:
+                                case 1005:
+                                default:
+                                    mAliveCallSource = "";
+                                    break;
+                            }
+                        } catch (Exception e)
+                        {
+                            mAliveCallSource = "";
+
+                            msg = getString(R.string.act_toast_payment_fail);
+                        }
+                    } else
+                    {
+                        mAliveCallSource = "";
+
+                        msg = getString(R.string.act_toast_payment_fail);
+                    }
+                    break;
+                }
 
                 default:
                     mDoReload = true;
@@ -1085,7 +1199,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         mProgressDialog.setMessage(getString(R.string.dialog_msg_processing_payment));
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
+
+        try
+        {
+            mProgressDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void hidePorgressDialog()
@@ -1812,7 +1933,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 // 0	성공
                 // 4	데이터가 없을시
                 // 5	판매 마감시
-                // 6	현재 시간이 자정부터 서비스 종료 시간 사이일시
+                // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
+                // 7    3시부터 9시까지
                 switch (msgCode)
                 {
                     case 6:
@@ -2047,62 +2169,96 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     throw new NullPointerException("response == null");
                 }
 
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msg_code != 0)
+                switch (msgCode)
                 {
-                    mDoReload = true;
-
-                    if (response.has("msg") == true)
+                    case 6:
+                    case 7:
+                    case 0:
                     {
-                        String msg = response.getString("msg");
+                        JSONObject jsonData = response.getJSONObject("data");
 
-                        DailyToast.showToast(BookingActivity.this, msg, Toast.LENGTH_SHORT);
-                        finish();
-                        return;
-                    } else
-                    {
-                        throw new NullPointerException("response == null");
-                    }
-                }
+                        long checkInDate = jsonData.getLong("check_in_date");
+                        long checkOutDate = jsonData.getLong("check_out_date");
+                        int discount = jsonData.getInt("discount_total");
+                        boolean isOnSale = jsonData.getBoolean("on_sale");
+                        int availableRooms = jsonData.getInt("available_rooms");
 
-                JSONObject jsonData = response.getJSONObject("data");
+                        SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
-                long checkInDate = jsonData.getLong("check_in_date");
-                long checkOutDate = jsonData.getLong("check_out_date");
-                int discount = jsonData.getInt("discount_total");
-                boolean isOnSale = jsonData.getBoolean("on_sale");
-                int availableRooms = jsonData.getInt("available_rooms");
+                        // 가격이 변동 되었다.
+                        if (saleRoomInformation.totalDiscount != discount)
+                        {
+                            mIsChangedPay = true;
+                        }
 
-                SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
+                        saleRoomInformation.totalDiscount = discount;
 
-                // 가격이 변동 되었다.
-                if (saleRoomInformation.totalDiscount != discount)
-                {
-                    mIsChangedPay = true;
-                }
+                        // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
+                        if (isOnSale == false || availableRooms == 0)
+                        {
+                            showStopOnSaleDialog();
+                        } else if (mIsChangedPay == true)
+                        {
+                            mIsChangedPay = false;
 
-                saleRoomInformation.totalDiscount = discount;
+                            // 현재 있는 팝업을 없애도록 한다.
+                            if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+                            {
+                                mFinalCheckDialog.cancel();
+                                mFinalCheckDialog = null;
+                            }
 
-                // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
-                if (isOnSale == false || availableRooms == 0)
-                {
-                    showStopOnSaleDialog();
-                } else if (mIsChangedPay == true)
-                {
-                    mIsChangedPay = false;
-
-                    // 현재 있는 팝업을 없애도록 한다.
-                    if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-                    {
-                        mFinalCheckDialog.cancel();
-                        mFinalCheckDialog = null;
+                            showChangedPayDialog();
+                        } else
+                        {
+                            moveToPayStep();
+                        }
+                        break;
                     }
 
-                    showChangedPayDialog();
-                } else
-                {
-                    moveToPayStep();
+                    case 5:
+                    {
+                        mDoReload = true;
+
+                        if (response.has("msg") == true)
+                        {
+                            String msg = response.getString("msg");
+
+                            showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                    finish();
+                                }
+                            });
+                        } else
+                        {
+                            throw new NullPointerException("response == null");
+                        }
+                        break;
+                    }
+
+                    case 4:
+                    default:
+                    {
+                        mDoReload = true;
+
+                        if (response.has("msg") == true)
+                        {
+                            String msg = response.getString("msg");
+
+                            DailyToast.showToast(BookingActivity.this, msg, Toast.LENGTH_SHORT);
+                            finish();
+                        } else
+                        {
+                            throw new NullPointerException("response == null");
+                        }
+                        break;
+                    }
                 }
             } catch (Exception e)
             {

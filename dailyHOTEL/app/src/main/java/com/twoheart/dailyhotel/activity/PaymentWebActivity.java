@@ -161,7 +161,7 @@ public class PaymentWebActivity extends BaseActivity implements Constants
         {
             Guest guest = mTicketPayment.getGuest();
 
-            if (Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
+            if (guest == null || Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
             {
                 restartApp();
                 return;
