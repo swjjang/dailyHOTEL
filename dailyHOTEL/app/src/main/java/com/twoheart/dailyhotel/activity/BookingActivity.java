@@ -666,8 +666,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
             params.put("room_idx", String.valueOf(saleRoomInformation.roomIndex));
-            params.put("checkin_date", mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-            params.put("length_stay", String.valueOf(saleRoomInformation.nights));
+            params.put("checkin_date", mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+            params.put("nights", String.valueOf(saleRoomInformation.nights));
             params.put("billkey", mSelectedCreditCard.billingkey);
             params.put("bonus", bonus);
             params.put("guest_name", guest.name);
@@ -679,7 +679,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
             }
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_EASY_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_PAYMENT_SESSION_EASY).toString(), params, mHotelPaymentSessionEasy, BookingActivity.this));
         } else
         {
             Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
@@ -897,13 +897,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             int msgCode = Integer.parseInt(message[0]);
                             msg = message[1];
 
-                            // 5	해당 객실의 판매가 마감되었습니다.
-                            // 1000	결제가 정상적으로 이루어졌습니다.(적립금으로만 결제하는 경우)
-                            // 1001	결제가 취소되었습니다.
-                            // 1002	호텔 예약 중 문제가 발생하였습니다. \n고객센터(1800-9120)로 문의 주시기 바랍니다.
-                            // 1003	이미 입금대기 중인 호텔입니다.
-                            // 1004	모든 객실이 판매되었습니다. \n다음에 이용해주세요.
-                            // 1005	마지막 상품을 다른 고객님이 결제중입니다.\n추가 상품 확보를 위해 노력하고 있으니 잠시 후 다시 확인해주세요!
+                            // 5	판매 마감시
+                            // 1000	결제 성공시
+                            // 1001	결제가 취소되었을시 ( 입금전 )
+                            // 1002	예약 실패시 ( 입금 후 )
+                            // 1003	입금 대기중 일시
+                            // 1004	모든 객실이 판매되었을시
+                            // 1005	마지막 상품을 다른 고객님이 결제중 일시
+                            // 1006	이니시스 에러 메시지 일시
                             switch (msgCode)
                             {
                                 case 5:
@@ -924,7 +925,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                     break;
                                 }
 
-                                // 적립금으로만 결제하는 경우
                                 case 1000:
                                 {
                                     writeLogPaid(mPay);
@@ -944,8 +944,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                     break;
                                 }
 
+                                case 1001:
+                                case 1002:
                                 case 1003:
-                                case 1004:
+
                                     mAliveCallSource = "";
 
                                     posListener = new OnClickListener()
@@ -958,9 +960,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                     };
                                     break;
 
-                                case 1001:
-                                case 1002:
+                                case 1004:
                                 case 1005:
+                                case 1006:
                                 default:
                                     mAliveCallSource = "";
                                     break;
@@ -2061,7 +2063,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         }
     };
 
-    private DailyHotelJsonResponseListener mUserSessionBillingPayment = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelPaymentSessionEasy = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -2070,80 +2072,23 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
             try
             {
-                int msg_code = -1;
-
                 if (response == null)
                 {
                     throw new NullPointerException("response == null");
                 }
 
-                //				---------------------------------
-                //				* 기본 포맷 *
-                //				{msg_code : value, msg: value, data : value}
-                //				---------------------------------
-                //				* 성공시 *
-                //				msg_code : 0
-                //				data : PAYMENT_COMPLETE
-                //				---------------------------------
-                //				* 실패시 *
-                //				msg_code : 200
-                //				msg : 에러 메시지
-                //				data : PAYMENT_CANCELED, NOT_AVAILABLE, SOLD_OUT, ACCOUNT_DUPLICATE, INVALID_DATE
-
                 // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
+                String message = response.getString("msg");
 
                 Intent intent = new Intent();
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, String.format("%d^%s", msgCode, message));
 
                 mAliveCallSource = "ACTIVITY_RESULT";
                 mReqCode = CODE_REQUEST_ACTIVITY_PAYMENT;
 
-                if (msg_code == 0)
-                {
-                    activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
-                } else
-                {
-                    String data = response.getString("data");
-                    String msg = null;
-
-                    if (response.has("msg") == true)
-                    {
-                        msg = response.getString("msg");
-                    }
-
-                    int resultCode = 0;
-
-                    if (Util.isTextEmpty(data) == true)
-                    {
-                        resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-                    } else if ("SOLD_OUT".equalsIgnoreCase(data) == true)
-                    {
-                        resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
-                    } else if ("INVALID_DATE".equalsIgnoreCase(data) == true)
-                    {
-                        resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
-                    } else if ("PAYMENT_CANCELED".equalsIgnoreCase(data) == true)
-                    {
-                        resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
-                    } else if ("ACCOUNT_DUPLICATE".equalsIgnoreCase(data) == true)
-                    {
-                        resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
-                    } else if ("NOT_AVAILABLE".equalsIgnoreCase(data) == true)
-                    {
-                        resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-                    } else
-                    {
-                        if (msg != null)
-                        {
-                            intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, msg);
-                        }
-
-                        resultCode = CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR;
-                    }
-
-                    activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, resultCode, intent);
-                }
+                activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
             } catch (Exception e)
             {
                 mDoReload = true;
