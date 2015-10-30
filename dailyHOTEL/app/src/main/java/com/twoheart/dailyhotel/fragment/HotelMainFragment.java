@@ -89,6 +89,8 @@ public class HotelMainFragment extends BaseFragment
         public void setMapViewVisible(boolean isVisible);
 
         public void goGourmet();
+
+        public void refreshAll();
     }
 
     public interface UserAnalyticsActionListener
@@ -631,7 +633,6 @@ public class HotelMainFragment extends BaseFragment
     ;
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
-
         @Override
         public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime)
         {
@@ -821,7 +822,31 @@ public class HotelMainFragment extends BaseFragment
 
             AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mHotelViewType.name(), Action.CLICK, "데일리고메배너링크", params);
         }
+
+        @Override
+        public void refreshAll()
+        {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            lockUI();
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("timeZone", "Asia/Seoul");
+
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+        }
     };
+
     private DailyHotelJsonResponseListener mSaleHotelAllJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -952,10 +977,7 @@ public class HotelMainFragment extends BaseFragment
                         tabSaleTime[i] = saleTime;
                     }
 
-                    if (hotelListFragment.getSaleTime() == null)
-                    {
-                        hotelListFragment.setSaleTime(saleTime);
-                    }
+                    hotelListFragment.setSaleTime(saleTime);
                 }
 
                 // 임시로 여기서 날짜를 넣는다.

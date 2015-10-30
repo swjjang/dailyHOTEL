@@ -711,6 +711,15 @@ public abstract class PlaceDetailLayout
         TextView bookingView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
         View soldoutView = mBottomLayout.findViewById(R.id.soldoutTextView);
 
+        if (bookingView == null || soldoutView == null)
+        {
+            if (mOnUserActionListener != null)
+            {
+                mOnUserActionListener.finish();
+            }
+            return;
+        }
+
         switch (status)
         {
             case STATUS_NONE:

@@ -346,6 +346,11 @@ public class Util implements Constants
             return true;
         } else
         {
+            if (activity == null || activity.isFinishing() == true)
+            {
+                return false;
+            }
+
             // set dialog message
             activity.showSimpleDialog(activity.getString(R.string.dialog_title_googleplayservice), activity.getString(R.string.dialog_msg_install_update_googleplayservice), //
                 activity.getString(R.string.dialog_btn_text_install), activity.getString(R.string.dialog_btn_text_cancel), //
@@ -613,6 +618,11 @@ public class Util implements Constants
     public static Dialog showDatePickerDialog(BaseActivity baseActivity, String titleText, final String[] values, String selectValue, String positive //
         , final View.OnClickListener positiveListener)
     {
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return null;
+        }
+
         final Dialog dialog = new Dialog(baseActivity);
 
         LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

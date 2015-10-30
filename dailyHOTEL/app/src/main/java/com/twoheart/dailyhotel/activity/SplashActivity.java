@@ -184,6 +184,22 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         mHandler.removeMessages(1);
     }
 
+    @Override
+    protected void onDestroy()
+    {
+        if (alertDlg != null)
+        {
+            if (alertDlg.isShowing() == true)
+            {
+                alertDlg.dismiss();
+            }
+
+            alertDlg = null;
+        }
+
+        super.onDestroy();
+    }
+
     private void showDisabledNetworkPopup()
     {
         if (alertDlg != null)

@@ -206,13 +206,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.NOTICE, 0L);
-            //        } else if (id == llVersion.getId())
-            //        {
-            //            Intent i = new Intent(mHostActivity, VersionActivity.class);
-            //            startActivity(i);
-            //            mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-            //
-            //            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.VERSION, 0L);
         } else if (id == tvHelp.getId())
         {
             Intent i = new Intent(mHostActivity, FAQActivity.class);

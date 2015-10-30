@@ -45,6 +45,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GourmetMainFragment extends PlaceMainFragment
 {
@@ -572,6 +573,29 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             setMenuEnabled(isVisible);
         }
+
+        @Override
+        public void refreshAll()
+        {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            lockUI();
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("timeZone", "Asia/Seoul");
+
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+        }
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -682,10 +706,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     SaleTime saleTime = mTodaySaleTime.getClone(i);
                     tabSaleTime[i] = saleTime;
 
-                    if (placeListFragment.getSaleTime() == null)
-                    {
-                        placeListFragment.setSaleTime(saleTime);
-                    }
+                    placeListFragment.setSaleTime(saleTime);
                 }
 
                 // 임시로 여기서 날짜를 넣는다.

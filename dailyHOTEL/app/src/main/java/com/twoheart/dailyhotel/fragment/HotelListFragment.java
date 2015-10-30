@@ -500,7 +500,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     @Override
     public void onRefreshStarted(View view)
     {
-        refreshHotelList(mSelectedProvince, true);
+        if (mUserActionListener != null)
+        {
+            mUserActionListener.refreshAll();
+        }
     }
 
     public void setActionBarAnimationLock(boolean lock)

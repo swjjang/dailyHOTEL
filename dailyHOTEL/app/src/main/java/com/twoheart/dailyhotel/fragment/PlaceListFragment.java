@@ -295,7 +295,10 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     @Override
     public void onRefreshStarted(View view)
     {
-        refreshList(mSelectedProvince, true);
+        if (mOnUserActionListener != null)
+        {
+            mOnUserActionListener.refreshAll();
+        }
     }
 
     public void setActionBarAnimationLock(boolean isLock)
