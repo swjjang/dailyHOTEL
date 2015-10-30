@@ -77,6 +77,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
         public void hideTicketInformationLayout();
 
         public void showMap();
+
+        public void finish();
     }
 
     public interface OnImageActionListener
@@ -517,6 +519,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
         }
+
+        @Override
+        public void finish()
+        {
+            finish();
+        }
     };
 
     private OnImageActionListener mOnImageActionListener = new OnImageActionListener()
@@ -730,6 +738,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         }
     };
+
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override

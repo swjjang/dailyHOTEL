@@ -243,12 +243,15 @@ public class GourmetListFragment extends PlaceListFragment
 
         ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
 
-        for (PlaceViewItem placeViewItem : arrayList)
+        if (arrayList != null)
         {
-            if (placeViewItem.getPlace() != null && placeViewItem.getPlace().isSoldOut == false)
+            for (PlaceViewItem placeViewItem : arrayList)
             {
-                hasPlace = true;
-                break;
+                if (placeViewItem.getPlace() != null && placeViewItem.getPlace().isSoldOut == false)
+                {
+                    hasPlace = true;
+                    break;
+                }
             }
         }
 

@@ -65,6 +65,8 @@ public abstract class PlaceMainFragment extends BaseFragment
         public void onClickActionBarArea();
 
         public void setMapViewVisible(boolean isVisible);
+
+        public void refreshAll();
     }
 
     protected abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
@@ -354,7 +356,7 @@ public abstract class PlaceMainFragment extends BaseFragment
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    protected DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
