@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +47,9 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailySwitchCompat;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONObject;
@@ -61,6 +64,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
     private View mSettingCardLayout;
     private LinearLayout llVersion, llLogin;
     private String profileStr, loginStr;
+    private DailySwitchCompat mSwitchCompat;
 
 
     @Override
@@ -82,6 +86,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         tvEmail = (TextView) view.findViewById(R.id.tv_setting_email);
         tvCall = (TextView) view.findViewById(R.id.tv_setting_call);
         tvAbout = (TextView) view.findViewById(R.id.tv_setting_introduction);
+        mSwitchCompat = (DailySwitchCompat) view.findViewById(R.id.pushSwitch);
 
         mSettingCardLayout = view.findViewById(R.id.settingCardLayout);
         mSettingCardTextView = (TextView) view.findViewById(R.id.settingCardTextView);
@@ -94,6 +99,23 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         tvCall.setOnClickListener(this);
         tvAbout.setOnClickListener(this);
         mSettingCardTextView.setOnClickListener(this);
+
+        mSwitchCompat.setChecked(DailyPreference.getInstance(mHostActivity).isAllowPush());
+        mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if (isLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+                DailyPreference.getInstance(mHostActivity).setAllowPush(isChecked);
+                releaseUiComponent();
+            }
+        });
 
         try
         {
@@ -141,28 +163,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
                 startActivity(intent);
             }
         });
-
-
-        // 고메 만족도 테스트
-        //        llVersion.setOnClickListener(new OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
-        //            }
-        //        });
-
-        // 호텔 만족도 테스트
-        //        llVersion.setOnClickListener(new OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "유 수쿰윗 호텔 방콕", 343944, 1442930400000L, 1443009600000L));
-        //            }
-        //        });
-
 
         return view;
     }
@@ -353,6 +353,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             }
         }
     };
+
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
 
