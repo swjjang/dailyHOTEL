@@ -356,7 +356,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
-
         @Override
         public void onResponse(String url, String response)
         {

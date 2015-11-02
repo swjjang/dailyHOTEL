@@ -79,6 +79,8 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected abstract void onNavigationItemSelected(Province province);
 
+    protected abstract void setNavigationItemSelected(Province province);
+
     protected abstract void requestProvinceList(BaseActivity baseActivity);
 
     protected abstract void refreshList(Province province, boolean isSelectionTop);
@@ -276,12 +278,22 @@ public abstract class PlaceMainFragment extends BaseFragment
                         {
                             Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-                            onNavigationItemSelected(province);
+                            setNavigationItemSelected(province);
+
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.refreshAll();
+                            }
                         } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
                         {
                             Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
-                            onNavigationItemSelected(province);
+                            setNavigationItemSelected(province);
+
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.refreshAll();
+                            }
                         }
                     }
                 }

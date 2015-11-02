@@ -131,6 +131,47 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
     }
 
+    public void setNavigationItemSelected(Province province)
+    {
+        if (province == null)
+        {
+            return;
+        }
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        mSelectedProvince = province;
+
+        baseActivity.setActionBarAreaEnabled(true);
+        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
+
+        boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
+        baseActivity.setActionBarRegionEnable(isShowSpinner);
+
+        boolean isSelectionTop = false;
+
+        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "")) == false)
+        {
+            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
+            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, ""));
+            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT, province.name);
+            editor.commit();
+
+            isSelectionTop = true;
+        }
+
+        if (mOnUserAnalyticsActionListener != null)
+        {
+            mOnUserAnalyticsActionListener.selectRegion(province);
+        }
+    }
+
     public void onNavigationItemSelected(Province province)
     {
         if (province == null)
@@ -297,7 +338,10 @@ public class GourmetMainFragment extends PlaceMainFragment
                     }
                 }
 
-                refreshList(mSelectedProvince, isSelectionTop);
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.refreshAll();
+                }
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Label.PROVINCE, mSelectedProvince.name);
