@@ -592,9 +592,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             case R.drawable.selector_drawermenu_gourmet:
                 indexLastFragment = INDEX_FNB_LIST_FRAGMENT;
 
-                // 이벤트 진입시에 이벤트 new를 제거한다.
-                DailyPreference.getInstance(this).setNewTodayFnB(false);
-
                 hideNewGourmet(true);
 
                 DailyPreference.getInstance(this).setLastMenu(getString(R.string.label_dailygourmet));
@@ -768,8 +765,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 {
                     setActionBarRegionEnable(true);
 
-                    if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true //
-                        || DailyPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
+                    if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true)
                     {
                         showActionBarNewIcon();
                     }
@@ -831,16 +827,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         } else
         {
             menuEventListFragment.hasEvent = false;
-        }
-
-        if (DailyPreference.getInstance(this).isNewTodayFnB() == true)
-        {
-            menuGourmetListFragment.hasEvent = true;
-
-            showNewFnB(true);
-        } else
-        {
-            menuGourmetListFragment.hasEvent = false;
         }
 
         mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mDrawerMenuList);
@@ -980,8 +966,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     {
         if (isForce == false)
         {
-            if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true || //
-                DailyPreference.getInstance(this).isNewTodayFnB() == true)
+            if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true)
             {
                 return;
             }
@@ -1301,18 +1286,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     editor.commit();
 
                     hideNewEvent(true);
-                }
-
-                // 같이 이벤트 처리
-                if (DailyPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
-                {
-                    if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
-                    {
-                        showNewFnB(false);
-                    } else
-                    {
-                        showNewFnB(true);
-                    }
                 }
             } catch (Exception e)
             {
