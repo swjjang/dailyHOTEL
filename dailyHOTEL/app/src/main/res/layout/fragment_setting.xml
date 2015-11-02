@@ -28,8 +28,8 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/setting_facebook"
-                android:paddingTop="10dp"/>
+                android:paddingTop="10dp"
+                android:src="@drawable/setting_facebook"/>
 
             <ImageView
                 android:id="@+id/instagramLinkView"
@@ -39,8 +39,8 @@
                 android:layout_marginRight="13dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/setting_instagram"
-                android:paddingTop="10dp"/>
+                android:paddingTop="10dp"
+                android:src="@drawable/setting_instagram"/>
 
             <ImageView
                 android:id="@+id/naverLinkView"
@@ -48,8 +48,8 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/setting_blog"
-                android:paddingTop="10dp"/>
+                android:paddingTop="10dp"
+                android:src="@drawable/setting_blog"/>
         </LinearLayout>
 
         <LinearLayout
@@ -268,6 +268,31 @@
                 android:background="@color/setting_fragment_section_border"/>
 
             <LinearLayout
+                android:id="@+id/ll_setting_push"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:orientation="horizontal"
+                android:paddingLeft="17dp">
+
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/frag_push_alert"
+                    android:textColor="@color/textView_textColor_main"
+                    android:textSize="16.5dp"/>
+
+                <com.twoheart.dailyhotel.view.widget.DailySwitchCompat
+                    android:id="@+id/pushSwitch"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="right|center_vertical"
+                    android:paddingRight="17dp"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/ll_setting_version"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -293,6 +318,7 @@
                     android:textColor="@color/textView_textColor_sub"
                     android:textSize="16.5dp"/>
             </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>

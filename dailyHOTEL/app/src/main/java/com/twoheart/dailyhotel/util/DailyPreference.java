@@ -12,6 +12,7 @@ public class DailyPreference
     private static final String KEY_NEW_EVENT_TODAY_FNB = "2"; // 앱 처음 실행시 FNB에  New 아이콘 넣기
     private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
+    private static final String KEY_ALLOW_PUSH = "5";
 
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
@@ -126,6 +127,27 @@ public class DailyPreference
         if (mEditor != null)
         {
             mEditor.putBoolean(KEY_SHOW_GUIDE, isShow);
+            mEditor.apply();
+        }
+    }
+
+    public boolean isAllowPush()
+    {
+        boolean result = false;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getBoolean(KEY_ALLOW_PUSH, true);
+        }
+
+        return result;
+    }
+
+    public void setAllowPush(boolean allow)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putBoolean(KEY_ALLOW_PUSH, allow);
             mEditor.apply();
         }
     }

@@ -1089,8 +1089,8 @@ public class HotelMainFragment extends BaseFragment
 
             return provinceList;
         }
-
     };
+
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override

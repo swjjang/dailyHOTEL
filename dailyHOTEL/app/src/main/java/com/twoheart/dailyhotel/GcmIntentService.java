@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
@@ -158,6 +159,13 @@ public class GcmIntentService extends IntentService implements Constants
                     }
 
                     case PUSH_TYPE_NOTICE:
+                    {
+                        // 푸쉬 알림을 해지하면 푸쉬를 받지 않는다
+                        if (DailyPreference.getInstance(getApplicationContext()).isAllowPush() == false)
+                        {
+                            return;
+                        }
+
                         if (collapseKey.equals(pref.getString("collapseKey", "")))
                         {
                         } else
@@ -166,8 +174,10 @@ public class GcmIntentService extends IntentService implements Constants
                             editor.putString("collapseKey", collapseKey);
                             editor.apply();
                             sendPush(messageType, type, msg, imageUrl);
-                            break;
                         }
+
+                        break;
+                    }
                 }
             } catch (Exception e)
             {

@@ -243,6 +243,7 @@
     <string name="frag_about">데일리호텔이란?</string>
     <string name="frag_app">앱</string>
     <string name="frag_version_info">버전정보</string>
+    <string name="frag_push_alert">알림설정</string>
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>
