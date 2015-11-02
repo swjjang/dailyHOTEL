@@ -879,20 +879,6 @@ public class HotelDetailActivity extends BaseActivity
                     saleTime.setCurrentTime(response.getLong("currentDateTime"));
                     saleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                    int hotelDailyDay = Integer.parseInt(simpleDateFormat.format(mCheckInSaleTime.getDayOfDaysHotelDate()));
-                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(saleTime.getDailyTime())));
-
-                    // 지난 날의 호텔인 경우.
-                    if (hotelDailyDay < todayDailyDay)
-                    {
-                        DailyToast.showToast(HotelDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
-                        finish();
-                        return;
-                    }
-
                     // 호텔 정보를 가져온다.
                     String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mHotelDetail.nights);
 

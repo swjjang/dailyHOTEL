@@ -772,6 +772,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     // 지난 날의 호텔인 경우.
                     if (shareDailyDay < todayDailyDay)
                     {
+                        unLockUI();
                         DailyToast.showToast(PlaceDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
                         finish();
                         return;
@@ -783,7 +784,27 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     SaleTime saleTime = new SaleTime();
 
                     saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                    long todayDailyTime = response.getLong("dailyDateTime");
+                    saleTime.setDailyTime(todayDailyTime);
+
+                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
+
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
+                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+
+                    // 지난 날의 호텔인 경우.
+                    if (shareDailyDay < todayDailyDay)
+                    {
+                        unLockUI();
+
+                        DailyToast.showToast(PlaceDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
+                        finish();
+                        return;
+                    }
 
                     requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
                 }

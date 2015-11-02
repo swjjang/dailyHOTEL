@@ -349,12 +349,22 @@ public class HotelMainFragment extends BaseFragment
                         {
                             Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-                            onNavigationItemSelected(province);
+                            setNavigationItemSelected(province);
+
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.refreshAll();
+                            }
                         } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
                         {
                             Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
-                            onNavigationItemSelected(province);
+                            setNavigationItemSelected(province);
+
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.refreshAll();
+                            }
                         }
                     }
                 }
@@ -380,7 +390,45 @@ public class HotelMainFragment extends BaseFragment
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void onNavigationItemSelected(Province province)
+    private void setNavigationItemSelected(Province province)
+    {
+        if (province == null)
+        {
+            return;
+        }
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        mSelectedProvince = province;
+
+        baseActivity.setActionBarAreaEnabled(true);
+        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
+
+        boolean isSelectionTop = false;
+
+        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
+        {
+            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
+            editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+            editor.putString(KEY_PREFERENCE_REGION_SELECT, province.name);
+            editor.commit();
+
+            isSelectionTop = true;
+        }
+
+        if (mUserAnalyticsActionListener != null)
+        {
+            mUserAnalyticsActionListener.selectRegion(province);
+        }
+    }
+
+    private void onNavigationItemSelected(Province province)
     {
         if (province == null)
         {
@@ -537,7 +585,10 @@ public class HotelMainFragment extends BaseFragment
                     }
                 }
 
-                refreshHotelList(mSelectedProvince, isSelectionTop);
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.refreshAll();
+                }
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Label.PROVINCE, mSelectedProvince.name);

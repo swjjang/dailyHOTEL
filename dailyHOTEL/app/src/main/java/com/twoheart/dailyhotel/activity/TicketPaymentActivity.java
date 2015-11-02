@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})
 public abstract class TicketPaymentActivity extends BaseActivity
@@ -858,7 +859,27 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 SaleTime saleTime = new SaleTime();
 
                 saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                long todayDailyTime = response.getLong("dailyDateTime");
+                saleTime.setDailyTime(todayDailyTime);
+
+                long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
+                int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+
+                // 지난 날인 경우
+                if (shareDailyDay < todayDailyDay)
+                {
+                    unLockUI();
+
+                    DailyToast.showToast(TicketPaymentActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
+                    finish();
+                    return;
+                }
 
                 lockUI();
 
