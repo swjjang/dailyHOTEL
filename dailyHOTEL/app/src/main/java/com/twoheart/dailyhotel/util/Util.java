@@ -743,106 +743,19 @@ public class Util implements Constants
         }
     }
 
-    private static boolean isValidateNumberPattern(String number)
-    {
-        int targetLength = number.length();
-
-        StringBuffer recursivePattern = new StringBuffer(4);
-        StringBuffer orderedPattern = new StringBuffer(4);
-
-        for (int i = 0; i < 10; i++)
-        {
-            recursivePattern.setLength(0);
-            orderedPattern.setLength(0);
-
-            for (int j = i, k = (i + targetLength); j < k; j++)
-            {
-                if (k <= 10)
-                {
-                    orderedPattern = orderedPattern.append(j);
-                }
-
-                recursivePattern = recursivePattern.append(i);
-            }
-
-            StringBuffer reversedPattern = orderedPattern.reverse();
-
-            if (number.equals(recursivePattern) || number.equals(orderedPattern) || number.equals(reversedPattern))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean numberPatternVaild01(String number)
-    {
-        final char[] NUMBERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
-        int num = number.charAt(0) - '0';
-        int length = number.length();
-        int maxLength = NUMBERS.length;
-
-        char validateNumber = number.charAt(1);
-
-        int i = num;
-        int j = num + 1;
-        int k = num - 1;
-
-        // 반복 비교
-        if (validateNumber == NUMBERS[i])
-        {
-            for (int m = 2; m < length; m++)
-            {
-                if (number.charAt(m) != NUMBERS[i])
-                {
-                    return false;
-                }
-            }
-        }
-        // 오른 차순 비교
-        else if (j < maxLength && validateNumber == NUMBERS[j])
-        {
-            for (int m = 2, n = j + 1; m < length; m++, n++)
-            {
-                if (n >= maxLength || number.charAt(m) != NUMBERS[n])
-                {
-                    return false;
-                }
-            }
-        }
-        // 내림 차순 비교
-        else if (k > 0 && validateNumber == NUMBERS[k])
-        {
-            for (int m = 2, n = k - 1; m < length; m++, n--)
-            {
-                if (n < 0 || number.charAt(m) != NUMBERS[n])
-                {
-                    return false;
-                }
-            }
-        } else
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    public static boolean numberPatternVaild03(String number)
+    private static boolean isValidateNumber(String number)
     {
         int length = number.length();
-        int num = number.charAt(0) - number.charAt(1);
+        final int value = number.charAt(0) - number.charAt(1);
 
-        switch (num)
+        switch (value)
         {
             case -1:
             case 0:
             case 1:
                 for (int i = 2; i < length; i++)
                 {
-                    if (number.charAt(i - 1) - number.charAt(i) != num)
+                    if (number.charAt(i - 1) - number.charAt(i) != value)
                     {
                         return false;
                     }
@@ -851,68 +764,6 @@ public class Util implements Constants
 
             default:
                 return false;
-        }
-
-        return true;
-    }
-
-    public static boolean numberPatternVaild02(String number)
-    {
-        final String[] NUMBERS = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-
-        int num = Integer.parseInt(number.substring(0, 1));
-
-        StringBuilder orderedPattern = new StringBuilder();
-        StringBuilder reversedPattern = new StringBuilder();
-        StringBuilder recursivePattern = new StringBuilder();
-
-        int orderIdx = 0;
-        int reversIdx = 0;
-        for (int i = 0; i < number.length(); i++)
-        {
-
-            orderIdx = num + i;
-            reversIdx = num - i;
-
-            if (orderIdx < NUMBERS.length)
-            {
-                orderedPattern.append(NUMBERS[num + i]);
-            }
-
-            if (reversIdx > 0)
-            {
-                reversedPattern.append(NUMBERS[num - i]);
-            }
-
-            recursivePattern.append(num);
-        }
-
-        return (orderedPattern.toString().equals(number) || reversedPattern.toString().equals(number) || recursivePattern.toString().equals(number));
-    }
-
-    public static boolean validNumber(String targetNum)
-    {
-        int targetLength = targetNum.length();
-
-        for (int i = 0; i < 10; i++)
-        {
-            StringBuilder recursivePattern = new StringBuilder();
-            StringBuilder orderedPattern = new StringBuilder();
-            StringBuilder reversedPattern = new StringBuilder();
-            for (int j = i, k = (i + targetLength); j < k; j++)
-            {
-                if (k <= 10)
-                {
-                    orderedPattern.append(j);
-                    reversedPattern.insert(0, j);
-                }
-                recursivePattern.append(i);
-            }
-
-            if (recursivePattern.toString().equals(targetNum) || orderedPattern.toString().equals(targetNum) || reversedPattern.toString().equals(targetNum))
-            {
-                return false;
-            }
         }
 
         return true;
