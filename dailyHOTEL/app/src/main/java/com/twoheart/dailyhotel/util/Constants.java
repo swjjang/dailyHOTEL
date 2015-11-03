@@ -109,11 +109,8 @@ public interface Constants
     public static final String URL_WEBAPI_USER_INFORMATION = UNENCRYPTED_URL ? "api/user/information" : "MzIkNTEkNTkkMzEkMTkk$NkQ5N0RBQTA3NzQ5MUZZEMzQ3QUE0OTIRwEMDI2NjhCMDJBNTdFNERZDNzdBMKjlGNDkxMDYyRURBRTQ3QjBFNTRERg==$";
 
     // DailyHOTEL Reservation Controller WebAPI URL
-    // api/payment/session/common_payment
-    //    public static final String URL_WEBAPI_PAYMENT_SESSION_COMMON_PAYMENT = UNENCRYPTED_URL ? "api/payment/session/common_payment" : "OTQkNjEkMzckMTAxJDc2JA==$ODlCMTUwRkZFNEY2ODFFNzNDMDIzMUZENjY4QBzYwQzlENjFBMzYwREM5OURFNPjY1NzM4N0E3QjNRGMzg1MUVCM0JEMjIzQkUFFRkHY5NTlGQzgxN0Q3Q0I5OUU3OTYzRjZE$";
-
-    // api/v1/hotel/payment/session/common
-    public static final String URL_WEBAPI_V1_HOTEL_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/v1/hotel/payment/session/common" : "MTExJDU0JDQ1JDEwNSQyMCQ=$MDk3MUMwRDEzQTgzNzFBCNUMwNTgzQjgzMkFBRDI2N0VFMNEJGRTdEMTWk4MjU1RENEREREMzM1ODFDN0RBNkRFMTZDMUEzMTQ2QjgwNzQV0RDY3M0MC4MjBCNDQ0MzQ0RjRF$";
+    // api/hotel/v1/payment/session/common
+    public static final String URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/hotel/v1/payment/session/common" : "MjAkNiQ0NiQ0NSQ0MyQ=$RTQ2MEIMxRTFGRjUyMUIxXMzVDRERBQzBBOThFNkE5NYUJWBINzJCRjMxMTM2MUYwNEEzMkU0OURBNzVBRTg4NDU0NkYzRkI2REJFQThERjAxNUJBNTUxNURBOENGQ0IyQjVG$";
 
     //"reserv/mine/detail";
     public static final String URL_WEBAPI_RESERV_MINE_DETAIL = UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
@@ -150,8 +147,8 @@ public interface Constants
     // api/common/datetime
     public static final String URL_WEBAPI_COMMON_DATETIME = UNENCRYPTED_URL ? "api/common/datetime" : "MTQkNzMkNzUkMSQzNyQ=$OCEY4MTlBNEY1NjHZFQ0FGNkFFQkNEOThEQkRODNTRFMTc1MzA5NTk5OTE4ODM2ODEzREEzREEzNRNjZDNTU1QTlBNw==$";
 
-    // api/v1/hotel/sale/room/payment
-    public static final String URL_WEBAPI_V1_HOTEL_SALE_ROOM_PAYMENT = UNENCRYPTED_URL ? "api/v1/hotel/sale/room/payment" : "MzgkMTYkNTIkNzckNDQk$NDI0OUUyRjIwNEM0WOTYyNTk4NDExM0ZBMjYwOTINFQUZUwNUMxQUPRENEFEQUMzRjE1QTc2NTA4MjEEyNjRCNEEyMg==$";
+    // api/hotel/v1/payment/detail
+    public static final String URL_WEBAPI_HOTEL_V1_PAYMENT_DETAIL = UNENCRYPTED_URL ? "api/hotel/v1/payment/detail" : "ODEkNzEkMzMkMTYkMyQ=$QkUG5QkI4MDA0QjAxRM0MyN0JEMTFCNzM1OHUIyRkUxNjUyMDFBODcxNUE1MzI5QTc3OTdEOUMFwOTE2NDY3RVjE5NQ==$";
 
     // api/reserv/detail
     public static final String URL_WEBAPI_RESERV_DETAIL = UNENCRYPTED_URL ? "api/reserv/detail" : "MSQ4MCQ1OSQ5JDYwJA==$NVDY2OTY3XM0FBODdEM0UxNDVDODlEQzhGM0RDRUZGMkYzRTRGQzczRjcyOTZQhBQzVDRDM0NDkxMDgxNkMZwRTkyRg==$";
@@ -162,8 +159,8 @@ public interface Constants
     // api/reserv/receipt
     public static final String URL_WEBAPI_RESERV_RECEIPT = UNENCRYPTED_URL ? "api/reserv/receipt" : "OCQ3NiQ3OSQyNSQ2NyQ=$MDgxRDE5WRDExNDUzRjAzNTg1KNDIyMEVCQTlGMDE5NjE5RjVEMjYxMEFBRTRCQzQ4RRTFBMDU0NjFADNCEUxMkI4Qg==$";
 
-    // api/v1/hotel/sale/detail
-    public static final String URL_WEBAPI_V1_HOTEL_SALE_DETAIL = UNENCRYPTED_URL ? "api/v1/hotel/sale/detail" : "MTIkNTIkMTQkNjYkNDgk$QzA0RjlFMzNFMNLjA4NEM3MUVEMUM2NDA1Njk5NzQ5OUU5NTCc2MTATxMkEyOEY3RDVSENkFGMzM2RDczNkUxRTQ1NA==$";
+    // api/hotel/v1/sale/detail
+    public static final String URL_WEBAPI_HOTEL_V1_SALE_DETAIL = UNENCRYPTED_URL ? "api/hotel/v1/sale/detail" : "ODUkMjUkNTAkMzAkODIk$MzRDNzU3QjM1OEE0MTEyQkJCQIzhDRUEMzOEYyQUQyOTBBMjlERYjJEN0Q0QUNCRUZGNkRGQkE0MUJCOUQOwQkFBROg==$";
 
     // api/user/session/update/fb_user
     public static final String URL_WEBAPI_USER_SESSION_UPDATE_FB_USER = UNENCRYPTED_URL ? "api/user/session/update/fb_user" : "NzIkMjgkMTkkNjYkMiQ=$NTJEyNTA1MEM4Qzk1NTJYBQ0E0NkREQRUE2RTAwNURCNTY3REJBQzA2MjI4QzIyQ0U0VRUM1M0Y5JN0ZGNTJDMzNCNQ==$";
@@ -176,8 +173,8 @@ public interface Constants
     public static final String URL_WEBAPI_USER_SESSION_BILLING_CARD_DEL = UNENCRYPTED_URL ? "api/user/session/billing/card/del" : "NyQyNyQxMTEkODIkMTEzJA==$MDQ2RUMO3QzJEMTNBQjI4MDAzRDLczQzM1REY1NjIxNTgzODZCMjYwNzc1RjA3NEEyRDI2REM2QjkxNDZBMMzZBMDBCNzVGNTk2MzM0Mjg3MDg0QEHTlBQzEwRDg1QjlDNjc5$";
 
     // Easy Payment
-    // api/v1/hotel/payment/session/easy
-    public static final String URL_WEBAPI_V1_HOTEL_PAYMENT_SESSION_EASY = UNENCRYPTED_URL ? "api/v1/hotel/payment/session/easy" : "MzAkMyQyNyQ4MSQxOSQ=$OTRQGMTc4M0FDRjhBOUHY1NzkwOTAZGOEYU4MzA5MzZCMDBEMzA0MUZDQ0E5MzRDNDE4NzM0NTQ2OEJCOUBVGMzAzQ0QzRjkxQTUyN0NBOTIxQ0RDOEI4OTVBRDVGNjJENDhF$";
+    // api/hotel/v1/payment/session/easy
+    public static final String URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_EASY = UNENCRYPTED_URL ? "api/hotel/v1/payment/session/easy" : "OTAkOTckMzckODEkNzQk$MzY2NzZEMEI4QUVBNzdCQjRGOUE3OUU3NjQxOBDhCMDAyQjMwNTBBRTIwMzZERTQyMkMwOTk5OADkzOTE3URjgyNDhFODVhFMzAxGODYzMEE3RjA4QUMzQjQ4RUNGRUQ0MDBD$";
 
     // api/sale/hotel_list
     public static final String URL_WEBAPI_SALE_HOTEL_LIST = UNENCRYPTED_URL ? "api/sale/hotel_list" : "NTgkNzMkMzckNzUkOCQ=$NkE2OTgyROEY2QTg2Qjc5MkIwODczNUZGRjI2NLkYwNjFGM0ZGRkUyQTIyRjWY3NzVFN0RDNEEwTINTYxOTZFNDc4Nw==$";

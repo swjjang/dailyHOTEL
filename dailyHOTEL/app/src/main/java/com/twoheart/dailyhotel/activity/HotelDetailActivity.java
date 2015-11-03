@@ -595,7 +595,7 @@ public class HotelDetailActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private DailyHotelJsonResponseListener mSaleDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelSaleDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
         @Override
@@ -871,7 +871,7 @@ public class HotelDetailActivity extends BaseActivity
                     //                        showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                     //                    }
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mSaleDetailJsonResponseListener, HotelDetailActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_V1_SALE_DETAIL).append(params).toString(), null, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this));
                 } else
                 {
                     SaleTime saleTime = new SaleTime();
@@ -887,7 +887,7 @@ public class HotelDetailActivity extends BaseActivity
                         showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                     }
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mSaleDetailJsonResponseListener, HotelDetailActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_V1_SALE_DETAIL).append(params).toString(), null, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this));
                 }
             } catch (Exception e)
             {

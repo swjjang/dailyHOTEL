@@ -169,7 +169,7 @@ public class PaymentActivity extends BaseActivity implements Constants
                 return;
             }
 
-            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_V1_HOTEL_PAYMENT_SESSION_COMMON)).toString();
+            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON)).toString();
 
             SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
