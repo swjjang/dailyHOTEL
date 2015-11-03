@@ -902,7 +902,7 @@ public class HotelMainFragment extends BaseFragment
                 Province selectedProvince = null;
                 String regionName = null;
 
-                if(mSelectedProvince != null)
+                if (mSelectedProvince != null)
                 {
                     selectedProvince = mSelectedProvince;
                     regionName = mSelectedProvince.name;

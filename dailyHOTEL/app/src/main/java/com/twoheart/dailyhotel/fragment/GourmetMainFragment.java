@@ -642,7 +642,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 Province selectedProvince = null;
                 String regionName = null;
 
-                if(mSelectedProvince != null)
+                if (mSelectedProvince != null)
                 {
                     selectedProvince = mSelectedProvince;
                     regionName = mSelectedProvince.name;
