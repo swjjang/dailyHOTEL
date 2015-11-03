@@ -679,7 +679,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
             }
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_PAYMENT_SESSION_EASY).toString(), params, mHotelPaymentSessionEasy, BookingActivity.this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_EASY).toString(), params, mHotelPaymentSessionEasy, BookingActivity.this));
         } else
         {
             Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
@@ -1535,7 +1535,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 // 호텔 디테일 정보 재 요청
                 String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_V1_PAYMENT_DETAIL).append(params).toString(), null, mHotelPaymentDetailJsonResponseListener, BookingActivity.this));
             }
         }, null, false);
     }
@@ -1918,7 +1918,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         }
     };
 
-    private DailyHotelJsonResponseListener mSaleRoomPaymentJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelPaymentDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -2274,7 +2274,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         // 2. 마지막 가격 및 기타 이상이 없는지 검사
                         String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_ROOM_PAYMENT).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_V1_PAYMENT_DETAIL).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
 
                     } else
                     {
@@ -2397,7 +2397,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         }
 
                         // 2. 화면 정보 얻기
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_V1_PAYMENT_DETAIL).append(params).toString(), null, mHotelPaymentDetailJsonResponseListener, BookingActivity.this));
                     } else
                     {
                         requestLogin();
