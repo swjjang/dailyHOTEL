@@ -133,43 +133,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
     public void setNavigationItemSelected(Province province)
     {
-        if (province == null)
-        {
-            return;
-        }
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
         mSelectedProvince = province;
-
-        baseActivity.setActionBarAreaEnabled(true);
-        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
-
-        boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
-        baseActivity.setActionBarRegionEnable(isShowSpinner);
-
-        boolean isSelectionTop = false;
-
-        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "")) == false)
-        {
-            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, ""));
-            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT, province.name);
-            editor.commit();
-
-            isSelectionTop = true;
-        }
-
-        if (mOnUserAnalyticsActionListener != null)
-        {
-            mOnUserAnalyticsActionListener.selectRegion(province);
-        }
     }
 
     public void onNavigationItemSelected(Province province)
@@ -675,31 +639,40 @@ public class GourmetMainFragment extends PlaceMainFragment
                 JSONArray provinceArray = response.getJSONArray("data");
                 ArrayList<Province> provinceList = makeProvinceList(provinceArray);
 
-                // 마지막으로 선택한 지역을 가져온다.
-                String regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
                 Province selectedProvince = null;
+                String regionName = null;
 
-                if (Util.isTextEmpty(regionName) == true)
+                if (mSelectedProvince != null)
                 {
-                    // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
-                    regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, "");
+                    selectedProvince = mSelectedProvince;
+                    regionName = mSelectedProvince.name;
+                } else
+                {
+                    // 마지막으로 선택한 지역을 가져온다.
+                    regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
 
-                    // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
                     if (Util.isTextEmpty(regionName) == true)
                     {
-                        selectedProvince = provinceList.get(0);
-                        regionName = selectedProvince.name;
-                    }
-                }
+                        // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
+                        regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, "");
 
-                if (selectedProvince == null)
-                {
-                    for (Province province : provinceList)
-                    {
-                        if (province.name.equals(regionName) == true)
+                        // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
+                        if (Util.isTextEmpty(regionName) == true)
                         {
-                            selectedProvince = province;
-                            break;
+                            selectedProvince = provinceList.get(0);
+                            regionName = selectedProvince.name;
+                        }
+                    }
+
+                    if (selectedProvince == null)
+                    {
+                        for (Province province : provinceList)
+                        {
+                            if (province.name.equals(regionName) == true)
+                            {
+                                selectedProvince = province;
+                                break;
+                            }
                         }
                     }
                 }
@@ -732,9 +705,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                         }
                     }
                 }
-
-                editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT, regionName);
-                editor.commit();
 
                 //탭에 들어갈 날짜를 만든다.
                 SaleTime[] tabSaleTime = null;

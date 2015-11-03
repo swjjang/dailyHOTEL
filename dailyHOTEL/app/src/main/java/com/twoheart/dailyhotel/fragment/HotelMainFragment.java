@@ -392,40 +392,7 @@ public class HotelMainFragment extends BaseFragment
 
     private void setNavigationItemSelected(Province province)
     {
-        if (province == null)
-        {
-            return;
-        }
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
         mSelectedProvince = province;
-
-        baseActivity.setActionBarAreaEnabled(true);
-        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
-
-        boolean isSelectionTop = false;
-
-        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
-        {
-            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-            editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-            editor.putString(KEY_PREFERENCE_REGION_SELECT, province.name);
-            editor.commit();
-
-            isSelectionTop = true;
-        }
-
-        if (mUserAnalyticsActionListener != null)
-        {
-            mUserAnalyticsActionListener.selectRegion(province);
-        }
     }
 
     private void onNavigationItemSelected(Province province)
@@ -932,42 +899,51 @@ public class HotelMainFragment extends BaseFragment
                 JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
                 ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
-                // 마지막으로 선택한 지역을 가져온다.
-                String regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
                 Province selectedProvince = null;
+                String regionName = null;
 
-                if (Util.isTextEmpty(regionName) == true)
+                if (mSelectedProvince != null)
                 {
-                    // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
-                    regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "");
+                    selectedProvince = mSelectedProvince;
+                    regionName = mSelectedProvince.name;
+                } else
+                {
+                    // 마지막으로 선택한 지역을 가져온다.
+                    regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 
-                    // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
                     if (Util.isTextEmpty(regionName) == true)
                     {
-                        selectedProvince = provinceList.get(0);
-                        regionName = selectedProvince.name;
-                    }
-                }
+                        // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
+                        regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "");
 
-                if (selectedProvince == null)
-                {
-                    for (Province province : provinceList)
-                    {
-                        if (province.name.equals(regionName) == true)
+                        // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
+                        if (Util.isTextEmpty(regionName) == true)
                         {
-                            selectedProvince = province;
-                            break;
+                            selectedProvince = provinceList.get(0);
+                            regionName = selectedProvince.name;
                         }
                     }
 
                     if (selectedProvince == null)
                     {
-                        for (Area area : areaList)
+                        for (Province province : provinceList)
                         {
-                            if (area.name.equals(regionName) == true)
+                            if (province.name.equals(regionName) == true)
                             {
-                                selectedProvince = area;
+                                selectedProvince = province;
                                 break;
+                            }
+                        }
+
+                        if (selectedProvince == null)
+                        {
+                            for (Area area : areaList)
+                            {
+                                if (area.name.equals(regionName) == true)
+                                {
+                                    selectedProvince = area;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -982,6 +958,7 @@ public class HotelMainFragment extends BaseFragment
                     regionName = selectedProvince.name;
                 }
 
+                // 처음 시작시에는 지역이 Area로 저장된 경우 Province로 변경하기 위한 저장값.
                 boolean mIsProvinceSetting = baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_REGION_SETTING, false);
                 SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
                 editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, true);
@@ -1001,9 +978,6 @@ public class HotelMainFragment extends BaseFragment
                         }
                     }
                 }
-
-                editor.putString(KEY_PREFERENCE_REGION_SELECT, regionName);
-                editor.commit();
 
                 //탭에 들어갈 날짜를 만든다.
                 SaleTime[] tabSaleTime = null;
