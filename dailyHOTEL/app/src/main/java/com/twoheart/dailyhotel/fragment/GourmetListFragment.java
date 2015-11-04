@@ -61,6 +61,8 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDeleg
 
 public class GourmetListFragment extends PlaceListFragment
 {
+    protected SaleTime mSaleTime;
+
     private PlaceListAdapter mPlaceListAdapter;
 
     @Override
@@ -136,7 +138,7 @@ public class GourmetListFragment extends PlaceListFragment
                 return;
             }
 
-            mOnUserActionListener.selectPlace(gourmetViewItem, mSaleTime);
+            mOnUserActionListener.selectPlace(gourmetViewItem, getSelectedSaleTime());
 
             try
             {
@@ -165,6 +167,11 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         return mPlaceListAdapter.getItem(position);
+    }
+
+    protected SaleTime getSelectedSaleTime()
+    {
+        return mSaleTime;
     }
 
     @Override
@@ -258,6 +265,78 @@ public class GourmetListFragment extends PlaceListFragment
         return hasPlace;
     }
 
+    /**
+     * 새로 고침을 하지 않고 기존의 있는 데이터를 보여준다.
+     *
+     * @param type
+     * @param isCurrentPage
+     */
+    public void setViewType(VIEW_TYPE type, boolean isCurrentPage)
+    {
+        mViewType = type;
+
+        if (mEmptyView.getVisibility() == View.VISIBLE)
+        {
+            setVisibility(VIEW_TYPE.GONE);
+        } else
+        {
+            switch (type)
+            {
+                case LIST:
+                    setVisibility(VIEW_TYPE.LIST, isCurrentPage);
+                    break;
+
+                case MAP:
+                    setVisibility(VIEW_TYPE.MAP, isCurrentPage);
+
+                    if (mPlaceMapFragment != null)
+                    {
+                        mPlaceMapFragment.setUserActionListener(mOnUserActionListener);
+
+                        if (isCurrentPage == true)
+                        {
+                            ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
+
+                            if (arrayList != null)
+                            {
+                                mPlaceMapFragment.setPlaceViewItemList(arrayList, getSelectedSaleTime(), false);
+                            }
+                        }
+                    }
+                    break;
+
+                case GONE:
+                    break;
+            }
+        }
+    }
+
+    protected void setPlaceMapData(ArrayList<PlaceViewItem> placeViewItemList)
+    {
+        if (mViewType == VIEW_TYPE.MAP && mPlaceMapFragment != null)
+        {
+            mPlaceMapFragment.setUserActionListener(mOnUserActionListener);
+            mPlaceMapFragment.setPlaceViewItemList(placeViewItemList, getSelectedSaleTime(), mIsSelectionTop);
+        }
+    }
+
+    public void refreshList(Province province, boolean isSelectionTop)
+    {
+        setProvince(province);
+        mIsSelectionTop = isSelectionTop;
+
+        fetchHotelList(province, getSelectedSaleTime(), null);
+    }
+
+    public SaleTime getSaleTime()
+    {
+        return mSaleTime;
+    }
+
+    public void setSaleTime(SaleTime saleTime)
+    {
+        mSaleTime = saleTime;
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
