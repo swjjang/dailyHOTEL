@@ -112,7 +112,7 @@
     <string name="toast_msg_please_select_reservationtime">방문 시간을 선택하세요.</string>
     <string name="toast_msg_solodout_area">판매 가능한 지역이 존재하지 않습니다.</string>
     <string name="toast_msg_input_error_phonenumber">휴대폰 번호 입력이 잘못되었습니다.</string>
-    <string name="toast_msg_confirm_mobilenumber">전화번호를 재확인 부탁드립니다.</string>
+    <string name="toast_msg_confirm_mobilenumber">전화번호를 확인해주시기 바랍니다.</string>
 
     <!-- Dialog Messages -->
 

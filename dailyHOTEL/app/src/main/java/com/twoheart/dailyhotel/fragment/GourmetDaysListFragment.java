@@ -54,6 +54,7 @@ public class GourmetDaysListFragment extends GourmetListFragment implements View
     private View[] mDaysViews;
 
     private boolean mIsShowDaysList;
+    private SaleTime mSelectedSaleTime;
 
     private enum ANIMATION_STATE
     {
@@ -224,7 +225,7 @@ public class GourmetDaysListFragment extends GourmetListFragment implements View
 
         if (mOnUserActionListener != null)
         {
-            mOnUserActionListener.selectDay(mSaleTime, true);
+            mOnUserActionListener.selectDay(getSelectedSaleTime(), true);
         }
 
         mHandler.postDelayed(new Runnable()
@@ -236,6 +237,12 @@ public class GourmetDaysListFragment extends GourmetListFragment implements View
             }
 
         }, 500);
+    }
+
+    @Override
+    protected SaleTime getSelectedSaleTime()
+    {
+        return mSelectedSaleTime;
     }
 
     private void initDaysLayout()
@@ -266,9 +273,14 @@ public class GourmetDaysListFragment extends GourmetListFragment implements View
             DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 85) + 1;
         }
 
+        if (mSelectedSaleTime == null)
+        {
+            mSelectedSaleTime = mSaleTime;
+        }
+
         for (int i = 0; i < DAY_OF_TOTALCOUNT; i++)
         {
-            if (mSaleTime.getOffsetDailyDay() == ((SaleTime) mDaysViews[i].getTag()).getOffsetDailyDay())
+            if (mSelectedSaleTime.getOffsetDailyDay() == ((SaleTime) mDaysViews[i].getTag()).getOffsetDailyDay())
             {
                 setSelectedDays(mDaysViews[i]);
                 break;
@@ -320,7 +332,7 @@ public class GourmetDaysListFragment extends GourmetListFragment implements View
             return;
         }
 
-        setSaleTime((SaleTime) view.getTag());
+        mSelectedSaleTime = (SaleTime) view.getTag();
 
         for (View dayView : mDaysViews)
         {

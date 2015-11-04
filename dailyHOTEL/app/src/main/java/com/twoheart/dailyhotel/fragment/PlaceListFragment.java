@@ -54,9 +54,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     protected VIEW_TYPE mViewType;
     protected PlaceMainFragment.OnUserActionListener mOnUserActionListener;
     protected ActionbarViewHolder mActionbarViewHolder;
-    protected SaleTime mSaleTime;
     private Province mSelectedProvince;
-    private PlaceMapFragment mPlaceMapFragment;
+    protected PlaceMapFragment mPlaceMapFragment;
     private float mOldY;
     private int mOldfirstVisibleItem;
     private int mDirection;
@@ -78,6 +77,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     protected abstract PlaceMapFragment createPlaceMapFragment();
 
     protected abstract boolean hasSalesPlace();
+
+    protected abstract void setViewType(VIEW_TYPE type, boolean isCurrentPage);
 
     @Override
     public void onResume()
@@ -120,15 +121,14 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
      *
      * @param detailRegion
      */
-    public void processSelectedDetailRegion(String detailRegion)
-    {
-        // 현재 맵화면을 보고 있으면 맵화면을 유지 시켜중어야 한다.
-        if (detailRegion != null && mViewType == VIEW_TYPE.MAP)
-        {
-            refreshList(mSelectedProvince, true);
-        }
-    }
-
+    //    public void processSelectedDetailRegion(String detailRegion)
+    //    {
+    //        // 현재 맵화면을 보고 있으면 맵화면을 유지 시켜중어야 한다.
+    //        if (detailRegion != null && mViewType == VIEW_TYPE.MAP)
+    //        {
+    //            refreshList(mSelectedProvince, true);
+    //        }
+    //    }
     public void onPageSelected(boolean isRequestHotelList)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -151,52 +151,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     public void onRefreshComplete()
     {
-    }
-
-    /**
-     * 새로 고침을 하지 않고 기존의 있는 데이터를 보여준다.
-     *
-     * @param type
-     * @param isCurrentPage
-     */
-    public void setViewType(VIEW_TYPE type, boolean isCurrentPage)
-    {
-        mViewType = type;
-
-        if (mEmptyView.getVisibility() == View.VISIBLE)
-        {
-            setVisibility(VIEW_TYPE.GONE);
-        } else
-        {
-            switch (type)
-            {
-                case LIST:
-                    setVisibility(VIEW_TYPE.LIST, isCurrentPage);
-                    break;
-
-                case MAP:
-                    setVisibility(VIEW_TYPE.MAP, isCurrentPage);
-
-                    if (mPlaceMapFragment != null)
-                    {
-                        mPlaceMapFragment.setUserActionListener(mOnUserActionListener);
-
-                        if (isCurrentPage == true)
-                        {
-                            ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
-
-                            if (arrayList != null)
-                            {
-                                mPlaceMapFragment.setPlaceViewItemList(arrayList, mSaleTime, false);
-                            }
-                        }
-                    }
-                    break;
-
-                case GONE:
-                    break;
-            }
-        }
     }
 
     protected void setVisibility(VIEW_TYPE type, boolean isCurrentPage)
@@ -250,25 +204,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         setVisibility(type, true);
     }
 
-    public SaleTime getSaleTime()
-    {
-        return mSaleTime;
-    }
-
-    public void setSaleTime(SaleTime saleTime)
-    {
-        mSaleTime = saleTime;
-    }
-
-    protected void setPlaceMapData(ArrayList<PlaceViewItem> placeViewItemList)
-    {
-        if (mViewType == VIEW_TYPE.MAP && mPlaceMapFragment != null)
-        {
-            mPlaceMapFragment.setUserActionListener(mOnUserActionListener);
-            mPlaceMapFragment.setPlaceViewItemList(placeViewItemList, mSaleTime, mIsSelectionTop);
-        }
-    }
-
     public void setUserActionListener(PlaceMainFragment.OnUserActionListener userActionLister)
     {
         mOnUserActionListener = userActionLister;
@@ -279,17 +214,14 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         mActionbarViewHolder = actionbarViewHolder;
     }
 
-    public void refreshList(Province province, boolean isSelectionTop)
-    {
-        mSelectedProvince = province;
-        mIsSelectionTop = isSelectionTop;
-
-        fetchHotelList(province, mSaleTime, null);
-    }
-
-    public Province getProvince()
+    protected Province getProvince()
     {
         return mSelectedProvince;
+    }
+
+    protected void setProvince(Province province)
+    {
+        mSelectedProvince = province;
     }
 
     @Override

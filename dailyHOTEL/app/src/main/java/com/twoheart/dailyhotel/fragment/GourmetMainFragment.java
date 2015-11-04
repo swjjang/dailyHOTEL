@@ -50,7 +50,7 @@ import java.util.Map;
 public class GourmetMainFragment extends PlaceMainFragment
 {
     private TabIndicator mTabIndicator;
-    private ArrayList<PlaceListFragment> mFragmentList;
+    private ArrayList<GourmetListFragment> mFragmentList;
     private ArrayList<AreaItem> mAreaItemList;
     private Province mSelectedProvince;
 
@@ -79,7 +79,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
         mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
-        mFragmentList = new ArrayList<PlaceListFragment>();
+        mFragmentList = new ArrayList<GourmetListFragment>();
 
         setOnUserActionListener(mOnGourmetUserActionListener);
 
@@ -715,12 +715,12 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                 for (int i = 0; i < fragmentSize; i++)
                 {
-                    PlaceListFragment placeListFragment = mFragmentList.get(i);
+                    GourmetListFragment gourmetListFragment = mFragmentList.get(i);
 
                     SaleTime saleTime = mTodaySaleTime.getClone(i);
                     tabSaleTime[i] = saleTime;
 
-                    placeListFragment.setSaleTime(saleTime);
+                    gourmetListFragment.setSaleTime(saleTime);
                 }
 
                 // 임시로 여기서 날짜를 넣는다.
