@@ -8,6 +8,7 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +33,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 public class PaymentWaitActivity extends BaseActivity
 {
@@ -44,6 +51,7 @@ public class PaymentWaitActivity extends BaseActivity
     private TextView tvDeadline;
     private TextView tvGuide1;
     private TextView tvGuide2;
+    private String mCSoperatingTimeMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -110,30 +118,52 @@ public class PaymentWaitActivity extends BaseActivity
                     return super.onOptionsItemSelected(item);
                 }
 
-                String title = getString(R.string.dialog_notice2);
-                String message = getString(R.string.dialog_msg_call);
-                String positive = getString(R.string.dialog_btn_call);
-
-                showSimpleDialog(title, message, positive, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
-                        {
-                            Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-                            startActivity(i);
-                        } else
-                        {
-                            DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                        }
-                    }
-                });
+                showCallDialog();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected void showCallDialog()
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                releaseUiComponent();
+
+                if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
+                {
+                    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+                    startActivity(i);
+                } else
+                {
+                    DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                }
+            }
+        };
+
+        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
+        {
+            mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
+        }
+
+        showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        }, true);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,10 +185,13 @@ public class PaymentWaitActivity extends BaseActivity
 
                 if (response.getBoolean("result") == false)
                 {
+                    unLockUI();
+
                     Intent intent = new Intent();
                     intent.putExtra("msg", response.getString("msg"));
                     setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
                     finish();
+                    return;
                 } else
                 {
                     tvAccount.setText(response.getString("bank_name") + ", " + response.getString("account_num"));
@@ -174,15 +207,19 @@ public class PaymentWaitActivity extends BaseActivity
 
                     tvGuide1.setText(response.getString("msg1"));
                     tvGuide2.setText(response.getString("msg2"));
-                    unLockUI();
                 }
 
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("timeZone", "Asia/Seoul");
+
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, PaymentWaitActivity.this));
             } catch (JSONException e)
             {
                 ExLog.e(e.toString());
             }
         }
     };
+
     private DailyHotelJsonResponseListener mFnBReservationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
@@ -217,11 +254,50 @@ public class PaymentWaitActivity extends BaseActivity
                     tvGuide2.setText(jsonObject.getString("msg2"));
                 } else
                 {
+                    unLockUI();
+
                     Intent intent = new Intent();
                     intent.putExtra("msg", response.getString("msg"));
                     setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
                     finish();
+                    return;
                 }
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("timeZone", "Asia/Seoul");
+
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, PaymentWaitActivity.this));
+            } catch (Exception e)
+            {
+                onError(e);
+                finish();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
             } catch (Exception e)
             {
                 onError(e);
@@ -230,6 +306,7 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 unLockUI();
             }
+
         }
     };
 }

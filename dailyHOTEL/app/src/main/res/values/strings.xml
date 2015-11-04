@@ -145,8 +145,8 @@
     <string name="dialog_msg_gourmet_payment_message06">취소 불가 등 위 내용에 동의하시면\n버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_gourmet_payment_message07">취소 불가 등 위 내용에 동의하시면\n서명 후 결제완료 버튼을 눌러주세요.</string>
 
-    <string name="dialog_msg_call">데일리호텔 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_call">전화 연결</string>
+    <string name="dialog_msg_call">데일리호텔 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_title_payment_confirm">확인 사항</string>
     <string name="dialog_btn_payment_no_reserve">이벤트 호텔의 경우\n적립금 사용을 할 수 없습니다.</string>
@@ -192,6 +192,7 @@
     <string name="dialog_msg_changed_time">방문 가능한 시간이 변경되었습니다. 확인 후 재선택 해주세요.</string>
     <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_issuing_account">가상계좌가 발급되었습니다.\n입금 대기 내역을 확인해주세요.</string>
+    <string name="dialog_message_cs_operating_time">데일리호텔 고객센터 운영시간은\n아침 %1$d시 ~ 익일 새벽 %2$d시입니다.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>

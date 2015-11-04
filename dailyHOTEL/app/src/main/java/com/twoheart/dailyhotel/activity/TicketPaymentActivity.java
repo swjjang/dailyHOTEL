@@ -81,6 +81,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     private int mResCode;
     private Intent mResIntent;
     private ProgressDialog mProgressDialog;
+    private String mCSoperatingTimeMessage;
 
     protected abstract void requestPayEasyPayment(TicketPayment ticketPayment, SaleTime checkInSaleTime);
 
@@ -681,7 +682,12 @@ public abstract class TicketPaymentActivity extends BaseActivity
             }
         };
 
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_call), getString(R.string.dialog_btn_call), null, positiveListener, null, null, new OnDismissListener()
+        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
+        {
+            mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
+        }
+
+        showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
@@ -689,7 +695,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 releaseUiComponent();
             }
         }, true);
-
     }
 
     private void showStopOnSaleDialog()
@@ -870,6 +875,13 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
                 int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
                 int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
+                    , Integer.parseInt(dateFormat.format(new Date(response.getLong("openDateTime")))) //
+                    , Integer.parseInt(dateFormat.format(new Date(response.getLong("closeDateTime")))));
 
                 // 지난 날인 경우
                 if (shareDailyDay < todayDailyDay)
