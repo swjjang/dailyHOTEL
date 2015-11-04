@@ -130,6 +130,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private View mClickView;
     private boolean mDoReload;
     private String mWarningDialogMessage;
+    private String mCSoperatingTimeMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -1464,7 +1465,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         };
 
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_call), getString(R.string.dialog_btn_call), null, positiveListener, null, null, new OnDismissListener()
+
+        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
+        {
+            mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
+        }
+
+        showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
@@ -1472,7 +1479,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 releaseUiComponent();
             }
         }, true);
-
     }
 
     private void showStopOnSaleDialog()
@@ -2432,6 +2438,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                 saleTime.setCurrentTime(response.getLong("currentDateTime"));
                 saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
 
                 lockUI();
 

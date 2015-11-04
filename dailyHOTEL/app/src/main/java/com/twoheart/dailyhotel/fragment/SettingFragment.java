@@ -14,6 +14,7 @@
 package com.twoheart.dailyhotel.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
@@ -54,6 +55,13 @@ import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
+
 public class SettingFragment extends BaseFragment implements Constants, OnClickListener
 {
     private MainActivity mHostActivity;
@@ -65,6 +73,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
     private LinearLayout llVersion, llLogin;
     private String profileStr, loginStr;
     private DailySwitchCompat mSwitchCompat;
+    private String mCSoperatingTimeMessage;
 
 
     @Override
@@ -246,14 +255,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
         } else if (id == tvCall.getId())
         {
-            if (Util.isTelephonyEnabled(mHostActivity) == true)
-            {
-                Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-                startActivity(i);
-            } else
-            {
-                DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-            }
+            showCallDialog();
 
             AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.CALL_CS, 0L);
         } else if (id == tvAbout.getId())
@@ -308,6 +310,46 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             tvEmail.setVisibility(View.GONE);
         }
 
+    }
+
+    private void showCallDialog()
+    {
+        if (mHostActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                releaseUiComponent();
+
+                if (Util.isTelephonyEnabled(mHostActivity) == true)
+                {
+                    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+                    startActivity(i);
+                } else
+                {
+                    DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                }
+            }
+        };
+
+        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
+        {
+            mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
+        }
+
+        mHostActivity.showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        }, true);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -381,6 +423,43 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
                 mSettingCardLayout.setVisibility(View.GONE);
 
                 invalidateLoginButton(false, "");
+            }
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("timeZone", "Asia/Seoul");
+
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, mHostActivity));
+        }
+    };
+
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (getActivity() == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
                 unLockUI();
             }
         }

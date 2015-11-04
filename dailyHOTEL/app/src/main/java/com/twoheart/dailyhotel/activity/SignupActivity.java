@@ -71,6 +71,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private EditText mPhoneTextView, mEmailEditText, mNameEditText, mPasswordEditText, mRecommenderEditText;
     private TextView mTermTextView, mPrivacyTextView;
     private TextView mSingupView;
+    private View mFakeMobileView;
     private int mMode;
     private String mUserIdx;
     private int mRecommender; // 추천인 코드
@@ -138,7 +139,31 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 phoneNumber = user.getPhone();
             }
 
-            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
+            View.OnClickListener onClickListener = null;
+            String message;
+
+            // 전화번호만 업데이트 하는 경우
+            if (isVisibleRecommender == true)
+            {
+                message = getString(R.string.dialog_msg_facebook_update);
+            } else
+            {
+                message = getString(R.string.toast_msg_confirm_mobilenumber);
+
+                onClickListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if (mFakeMobileView != null)
+                        {
+                            mFakeMobileView.performClick();
+                        }
+                    }
+                };
+            }
+
+            showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null, onClickListener, null);
         } else
         {
             mMode = MODE_SIGNUP;
@@ -241,10 +266,10 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         });
 
-        View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
+        mFakeMobileView = findViewById(R.id.fakeMobileEditView);
 
-        fakeMobileEditView.setFocusable(true);
-        fakeMobileEditView.setOnClickListener(new OnClickListener()
+        mFakeMobileView.setFocusable(true);
+        mFakeMobileView.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
