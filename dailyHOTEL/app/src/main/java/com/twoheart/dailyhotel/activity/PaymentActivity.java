@@ -114,7 +114,7 @@ public class PaymentActivity extends BaseActivity implements Constants
         setContentView(mWebView, layoutParams);
 
         // TODO  setWebContentsDebuggingEnabled
-        //		WebView.setWebContentsDebuggingEnabled(true);
+        //        WebView.setWebContentsDebuggingEnabled(true);
 
         mWebView.getSettings().setSavePassword(false);
         mWebView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
@@ -460,7 +460,6 @@ public class PaymentActivity extends BaseActivity implements Constants
     {
         try
         {
-
             if (ResultRcvActivity.m_uriResult != null)
             {
                 m_nStat = PROGRESS_DONE;

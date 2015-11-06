@@ -208,10 +208,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
             {
                 return;
-            } else if (hotelListViewItem.getType() == HotelListViewItem.TYPE_EVENT)
-            {
-                mUserActionListener.goGourmet();
-                return;
             }
 
             mUserActionListener.selectHotel(hotelListViewItem, mSaleTime);
@@ -898,30 +894,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                         {
                             mHotelListMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mIsSelectionTop);
                         }
-                    }
-
-                    boolean isSeoulProvince = false;
-
-                    if (mSelectedProvince instanceof Area)
-                    {
-                        // 특별히 서울인 경우에 한하여 이벤트 셀을 추가한다
-                        if ("서울".equalsIgnoreCase(((Area) mSelectedProvince).getProvince().name) == true)
-                        {
-                            isSeoulProvince = true;
-                        }
-                    } else
-                    {
-                        // 특별히 서울인 경우에 한하여 이벤트 셀을 추가한다
-                        if ("서울".equalsIgnoreCase(mSelectedProvince.name) == true)
-                        {
-                            isSeoulProvince = true;
-                        }
-                    }
-
-                    if (isSeoulProvince == true)
-                    {
-                        HotelListViewItem eventLayout = new HotelListViewItem(R.layout.list_row_gourmetlink);
-                        hotelListViewItemList.add(0, eventLayout);
                     }
 
                     mHotelListAdapter.clear();

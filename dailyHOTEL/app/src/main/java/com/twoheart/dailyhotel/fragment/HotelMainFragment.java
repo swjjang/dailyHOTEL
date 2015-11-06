@@ -88,8 +88,6 @@ public class HotelMainFragment extends BaseFragment
 
         public void setMapViewVisible(boolean isVisible);
 
-        public void goGourmet();
-
         public void refreshAll();
     }
 
@@ -819,26 +817,6 @@ public class HotelMainFragment extends BaseFragment
         public void setMapViewVisible(boolean isVisible)
         {
             setMenuEnabled(isVisible);
-        }
-
-        @Override
-        public void goGourmet()
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuGourmetListFragment);
-
-            String text = mTabIndicator.getMainText(mFragmentViewPager.getCurrentItem());
-
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.DATE_TAB, text);
-
-            AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mHotelViewType.name(), Action.CLICK, "데일리고메배너링크", params);
         }
 
         @Override

@@ -173,13 +173,6 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 convertView = makeEntryView(convertView, parent, item);
                 break;
             }
-
-            case HotelListViewItem.TYPE_EVENT:
-            {
-                convertView = inflater.inflate(item.eventLayotuResourceId, parent, false);
-                convertView.setTag(null);
-                break;
-            }
         }
 
         return convertView;
