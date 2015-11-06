@@ -28,8 +28,8 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 70
-        versionName "1.7.0"
+        versionCode 71
+        versionName "1.7.1"
     }
     buildTypes {
         release {
