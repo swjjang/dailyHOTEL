@@ -568,7 +568,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
         {
             hotelListViewItem = arrangeList.get(i);
 
-            if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION || hotelListViewItem.getType() == HotelListViewItem.TYPE_EVENT)
+            if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
             {
                 arrangeList.remove(i);
             } else
@@ -1015,7 +1015,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
             {
                 for (HotelListViewItem hotelListViewItem : mHotelArrayList)
                 {
-                    if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION || hotelListViewItem.getType() == HotelListViewItem.TYPE_EVENT)
+                    if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
                     {
                         continue;
                     }

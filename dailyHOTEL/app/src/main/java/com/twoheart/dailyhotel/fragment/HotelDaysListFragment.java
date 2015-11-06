@@ -436,10 +436,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
             if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
             {
                 return;
-            } else if (hotelListViewItem.getType() == HotelListViewItem.TYPE_EVENT)
-            {
-                mUserActionListener.goGourmet();
-                return;
             }
 
             mUserActionListener.selectHotel(hotelListViewItem, mSelectedCheckInSaleTime);
