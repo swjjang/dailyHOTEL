@@ -6,12 +6,10 @@ public class HotelListViewItem
 {
     public static final int TYPE_ENTRY = 0;
     public static final int TYPE_SECTION = 1;
-    public static final int TYPE_EVENT = 2;
 
     private int type;
     private Hotel item;
     private String category;
-    public int eventLayotuResourceId;
 
     public HotelListViewItem(Hotel hotel)
     {
@@ -23,12 +21,6 @@ public class HotelListViewItem
     {
         type = TYPE_SECTION;
         category = region;
-    }
-
-    public HotelListViewItem(int resId)
-    {
-        type = TYPE_EVENT;
-        eventLayotuResourceId = resId;
     }
 
     public int getType()

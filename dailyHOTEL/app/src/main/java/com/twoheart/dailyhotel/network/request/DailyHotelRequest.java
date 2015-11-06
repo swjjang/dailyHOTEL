@@ -23,15 +23,23 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
     public DailyHotelRequest(int method, String url, Map<String, String> parameters, ErrorListener errorListener)
     {
-        this(method, url, errorListener);
+        this(errorListener, method, url, errorListener);
 
         mParameters = parameters;
     }
 
-    private DailyHotelRequest(int method, String url, ErrorListener listener)
+    public DailyHotelRequest(Object tag, int method, String url, Map<String, String> parameters, ErrorListener errorListener)
+    {
+        this(tag, method, url, errorListener);
+
+        mParameters = parameters;
+    }
+
+    private DailyHotelRequest(Object tag, int method, String url, ErrorListener listener)
     {
         super(method, getUrlDecoderEx(url), listener);
-        setTag(listener);
+
+        setTag(tag);
 
         setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
