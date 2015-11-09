@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.model.TicketPayment.PaymentType;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -109,11 +110,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
         if (mDoReload == true)
         {
             lockUI();
-
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("timeZone", "Asia/Seoul");
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, TicketPaymentActivity.this);
         }
     }
 
@@ -194,7 +191,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
         lockUI();
 
         // 1. 세션이 연결되어있는지 검사.
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     protected void activityResulted(int requestCode, int resultCode, Intent intent)
@@ -436,7 +433,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     lockUI();
 
                     // credit card 요청
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserRegisterBillingCardInfoJsonResponseListener, TicketPaymentActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, TicketPaymentActivity.this);
                     return;
 
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -803,8 +800,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
         if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
         {
             HashMap<String, String> params = Util.getLoginParams(sharedPreference);
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, TicketPaymentActivity.this));
+            DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, TicketPaymentActivity.this);
         } else
         {
             mDoReload = true;
@@ -894,8 +890,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 }
 
                 lockUI();
-
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
+                DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, TicketPaymentActivity.this);
             } catch (Exception e)
             {
                 mDoReload = true;
@@ -929,10 +924,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     {
                         VolleyHttpClient.createCookie();
 
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("timeZone", "Asia/Seoul");
-
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
+                        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, TicketPaymentActivity.this);
                         return;
                     }
                 }

@@ -34,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -433,8 +434,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 mSignupParams.put("social_id", "0");
                 mSignupParams.put("user_type", "normal");
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mSignupParams, mUserSignupJsonResponseListener, this));
-
+                DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mSignupParams, mUserSignupJsonResponseListener, this);
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNUP, Action.CLICK, Label.SIGNUP, 0L);
             } else
             {
@@ -464,7 +464,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                     phoneNumber = phoneNumber.replaceAll("-", "");
                     updateParams.put("phone", phoneNumber);
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_UPDATE).toString(), updateParams, mUserUpdateJsonResponseListener, this));
+                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, updateParams, mUserUpdateJsonResponseListener, this);
                 } else
                 {
                     Map<String, String> updateParams = new HashMap<String, String>();
@@ -494,7 +494,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         updateParams.put("recommendation_code", recommender);
                     }
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_UPDATE_FB_USER).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
+                    DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, updateParams, mUserUpdateFacebookJsonResponseListener, this);
                 }
             }
         } else if (v.getId() == mTermTextView.getId())
@@ -510,7 +510,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             Intent i = new Intent(this, PrivacyActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
         }
     }
 
@@ -618,14 +617,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 regPushParams.put("notification_id", regId);
                 regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
+                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, regPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
                     {
                         signUpAndFinish();
                     }
-                }));
+                });
             }
         }.execute();
     }
@@ -881,7 +880,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         storeLoginInfo();
 
                         lockUI();
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, SignupActivity.this));
+                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, SignupActivity.this);
                         return;
                     }
                 }
@@ -935,7 +934,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         params.put("user_type", "normal");
                         params.put("is_auto", "true");
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, SignupActivity.this));
+                        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, SignupActivity.this);
                         return;
                     }
                 }

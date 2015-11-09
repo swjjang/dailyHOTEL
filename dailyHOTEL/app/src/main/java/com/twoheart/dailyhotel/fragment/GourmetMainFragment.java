@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -183,7 +184,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     protected void requestProvinceList(BaseActivity baseActivity)
     {
         // 지역 리스트를 가져온다
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_FNB_SALE_REGION_PROVINCE_LIST).toString(), null, mProvinceListJsonResponseListener, baseActivity));
+        DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mProvinceListJsonResponseListener, baseActivity);
     }
 
     @Override
@@ -599,10 +600,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             lockUI();
 
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("timeZone", "Asia/Seoul");
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
     };
 

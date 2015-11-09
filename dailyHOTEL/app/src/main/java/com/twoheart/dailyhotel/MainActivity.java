@@ -63,9 +63,9 @@ import com.twoheart.dailyhotel.fragment.EventListFragment;
 import com.twoheart.dailyhotel.fragment.GourmetMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
@@ -85,12 +85,10 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
     public static final int ERROR_FRAGMENT = -1;
-    public static final int WAITTIMER_FRAGMENT = -2;
     public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
     public static final int INDEX_FNB_LIST_FRAGMENT = 1;
     public static final int INDEX_BOOKING_LIST_FRAGMENT = 2;
@@ -130,7 +128,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     {
         super.onCreate(savedInstanceState);
 
-        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         VolleyHttpClient.cookieManagerCreate();
 
@@ -325,18 +323,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                             break;
                     }
 
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+                    DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
                 }
             }
         } else if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL)
         {
-            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+            DailyNetworkAPI.getInstance().requestGourmetIsExistRating(mNetworkTag, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
             {
                 public void onErrorResponse(VolleyError error)
                 {
 
                 }
-            }));
+            });
         } else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO)
         {
             selectMenuDrawer(menuHotelListFragment);
@@ -433,7 +431,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 regPushParams.put("notification_id", regId);
                 regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this));
+                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this);
             }
         }.execute();
     }
@@ -1010,10 +1008,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
     private void requestEvent()
     {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("timeZone", "Asia/Seoul");
-
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, new DailyHotelJsonResponseListener()
+        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, JSONObject response)
@@ -1028,21 +1023,20 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     editor.apply();
 
                     String params = String.format("?date_time=%d", lastLookupDateTime);
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_COUNT).append(params).toString(), null, mDailyEventCountJsonResponseListener, null));
+                    DailyNetworkAPI.getInstance().requestEventNewCount(mNetworkTag, params, mDailyEventCountJsonResponseListener, null);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }
             }
-        }, null));
+        }, null);
     }
 
     @Override
     protected void onDestroy()
     {
         // 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
-
+        DailyNetworkAPI.getInstance().requestUserLogout(mNetworkTag, null, null);
         VolleyHttpClient.destroyCookie();
 
         super.onDestroy();
@@ -1354,13 +1348,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     startActivityForResult(SatisfactionActivity.newInstance(MainActivity.this, hotelName, reservationIndex, checkInDate, checkOutDate), CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
                 } else
                 {
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+                    DailyNetworkAPI.getInstance().requestGourmetIsExistRating(mNetworkTag, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
                     {
                         public void onErrorResponse(VolleyError error)
                         {
 
                         }
-                    }));
+                    });
                 }
             } catch (Exception e)
             {
@@ -1395,8 +1389,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 }
 
                 // 호텔 평가요청
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, //
-                    mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+                DailyNetworkAPI.getInstance().requestHotelIsExistRating(mNetworkTag,  mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
@@ -1404,7 +1397,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                         // TODO Auto-generated method stub
 
                     }
-                }));
+                });
             } catch (Exception e)
             {
                 onError(e);
@@ -1433,7 +1426,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             {
                 // session alive
                 // 호텔 평가를 위한 사용자 정보 조회
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
+                DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, MainActivity.this);
             } else
             {
                 if (getGcmId().isEmpty() == true)

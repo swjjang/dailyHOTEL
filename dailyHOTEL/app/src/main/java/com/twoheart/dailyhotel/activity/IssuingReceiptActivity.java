@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -57,7 +58,7 @@ public class IssuingReceiptActivity extends BaseActivity
     protected void onResume()
     {
         lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
 
         super.onResume();
     }
@@ -340,7 +341,7 @@ public class IssuingReceiptActivity extends BaseActivity
                     showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
                 }
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_RECEIPT).toString(), params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this));
+                DailyNetworkAPI.getInstance().requestHotelReceipt(mNetworkTag, params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this);
             } else
             {
                 finish();

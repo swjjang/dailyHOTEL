@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * SettingFragment (설정 화면)
- * <p/>
+ * <p>
  * 어플리케이션의 설정 화면이다. 뷰는 리스트뷰처럼 보이나 리스트뷰처럼 보이도록
  * 구성된 화면일 뿐이다. 이 화면에서 현재 로그인 상태를 가져오기 위해 네트워
  * 크 작업을 하기도 한다.
@@ -28,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
@@ -38,9 +37,9 @@ import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
+import com.twoheart.dailyhotel.activity.SatisfactionActivity;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
@@ -57,9 +56,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class SettingFragment extends BaseFragment implements Constants, OnClickListener
@@ -173,6 +170,15 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             }
         });
 
+        llVersion.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(SatisfactionActivity.newInstance(getContext(), "카페 스탠포드", 26, 1443571200000L));
+            }
+        });
+
         return view;
     }
 
@@ -193,7 +199,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         loginStr = getString(R.string.frag_login);
 
         lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
+        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, mHostActivity);
     }
 
     @Override
@@ -414,10 +420,10 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             }
 
             if ("alive".equalsIgnoreCase(result) == true)
-            { // session alive
+            {
+                // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
-
+                DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, mHostActivity);
             } else
             {
                 mSettingCardLayout.setVisibility(View.GONE);
@@ -425,10 +431,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
                 invalidateLoginButton(false, "");
             }
 
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("timeZone", "Asia/Seoul");
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, mHostActivity));
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, mHostActivity);
         }
     };
 

@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.activity.CreditListActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Credit;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -152,8 +153,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
                 idx = response.getString("idx");
 
                 // 적립금 목록 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_BONUS_ALL).toString(), null, mUserBonusAllResponseListener, baseActivity));
-
+                DailyNetworkAPI.getInstance().requestUserBonus(mNetworkTag, mUserBonusAllResponseListener, baseActivity);
             } catch (Exception e)
             {
                 onError(e);
@@ -198,8 +198,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
                 tvBonus.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
 
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, baseActivity));
-
+                DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, baseActivity);
             } catch (Exception e)
             {
                 onError(e);
@@ -240,7 +239,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
                         VolleyHttpClient.createCookie();
 
                         // credit 요청
-                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, baseActivity));
+                        DailyNetworkAPI.getInstance().requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, baseActivity);
                         return;
                     }
                 }
@@ -285,19 +284,19 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
             }
 
             if (true == "alive".equalsIgnoreCase(result))
-            { // session alive
+            {
+                // session alive
                 // credit 요청
-                mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, baseActivity));
+                DailyNetworkAPI.getInstance().requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, baseActivity);
 
             } else if (true == "dead".equalsIgnoreCase(result))
-            { // session dead
-
+            {
+                // session dead
                 // 재로그인
                 if (true == baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
                     HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
+                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, baseActivity);
                 } else
                 {
                     unLockUI();
@@ -378,7 +377,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
         baseActivity.setActionBar(getString(R.string.actionbar_title_credit_frag), false);
 
         lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
+        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
     }
 
     @Override

@@ -35,6 +35,7 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -135,13 +136,13 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         }
 
         // 서버 상태 체크
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_STATUS_HEALTH_CHECK).toString(), null, mStatusHealthCheckJsonResponseListener, new ErrorListener()
+        DailyNetworkAPI.getInstance().requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener, new ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
             }
-        }));
+        });
     }
 
     @Override
@@ -313,11 +314,10 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
         {
             HashMap<String, String> params = Util.getLoginParams(sharedPreference);
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, this));
+            DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, this);
         }
 
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(), null, mAppVersionJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, this);
     }
 
     private void showMainActivity()

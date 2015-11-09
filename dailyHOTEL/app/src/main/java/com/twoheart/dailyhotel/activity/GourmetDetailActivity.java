@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -66,7 +67,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
         }
 
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_RESTAURANT_INFO).append(params).toString(), null, mGourmetDetailJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestGourmetDetailInformation(mNetworkTag, params, mGourmetDetailJsonResponseListener, this);
     }
 
     @Override

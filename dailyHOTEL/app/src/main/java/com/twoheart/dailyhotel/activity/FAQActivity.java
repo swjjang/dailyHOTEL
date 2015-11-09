@@ -67,7 +67,7 @@ public class FAQActivity extends BaseActivity
         super.onResume();
 
         lockUI();
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(), null, mBoardFAQJsonResponseListener, this));
+//        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(), null, mBoardFAQJsonResponseListener, this));
     }
 
     @Override

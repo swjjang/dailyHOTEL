@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -142,7 +143,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
         String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d&arrival_time=%s", //
             ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), ticketPayment.ticketCount, String.valueOf(ticketPayment.ticketTime));
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_SESSION_TICKET_SELL_CHECK).append(params).toString(), null, mTicketSellCheckJsonResponseListener, this));
+
+        DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag, params, mTicketSellCheckJsonResponseListener, this);
     }
 
     @Override
@@ -173,7 +175,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         //            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_PAYMENT_SESSION_EASY).toString(), params, mPayEasyPaymentJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestGourmetPayment(mNetworkTag, params, mPayEasyPaymentJsonResponseListener, this);
     }
 
     @Override
@@ -188,7 +190,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         }
 
         String params = String.format("?sale_reco_idx=%d", index);
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_TICKET_PAYMENT_INFO).append(params).toString(), null, mTicketPaymentInformationJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, params, mTicketPaymentInformationJsonResponseListener, this);
     }
 
     @Override
@@ -317,7 +319,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                             mState = STATE_PAYMENT;
 
                             // 1. 세션이 살아있는지 검사 시작.
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, GourmetPaymentActivity.this));
+                            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, GourmetPaymentActivity.this);
 
                             mFinalCheckDialog.dismiss();
 
@@ -454,7 +456,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     mDoReload = false;
 
                     // 1. 세션이 살아있는지 검사 시작.
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, GourmetPaymentActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, GourmetPaymentActivity.this);
 
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put(AnalyticsManager.Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
@@ -517,8 +519,16 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 {
                     int select = (Integer) v.getTag();
 
-                    mTicketPayment.ticketTime = mTicketPayment.ticketTimes[select];
-                    mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
+                    try
+                    {
+                        mTicketPayment.ticketTime = mTicketPayment.ticketTimes[select];
+                        mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+
+                        onInternalError();
+                    }
                 }
             });
 
@@ -750,7 +760,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                 if (isOnSale == true && msg_code == 0)
                 {
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
                 } else
                 {
                     if (response.has("msg") == true)
@@ -871,7 +881,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                             if (mTicketPayment.ticketTime == 0)
                             {
                                 // 방문시간을 선택하지 않은 경우
-                                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this));
+                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
                             } else
                             {
                                 requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);

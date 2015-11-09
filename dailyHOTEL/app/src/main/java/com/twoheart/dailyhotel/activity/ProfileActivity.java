@@ -26,6 +26,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -295,7 +296,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     updateParams.put("phone", phone);
 
                     lockUI();
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_UPDATE).toString(), updateParams, mUserUpdateJsonResponseListener, this));
+                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, updateParams, mUserUpdateJsonResponseListener, this);
                 }
             }
         } else if (v.getId() == R.id.btn_profile_logout)
@@ -314,8 +315,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 public void onClick(View view)
                 {
                     lockUI();
+                    DailyNetworkAPI.getInstance().requestUserLogout(mNetworkTag, mUserLogoutStringResponseListener, ProfileActivity.this);
 
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutStringResponseListener, ProfileActivity.this));
                     AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
                 }
             };
@@ -331,7 +332,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         lockUI();
 
         // 사용자 정보 요청.
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserLogInfoJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserLogInfoJsonResponseListener, this);
     }
 
     @Override

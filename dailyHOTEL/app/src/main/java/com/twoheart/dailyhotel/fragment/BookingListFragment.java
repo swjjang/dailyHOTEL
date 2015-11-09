@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
 import com.twoheart.dailyhotel.model.Booking;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -115,7 +116,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         baseActivity.setActionBar(getString(R.string.actionbar_title_booking_list_frag), false);
 
         lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
+        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
     }
 
     @Override
@@ -256,7 +257,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             lockUI();
 
             // 세션 여부를 판단한다.
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
+            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, new DailyHotelStringResponseListener()
             {
                 @Override
                 public void onResponse(String url, String response)
@@ -305,7 +306,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                         HashMap<String, String> params = new HashMap<String, String>();
                                         params.put("idx", String.valueOf(booking.reservationIndex));
 
-                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+                                        DailyNetworkAPI.getInstance().requestHotelHiddenBooking(mNetworkTag, params, mReservationHiddenJsonResponseListener, baseActivity);
                                         break;
                                     }
 
@@ -313,7 +314,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                         HashMap<String, String> params = new HashMap<String, String>();
                                         params.put("reservation_rec_idx", String.valueOf(booking.reservationIndex));
 
-                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+                                        DailyNetworkAPI.getInstance().requestGourmetHiddenBooking(mNetworkTag, params, mReservationHiddenJsonResponseListener, baseActivity);
                                         break;
                                 }
 
@@ -326,7 +327,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                         baseActivity.restartApp();
                     }
                 }
-            }, baseActivity));
+            }, baseActivity);
         }
     };
 
@@ -563,7 +564,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 mCurrentTime = response.getLong("currentDateTime");
 
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
             } catch (Exception e)
             {
                 onError(e);
@@ -571,6 +572,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             }
         }
     };
+
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
 
@@ -592,11 +594,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             }
 
             if ("alive".equalsIgnoreCase(result) == true)
-            { // session alive
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("timeZone", "Asia/Seoul");
-
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+            {
+                // session alive
+                DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
 
             } else if ("dead".equalsIgnoreCase(result) == true)
             { // session dead
@@ -604,8 +604,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 if (true == baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
                     HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
+                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, baseActivity);
 
                     mListView.setVisibility(View.GONE);
                     mEmptyLayout.setVisibility(View.VISIBLE);
@@ -685,8 +684,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             }
 
                             lockUI();
-
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                            DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         }
                     };
                 } else
@@ -704,8 +702,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             }
 
                             lockUI();
-
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                            DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         }
                     };
                 }
@@ -717,7 +714,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                         message = response.getString("msg");
                         DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                        DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         break;
                     }
 
@@ -731,7 +728,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                         }
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                        DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         break;
                     }
 
@@ -752,7 +749,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
                         } else
                         {
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                            DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         }
                         break;
                     }
@@ -762,7 +759,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 onError(e);
 
                 // credit card 요청
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
             }
         }
     };

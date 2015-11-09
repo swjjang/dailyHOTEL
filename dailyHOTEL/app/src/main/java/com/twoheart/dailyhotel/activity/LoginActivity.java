@@ -54,6 +54,7 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -283,7 +284,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.put("user_type", "facebook");
         params.put("user_type", "facebook");
 
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
+        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
     }
 
     private void registerKakaokUser(long id)
@@ -326,7 +327,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.put("user_type", "kakao_talk");
         params.put("user_type", "kakao_talk");
 
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
+        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
     }
 
     @Override
@@ -384,7 +385,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             mStoreParams.put("social_id", "0");
             mStoreParams.put("user_type", "normal");
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mDailyUserLoginJsonResponseListener, this));
+            DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN, 0L);
         }
@@ -566,7 +567,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 mRegPushParams.put("notification_id", regId);
                 mRegPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), mRegPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
+                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, mRegPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
@@ -577,7 +578,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         setResult(RESULT_OK);
                         finish();
                     }
-                }));
+                });
             }
         }.execute();
     }
@@ -736,8 +737,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         mAutoLoginSwitch.setChecked(true);
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
-
+                        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
                         return;
                     }
                 }
@@ -865,7 +865,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         VolleyHttpClient.createCookie();
                         storeLoginInfo();
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
+                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
 
                         Editor editor = sharedPreference.edit();
                         editor.putString("collapseKey", "");
@@ -914,7 +914,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     VolleyHttpClient.createCookie();
                     storeLoginInfo();
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
 
                     Editor editor = sharedPreference.edit();
                     editor.putString("collapseKey", "");
@@ -922,7 +922,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 } else
                 {
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mStoreParams, mUserSignupJsonResponseListener, LoginActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mStoreParams, mUserSignupJsonResponseListener, LoginActivity.this);
                 }
 
                 //                {

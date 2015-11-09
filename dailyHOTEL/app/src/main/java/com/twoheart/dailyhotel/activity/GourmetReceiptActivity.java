@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -166,8 +167,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
     protected void requestReceiptDetail(int index)
     {
         String params = String.format("?reservation_rec_idx=%d", index);
-
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_RECEIPT).append(params).toString(), null, mReservReceiptJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestGourmetReceipt(mNetworkTag, params, mReservReceiptJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

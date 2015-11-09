@@ -22,13 +22,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -499,15 +497,14 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     case HOTEL:
                     {
                         params.put("reserv_idx", String.valueOf(mReservationIndex));
-
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTIONRATING_MSG_UPDATE).toString(), params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
+                        DailyNetworkAPI.getInstance().requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
                         {
                             @Override
                             public void onErrorResponse(VolleyError arg0)
                             {
                                 finish();
                             }
-                        }));
+                        });
                         break;
                     }
 
@@ -515,14 +512,14 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     {
                         params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_MSG_UPDATE).toString(), params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
+                        DailyNetworkAPI.getInstance().requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
                         {
                             @Override
                             public void onErrorResponse(VolleyError arg0)
                             {
                                 finish();
                             }
-                        }));
+                        });
                         break;
                     }
                 }
@@ -568,26 +565,26 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         {
             case HOTEL:
                 params.put("reserv_idx", String.valueOf(index));
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
+                DailyNetworkAPI.getInstance().requestHotelRating(mNetworkTag, params, listener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
                     {
                         finish();
                     }
-                }));
+                });
                 break;
 
             case FNB:
                 params.put("reservation_rec_idx", String.valueOf(index));
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
+                DailyNetworkAPI.getInstance().requestGourmetRating(mNetworkTag, params, listener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
                     {
                         finish();
                     }
-                }));
+                });
                 break;
         }
     }
@@ -652,14 +649,14 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                                 break;
                         }
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_CODE_REVIEW).append(params).toString(), null, mRequestServicesJsonResponseListener, new ErrorListener()
+                        DailyNetworkAPI.getInstance().requestCommonReview(mNetworkTag, params, mRequestServicesJsonResponseListener, new ErrorListener()
                         {
                             @Override
                             public void onErrorResponse(VolleyError arg0)
                             {
                                 finish();
                             }
-                        }));
+                        });
                     }
                 } else
                 {

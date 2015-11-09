@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -101,8 +102,7 @@ public class EventListFragment extends BaseFragment implements Constants
         baseActivity.setActionBar(getString(R.string.actionbar_title_event_list_frag), false);
 
         lockUI();
-
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
+        DailyNetworkAPI.getInstance().requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, baseActivity);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class EventListFragment extends BaseFragment implements Constants
             params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
         }
 
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_PAGE).append(params).toString(), null, mDailyEventPageJsonResponseListener, baseActivity));
+        DailyNetworkAPI.getInstance().requestEventPageUrl(mNetworkTag, params, mDailyEventPageJsonResponseListener, baseActivity);
     }
 
     public interface OnUserActionListener
@@ -225,8 +225,7 @@ public class EventListFragment extends BaseFragment implements Constants
             lockUI();
 
             mSelectedEvent = event;
-
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
+            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
         }
     };
 
@@ -331,8 +330,7 @@ public class EventListFragment extends BaseFragment implements Constants
                     if (isSignin == true)
                     {
                         VolleyHttpClient.createCookie();
-
-                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
+                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
                         return;
                     }
                 }
@@ -382,7 +380,7 @@ public class EventListFragment extends BaseFragment implements Constants
             {
                 // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserInformationJsonResponseListener, baseActivity));
+                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, baseActivity);
             } else if (true == "dead".equalsIgnoreCase(result))
             {
                 // session dead
@@ -390,8 +388,7 @@ public class EventListFragment extends BaseFragment implements Constants
                 if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
                     HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
+                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, baseActivity);
                 } else
                 {
                     unLockUI();
@@ -487,7 +484,7 @@ public class EventListFragment extends BaseFragment implements Constants
 
                 if (mSelectedEvent == null)
                 {
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
+                    DailyNetworkAPI.getInstance().requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, baseActivity);
                 } else
                 {
                     if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)

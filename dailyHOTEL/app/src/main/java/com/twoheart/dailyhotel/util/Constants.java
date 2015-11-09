@@ -1,8 +1,8 @@
 /**
  * \ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * Constants (어플리케이션 전역 상수)
- * <p/>
+ * <p>
  * 어플리케이션에서 사용되는 전역 상수들을 정리해놓은 인터페이스이다. 어플리
  * 케이션에서 사용되는 전역 상수들은 거의 고정된 값들이며 여러 부분에서 일
  * 률적으로 사용되므로 상수로서 선언됐다. 이 인터페이스는 각 클래스에서 상속
@@ -53,214 +53,64 @@ public interface Constants
     public static final String URL_DAILYHOTEL_SERVER_8080 = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr:8080/goodnight/" : "MjEkNzYkMTI5JDk1JDUzJA==$QTY2MTMyRUQ5RURFRkZBQHzU1RUIwNkI0Qjk5MTVFMTk5MEFDQkNFLMzQwQzQzNTNDQzJGMDk0N0EJwRjIwRUYzMEJEM0U5NNzFDNUE4NTMzREMzM0ZCQzc4M0VCQjMyMTQQ1$";
     public static final String URL_DAILYHOTEL_SERVER_8081 = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr:8081/goodnight/" : "MjgkMTA1JDEyMSQ4MiQxMjIk$NTU0NTQwMTExRDVDNUVFMzJEMTc3BNTA3QTQ0QTVDMDM1OTNBNEFGRjlDRTZEQTU0NzUyMTNFRTY1NjIxNTjZFQjM2RDVDNjAxRjI4NzJBNMTdFMTk1RUJFQzAQNwNDdFQTg4$";
 
-    //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "";
+    //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
     //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
 
     public static final String URL_DAILYHOTEL_LB_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://lb.dailyhotel.kr/goodnight/" : "MTEyJDEwMyQ0NCQzNSQ5MCQ=$RkE1MTczODQ3QzdBQUEwMUQ0MDExMEFGNTQC5NjRBMDQ3ARURFRDBGMDUwMzEwOTU5M0VDNEFERjJCMDc5MzQwNjdEWOUZENzc5MUM0RDADxNDlEODk0RNzBERkVBOTY3NDg1$";
-    //    public static final String URL_DAILYHOTEL_LB_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "";
+    //    public static final String URL_DAILYHOTEL_LB_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
     //    public static final String URL_DAILYHOTEL_LB_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
 
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
+
     // uiLock을 띄우고 API를 콜하였는데 제한 시간 안에 리턴을 받지 못한경우. error 발생.
     public static final int REQUEST_EXPIRE_JUDGE = 60000;
+
     // 구글플레이 서비스 상태 확인 타임아웃
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 15000;
+
     // Volley의 최대 retry 횟수,  여기서 0은 리퀘스트를 리트라이 하지 않음을 말함.
     public static final int REQUEST_MAX_RETRY = 0;
-    // 호텔 평가를 표시할 최대 날짜
-    public static final int DAYS_DISPLAY_RATING_HOTEL_DIALOG = 7;
-
-    // Service Status Alert
-    // http://status.dailyhotel.kr/status/health/check
-    public static final String URL_STATUS_HEALTH_CHECK = UNENCRYPTED_URL ? "http://status.dailyhotel.kr/status/health/check" : "NDYkMTE0JDU3JDQ5JDYxJA==$NkQ5QUVEMTQ3RjRBNjBGMURGNUMwQUE0RkE0QzkyRkQxNzSQxYRDM4MjM2UM0VMzNUUxMDc0QzVDQzVCRjQyQjBFQ0U1RkM2RTYyODMyMTEwODhEQzc2ODDdEQzI0OUJEMjkz$";
-
-    // DailyHOTEL User Controller WebAPI URL
-    // api/user/signin
-    public static final String URL_WEBAPI_USER_SIGNIN = UNENCRYPTED_URL ? "api/user/signin" : "MzIkMzQkMTYkMzAkNDEk$RkNGRTZDQzdGNjI3UNjlCQzExQzY5MNkEyFRGDUyMQDdGMUE=$";
-
-    //"user/logout/mobile";
-    public static final String URL_WEBAPI_USER_LOGOUT = UNENCRYPTED_URL ? "user/logout/mobile" : "MjgkNjIkMiQ4MSQzMyQ=$NjIU3RDBBQUEyRjIxMTZEQkFCQjY2NRkZCBRTZCM0RDOTM2M0EwNDhBNURBOTg1MQjYwODAzNkM4NjYwM0CRGRENEOQ==$";
-
-    // api/user/information/omission;
-    public static final String URL_WEBAPI_USER_INFORMATION_OMISSION = UNENCRYPTED_URL ? "api/user/information/omission" : "NjkkMTgkNTQkNDUkNTUk$RDhERTZBNkRGMUJENTXVFQTdFQTc5NzFCMTZBQjFFMTMyXNkRGMkUyNWJzRBRjI4NkVBNUMzMKkQ2NDEwOTAyM0ZFNw==$";
-
-    // user/session/myinfo
-    public static final String URL_WEBAPI_USER_INFO = UNENCRYPTED_URL ? "user/session/myinfo" : "MjQkNjgkNjUkOTAkNCQ=$RDUxBMkY5MUI3MTU5OTY1RUUyGRDE1QjgzQjI0OEY0REY5Q0JFNzgxRDBFQjdEMURGCQ0MNzN0U0RjRGM0RFQjVCMA=D=$";
-
-    //"user/session/bonus/all";
-    public static final String URL_WEBAPI_USER_BONUS_ALL = UNENCRYPTED_URL ? "user/session/bonus/all" : "NjEkODIkNTQkNjYkNjQk$NkE0NzIwMzJGNUIxNEM1MTYzODAxNkFCMkEzMkY1RDMzQzRFMjNBQTDk0RDNGMCTIIxHNDA2MUI0QkNEMDYxOUDJBRQ==$";
-
-    // api/user/signup
-    public static final String URL_WEBAPI_USER_SIGNUP = UNENCRYPTED_URL ? "api/user/signup" : "NCQzJDM3JDUkMzEk$MDBLCFWQUI1OTE5QjY2MzE3MDJGMkYzRM0U0ODII2MkZDN0M=$";
-
-    //"user/alive";
-    public static final String URL_WEBAPI_USER_ALIVE = UNENCRYPTED_URL ? "user/alive" : "MzAkMTQkMzckNDMkMTck$QzNENDQ1NTk0MzEg1GOURFOUYxQkM4MEIZFRjVBEQTU3BQjE=$";
-
-    //"user/update";
-    public static final String URL_WEBAPI_USER_UPDATE = UNENCRYPTED_URL ? "user/update" : "MjQkMjkkMzAkMiQ4JA==$QTCNBRjRIFMUZGRUQwMEQzRDM2ZMjM2FCRTIzRjZDREZCRDA=$";
-
-    // user/check/email_auth
-    public static final String URL_WEBAPI_USER_CHECK_EMAIL = UNENCRYPTED_URL ? "user/check/email_auth" : "NCQ4MCQ0MyQyNiQ4OCQ=$MzY0XM0YwNTgwNzYwMjJBOEQyMQEIxMDM3MDQ1RjBGMjUZGQzJERjU5OTAwQzQ2OEM2REJGMzc3RTI3REIUwNEYzGMQ==$";
-
-    // user/change_pw
-    public static final String URL_WEBAPI_USER_CHANGE_PW = UNENCRYPTED_URL ? "user/change_pw" : "MjMkMzAkMyQxNCQzMiQ=$QzcB0MkU1RjExOATlDMjU5OTBKCMkU4NIK0IwMUVCNTZENjI=$";
-
-    // api/user/information
-    public static final String URL_WEBAPI_USER_INFORMATION = UNENCRYPTED_URL ? "api/user/information" : "MzIkNTEkNTkkMzEkMTkk$NkQ5N0RBQTA3NzQ5MUZZEMzQ3QUE0OTIRwEMDI2NjhCMDJBNTdFNERZDNzdBMKjlGNDkxMDYyRURBRTQ3QjBFNTRERg==$";
 
     // DailyHOTEL Reservation Controller WebAPI URL
     // api/hotel/v1/payment/session/common
     public static final String URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/hotel/v1/payment/session/common" : "MjAkNiQ0NiQ0NSQ0MyQ=$RTQ2MEIMxRTFGRjUyMUIxXMzVDRERBQzBBOThFNkE5NYUJWBINzJCRjMxMTM2MUYwNEEzMkU0OURBNzVBRTg4NDU0NkYzRkI2REJFQThERjAxNUJBNTUxNURBOENGQ0IyQjVG$";
 
-    //"reserv/mine/detail";
-    public static final String URL_WEBAPI_RESERV_MINE_DETAIL = UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
-
-    //"reserv/bonus";
-    public static final String URL_WEBAPI_RESERV_SAVED_MONEY = UNENCRYPTED_URL ? "reserv/bonus" : "MjYkMzIkMTYkMjckMjMk$MkM1NTUyNzJERjg5IQzgxOTLg1RUDVY0MTcJ3OUMzQ0U3NjI=$";
-
-    // api/reserv/satisfaction_rating/update
-    public static final String URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE = UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/update" : "MTExJDQ5JDIzJDU4JDg5JA==$NTg0NUMwNTE5QURGQzU1QTRJCRDIwN0UzODY3QTY0MjI3ODY1QCUI4QTk2DMTc2N0EyNzQzMTg4OTUxOTFFQ0Y2NzDQzNjdDOTlBMzYyMDYzNjE1NkFMDNkEzMDdFQ0NGQzg2$";
-
-    // api/reserv/satisfaction_rating/exist
-    public static final String URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST = UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/exist" : "NTUkNjYkODMkMjAkMTE3JA==$QkI0RTFFRDgxODg5RDhEXMTIzOENBQzA5MTVDN0E0MTA4N0FEMTk1ODMQ1MDA4Nzk5MVjhDNDA0QUNCMDEwMZjY0RTQ4RDIzMjc5N0RCOEZENUE0M0M2NO0FFQkE2MTRGOTQw$";
-
-    // api/common/code/review
-    public static final String URL_WEBAPI_COMMON_CODE_REVIEW = UNENCRYPTED_URL ? "api/common/code/review" : "MzkkODAkNDQkNjUkNzYk$RTM5MjQ0MjFEMjczNEY1RDA1OEJFMTJGRDUwQUQPzQUYOwMzJCNEMyRjFDQkFERDcQzMEQyMkQ3ONUFGODUZ2QUEyQw==$";
-
-    // api/reserv/satisfaction_rating/msg/update
-    public static final String URL_WEBAPI_RESERV_SATISFACTIONRATING_MSG_UPDATE = UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/msg/update" : "MTI1JDg2JDEyNCQ3JDU1JA==$RTI1RTRGENDA0NkVDMjcyNjVEQzAwRUIxQTc4NDU1RDhBRUMzRkQwN0ZI1OUJENjY4MDZBOUVGMzFDRTJFOTQ1QTTAxMTExQjhDNkM2NEYzQjZGNzEwNjUxMTdDOEEA2MH0I0$";
-
-    // api/fnb/reservation/session/rating/msg/update
-    public static final String URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_MSG_UPDATE = UNENCRYPTED_URL ? "api/fnb/reservation/session/rating/msg/update" : "NTMkMjckMTI2JDE5JDExNSQ=$NDVENTEzNEJDMzg4MDBSCOUYzNzQJyMDY4MTE0QzcwRjgxMzgxRTI0RLjg5NEI0QUIyNUI3MEJFMDEyQjdBQjYzNzlDMUNDQkI0ODNDRENBQjlDQTBEHQTU1MjQ4MDdBZQUQx$";
-
-    // DailyHOTEL App Management Controller WebAPI URL
-    //"common/ver_dual";
-    public static final String URL_WEBAPI_APP_VERSION = UNENCRYPTED_URL ? "common/ver_dual" : "MjIkMzckNDMkMTgkMTYk$QjlDRjI3N0NBNUM1UNjMZBOTNBFMTZGNUY0RTdEXNTY1RUjA=$";
-
-    // DailyHOTEL Board Controller WebAPI URL
-    //"board/json/faq";
-    public static final String URL_WEBAPI_BOARD_FAQ = UNENCRYPTED_URL ? "board/json/faq" : "MjgkMTkkMTckMjMkMzgk$RjdDNURGRTkwOEY4NXDUV5MNjQ3MEE0YMjZFOTVRDNTJGRkM=$";
-
-    //"board/json/notice";
-    public static final String URL_WEBAPI_BOARD_NOTICE = UNENCRYPTED_URL ? "board/json/notice" : "MjYkMzMkNzAkNzQkNyQ=$MzkwMDcUyNDcwMjI5NUY3MzdGQjMU3NDFEWQUVCQURCQUMwODY2NERDNjNFNEJDMzczOUM0JNDkS0QUI0Qjk2NDYxMQ==$";
-
-    // api/common/datetime
-    public static final String URL_WEBAPI_COMMON_DATETIME = UNENCRYPTED_URL ? "api/common/datetime" : "MTQkNzMkNzUkMSQzNyQ=$OCEY4MTlBNEY1NjHZFQ0FGNkFFQkNEOThEQkRODNTRFMTc1MzA5NTk5OTE4ODM2ODEzREEzREEzNRNjZDNTU1QTlBNw==$";
-
-    // api/hotel/v1/payment/detail
-    public static final String URL_WEBAPI_HOTEL_V1_PAYMENT_DETAIL = UNENCRYPTED_URL ? "api/hotel/v1/payment/detail" : "ODEkNzEkMzMkMTYkMyQ=$QkUG5QkI4MDA0QjAxRM0MyN0JEMTFCNzM1OHUIyRkUxNjUyMDFBODcxNUE1MzI5QTc3OTdEOUMFwOTE2NDY3RVjE5NQ==$";
-
-    // api/reserv/detail
-    public static final String URL_WEBAPI_RESERV_DETAIL = UNENCRYPTED_URL ? "api/reserv/detail" : "MSQ4MCQ1OSQ5JDYwJA==$NVDY2OTY3XM0FBODdEM0UxNDVDODlEQzhGM0RDRUZGMkYzRTRGQzczRjcyOTZQhBQzVDRDM0NDkxMDgxNkMZwRTkyRg==$";
-
-    // api/reserv/mine/hidden
-    public static final String URL_WEBAPI_RESERV_MINE_HIDDEN = UNENCRYPTED_URL ? "api/reserv/mine/hidden" : "NyQ1OCQzMiQyMyQzOCQ=$RkI3OTZDGQ0UzOEYzQ0U2RkZMzQ0ZFRTNDGRkQOxNERFMjc4NDYzMkQ0MEE1RFDI5Q0NDMDk5NjEzMTEyRkIyNUIzRQ==$";
-
-    // api/reserv/receipt
-    public static final String URL_WEBAPI_RESERV_RECEIPT = UNENCRYPTED_URL ? "api/reserv/receipt" : "OCQ3NiQ3OSQyNSQ2NyQ=$MDgxRDE5WRDExNDUzRjAzNTg1KNDIyMEVCQTlGMDE5NjE5RjVEMjYxMEFBRTRCQzQ4RRTFBMDU0NjFADNCEUxMkI4Qg==$";
-
-    // api/hotel/v1/sale/detail
-    public static final String URL_WEBAPI_HOTEL_V1_SALE_DETAIL = UNENCRYPTED_URL ? "api/hotel/v1/sale/detail" : "ODUkMjUkNTAkMzAkODIk$MzRDNzU3QjM1OEE0MTEyQkJCQIzhDRUEMzOEYyQUQyOTBBMjlERYjJEN0Q0QUNCRUZGNkRGQkE0MUJCOUQOwQkFBROg==$";
-
-    // api/user/session/update/fb_user
-    public static final String URL_WEBAPI_USER_SESSION_UPDATE_FB_USER = UNENCRYPTED_URL ? "api/user/session/update/fb_user" : "NzIkMjgkMTkkNjYkMiQ=$NTJEyNTA1MEM4Qzk1NTJYBQ0E0NkREQRUE2RTAwNURCNTY3REJBQzA2MjI4QzIyQ0U0VRUM1M0Y5JN0ZGNTJDMzNCNQ==$";
-
-    // Register Credit Card
-    // api/user/session/billing/card/info
-    public static final String URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO = UNENCRYPTED_URL ? "api/user/session/billing/card/info" : "NjIkNjkkNTAkMzgkMCQ=$XMUVCNTA1RUJERjVGQkE5NTM0QUM2RkI1MTAxOEQVFQjk3N0UzNTIIzQkRFNTg5RTQUyRDhCNMURCQjBENTIzQUU0N0RGRTgwMEYxREMwOUJCOTM2RDczNEY5OEE0NEU3RTdG$";
-
-    // api/user/session/billing/card/del
-    public static final String URL_WEBAPI_USER_SESSION_BILLING_CARD_DEL = UNENCRYPTED_URL ? "api/user/session/billing/card/del" : "NyQyNyQxMTEkODIkMTEzJA==$MDQ2RUMO3QzJEMTNBQjI4MDAzRDLczQzM1REY1NjIxNTgzODZCMjYwNzc1RjA3NEEyRDI2REM2QjkxNDZBMMzZBMDBCNzVGNTk2MzM0Mjg3MDg0QEHTlBQzEwRDg1QjlDNjc5$";
-
-    // Easy Payment
-    // api/hotel/v1/payment/session/easy
-    public static final String URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_EASY = UNENCRYPTED_URL ? "api/hotel/v1/payment/session/easy" : "OTAkOTckMzckODEkNzQk$MzY2NzZEMEI4QUVBNzdCQjRGOUE3OUU3NjQxOBDhCMDAyQjMwNTBBRTIwMzZERTQyMkMwOTk5OADkzOTE3URjgyNDhFODVhFMzAxGODYzMEE3RjA4QUMzQjQ4RUNGRUQ0MDBD$";
-
-    // api/sale/hotel_list
-    public static final String URL_WEBAPI_SALE_HOTEL_LIST = UNENCRYPTED_URL ? "api/sale/hotel_list" : "NTgkNzMkMzckNzUkOCQ=$NkE2OTgyROEY2QTg2Qjc5MkIwODczNUZGRjI2NLkYwNjFGM0ZGRkUyQTIyRjWY3NzVFN0RDNEEwTINTYxOTZFNDc4Nw==$";
-
-    // api/sale/region/all
-    public static final String URL_WEBAPI_SALE_HOTEL_ALL = UNENCRYPTED_URL ? "api/sale/region/all" : "MTEkMjckMzQkMTUkNDIk$RjgwRDA0OUUU2QjYBEODJDMEM5RTIYxODc2PMDJGOTBZBRUY3ODUwMzYwRUJEQjA2MEUwRDA3NkVGOEY0OUIzMDM5Qw==$";
+    // api/fnb/payment/session/common
+    public static final String URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/fnb/payment/session/common" : "NzIkMTAkMzMkNDEkNTYk$NjlERDU2NDLQyQUZEQzczMEU0NUNDNjBCIRDdCNzYD0OTE5QkMwQTUxQUTVGNEE1RjE1REI2RUJBANzk2QjVFNDM1Ng==$";
 
     // DailyHOTEL Site Controller WebAPI URL
     // A/B Test
     // api/abtest/testcase
     public static final String URL_WEBAPI_ABTEST_TESTCASE = UNENCRYPTED_URL ? "api/abtest/testcase" : "NTYkMzgkOSQ3NyQ4MSQ=$QTc1QzU3QP0VBMkUyQ0RDMjA4RUZFQUEwRjBCOEOY1MkYwNzg4OEI4MEZDBMzAwRjExRkM4N0VBRUFRGMHDYxMkM3QQ==$";
 
-    // Event
-    public static final String URL_WEBAPI_DAILY_EVENT_LIST = UNENCRYPTED_URL ? "api/daily/event/list" : "NDYkMTEkNzkkNzAkNjck$NkUyMEQyRjZTDMjMzNUZFRDJERkVBQUYzRTFGQTgxMzY2MUHY1NDA5MTUyRTAxRjk0MJEZCPMzUzMUZDMD0IzMDREQw==$";
-    public static final String URL_WEBAPI_DAILY_EVENT_COUNT = UNENCRYPTED_URL ? "api/daily/event/count" : "NDQkNDIkNjMkODYkMzYk$Mjg4QzY4OEFERDc1RjAzMzE5MDQwNDVGNjVDQNzcyNETI3EMkJDNEIxRTZDMEM1RGDFCNTIxNDczRTc4OTlDNEFIFOA==$";
-    public static final String URL_WEBAPI_DAILY_EVENT_PAGE = UNENCRYPTED_URL ? "api/daily/event/page" : "MyQzNCQ3NyQyOSQ5MCQ=$MURDFQ0UwQkFGRDJCOTBFMDhDRTg0DMjhGOVTdBQzhERTVBQjU2Q0EyMkQ0M0NBODBGNEU1MTQ4RkUM2M0QxQzFBQwT==$";
-
     // api/abtest/kakao/consult/feedback
     public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK = UNENCRYPTED_URL ? "api/abtest/kakao/consult/feedback" : "NTEkMjgkMTEwJDQ3JDQ0JA==$QTUxRjgwNzIyNDY1MjQ2ODJGMTdDIMUU4QTRCOTc3QTEP3MDTc5OTMG4RTc1M0NGRUIzNkNBOUJBQUJCOTg4OTU5MjBCNzg4MEZFODk5M0VFRTgxZODMyMDU3NjlGQUYxMzkw$";
-
-    //  Gourmet
-    // api/fnb/sale/region/province/list
-    public static final String URL_WEBAPI_FNB_SALE_REGION_PROVINCE_LIST = UNENCRYPTED_URL ? "api/fnb/sale/region/province/list" : "NjkkNDEkNjgkMzIkMTck$OTQ4RTJDNTMwQjhGRHkJDNTkzNUUyRUM5RREVDMkU1RXDE1ODk0M0MwREJGRkUyMUNEQUESyRPUEyOTk5MDY0NTVENzI1RDM5NDc0ODczNjg2ODJCNEI1NEI3RTA5N0I5NDM2$";
-
-    // api/fnb/sale/list
-    public static final String URL_WEBAPI_FNB_SALE_LIST = UNENCRYPTED_URL ? "api/fnb/sale/list" : "NDEkODUkNTckNDEkOTEk$QzZDMTM2NTc4MUExRjQ1NDg4OUExRDY4MkE5RjcxRAPjdEQkUwMjFEODNDKQjQzQzY3RTI2QzkxNUQxRTcyMTBEPQQ=L=$";
-
-    // api/fnb/sale/restaurant/info
-    public static final String URL_WEBAPI_FNB_SALE_RESTAURANT_INFO = UNENCRYPTED_URL ? "api/fnb/sale/restaurant/info" : "MjkkMzYkNDckMjUkODMk$M0FCMTY0Qjk2RDU1NTRFNTc1ROURDRVEFFOTEVyMUFDQTkwNJkExRTkwMzBGNUQ5MTgyQUI4MzJGNEQ2MTBUEOEY2OQ==$";
-
-    // api/fnb/sale/ticket/payment/info
-    public static final String URL_WEBAPI_FNB_SALE_TICKET_PAYMENT_INFO = UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info" : "NTkkNDYkMTAzJDc1JDIk$NzDc3MjA1MTg5QjgwMTg5QkFCOENEMDFBRUY5NTlGNzY4QjTEzMUNCMTBGOUMD1NkM1MzRBOTZFMRjY4MjAwNjlDMDQ3OUNEREIyQTQyMEEZCQ0IwOTgxNkFGMzMwNUYyOTg0$";
-
-    // api/fnb/sale/session/ticket/sell/check
-    public static final String URL_WEBAPI_FNB_SALE_SESSION_TICKET_SELL_CHECK = UNENCRYPTED_URL ? "api/fnb/sale/session/ticket/sell/check" : "NzckMTA3JDYxJDEyNCQ0MyQ=$MjczMEVDNkQ2ODQzRDE3ODYzRjZCQzMwNzc0NjU0RkYYxMUY0RTYyOTA0QzkwQXTFGNTUxN0M2NjQwNCDQ3ODlCNEZEMEM5RkMwMjQ3OUM2NzJMyNkJCQUU1MTVFRSkZGODRE$";
-
-    // api/fnb/payment/session/easy
-    public static final String URL_WEBAPI_FNB_PAYMENT_SESSION_EASY = UNENCRYPTED_URL ? "api/fnb/payment/session/easy" : "NTEkNDMkMTAkMjAkODYk$QzBFMTI4ODUlBMzAzRDYS3NzU3MEU3NDFEQ0VDQzY1NEJOGRjNDMUNTBNkMzQzkyRUM2RkI5ODVGNUNCRjU0OEWUzOA==$";
-
-    // api/fnb/reservation/booking/list
-    public static final String URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST = UNENCRYPTED_URL ? "api/fnb/reservation/booking/list" : "NiQ5NCQ2NyQ5NSQ3MiQ=$Q0U0MjAc0OUM0RkY4RjU3NTVDNTBFQzJGQUNFMTVDRkJCQUJBOTI0MTI3MzU4RTIyMDVkzOTTlCQjAyNzdGMENFNUFCMDVFQSGTgwRUE0QTc1OTFCMTczNDQyMjlFNERCRDZB$";
-
-    // api/fnb/reservation/booking/detail
-    public static final String URL_WEBAPI_FNB_RESERVATION_BOOKING_DETAIL = UNENCRYPTED_URL ? "api/fnb/reservation/booking/detail" : "OTEkNDMkNjEkNCQ0NSQ=$Mzk1LREFENEREODg4Qzg1QzE2NDBDMDFGMTFEMERCRDgBLwMTdGOUJDQkU3RkFGWRTg4NjVFODQ3NkI5NzJDMzMzNTEzNjVJGMTNENUM2RTExMkI5NjNEREREOUZEMTg0REM0$";
-
-    // api/fnb/reservation/booking/receipt
-    public static final String URL_WEBAPI_FNB_RESERVATION_BOOKING_RECEIPT = UNENCRYPTED_URL ? "api/fnb/reservation/booking/receipt" : "MTA3JDk4JDUyJDc1JDc0JA==$NTdEMjBFRDA2Q0I0RDc0OTI2REMzNjYxRUU2RTdCOTFBNUUwRkY4ERTMxQTI0N0Y2MTExQ0I2QIzHYzMDUwRkE5OTkwQjVEMkNGREWY2ODhGNkQG2MzgwMzFGMUNDQThDMDdF$";
-
-    // api/fnb/reservation/session/rating/exist
-    public static final String URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST = UNENCRYPTED_URL ? "api/fnb/reservation/session/rating/exist" : "MzQkMzQkOTYkMTA3JDEwMCQ=$NkMwNzBFMDI1ODg3NEYyRDQwMEJEQjE5REKZE2QzM1MUMzRjlDRENDODZBREUwQjEwNzkzNUZDMDRDNDFGQ0I0RjlGMzMwNjVEzQQjRBNzFCQNzA0MkY3N0FCODAyNUQ1MjND$";
-
-    // api/fnb/reservation/session/rating/update
-    public static final String URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE = UNENCRYPTED_URL ? "api/fnb/reservation/session/rating/update" : "MTQkNzgkOTIkMTEzJDEwMCQ=$QzEzMzAwQ0VFMjZkxQzZDQkM2QjM0Q0QzRkJEQTNEMTY4MzA1MzFGRDdCMDQyOUNFMzlCNUIyRjQzNBEZCMzREMUMwMjGdGN0UzOPDAyQUNEQjZDRjGYxRDk2QkNFQzY1NzY1$";
-
-    // api/fnb/payment/session/common
-    public static final String URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/fnb/payment/session/common" : "NzIkMTAkMzMkNDEkNTYk$NjlERDU2NDLQyQUZEQzczMEU0NUNDNjBCIRDdCNzYD0OTE5QkMwQTUxQUTVGNEE1RjE1REI2RUJBANzk2QjVFNDM1Ng==$";
-
-    // api/fnb/reservation/session/hidden
-    public static final String URL_WEBAPI_FNB_RESERVATION_SESSION_HIDDEN = UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden" : "MTI1JDI0JDIkNDQkNzck$QzXFGQzQwNTRCRERFQ0UxRjczZQjI2QTI2M0ZFNzExMkZY5NEYwRjdDMUMxNDhFMzgyM0FFNDUxRUHEzNzAzMUUyRUFDMTUyMTM0MDRDMkEyNDJDN0Q4OTE3OUFCNTM4RVTYy$";
-
-    // api/fnb/reservation/session/vbank/account/info
-    public static final String URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO = UNENCRYPTED_URL ? "api/fnb/reservation/session/vbank/account/info" : "MCQxMDQkOTIkODIkMTAk$FRDRCRTU2MFDExMjk5Njg2MEZCMzYwQTU4QzZENzg2RTdEQkFGNzUyM0Q2NjkxOTU3M0Y1OEZBQURENDY0QUzVFMjc2NDJZGMURDNkVCRUYDzOEExQjdCRDU5RDVBQUVBMEI0$";
 
     //
     public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
     public static final String URL_STORE_GOOGLE_KAKAOTALK = "market://details?id=com.kakao.talk";
     public static final String URL_STORE_T_DAILYHOTEL = "http://tsto.re/0000412421";
-    public static final String URL_STORE_N_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
     public static final String URL_STORE_GOOGLE_DAILYHOTEL_WEB = "https://play.google.com/store/apps/details?id=com.twoheart.dailyhotel";
     public static final String URL_STORE_GOOGLE_KAKAOTALK_WEB = "https://play.google.com/store/apps/details?id=com.kakao.talk";
+
     //"http://policies.dailyhotel.co.kr/privacy/";
     public static final String URL_WEB_PRIVACY = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/privacy/" : "NzgkNDYkNDkkMzckMTgk$QzkwQkRGODU1ODQ3OTHQ1RUE2NkRENzczRDVEMY0QyOTU2MDQAyHMDJBRDlCMTQzRjhEMzhCNTdGNTUxQjAEyQ0JCQzFDMzQ5RUIyQkJCOEQzQzlGMzhDMjQ1Qjg5MkZGRDBE$";
+
     //"http://policies.dailyhotel.co.kr/terms/";
     public static final String URL_WEB_TERMS = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/terms/" : "MTA3JDk5JDk5JDExNiQ4MCQ=$QjVFNzE2QUQ1QUU4MEEyMEU5MTlBN0NDOUI5MEVBNDIyNjkwNjFENDgxNDQyMkMxNTE5MEYzMjY1RURGYNjQ2NjNEMjQ5MkU2NjFQODQ0YxQkEM2MUFEMZzc5MjI2NjBGMzgy$";
+
     //"http://policies.dailyhotel.co.kr/about/";
     public static final String URL_WEB_ABOUT = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/about/" : "OTkkMjQkMjQkNjAkNjgk$Mjc3NTgwNDUzNTEwQzdERkM1WYQzMyQkIxNzhENTk0N0M3RjdFMzYyMDJBNDKc2MjM3NJkU1NzhBOERDMzUyRUZDNzZDODUxNDQ5QkMUzQzMwQkJERTZFNDY4NTU1RDJEODFD$";
+
     // Payment App GoogleStore URL
     public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";
     public static final String URL_STORE_PAYMENT_KFTC = "market://details?id=com.kftc.bankpay.android&hl=ko";
     public static final String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
+
     // Register Credit Card URL
     public static final String URL_REGISTER_CREDIT_CARD = UNENCRYPTED_URL ? "api/user/session/billing/card/register" : "MTA4JDgyJDY3JDM1JDgk$NjE5NTkxFODMxQTRCM0RFNzIzNjRCQjc2RThJGQzQxRDRCQkNEQjk5N0U4ODhBMUM5MUYU3RTlGMzY3ODA3NEVUzREQyQjM2MzEwN0VFNzA5ODQ2GMTgwNTVFODA5NzE2MzRE$";
-    // Gcm Server URL
-    //"user/notification/register";
-    public static final String URL_GCM_REGISTER = UNENCRYPTED_URL ? "user/notification/register" : "MjkkMzAkMjAkMyQzMiQ=$MkUSwQkZDOUNGMDg5RTMwAQUEwODEwNDJOzIzQjI0NjNEODNCMEQ4MUVGNUMwNzlBMjY2OEJFMUVCMjdGN0ZCNUMzNg==$";
+
     // Payment App PackageName
     public static final String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
     public static final String PACKAGE_NAME_KFTC = "com.kftc.bankpay.android";
@@ -422,22 +272,7 @@ public interface Constants
 
     // Android Google Analytics 정보들.
     public static final String GA_PROPERTY_ID = "UA-43721645-6";
+
     // Key used to store a user's tracking preferences in SharedPreferences.
     public static final String TRACKING_PREF_KEY = "trackingPreference";
-    // GA E-Commerce Constants
-    public static final String GA_COMMERCE_DEFAULT_AFFILIATION = "DailyHOTEL";
-    public static final Double GA_COMMERCE_DEFAULT_TAX = 0d;
-    public static final Double GA_COMMERCE_DEFAULT_SHIPPING = 0d;
-    public static final String GA_COMMERCE_DEFAULT_CURRENCY_CODE = "KRW";
-    public static final String GA_COMMERCE_DEFAULT_SKU = "1";
-    public static final Long GA_COMMERCE_DEFAULT_QUANTITY = 1L;
-    // GA Event Constants
-    public static final String GA_SIGNUP_EVENT_CATEGORY = "Signup";
-    public static final String GA_SIGNUP_EVENT_ACTION = "SignupComplete";
-    public static final String GA_SIGNUP_EVENT_LABEL = "SignupComplete";
-    public static final Long GA_SIGNUP_EVENT_VALUE = 1L;
-    public static final String GA_PURCHASE_EVENT_CATEGORY = "Purchase";
-    public static final String GA_PURCHASE_EVENT_ACTION = "PurchaseComplete";
-    public static final String GA_PURCHASE_EVENT_LABEL = "PurchaseComplete";
-    public static final Long GA_PURCHASE_EVENT_VALUE = 1L;
 }

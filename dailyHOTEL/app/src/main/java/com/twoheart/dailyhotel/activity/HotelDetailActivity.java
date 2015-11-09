@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -208,11 +209,7 @@ public class HotelDetailActivity extends BaseActivity
     protected void onResume()
     {
         lockUI();
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("timeZone", "Asia/Seoul");
-
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
 
         super.onResume();
     }
@@ -273,7 +270,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+                    DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
                 }
                 break;
             }
@@ -491,8 +488,7 @@ public class HotelDetailActivity extends BaseActivity
             mSelectedSaleRoomInformation = saleRoomInformation;
 
             lockUI();
-
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
+            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, HotelDetailActivity.this);
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(Label.HOTEL_ROOM_NAME, saleRoomInformation.roomName);
@@ -752,8 +748,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserInformationJsonResponseListener, HotelDetailActivity.this));
-
+                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, HotelDetailActivity.this);
             } else if ("dead".equalsIgnoreCase(result) == true)
             {
                 // session dead
@@ -762,7 +757,7 @@ public class HotelDetailActivity extends BaseActivity
                 {
                     HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, HotelDetailActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, HotelDetailActivity.this);
                 } else
                 {
                     startLoginActivity();
@@ -799,8 +794,7 @@ public class HotelDetailActivity extends BaseActivity
                     {
                         //로그인 성공
                         VolleyHttpClient.createCookie();
-
-                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
+                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, HotelDetailActivity.this);
                         return;
                     }
                 }
@@ -871,7 +865,7 @@ public class HotelDetailActivity extends BaseActivity
                     //                        showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                     //                    }
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_V1_SALE_DETAIL).append(params).toString(), null, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this));
+                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this);
                 } else
                 {
                     SaleTime saleTime = new SaleTime();
@@ -887,7 +881,7 @@ public class HotelDetailActivity extends BaseActivity
                         showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                     }
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_V1_SALE_DETAIL).append(params).toString(), null, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this));
+                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this);
                 }
             } catch (Exception e)
             {
