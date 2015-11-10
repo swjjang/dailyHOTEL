@@ -522,11 +522,6 @@
     <string name="label_event_subtitle">데일리호텔의 이벤트에 참여하세요.</string>
 
     <!-- Map -->
-    <string name="label_seoul_area1">강남구|서초구|동작구|송파구|강동구</string>
-    <string name="label_seoul_area2">동대문구|성동구|광진구|성북구|강북구|중랑구|노원구|도봉구</string>
-    <string name="label_seoul_area3">중구|종로구|용산구</string>
-    <string name="label_seoul_area4">마포구|서대문구|은평구</string>
-    <string name="label_seoul_area5">영등포구|양천구|강서구|금천구|구로구</string>
     <string name="message_failed_mylocation">일시적으로 내 위치 정보를 얻을 수 없습니다.</string>
 
     <!-- CreditCardFragment -->

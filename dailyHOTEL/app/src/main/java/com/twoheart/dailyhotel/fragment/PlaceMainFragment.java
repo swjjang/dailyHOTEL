@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
@@ -19,8 +18,6 @@ import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -29,8 +26,6 @@ import com.twoheart.dailyhotel.view.PlaceViewItem;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class PlaceMainFragment extends BaseFragment
 {
@@ -400,42 +395,42 @@ public abstract class PlaceMainFragment extends BaseFragment
 
                         try
                         {
-                            String[] params = param.split("\\&|\\=");
+                            String previousType = Util.getValueForLinkUrl(param, "fnbIndex");
 
-                            int hotelIndex = 0;
-                            int fnbIndex = 0;
-                            long dailyTime = 0;
-                            int dailyDayOfDays = 0;
-                            int nights = 0;
-
-                            int length = params.length;
-
-                            for (int i = 0; i < length; i++)
+                            if (Util.isTextEmpty(previousType) == false)
                             {
-                                if ("hotelIndex".equalsIgnoreCase(params[i]) == true)
+                                // 이전 타입의 화면 이동
+                                int fnbIndex = Integer.valueOf(previousType);
+                                long dailyTime = Long.valueOf(Util.getValueForLinkUrl(param, "dailyTime"));
+                                int dailyDayOfDays = Integer.valueOf(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
+                                int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
+
+                                if (nights != 1 || dailyDayOfDays < 0)
                                 {
-                                    hotelIndex = Integer.valueOf(params[++i]);
-                                } else if ("fnbIndex".equalsIgnoreCase(params[i]) == true)
-                                {
-                                    fnbIndex = Integer.valueOf(params[++i]);
-                                } else if ("dailyTime".equalsIgnoreCase(params[i]) == true)
-                                {
-                                    dailyTime = Long.valueOf(params[++i]);
-                                } else if ("dailyDayOfDays".equalsIgnoreCase(params[i]) == true)
-                                {
-                                    dailyDayOfDays = Integer.valueOf(params[++i]);
-                                } else if ("nights".equalsIgnoreCase(params[i]) == true)
-                                {
-                                    nights = Integer.valueOf(params[++i]);
+                                    throw new NullPointerException("nights != 1 || dailyDayOfDays < 0");
                                 }
-                            }
 
-                            if (mOnUserActionListener != null)
-                            {
-                                if (hotelIndex != 0)
+                                if (mOnUserActionListener != null)
                                 {
-                                    mOnUserActionListener.selectPlace(hotelIndex, dailyTime, dailyDayOfDays, nights);
-                                } else if (fnbIndex != 0)
+                                    mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
+                                }
+
+                            } else
+                            {
+                                // 신규 타입의 화면이동
+                                int fnbIndex = Integer.valueOf(Util.getValueForLinkUrl(param, "idx"));
+                                String date = Util.getValueForLinkUrl(param, "date");
+                                long dailyTime = mTodaySaleTime.getDailyTime();
+                                int dailyDate = Integer.parseInt(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+                                int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
+                                int dailyDayOfDays = dailyDate - Integer.parseInt(date);
+
+                                if (nights != 1 || dailyDayOfDays < 0)
+                                {
+                                    throw new NullPointerException("nights != 1 || dailyDayOfDays < 0");
+                                }
+
+                                if (mOnUserActionListener != null)
                                 {
                                     mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
                                 }

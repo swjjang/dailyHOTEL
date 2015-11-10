@@ -48,7 +48,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -65,7 +64,6 @@ import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
@@ -128,7 +126,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     {
         super.onCreate(savedInstanceState);
 
-        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         VolleyHttpClient.cookieManagerCreate();
 
@@ -150,16 +148,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             ExLog.d(e.toString());
         }
 
-        initLayout();
-
         Uri intentData = getIntent().getData();
-        checkExternalLink(intentData);
+        String title = checkExternalLink(intentData);
+
+        initLayout(title);
 
         // 스플래시 화면을 띄운다
         startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
     }
 
-    private void initLayout()
+    private void initLayout(String title)
     {
         setContentView(R.layout.activity_main);
 
@@ -167,12 +165,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         // 1
         Toolbar toolbar;
 
-        if (getString(R.string.label_dailygourmet).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
+        if (Util.isTextEmpty(title) == false)
         {
-            toolbar = setActionBar(getString(R.string.actionbar_title_fnb_list_frag), false);
+            toolbar = setActionBar(title, false);
         } else
         {
-            toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
+            if (getString(R.string.label_dailygourmet).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
+            {
+                toolbar = setActionBar(getString(R.string.actionbar_title_fnb_list_frag), false);
+            } else
+            {
+                toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
+            }
         }
 
         // 2
@@ -215,36 +219,52 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         requestEvent();
     }
 
-    private void checkExternalLink(Uri uri)
+    private String checkExternalLink(Uri uri)
     {
         if (uri == null)
         {
-            return;
+            return null;
         }
 
         final String KAKAOLINK = "kakaolink";
         final String DAILYHOTEL = "dailyhotel";
 
-        ExLog.e("intentData : " + uri.toString());
-
         String link = uri.toString();
-
-        DrawerMenu selectMenuDrawer = menuHotelListFragment;
 
         if (link.indexOf(KAKAOLINK) >= 0 || link.indexOf(DAILYHOTEL) >= 0)
         {
-            writeKakaoLinkPreference(link);
+            String params = writeKakaoLinkPreference(link);
 
             if (link.contains("hotelIndex") == true)
             {
-                selectMenuDrawer = menuHotelListFragment;
+                return getString(R.string.actionbar_title_hotel_list_frag);
             } else if (link.contains("fnbIndex") == true)
             {
-                selectMenuDrawer = menuGourmetListFragment;
+                return getString(R.string.actionbar_title_fnb_list_frag);
+            } else
+            {
+                String value = Util.getValueForLinkUrl(params, "view");
+
+                if ("hotel".equalsIgnoreCase(value) == true)
+                {
+                    return getString(R.string.actionbar_title_hotel_list_frag);
+                } else if ("gourmet".equalsIgnoreCase(value) == true)
+                {
+                    return getString(R.string.actionbar_title_fnb_list_frag);
+                } else if ("bookings".equalsIgnoreCase(value) == true)
+                {
+                    return getString(R.string.actionbar_title_booking_list_frag);
+                } else if ("bonus".equalsIgnoreCase(value) == true)
+                {
+                    return getString(R.string.actionbar_title_credit_frag);
+                } else if ("event".equalsIgnoreCase(value) == true)
+                {
+                    return getString(R.string.actionbar_title_event_list_frag);
+                }
             }
         }
 
-        selectMenuDrawer(selectMenuDrawer);
+        return null;
     }
 
     @Override
@@ -282,9 +302,29 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                         if (param.contains("hotelIndex") == true)
                         {
                             selectMenuDrawer(menuHotelListFragment);
-                        } else
+                        } else if (param.contains("fnbIndex"))
                         {
                             selectMenuDrawer(menuGourmetListFragment);
+                        } else
+                        {
+                            String value = Util.getValueForLinkUrl(param, "view");
+
+                            if ("hotel".equalsIgnoreCase(value) == true)
+                            {
+                                selectMenuDrawer(menuHotelListFragment);
+                            } else if ("gourmet".equalsIgnoreCase(value) == true)
+                            {
+                                selectMenuDrawer(menuGourmetListFragment);
+                            } else if ("bookings".equalsIgnoreCase(value) == true)
+                            {
+                                selectMenuDrawer(menuBookingListFragment);
+                            } else if ("bonus".equalsIgnoreCase(value) == true)
+                            {
+                                selectMenuDrawer(menuCreditFragment);
+                            } else if ("event".equalsIgnoreCase(value) == true)
+                            {
+                                selectMenuDrawer(menuEventListFragment);
+                            }
                         }
                     } else
                     {
@@ -292,35 +332,21 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     }
                 } else
                 {
-                    // Intent가 Push로 부터 온경우
-                    int pushType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
-                    switch (pushType)
+                    if (getString(R.string.label_dailygourmet).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
                     {
-                        case PUSH_TYPE_NOTICE:
+                        selectMenuDrawer(menuGourmetListFragment);
+                    } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
+                    {
+                        selectMenuDrawer(menuHotelListFragment);
+                    } else
+                    {
+                        if (indexLastFragment == INDEX_FNB_LIST_FRAGMENT)
+                        {
+                            selectMenuDrawer(menuGourmetListFragment);
+                        } else
+                        {
                             selectMenuDrawer(menuHotelListFragment);
-                            break;
-                        case PUSH_TYPE_ACCOUNT_COMPLETE:
-                            selectMenuDrawer(menuBookingListFragment);
-                            break;
-                        default:
-
-                            if (getString(R.string.label_dailygourmet).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
-                            {
-                                selectMenuDrawer(menuGourmetListFragment);
-                            } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
-                            {
-                                selectMenuDrawer(menuHotelListFragment);
-                            } else
-                            {
-                                if (indexLastFragment == INDEX_FNB_LIST_FRAGMENT)
-                                {
-                                    selectMenuDrawer(menuGourmetListFragment);
-                                } else
-                                {
-                                    selectMenuDrawer(menuHotelListFragment);
-                                }
-                            }
-                            break;
+                        }
                     }
 
                     DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
@@ -362,18 +388,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         }
     }
 
-    private void writeKakaoLinkPreference(String link)
+    private String writeKakaoLinkPreference(String link)
     {
         if (Util.isTextEmpty(link) == true)
         {
-            return;
+            return null;
         }
 
         int startIndex = link.indexOf("?") + 1;
 
         if (startIndex <= 0)
         {
-            return;
+            return null;
         }
 
         String param = link.substring(startIndex);
@@ -382,6 +408,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         Editor editor = sharedPreference.edit();
         editor.putString(KEY_PREFERENCE_BY_SHARE, param);
         editor.apply();
+
+        return param;
     }
 
     private String getGcmId()
@@ -1389,7 +1417,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 }
 
                 // 호텔 평가요청
-                DailyNetworkAPI.getInstance().requestHotelIsExistRating(mNetworkTag,  mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+                DailyNetworkAPI.getInstance().requestHotelIsExistRating(mNetworkTag, mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)

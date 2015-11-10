@@ -181,6 +181,7 @@ public interface Constants
     //	public static final String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH = "is_intent_from_push";
     public static final String NAME_INTENT_EXTRA_DATA_PUSH_TYPE = "push_type";
     public static final String NAME_INTENT_EXTRA_DATA_PUSH_MSG = "push_msg";
+    public static final String NAME_INTENT_EXTRA_DATA_PUSH_LINK = "push_link";
     public static final String NAME_INTENT_EXTRA_DATA_REGIONMAP = "regionmap";
     public static final String NAME_INTENT_EXTRA_DATA_CREDITCARD = "creditcard";
     public static final String NAME_INTENT_EXTRA_DATA_MESSAGE = "message";
