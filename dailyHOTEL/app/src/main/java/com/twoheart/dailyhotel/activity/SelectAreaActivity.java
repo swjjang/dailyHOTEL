@@ -98,6 +98,34 @@ public class SelectAreaActivity extends BaseActivity
                     return true;
                 }
 
+                Integer tag = (Integer) mListView.getTag();
+
+                if (tag != null)
+                {
+                    int previousGroupPosition = tag.intValue();
+
+                    if (mListView.isGroupExpanded(previousGroupPosition))
+                    {
+                        mListView.collapseGroupWithAnimation(previousGroupPosition);
+
+                        int count = mListView.getChildCount();
+                        for (int i = 0; i < count; i++)
+                        {
+                            View childView = mListView.getChildAt(i);
+
+                            if (childView != null)
+                            {
+                                Integer childTag = (Integer) childView.getTag();
+
+                                if (childTag != null && childTag.intValue() == previousGroupPosition)
+                                {
+                                    mOnUserActionListener.onGroupCollapse(childView);
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (mListView.isGroupExpanded(groupPosition))
                 {
                     mListView.collapseGroupWithAnimation(groupPosition);
@@ -105,6 +133,7 @@ public class SelectAreaActivity extends BaseActivity
                 } else
                 {
                     mListView.expandGroupWithAnimation(groupPosition);
+                    mListView.setTag(groupPosition);
                     mOnUserActionListener.onGroupExpand(v);
                 }
                 return true;
@@ -177,6 +206,7 @@ public class SelectAreaActivity extends BaseActivity
                             {
                                 mListView.setSelection(i);
                                 mListView.expandGroup(i);
+                                mListView.setTag(i);
                                 break;
                             }
                         }
@@ -203,6 +233,7 @@ public class SelectAreaActivity extends BaseActivity
                     {
                         mListView.setSelection(i);
                         mListView.expandGroup(i);
+                        mListView.setTag(i);
                     }
                     break;
                 }
@@ -446,6 +477,8 @@ public class SelectAreaActivity extends BaseActivity
             {
                 convertView = inflater.inflate(R.layout.list_row_province, parent, false);
             }
+
+            convertView.setTag(groupPosition);
 
             ImageView imageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);
             TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
