@@ -23,6 +23,7 @@ public class AreaItem implements Parcelable
     };
     private Province province;
     private ArrayList<Area> areaList;
+    public boolean mIsExpandGroup;
 
     public AreaItem()
     {

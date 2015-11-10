@@ -33,7 +33,6 @@ public class SelectAreaActivity extends BaseActivity
 {
     private DailyAnimatedExpandableListView mListView;
     private AreaAnimatedExpandableListAdapter mAdapter;
-    private boolean mIsLoadedGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -76,7 +75,7 @@ public class SelectAreaActivity extends BaseActivity
         mListView.setOnGroupClickListener(new OnGroupClickListener()
         {
             @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id)
+            public boolean onGroupClick(ExpandableListView parent, final View v, final int groupPosition, long id)
             {
                 if (isLockUiComponent() == true)
                 {
@@ -103,10 +102,13 @@ public class SelectAreaActivity extends BaseActivity
                 if (tag != null)
                 {
                     int previousGroupPosition = tag.intValue();
+                    AreaItem areaItem = mAdapter.getAreaItem(previousGroupPosition);
 
                     if (mListView.isGroupExpanded(previousGroupPosition))
                     {
                         mListView.collapseGroupWithAnimation(previousGroupPosition);
+
+                        boolean noneView = false;
 
                         int count = mListView.getChildCount();
                         for (int i = 0; i < count; i++)
@@ -119,22 +121,49 @@ public class SelectAreaActivity extends BaseActivity
 
                                 if (childTag != null && childTag.intValue() == previousGroupPosition)
                                 {
-                                    mOnUserActionListener.onGroupCollapse(childView);
+                                    noneView = true;
+                                    mOnUserActionListener.onGroupCollapse(childView, areaItem);
+                                    break;
                                 }
                             }
+                        }
+
+                        if (noneView == false)
+                        {
+                            areaItem.mIsExpandGroup = false;
                         }
                     }
                 }
 
                 if (mListView.isGroupExpanded(groupPosition))
                 {
+                    AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
+
                     mListView.collapseGroupWithAnimation(groupPosition);
-                    mOnUserActionListener.onGroupCollapse(v);
+                    mOnUserActionListener.onGroupCollapse(v, areaItem);
                 } else
                 {
-                    mListView.expandGroupWithAnimation(groupPosition);
-                    mListView.setTag(groupPosition);
-                    mOnUserActionListener.onGroupExpand(v);
+                    final AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
+
+                    try
+                    {
+                        mListView.expandGroupWithAnimation(groupPosition);
+                        mListView.setTag(groupPosition);
+                        mOnUserActionListener.onGroupExpand(v, areaItem);
+                    } catch (Exception e)
+                    {
+                        mListView.post(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mListView.setSelection(groupPosition);
+                                mListView.expandGroupWithAnimation(groupPosition);
+                                mListView.setTag(groupPosition);
+                                mOnUserActionListener.onGroupExpand(v, areaItem);
+                            }
+                        });
+                    }
                 }
                 return true;
             }
@@ -193,6 +222,8 @@ public class SelectAreaActivity extends BaseActivity
                         // 상세 지역이 없는 경우.
                         mListView.setSelection(i);
                         mListView.setSelectedGroup(i);
+
+                        areaItem.mIsExpandGroup = false;
                     } else
                     {
                         ArrayList<Area> areaList = areaItem.getAreaList();
@@ -207,6 +238,8 @@ public class SelectAreaActivity extends BaseActivity
                                 mListView.setSelection(i);
                                 mListView.expandGroup(i);
                                 mListView.setTag(i);
+
+                                areaItem.mIsExpandGroup = true;
                                 break;
                             }
                         }
@@ -229,11 +262,15 @@ public class SelectAreaActivity extends BaseActivity
                         // 상세 지역이 없는 경우.
                         mListView.setSelection(i);
                         mListView.setSelectedGroup(i);
+
+                        areaItem.mIsExpandGroup = false;
                     } else
                     {
                         mListView.setSelection(i);
                         mListView.expandGroup(i);
                         mListView.setTag(i);
+
+                        areaItem.mIsExpandGroup = true;
                     }
                     break;
                 }
@@ -251,16 +288,15 @@ public class SelectAreaActivity extends BaseActivity
 
     public interface OnUserActionListener
     {
-        public void onGroupExpand(View view);
+        public void onGroupExpand(View view, AreaItem areaItem);
 
-        public void onGroupCollapse(View view);
+        public void onGroupCollapse(View view, AreaItem areaItem);
     }
 
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
-
         @Override
-        public void onGroupExpand(View view)
+        public void onGroupExpand(View view, final AreaItem areaItem)
         {
             if (view.getVisibility() != View.VISIBLE)
             {
@@ -278,7 +314,6 @@ public class SelectAreaActivity extends BaseActivity
 
             animation.setAnimationListener(new AnimationListener()
             {
-
                 @Override
                 public void onAnimationStart(Animation animation)
                 {
@@ -299,12 +334,14 @@ public class SelectAreaActivity extends BaseActivity
                     releaseUiComponent();
                     imageView.setAnimation(null);
                     imageView.setImageResource(R.drawable.ic_details_menu_on);
+
+                    areaItem.mIsExpandGroup = true;
                 }
             });
         }
 
         @Override
-        public void onGroupCollapse(View view)
+        public void onGroupCollapse(View view, final AreaItem areaItem)
         {
             if (view.getVisibility() != View.VISIBLE)
             {
@@ -345,6 +382,8 @@ public class SelectAreaActivity extends BaseActivity
 
                         imageView.setAnimation(null);
                         imageView.setImageResource(R.drawable.ic_details_menu_off);
+
+                        areaItem.mIsExpandGroup = false;
                     }
                 });
             }
@@ -381,6 +420,11 @@ public class SelectAreaActivity extends BaseActivity
         public Area getChild(int groupPosition, int childPosition)
         {
             return items.get(groupPosition).getAreaList().get(childPosition);
+        }
+
+        public AreaItem getAreaItem(int groupPosition)
+        {
+            return items.get(groupPosition);
         }
 
         @Override
@@ -531,13 +575,14 @@ public class SelectAreaActivity extends BaseActivity
                 }
             }
 
-            if (mIsLoadedGroup == false)
+            if (hasChildren == true)
             {
-                mIsLoadedGroup = true;
-
-                if (mListView.isGroupExpanded(groupPosition) == true)
+                if (getAreaItem(groupPosition).mIsExpandGroup == true)
                 {
                     imageView.setImageResource(R.drawable.ic_details_menu_on);
+                } else
+                {
+                    imageView.setImageResource(R.drawable.ic_details_menu_off);
                 }
             }
 
