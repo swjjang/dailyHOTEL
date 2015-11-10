@@ -13,7 +13,6 @@
 package com.twoheart.dailyhotel.network;
 
 import com.android.volley.Response;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 

@@ -1,8 +1,8 @@
 /**
  * \ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * Constants (어플리케이션 전역 상수)
- * <p>
+ * <p/>
  * 어플리케이션에서 사용되는 전역 상수들을 정리해놓은 인터페이스이다. 어플리
  * 케이션에서 사용되는 전역 상수들은 거의 고정된 값들이며 여러 부분에서 일
  * 률적으로 사용되므로 상수로서 선언됐다. 이 인터페이스는 각 클래스에서 상속
@@ -211,6 +211,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_RESULT = "result";
     public static final String NAME_INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
     public static final String NAME_INTENT_EXTRA_DATA_ISDAILYUSER = "isDailyUser";
+    public static final String NAME_INTENT_EXTRA_DATA_DATE = "date";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;

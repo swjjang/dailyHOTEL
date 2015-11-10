@@ -10,7 +10,6 @@ package com.twoheart.dailyhotel.activity;
 
 import android.view.View;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.fragment.GourmetTabBookingFragment;
@@ -18,8 +17,6 @@ import com.twoheart.dailyhotel.fragment.PlaceTabInfoFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabMapFragment;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 
