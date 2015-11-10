@@ -384,7 +384,7 @@ public class EventListFragment extends BaseFragment implements Constants
                 // 재로그인
                 if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
-                    HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
+                    HashMap<String, String> params = Util.getLoginParams(baseActivity, baseActivity.sharedPreference);
                     DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, baseActivity);
                 } else
                 {

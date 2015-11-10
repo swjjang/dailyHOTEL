@@ -32,8 +32,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -388,12 +390,14 @@ public class Util implements Constants
         }
     }
 
-    public static HashMap<String, String> getLoginParams(SharedPreferences sharedPreference)
+    public static HashMap<String, String> getLoginParams(Context context, SharedPreferences sharedPreference)
     {
         String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
         String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
         String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
         String type = sharedPreference.getString(KEY_PREFERENCE_USER_TYPE, null);
+
+        SharedPreferences.Editor editor = sharedPreference.edit();
 
         HashMap<String, String> params = new HashMap<String, String>();
 
@@ -406,7 +410,7 @@ public class Util implements Constants
             {
                 params.put("user_type", "facebook");
 
-                sharedPreference.edit().putString("user_type", "facebook").apply();
+                editor.putString(KEY_PREFERENCE_USER_TYPE, "facebook").apply();
             }
         } else
         {
@@ -417,17 +421,39 @@ public class Util implements Constants
             {
                 params.put("user_type", "normal");
 
-                sharedPreference.edit().putString("user_type", "normal").apply();
+                editor.putString(KEY_PREFERENCE_USER_TYPE, "normal").apply();
             }
         }
 
         params.put("is_auto", sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) ? "true" : "false");
-
         params.put("pw", pw);
 
         if (Util.isTextEmpty(type) == false)
         {
             params.put("user_type", type);
+        } else
+        {
+            // 만일 정보가 없으면 다시 로그인 하도록 수정한다
+            editor.clear();
+            editor.commit();
+
+            DailyPreference.getInstance(context).clear();
+
+            try
+            {
+                LoginManager.getInstance().logOut();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            try
+            {
+                UserManagement.requestLogout(null);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         return params;

@@ -665,7 +665,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 // 재로그인
                 if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
-                    HashMap<String, String> params = Util.getLoginParams(sharedPreference);
+                    HashMap<String, String> params = Util.getLoginParams(PlaceDetailActivity.this, sharedPreference);
 
                     DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, PlaceDetailActivity.this);
                 } else

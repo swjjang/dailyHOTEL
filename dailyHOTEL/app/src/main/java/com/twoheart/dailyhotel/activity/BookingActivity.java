@@ -1581,7 +1581,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         // 세션이 종료되어있으면 다시 로그인한다.
         if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
         {
-            HashMap<String, String> params = Util.getLoginParams(sharedPreference);
+            HashMap<String, String> params = Util.getLoginParams(BookingActivity.this, sharedPreference);
 
             DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, BookingActivity.this);
         } else
