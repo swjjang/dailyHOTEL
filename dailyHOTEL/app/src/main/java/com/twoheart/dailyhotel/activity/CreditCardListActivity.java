@@ -431,7 +431,7 @@ public class CreditCardListActivity extends BaseActivity
 
                 if (true == sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
-                    HashMap<String, String> params = Util.getLoginParams(sharedPreference);
+                    HashMap<String, String> params = Util.getLoginParams(CreditCardListActivity.this, sharedPreference);
 
                     DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, CreditCardListActivity.this);
                 } else

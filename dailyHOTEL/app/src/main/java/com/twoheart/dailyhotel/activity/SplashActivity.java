@@ -311,7 +311,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
         if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
         {
-            HashMap<String, String> params = Util.getLoginParams(sharedPreference);
+            HashMap<String, String> params = Util.getLoginParams(SplashActivity.this, sharedPreference);
             DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, this);
         }
 
