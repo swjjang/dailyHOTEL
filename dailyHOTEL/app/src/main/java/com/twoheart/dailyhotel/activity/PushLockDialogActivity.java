@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.IntentActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
@@ -22,11 +24,10 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
  */
 public class PushLockDialogActivity extends Activity implements OnClickListener, Constants
 {
-
     private TextView mPositiveView;
     private TextView mNegativeView;
 
-    private int mType;
+    private String mLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,28 +37,35 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
         setContentView(R.layout.activity_push_lock_dialog_gcm);
 
         String message = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
-        mType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
+        int type = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
+        mLink = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_LINK);
 
         TextView messageTextView = (TextView) findViewById(R.id.messageTextView);
 
-        // 타입별로 mMsg 표시 방식 설정
-        if (mType == PUSH_TYPE_NOTICE)
+        switch (type)
         {
-            // 공지 푸시
-            messageTextView.setText(message);
-        } else if (mType == PUSH_TYPE_ACCOUNT_COMPLETE)
-        {
-            // 계좌이체 결제 완료 푸시
-            String result = message;
-            if (message.contains("]"))
+            case PUSH_TYPE_NOTICE:
             {
-                // [호텔이름 [조식 포함]] 예약되었습니다. 과 같은 경우 마지막 ] 다음에서 개행하여 보기 좋도록 표시
-                int index = message.lastIndexOf("]");
-                StringBuffer sb = new StringBuffer(message);
-                result = sb.replace(index, index + 1, "]\n").toString();
+                // 공지 푸시
+                messageTextView.setText(message);
+                break;
             }
 
-            messageTextView.setText(result);
+            case PUSH_TYPE_ACCOUNT_COMPLETE:
+            {
+                // 계좌이체 결제 완료 푸시
+                String result = message;
+                if (message.contains("]"))
+                {
+                    // [호텔이름 [조식 포함]] 예약되었습니다. 과 같은 경우 마지막 ] 다음에서 개행하여 보기 좋도록 표시
+                    int index = message.lastIndexOf("]");
+                    StringBuffer sb = new StringBuffer(message);
+                    result = sb.replace(index, index + 1, "]\n").toString();
+                }
+
+                messageTextView.setText(result);
+                break;
+            }
         }
 
         messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
@@ -78,14 +86,15 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
     {
         if (v.getId() == mPositiveView.getId())
         {
-            Intent intent = new Intent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setClass(this, IntentActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, mType); // 메인엑티비티 -> 예약확인리스트 -> 최신 예약 클릭,
+            if (Util.isTextEmpty(mLink) == false)
+            {
+                Intent intent = new Intent(this, IntentActivity.class);
+                intent.setData(Uri.parse(mLink));
 
-            startActivity(intent);
+                startActivity(intent);
+            }
+
             finish();
-
         } else if (v.getId() == mNegativeView.getId())
         {
             finish();

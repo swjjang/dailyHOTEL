@@ -130,7 +130,7 @@ public class GcmIntentService extends IntentService implements Constants
                         String hotelName = jsonMsg.getString("hotelName");
                         String paidPrice = jsonMsg.getString("paidPrice");
 
-                        sendPush(messageType, type, msg, imageUrl);
+                        sendPush(messageType, type, msg, imageUrl, null);
 
                         // 로그 남기기 이슈
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
@@ -173,7 +173,16 @@ public class GcmIntentService extends IntentService implements Constants
                             Editor editor = pref.edit();
                             editor.putString("collapseKey", collapseKey);
                             editor.apply();
-                            sendPush(messageType, type, msg, imageUrl);
+
+                            String link = null;
+
+                            // dailyhotel://dailyhotel.co.kr?view=hotel&idx=131&date=20151109&night=1
+                            if (jsonMsg.has("targetLink") == true)
+                            {
+                                link = jsonMsg.getString("targetLink");
+                            }
+
+                            sendPush(messageType, type, msg, imageUrl, link);
                         }
 
                         break;
@@ -188,7 +197,7 @@ public class GcmIntentService extends IntentService implements Constants
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    public void sendPush(String messageType, int type, String msg, String imageUrl)
+    public void sendPush(String messageType, int type, String msg, String imageUrl, String link)
     {
         if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
         {
@@ -205,6 +214,18 @@ public class GcmIntentService extends IntentService implements Constants
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
                     i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
+
+                    switch (type)
+                    {
+                        case PUSH_TYPE_ACCOUNT_COMPLETE:
+                            i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_LINK, "dailyhotel://dailyhotel.co.kr?view=bookings");
+                            break;
+
+                        case PUSH_TYPE_NOTICE:
+                            i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_LINK, link);
+                            break;
+                    }
+
                     startActivity(i);
                 }
             } else if (!isScreenOn(this) && !mIsBadge)
@@ -218,12 +239,24 @@ public class GcmIntentService extends IntentService implements Constants
                 Intent i = new Intent(this, PushLockDialogActivity.class);
                 i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
                 i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
+
+                switch (type)
+                {
+                    case PUSH_TYPE_ACCOUNT_COMPLETE:
+                        i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_LINK, "dailyhotel://dailyhotel.co.kr?view=bookings");
+                        break;
+
+                    case PUSH_TYPE_NOTICE:
+                        i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_LINK, link);
+                        break;
+                }
+
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                this.startActivity(i);
+                startActivity(i);
             }
 
             // 노티피케이션은 케이스에 상관없이 항상 뜨도록함.
-            sendNotification(type, msg, imageUrl);
+            sendNotification(type, msg, imageUrl, link);
         }
     }
 
@@ -232,7 +265,7 @@ public class GcmIntentService extends IntentService implements Constants
         return ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).isScreenOn();
     }
 
-    private void sendNotification(int type, String msg, String imageUrl)
+    private void sendNotification(int type, String msg, String imageUrl, String link)
     {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -240,9 +273,15 @@ public class GcmIntentService extends IntentService implements Constants
         if (type == PUSH_TYPE_ACCOUNT_COMPLETE)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
+            intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?view=bookings"));
         } else if (type == PUSH_TYPE_NOTICE)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_NOTICE);
+
+            if (Util.isTextEmpty(link) == false)
+            {
+                intent.setData(Uri.parse(link));
+            }
         }
 
         // type은 notice 타입과 account_complete 타입이 존재함. reservation일 경우 예약확인 창으로 이동.

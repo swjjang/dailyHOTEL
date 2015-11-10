@@ -768,4 +768,25 @@ public class Util implements Constants
 
         return true;
     }
+
+    public static String getValueForLinkUrl(String linkUrl, String key)
+    {
+        if (Util.isTextEmpty(linkUrl) == true || Util.isTextEmpty(key) == true)
+        {
+            return null;
+        }
+
+        // view=hotel&idx=131&date=20151109&nights=1
+        String[] keyValue = linkUrl.split("\\&|\\=");
+
+        for (int i = 0; i < keyValue.length; i += 2)
+        {
+            if (key.equalsIgnoreCase(keyValue[i]) == true)
+            {
+                return keyValue[i + 1];
+            }
+        }
+
+        return null;
+    }
 }
