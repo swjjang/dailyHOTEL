@@ -73,7 +73,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected abstract void showSlidingDrawer();
 
-    protected abstract void onNavigationItemSelected(Province province);
+    protected abstract void onNavigationItemSelected(Province province, boolean isSelectionTop);
 
     protected abstract void setNavigationItemSelected(Province province);
 
