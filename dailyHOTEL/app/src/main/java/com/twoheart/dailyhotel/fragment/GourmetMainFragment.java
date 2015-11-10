@@ -133,7 +133,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         mSelectedProvince = province;
     }
 
-    public void onNavigationItemSelected(Province province)
+    public void onNavigationItemSelected(Province province, boolean isSelectionTop)
     {
         if (province == null)
         {
@@ -154,8 +154,6 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
         baseActivity.setActionBarRegionEnable(isShowSpinner);
-
-        boolean isSelectionTop = false;
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "")) == false)
@@ -278,20 +276,10 @@ public class GourmetMainFragment extends PlaceMainFragment
                 // 현재 페이지 선택 상태를 Fragment에게 알려준다.
                 GourmetListFragment currentFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
 
-                boolean isSelectionTop = false;
-                Province province = null;
-
                 for (PlaceListFragment placeListFragment : mFragmentList)
                 {
                     if (placeListFragment == currentFragment)
                     {
-                        province = placeListFragment.getProvince();
-
-                        if (province == null || mSelectedProvince.index != province.index || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
-                        {
-                            isSelectionTop = true;
-                        }
-
                         placeListFragment.onPageSelected(true);
                     } else
                     {
@@ -701,53 +689,10 @@ public class GourmetMainFragment extends PlaceMainFragment
                 }
 
                 //탭에 들어갈 날짜를 만든다.
-                SaleTime[] tabSaleTime = null;
+                makeTabDate();
 
-                int fragmentSize = mFragmentList.size();
-
-                tabSaleTime = new SaleTime[3];
-
-                for (int i = 0; i < fragmentSize; i++)
-                {
-                    GourmetListFragment gourmetListFragment = mFragmentList.get(i);
-
-                    SaleTime saleTime = mTodaySaleTime.getClone(i);
-                    tabSaleTime[i] = saleTime;
-
-                    gourmetListFragment.setSaleTime(saleTime);
-                }
-
-                // 임시로 여기서 날짜를 넣는다.
-                ArrayList<String> dayList = new ArrayList<String>();
-
-                dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getDailyDay(), tabSaleTime[0].getDailyDayOftheWeek()));
-                dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getDailyDay(), tabSaleTime[1].getDailyDayOftheWeek()));
-
-                if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
-                {
-                    dayList.add(getString(R.string.label_format_tabday, tabSaleTime[2].getDailyDay(), tabSaleTime[2].getDailyDayOftheWeek()));
-                } else
-                {
-                    dayList.add(mTabIndicator.getSubText(2));
-                }
-
-                int tabSize = mTabIndicator.size();
-
-                for (int i = 0; i < tabSize; i++)
-                {
-                    String day = dayList.get(i);
-
-                    if (Util.isTextEmpty(day) == true)
-                    {
-                        mTabIndicator.setSubTextEnable(i, false);
-                    } else
-                    {
-                        mTabIndicator.setSubTextEnable(i, true);
-                        mTabIndicator.setSubText(i, day);
-                    }
-                }
-
-                onNavigationItemSelected(selectedProvince);
+                boolean isSelectionTop = isSelectionTop();
+                onNavigationItemSelected(selectedProvince, isSelectionTop);
             } catch (Exception e)
             {
                 onError(e);
@@ -755,6 +700,79 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 unLockUI();
             }
+        }
+
+        private void makeTabDate()
+        {
+            SaleTime[] tabSaleTime = null;
+
+            int fragmentSize = mFragmentList.size();
+
+            tabSaleTime = new SaleTime[3];
+
+            for (int i = 0; i < fragmentSize; i++)
+            {
+                GourmetListFragment gourmetListFragment = mFragmentList.get(i);
+
+                SaleTime saleTime = mTodaySaleTime.getClone(i);
+                tabSaleTime[i] = saleTime;
+
+                gourmetListFragment.setSaleTime(saleTime);
+            }
+
+            // 임시로 여기서 날짜를 넣는다.
+            ArrayList<String> dayList = new ArrayList<String>();
+
+            dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getDailyDay(), tabSaleTime[0].getDailyDayOftheWeek()));
+            dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getDailyDay(), tabSaleTime[1].getDailyDayOftheWeek()));
+
+            if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
+            {
+                dayList.add(getString(R.string.label_format_tabday, tabSaleTime[2].getDailyDay(), tabSaleTime[2].getDailyDayOftheWeek()));
+            } else
+            {
+                dayList.add(mTabIndicator.getSubText(2));
+            }
+
+            int tabSize = mTabIndicator.size();
+
+            for (int i = 0; i < tabSize; i++)
+            {
+                String day = dayList.get(i);
+
+                if (Util.isTextEmpty(day) == true)
+                {
+                    mTabIndicator.setSubTextEnable(i, false);
+                } else
+                {
+                    mTabIndicator.setSubTextEnable(i, true);
+                    mTabIndicator.setSubText(i, day);
+                }
+            }
+        }
+
+        private boolean isSelectionTop()
+        {
+            boolean isSelectionTop = false;
+
+            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
+
+            for (GourmetListFragment gourmetListFragment : mFragmentList)
+            {
+                if (gourmetListFragment == currentFragment)
+                {
+                    Province province = gourmetListFragment.getProvince();
+
+                    if (province == null || mSelectedProvince.index != province.index || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
+                    {
+                        isSelectionTop = true;
+                        break;
+                    }
+                }
+            }
+
+            return isSelectionTop;
         }
 
         private ArrayList<Area> makeAreaList(JSONArray jsonArray)

@@ -386,7 +386,7 @@ public class HotelMainFragment extends BaseFragment
         mSelectedProvince = province;
     }
 
-    private void onNavigationItemSelected(Province province)
+    private void onNavigationItemSelected(Province province, boolean isSelectionTop)
     {
         if (province == null)
         {
@@ -404,8 +404,6 @@ public class HotelMainFragment extends BaseFragment
 
         baseActivity.setActionBarAreaEnabled(true);
         baseActivity.setActionBarArea(province.name, mOnUserActionListener);
-
-        boolean isSelectionTop = false;
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
@@ -522,20 +520,10 @@ public class HotelMainFragment extends BaseFragment
                 // 현재 페이지 선택 상태를 Fragment에게 알려준다.
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 
-                boolean isSelectionTop = false;
-                Province province = null;
-
                 for (HotelListFragment hotelListFragment : mFragmentList)
                 {
                     if (hotelListFragment == currentFragment)
                     {
-                        province = hotelListFragment.getProvince();
-
-                        if (province == null || mSelectedProvince.index != province.index || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
-                        {
-                            isSelectionTop = true;
-                        }
-
                         hotelListFragment.onPageSelected(true);
                     } else
                     {
@@ -946,72 +934,10 @@ public class HotelMainFragment extends BaseFragment
                 }
 
                 //탭에 들어갈 날짜를 만든다.
-                SaleTime[] tabSaleTime = null;
+                makeTabDate();
 
-                int fragmentSize = mFragmentList.size();
-
-                tabSaleTime = new SaleTime[3];
-
-                for (int i = 0; i < fragmentSize; i++)
-                {
-                    HotelListFragment hotelListFragment = mFragmentList.get(i);
-
-                    SaleTime saleTime;
-
-                    if (i == 2)
-                    {
-                        saleTime = mTodaySaleTime.getClone(0);
-                        tabSaleTime[i] = saleTime;
-                    } else
-                    {
-                        saleTime = mTodaySaleTime.getClone(i);
-                        tabSaleTime[i] = saleTime;
-                    }
-
-                    hotelListFragment.setSaleTime(saleTime);
-                }
-
-                // 임시로 여기서 날짜를 넣는다.
-                ArrayList<String> dayList = new ArrayList<String>();
-
-                dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getDailyDay(), tabSaleTime[0].getDailyDayOftheWeek()));
-                dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getDailyDay(), tabSaleTime[1].getDailyDayOftheWeek()));
-
-                if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
-                {
-                    SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
-                    SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
-
-                    String checkInDay = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
-                    String checkOutDay = getString(R.string.label_format_tabday, checkOutSaleTime.getDailyDay(), checkOutSaleTime.getDailyDayOftheWeek());
-
-                    String checkInOutDate = checkInDay + "-" + checkOutDay;
-                    dayList.add(checkInOutDate);
-
-                    HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentList.get(2);
-                    fragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
-                } else
-                {
-                    dayList.add(mTabIndicator.getSubText(2));
-                }
-
-                int tabSize = mTabIndicator.size();
-
-                for (int i = 0; i < tabSize; i++)
-                {
-                    String day = dayList.get(i);
-
-                    if (Util.isTextEmpty(day) == true)
-                    {
-                        mTabIndicator.setSubTextEnable(i, false);
-                    } else
-                    {
-                        mTabIndicator.setSubTextEnable(i, true);
-                        mTabIndicator.setSubText(i, day);
-                    }
-                }
-
-                onNavigationItemSelected(selectedProvince);
+                boolean isSelectionTop = isSelectionTop();
+                onNavigationItemSelected(selectedProvince, isSelectionTop);
             } catch (Exception e)
             {
                 onError(e);
@@ -1019,6 +945,99 @@ public class HotelMainFragment extends BaseFragment
             {
                 unLockUI();
             }
+        }
+
+        private void makeTabDate()
+        {
+            //탭에 들어갈 날짜를 만든다.
+            SaleTime[] tabSaleTime = null;
+
+            int fragmentSize = mFragmentList.size();
+
+            tabSaleTime = new SaleTime[3];
+
+            for (int i = 0; i < fragmentSize; i++)
+            {
+                HotelListFragment hotelListFragment = mFragmentList.get(i);
+
+                SaleTime saleTime;
+
+                if (i == 2)
+                {
+                    saleTime = mTodaySaleTime.getClone(0);
+                    tabSaleTime[i] = saleTime;
+                } else
+                {
+                    saleTime = mTodaySaleTime.getClone(i);
+                    tabSaleTime[i] = saleTime;
+                }
+
+                hotelListFragment.setSaleTime(saleTime);
+            }
+
+            // 임시로 여기서 날짜를 넣는다.
+            ArrayList<String> dayList = new ArrayList<String>();
+
+            dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getDailyDay(), tabSaleTime[0].getDailyDayOftheWeek()));
+            dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getDailyDay(), tabSaleTime[1].getDailyDayOftheWeek()));
+
+            if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
+            {
+                SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
+                SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
+
+                String checkInDay = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
+                String checkOutDay = getString(R.string.label_format_tabday, checkOutSaleTime.getDailyDay(), checkOutSaleTime.getDailyDayOftheWeek());
+
+                String checkInOutDate = checkInDay + "-" + checkOutDay;
+                dayList.add(checkInOutDate);
+
+                HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentList.get(2);
+                fragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
+            } else
+            {
+                dayList.add(mTabIndicator.getSubText(2));
+            }
+
+            int tabSize = mTabIndicator.size();
+
+            for (int i = 0; i < tabSize; i++)
+            {
+                String day = dayList.get(i);
+
+                if (Util.isTextEmpty(day) == true)
+                {
+                    mTabIndicator.setSubTextEnable(i, false);
+                } else
+                {
+                    mTabIndicator.setSubTextEnable(i, true);
+                    mTabIndicator.setSubText(i, day);
+                }
+            }
+        }
+
+        private boolean isSelectionTop()
+        {
+            boolean isSelectionTop = false;
+
+            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+            for (HotelListFragment hotelListFragment : mFragmentList)
+            {
+                if (hotelListFragment == currentFragment)
+                {
+                    Province province = hotelListFragment.getProvince();
+
+                    if (province == null || mSelectedProvince.index != province.index || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
+                    {
+                        isSelectionTop = true;
+                        break;
+                    }
+                }
+            }
+
+            return isSelectionTop;
         }
 
         private ArrayList<Area> makeAreaList(JSONArray jsonArray)
