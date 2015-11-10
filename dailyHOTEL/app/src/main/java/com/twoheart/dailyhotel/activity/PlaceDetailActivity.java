@@ -17,15 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
@@ -43,7 +41,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 public abstract class PlaceDetailActivity extends BaseActivity
@@ -219,11 +216,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected void onResume()
     {
         lockUI();
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("timeZone", "Asia/Seoul");
-
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
 
         super.onResume();
     }
@@ -284,7 +277,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+                    DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
                 }
                 break;
             }
@@ -422,8 +415,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mSelectedTicketInformation = ticketInformation;
 
             lockUI();
-
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
+            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, PlaceDetailActivity.this);
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(Label.FNB_TICKET_NAME, ticketInformation.name);
@@ -666,8 +658,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserSocialInformationJsonResponseListener, PlaceDetailActivity.this));
-
+                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserSocialInformationJsonResponseListener, PlaceDetailActivity.this);
             } else if ("dead".equalsIgnoreCase(result) == true)
             {
                 // session dead
@@ -676,7 +667,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 {
                     HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, PlaceDetailActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, PlaceDetailActivity.this);
                 } else
                 {
                     startLoginActivity();
@@ -713,8 +704,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     {
                         //로그인 성공
                         VolleyHttpClient.createCookie();
-
-                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
+                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, PlaceDetailActivity.this);
                         return;
                     }
                 }

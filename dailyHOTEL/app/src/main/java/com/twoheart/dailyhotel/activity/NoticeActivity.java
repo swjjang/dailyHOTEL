@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.model.Board;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
@@ -67,7 +64,7 @@ public class NoticeActivity extends BaseActivity
         super.onResume();
 
         lockUI();
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE).toString(), null, mBoardNoticeResponseListener, this));
+        //        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE).toString(), null, mBoardNoticeResponseListener, this));
     }
 
     @Override

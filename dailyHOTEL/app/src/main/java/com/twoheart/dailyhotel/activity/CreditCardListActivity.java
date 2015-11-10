@@ -19,12 +19,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -94,7 +92,7 @@ public class CreditCardListActivity extends BaseActivity
         super.onResume();
 
         lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
     }
 
     @Override
@@ -165,7 +163,7 @@ public class CreditCardListActivity extends BaseActivity
             lockUI();
 
             // 세션 여부를 판단한다.
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
+            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, new DailyHotelStringResponseListener()
             {
                 @Override
                 public void onResponse(String url, String response)
@@ -189,7 +187,7 @@ public class CreditCardListActivity extends BaseActivity
                         restartApp();
                     }
                 }
-            }, CreditCardListActivity.this));
+            }, CreditCardListActivity.this);
         }
 
         @Override
@@ -203,7 +201,7 @@ public class CreditCardListActivity extends BaseActivity
             lockUI();
 
             // 세션 여부를 판단한다.
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
+            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, new DailyHotelStringResponseListener()
             {
                 @Override
                 public void onResponse(String url, String response)
@@ -231,7 +229,7 @@ public class CreditCardListActivity extends BaseActivity
                                 HashMap<String, String> params = new HashMap<String, String>();
                                 params.put("billkey", card.billingkey);
 
-                                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_DEL).toString(), params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this));
+                                DailyNetworkAPI.getInstance().requestUserDeleteBillingCard(mNetworkTag, params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this);
                             }
                         };
 
@@ -246,7 +244,7 @@ public class CreditCardListActivity extends BaseActivity
                         restartApp();
                     }
                 }
-            }, CreditCardListActivity.this));
+            }, CreditCardListActivity.this);
         }
 
         @Override
@@ -379,7 +377,7 @@ public class CreditCardListActivity extends BaseActivity
                     if (isSignin == true)
                     {
                         // credit card 요청
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+                        DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
                         return;
                     }
                 }
@@ -424,7 +422,7 @@ public class CreditCardListActivity extends BaseActivity
                 // 목록 요청.
                 mCreditCardLayout.setViewLoginLayout(true);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
 
             } else if (true == "dead".equalsIgnoreCase(result))
             {
@@ -435,7 +433,7 @@ public class CreditCardListActivity extends BaseActivity
                 {
                     HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, CreditCardListActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, CreditCardListActivity.this);
                 } else
                 {
                     unLockUI();
@@ -485,7 +483,7 @@ public class CreditCardListActivity extends BaseActivity
                 {
                     // 성공
                     // credit card 요청
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
                 } else
                 {
                     unLockUI();
@@ -504,7 +502,7 @@ public class CreditCardListActivity extends BaseActivity
                             lockUI();
 
                             // credit card 요청
-                            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
                         }
 
                     });
@@ -516,7 +514,7 @@ public class CreditCardListActivity extends BaseActivity
                 lockUI();
 
                 // credit card 요청
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
             }
         }
     };

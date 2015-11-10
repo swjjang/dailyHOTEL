@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
@@ -20,8 +19,7 @@ import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
@@ -122,7 +120,7 @@ public class BookingTabActivity extends BaseActivity
 
         // 호텔 정보를 가져온다.
         String params = String.format("?reservationIdx=%d", booking.reservationIndex);
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
+        DailyNetworkAPI.getInstance().requestHotelBookingDetailInformation(mNetworkTag, params, mReservationBookingDetailJsonResponseListener, this);
 
         super.onResume();
     }

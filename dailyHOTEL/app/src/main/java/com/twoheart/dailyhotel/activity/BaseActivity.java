@@ -37,15 +37,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -61,14 +59,14 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 {
     protected static int mStatusBarHeight;
     public SharedPreferences sharedPreference;
-    protected RequestQueue mQueue;
     private Toolbar mToolbar;
     private Dialog mDialog;
     private LoadingDialog mLockUI;
-    private RequestFilter cancelAllRequestFilter;
     private Handler handler;
     private int mSpinnderIndex = -1;
     private boolean mActionBarRegionEnabled;
+    protected String mNetworkTag;
+
 
     /**
      * UI Component의 잠금 상태인지 확인하는 변수..
@@ -86,20 +84,9 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         }
 
         sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        mQueue = VolleyHttpClient.getRequestQueue();
-
         mLockUI = new LoadingDialog(this);
-
-        cancelAllRequestFilter = new RequestQueue.RequestFilter()
-        {
-            @Override
-            public boolean apply(Request<?> request)
-            {
-                return true;
-            }
-        };
-
         handler = new Handler();
+        mNetworkTag = getClass().getName();
     }
 
     @Override
@@ -127,11 +114,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             finish();
         } finally
         {
-            // RequestQueue에 등록된 모든 Request들을 취소한다.
-            if (mQueue != null)
-            {
-                mQueue.cancelAll(cancelAllRequestFilter);
-            }
+            DailyNetworkAPI.getInstance().cancelAll();
         }
     }
 
@@ -158,9 +141,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         {
             Util.finishOutOfMemory(BaseActivity.this);
         }
-
-        // pinkred_font
-        //		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
     }
 
     /**
@@ -204,9 +184,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 }
             });
         }
-
-        // pinkred_font
-        //		GlobalFont.apply(mToolbar);
 
         return mToolbar;
     }
@@ -542,28 +519,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         }
 
         // 현재 Activity에 등록된 Request를 취소한다.
-        if (mQueue != null)
-        {
-            mQueue.cancelAll(new RequestQueue.RequestFilter()
-            {
-                @Override
-                public boolean apply(Request<?> request)
-                {
-                    Request<?> cancelRequest = (Request<?>) request;
-
-                    if (cancelRequest != null && cancelRequest.getTag() != null)
-                    {
-                        if (cancelRequest.getTag().equals(this))
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                }
-            });
-        }
-
+        DailyNetworkAPI.getInstance().cancelAll(mNetworkTag);
         if (mDialog != null && mDialog.isShowing())
         {
             mDialog.dismiss();

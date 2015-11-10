@@ -32,7 +32,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -41,8 +40,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
@@ -481,7 +479,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         //		}
 
         // 호텔 리스트를 가져온다.
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_SALE_HOTEL_LIST).append(params).toString(), null, mHotelJsonResponseListener, baseActivity));
+        DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelJsonResponseListener, baseActivity);
     }
 
     public Province getProvince()

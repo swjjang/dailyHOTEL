@@ -1,25 +1,23 @@
 package com.twoheart.dailyhotel.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.view.OnLoadListener;
 
 public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener
 {
-    protected RequestQueue mQueue;
     protected Toast mToast;
 
     private String mTitle;
+    protected String mNetworkTag;
 
     /**
      * UI Component의 잠금 상태인지 확인하는 변수..
@@ -31,25 +29,10 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
     }
 
     @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mQueue = VolleyHttpClient.getRequestQueue();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-
-        // pinkred_font
-        //		GlobalFont.apply((ViewGroup) getView().getRootView());
+        mNetworkTag = getClass().getName();
     }
 
     @Override
@@ -61,6 +44,14 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
         }
 
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        DailyNetworkAPI.getInstance().cancelAll(mNetworkTag);
+
+        super.onDestroy();
     }
 
     public void showToast(String message, int length, boolean isAttachToFragment)

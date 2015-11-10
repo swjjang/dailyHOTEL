@@ -196,11 +196,8 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         return map;
     }
 
-    //    public static void makeUrlEncoder()
-    //    {
-    //        DailyHotelRequest.getUrlEncoder("api/hotel/v1/payment/detail");
-    //        DailyHotelRequest.getUrlEncoder("api/hotel/v1/sale/detail");
-    //        DailyHotelRequest.getUrlEncoder("api/hotel/v1/payment/session/easy");
-    //        DailyHotelRequest.getUrlEncoder("api/hotel/v1/payment/session/common");
-    //    }
+    public static void makeUrlEncoder()
+    {
+        DailyHotelRequest.getUrlEncoder("http://test-api.dailyhotel.me/goodnight/");
+    }
 }

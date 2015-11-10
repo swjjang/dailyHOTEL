@@ -19,11 +19,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -35,9 +33,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class PaymentWaitActivity extends BaseActivity
@@ -85,16 +81,15 @@ public class PaymentWaitActivity extends BaseActivity
         {
             case HOTEL:
             {
-                String url = new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelReservationJsonResponseListener, this));
+                String params = String.format("/%d/%s", booking.payType, booking.tid);
+                DailyNetworkAPI.getInstance().requestDepositWaitDetailInformation(mNetworkTag, params, mHotelReservationJsonResponseListener, this);
                 break;
             }
 
             case FNB:
             {
                 String params = String.format("?tid=%s", booking.tid);
-                String url = new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mFnBReservationJsonResponseListener, this));
+                DailyNetworkAPI.getInstance().requestGourmetAccountInformation(mNetworkTag, params, mFnBReservationJsonResponseListener, this);
                 break;
             }
         }
@@ -209,10 +204,7 @@ public class PaymentWaitActivity extends BaseActivity
                     tvGuide2.setText(response.getString("msg2"));
                 }
 
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("timeZone", "Asia/Seoul");
-
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, PaymentWaitActivity.this));
+                DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, PaymentWaitActivity.this);
             } catch (JSONException e)
             {
                 ExLog.e(e.toString());
@@ -263,10 +255,7 @@ public class PaymentWaitActivity extends BaseActivity
                     return;
                 }
 
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("timeZone", "Asia/Seoul");
-
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, PaymentWaitActivity.this));
+                DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, PaymentWaitActivity.this);
             } catch (Exception e)
             {
                 onError(e);

@@ -13,7 +13,6 @@
 package com.twoheart.dailyhotel.network;
 
 import com.android.volley.Response;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 
@@ -21,6 +20,16 @@ import java.util.Map;
 
 public interface IDailyNetwork
 {
+    /**
+     * http://status.dailyhotel.kr/status/health/check
+     * 서버 상태 체크
+     *
+     * @param tag
+     * @param listener
+     * @param errorListener
+     */
+    public void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
     /**
      * common/ver_dual
      * 버전을 받아 업데이트를 체크한다
@@ -43,7 +52,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestCommonDatetime(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    public void requestCommonDatetime(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -52,7 +61,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserLogout(Object tag);
+    public void requestUserLogout(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * user/session/myinfo
@@ -120,7 +129,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserInformationEx(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    public void requestUserInformationEx(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/user/signin
@@ -405,7 +414,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestEventList(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    public void requestEventList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/daily/event/count

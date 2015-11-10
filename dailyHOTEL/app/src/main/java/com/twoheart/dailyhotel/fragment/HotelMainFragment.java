@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -177,11 +178,7 @@ public class HotelMainFragment extends BaseFragment
         } else
         {
             lockUI();
-
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("timeZone", "Asia/Seoul");
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
 
         super.onResume();
@@ -835,11 +832,7 @@ public class HotelMainFragment extends BaseFragment
             }
 
             lockUI();
-
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("timeZone", "Asia/Seoul");
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
     };
 
@@ -1164,13 +1157,13 @@ public class HotelMainFragment extends BaseFragment
                             ExLog.d(e.toString());
 
                             // 지역 리스트를 가져온다
-                            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
+                            DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mSaleHotelAllJsonResponseListener, baseActivity);
                         }
                     }
                 } else
                 {
                     // 지역 리스트를 가져온다
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
+                    DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mSaleHotelAllJsonResponseListener, baseActivity);
                 }
 
             } catch (Exception e)

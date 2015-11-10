@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
@@ -26,8 +25,7 @@ import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
@@ -45,7 +43,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class GourmetMainFragment extends PlaceMainFragment
 {
@@ -183,7 +180,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     protected void requestProvinceList(BaseActivity baseActivity)
     {
         // 지역 리스트를 가져온다
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_FNB_SALE_REGION_PROVINCE_LIST).toString(), null, mProvinceListJsonResponseListener, baseActivity));
+        DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mProvinceListJsonResponseListener, baseActivity);
     }
 
     @Override
@@ -599,10 +596,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             lockUI();
 
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("timeZone", "Asia/Seoul");
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
     };
 
