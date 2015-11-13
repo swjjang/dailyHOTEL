@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * PaymentActivity (결제화면)
- * <p/>
+ * <p>
  * 웹서버에서 이용하는 KCP 결제 모듈을 이용하는 화면이다. WebView를 이용
  * 해서 KCP 결제를 진행하는 웹서버 API에 POST 방식으로 요청한다. 요청 시
  * 요청 파라미터에 사용자 정보를 담는다. 이는 서버 사이드에서 Facbook 계정

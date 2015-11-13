@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * BookingActivity (예약 화면)
- * <p/>
+ * <p>
  * 결제 화면으로 넘어가기 전 예약 정보를 보여주고 결제방식을 선택할 수 있는 화면
  */
 package com.twoheart.dailyhotel.view;

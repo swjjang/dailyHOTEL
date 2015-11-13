@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * CloseOnBackPressed
- * <p/>
+ * <p>
  * Android 디바이스의 Back 버튼을 이용한 임의의 어플리케이션 인스턴스 종
  * 료를 방지하기 위한 클래스이다. 이 클래스를 가지는 Activity에서는 Back
  * 버튼을 연속 두 번 눌러야지만 종료가 된다.

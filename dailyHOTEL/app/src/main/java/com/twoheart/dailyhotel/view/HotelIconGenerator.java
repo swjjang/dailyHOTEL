@@ -78,7 +78,7 @@ public class HotelIconGenerator
 
     /**
      * Creates an icon with the current content and style.
-     * <p/>
+     * <p>
      * This method is useful if a custom view has previously been set, or if
      * text content is not applicable.
      */

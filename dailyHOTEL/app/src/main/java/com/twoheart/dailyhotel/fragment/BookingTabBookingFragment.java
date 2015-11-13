@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * BookingTabBookingFragment (예약한 호텔의 예약 탭)
- * <p/>
+ * <p>
  * 예약한 호텔 탭 중 예약 탭 프래그먼트
  */
 package com.twoheart.dailyhotel.fragment;

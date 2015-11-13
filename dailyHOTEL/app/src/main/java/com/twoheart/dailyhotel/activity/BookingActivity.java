@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * BookingActivity (예약 화면)
- * <p/>
+ * <p>
  * 결제 화면으로 넘어가기 전 예약 정보를 보여주고 결제방식을 선택할 수 있는 화면
  */
 package com.twoheart.dailyhotel.activity;
@@ -220,7 +220,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         TextView linkTextView = (TextView) findViewById(R.id.tv_card_notice);
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
 
-        String info01 = getString(R.string.act_booking_payment_info01);
+        String info01 = getString(R.string.act_booking_payment_info01) + " ";
         String info02 = getString(R.string.act_booking_payment_info02);
 
         stringBuilder.append(info01);

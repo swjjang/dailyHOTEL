@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * ErrorFragment (오류 화면)
- * <p/>
+ * <p>
  * 네트워크 문제 등 오류가 발생했을 시 보여지는 화면이다. 이 화면은 메인 화
  * 면 단위(MainActivity)에서 사용되는 작은 화면 단위(Fragment)이다.
  *

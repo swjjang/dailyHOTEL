@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * WebViewActivity
- * <p/>
+ * <p>
  * WebView를 사용하는 Activity를 위한 부모 클래스이다. 일괄적인 WebV
  * iew의 설정을 위해 설계된 클래스이다.
  *

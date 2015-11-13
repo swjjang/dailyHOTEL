@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * SignupActivity (회원가입화면)
- * <p/>
+ * <p>
  * 새로운 사용자 가입하는 화면이다. 새로운 사용자로부터 이메일, 이름, 패스워드,
  * 추천인 코드를 입력받는다. 회원가입하는 웹서버 API를 이용한다.
  *

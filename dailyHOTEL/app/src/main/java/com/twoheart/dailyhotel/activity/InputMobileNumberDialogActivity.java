@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * CreditListFragment (적립금 내역 화면)
- * <p/>
+ * <p>
  * 적립금 내역 리스트를 보여주는 화면이다.
  *
  * @version 1
