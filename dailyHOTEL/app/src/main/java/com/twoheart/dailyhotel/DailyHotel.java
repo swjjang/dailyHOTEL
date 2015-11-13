@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * DailyHotel
- * <p/>
+ * <p>
  * Android의 Application을 상속받은 서브 클래스로서 어플리케이션의 가장
  * 기본이 되는 클래스이다. 이 클래스에서는 어플리케이션에서 전역적으로 사용되
  * 는 GoogleAnalytics와 폰트, Volley, Universal Image Loder를

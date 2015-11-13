@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * SplashActivity (로딩화면)
- * <p/>
+ * <p>
  * 어플리케이션 처음 시작 시 나타나는 화면이며, 이는 MainActivity에 의해서
  * 호출된다. SplashActivity는 어플리케이션 처음 실행 시 가장 먼저 나타나는
  * 화면이나 어플리케이션의 주 화면은 아니므로 MainActivity가 처음 실행됐을 시

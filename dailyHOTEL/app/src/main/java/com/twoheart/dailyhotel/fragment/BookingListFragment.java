@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * BookingListFragment (예약 확인 화면)
- * <p/>
+ * <p>
  * 예약된 목록들을 보여주는 화면이다.
  *
  * @version 1

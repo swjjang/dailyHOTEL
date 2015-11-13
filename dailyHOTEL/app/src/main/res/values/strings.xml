@@ -342,7 +342,7 @@
     <string name="act_booking_pay_account">계좌이체</string>
     <string name="act_booking_btn_pay">결제하기</string>
     <string name="act_booking_0won">0원</string>
-    <string name="act_booking_payment_info01">결제가 안되시나요? </string>
+    <string name="act_booking_payment_info01">결제가 안되시나요?</string>
     <string name="act_booking_payment_info02">1800-9120</string>
     <string name="act_booking_payment_info03">으로 전화주세요.</string>
     <string name="action_booking_cardmanager">카드관리</string>

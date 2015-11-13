@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * LoginActivity (로그인화면)
- * <p/>
+ * <p>
  * 사용자 계정 로그인을 담당하는 화면이다. 사용자로부터 아이디와 패스워드를
  * 입력받으며, 이를 로그인을 하는 웹서버 API를 이용한다.
  *

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * CountryCodeHeadNumber      v 1.0.1<br>
- * <p/>
+ * <p>
  * <Br>
  * Android phone 의 국가 코드로 국가전화번호를 획득하는 Class 입니다.<br>
  * Android 에서 기본적으로 지역의 국가코드로 사용하는 ISO 3166-1 alpha-2 codes 에 근거하고 있습니다.<br>

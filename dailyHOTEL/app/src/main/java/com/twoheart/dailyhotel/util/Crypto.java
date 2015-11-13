@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * Crypto
- * <p/>
+ * <p>
  * 암호화 유틸 클래스이다. MD5로 암호화한 뒤 이것을 다시 BASE64 인코딩을
  * 수행하여 암호화된 String 값을 반환한다.
  *

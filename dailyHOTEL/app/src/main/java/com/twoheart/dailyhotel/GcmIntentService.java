@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.IntentService;
 import android.app.KeyguardManager;
 import android.app.KeyguardManager.KeyguardLock;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -45,7 +46,7 @@ import java.util.Locale;
 /**
  * GCM 메시지가 올 경우 실제로 처리하는 클래스, 스마트폰이 꺼져있는 경우 잠금을 뚫고 다이얼로그를 띄움. 스마트폰이 켜져있으며 우리 앱을
  * 킨 상태에서 결제 완료 메시지를 받았다면, 결제완료 다이얼로그를 띄움. 노티피케이션은 GCM이 들어오는 어떠한 경우에도 모두 띄움.
- * <p/>
+ * <p>
  * case 1 : 휴대폰이 켜져있지만 현재 데일리호텔이 켜져있지 않은 상황, => 푸시만 뜸 case 2 : 휴대폰이 켜져있고 데일리호텔이
  * 켜져있는 상황 => 푸시, 다이얼로그형 푸시 뜸 case 3 : 휴대폰이 꺼져있는 경우 => 다이얼로그형 푸시만 뜸
  *
@@ -347,24 +348,43 @@ public class GcmIntentService extends IntentService implements Constants
         @Override
         protected void onPostExecute(Bitmap bitmap)
         {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(GcmIntentService.this);
-
-            builder.setContentTitle(getString(R.string.app_name)) //
-                .setContentText(mMessage) //
-                .setTicker(getResources().getString(R.string.app_name)) //
-                .setSound(mUri) //
-                .setAutoCancel(true) //
-                .setSmallIcon(R.drawable.icon_noti_small) //
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
-                .setColor(getResources().getColor(R.color.dh_theme_color));
-
-            if (bitmap != null)
+            if (Util.isOverAPI16() == true)
             {
-                builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
-            }
+                Notification.Builder builder = new Notification.Builder(GcmIntentService.this)//
+                    .setContentTitle(getString(R.string.app_name))//
+                    .setContentText(mMessage)//
+                    .setSmallIcon(R.drawable.icon_noti_small)//
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
+                    .setColor(getResources().getColor(R.color.dh_theme_color));
 
-            builder.setContentIntent(mPendingIntent);
-            mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+                if (bitmap != null)
+                {
+                    builder.setStyle(new Notification.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
+                }
+
+                builder.setContentIntent(mPendingIntent);
+                mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+            } else
+            {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(GcmIntentService.this);
+
+                builder.setContentTitle(getString(R.string.app_name)) //
+                    .setContentText(mMessage) //
+                    .setTicker(getResources().getString(R.string.app_name)) //
+                    .setSound(mUri) //
+                    .setAutoCancel(true) //
+                    .setSmallIcon(R.drawable.icon_noti_small) //
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
+                    .setColor(getResources().getColor(R.color.dh_theme_color));
+
+                if (bitmap != null)
+                {
+                    builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
+                }
+
+                builder.setContentIntent(mPendingIntent);
+                mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * PaymentWaitActivity (입금대기 화면)
- * <p/>
+ * <p>
  * 계좌이체 결제 선택 후 입금대기 상태 화면
  * 가상계좌 정보를 보여주는 화면이다.
  */

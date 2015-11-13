@@ -98,7 +98,7 @@ public class ExLog
      * <PRE>
      * print
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:17:07
      *
      * @param format 포맷
@@ -123,7 +123,7 @@ public class ExLog
      * <PRE>
      * print
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:17:24
      *
      * @param message 메시지
@@ -137,7 +137,7 @@ public class ExLog
      * <PRE>
      * print
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:17:33
      *
      * @param message 메시지
@@ -152,7 +152,7 @@ public class ExLog
      * <PRE>
      * 디버그
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:17:43
      *
      * @param message 메시지
@@ -187,7 +187,7 @@ public class ExLog
      * <PRE>
      * 에러
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:17:57
      *
      * @param message 메시지
@@ -205,7 +205,7 @@ public class ExLog
      * <PRE>
      * 정보
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:18:04
      *
      * @param message 메시지
@@ -222,7 +222,7 @@ public class ExLog
      * <PRE>
      * Verbose
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:18:15
      *
      * @param message 메시지
@@ -239,7 +239,7 @@ public class ExLog
      * <PRE>
      * 경고
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:18:54
      *
      * @param message 메시지
@@ -256,7 +256,7 @@ public class ExLog
      * <PRE>
      * Map Data를 Debug Print
      * </PRE>
-     * <p/>
+     * <p>
      * jmkim9 2011. 10. 24. 오후 5:52:06
      *
      * @param tag    태그
@@ -344,7 +344,7 @@ public class ExLog
      * <PRE>
      * printMap
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:20:34
      *
      * @param title 타이틀
@@ -360,7 +360,7 @@ public class ExLog
      * <PRE>
      * printMap
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:20:48
      *
      * @param title  타이틀
@@ -377,7 +377,7 @@ public class ExLog
      * <PRE>
      * printJSON
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:21:37
      *
      * @param json JSONObject
@@ -394,7 +394,7 @@ public class ExLog
      * <PRE>
      * printJSON
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:21:47
      *
      * @param json   JSONObject
@@ -412,7 +412,7 @@ public class ExLog
      * <PRE>
      * printJSON
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:21:56
      *
      * @param json String
@@ -426,7 +426,7 @@ public class ExLog
      * <PRE>
      * JSON String을 포맷하여 여러줄에 출력
      * </PRE>
-     * <p/>
+     * <p>
      * jmkim9 2011. 12. 1. 오후 5:43:58
      *
      * @param message 메시지
@@ -515,7 +515,7 @@ public class ExLog
      * <PRE>
      * printMemory
      * </PRE>
-     * <p/>
+     * <p>
      * pinkred 2013. 4. 11. 오후 6:22:21
      */
     @SuppressWarnings("unused")
