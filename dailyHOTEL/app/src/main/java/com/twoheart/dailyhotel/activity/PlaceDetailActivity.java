@@ -515,7 +515,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         @Override
         public void finish()
         {
-            finish();
+            PlaceDetailActivity.super.finish();
         }
     };
 
