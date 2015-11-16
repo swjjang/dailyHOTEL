@@ -423,7 +423,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                                 long dailyTime = mTodaySaleTime.getDailyTime();
                                 int dailyDate = Integer.parseInt(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
                                 int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
-                                int dailyDayOfDays = dailyDate - Integer.parseInt(date);
+                                int dailyDayOfDays = Integer.parseInt(date) - dailyDate;
 
                                 if (nights != 1 || dailyDayOfDays < 0)
                                 {

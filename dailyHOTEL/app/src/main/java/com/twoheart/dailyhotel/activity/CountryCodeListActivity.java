@@ -16,7 +16,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ContryCodeNumber;
+import com.twoheart.dailyhotel.util.CountryCodeNumber;
 import com.twoheart.dailyhotel.view.CountryCodeListLayout;
 
 public class CountryCodeListActivity extends BaseActivity
@@ -67,8 +67,8 @@ public class CountryCodeListActivity extends BaseActivity
 
         mCountryCodeListLayout.setOnUserActionListener(mOnUserActionListener);
 
-        ContryCodeNumber contryCodeNumber = new ContryCodeNumber();
-        mCountryCodeListLayout.setData(contryCodeNumber.getCountryValue(), countryCode);
+        CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
+        mCountryCodeListLayout.setData(countryCodeNumber.getCountryValue(), countryCode);
     }
 
     @Override

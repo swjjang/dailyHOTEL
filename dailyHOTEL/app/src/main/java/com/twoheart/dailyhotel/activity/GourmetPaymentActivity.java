@@ -254,7 +254,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(layoutParams);
 
-        int[] messageResIds = {R.string.dialog_msg_gourmet_payment_message01, R.string.dialog_msg_gourmet_payment_message02, R.string.dialog_msg_gourmet_payment_message03};
+        int[] messageResIds = {R.string.dialog_msg_gourmet_payment_message01, R.string.dialog_msg_gourmet_payment_message02, R.string.dialog_msg_gourmet_payment_message03, R.string.dialog_msg_hotel_payment_message08};
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(GourmetPaymentActivity.this, messageResIds);
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);

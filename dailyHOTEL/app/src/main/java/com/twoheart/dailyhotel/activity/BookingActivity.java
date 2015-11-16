@@ -1317,7 +1317,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(layoutParams);
 
-        int[] messageResIds = {R.string.dialog_msg_hotel_payment_message01, R.string.dialog_msg_hotel_payment_message02, R.string.dialog_msg_hotel_payment_message03};
+        int[] messageResIds = {R.string.dialog_msg_hotel_payment_message01, R.string.dialog_msg_hotel_payment_message02, R.string.dialog_msg_hotel_payment_message03, R.string.dialog_msg_hotel_payment_message08};
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(BookingActivity.this, messageResIds);
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
