@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * <br>
  * 0 으로 기록된 국제전화번호는 위성통신만 가능한 지역이거나 할당되지 않은 번호를 뜻합니다.(False number)<br>
  */
-public class ContryCodeNumber
+public class CountryCodeNumber
 {
     private final String[][] CODE_NUMBER = new String[][]{{"", "", "", "주요국가"},//
         {"KR", "82", "KOREA, REPUBLIC OF", "대한민국"},//

@@ -461,16 +461,16 @@ public class Util implements Constants
 
     private static String getValidateCountry(String code)
     {
-        ContryCodeNumber contryCodeNumber = new ContryCodeNumber();
+        CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
 
-        return contryCodeNumber.getCountry(code);
+        return countryCodeNumber.getCountry(code);
     }
 
     private static boolean isValidateCountryCode(String code)
     {
-        ContryCodeNumber contryCodeNumber = new ContryCodeNumber();
+        CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
 
-        return contryCodeNumber.hasCountryCode(code);
+        return countryCodeNumber.hasCountryCode(code);
     }
 
     public static boolean isValidatePhoneNumber(String phonenumber)
