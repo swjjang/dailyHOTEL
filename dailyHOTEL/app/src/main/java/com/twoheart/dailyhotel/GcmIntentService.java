@@ -351,13 +351,10 @@ public class GcmIntentService extends IntentService implements Constants
             if (Util.isOverAPI16() == true)
             {
                 Notification.Builder builder = new Notification.Builder(GcmIntentService.this)//
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText(mMessage)
-                    .setSound(mUri) //
+                    .setContentTitle(getString(R.string.app_name)).setContentText(mMessage).setSound(mUri) //
                     .setTicker(getResources().getString(R.string.app_name)) //
                     .setAutoCancel(true) //
-                    .setSmallIcon(R.drawable.icon_noti_small)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
+                    .setSmallIcon(R.drawable.icon_noti_small).setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
                     .setColor(getResources().getColor(R.color.dh_theme_color));
 
                 if (bitmap != null)

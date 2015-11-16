@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.ArrayList;
 
@@ -123,10 +124,16 @@ public class DailySignatureView extends View
 
         if (mBitmap == null)
         {
-            mBitmap = Bitmap.createBitmap(right - left, bottom - top, Bitmap.Config.RGB_565);
-            mCanvas = new Canvas(mBitmap);
+            try
+            {
+                mBitmap = Bitmap.createBitmap(right - left, bottom - top, Bitmap.Config.RGB_565);
+                mCanvas = new Canvas(mBitmap);
 
-            clearCanvas(mCanvas);
+                clearCanvas(mCanvas);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     }
 

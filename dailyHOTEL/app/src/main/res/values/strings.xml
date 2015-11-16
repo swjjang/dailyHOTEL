@@ -136,6 +136,7 @@
     <string name="dialog_msg_hotel_payment_message05">발급된 가상 계좌번호로 10분 안에 입금해주세요. 미입금 시, 자동으로 예약이 취소됩니다.</string>
     <string name="dialog_msg_hotel_payment_message06">취소 불가 등 위 내용에 동의하시면\n버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_hotel_payment_message07">취소 불가 등 위 내용에 동의하시면\n서명 후 결제완료 버튼을 눌러주세요.</string>
+    <string name="dialog_msg_hotel_payment_message08">간편결제 시 일시불만 가능하므로 할부를 원하실 경우 일반결제를 선택해주세요.</string>
 
     <string name="dialog_msg_gourmet_payment_message01">예약 취소, 변경 및 환불 불가 상품이에요!</string>
     <string name="dialog_msg_gourmet_payment_message02">특정 좌석과 뷰를 보장해드리기 어려운 점 양해 부탁드려요.</string>
@@ -144,6 +145,7 @@
     <string name="dialog_msg_gourmet_payment_message05">발급된 가상 계좌번호로 10분 안에 입금해주세요. 미입금 시, 자동으로 예약이 취소됩니다.</string>
     <string name="dialog_msg_gourmet_payment_message06">취소 불가 등 위 내용에 동의하시면\n버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_gourmet_payment_message07">취소 불가 등 위 내용에 동의하시면\n서명 후 결제완료 버튼을 눌러주세요.</string>
+    <string name="dialog_msg_gourmet_payment_message08">간편결제 시 일시불만 가능하므로 할부를 원하실 경우 일반결제를 선택해주세요.</string>
 
     <string name="dialog_btn_call">전화 연결</string>
     <string name="dialog_msg_call">데일리호텔 고객센터로 전화 연결합니다.</string>

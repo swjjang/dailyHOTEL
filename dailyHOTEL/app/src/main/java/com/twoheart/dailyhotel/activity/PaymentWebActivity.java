@@ -908,7 +908,7 @@ public class PaymentWebActivity extends BaseActivity implements Constants
         public void feed(final String msg)
         {
             int resultCode = 0;
-            ExLog.e("FEED : " + msg);
+
 
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT, mTicketPayment);
