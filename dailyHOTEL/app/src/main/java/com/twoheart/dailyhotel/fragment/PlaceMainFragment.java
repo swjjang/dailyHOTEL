@@ -25,7 +25,9 @@ import com.twoheart.dailyhotel.view.PlaceViewItem;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public abstract class PlaceMainFragment extends BaseFragment
 {
@@ -419,11 +421,15 @@ public abstract class PlaceMainFragment extends BaseFragment
                             {
                                 // 신규 타입의 화면이동
                                 int fnbIndex = Integer.valueOf(Util.getValueForLinkUrl(param, "idx"));
-                                String date = Util.getValueForLinkUrl(param, "date");
                                 long dailyTime = mTodaySaleTime.getDailyTime();
-                                int dailyDate = Integer.parseInt(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
                                 int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
-                                int dailyDayOfDays = Integer.parseInt(date) - dailyDate;
+
+                                String date = Util.getValueForLinkUrl(param, "date");
+                                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                                Date schemeDate = format.parse(date);
+                                Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+
+                                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / (SaleTime.SECONDS_IN_A_DAY * 1000));
 
                                 if (nights != 1 || dailyDayOfDays < 0)
                                 {
