@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * HotelTabBookingFragment (호텔 예약 탭)
- * <p>
- * 호텔 탭 중 예약 탭 프래그먼트
- */
 package com.twoheart.dailyhotel.fragment;
 
 import android.app.Activity;
@@ -46,7 +39,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class HotelMainFragment extends BaseFragment
@@ -1162,11 +1157,15 @@ public class HotelMainFragment extends BaseFragment
                             {
                                 // 신규 타입의 화면이동
                                 int hotelIndex = Integer.valueOf(Util.getValueForLinkUrl(param, "idx"));
-                                String date = Util.getValueForLinkUrl(param, "date");
                                 long dailyTime = mTodaySaleTime.getDailyTime();
-                                int dailyDate = Integer.parseInt(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
                                 int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
-                                int dailyDayOfDays = Integer.parseInt(date) - dailyDate;
+
+                                String date = Util.getValueForLinkUrl(param, "date");
+                                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                                Date schemeDate = format.parse(date);
+                                Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+
+                                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / (SaleTime.SECONDS_IN_A_DAY * 1000));
 
                                 if (nights <= 0 || dailyDayOfDays < 0)
                                 {
