@@ -571,7 +571,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
-
         @Override
         public void onResponse(String url, String response)
         {

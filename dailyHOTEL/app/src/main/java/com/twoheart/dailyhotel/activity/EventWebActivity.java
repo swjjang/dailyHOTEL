@@ -11,6 +11,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.twoheart.dailyhotel.IntentActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
@@ -109,12 +110,21 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void interlLink(String uri)
         {
-            Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-            marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
-
-            if (marketLaunch.resolveActivity(getPackageManager()) == null)
+            if(Util.isTextEmpty(uri) == true)
             {
-                marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                {
+                    marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                }
+            } else
+            {
+                Intent intent = new Intent(EventWebActivity.this, IntentActivity.class);
+                intent.setData(Uri.parse(uri));
+
+                startActivity(intent);
             }
         }
 

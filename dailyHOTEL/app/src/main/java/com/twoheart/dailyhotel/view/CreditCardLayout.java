@@ -93,11 +93,16 @@ public class CreditCardLayout extends FrameLayout
 
         mLogingLayout = (ViewGroup) view.findViewById(R.id.loginLayout);
         mIntroductionLayout = (ViewGroup) mLogingLayout.findViewById(R.id.introductionLayout);
+        mIntroductionLayout.setOnClickListener(mAddCreditCardClickListener);
 
+        mAddCreditCardButton = (TextView) view.findViewById(R.id.addCreditCardButton);
         mAddCreditCardButton = (TextView) view.findViewById(R.id.addCreditCardButton);
 
         mListView = (ListView) view.findViewById(R.id.creditcardListView);
         mAddCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
+
+        View emptyCardLayout = view.findViewById(R.id.emptyCardLayout);
+        emptyCardLayout.setOnClickListener(mAddCreditCardClickListener);
     }
 
     public void setUserActionListener(CreditCardListActivity.OnUserActionListener listener)
@@ -135,9 +140,11 @@ public class CreditCardLayout extends FrameLayout
         if (arrayList == null || arrayList.size() == 0)
         {
             mIntroductionLayout.setVisibility(View.VISIBLE);
+            mAddCreditCardButton.setVisibility(View.INVISIBLE);
         } else
         {
             mIntroductionLayout.setVisibility(View.GONE);
+            mAddCreditCardButton.setVisibility(View.VISIBLE);
         }
 
         mAdapter.clear();

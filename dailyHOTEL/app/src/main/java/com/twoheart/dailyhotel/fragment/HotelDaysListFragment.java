@@ -167,6 +167,14 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
         return view;
     }
 
+    @Override
+    public void onPause()
+    {
+        hideDaysList();
+
+        super.onPause();
+    }
+
     private void initDaysLayout()
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
