@@ -92,6 +92,12 @@
             layout="@layout/list_row_detail_roomtype"
             android:layout_width="match_parent"
             android:layout_height="92dp"/>
+
+        <include
+            android:id="@+id/ticketType04View"
+            layout="@layout/list_row_detail_roomtype"
+            android:layout_width="match_parent"
+            android:layout_height="92dp"/>
     </LinearLayout>
 
     <RelativeLayout

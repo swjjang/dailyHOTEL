@@ -41,7 +41,7 @@ public abstract class PlaceDetailLayout
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
 
-    private static final int MAX_OF_TICKETTYPE = 3;
+    private static final int MAX_OF_TICKETTYPE = 4;
 
     protected PlaceDetail mPlaceDetail;
     protected BaseActivity mActivity;
@@ -606,10 +606,10 @@ public abstract class PlaceDetailLayout
             return;
         }
 
-        // 객실 타입 세팅
         mTicketInformationViews[0] = mViewGroupRoot.findViewById(R.id.ticketType01View);
         mTicketInformationViews[1] = mViewGroupRoot.findViewById(R.id.ticketType02View);
         mTicketInformationViews[2] = mViewGroupRoot.findViewById(R.id.ticketType03View);
+        mTicketInformationViews[3] = mViewGroupRoot.findViewById(R.id.ticketType04View);
 
         int size = ticketInformationList.size();
 
@@ -876,7 +876,7 @@ public abstract class PlaceDetailLayout
         if (Util.isOverAPI12() == true)
         {
             mTicketInformationLayout.setVisibility(View.INVISIBLE);
-            mTicketInformationLayout.setTranslationY(Util.dpToPx(mActivity, 276));
+            mTicketInformationLayout.setTranslationY(Util.dpToPx(mActivity, MAX_OF_TICKETTYPE * 92));
         } else
         {
             mTicketInformationLayout.setVisibility(View.GONE);
