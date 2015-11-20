@@ -98,6 +98,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
         SharedPreferences.Editor editor = sharedPreference.edit();
         editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
+        editor.putBoolean(KEY_PREFERENCE_FNB_REGION_SETTING, false);
         editor.remove(KEY_PREFERENCE_GCM_ID);
         editor.commit();
         editor.apply();

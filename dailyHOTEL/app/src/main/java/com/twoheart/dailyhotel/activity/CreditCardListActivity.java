@@ -448,6 +448,7 @@ public class CreditCardListActivity extends BaseActivity
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserSessionBillingCardDelJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
