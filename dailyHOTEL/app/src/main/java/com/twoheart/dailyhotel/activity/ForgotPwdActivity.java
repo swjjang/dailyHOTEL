@@ -42,7 +42,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
         etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
         btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
         btnForgot.setOnClickListener(this);
-        etForgot.setId(EditorInfo.IME_ACTION_DONE);
+        etForgot.setImeOptions(EditorInfo.IME_ACTION_DONE);
         etForgot.setOnEditorActionListener(new OnEditorActionListener()
         {
 

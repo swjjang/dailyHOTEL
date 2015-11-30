@@ -6,13 +6,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         android:background="@drawable/popup_bg_white"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="79dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:gravity="center">
@@ -44,13 +44,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="17dp"
             android:gravity="center"
             android:text="@string/satisfaction_selectservice_title"
             android:textColor="@color/dialog_message_text"
-            android:textSize="11dp"
-            android:textStyle="bold"
-            android:visibility="visible"/>
+            android:textSize="13dp"
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:id="@+id/selectServiceLayout"
@@ -60,8 +59,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="3dp"
             android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -91,8 +89,7 @@
                     android:background="@drawable/selector_satisfaction_boxcolor"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="17dp"
-                    />
+                    android:textSize="17dp"/>
 
             </LinearLayout>
 
@@ -141,7 +138,7 @@
             android:layout_height="84dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="22dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/commentsHintView"
@@ -157,11 +154,11 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/shape_edittext_statisfaction_background"
                 android:gravity="top|left"
+                android:maxLength="190"
+                android:maxLines="20"
                 android:padding="5dp"
                 android:textColor="@color/dialog_message_text"
-                android:textSize="13dp"
-                android:maxLength="190"
-                android:maxLines="20"/>
+                android:textSize="13dp"/>
 
         </FrameLayout>
 
@@ -169,7 +166,7 @@
             android:id="@+id/positiveTextView"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="22dp"
             android:background="@color/dh_theme_color"
             android:gravity="center"
             android:text="@string/label_send_your_comments"

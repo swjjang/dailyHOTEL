@@ -7,19 +7,12 @@ import android.os.Bundle;
 
 import com.twoheart.dailyhotel.util.Util;
 
-import io.branch.referral.Branch;
-
 public class IntentActivity extends Activity
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        if (Util.isOverAPI14() == true)
-        {
-            Branch.getAutoInstance(getApplicationContext());
-        }
 
         Intent intent = getIntent();
 

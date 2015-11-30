@@ -47,9 +47,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
-
 public class SplashActivity extends BaseActivity implements Constants, ErrorListener
 {
     private static final int PROGRESS_CIRCLE_COUNT = 3;
@@ -119,20 +116,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
     {
         AnalyticsManager.getInstance(this).recordScreen(Screen.SPLASH);
         super.onStart();
-
-        if (Util.isOverAPI16() == true)
-        {
-            Branch branch = Branch.getInstance();
-            branch.initSession(new Branch.BranchReferralInitListener()
-            {
-                @Override
-                public void onInitFinished(JSONObject referringParams, BranchError error)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-            }, this.getIntent().getData(), this);
-        }
 
         // 서버 상태 체크
         DailyNetworkAPI.getInstance().requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener, new ErrorListener()

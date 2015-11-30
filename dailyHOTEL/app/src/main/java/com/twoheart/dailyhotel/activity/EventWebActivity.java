@@ -110,22 +110,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void interlLink(String uri)
         {
-            if(Util.isTextEmpty(uri) == true)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+            Intent intent = new Intent(EventWebActivity.this, IntentActivity.class);
+            intent.setData(Uri.parse(uri));
 
-                if (marketLaunch.resolveActivity(getPackageManager()) == null)
-                {
-                    marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
-                }
-            } else
-            {
-                Intent intent = new Intent(EventWebActivity.this, IntentActivity.class);
-                intent.setData(Uri.parse(uri));
-
-                startActivity(intent);
-            }
+            startActivity(intent);
         }
 
         @JavascriptInterface

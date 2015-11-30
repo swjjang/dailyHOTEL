@@ -341,6 +341,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
     private void showInputMobileNumberDialog(String mobileNumber)
     {
+        if(isFinishing() == true)
+        {
+            return;
+        }
+
         Intent intent = InputMobileNumberDialogActivity.newInstance(ProfileActivity.this, mobileNumber);
         startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
     }

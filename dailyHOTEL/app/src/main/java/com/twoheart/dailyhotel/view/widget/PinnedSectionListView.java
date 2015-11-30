@@ -37,6 +37,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+
 /**
  * ListView, which is capable to pin section views at its top while the rest is
  * still scrolled.
@@ -480,15 +483,22 @@ public class PinnedSectionListView extends ListView
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b)
     {
-        super.onLayout(changed, l, t, r, b);
-        if (mPinnedSection != null)
+        try
         {
-            int parentWidth = r - l - getPaddingLeft() - getPaddingRight();
-            int shadowWidth = mPinnedSection.view.getWidth();
-            if (parentWidth != shadowWidth)
+            super.onLayout(changed, l, t, r, b);
+            if (mPinnedSection != null)
             {
-                recreatePinnedShadow();
+                int parentWidth = r - l - getPaddingLeft() - getPaddingRight();
+                int shadowWidth = mPinnedSection.view.getWidth();
+                if (parentWidth != shadowWidth)
+                {
+                    recreatePinnedShadow();
+                }
             }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+            Util.restartApp(getContext());
         }
     }
 

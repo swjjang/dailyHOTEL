@@ -32,8 +32,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.util.Locale;
-
-import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 
 public class DailyHotel extends Application implements Constants
@@ -52,12 +50,6 @@ public class DailyHotel extends Application implements Constants
         mInstance = this;
 
         Util.setLocale(this, Locale.KOREAN);
-
-        //
-        if (Util.isOverAPI14() == true)
-        {
-            Branch branch = Branch.getAutoInstance(this);
-        }
 
         // 버전 정보 얻기
         VERSION = Util.getAppVersion(getApplicationContext());

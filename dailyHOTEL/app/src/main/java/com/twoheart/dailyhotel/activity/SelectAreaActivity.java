@@ -65,6 +65,9 @@ public class SelectAreaActivity extends BaseActivity
 
     private void initLayout(Province province, ArrayList<AreaItem> arrayList)
     {
+        AreaItem footerItem = new AreaItem();
+        arrayList.add(footerItem);
+
         mAdapter = new AreaAnimatedExpandableListAdapter(this);
         mAdapter.setData(arrayList);
         mAdapter.setSelected(province);
@@ -77,7 +80,7 @@ public class SelectAreaActivity extends BaseActivity
             @Override
             public boolean onGroupClick(ExpandableListView parent, final View v, final int groupPosition, long id)
             {
-                if (isLockUiComponent() == true)
+                if (isLockUiComponent() == true || v.getTag() == null)
                 {
                     return true;
                 }
@@ -441,7 +444,17 @@ public class SelectAreaActivity extends BaseActivity
             if (convertView == null)
             {
                 convertView = inflater.inflate(R.layout.list_row_area, parent, false);
+            } else
+            {
+                Integer resourceId = (Integer) convertView.getTag(parent.getId());
+
+                if (resourceId == null || resourceId.intValue() != R.layout.list_row_area)
+                {
+                    convertView = inflater.inflate(R.layout.list_row_area, parent, false);
+                }
             }
+
+            convertView.setTag(parent.getId(), R.layout.list_row_area);
 
             TextView textView = (TextView) convertView.findViewById(R.id.areaTextView);
 
@@ -517,11 +530,37 @@ public class SelectAreaActivity extends BaseActivity
         {
             Province province = getGroup(groupPosition);
 
-            if (convertView == null)
+            if (province == null)
             {
-                convertView = inflater.inflate(R.layout.list_row_province, parent, false);
+                convertView = inflater.inflate(R.layout.list_row_region_footer, parent, false);
+                convertView.setTag(null);
+                convertView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+
+                    }
+                });
+
+                return convertView;
+            } else
+            {
+                if (convertView == null)
+                {
+                    convertView = inflater.inflate(R.layout.list_row_province, parent, false);
+                } else
+                {
+                    Integer resourceId = (Integer) convertView.getTag(parent.getId());
+
+                    if (resourceId == null || resourceId.intValue() != R.layout.list_row_province)
+                    {
+                        convertView = inflater.inflate(R.layout.list_row_province, parent, false);
+                    }
+                }
             }
 
+            convertView.setTag(parent.getId(), R.layout.list_row_province);
             convertView.setTag(groupPosition);
 
             ImageView imageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);

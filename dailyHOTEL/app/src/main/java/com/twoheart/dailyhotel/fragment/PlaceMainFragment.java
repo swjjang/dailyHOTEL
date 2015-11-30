@@ -402,10 +402,10 @@ public abstract class PlaceMainFragment extends BaseFragment
                             if (Util.isTextEmpty(previousType) == false)
                             {
                                 // 이전 타입의 화면 이동
-                                int fnbIndex = Integer.valueOf(previousType);
-                                long dailyTime = Long.valueOf(Util.getValueForLinkUrl(param, "dailyTime"));
-                                int dailyDayOfDays = Integer.valueOf(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
-                                int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
+                                int fnbIndex = Integer.parseInt(previousType);
+                                long dailyTime = Long.parseLong(Util.getValueForLinkUrl(param, "dailyTime"));
+                                int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
+                                int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
 
                                 if (nights != 1 || dailyDayOfDays < 0)
                                 {
@@ -420,9 +420,9 @@ public abstract class PlaceMainFragment extends BaseFragment
                             } else
                             {
                                 // 신규 타입의 화면이동
-                                int fnbIndex = Integer.valueOf(Util.getValueForLinkUrl(param, "idx"));
+                                int fnbIndex = Integer.parseInt(Util.getValueForLinkUrl(param, "idx"));
                                 long dailyTime = mTodaySaleTime.getDailyTime();
-                                int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
+                                int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
 
                                 String date = Util.getValueForLinkUrl(param, "date");
                                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");

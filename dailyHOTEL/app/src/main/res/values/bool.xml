@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="build_log">false</string>
+    <bool name="abc_config_showMenuShortcutsWhenKeyboardPresent">false</bool>
 </resources>
