@@ -155,7 +155,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mLoginView.setOnClickListener(this);
         mFacebookLoginView.setOnClickListener(this);
 
-        mPasswordEditText.setId(EditorInfo.IME_ACTION_DONE);
+        mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mPasswordEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
 

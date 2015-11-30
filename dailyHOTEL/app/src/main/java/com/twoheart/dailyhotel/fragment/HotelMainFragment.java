@@ -814,7 +814,7 @@ public class HotelMainFragment extends BaseFragment
         }
     };
 
-    private DailyHotelJsonResponseListener mSaleHotelAllJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -1139,10 +1139,10 @@ public class HotelMainFragment extends BaseFragment
                             if (Util.isTextEmpty(previousType) == false)
                             {
                                 // 이전 타입의 화면 이동
-                                int hotelIndex = Integer.valueOf(previousType);
-                                long dailyTime = Long.valueOf(Util.getValueForLinkUrl(param, "dailyTime"));
-                                int dailyDayOfDays = Integer.valueOf(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
-                                int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
+                                int hotelIndex = Integer.parseInt(previousType);
+                                long dailyTime = Long .parseLong(Util.getValueForLinkUrl(param, "dailyTime"));
+                                int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
+                                int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
 
                                 if (nights <= 0 || dailyDayOfDays < 0)
                                 {
@@ -1156,9 +1156,9 @@ public class HotelMainFragment extends BaseFragment
                             } else
                             {
                                 // 신규 타입의 화면이동
-                                int hotelIndex = Integer.valueOf(Util.getValueForLinkUrl(param, "idx"));
+                                int hotelIndex = Integer.parseInt(Util.getValueForLinkUrl(param, "idx"));
                                 long dailyTime = mTodaySaleTime.getDailyTime();
-                                int nights = Integer.valueOf(Util.getValueForLinkUrl(param, "nights"));
+                                int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
 
                                 String date = Util.getValueForLinkUrl(param, "date");
                                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
@@ -1182,13 +1182,13 @@ public class HotelMainFragment extends BaseFragment
                             ExLog.d(e.toString());
 
                             // 지역 리스트를 가져온다
-                            DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mSaleHotelAllJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
                         }
                     }
                 } else
                 {
                     // 지역 리스트를 가져온다
-                    DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mSaleHotelAllJsonResponseListener, baseActivity);
+                    DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
                 }
 
             } catch (Exception e)

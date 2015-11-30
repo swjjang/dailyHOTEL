@@ -33,6 +33,9 @@ public class AnalyticsManager
     {
         mGoogleAnalytics = GoogleAnalytics.getInstance(context);
         mTracker = mGoogleAnalytics.getTracker(Constants.GA_PROPERTY_ID);
+
+        // Enable Display Features.
+//        mTracker.enableAdvertisingIdCollection(true);
     }
 
     public void recordScreen(String screenName)

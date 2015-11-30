@@ -482,12 +482,8 @@ public class Util implements Constants
 
         if (phonenumber.charAt(0) == '+')
         {
-            String[] text = phonenumber.split("\\s");
-
-            if (text.length != 2)
-            {
-                return false;
-            }
+            String globalPhoneNumber = phonenumber.replaceFirst("\\s", "^");
+            String[] text = globalPhoneNumber.split("\\^");
 
             // 국제 전화번호 존재 여부 확인
             if (isValidateCountryCode(text[0]) == false)
@@ -513,8 +509,11 @@ public class Util implements Constants
                 }
             } else
             {
-                // 국내가 아니면 숫자만 있는지 검증한다
-                if (TextUtils.isDigitsOnly(text[1]) == true)
+                text[1] = text[1].replace("\\(|\\)|\\s|\\-", "");
+
+                // 국내가 아니면 숫자만 있는지 검증한다 7자리 ~ 15자리
+                int length = text[1].length();
+                if (length >= 7 && length <= 15)
                 {
                     return true;
                 }
@@ -537,7 +536,8 @@ public class Util implements Constants
             return false;
         }
 
-        String[] number = mobileNumber.split("\\s");
+        mobileNumber = mobileNumber.replaceFirst("\\s", "^");
+        String[] number = mobileNumber.split("\\^");
 
         if (number.length != 2)
         {
@@ -581,13 +581,8 @@ public class Util implements Constants
 
         if (phonenumber.charAt(0) == '+')
         {
-            String[] text = phonenumber.split("\\s");
-
-            if (text.length != 2)
-            {
-                return null;
-            }
-
+            String globalPhoneNumber = phonenumber.replaceFirst("\\s", "^");
+            String[] text = globalPhoneNumber.split("\\^");
             String countryCode = getValidateCountry(text[0]);
 
             // 국제 전화번호 존재 여부 확인
@@ -613,12 +608,8 @@ public class Util implements Constants
                 }
             } else
             {
-                // 국내가 아니면 숫자만 있는지 검증한다
-                if (TextUtils.isDigitsOnly(text[1]) == true)
-                {
-                    text[0] = countryCode + "\n" + text[0];
-                    return text;
-                }
+                text[0] = countryCode + "\n" + text[0];
+                return text;
             }
         } else
         {
@@ -761,7 +752,7 @@ public class Util implements Constants
                 textView.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
             }
 
-            textView.setText(countryCode[1].replaceAll("\\(|\\)|-", ""));
+            textView.setText(countryCode[1].replaceAll("\\(|\\)|-|\\s", ""));
             return countryCode[0].substring(countryCode[0].indexOf('\n') + 1) + " " + textView.getText().toString();
         } else
         {

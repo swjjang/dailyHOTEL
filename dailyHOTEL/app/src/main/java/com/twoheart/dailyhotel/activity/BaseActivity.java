@@ -53,8 +53,6 @@ import com.twoheart.dailyhotel.view.OnLoadListener;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
-import io.branch.referral.Branch;
-
 public class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
     protected static int mStatusBarHeight;
@@ -77,11 +75,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        if (Util.isOverAPI14() == true)
-        {
-            Branch.getAutoInstance(getApplicationContext());
-        }
 
         sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         mLockUI = new LoadingDialog(this);
@@ -210,8 +203,8 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         {
             if (view.getVisibility() != View.INVISIBLE)
             {
-                mToolbar.setTitleTextColor(android.R.color.transparent);
-                mToolbar.setBackgroundColor(android.R.color.transparent);
+                mToolbar.setTitleTextColor(getResources().getColor(android.R.color.transparent));
+                mToolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
                 view.setVisibility(View.INVISIBLE);
             }

@@ -14,6 +14,7 @@
     <color name="section_background">#fafafa</color>
     <color name="rating_hotel_title_border">#33000000</color>
     <color name="setting_fragment_section_border">#8c8c8c</color>
+    <color name="network_error_text">#cccccc</color>
 
     <color name="textView_textColor_section">#969696</color>
     <color name="textView_textColor_main">#5c5c5c</color>

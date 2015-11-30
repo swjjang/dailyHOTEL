@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * SettingFragment (설정 화면)
- * <p>
+ * <p/>
  * 어플리케이션의 설정 화면이다. 뷰는 리스트뷰처럼 보이나 리스트뷰처럼 보이도록
  * 구성된 화면일 뿐이다. 이 화면에서 현재 로그인 상태를 가져오기 위해 네트워
  * 크 작업을 하기도 한다.
@@ -142,7 +142,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             public void onClick(View v)
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://www.facebook.com/Dailyhotel"));
+                intent.setData(Uri.parse("https://www.facebook.com/dailyhotel"));
                 startActivity(intent);
             }
         });
@@ -153,7 +153,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             public void onClick(View v)
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://instagram.com/dailyhotel"));
+                intent.setData(Uri.parse("https://www.instagram.com/dailyhotel_korea"));
                 startActivity(intent);
             }
         });
@@ -174,7 +174,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         //            @Override
         //            public void onClick(View v)
         //            {
-        //                startActivity(SatisfactionActivity.newInstance(getContext(), "카페 스탠포드", 26, 1443571200000L));
+        //                startActivity(com.twoheart.dailyhotel.activity.SatisfactionActivity.newInstance(getContext(), "카페 스탠포드", 26, 1443571200000L));
         //            }
         //        });
         //
@@ -183,7 +183,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         //            @Override
         //            public void onClick(View v)
         //            {
-        //                startActivity(SatisfactionActivity.newInstance(getContext(), "인터컨티넨탈 서울 코엑스", 404880, 1446822000000L, 1446897600000L));
+        //                startActivity(com.twoheart.dailyhotel.activity.SatisfactionActivity.newInstance(getContext(), "인터컨티넨탈 서울 코엑스", 404880, 1446822000000L, 1446897600000L));
         //            }
         //        });
 
