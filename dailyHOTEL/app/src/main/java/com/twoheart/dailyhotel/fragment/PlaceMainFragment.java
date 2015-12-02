@@ -34,6 +34,8 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected SaleTime mTodaySaleTime;
     protected OnUserActionListener mOnUserActionListener;
     protected VIEW_TYPE mViewType = VIEW_TYPE.LIST;
+    protected boolean mMapEnabled;
+
     private boolean mMenuEnabled;
     private boolean mDontReloadAtOnResume;
 
@@ -161,7 +163,7 @@ public abstract class PlaceMainFragment extends BaseFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (baseActivity == null || (enabled == true && mMapEnabled == false))
         {
             return;
         }

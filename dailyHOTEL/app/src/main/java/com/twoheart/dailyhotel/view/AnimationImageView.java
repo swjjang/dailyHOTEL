@@ -230,6 +230,7 @@ public class AnimationImageView extends ImageView
 
         if (drawable == null)
         {
+            mIsImageNone = true;
             return;
         }
 

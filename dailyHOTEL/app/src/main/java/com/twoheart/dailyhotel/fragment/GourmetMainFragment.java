@@ -564,6 +564,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void setMapViewVisible(boolean isVisible)
         {
+            mMapEnabled = isVisible;
             setMenuEnabled(isVisible);
         }
 

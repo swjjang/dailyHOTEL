@@ -142,8 +142,16 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             public void onClick(View v)
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://www.facebook.com/dailyhotel"));
-                startActivity(intent);
+
+                try
+                {
+                    intent.setData(Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/Dailyhotel.Korea"));
+                    startActivity(intent);
+                } catch (Exception e)
+                {
+                    intent.setData(Uri.parse("https://www.facebook.com/dailyhotel"));
+                    startActivity(intent);
+                }
             }
         });
 
@@ -153,8 +161,16 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             public void onClick(View v)
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://www.instagram.com/dailyhotel_korea"));
-                startActivity(intent);
+
+                try
+                {
+                    intent.setData(Uri.parse("instagram://user?username=dailyhotel"));
+                    startActivity(intent);
+                }catch (Exception e)
+                {
+                    intent.setData(Uri.parse("https://www.instagram.com/dailyhotel"));
+                    startActivity(intent);
+                }
             }
         });
 

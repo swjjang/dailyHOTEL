@@ -45,8 +45,8 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
     @Override
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response)
     {
-
         String parsed;
+
         try
         {
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
