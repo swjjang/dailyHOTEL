@@ -185,7 +185,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(hotel.getImage(), resource.getAbsolutePath());
+                    FileLruCache.getInstance().put(hotel.getImage(), resource.getName());
                     Glide.with(mContext).load(resource).crossFade().into(hotelImageView);
                 }
             });
@@ -196,7 +196,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(hotel.getImage(), resource.getAbsolutePath());
+                    FileLruCache.getInstance().put(hotel.getImage(), resource.getName());
                     Glide.with(mContext).load(resource).crossFade().into(hotelImageView);
                 }
             });
