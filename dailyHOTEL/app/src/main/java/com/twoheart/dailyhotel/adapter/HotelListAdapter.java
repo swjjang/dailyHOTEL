@@ -310,7 +310,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(element.getImage(), resource.getAbsolutePath());
+                    FileLruCache.getInstance().put(element.getImage(), resource.getName());
                     Glide.with(context).load(resource).crossFade().into(placeImageView);
                 }
             });
@@ -321,7 +321,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(element.getImage(), resource.getAbsolutePath());
+                    FileLruCache.getInstance().put(element.getImage(), resource.getName());
                     Glide.with(context).load(resource).crossFade().into(placeImageView);
                 }
             });

@@ -123,7 +123,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
+                    FileLruCache.getInstance().put(place.imageUrl, resource.getName());
                     Glide.with(mContext).load(resource).crossFade().into(placeImageView);
                 }
             });
@@ -134,7 +134,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
+                    FileLruCache.getInstance().put(place.imageUrl, resource.getName());
                     Glide.with(mContext).load(resource).crossFade().into(placeImageView);
                 }
             });

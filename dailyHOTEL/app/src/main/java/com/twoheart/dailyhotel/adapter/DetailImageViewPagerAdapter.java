@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.AnimationImageView;
 
+import java.io.File;
 import java.util.List;
 
 public class DetailImageViewPagerAdapter extends PagerAdapter
@@ -73,44 +74,54 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
         imageView.setTag(imageView.getId(), position);
 
         String url = mImageUrlList.get(position);
-        String imageFilePath = FileLruCache.getInstance().get(url);
+        String imageFileName = FileLruCache.getInstance().get(url);
+        boolean isExist = false;
 
-        if (Util.isTextEmpty(imageFilePath) == false)
+        if (Util.isTextEmpty(imageFileName) == false)
         {
-            imageView.setImageBitmap(BitmapFactory.decodeFile(imageFilePath));
+            File file = new File(Glide.getPhotoCacheDir(mContext).getAbsoluteFile() + "/" + imageFileName);
+
+            if (file.isFile() == true && file.exists() == true)
+            {
+                imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                isExist = true;
+            }
         }
 
-        RequestListener<String, GlideDrawable> glideDrawableRequestListener = new RequestListener<String, GlideDrawable>()
+        if (isExist == false)
         {
-            @Override
-            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+            RequestListener<String, GlideDrawable> glideDrawableRequestListener = new RequestListener<String, GlideDrawable>()
             {
-                imageView.setImageDrawable(null);
-                return false;
-            }
+                @Override
+                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                {
+                    imageView.setImageDrawable(null);
+                    return false;
+                }
 
-            @Override
-            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                {
+                    return false;
+                }
+            };
+
+            SimpleTarget<GlideDrawable> glideDrawableSimpleTarget = new SimpleTarget<GlideDrawable>()
             {
-                return false;
-            }
-        };
+                @Override
+                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation)
+                {
+                    imageView.setImageDrawable(resource);
+                }
+            };
 
-        SimpleTarget<GlideDrawable> glideDrawableSimpleTarget = new SimpleTarget<GlideDrawable>()
-        {
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation)
+            if (Util.getLCDWidth(mContext) < 720)
             {
-                imageView.setImageDrawable(resource);
+                Glide.with(mContext).load(url).override(360, 240).listener(glideDrawableRequestListener).into(glideDrawableSimpleTarget);
+            } else
+            {
+                Glide.with(mContext).load(url).listener(glideDrawableRequestListener).into(glideDrawableSimpleTarget);
             }
-        };
-
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            Glide.with(mContext).load(url).override(360, 240).listener(glideDrawableRequestListener).into(glideDrawableSimpleTarget);
-        } else
-        {
-            Glide.with(mContext).load(url).listener(glideDrawableRequestListener).into(glideDrawableSimpleTarget);
         }
 
         LayoutParams layoutParams = new LayoutParams(width, width);
