@@ -16,29 +16,29 @@
 
 package com.twoheart.dailyhotel.util;
 
-import android.graphics.drawable.Drawable;
 import android.support.v4.util.LruCache;
 
-public class DrawableLruCache extends LruCache<String, Drawable>
+public class FileLruCache extends LruCache<String, String>
 {
-    private static DrawableLruCache mBitmapLruCache;
+    private static FileLruCache mInstance;
 
-    public synchronized static DrawableLruCache getInstance()
+    public synchronized static FileLruCache getInstance()
     {
-        if (mBitmapLruCache == null)
+        if (mInstance == null)
         {
-            mBitmapLruCache = new DrawableLruCache();
+            mInstance = new FileLruCache();
         }
 
-        return mBitmapLruCache;
+        return mInstance;
     }
 
-    private DrawableLruCache()
+    private FileLruCache()
     {
-        this(3);
+        // 개당 1씩으로 계산된다. 50개까지 저장함
+        this(50);
     }
 
-    private DrawableLruCache(int sizeInKiloBytes)
+    private FileLruCache(int sizeInKiloBytes)
     {
         super(sizeInKiloBytes);
     }

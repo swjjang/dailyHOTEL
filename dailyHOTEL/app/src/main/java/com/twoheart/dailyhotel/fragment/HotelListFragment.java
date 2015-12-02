@@ -29,7 +29,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -45,8 +44,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DrawableLruCache;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
@@ -209,15 +206,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             }
 
             mUserActionListener.selectHotel(hotelListViewItem, mSaleTime);
-
-            try
-            {
-                ImageView imageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
-                DrawableLruCache.getInstance().put(hotelListViewItem.getItem().getImage(), imageView.getDrawable());
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
         }
     }
 

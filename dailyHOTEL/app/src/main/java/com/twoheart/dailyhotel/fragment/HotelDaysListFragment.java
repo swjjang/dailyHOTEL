@@ -33,7 +33,6 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,7 +41,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.DrawableLruCache;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
@@ -447,15 +445,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
             }
 
             mUserActionListener.selectHotel(hotelListViewItem, mSelectedCheckInSaleTime);
-
-            try
-            {
-                ImageView imageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
-                DrawableLruCache.getInstance().put(hotelListViewItem.getItem().getImage(), imageView.getDrawable());
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
         }
     }
 

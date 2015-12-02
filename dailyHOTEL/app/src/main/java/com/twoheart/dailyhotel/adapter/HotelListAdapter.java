@@ -19,14 +19,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.StringSignature;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -200,7 +202,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
     private View makeEntryView(View convertView, ViewGroup parent, HotelListViewItem hotelListViewItem)
     {
-        Hotel element = hotelListViewItem.getItem();
+        final Hotel element = hotelListViewItem.getItem();
         HotelListViewHolder viewHolder = null;
 
         if (convertView != null)
@@ -299,14 +301,30 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
         viewHolder.hotelGradeView.setText(element.getCategory().getName(context));
         viewHolder.hotelGradeView.setBackgroundResource(element.getCategory().getColorResId());
 
+        final ImageView placeImageView = viewHolder.hotelImageView;
+
         if (Util.getLCDWidth(context) < 720)
         {
-            Glide.with(context).load(element.getImage()).placeholder(R.drawable.img_placeholder)//
-                .crossFade().override(360, 240).into(viewHolder.hotelImageView);
+            Glide.with(context).load(element.getImage()).downloadOnly(new SimpleTarget<File>(360, 240)
+            {
+                @Override
+                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
+                {
+                    FileLruCache.getInstance().put(element.getImage(), resource.getAbsolutePath());
+                    Glide.with(context).load(resource).crossFade().into(placeImageView);
+                }
+            });
         } else
         {
-            Glide.with(context).load(element.getImage()).placeholder(R.drawable.img_placeholder)//
-                .crossFade().into(viewHolder.hotelImageView);
+            Glide.with(context).load(element.getImage()).downloadOnly(new SimpleTarget<File>()
+            {
+                @Override
+                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
+                {
+                    FileLruCache.getInstance().put(element.getImage(), resource.getAbsolutePath());
+                    Glide.with(context).load(resource).crossFade().into(placeImageView);
+                }
+            });
         }
 
         int availableRoomCount = element.getAvailableRoom();

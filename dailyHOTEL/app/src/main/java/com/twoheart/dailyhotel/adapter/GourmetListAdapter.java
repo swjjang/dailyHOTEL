@@ -11,11 +11,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -62,7 +66,7 @@ public class GourmetListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_ENTRY:
             {
-                Place place = item.getPlace();
+                final Place place = item.getPlace();
                 PlaceViewHolder viewHolder = null;
 
                 if (convertView != null)
@@ -152,14 +156,30 @@ public class GourmetListAdapter extends PlaceListAdapter
                 //                viewHolder.hotelGradeView.setText(place.grade.getName(context));
                 //                viewHolder.hotelGradeView.setBackgroundResource(place.grade.getColorResId());
 
+                final ImageView placeImageView = viewHolder.hotelImageView;
+
                 if (Util.getLCDWidth(context) < 720)
                 {
-                    Glide.with(context).load(place.imageUrl).placeholder(R.drawable.img_placeholder)//
-                        .crossFade().override(360, 240).into(viewHolder.hotelImageView);
+                    Glide.with(context).load(place.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
+                    {
+                        @Override
+                        public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
+                        {
+                            FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
+                            Glide.with(context).load(resource).crossFade().into(placeImageView);
+                        }
+                    });
                 } else
                 {
-                    Glide.with(context).load(place.imageUrl).placeholder(R.drawable.img_placeholder)//
-                        .crossFade().into(viewHolder.hotelImageView);
+                    Glide.with(context).load(place.imageUrl).downloadOnly(new SimpleTarget<File>()
+                    {
+                        @Override
+                        public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
+                        {
+                            FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
+                            Glide.with(context).load(resource).crossFade().into(placeImageView);
+                        }
+                    });
                 }
 
                 // SOLD OUT 표시

@@ -341,7 +341,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
     private void showInputMobileNumberDialog(String mobileNumber)
     {
-        if(isFinishing() == true)
+        if (isFinishing() == true)
         {
             return;
         }

@@ -1142,7 +1142,7 @@ public class HotelMainFragment extends BaseFragment
                             {
                                 // 이전 타입의 화면 이동
                                 int hotelIndex = Integer.parseInt(previousType);
-                                long dailyTime = Long .parseLong(Util.getValueForLinkUrl(param, "dailyTime"));
+                                long dailyTime = Long.parseLong(Util.getValueForLinkUrl(param, "dailyTime"));
                                 int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
                                 int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
 
