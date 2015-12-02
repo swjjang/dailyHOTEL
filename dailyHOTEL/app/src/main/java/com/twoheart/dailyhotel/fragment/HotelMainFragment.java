@@ -55,6 +55,7 @@ public class HotelMainFragment extends BaseFragment
     private Province mSelectedProvince;
 
     private boolean mMenuEnabled;
+    private boolean mMapEnabled;
     private boolean mDontReloadAtOnResume;
 
     private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
@@ -206,7 +207,7 @@ public class HotelMainFragment extends BaseFragment
 
     public void setMenuEnabled(boolean enabled)
     {
-        if (mMenuEnabled == enabled)
+        if (mMenuEnabled == enabled || (enabled == true && mMapEnabled == false))
         {
             return;
         }
@@ -791,6 +792,7 @@ public class HotelMainFragment extends BaseFragment
         @Override
         public void setMapViewVisible(boolean isVisible)
         {
+            mMapEnabled = isVisible;
             setMenuEnabled(isVisible);
         }
 
