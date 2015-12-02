@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.twoheart.dailyhotel.util.Util;
-
 public class IntentActivity extends Activity
 {
     @Override

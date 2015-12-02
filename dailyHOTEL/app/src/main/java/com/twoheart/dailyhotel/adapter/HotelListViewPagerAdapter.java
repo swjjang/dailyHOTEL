@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -20,16 +19,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.util.DrawableLruCache;
+import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -179,48 +178,28 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         grade.setText(hotel.getCategory().getName(mContext));
         grade.setBackgroundResource(hotel.getCategory().getColorResId());
 
-        Drawable drawable = DrawableLruCache.getInstance().get(hotel.getImage());
-
-        if (drawable != null)
+        if (Util.getLCDWidth(mContext) < 720)
         {
-            hotelImageView.setImageDrawable(drawable);
+            Glide.with(mContext).load(hotel.getImage()).downloadOnly(new SimpleTarget<File>(360, 240)
+            {
+                @Override
+                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
+                {
+                    FileLruCache.getInstance().put(hotel.getImage(), resource.getAbsolutePath());
+                    Glide.with(mContext).load(resource).crossFade().into(hotelImageView);
+                }
+            });
         } else
         {
-            if (Util.getLCDWidth(mContext) < 720)
+            Glide.with(mContext).load(hotel.getImage()).downloadOnly(new SimpleTarget<File>()
             {
-                Glide.with(mContext).load(hotel.getImage()).crossFade().override(360, 240).listener(new RequestListener<String, GlideDrawable>()
+                @Override
+                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
-                    {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
-                    {
-                        DrawableLruCache.getInstance().put(model, resource);
-                        return false;
-                    }
-                }).into(hotelImageView);
-            } else
-            {
-                Glide.with(mContext).load(hotel.getImage()).crossFade().listener(new RequestListener<String, GlideDrawable>()
-                {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
-                    {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
-                    {
-                        DrawableLruCache.getInstance().put(model, resource);
-                        return false;
-                    }
-                }).into(hotelImageView);
-            }
+                    FileLruCache.getInstance().put(hotel.getImage(), resource.getAbsolutePath());
+                    Glide.with(mContext).load(resource).crossFade().into(hotelImageView);
+                }
+            });
         }
 
         // 객실이 1~2 개일때 label 표시
