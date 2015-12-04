@@ -518,6 +518,7 @@
     <string name="label_tomorrow">내일</string>
     <string name="label_selecteday">날짜</string>
     <string name="label_format_tabday">%1$s일(%2$s)</string>
+    <string name="label_format_tabmonth">%1$s월 %2$s일</string>
 
     <!-- Banner -->
     <string name="label_event_title">이벤트 참여하기</string>
@@ -565,7 +566,7 @@
     <string name="eventfragment_emptylist_maintext">현재 진행중인 이벤트가 없습니다.</string>
     <string name="eventfragment_emptylist_subtext">더욱 특별한 이벤트를\n준비 중이니 기대해주세요!</string>
 
-    <!-- FNB ListFragment -->
+    <!-- GOURMET ListFragment -->
     <string name="label_headersectionbar_title">당일 판매 상품</string>
     <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
     <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
@@ -574,5 +575,17 @@
     <!-- Country Code List Activity -->
     <string name="label_select_country">국가 선택</string>
 
+    <!-- Calendar Activity -->
+    <string name="label_calendar_hotel_select_checkin">체크인 날짜 선택</string>
+    <string name="label_calendar_hotel_select_checkout">체크아웃 날짜 선택</string>
+    <string name="label_calendar_gourmet_select">날짜 선택</string>
+
+    <string name="label_monday">월</string>
+    <string name="label_tuesday">화</string>
+    <string name="label_wednesday">수</string>
+    <string name="label_thursday">목</string>
+    <string name="label_friday">금</string>
+    <string name="label_saturday">토</string>
+    <string name="label_sunday">일</string>
 
 </resources>

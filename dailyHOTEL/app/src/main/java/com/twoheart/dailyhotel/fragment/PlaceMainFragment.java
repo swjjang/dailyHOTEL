@@ -49,7 +49,7 @@ public abstract class PlaceMainFragment extends BaseFragment
     public enum TYPE
     {
         HOTEL,
-        FNB,
+        GOURMET,
     }
 
     public interface OnUserActionListener
@@ -431,7 +431,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                                 Date schemeDate = format.parse(date);
                                 Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
 
-                                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / (SaleTime.SECONDS_IN_A_DAY * 1000));
+                                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
                                 if (nights != 1 || dailyDayOfDays < 0)
                                 {

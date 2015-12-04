@@ -206,6 +206,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_URL = "url";
     public static final String NAME_INTENT_EXTRA_DATA_PLACEIDX = "placeIdx";
     public static final String NAME_INTENT_EXTRA_DATA_PLACENAME = "placeName";
+    public static final String NAME_INTENT_EXTRA_DATA_PLACETYPE = "placeType";
     public static final String NAME_INTENT_EXTRA_DATA_RESULT = "result";
     public static final String NAME_INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
     public static final String NAME_INTENT_EXTRA_DATA_ISDAILYUSER = "isDailyUser";

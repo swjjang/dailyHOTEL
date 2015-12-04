@@ -160,24 +160,24 @@ public class GourmetListAdapter extends PlaceListAdapter
 
                 if (Util.getLCDWidth(context) < 720)
                 {
+                    Glide.with(context).load(place.imageUrl).crossFade().into(placeImageView);
                     Glide.with(context).load(place.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
                     {
                         @Override
                         public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                         {
                             FileLruCache.getInstance().put(place.imageUrl, resource.getName());
-                            Glide.with(context).load(resource).crossFade().into(placeImageView);
                         }
                     });
                 } else
                 {
+                    Glide.with(context).load(place.imageUrl).crossFade().into(placeImageView);
                     Glide.with(context).load(place.imageUrl).downloadOnly(new SimpleTarget<File>()
                     {
                         @Override
                         public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                         {
                             FileLruCache.getInstance().put(place.imageUrl, resource.getName());
-                            Glide.with(context).load(resource).crossFade().into(placeImageView);
                         }
                     });
                 }

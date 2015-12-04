@@ -185,14 +185,15 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             }
         });
 
-        //        llVersion.setOnClickListener(new OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                startActivity(com.twoheart.dailyhotel.activity.SatisfactionActivity.newInstance(getContext(), "카페 스탠포드", 26, 1443571200000L));
-        //            }
-        //        });
+        llVersion.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), PlaceMainFragment.TYPE.HOTEL, 1449211725884L));
+            }
+        });
+
         //
         //        viewFacebook.setOnClickListener(new OnClickListener()
         //        {

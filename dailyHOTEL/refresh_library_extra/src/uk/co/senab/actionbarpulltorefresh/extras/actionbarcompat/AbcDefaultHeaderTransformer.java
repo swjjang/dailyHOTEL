@@ -76,13 +76,16 @@ public class AbcDefaultHeaderTransformer extends DefaultHeaderTransformer {
             return super.getActionBarSize(context);
         }
 
-        int[] attrs = { android.R.attr.actionBarSize };
-        TypedArray values = context.obtainStyledAttributes(attrs);
-        try {
-            return values.getDimensionPixelSize(0, 0);
-        } finally {
-            values.recycle();
-        }
+//        int[] attrs = { android.R.attr.actionBarSize };
+//        TypedArray values = context.obtainStyledAttributes(attrs);
+//        try {
+//            return values.getDimensionPixelSize(0, 0);
+//        } finally {
+//            values.recycle();
+//        }
+
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (56 * scale + 0.5f);
     }
 
     @Override

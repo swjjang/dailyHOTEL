@@ -305,24 +305,24 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
         if (Util.getLCDWidth(context) < 720)
         {
+            Glide.with(context).load(element.getImage()).crossFade().into(placeImageView);
             Glide.with(context).load(element.getImage()).downloadOnly(new SimpleTarget<File>(360, 240)
             {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
                     FileLruCache.getInstance().put(element.getImage(), resource.getName());
-                    Glide.with(context).load(resource).crossFade().into(placeImageView);
                 }
             });
         } else
         {
+            Glide.with(context).load(element.getImage()).crossFade().into(placeImageView);
             Glide.with(context).load(element.getImage()).downloadOnly(new SimpleTarget<File>()
             {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
                     FileLruCache.getInstance().put(element.getImage(), resource.getName());
-                    Glide.with(context).load(resource).crossFade().into(placeImageView);
                 }
             });
         }

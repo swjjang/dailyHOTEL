@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar_actionbar"
+        layout="@layout/toolbar_default"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline"/>
+
+    <LinearLayout
+        android:id="@+id/weekLayoutr"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_below="@+id/toolbar_actionbar"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/monTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/label_monday"
+            android:textColor="@color/calendar_week_text_default"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/tueTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/label_tuesday"
+            android:textColor="@color/calendar_week_text_default"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/wedTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/label_wednesday"
+            android:textColor="@color/calendar_week_text_default"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/thuTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/label_thursday"
+            android:textColor="@color/calendar_week_text_default"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/friTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/label_friday"
+            android:textColor="@color/calendar_week_text_default"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/satTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/label_saturday"
+            android:textColor="@color/calendar_week_text_default"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/sunTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/label_sunday"
+            android:textColor="@color/calendar_sunday_text_default"
+            android:textSize="11dp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/weekLayoutr"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:cacheColorHint="@android:color/transparent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/calendarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+</RelativeLayout>

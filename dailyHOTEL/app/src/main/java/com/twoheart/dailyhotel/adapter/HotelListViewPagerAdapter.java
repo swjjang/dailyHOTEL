@@ -180,24 +180,24 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 
         if (Util.getLCDWidth(mContext) < 720)
         {
+            Glide.with(mContext).load(hotel.getImage()).crossFade().into(hotelImageView);
             Glide.with(mContext).load(hotel.getImage()).downloadOnly(new SimpleTarget<File>(360, 240)
             {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
                     FileLruCache.getInstance().put(hotel.getImage(), resource.getName());
-                    Glide.with(mContext).load(resource).crossFade().into(hotelImageView);
                 }
             });
         } else
         {
+            Glide.with(mContext).load(hotel.getImage()).crossFade().into(hotelImageView);
             Glide.with(mContext).load(hotel.getImage()).downloadOnly(new SimpleTarget<File>()
             {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
                     FileLruCache.getInstance().put(hotel.getImage(), resource.getName());
-                    Glide.with(mContext).load(resource).crossFade().into(hotelImageView);
                 }
             });
         }

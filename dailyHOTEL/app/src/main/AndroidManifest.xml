@@ -234,6 +234,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.CalendarActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.ExitActivity"
             android:autoRemoveFromRecents="true"
             android:launchMode="singleTop"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/monthTextView"
+        android:layout_width="match_parent"
+        android:layout_height="23dp"
+        android:textColor="@color/calendar_month_text"
+        android:textSize="11dp"
+        android:gravity="center"/>
+
+    <GridView
+        android:id="@+id/calendarGridView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="7"
+        android:layout_below="@+id/monthTextView">
+
+    </GridView>
+</RelativeLayout>

@@ -983,10 +983,14 @@ public class HotelMainFragment extends BaseFragment
                 SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
                 SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
 
-                String checkInDay = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
-                String checkOutDay = getString(R.string.label_format_tabday, checkOutSaleTime.getDailyDay(), checkOutSaleTime.getDailyDayOftheWeek());
+                String checkInDay = getString(R.string.label_format_tabmonth, //
+                    checkInSaleTime.getDayOfDaysHotelDateFormat("M"),//
+                    checkInSaleTime.getDayOfDaysHotelDateFormat("d"));
+                String checkOutDay = getString(R.string.label_format_tabmonth, //
+                    checkOutSaleTime.getDayOfDaysHotelDateFormat("M"),//
+                    checkOutSaleTime.getDayOfDaysHotelDateFormat("d"));
 
-                String checkInOutDate = checkInDay + "-" + checkOutDay;
+                String checkInOutDate = checkInDay + " - " + checkOutDay;
                 dayList.add(checkInOutDate);
 
                 HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentList.get(2);
@@ -1167,7 +1171,7 @@ public class HotelMainFragment extends BaseFragment
                                 Date schemeDate = format.parse(date);
                                 Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
 
-                                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / (SaleTime.SECONDS_IN_A_DAY * 1000));
+                                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
                                 if (nights <= 0 || dailyDayOfDays < 0)
                                 {
