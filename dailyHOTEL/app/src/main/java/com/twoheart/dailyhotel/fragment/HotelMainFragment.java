@@ -317,6 +317,7 @@ public class HotelMainFragment extends BaseFragment
             }
 
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            case CODE_REQUEST_ACTIVITY_CALENDAR:
             {
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
                 currentFragment.onActivityResult(requestCode, resultCode, data);
@@ -719,10 +720,14 @@ public class HotelMainFragment extends BaseFragment
 
             lockUiComponent();
 
-            // 선택탭의 이름을 수정한다.
-            String checkInDay = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
-            String checkOutDay = getString(R.string.label_format_tabday, checkOutSaleTime.getDailyDay(), checkOutSaleTime.getDailyDayOftheWeek());
+            String checkInDay = getString(R.string.label_format_tabmonth, //
+                checkInSaleTime.getDayOfDaysHotelDateFormat("M"),//
+                checkInSaleTime.getDayOfDaysHotelDateFormat("d"));
+            String checkOutDay = getString(R.string.label_format_tabmonth, //
+                checkOutSaleTime.getDayOfDaysHotelDateFormat("M"),//
+                checkOutSaleTime.getDayOfDaysHotelDateFormat("d"));
 
+            // 선택탭의 이름을 수정한다.
             mTabIndicator.setSubTextEnable(2, true);
             mTabIndicator.setSubText(2, checkInDay + "-" + checkOutDay);
 
@@ -773,14 +778,6 @@ public class HotelMainFragment extends BaseFragment
             if (baseActivity == null)
             {
                 return;
-            }
-
-            // 연박이 열려있는 경우 지역 선택할 경우 처리
-            HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-            if (currentFragment instanceof HotelDaysListFragment)
-            {
-                ((HotelDaysListFragment) currentFragment).clickBackgroundView();
             }
 
             Intent intent = new Intent(baseActivity, SelectAreaActivity.class);
@@ -990,7 +987,7 @@ public class HotelMainFragment extends BaseFragment
                     checkOutSaleTime.getDayOfDaysHotelDateFormat("M"),//
                     checkOutSaleTime.getDayOfDaysHotelDateFormat("d"));
 
-                String checkInOutDate = checkInDay + " - " + checkOutDay;
+                String checkInOutDate = checkInDay + "-" + checkOutDay;
                 dayList.add(checkInOutDate);
 
                 HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentList.get(2);

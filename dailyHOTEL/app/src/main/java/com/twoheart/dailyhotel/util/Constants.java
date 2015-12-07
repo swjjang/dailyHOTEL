@@ -215,6 +215,7 @@ public interface Constants
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
     public static final int PUSH_TYPE_ACCOUNT_COMPLETE = 1;
+
     // Android Activity의 Request Code들이다.
     public static final int CODE_REQUEST_ACTIVITY_HOTELTAB = 1;
     public static final int CODE_REQUEST_FRAGMENT_BOOKINGLIST = 2;
@@ -234,6 +235,7 @@ public interface Constants
     public static final int CODE_REQUEST_FRAGMENT_PLACE_MAIN = 20;
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL = 21;
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET = 22;
+    public static final int CODE_REQUEST_ACTIVITY_CALENDAR = 30;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

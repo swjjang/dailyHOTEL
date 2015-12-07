@@ -9,9 +9,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -19,7 +16,6 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
 
@@ -28,7 +24,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class CalendarActivity extends BaseActivity implements GridView.OnItemClickListener
+public class CalendarActivity extends BaseActivity implements View.OnClickListener
 {
     private static final int DAYCOUNT_OF_MAX = 60;
 
@@ -36,7 +32,9 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
     private Day mCheckInDay;
     private Day mCheckOutDay;
 
-    public static Intent newInstance(Context context, PlaceMainFragment.TYPE type, long dailyTime)
+    private View[] mDailyTextViews;
+
+    public static Intent newInstance(Context context, PlaceMainFragment.TYPE type, SaleTime dailyTime)
     {
         Intent intent = new Intent(context, CalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, type.toString());
@@ -54,7 +52,7 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
 
         mPlaceType = PlaceMainFragment.TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
 
-        long dailyTime = intent.getLongExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, 0L);
+        SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
 
         initLayout(CalendarActivity.this, dailyTime);
     }
@@ -67,7 +65,7 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
         super.onStart();
     }
 
-    private void initLayout(Context context, long dailyTime)
+    private void initLayout(Context context, SaleTime dailyTime)
     {
         setContentView(R.layout.activity_calendar);
 
@@ -84,39 +82,43 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
 
         ViewGroup calendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
 
+        mDailyTextViews = new DailyTextView[DAYCOUNT_OF_MAX];
+
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(dailyTime);
+        calendar.setTimeInMillis(dailyTime.getDailyTime());
 
         int maxMonth = getMonthInterval(calendar);
         int maxDay = DAYCOUNT_OF_MAX;
+        int dayCount = 0;
 
         for (int i = 0; i <= maxMonth; i++)
         {
             int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            makeMonthCalendarView(context, calendarsLayout, calendar, maxDay > maxDayOfMonth ? maxDayOfMonth : maxDay);
+            calendarsLayout.addView(makeMonthCalendarView(context, dailyTime.getClone(dayCount)//
+                , calendar, maxDay > maxDayOfMonth ? maxDayOfMonth : maxDay));
 
-            maxDay -= (maxDayOfMonth - day + 1);
+            dayCount += maxDayOfMonth - day + 1;
+            maxDay = DAYCOUNT_OF_MAX - dayCount;
 
             calendar.add(Calendar.MONTH, 1);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
         }
     }
 
-    private View makeMonthCalendarView(Context context, ViewGroup parent, final Calendar calendar, final int maxDayOfMonth)
+    private View makeMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth)
     {
         View calendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
 
         TextView monthTextView = (TextView) calendarLayout.findViewById(R.id.monthTextView);
-        GridView calendarGridView = (GridView) calendarLayout.findViewById(R.id.calendarGridView);
-        calendarGridView.setOnItemClickListener(this);
+        android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) calendarLayout.findViewById(R.id.calendarGridLayout);
 
-        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("MMM", Locale.KOREA);
+        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("M", Locale.KOREA);
         simpleDayFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-        monthTextView.setText(simpleDayFormat.format(calendar.getTime()));
+        monthTextView.setText(simpleDayFormat.format(calendar.getTime()) + "월");
 
         // day
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -128,7 +130,7 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
             dayOfWeek = 6;
         }
 
-        int length = maxDayOfMonth + dayOfWeek;
+        int length = maxDayOfMonth - day + 1 + dayOfWeek;
         final int LENGHT_OF_WEEK = 7;
 
         if (length % LENGHT_OF_WEEK != 0)
@@ -140,24 +142,72 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
 
         Calendar cloneCalendar = (Calendar) calendar.clone();
 
-        for (int j = dayOfWeek, k = day; k <= maxDayOfMonth; j++, k++)
+        for (int i = 0, j = dayOfWeek, k = day; k <= maxDayOfMonth; i++, j++, k++)
         {
             days[j] = new Day();
-            days[j].dayTime = cloneCalendar.getTimeInMillis();
+            days[j].dayTime = dailyTime.getClone(dailyTime.getOffsetDailyDay() + i);
             days[j].day = Integer.toString(cloneCalendar.get(Calendar.DAY_OF_MONTH));
             days[j].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
 
             cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, //
-            Util.dpToPx(this, 23) + length / LENGHT_OF_WEEK * Util.dpToPx(this, 38));
-        calendarLayout.setLayoutParams(layoutParams);
+        for (Day dayClass : days)
+        {
+            View view = getView(context, dayClass);
 
-        calendarGridView.setAdapter(new CalendarAdapter(context, days));
-        parent.addView(calendarLayout);
+            if (dayClass != null)
+            {
+                mDailyTextViews[dayClass.dayTime.getOffsetDailyDay()] = view;
+            }
+
+            calendarGridLayout.addView(view);
+        }
 
         return calendarLayout;
+    }
+
+    public View getView(Context context, Day day)
+    {
+        DailyTextView dayTextView = new DailyTextView(context);
+        dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        dayTextView.setGravity(Gravity.CENTER);
+        dayTextView.setTypeface(dayTextView.getTypeface(), Typeface.NORMAL);
+
+        android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
+        layoutParams.width = 0;
+        layoutParams.height = Util.dpToPx(context, 38);
+        layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+
+        dayTextView.setLayoutParams(layoutParams);
+        dayTextView.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
+
+        if (day == null)
+        {
+            dayTextView.setText(null);
+            dayTextView.setTag(null);
+            dayTextView.setEnabled(false);
+        } else
+        {
+            switch (day.dayOfWeek)
+            {
+                // 일요일
+                case 1:
+                    dayTextView.setTextColor(context.getResources().getColorStateList(R.drawable.selector_calendar_sunday_textcolor));
+                    break;
+
+                default:
+                    dayTextView.setTextColor(context.getResources().getColorStateList(R.drawable.selector_calendar_default_text_color));
+                    break;
+            }
+
+            dayTextView.setText(day.day);
+            dayTextView.setTag(day);
+        }
+
+        dayTextView.setOnClickListener(this);
+
+        return dayTextView;
     }
 
     private int getMonthInterval(final Calendar calendar)
@@ -175,9 +225,10 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    public void onClick(View view)
     {
         Day day = (Day) view.getTag();
+        DailyTextView dailyTextView = (DailyTextView) view;
 
         if (day == null)
         {
@@ -189,13 +240,11 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
             return;
         }
 
-        day.isSelected = true;
-
         if (mCheckInDay == null)
         {
             mCheckInDay = day;
-
-            ((CalendarAdapter) parent.getAdapter()).notifyDataSetChanged();
+            dailyTextView.setSelected(true);
+            dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
 
             if (mPlaceType == PlaceMainFragment.TYPE.GOURMET)
             {
@@ -206,130 +255,68 @@ public class CalendarActivity extends BaseActivity implements GridView.OnItemCli
 
                 setResult(RESULT_OK, intent);
                 finish();
+            } else
+            {
+                setActionBar(R.string.label_calendar_hotel_select_checkout);
+
+                for (View textview : mDailyTextViews)
+                {
+                    if (view == textview)
+                    {
+                        break;
+                    } else
+                    {
+                        textview.setEnabled(false);
+                    }
+                }
             }
         } else
         {
             if (mCheckInDay.dayTime == day.dayTime)
             {
                 mCheckInDay = null;
-                day.isSelected = false;
+                view.setSelected(false);
+                dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
 
-                ((CalendarAdapter) parent.getAdapter()).notifyDataSetChanged();
+                setActionBar(R.string.label_calendar_hotel_select_checkin);
+
+                for (View dailTextView : mDailyTextViews)
+                {
+                    if (view == dailTextView)
+                    {
+                        break;
+                    } else
+                    {
+                        dailTextView.setEnabled(true);
+                    }
+                }
+                return;
+            }
+
+            if (mCheckInDay.dayTime.getOffsetDailyDay() >= day.dayTime.getOffsetDailyDay())
+            {
                 return;
             }
 
             lockUiComponent();
             mCheckOutDay = day;
 
-            ((CalendarAdapter) parent.getAdapter()).notifyDataSetChanged();
+            dailyTextView.setSelected(true);
+            dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
 
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInDay.dayTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, mCheckOutDay.dayTime);
-
-            ExLog.d("night : " + ((mCheckOutDay.dayTime - mCheckInDay.dayTime) / SaleTime.MILLISECOND_IN_A_DAY));
 
             setResult(RESULT_OK, intent);
             finish();
         }
     }
 
-    private class CalendarAdapter extends BaseAdapter
-    {
-        private Context mContext;
-        private final Day[] mDays;
-
-        public CalendarAdapter(Context context, Day[] days)
-        {
-            mContext = context;
-            mDays = days;
-        }
-
-        @Override
-        public int getCount()
-        {
-            if (mDays == null)
-            {
-                return 0;
-            }
-
-            return mDays.length;
-        }
-
-        @Override
-        public Day getItem(int position)
-        {
-            if (mDays == null)
-            {
-                return null;
-            }
-
-            return mDays[position];
-        }
-
-        @Override
-        public long getItemId(int position)
-        {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            DailyTextView dayTextView = (DailyTextView) convertView;
-            Day day = mDays[position];
-
-            if (dayTextView == null)
-            {
-                dayTextView = new DailyTextView(mContext);
-                dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-                dayTextView.setGravity(Gravity.CENTER);
-
-                GridView.LayoutParams layoutParams = new GridView.LayoutParams(Util.dpToPx(mContext, 50), Util.dpToPx(mContext, 38));
-                dayTextView.setLayoutParams(layoutParams);
-            }
-
-            if (day == null)
-            {
-                dayTextView.setText(null);
-                dayTextView.setTag(null);
-                dayTextView.setBackgroundResource(R.drawable.date_month_bg);
-            } else
-            {
-                if (day.isSelected == true)
-                {
-                    dayTextView.setTypeface(dayTextView.getTypeface(), Typeface.BOLD);
-                    dayTextView.setBackgroundResource(R.drawable.date_select_btn);
-                    dayTextView.setTextColor(getResources().getColor(R.color.calendar_day_text_select));
-                } else
-                {
-                    dayTextView.setTypeface(dayTextView.getTypeface(), Typeface.NORMAL);
-
-                    // 일요일
-                    if (day.dayOfWeek == 1)
-                    {
-                        dayTextView.setTextColor(mContext.getResources().getColorStateList(R.drawable.selector_calendar_sunday_textcolor));
-                    } else
-                    {
-                        dayTextView.setTextColor(mContext.getResources().getColorStateList(R.drawable.selector_calendar_default_text_color));
-                    }
-
-                    dayTextView.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
-                }
-
-                dayTextView.setText(mDays[position].day);
-                dayTextView.setTag(mDays[position]);
-            }
-
-            return dayTextView;
-        }
-    }
-
     private class Day
     {
-        long dayTime;
+        SaleTime dayTime;
         String day;
         int dayOfWeek;
-        boolean isSelected;
     }
 }

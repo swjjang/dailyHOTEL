@@ -185,15 +185,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             }
         });
 
-        llVersion.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startActivity(com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), PlaceMainFragment.TYPE.HOTEL, 1449211725884L));
-            }
-        });
-
         //
         //        viewFacebook.setOnClickListener(new OnClickListener()
         //        {

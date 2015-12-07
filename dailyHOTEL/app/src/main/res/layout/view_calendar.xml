@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/monthTextView"
         android:layout_width="match_parent"
         android:layout_height="23dp"
+        android:background="@color/calendar_month_background"
+        android:gravity="center"
         android:textColor="@color/calendar_month_text"
-        android:textSize="11dp"
-        android:gravity="center"/>
+        android:textSize="11dp"/>
 
-    <GridView
-        android:id="@+id/calendarGridView"
+    <View
+        android:id="@+id/lineView"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/monthTextView"
+        android:background="@color/calendar_month_line"/>
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/calendarGridLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="7"
-        android:layout_below="@+id/monthTextView">
-
-    </GridView>
+        android:layout_below="@+id/lineView"
+        android:background="@color/white"
+        app:columnCount="7"/>
 </RelativeLayout>
