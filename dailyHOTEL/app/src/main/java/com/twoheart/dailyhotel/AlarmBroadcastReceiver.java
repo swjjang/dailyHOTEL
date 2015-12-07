@@ -58,7 +58,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
             context.startActivity(i);
         }
 
-        Intent callIntent = new Intent(context, IntentActivity.class);
+        Intent callIntent = new Intent(context, LauncherActivity.class);
         callIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, callIntent, 0);

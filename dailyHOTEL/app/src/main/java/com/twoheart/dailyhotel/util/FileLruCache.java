@@ -35,7 +35,7 @@ public class FileLruCache extends LruCache<String, String>
     private FileLruCache()
     {
         // 개당 1씩으로 계산된다. 50개까지 저장함
-        this(50);
+        this(500);
     }
 
     private FileLruCache(int sizeInKiloBytes)

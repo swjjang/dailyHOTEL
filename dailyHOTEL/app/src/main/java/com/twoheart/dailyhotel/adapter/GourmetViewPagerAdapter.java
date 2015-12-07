@@ -118,24 +118,24 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
 
         if (Util.getLCDWidth(mContext) < 720)
         {
-            Glide.with(mContext).load(place.imageUrl).crossFade().into(placeImageView);
+            Glide.with(mContext).load(place.imageUrl).into(placeImageView);
             Glide.with(mContext).load(place.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
             {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(place.imageUrl, resource.getName());
+                    FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
                 }
             });
         } else
         {
-            Glide.with(mContext).load(place.imageUrl).crossFade().into(placeImageView);
+            Glide.with(mContext).load(place.imageUrl).into(placeImageView);
             Glide.with(mContext).load(place.imageUrl).downloadOnly(new SimpleTarget<File>()
             {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(place.imageUrl, resource.getName());
+                    FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
                 }
             });
         }

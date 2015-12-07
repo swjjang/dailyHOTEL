@@ -166,7 +166,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                         @Override
                         public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                         {
-                            FileLruCache.getInstance().put(place.imageUrl, resource.getName());
+                            FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
                         }
                     });
                 } else
@@ -177,7 +177,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                         @Override
                         public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                         {
-                            FileLruCache.getInstance().put(place.imageUrl, resource.getName());
+                            FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
                         }
                     });
                 }

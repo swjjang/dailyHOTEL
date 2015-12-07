@@ -74,12 +74,12 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
         imageView.setTag(imageView.getId(), position);
 
         String url = mImageUrlList.get(position);
-        String imageFileName = FileLruCache.getInstance().get(url);
+        String imageFilePath = FileLruCache.getInstance().get(url);
         boolean isExist = false;
 
-        if (Util.isTextEmpty(imageFileName) == false)
+        if (Util.isTextEmpty(imageFilePath) == false)
         {
-            File file = new File(Glide.getPhotoCacheDir(mContext).getAbsoluteFile() + "/" + imageFileName);
+            File file = new File(imageFilePath);
 
             if (file.isFile() == true && file.exists() == true)
             {

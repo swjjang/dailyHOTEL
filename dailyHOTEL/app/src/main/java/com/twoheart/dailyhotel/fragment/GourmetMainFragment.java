@@ -473,7 +473,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             String checkInDay = getString(R.string.label_format_gourmet_tabmonth, //
                 checkInSaleTime.getDayOfDaysHotelDateFormat("M"),//
-                checkInSaleTime.getDayOfDaysHotelDateFormat("d"), checkInSaleTime.getDailyDayOftheWeek() );
+                checkInSaleTime.getDayOfDaysHotelDateFormat("d"), checkInSaleTime.getDailyDayOftheWeek());
 
             // 선택탭의 이름을 수정한다.
             mTabIndicator.setSubTextEnable(2, true);

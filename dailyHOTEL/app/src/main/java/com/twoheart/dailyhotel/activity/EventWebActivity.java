@@ -11,7 +11,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.twoheart.dailyhotel.IntentActivity;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
@@ -110,7 +110,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void interlLink(String uri)
         {
-            Intent intent = new Intent(EventWebActivity.this, IntentActivity.class);
+            Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
             intent.setData(Uri.parse(uri));
 
             startActivity(intent);
