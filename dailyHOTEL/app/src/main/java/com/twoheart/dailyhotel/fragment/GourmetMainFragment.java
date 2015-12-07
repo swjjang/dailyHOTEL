@@ -471,9 +471,9 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             lockUiComponent();
 
-            String checkInDay = getString(R.string.label_format_tabmonth, //
+            String checkInDay = getString(R.string.label_format_gourmet_tabmonth, //
                 checkInSaleTime.getDayOfDaysHotelDateFormat("M"),//
-                checkInSaleTime.getDayOfDaysHotelDateFormat("d"));
+                checkInSaleTime.getDayOfDaysHotelDateFormat("d"), checkInSaleTime.getDailyDayOftheWeek() );
 
             // 선택탭의 이름을 수정한다.
             mTabIndicator.setSubTextEnable(2, true);
@@ -732,9 +732,9 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
             {
-                String checkInDay = getString(R.string.label_format_tabmonth, //
+                String checkInDay = getString(R.string.label_format_gourmet_tabmonth, //
                     tabSaleTime[2].getDayOfDaysHotelDateFormat("M"),//
-                    tabSaleTime[2].getDayOfDaysHotelDateFormat("d"));
+                    tabSaleTime[2].getDayOfDaysHotelDateFormat("d"), tabSaleTime[2].getDailyDayOftheWeek());
 
                 dayList.add(checkInDay);
             } else
