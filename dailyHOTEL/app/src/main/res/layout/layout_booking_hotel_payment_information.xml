@@ -173,7 +173,6 @@
             android:id="@+id/rg_payment_method"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="27dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
             android:layout_toLeftOf="@id/cardManagerButton"
@@ -188,6 +187,16 @@
                 android:text="@string/label_booking_easypayment"
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="15dp"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/tv_card_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="-10dp"
+                android:text="@string/label_booking_corporate_card"
+                android:textColor="@color/textView_textColor_section"
+                android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyRadioButton
                 android:id="@+id/rb_payment_card"
@@ -221,5 +230,4 @@
                 android:textSize="15dp"/>
         </RadioGroup>
     </RelativeLayout>
-
 </LinearLayout>

@@ -71,25 +71,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <!-- 안내문구 -->
-
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/tv_card_notice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="15dp"
-                android:gravity="right"
-                android:textColor="@color/textView_textColor_section"
-                android:textSize="12.5dp"/>
-
             <!-- 결제 버튼 -->
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/btn_hotel_payment"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="14dp"
                 android:background="@color/dh_theme_color"
                 android:gravity="center"
                 android:text="@string/act_booking_btn_pay"
