@@ -30,9 +30,9 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -217,20 +217,23 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
         rgPaymentMethod.setVisibility(View.VISIBLE);
 
-        TextView linkTextView = (TextView) findViewById(R.id.tv_card_notice);
+        // 법인 카드 가능 추가
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
 
-        String info01 = getString(R.string.act_booking_payment_info01) + " ";
-        String info02 = getString(R.string.act_booking_payment_info02);
+        String info01 = getString(R.string.label_booking_easypayment) + "\n";
+        String info02 = getString(R.string.label_booking_corporate_card);
 
         stringBuilder.append(info01);
         stringBuilder.append(info02);
-        stringBuilder.append(getString(R.string.act_booking_payment_info03));
 
-        stringBuilder.setSpan(new TelophoneClickSpannable(), info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.textView_textColor_section))//
+            , info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        linkTextView.setText(stringBuilder);
-        linkTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        stringBuilder.setSpan(new RelativeSizeSpan(Util.dpToPx(this, 12.5f))//
+            , info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mSimplePaymentRadioButton.setText(stringBuilder);
 
         // 수정.
         View editLinearLayout = findViewById(R.id.editLinearLayout);
@@ -1862,6 +1865,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override

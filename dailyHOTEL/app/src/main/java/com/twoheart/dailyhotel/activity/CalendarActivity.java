@@ -272,6 +272,11 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             }
         } else
         {
+            if (mPlaceType == PlaceMainFragment.TYPE.GOURMET)
+            {
+                return;
+            }
+
             if (mCheckInDay.dayTime == day.dayTime)
             {
                 mCheckInDay = null;

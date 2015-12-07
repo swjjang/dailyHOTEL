@@ -12,10 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -103,22 +100,6 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         bookingLayout.addView(mTicketInformation, 0);
 
         initTicketInformationLayout(activity, mTicketInformation);
-
-        // 하단에 링크 전화 넣기
-        TextView customerServiceNotice = (TextView) mViewGroupRoot.findViewById(R.id.customerServiceNotice);
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
-
-        String info01 = activity.getString(R.string.act_booking_payment_info01);
-        String info02 = activity.getString(R.string.act_booking_payment_info02);
-
-        stringBuilder.append(info01);
-        stringBuilder.append(info02);
-        stringBuilder.append(activity.getString(R.string.act_booking_payment_info03));
-
-        stringBuilder.setSpan(new TelophoneClickSpannable(activity, mOnUserActionListener), info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        customerServiceNotice.setText(stringBuilder);
-        customerServiceNotice.setMovementMethod(LinkMovementMethod.getInstance());
 
         View payButton = mViewGroupRoot.findViewById(R.id.payButton);
         payButton.setOnClickListener(new View.OnClickListener()
