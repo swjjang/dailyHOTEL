@@ -10,7 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.IntentActivity;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -88,7 +88,7 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
         {
             if (Util.isTextEmpty(mLink) == false)
             {
-                Intent intent = new Intent(this, IntentActivity.class);
+                Intent intent = new Intent(this, LauncherActivity.class);
                 intent.setData(Uri.parse(mLink));
 
                 startActivity(intent);

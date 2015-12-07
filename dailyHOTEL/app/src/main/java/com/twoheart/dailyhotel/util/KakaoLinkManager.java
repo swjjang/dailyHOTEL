@@ -65,8 +65,8 @@ public class KakaoLinkManager implements Constants
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd", Locale.KOREA);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-            Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);
-            Date chekcOutDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * (dailyDayOfDays + nights) * 1000);
+            Date checkInDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * dailyDayOfDays);
+            Date chekcOutDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * (dailyDayOfDays + nights));
 
             String text = mContext.getString(R.string.kakao_btn_share_hotel, hotelName, simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate), nights, nights + 1);
 
@@ -95,7 +95,7 @@ public class KakaoLinkManager implements Constants
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-            Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);
+            Date checkInDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * dailyDayOfDays);
 
             String text = mContext.getString(R.string.kakao_btn_share_fnb, name, simpleDateFormat.format(checkInDate));
 

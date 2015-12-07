@@ -132,7 +132,7 @@
     <color name="dialog_message_text">#3a3a3a</color>
     <color name="dialog_agree_text">#900034</color>
 
-    <!-- FNB ListFragment -->
+    <!-- GOURMET ListFragment -->
     <color name="headersectionbar">#222222</color>
     <color name="headersectionbar_text">#bcaaa4</color>
 
@@ -155,4 +155,14 @@
     <!-- Country Code -->
     <color name="countrycode_section_background">#f7f7f7</color>
     <color name="countrycode_section_text">#4d272727</color>
-</resources>	
+
+    <!-- Calendar Code -->
+    <color name="calendar_day_text_default">#1c1c1c</color>
+    <color name="calendar_day_text_select">#ffffff</color>
+    <color name="calendar_day_text_disable">#ebebeb</color>
+    <color name="calendar_week_text_default">#999999</color>
+    <color name="calendar_sunday_text_default">#900034</color>
+    <color name="calendar_month_text">#969696</color>
+    <color name="calendar_month_line">#ebebeb</color>
+    <color name="calendar_month_background">#f7f7f7</color>
+</resources>

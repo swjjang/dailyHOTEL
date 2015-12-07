@@ -37,7 +37,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -497,7 +496,6 @@ public class PinnedSectionListView extends ListView
             }
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
             Util.restartApp(getContext());
         }
     }

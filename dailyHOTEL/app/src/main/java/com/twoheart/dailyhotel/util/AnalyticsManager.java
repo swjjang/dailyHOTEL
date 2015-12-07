@@ -133,6 +133,7 @@ public class AnalyticsManager
         public static final String MENU = "menu";
         public static final String PAYMENT_AGREE_POPUP = "paymentAgreePopup";
         public static final String WAIT_TIMER = "WaitTimer Screen";
+        public static final String CALENDAR = "Calendar Screen";
     }
 
     public static class Action

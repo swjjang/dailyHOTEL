@@ -9,7 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.IntentActivity;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -54,7 +54,7 @@ public class PushDialogActivity extends Activity implements OnClickListener
         {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setClass(this, IntentActivity.class);
+            intent.setClass(this, LauncherActivity.class);
 
             startActivity(intent);
             finish();

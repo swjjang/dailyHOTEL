@@ -13,7 +13,7 @@ import java.util.TimeZone;
 
 public class SaleTime implements Constants, Parcelable
 {
-    public static final long SECONDS_IN_A_DAY = 3600 * 24;
+    public static final long MILLISECOND_IN_A_DAY = 3600 * 24 * 1000;
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
         public SaleTime createFromParcel(Parcel in)
@@ -81,7 +81,7 @@ public class SaleTime implements Constants, Parcelable
 
     public Date getDayOfDaysHotelDate()
     {
-        return new Date(mDailyTime.getTime() + SECONDS_IN_A_DAY * mDayOfDays * 1000);
+        return new Date(mDailyTime.getTime() + MILLISECOND_IN_A_DAY * mDayOfDays);
     }
 
     public String getDayOfDaysHotelDateFormat(String format)

@@ -194,6 +194,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         switch (requestCode)
         {
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            case CODE_REQUEST_ACTIVITY_CALENDAR:
             {
                 PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
                 currentFragment.onActivityResult(requestCode, resultCode, data);
@@ -470,11 +471,13 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             lockUiComponent();
 
-            // 선택탭의 이름을 수정한다.
-            String day = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
+            String checkInDay = getString(R.string.label_format_gourmet_tabmonth, //
+                checkInSaleTime.getDayOfDaysHotelDateFormat("M"),//
+                checkInSaleTime.getDayOfDaysHotelDateFormat("d"), checkInSaleTime.getDailyDayOftheWeek());
 
+            // 선택탭의 이름을 수정한다.
             mTabIndicator.setSubTextEnable(2, true);
-            mTabIndicator.setSubText(2, day);
+            mTabIndicator.setSubText(2, checkInDay);
 
             refreshList(mSelectedProvince, isListSelectionTop);
 
@@ -729,7 +732,11 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
             {
-                dayList.add(getString(R.string.label_format_tabday, tabSaleTime[2].getDailyDay(), tabSaleTime[2].getDailyDayOftheWeek()));
+                String checkInDay = getString(R.string.label_format_gourmet_tabmonth, //
+                    tabSaleTime[2].getDayOfDaysHotelDateFormat("M"),//
+                    tabSaleTime[2].getDayOfDaysHotelDateFormat("d"), tabSaleTime[2].getDailyDayOftheWeek());
+
+                dayList.add(checkInDay);
             } else
             {
                 dayList.add(mTabIndicator.getSubText(2));

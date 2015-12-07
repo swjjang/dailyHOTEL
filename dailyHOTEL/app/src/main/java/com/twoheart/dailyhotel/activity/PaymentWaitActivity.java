@@ -86,7 +86,7 @@ public class PaymentWaitActivity extends BaseActivity
                 break;
             }
 
-            case FNB:
+            case GOURMET:
             {
                 String params = String.format("?tid=%s", booking.tid);
                 DailyNetworkAPI.getInstance().requestGourmetAccountInformation(mNetworkTag, params, mFnBReservationJsonResponseListener, this);

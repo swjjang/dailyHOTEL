@@ -364,6 +364,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         } else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO)
         {
             selectMenuDrawer(menuHotelListFragment);
+        } else if (requestCode == CODE_REQUEST_ACTIVITY_CALENDAR)
+        {
+
         }
     }
 
