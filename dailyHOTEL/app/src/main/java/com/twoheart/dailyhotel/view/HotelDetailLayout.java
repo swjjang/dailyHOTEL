@@ -136,7 +136,6 @@ public class HotelDetailLayout
 
         mViewPager = (LoopViewPager) mViewRoot.findViewById(R.id.defaultHotelImageView);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
-        mViewPager.setScrollDurationFactor(4);
 
         if (defaultImageUrl != null)
         {

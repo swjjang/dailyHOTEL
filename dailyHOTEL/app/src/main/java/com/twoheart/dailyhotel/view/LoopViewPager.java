@@ -255,7 +255,7 @@ public class LoopViewPager extends ViewPager
             layoutParams.height = Util.getLCDWidth(context);
         }
 
-        postInitViewPager();
+//        postInitViewPager();
     }
 
     public View findViewWidthPosition(int position)
@@ -302,7 +302,7 @@ public class LoopViewPager extends ViewPager
     /**
      * Set the factor by which the duration will change
      */
-    public void setScrollDurationFactor(double scrollFactor)
+    private void setScrollDurationFactor(double scrollFactor)
     {
         if (mScroller != null)
         {

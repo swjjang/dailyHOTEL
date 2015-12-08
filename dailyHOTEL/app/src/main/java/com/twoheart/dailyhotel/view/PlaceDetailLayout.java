@@ -423,7 +423,6 @@ public abstract class PlaceDetailLayout
 
         mViewPager = (LoopViewPager) mViewGroupRoot.findViewById(R.id.defaultHotelImageView);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
-        mViewPager.setScrollDurationFactor(4);
 
         if (defaultImageUrl != null)
         {
