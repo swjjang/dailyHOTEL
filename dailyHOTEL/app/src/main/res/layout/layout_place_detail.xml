@@ -3,17 +3,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.twoheart.dailyhotel.view.LoopViewPager
-        android:id="@+id/defaultHotelImageView"
+    <RelativeLayout
+        android:id="@+id/defaultHotelImageLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_hoteldetail_viewpager"/>
+        android:layout_height="wrap_content">
+
+        <com.twoheart.dailyhotel.view.LoopViewPager
+            android:id="@+id/defaultHotelImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_hoteldetail_viewpager"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator
+            android:id="@+id/viewpagerIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="7dp"
+            android:layout_alignParentBottom="false"
+            android:layout_alignBaseline="@+id/defaultHotelImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/defaultHotelImageView"/>
+    </RelativeLayout>
 
     <View
         android:id="@+id/imageViewBlur"
         android:layout_width="match_parent"
         android:layout_height="19dp"
-        android:layout_alignBottom="@id/defaultHotelImageView"
+        android:layout_alignBottom="@id/defaultHotelImageLayout"
         android:background="@drawable/blur"
         android:visibility="invisible"/>
 

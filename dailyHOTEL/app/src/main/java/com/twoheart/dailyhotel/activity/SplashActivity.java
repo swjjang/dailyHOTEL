@@ -67,7 +67,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                 case 0:
                     if (mDoService == true)
                     {
-                        moveToLoginStep();
+                        processLogin();
                     }
                     break;
 
@@ -215,7 +215,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                         mHandler.sendEmptyMessageDelayed(1, 1000);
                     }
 
-                    moveToLoginStep();
+                    processLogin();
                 } else
                 {
                     mHandler.postDelayed(new Runnable()
@@ -284,7 +284,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         }
     }
 
-    private void moveToLoginStep()
+    private void processLogin()
     {
         if (mStatusBarHeight == 0)
         {

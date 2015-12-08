@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2013 Leszek Mzyk
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.twoheart.dailyhotel.view;
 
 import android.content.Context;
@@ -28,24 +12,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.reflect.Field;
 
-/**
- * A ViewPager subclass enabling infinte scrolling of the viewPager elements
- * <p>
- * When used for paginating views (in opposite to fragments), no code changes
- * should be needed only change xml's from
- * <android.support.v4.view.ViewPager> to <com.imbryk.viewPager.LoopViewPager>
- * <p>
- * If "blinking" can be seen when paginating to first or last view, simply call
- * seBoundaryCaching( true ), or change DEFAULT_BOUNDARY_CASHING to true
- * <p>
- * When using a FragmentPagerAdapter or FragmentStatePagerAdapter, additional
- * changes in the adapter must be done. The adapter must be prepared to create 2
- * extra items e.g.:
- * <p>
- * The original adapter creates 4 items: [0,1,2,3] The modified adapter will
- * have to create 6 items [0,1,2,3,4,5] with mapping
- * realPosition=(position-1)%count [0->3, 1->0, 2->1, 3->2, 4->3, 5->0]
- */
 public class LoopViewPager extends ViewPager
 {
     private static final boolean DEFAULT_BOUNDARY_CASHING = false;
@@ -55,6 +21,7 @@ public class LoopViewPager extends ViewPager
     private boolean mBoundaryCaching = DEFAULT_BOUNDARY_CASHING;
 
     private ScrollerCustomDuration mScroller = null;
+
     private OnPageChangeListener onPageChangeListener = new OnPageChangeListener()
     {
         private float mPreviousOffset = -1;
@@ -254,7 +221,7 @@ public class LoopViewPager extends ViewPager
             layoutParams.height = Util.getLCDWidth(context);
         }
 
-        postInitViewPager();
+        //        postInitViewPager();
     }
 
     public View findViewWidthPosition(int position)
@@ -276,10 +243,6 @@ public class LoopViewPager extends ViewPager
         return null;
     }
 
-    /**
-     * Override the Scroller instance with our own class so we can change the
-     * duration
-     */
     private void postInitViewPager()
     {
         try
@@ -298,10 +261,7 @@ public class LoopViewPager extends ViewPager
         }
     }
 
-    /**
-     * Set the factor by which the duration will change
-     */
-    public void setScrollDurationFactor(double scrollFactor)
+    private void setScrollDurationFactor(double scrollFactor)
     {
         if (mScroller != null)
         {

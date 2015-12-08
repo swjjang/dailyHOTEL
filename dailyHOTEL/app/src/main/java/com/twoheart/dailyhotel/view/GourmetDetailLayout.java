@@ -102,6 +102,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         mImageAdapter.setData(placeDetail.getImageUrlList());
         mViewPager.setAdapter(mImageAdapter);
+        mDailyViewPagerIndicator.setTotalCount(placeDetail.getImageUrlList().size());
 
         if (mListAdapter == null)
         {
@@ -112,11 +113,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         setCurrentImage(imagePosition);
 
         hideTicketInformationLayout();
-
-        if (mOnImageActionListener != null)
-        {
-            mOnImageActionListener.startAutoSlide();
-        }
 
         // 호텔 sold out시
         View bookingView = mViewGroupRoot.findViewById(R.id.bookingTextView);

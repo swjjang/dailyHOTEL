@@ -67,10 +67,6 @@ public class HotelDetailActivity extends BaseActivity
 
         public void onClickImage(HotelDetail hotelDetail);
 
-        public void startAutoSlide();
-
-        public void stopAutoSlide();
-
         public void nextSlide();
 
         public void prevSlide();
@@ -208,22 +204,6 @@ public class HotelDetailActivity extends BaseActivity
         DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
 
         super.onResume();
-    }
-
-    @Override
-    protected void onPause()
-    {
-        mOnUserActionListener.stopAutoSlide();
-
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        mOnUserActionListener.stopAutoSlide();
-
-        super.onDestroy();
     }
 
     @Override
@@ -397,8 +377,6 @@ public class HotelDetailActivity extends BaseActivity
 
             lockUiComponent();
 
-            stopAutoSlide();
-
             Intent intent = new Intent(HotelDetailActivity.this, ImageDetailListActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, hotelDetail.getImageUrlList());
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
@@ -406,65 +384,27 @@ public class HotelDetailActivity extends BaseActivity
         }
 
         @Override
-        public void startAutoSlide()
-        {
-            if (Util.isOverAPI11() == false)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = 1; // 오른쪽으로 이동.
-                message.arg2 = 1; // 자동
-
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessageDelayed(message, DURATION_HOTEL_IMAGE_SHOW);
-            } else
-            {
-                mImageHandler.removeMessages(0);
-                mHotelDetailLayout.startAnimationImageView();
-            }
-        }
-
-        @Override
-        public void stopAutoSlide()
-        {
-            if (Util.isOverAPI11() == false)
-            {
-                mImageHandler.removeMessages(0);
-            } else
-            {
-                mImageHandler.removeMessages(0);
-                mHotelDetailLayout.stopAnimationImageView(false);
-            }
-        }
-
-        @Override
         public void nextSlide()
         {
-            if (Util.isOverAPI11() == true)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = 1; // 오른쪽으로 이동.
-                message.arg2 = 0; // 수동
+            Message message = mImageHandler.obtainMessage();
+            message.what = 0;
+            message.arg1 = 1; // 오른쪽으로 이동.
+            message.arg2 = 0; // 수동
 
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessage(message);
-            }
+            mImageHandler.removeMessages(0);
+            mImageHandler.sendMessage(message);
         }
 
         @Override
         public void prevSlide()
         {
-            if (Util.isOverAPI11() == true)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = -1; // 왼쪽으로 이동.
-                message.arg2 = 0; // 수동
+            Message message = mImageHandler.obtainMessage();
+            message.what = 0;
+            message.arg1 = -1; // 왼쪽으로 이동.
+            message.arg2 = 0; // 수동
 
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessage(message);
-            }
+            mImageHandler.removeMessages(0);
+            mImageHandler.sendMessage(message);
         }
 
         @Override

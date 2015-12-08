@@ -55,6 +55,7 @@ import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.text.DecimalFormat;
@@ -80,6 +81,7 @@ public class HotelDetailLayout
     private BaseActivity mActivity;
     private View mViewRoot;
     private LoopViewPager mViewPager;
+    private DailyViewPagerIndicator mDailyViewPagerIndicator;
     private View mHotelTitleLaout;
     private TextView mHotelGradeTextView;
     private TextView mHotelNameTextView;
@@ -130,9 +132,10 @@ public class HotelDetailLayout
         mListView.setOnScrollListener(mOnScrollListener);
 
         // 이미지 ViewPage 넣기.
+        mDailyViewPagerIndicator = (DailyViewPagerIndicator) mViewRoot.findViewById(R.id.viewpagerIndicator);
+
         mViewPager = (LoopViewPager) mViewRoot.findViewById(R.id.defaultHotelImageView);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
-        mViewPager.setScrollDurationFactor(4);
 
         if (defaultImageUrl != null)
         {
@@ -226,6 +229,7 @@ public class HotelDetailLayout
 
         mImageAdapter.setData(hotelDetail.getImageUrlList());
         mViewPager.setAdapter(mImageAdapter);
+        mDailyViewPagerIndicator.setTotalCount(hotelDetail.getImageUrlList().size());
 
         if (mListAdapter == null)
         {
@@ -236,11 +240,6 @@ public class HotelDetailLayout
         setCurrentImage(imagePosition);
 
         hideRoomType();
-
-        if (mOnUserActionListener != null)
-        {
-            mOnUserActionListener.startAutoSlide();
-        }
 
         // 호텔 sold out시
         View bookingView = mViewRoot.findViewById(R.id.bookingTextView);
@@ -417,11 +416,6 @@ public class HotelDetailLayout
         {
             case STATUS_NONE:
             {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.stopAutoSlide();
-                }
-
                 bookingView.setVisibility(View.VISIBLE);
                 soldoutView.setVisibility(View.GONE);
 
@@ -431,11 +425,6 @@ public class HotelDetailLayout
 
             case STATUS_SEARCH_ROOM:
             {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.startAutoSlide();
-                }
-
                 bookingView.setVisibility(View.VISIBLE);
                 soldoutView.setVisibility(View.GONE);
 
@@ -524,35 +513,6 @@ public class HotelDetailLayout
         }
 
         mRoomTypeBackgroundView.setEnabled(enabled);
-    }
-
-    public void startAnimationImageView()
-    {
-        if (Util.isOverAPI11() == true)
-        {
-            int position = mViewPager.getCurrentItem();
-
-            AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(position);
-
-            if (imageView != null)
-            {
-                imageView.startAnimation();
-            }
-        }
-    }
-
-    public void stopAnimationImageView(boolean initDuration)
-    {
-        if (Util.isOverAPI11() == true)
-        {
-            int count = mViewPager.getChildCount();
-
-            for (int i = 0; i < count; i++)
-            {
-                AnimationImageView imageView = (AnimationImageView) mViewPager.getChildAt(i);
-                imageView.stopAnimation(initDuration);
-            }
-        }
     }
 
     private void hideRoomType()
@@ -667,63 +627,6 @@ public class HotelDetailLayout
 
                 setBookingStatus(STATUS_BOOKING);
             }
-
-            //			ArrayList<SaleRoomInformation> arrayList = mHotelDetail.getSaleRoomList();
-            //
-            //			if(arrayList == null || arrayList.size() == 0)
-            //			{
-            //				return;
-            //			}
-            //
-            //			int height = arrayList.size() * Util.dpToPx(mActivity, 92);
-            //
-            //			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, height, 0);
-            //			translateAnimation.setDuration(300);
-            //			translateAnimation.setFillBefore(true);
-            //			translateAnimation.setFillAfter(true);
-            //			translateAnimation.setInterpolator(mActivity, android.R.anim.decelerate_interpolator);
-            //
-            //			translateAnimation.setAnimationListener(new AnimationListener()
-            //			{
-            //				@Override
-            //				public void onAnimationStart(Animation animation)
-            //				{
-            //					if (mRoomTypeLayout.getVisibility() != View.VISIBLE)
-            //					{
-            //						mRoomTypeLayout.setVisibility(View.VISIBLE);
-            //					}
-            //
-            //					mAnimationState = ANIMATION_STATE.START;
-            //					mAnimationStatus = ANIMATION_STATUS.SHOW;
-            //				}
-            //
-            //				@Override
-            //				public void onAnimationRepeat(Animation animation)
-            //				{
-            //
-            //				}
-            //
-            //				@Override
-            //				public void onAnimationEnd(Animation animation)
-            //				{
-            //					mAnimationStatus = ANIMATION_STATUS.SHOW_END;
-            //					mAnimationState = ANIMATION_STATE.END;
-            //
-            //					if (mRoomTypeLayout != null)
-            //					{
-            //						mRoomTypeLayout.startAnimation(null);
-            //					}
-            //
-            //					setRoomTypeLayoutEnabled(true);
-            //
-            //					setBookingStatus(STATUS_BOOKING);
-            //				}
-            //			});
-            //
-            //			if (mRoomTypeLayout != null)
-            //			{
-            //				mRoomTypeLayout.startAnimation(translateAnimation);
-            //			}
         }
 
         showAnimationFadeOut();
@@ -963,7 +866,6 @@ public class HotelDetailLayout
     {
         private int mSelectedPosition = -1;
         private boolean mIsRefresh;
-        private int mDirection;
         private int mScrollState = -1;
         private int mScrollPosition = -1;
 
@@ -978,17 +880,7 @@ public class HotelDetailLayout
                 mOnUserActionListener.onSelectedImagePosition(position);
             }
 
-            if (mScrollState == -1 && Util.isOverAPI11() == true)
-            {
-                stopAnimationImageView(true);
-
-                AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(position);
-
-                if (imageView != null)
-                {
-                    imageView.startAnimation();
-                }
-            }
+            mDailyViewPagerIndicator.setPosition(position);
         }
 
         @Override
@@ -999,51 +891,9 @@ public class HotelDetailLayout
                 return;
             }
 
-            if (Util.isOverAPI11() == true)
-            {
-                stopAnimationImageView(true);
-            }
-
             if (mScrollPosition == -1)
             {
                 mScrollPosition = position;
-            }
-
-            if (mIsRefresh == false && mImageAdapter != null)
-            {
-                if (mDirection == 0)
-                {
-                    mDirection = Float.compare(positionOffset, 0.5f) <= 0 ? 1 : -1;
-                }
-
-                int nextPosition;
-
-                if (mDirection >= 0)
-                {
-                    nextPosition = mScrollPosition + 1;
-
-                    if (nextPosition >= mImageAdapter.getCount())
-                    {
-                        nextPosition = 0;
-                    }
-                } else
-                {
-                    nextPosition = mScrollPosition;
-                }
-
-                if (Util.isOverAPI11() == true)
-                {
-                    mImageAdapter.setDirection(mDirection);
-
-                    AnimationImageView nextImageView = (AnimationImageView) mViewPager.findViewWidthPosition(nextPosition);
-
-                    // 방향에 따라서 초기화가 달라야한다.
-                    if (nextImageView != null)
-                    {
-                        nextImageView.initAnimation(mDirection < 0);
-                        nextImageView.invalidate();
-                    }
-                }
             }
         }
 
@@ -1055,29 +905,10 @@ public class HotelDetailLayout
             switch (state)
             {
                 case ViewPager.SCROLL_STATE_IDLE:
-                {
-                    if (Util.isOverAPI11() == true)
-                    {
-                        stopAnimationImageView(true);
-
-                        AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(mSelectedPosition);
-
-                        if (imageView != null)
-                        {
-                            imageView.startAnimation();
-                        }
-                    }
-
-                    mDirection = 0;
                     mScrollPosition = -1;
                     break;
-                }
 
                 case ViewPager.SCROLL_STATE_DRAGGING:
-                    if (Util.isOverAPI11() == true)
-                    {
-                        stopAnimationImageView(true);
-                    }
                     break;
 
                 case ViewPager.SCROLL_STATE_SETTLING:
@@ -1108,11 +939,6 @@ public class HotelDetailLayout
                 if (mActionBarTextView != null)
                 {
                     mActionBarTextView.setVisibility(View.VISIBLE);
-                }
-
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.stopAutoSlide();
                 }
                 return;
             }
@@ -1149,11 +975,6 @@ public class HotelDetailLayout
                     if (mActionBarTextView != null)
                     {
                         mActionBarTextView.setVisibility(View.INVISIBLE);
-                    }
-
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.startAutoSlide();
                     }
                 }
             }
@@ -1274,11 +1095,6 @@ public class HotelDetailLayout
             {
                 case MotionEvent.ACTION_DOWN:
                 {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.stopAutoSlide();
-                    }
-
                     mPrevX = event.getX();
                     mPrevY = event.getY();
 
@@ -1307,7 +1123,6 @@ public class HotelDetailLayout
                     {
                         if (mOnUserActionListener != null)
                         {
-                            mOnUserActionListener.stopAutoSlide();
                             mOnUserActionListener.onClickImage(mHotelDetail);
 
                             mMoveState = 0;
@@ -1342,21 +1157,11 @@ public class HotelDetailLayout
                     }
 
                     mListView.setScrollEnabled(true);
-
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.startAutoSlide();
-                    }
                     break;
                 }
 
                 case MotionEvent.ACTION_MOVE:
                 {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.stopAutoSlide();
-                    }
-
                     float x = event.getX();
                     float y = event.getY();
 

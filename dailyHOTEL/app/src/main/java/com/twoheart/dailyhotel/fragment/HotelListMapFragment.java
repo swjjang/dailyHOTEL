@@ -628,7 +628,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
                         arrangeList.remove(i - 1);
                     }
 
-                    String key = String.valueOf(item01.mLatitude) + String.valueOf(item01.mLongitude);
+                    String key = Double.toString(item01.mLatitude) + Double.toString(item01.mLongitude);
 
                     if (hashMap.containsKey(key) == true)
                     {

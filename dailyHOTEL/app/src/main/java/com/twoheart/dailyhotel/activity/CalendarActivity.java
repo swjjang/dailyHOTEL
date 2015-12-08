@@ -97,7 +97,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            calendarsLayout.addView(makeMonthCalendarView(context, dailyTime.getClone(dayCount)//
+            calendarsLayout.addView(getMonthCalendarView(context, dailyTime.getClone(dayCount)//
                 , calendar, maxDay > maxDayOfMonth ? maxDayOfMonth : maxDay));
 
             dayCount += maxDayOfMonth - day + 1;
@@ -108,7 +108,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private View makeMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth)
+    private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth)
     {
         View calendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
 
@@ -154,7 +154,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
 
         for (Day dayClass : days)
         {
-            View view = getView(context, dayClass);
+            View view = getDayView(context, dayClass);
 
             if (dayClass != null)
             {
@@ -167,7 +167,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         return calendarLayout;
     }
 
-    public View getView(Context context, Day day)
+    public View getDayView(Context context, Day day)
     {
         DailyTextView dayTextView = new DailyTextView(context);
         dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
@@ -318,7 +318,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private class Day
+    private static class Day
     {
         SaleTime dayTime;
         String day;

@@ -58,7 +58,7 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
                 if (result.contains("]"))
                 {
                     // [호텔이름 [조식 포함]] 예약되었습니다. 과 같은 경우 마지막 ] 다음에서 개행하여 보기 좋도록 표시
-                    int index = msg.lastIndexOf("]");
+                    int index = msg.lastIndexOf(']');
                     StringBuffer sb = new StringBuffer(msg);
                     result = sb.replace(index, index + 1, "]\n").toString();
                 }
