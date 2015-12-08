@@ -55,6 +55,7 @@ public class LoopViewPager extends ViewPager
     private boolean mBoundaryCaching = DEFAULT_BOUNDARY_CASHING;
 
     private ScrollerCustomDuration mScroller = null;
+
     private OnPageChangeListener onPageChangeListener = new OnPageChangeListener()
     {
         private float mPreviousOffset = -1;

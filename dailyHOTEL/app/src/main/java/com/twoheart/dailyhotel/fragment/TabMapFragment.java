@@ -141,37 +141,6 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 
             getChildFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
         }
-
-        //        View viewGroup = mMapFragment.getView();
-        //
-        //        if (viewGroup instanceof ViewGroup)
-        //        {
-        //            View viewLayout = ((ViewGroup) viewGroup).getChildAt(0);
-        //
-        //            if (viewLayout instanceof ViewGroup)
-        //            {
-        //                View viewButton = ((ViewGroup) viewLayout).getChildAt(1);
-        //
-        //                if (viewButton instanceof Button)
-        //                {
-        //                    viewButton.setOnClickListener(new View.OnClickListener()
-        //                    {
-        //                        @Override
-        //                        public void onClick(View v)
-        //                        {
-        //                            BaseActivity baseActivity = (BaseActivity) getActivity();
-        //
-        //                            if (baseActivity == null || baseActivity.isFinishing() == true)
-        //                            {
-        //                                return;
-        //                            }
-        //
-        //                            Util.installGooglePlayService(baseActivity);
-        //                        }
-        //                    });
-        //                }
-        //            }
-        //        }
     }
 
     @Override

@@ -80,10 +80,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     public interface OnImageActionListener
     {
-        public void startAutoSlide();
-
-        public void stopAutoSlide();
-
         public void nextSlide();
 
         public void prevSlide();
@@ -219,22 +215,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
         DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
 
         super.onResume();
-    }
-
-    @Override
-    protected void onPause()
-    {
-        mOnImageActionListener.stopAutoSlide();
-
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        mOnImageActionListener.stopAutoSlide();
-
-        super.onDestroy();
     }
 
     @Override
@@ -387,11 +367,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             lockUiComponent();
 
-            if (mOnImageActionListener != null)
-            {
-                mOnImageActionListener.stopAutoSlide();
-            }
-
             Intent intent = new Intent(PlaceDetailActivity.this, ImageDetailListActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, ticketDetailDto.getImageUrlList());
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
@@ -522,65 +497,27 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private OnImageActionListener mOnImageActionListener = new OnImageActionListener()
     {
         @Override
-        public void startAutoSlide()
-        {
-            if (Util.isOverAPI11() == false)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = 1; // 오른쪽으로 이동.
-                message.arg2 = 1; // 자동
-
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessageDelayed(message, DURATION_HOTEL_IMAGE_SHOW);
-            } else
-            {
-                mImageHandler.removeMessages(0);
-                mPlaceDetailLayout.startAnimationImageView();
-            }
-        }
-
-        @Override
-        public void stopAutoSlide()
-        {
-            if (Util.isOverAPI11() == false)
-            {
-                mImageHandler.removeMessages(0);
-            } else
-            {
-                mImageHandler.removeMessages(0);
-                mPlaceDetailLayout.stopAnimationImageView(false);
-            }
-        }
-
-        @Override
         public void nextSlide()
         {
-            if (Util.isOverAPI11() == true)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = 1; // 오른쪽으로 이동.
-                message.arg2 = 0; // 수동
+            Message message = mImageHandler.obtainMessage();
+            message.what = 0;
+            message.arg1 = 1; // 오른쪽으로 이동.
+            message.arg2 = 0; // 수동
 
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessage(message);
-            }
+            mImageHandler.removeMessages(0);
+            mImageHandler.sendMessage(message);
         }
 
         @Override
         public void prevSlide()
         {
-            if (Util.isOverAPI11() == true)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = -1; // 왼쪽으로 이동.
-                message.arg2 = 0; // 수동
+            Message message = mImageHandler.obtainMessage();
+            message.what = 0;
+            message.arg1 = -1; // 왼쪽으로 이동.
+            message.arg2 = 0; // 수동
 
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessage(message);
-            }
+            mImageHandler.removeMessages(0);
+            mImageHandler.sendMessage(message);
         }
     };
 

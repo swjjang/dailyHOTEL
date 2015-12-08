@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public abstract class PlaceDetailLayout
     protected BaseActivity mActivity;
     protected ViewGroup mViewGroupRoot;
     protected LoopViewPager mViewPager;
+    protected DailyViewPagerIndicator mDailyViewPagerIndicator;
 
     protected View mTitleLayout;
     protected TextView mGradeTextView;
@@ -75,11 +77,6 @@ public abstract class PlaceDetailLayout
             {
                 case MotionEvent.ACTION_DOWN:
                 {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnImageActionListener.stopAutoSlide();
-                    }
-
                     mPrevX = event.getX();
                     mPrevY = event.getY();
 
@@ -108,7 +105,6 @@ public abstract class PlaceDetailLayout
                     {
                         if (mOnUserActionListener != null)
                         {
-                            mOnImageActionListener.stopAutoSlide();
                             mOnUserActionListener.onClickImage(mPlaceDetail);
 
                             mMoveState = 0;
@@ -143,21 +139,11 @@ public abstract class PlaceDetailLayout
                     }
 
                     mListView.setScrollEnabled(true);
-
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnImageActionListener.startAutoSlide();
-                    }
                     break;
                 }
 
                 case MotionEvent.ACTION_MOVE:
                 {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnImageActionListener.stopAutoSlide();
-                    }
-
                     float x = event.getX();
                     float y = event.getY();
 
@@ -203,6 +189,7 @@ public abstract class PlaceDetailLayout
             return false;
         }
     };
+
     private View mTicketInformationLayout;
     private View mBottomLayout;
     private View mTicketTypeBackgroundView;
@@ -215,12 +202,10 @@ public abstract class PlaceDetailLayout
     private int mStatusBarHeight;
     private float mLastFactor;
 
-    ;
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
     {
         private int mSelectedPosition = -1;
         private boolean mIsRefresh;
-        private int mDirection;
         private int mScrollState = -1;
         private int mScrollPosition = -1;
 
@@ -235,17 +220,7 @@ public abstract class PlaceDetailLayout
                 mOnUserActionListener.onSelectedImagePosition(position);
             }
 
-            if (mScrollState == -1 && Util.isOverAPI11() == true)
-            {
-                stopAnimationImageView(true);
-
-                AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(position);
-
-                if (imageView != null)
-                {
-                    imageView.startAnimation();
-                }
-            }
+            mDailyViewPagerIndicator.setPosition(position);
         }
 
         @Override
@@ -256,51 +231,9 @@ public abstract class PlaceDetailLayout
                 return;
             }
 
-            if (Util.isOverAPI11() == true)
-            {
-                stopAnimationImageView(true);
-            }
-
             if (mScrollPosition == -1)
             {
                 mScrollPosition = position;
-            }
-
-            if (mIsRefresh == false && mImageAdapter != null)
-            {
-                if (mDirection == 0)
-                {
-                    mDirection = Float.compare(positionOffset, 0.5f) <= 0 ? 1 : -1;
-                }
-
-                int nextPosition;
-
-                if (mDirection >= 0)
-                {
-                    nextPosition = mScrollPosition + 1;
-
-                    if (nextPosition >= mImageAdapter.getCount())
-                    {
-                        nextPosition = 0;
-                    }
-                } else
-                {
-                    nextPosition = mScrollPosition;
-                }
-
-                if (Util.isOverAPI11() == true)
-                {
-                    mImageAdapter.setDirection(mDirection);
-
-                    AnimationImageView nextImageView = (AnimationImageView) mViewPager.findViewWidthPosition(nextPosition);
-
-                    // 방향에 따라서 초기화가 달라야한다.
-                    if (nextImageView != null)
-                    {
-                        nextImageView.initAnimation(mDirection < 0);
-                        nextImageView.invalidate();
-                    }
-                }
             }
         }
 
@@ -312,29 +245,10 @@ public abstract class PlaceDetailLayout
             switch (state)
             {
                 case ViewPager.SCROLL_STATE_IDLE:
-                {
-                    if (Util.isOverAPI11() == true)
-                    {
-                        stopAnimationImageView(true);
-
-                        AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(mSelectedPosition);
-
-                        if (imageView != null)
-                        {
-                            imageView.startAnimation();
-                        }
-                    }
-
-                    mDirection = 0;
                     mScrollPosition = -1;
                     break;
-                }
 
                 case ViewPager.SCROLL_STATE_DRAGGING:
-                    if (Util.isOverAPI11() == true)
-                    {
-                        stopAnimationImageView(true);
-                    }
                     break;
 
                 case ViewPager.SCROLL_STATE_SETTLING:
@@ -343,7 +257,6 @@ public abstract class PlaceDetailLayout
         }
     };
 
-    ;
     private OnScrollListener mOnScrollListener = new OnScrollListener()
     {
         @Override
@@ -364,11 +277,6 @@ public abstract class PlaceDetailLayout
                 if (mActionBarTextView != null)
                 {
                     mActionBarTextView.setVisibility(View.VISIBLE);
-                }
-
-                if (mOnUserActionListener != null)
-                {
-                    mOnImageActionListener.stopAutoSlide();
                 }
                 return;
             }
@@ -406,11 +314,6 @@ public abstract class PlaceDetailLayout
                     {
                         mActionBarTextView.setVisibility(View.INVISIBLE);
                     }
-
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnImageActionListener.startAutoSlide();
-                    }
                 }
             }
 
@@ -418,14 +321,6 @@ public abstract class PlaceDetailLayout
             {
                 return;
             }
-
-            //			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
-            //			float max = mImageHeight - Util.dpToPx(mActivity, 56);
-            //			float alphaFactor = offset / max;
-
-            //			float max = (mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
-            //			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56) - max;
-            //			float alphaFactor = offset / max;
 
             float max = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
             float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
@@ -447,26 +342,6 @@ public abstract class PlaceDetailLayout
                     }
                 }
             }
-
-            //            if (Util.isOverAPI11() == true)
-            //            {
-            //                if (Float.compare(alphaFactor, 0.0f) <= 0)
-            //                {
-            //                    mGradeTextView.setAlpha(0.0f);
-            //                } else
-            //                {
-            //                    mGradeTextView.setAlpha(alphaFactor);
-            //                }
-            //            } else
-            //            {
-            //                if (Float.compare(alphaFactor, 0.2f) <= 0)
-            //                {
-            //                    mGradeTextView.setVisibility(View.INVISIBLE);
-            //                } else
-            //                {
-            //                    mGradeTextView.setVisibility(View.VISIBLE);
-            //                }
-            //            }
 
             Rect firstRect = (Rect) mNameTextView.getTag();
 
@@ -544,6 +419,8 @@ public abstract class PlaceDetailLayout
         mListView.setOnScrollListener(mOnScrollListener);
 
         // 이미지 ViewPage 넣기.
+        mDailyViewPagerIndicator = (DailyViewPagerIndicator) mViewGroupRoot.findViewById(R.id.viewpagerIndicator);
+
         mViewPager = (LoopViewPager) mViewGroupRoot.findViewById(R.id.defaultHotelImageView);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
         mViewPager.setScrollDurationFactor(4);
@@ -724,11 +601,6 @@ public abstract class PlaceDetailLayout
         {
             case STATUS_NONE:
             {
-                if (mOnUserActionListener != null)
-                {
-                    mOnImageActionListener.stopAutoSlide();
-                }
-
                 bookingView.setVisibility(View.VISIBLE);
                 soldoutView.setVisibility(View.GONE);
                 break;
@@ -736,11 +608,6 @@ public abstract class PlaceDetailLayout
 
             case STATUS_SEARCH_TICKET:
             {
-                if (mOnUserActionListener != null)
-                {
-                    mOnImageActionListener.startAutoSlide();
-                }
-
                 bookingView.setVisibility(View.VISIBLE);
                 soldoutView.setVisibility(View.GONE);
 
@@ -824,35 +691,6 @@ public abstract class PlaceDetailLayout
         }
 
         mTicketTypeBackgroundView.setEnabled(enabled);
-    }
-
-    public void startAnimationImageView()
-    {
-        if (Util.isOverAPI11() == true)
-        {
-            int position = mViewPager.getCurrentItem();
-
-            AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(position);
-
-            if (imageView != null)
-            {
-                imageView.startAnimation();
-            }
-        }
-    }
-
-    public void stopAnimationImageView(boolean initDuration)
-    {
-        if (Util.isOverAPI11() == true)
-        {
-            int count = mViewPager.getChildCount();
-
-            for (int i = 0; i < count; i++)
-            {
-                AnimationImageView imageView = (AnimationImageView) mViewPager.getChildAt(i);
-                imageView.stopAnimation(initDuration);
-            }
-        }
     }
 
     protected void hideTicketInformationLayout()

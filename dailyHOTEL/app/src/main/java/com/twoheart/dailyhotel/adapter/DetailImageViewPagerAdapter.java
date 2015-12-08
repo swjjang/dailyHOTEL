@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.AnimationImageView;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +27,6 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private List<String> mImageUrlList;
-    private int mDirection;
 
     private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
     private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
@@ -43,11 +41,6 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
         mImageUrlList = list;
     }
 
-    public void setDirection(int direction)
-    {
-        mDirection = direction;
-    }
-
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
@@ -56,20 +49,10 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
             return null;
         }
 
-        final ImageView imageView;
-
         int width = Util.getLCDWidth(mContext);
 
-        if (Util.isOverAPI11() == true)
-        {
-            imageView = new AnimationImageView(mContext, width, width, mDirection < 0);
-            ((AnimationImageView) imageView).setOnAnimationListener(mOnUserActionListener);
-            ((AnimationImageView) imageView).setOnImageActionListener(mOnImageActionListener);
-        } else
-        {
-            imageView = new ImageView(mContext);
-            imageView.setScaleType(ScaleType.CENTER_CROP);
-        }
+        final ImageView imageView = new ImageView(mContext);
+        imageView.setScaleType(ScaleType.CENTER_CROP);
 
         imageView.setTag(imageView.getId(), position);
 
