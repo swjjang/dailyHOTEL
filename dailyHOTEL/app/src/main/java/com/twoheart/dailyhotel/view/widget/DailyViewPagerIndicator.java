@@ -97,7 +97,9 @@ public class DailyViewPagerIndicator extends View
 
         int measuredWidth = (int) (mRadius * SELECTED_FACTOR + (mRadius * (SELECTED_FACTOR + SPACING_FACTOR)) * (mTotalCount - 1));
         measuredWidth += mRadius * SELECTED_FACTOR;
+
         int measuredHeight = (int) (mRadius * SELECTED_FACTOR) * 2;
+
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 }

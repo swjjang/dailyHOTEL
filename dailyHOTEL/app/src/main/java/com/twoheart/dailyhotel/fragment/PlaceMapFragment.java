@@ -619,7 +619,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
                         arrangeList.remove(i - 1);
                     }
 
-                    String key = String.valueOf(item01.latitude) + String.valueOf(item01.longitude);
+                    String key = Double.toString(item01.latitude) + Double.toString(item01.longitude);
 
                     if (hashMap.containsKey(key) == true)
                     {

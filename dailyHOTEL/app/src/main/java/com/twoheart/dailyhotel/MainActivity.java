@@ -398,7 +398,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             return null;
         }
 
-        int startIndex = link.indexOf("?") + 1;
+        int startIndex = link.indexOf('?') + 1;
 
         if (startIndex <= 0)
         {

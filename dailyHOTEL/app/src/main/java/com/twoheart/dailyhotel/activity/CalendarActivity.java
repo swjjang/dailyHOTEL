@@ -318,7 +318,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private class Day
+    private static class Day
     {
         SaleTime dayTime;
         String day;
