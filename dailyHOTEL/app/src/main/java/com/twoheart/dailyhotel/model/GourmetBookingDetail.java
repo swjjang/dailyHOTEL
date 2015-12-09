@@ -66,7 +66,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         longitude = jsonObject.getDouble("longitude");
         placeName = jsonObject.getString("restaurant_name");
 
-        grade = Place.Grade.valueOf(jsonObject.getString("grade"));
+        grade = Place.Grade.gourmet;
         guestName = jsonObject.getString("customer_name");
         guestPhone = jsonObject.getString("customer_phone");
         guestEmail = jsonObject.getString("customer_email");

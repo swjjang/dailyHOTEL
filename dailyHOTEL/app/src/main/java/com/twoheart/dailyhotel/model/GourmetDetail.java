@@ -15,7 +15,7 @@ public class GourmetDetail extends PlaceDetail
     @Override
     public void setData(JSONObject jsonObject) throws Exception
     {
-        grade = Place.Grade.valueOf(jsonObject.getString("grade"));
+        grade = Place.Grade.gourmet;
         name = jsonObject.getString("restaurant_name");
         address = jsonObject.getString("address");
 

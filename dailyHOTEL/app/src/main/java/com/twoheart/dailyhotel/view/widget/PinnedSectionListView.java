@@ -572,7 +572,6 @@ public class PinnedSectionListView extends ListView
             {
                 if (Math.abs(y - mTouchPoint.y) > mTouchSlop)
                 {
-
                     // cancel sequence on touch target
                     MotionEvent event = MotionEvent.obtain(ev);
                     event.setAction(MotionEvent.ACTION_CANCEL);
@@ -583,7 +582,6 @@ public class PinnedSectionListView extends ListView
                     super.dispatchTouchEvent(mDownEvent);
                     super.dispatchTouchEvent(ev);
                     clearTouchTarget();
-
                 }
             }
 
