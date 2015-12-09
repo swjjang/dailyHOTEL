@@ -179,7 +179,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             {
                 mDailyTextViews[dayClass.dayTime.getOffsetDailyDay()] = view;
 
-                if(enableDayCount-- <= 0)
+                if (enableDayCount-- <= 0)
                 {
                     view.setEnabled(false);
                 }
@@ -242,7 +242,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         int lastMonth = lastMonthCalendar.get(Calendar.MONTH);
         int currentMonth = calendar.get(Calendar.MONTH);
 
-        if(currentMonth > lastMonth)
+        if (currentMonth > lastMonth)
         {
             return 12 - currentMonth + lastMonth;
         } else

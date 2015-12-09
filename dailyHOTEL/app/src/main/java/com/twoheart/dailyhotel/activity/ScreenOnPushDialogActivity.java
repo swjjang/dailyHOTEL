@@ -32,22 +32,24 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
 
         setContentView(R.layout.activity_screen_on_push_dialog);
 
+        String title = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_TITLE);
         String msg = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
         int type = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
         mLink = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_LINK);
 
         TextView messageTextView = (TextView) findViewById(R.id.messageTextView);
 
-        String title = null;
         switch (type)
         {
             case PUSH_TYPE_NOTICE:
             {
-                msg = msg.replaceAll("\\\\n", "\n");
+                if (Util.isTextEmpty(title) == true)
+                {
+                    title = getString(R.string.dialog_notice2);
+                }
 
-                // 공지 푸시
+                msg = msg.replaceAll("\\\\n", "\n");
                 messageTextView.setText(msg);
-                title = getString(R.string.dialog_notice2);
                 break;
             }
 

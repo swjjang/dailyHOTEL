@@ -131,7 +131,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
     {
         super.onResume();
 
-        if(VolleyHttpClient.isAvailableNetwork() == false)
+        if (VolleyHttpClient.isAvailableNetwork() == false)
         {
             showDisabledNetworkPopup();
         } else

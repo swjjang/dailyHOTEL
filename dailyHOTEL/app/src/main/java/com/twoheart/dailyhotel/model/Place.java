@@ -71,20 +71,6 @@ public abstract class Place implements Parcelable
 
     public enum Grade
     {
-        biz(R.string.grade_biz, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
-        //
-        hostel(R.string.grade_hostel, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
-        //
-        grade1(R.string.grade_1, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
-        grade2(R.string.grade_2, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
-        grade3(R.string.grade_3, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
-        boutique(R.string.grade_boutique, R.color.grade_boutique, R.drawable.bg_hotel_price_9f2d58),
-        residence(R.string.grade_residence, R.color.grade_residence, R.drawable.bg_hotel_price_407f67),
-        resort(R.string.grade_resort, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_cf8d14),
-        pension(R.string.grade_pension, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_cf8d14),
-        condo(R.string.grade_condo, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_cf8d14),
-        special(R.string.grade_special, R.color.grade_special, R.drawable.bg_hotel_price_ab380a),
-        etc(R.string.grade_not_yet, R.color.grade_not_yet, R.drawable.bg_hotel_price_808080),
         gourmet(R.string.grade_not_yet, R.color.dh_theme_color, R.drawable.bg_hotel_price_900034);
 
         private int mNameResId;

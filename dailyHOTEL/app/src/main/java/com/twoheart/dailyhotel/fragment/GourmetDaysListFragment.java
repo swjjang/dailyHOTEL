@@ -29,7 +29,7 @@ public class GourmetDaysListFragment extends GourmetListFragment
     {
         super.setSaleTime(saleTime);
 
-        if(mSelectedSaleTime == null)
+        if (mSelectedSaleTime == null)
         {
             mSelectedSaleTime = saleTime.getClone(saleTime.getOffsetDailyDay());
         }

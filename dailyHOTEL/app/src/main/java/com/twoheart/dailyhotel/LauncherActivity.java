@@ -54,7 +54,7 @@ public class LauncherActivity extends Activity
     {
         super.onStart();
 
-        if(Util.isOverAPI14() == true)
+        if (Util.isOverAPI14() == true)
         {
             Branch branch = Branch.getInstance();
             branch.initSession(new Branch.BranchReferralInitListener()
