@@ -43,9 +43,10 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
         {
             case PUSH_TYPE_NOTICE:
             {
+                msg = msg.replaceAll("\\\\n", "\n");
+
                 // 공지 푸시
                 messageTextView.setText(msg);
-
                 title = getString(R.string.dialog_notice2);
                 break;
             }

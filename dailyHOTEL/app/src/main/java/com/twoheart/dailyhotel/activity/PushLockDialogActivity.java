@@ -47,6 +47,8 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
             case PUSH_TYPE_NOTICE:
             {
                 // 공지 푸시
+                message = message.replaceAll("\\\\n", "\n");
+
                 messageTextView.setText(message);
                 break;
             }
