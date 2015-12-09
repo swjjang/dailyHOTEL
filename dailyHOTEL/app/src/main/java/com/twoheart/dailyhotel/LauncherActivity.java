@@ -5,6 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.twoheart.dailyhotel.util.Util;
+
+import org.json.JSONObject;
+
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+
 public class LauncherActivity extends Activity
 {
     @Override
@@ -46,5 +53,17 @@ public class LauncherActivity extends Activity
     protected void onStart()
     {
         super.onStart();
+
+        if(Util.isOverAPI14() == true)
+        {
+            Branch branch = Branch.getInstance();
+            branch.initSession(new Branch.BranchReferralInitListener()
+            {
+                @Override
+                public void onInitFinished(JSONObject referringParams, BranchError error)
+                {
+                }
+            }, this.getIntent().getData(), this);
+        }
     }
 }

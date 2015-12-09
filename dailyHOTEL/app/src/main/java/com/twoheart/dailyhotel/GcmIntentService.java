@@ -300,7 +300,27 @@ public class GcmIntentService extends IntentService implements Constants
             builder.setSmallIcon(R.drawable.icon_noti_small) //
                 .setContentTitle(getString(R.string.app_name)).setAutoCancel(true).setSound(uri).setContentText(msg) //
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
+                .setPriority(NotificationCompat.PRIORITY_MAX)//
+                .setColor(getResources().getColor(R.color.dh_theme_color))//
                 .setContentIntent(contentIntent);
+
+            if (msg.indexOf('\n') >= 0)
+            {
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(msg));
+            } else
+            {
+                String[] message = msg.split("\\\\n");
+
+                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+
+                for (String text : message)
+                {
+                    inboxStyle.addLine(text);
+                }
+
+                builder.setStyle(inboxStyle);
+            }
+
             mNotificationManager.notify(NOTIFICATION_ID, builder.build());
         } else
         {
@@ -354,7 +374,8 @@ public class GcmIntentService extends IntentService implements Constants
                     .setContentTitle(getString(R.string.app_name)).setContentText(mMessage).setSound(mUri) //
                     .setTicker(getResources().getString(R.string.app_name)) //
                     .setAutoCancel(true) //
-                    .setSmallIcon(R.drawable.icon_noti_small).setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
+                    .setSmallIcon(R.drawable.icon_noti_small)//
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
                     .setColor(getResources().getColor(R.color.dh_theme_color));
 
                 if (bitmap != null)
@@ -363,6 +384,7 @@ public class GcmIntentService extends IntentService implements Constants
                 }
 
                 builder.setContentIntent(mPendingIntent);
+                builder.setPriority(Notification.PRIORITY_MAX);
                 mNotificationManager.notify(NOTIFICATION_ID, builder.build());
             } else
             {
@@ -383,6 +405,7 @@ public class GcmIntentService extends IntentService implements Constants
                 }
 
                 builder.setContentIntent(mPendingIntent);
+                builder.setPriority(NotificationCompat.PRIORITY_MAX);
                 mNotificationManager.notify(NOTIFICATION_ID, builder.build());
             }
         }

@@ -25,6 +25,17 @@ public class GourmetDaysListFragment extends GourmetListFragment
     private SaleTime mSelectedSaleTime;
 
     @Override
+    public void setSaleTime(SaleTime saleTime)
+    {
+        super.setSaleTime(saleTime);
+
+        if(mSelectedSaleTime == null)
+        {
+            mSelectedSaleTime = saleTime.getClone(saleTime.getOffsetDailyDay());
+        }
+    }
+
+    @Override
     public void onPageSelected(boolean isRequestHotelList)
     {
         super.onPageSelected(isRequestHotelList);

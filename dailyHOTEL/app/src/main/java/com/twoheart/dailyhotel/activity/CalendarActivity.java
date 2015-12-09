@@ -26,7 +26,12 @@ import java.util.TimeZone;
 
 public class CalendarActivity extends BaseActivity implements View.OnClickListener
 {
-    private static final int DAYCOUNT_OF_MAX = 60;
+    private static final int HOTEL_DAYCOUNT_OF_MAX = 60;
+    private static final int GOURMET_DAYCOUNT_OF_MAX = 30;
+
+    private static final int HOTEL_ENABLE_DAYCOUNT_OF_MAX = 60;
+    private static final int GOURMET_ENABLE_DAYCOUNT_OF_MAX = 14;
+
 
     private PlaceMainFragment.TYPE mPlaceType;
     private Day mCheckInDay;
@@ -51,10 +56,20 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         Intent intent = getIntent();
 
         mPlaceType = PlaceMainFragment.TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
-
         SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
 
-        initLayout(CalendarActivity.this, dailyTime);
+        switch (mPlaceType)
+        {
+            case HOTEL:
+                initLayout(CalendarActivity.this, dailyTime//
+                    , HOTEL_ENABLE_DAYCOUNT_OF_MAX, HOTEL_DAYCOUNT_OF_MAX);
+                break;
+
+            case GOURMET:
+                initLayout(CalendarActivity.this, dailyTime//
+                    , GOURMET_ENABLE_DAYCOUNT_OF_MAX, GOURMET_DAYCOUNT_OF_MAX);
+                break;
+        }
     }
 
     @Override
@@ -65,7 +80,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         super.onStart();
     }
 
-    private void initLayout(Context context, SaleTime dailyTime)
+    private void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
         setContentView(R.layout.activity_calendar);
 
@@ -82,15 +97,16 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
 
         ViewGroup calendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
 
-        mDailyTextViews = new DailyTextView[DAYCOUNT_OF_MAX];
+        mDailyTextViews = new DailyTextView[dayCountOfMax];
 
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         calendar.setTimeInMillis(dailyTime.getDailyTime());
 
-        int maxMonth = getMonthInterval(calendar);
-        int maxDay = DAYCOUNT_OF_MAX;
+        int maxMonth = getMonthInterval(calendar, dayCountOfMax);
+        int maxDay = dayCountOfMax;
         int dayCount = 0;
+        int enableDayCount = enableDayCountOfMax;
 
         for (int i = 0; i <= maxMonth; i++)
         {
@@ -98,17 +114,18 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             calendarsLayout.addView(getMonthCalendarView(context, dailyTime.getClone(dayCount)//
-                , calendar, maxDay > maxDayOfMonth ? maxDayOfMonth : maxDay));
+                , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1, enableDayCount));
 
             dayCount += maxDayOfMonth - day + 1;
-            maxDay = DAYCOUNT_OF_MAX - dayCount;
+            maxDay = dayCountOfMax - dayCount;
+            enableDayCount = enableDayCountOfMax - dayCount;
 
             calendar.add(Calendar.MONTH, 1);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
         }
     }
 
-    private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth)
+    private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
     {
         View calendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
 
@@ -152,6 +169,8 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
+        int enableDayCount = enableDayCountMax < 0 ? 0 : enableDayCountMax;
+
         for (Day dayClass : days)
         {
             View view = getDayView(context, dayClass);
@@ -159,6 +178,11 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             if (dayClass != null)
             {
                 mDailyTextViews[dayClass.dayTime.getOffsetDailyDay()] = view;
+
+                if(enableDayCount-- <= 0)
+                {
+                    view.setEnabled(false);
+                }
             }
 
             calendarGridLayout.addView(view);
@@ -210,18 +234,21 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         return dayTextView;
     }
 
-    private int getMonthInterval(final Calendar calendar)
+    private int getMonthInterval(final Calendar calendar, int interval)
     {
         Calendar lastMonthCalendar = (Calendar) calendar.clone();
-        lastMonthCalendar.add(Calendar.DAY_OF_MONTH, DAYCOUNT_OF_MAX);
+        lastMonthCalendar.add(Calendar.DAY_OF_MONTH, interval);
 
-        long loopTime = lastMonthCalendar.getTimeInMillis() - calendar.getTimeInMillis();
+        int lastMonth = lastMonthCalendar.get(Calendar.MONTH);
+        int currentMonth = calendar.get(Calendar.MONTH);
 
-        Calendar monthCalendar = DailyCalendar.getInstance();
-        monthCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        monthCalendar.setTimeInMillis(loopTime);
-
-        return monthCalendar.get(Calendar.DAY_OF_MONTH);
+        if(currentMonth > lastMonth)
+        {
+            return 12 - currentMonth + lastMonth;
+        } else
+        {
+            return lastMonth - currentMonth;
+        }
     }
 
     @Override

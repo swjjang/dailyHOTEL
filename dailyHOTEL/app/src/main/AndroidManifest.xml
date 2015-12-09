@@ -365,6 +365,16 @@
         <meta-data
             android:name="com.twoheart.dailyhotel.util.DailyGlideModule"
             android:value="GlideModule" />
+
+        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="io.branch.sdk.BranchKey"
+            android:value="key_live_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt"/>
     </application>
 
 </manifest>
