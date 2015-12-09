@@ -50,8 +50,8 @@ import java.util.HashMap;
 public class SplashActivity extends BaseActivity implements Constants, ErrorListener
 {
     private static final int PROGRESS_CIRCLE_COUNT = 3;
-    protected HashMap<String, String> regPushParams;
-    private Dialog alertDlg;
+
+    private Dialog mAlertDlg;
     private View mProgressView;
     private View[] mCircleViewList;
     private boolean mIsRequestLogin;
@@ -76,7 +76,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                     {
                         mProgressView.setVisibility(View.VISIBLE);
 
-                        startSplashLoad();
+                        showSplashView();
                     }
                     break;
             }
@@ -97,7 +97,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
         editor.putBoolean(KEY_PREFERENCE_FNB_REGION_SETTING, false);
         editor.remove(KEY_PREFERENCE_GCM_ID);
-        editor.commit();
         editor.apply();
 
         mProgressView = findViewById(R.id.progressLayout);
@@ -132,14 +131,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
     {
         super.onResume();
 
-        // 비행기 모드
-        boolean isAirplainMode = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1 ? true : false;
-        boolean isNetworkAvailable = VolleyHttpClient.isAvailableNetwork();
-
-        if (isAirplainMode && !isNetworkAvailable)
-        {
-            showDisabledNetworkPopup();
-        } else if (!isAirplainMode && !isNetworkAvailable)
+        if(VolleyHttpClient.isAvailableNetwork() == false)
         {
             showDisabledNetworkPopup();
         } else
@@ -151,11 +143,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                 mHandler.sendEmptyMessageDelayed(0, 1500);
             }
 
-            if (mProgressView.getVisibility() != View.VISIBLE)
-            {
-                mHandler.removeMessages(1);
-                mHandler.sendEmptyMessageDelayed(1, 3000);
-            }
+            showProgress();
         }
     }
 
@@ -170,34 +158,38 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
     @Override
     protected void onDestroy()
     {
-        if (alertDlg != null)
+        if (mAlertDlg != null)
         {
-            if (alertDlg.isShowing() == true)
+            if (mAlertDlg.isShowing() == true)
             {
-                alertDlg.dismiss();
+                mAlertDlg.dismiss();
             }
 
-            alertDlg = null;
+            mAlertDlg = null;
         }
 
         super.onDestroy();
     }
 
+    private void showProgress()
+    {
+        if (mProgressView.getVisibility() != View.VISIBLE)
+        {
+            mHandler.removeMessages(1);
+            mHandler.sendEmptyMessageDelayed(1, 1000);
+        }
+    }
+
     private void showDisabledNetworkPopup()
     {
-        if (alertDlg != null)
+        if (mAlertDlg != null)
         {
-            if (alertDlg.isShowing() == true)
+            if (mAlertDlg.isShowing() == true)
             {
-                alertDlg.dismiss();
+                mAlertDlg.dismiss();
             }
 
-            alertDlg = null;
-        }
-
-        if (isFinishing() == true)
-        {
-            return;
+            mAlertDlg = null;
         }
 
         View.OnClickListener posListener = new View.OnClickListener()
@@ -205,7 +197,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             @Override
             public void onClick(View view)
             {
-                alertDlg.dismiss();
+                mAlertDlg.dismiss();
 
                 if (VolleyHttpClient.isAvailableNetwork())
                 {
@@ -236,7 +228,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             public void onClick(View view)
             {
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                alertDlg.dismiss();
+                mAlertDlg.dismiss();
             }
         };
 
@@ -247,7 +239,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             {
                 if (keyCode == KeyEvent.KEYCODE_BACK)
                 {
-                    alertDlg.dismiss();
+                    mAlertDlg.dismiss();
                     finish();
                     return true;
                 }
@@ -255,19 +247,22 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             }
         };
 
-        alertDlg = createSimpleDialog(getString(R.string.dialog_btn_text_waiting), getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi), getString(R.string.dialog_btn_text_retry), getString(R.string.dialog_btn_text_setting), posListener, negaListener);
-        alertDlg.setOnKeyListener(keyListener);
+        mAlertDlg = createSimpleDialog(getString(R.string.dialog_btn_text_waiting)//
+            , getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi)//
+            , getString(R.string.dialog_btn_text_retry)//
+            , getString(R.string.dialog_btn_text_setting), posListener, negaListener);
+        mAlertDlg.setOnKeyListener(keyListener);
 
         try
         {
-            alertDlg.show();
+            mAlertDlg.show();
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
     }
 
-    private void startSplashLoad()
+    private void showSplashView()
     {
         for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
         {
@@ -302,7 +297,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         DailyNetworkAPI.getInstance().requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, this);
     }
 
-    private void showMainActivity()
+    private void doFinish()
     {
         setResult(RESULT_OK);
         finish();
@@ -330,11 +325,11 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         //            @Override
         //            public void onPostExecute()
         //            {
-        //                showMainActivity();
+        //                doFinish();
         //            }
         //        });
 
-        showMainActivity();
+        doFinish();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -349,11 +344,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -395,30 +385,18 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                ExLog.d(" / onResponse : Stores = " + RELEASE_STORE);
-
                 SharedPreferences.Editor editor = sharedPreference.edit();
 
                 if (RELEASE_STORE == Stores.PLAY_STORE)
                 {
-                    ExLog.d("RELEASE_PLAY_STORE : true");
-
                     editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("play_max"));
                     editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("play_min"));
                 } else if (RELEASE_STORE == Stores.T_STORE)
                 {
-                    ExLog.d("RELEASE_T_STORE : true");
-
                     editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("tstore_max"));
                     editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("tstore_min"));
                 } else if (RELEASE_STORE == Stores.N_STORE)
                 {
-                    ExLog.d("RELEASE_N_STORE : true");
                     editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("nstore_max"));
                     editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("nstore_min"));
                 }
@@ -433,13 +411,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                 ExLog.d("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
 
                 if (minVersion > currentVersion)
-                { // 강제 업데이트
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
+                {
                     View.OnClickListener posListener = new View.OnClickListener()
                     {
                         @Override
@@ -472,11 +444,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
                 } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
                 {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
                     View.OnClickListener posListener = new View.OnClickListener()
                     {
                         @Override
@@ -522,7 +489,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                 {
                     requestConfigurationABTest();
                 }
-
             } catch (Exception e)
             {
                 onError(e);
@@ -537,11 +503,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msgCode = response.getInt("msg_code");
 
                 if (msgCode == 200)

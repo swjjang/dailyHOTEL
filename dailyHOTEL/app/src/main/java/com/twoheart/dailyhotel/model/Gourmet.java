@@ -48,15 +48,7 @@ public class Gourmet extends Place implements Parcelable
             price = jsonObject.getInt("price");
             discountPrice = jsonObject.getInt("discount");
             address = jsonObject.getString("addr_summary");
-
-            try
-            {
-                grade = Grade.valueOf(jsonObject.getString("grade"));
-            } catch (Exception e)
-            {
-                grade = Grade.etc;
-            }
-
+            grade = Grade.gourmet;
             districtName = jsonObject.getString("district_name");
             imageUrl = jsonObject.getString("img");
 

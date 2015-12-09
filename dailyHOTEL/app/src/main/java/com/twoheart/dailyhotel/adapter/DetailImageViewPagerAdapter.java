@@ -53,7 +53,6 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
 
         final ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ScaleType.CENTER_CROP);
-
         imageView.setTag(imageView.getId(), position);
 
         String url = mImageUrlList.get(position);
@@ -73,37 +72,12 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
 
         if (isExist == false)
         {
-            RequestListener<String, GlideDrawable> glideDrawableRequestListener = new RequestListener<String, GlideDrawable>()
-            {
-                @Override
-                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
-                {
-                    imageView.setImageDrawable(null);
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
-                {
-                    return false;
-                }
-            };
-
-            SimpleTarget<GlideDrawable> glideDrawableSimpleTarget = new SimpleTarget<GlideDrawable>()
-            {
-                @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation)
-                {
-                    imageView.setImageDrawable(resource);
-                }
-            };
-
             if (Util.getLCDWidth(mContext) < 720)
             {
-                Glide.with(mContext).load(url).override(360, 240).listener(glideDrawableRequestListener).into(glideDrawableSimpleTarget);
+                Glide.with(mContext).load(url).override(360, 240).crossFade().into(imageView);
             } else
             {
-                Glide.with(mContext).load(url).listener(glideDrawableRequestListener).into(glideDrawableSimpleTarget);
+                Glide.with(mContext).load(url).crossFade().into(imageView);
             }
         }
 

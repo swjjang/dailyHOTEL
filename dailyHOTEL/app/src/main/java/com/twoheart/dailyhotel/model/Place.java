@@ -84,7 +84,8 @@ public abstract class Place implements Parcelable
         pension(R.string.grade_pension, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_cf8d14),
         condo(R.string.grade_condo, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_cf8d14),
         special(R.string.grade_special, R.color.grade_special, R.drawable.bg_hotel_price_ab380a),
-        etc(R.string.grade_not_yet, R.color.grade_not_yet, R.drawable.bg_hotel_price_808080);
+        etc(R.string.grade_not_yet, R.color.grade_not_yet, R.drawable.bg_hotel_price_808080),
+        gourmet(R.string.grade_not_yet, R.color.dh_theme_color, R.drawable.bg_hotel_price_900034);
 
         private int mNameResId;
         private int mColorResId;
