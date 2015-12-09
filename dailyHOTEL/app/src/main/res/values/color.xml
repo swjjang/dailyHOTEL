@@ -39,12 +39,14 @@
     <color name="vpi_fillcolor">#99000000</color>
     <color name="vpi_pagecolor">#33000000</color>
 
-    <color name="grade_hotel">#055870</color>
-    <color name="grade_boutique">#9f2d58</color>
-    <color name="grade_residence">#407f67</color>
-    <color name="grade_resort_pension_condo">#cf8d14</color>
-    <color name="grade_special">#ab380a</color>
-    <color name="grade_not_yet">#808080</color>
+    <color name="grade_business">#576071</color>
+    <color name="grade_boutique">#c46262</color>
+    <color name="grade_residence">#738253</color>
+    <color name="grade_resort_pension_condo">#d69467</color>
+    <color name="grade_special">#722a44</color>
+    <color name="grade_special1">#812144</color>
+    <color name="grade_special2">#78554a</color>
+    <color name="grade_not_yet">#aca69c</color>
 
     <color name="white">#ffffff</color>
     <color name="white_a50">#80ffffff</color>

@@ -50,6 +50,8 @@ import android.widget.TextView;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
@@ -120,6 +122,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed backButtonHandler;
     private Handler mHandler = new Handler();
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -155,6 +162,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         // 스플래시 화면을 띄운다
         startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void initLayout(String title)
@@ -1080,6 +1090,44 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         // Error Fragment를 표시한다. -> stackoverflow가 발생하는 경우가 있음. 에러 원인 파악해야 함.
         replaceFragment(new ErrorFragment(), String.valueOf(ERROR_FRAGMENT));
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        com.google.android.gms.appindexing.Action viewAction = com.google.android.gms.appindexing.Action.newAction(com.google.android.gms.appindexing.Action.TYPE_VIEW, // TODO: choose an action type.
+            "Main Page", // TODO: Define a title for the content shown.
+            // TODO: If you have web page content that matches this app activity's content,
+            // make sure this auto-generated web page URL is correct.
+            // Otherwise, set the URL to null.
+            Uri.parse("http://host/path"),
+            // TODO: Make sure this auto-generated app deep link URI is correct.
+            Uri.parse("android-app://com.twoheart.dailyhotel/http/host/path"));
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        com.google.android.gms.appindexing.Action viewAction = com.google.android.gms.appindexing.Action.newAction(com.google.android.gms.appindexing.Action.TYPE_VIEW, // TODO: choose an action type.
+            "Main Page", // TODO: Define a title for the content shown.
+            // TODO: If you have web page content that matches this app activity's content,
+            // make sure this auto-generated web page URL is correct.
+            // Otherwise, set the URL to null.
+            Uri.parse("http://host/path"),
+            // TODO: Make sure this auto-generated app deep link URI is correct.
+            Uri.parse("android-app://com.twoheart.dailyhotel/http/host/path"));
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     private static class DrawerMenu

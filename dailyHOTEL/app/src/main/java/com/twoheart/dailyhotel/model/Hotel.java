@@ -266,20 +266,26 @@ public class Hotel implements Parcelable
 
     public enum HotelGrade
     {
-        biz(R.string.grade_biz, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
+        special(R.string.grade_special, R.color.grade_special, R.drawable.bg_hotel_price_stars_5),
+        special1(R.string.grade_special1, R.color.grade_special1, R.drawable.bg_hotel_price_special1),
+        special2(R.string.grade_special2, R.color.grade_special2, R.drawable.bg_hotel_price_special2),
         //
-        hostel(R.string.grade_hostel, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
+        biz(R.string.grade_biz, R.color.grade_business, R.drawable.bg_hotel_price_business),
+        hostel(R.string.grade_hostel, R.color.grade_business, R.drawable.bg_hotel_price_business),
+        grade1(R.string.grade_1, R.color.grade_business, R.drawable.bg_hotel_price_business),
+        grade2(R.string.grade_2, R.color.grade_business, R.drawable.bg_hotel_price_business),
+        grade3(R.string.grade_3, R.color.grade_business, R.drawable.bg_hotel_price_business),
         //
-        grade1(R.string.grade_1, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
-        grade2(R.string.grade_2, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
-        grade3(R.string.grade_3, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
-        boutique(R.string.grade_boutique, R.color.grade_boutique, R.drawable.bg_hotel_price_9f2d58),
-        residence(R.string.grade_residence, R.color.grade_residence, R.drawable.bg_hotel_price_407f67),
-        resort(R.string.grade_resort, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_cf8d14),
-        pension(R.string.grade_pension, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_cf8d14),
-        condo(R.string.grade_condo, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_cf8d14),
-        special(R.string.grade_special, R.color.grade_special, R.drawable.bg_hotel_price_ab380a),
-        etc(R.string.grade_not_yet, R.color.grade_not_yet, R.drawable.bg_hotel_price_808080);
+        resort(R.string.grade_resort, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_pension),
+        pension(R.string.grade_pension, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_pension),
+        fullvilla(R.string.grade_fullvilla, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_pension),
+        condo(R.string.grade_condo, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_pension),
+        //
+        boutique(R.string.grade_boutique, R.color.grade_boutique, R.drawable.bg_hotel_price_boutique),
+        //
+        residence(R.string.grade_residence, R.color.grade_residence, R.drawable.bg_hotel_price_residence),
+        //
+        etc(R.string.grade_not_yet, R.color.grade_not_yet, R.drawable.bg_hotel_price_etc);
 
         private int mNameResId;
         private int mColorResId;

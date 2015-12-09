@@ -92,9 +92,15 @@ public class GcmIntentService extends IntentService implements Constants
             {
                 // 중복 체크를 위한 값
                 String collapseKey = intent.getStringExtra("collapse_key");
+                String title = extras.getString("title");
                 JSONObject jsonMsg = new JSONObject(extras.getString("message"));
                 String msg = jsonMsg.getString("msg");
                 String imageUrl = null;
+
+                if (Util.isTextEmpty(title) == true)
+                {
+                    title = getString(R.string.app_name);
+                }
 
                 if (jsonMsg.has("image_url") == true)
                 {
@@ -131,7 +137,7 @@ public class GcmIntentService extends IntentService implements Constants
                         String hotelName = jsonMsg.getString("hotelName");
                         String paidPrice = jsonMsg.getString("paidPrice");
 
-                        sendPush(messageType, type, msg, imageUrl, null);
+                        sendPush(messageType, type, title, msg, imageUrl, null);
 
                         // 로그 남기기 이슈
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
@@ -183,7 +189,7 @@ public class GcmIntentService extends IntentService implements Constants
                                 link = jsonMsg.getString("targetLink");
                             }
 
-                            sendPush(messageType, type, msg, imageUrl, link);
+                            sendPush(messageType, type, title, msg, imageUrl, link);
                         }
 
                         break;
@@ -198,7 +204,7 @@ public class GcmIntentService extends IntentService implements Constants
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    public void sendPush(String messageType, int type, String msg, String imageUrl, String link)
+    public void sendPush(String messageType, int type, String title, String msg, String imageUrl, String link)
     {
         if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
         {
@@ -215,6 +221,7 @@ public class GcmIntentService extends IntentService implements Constants
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
                     i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
+                    i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TITLE, title);
 
                     switch (type)
                     {
@@ -239,6 +246,7 @@ public class GcmIntentService extends IntentService implements Constants
 
                 Intent i = new Intent(this, PushLockDialogActivity.class);
                 i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
+                i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TITLE, title);
                 i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
 
                 switch (type)
@@ -257,7 +265,7 @@ public class GcmIntentService extends IntentService implements Constants
             }
 
             // 노티피케이션은 케이스에 상관없이 항상 뜨도록함.
-            sendNotification(type, msg, imageUrl, link);
+            sendNotification(type, title, msg, imageUrl, link);
         }
     }
 
@@ -266,7 +274,7 @@ public class GcmIntentService extends IntentService implements Constants
         return ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).isScreenOn();
     }
 
-    private void sendNotification(int type, String msg, String imageUrl, String link)
+    private void sendNotification(int type, String title, String msg, String imageUrl, String link)
     {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -298,7 +306,7 @@ public class GcmIntentService extends IntentService implements Constants
         {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setSmallIcon(R.drawable.icon_noti_small) //
-                .setContentTitle(getString(R.string.app_name)).setAutoCancel(true).setSound(uri).setContentText(msg) //
+                .setContentTitle(title).setAutoCancel(true).setSound(uri).setContentText(msg) //
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
                 .setPriority(NotificationCompat.PRIORITY_MAX)//
                 .setColor(getResources().getColor(R.color.dh_theme_color))//
@@ -324,22 +332,24 @@ public class GcmIntentService extends IntentService implements Constants
             mNotificationManager.notify(NOTIFICATION_ID, builder.build());
         } else
         {
-            new ImageLoaderNotification(contentIntent, uri, msg).execute(imageUrl);
+            new ImageLoaderNotification(contentIntent, uri, title, msg).execute(imageUrl);
         }
     }
 
     private class ImageLoaderNotification extends AsyncTask<String, Void, Bitmap>
     {
+        private String mTitle;
         private String mMessage;
         private PendingIntent mPendingIntent;
         private Uri mUri;
 
-        public ImageLoaderNotification(PendingIntent contentIntent, Uri uri, String message)
+        public ImageLoaderNotification(PendingIntent contentIntent, Uri uri, String title, String message)
         {
             super();
 
             mPendingIntent = contentIntent;
             mUri = uri;
+            mTitle = title;
             mMessage = message;
         }
 
@@ -371,8 +381,8 @@ public class GcmIntentService extends IntentService implements Constants
             if (Util.isOverAPI16() == true)
             {
                 Notification.Builder builder = new Notification.Builder(GcmIntentService.this)//
-                    .setContentTitle(getString(R.string.app_name)).setContentText(mMessage).setSound(mUri) //
-                    .setTicker(getResources().getString(R.string.app_name)) //
+                    .setContentTitle(mTitle).setContentText(mMessage).setSound(mUri) //
+                    .setTicker(mTitle) //
                     .setAutoCancel(true) //
                     .setSmallIcon(R.drawable.icon_noti_small)//
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
@@ -390,9 +400,9 @@ public class GcmIntentService extends IntentService implements Constants
             {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(GcmIntentService.this);
 
-                builder.setContentTitle(getString(R.string.app_name)) //
+                builder.setContentTitle(mTitle) //
                     .setContentText(mMessage) //
-                    .setTicker(getResources().getString(R.string.app_name)) //
+                    .setTicker(mTitle) //
                     .setSound(mUri) //
                     .setAutoCancel(true) //
                     .setSmallIcon(R.drawable.icon_noti_small) //
