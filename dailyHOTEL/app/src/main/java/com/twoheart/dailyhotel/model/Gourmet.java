@@ -11,6 +11,8 @@ import org.json.JSONObject;
 public class Gourmet extends Place implements Parcelable
 {
     public String saleDay;
+    public int persons;
+    public String category;
 
     public Gourmet()
     {
@@ -28,6 +30,7 @@ public class Gourmet extends Place implements Parcelable
         super.writeToParcel(dest, flags);
 
         dest.writeString(saleDay);
+        dest.writeInt(persons);
     }
 
     protected void readFromParcel(Parcel in)
@@ -35,6 +38,7 @@ public class Gourmet extends Place implements Parcelable
         super.readFromParcel(in);
 
         saleDay = in.readString();
+        persons = in.readInt();
     }
 
     @Override
@@ -58,6 +62,8 @@ public class Gourmet extends Place implements Parcelable
             isSoldOut = "Y".equalsIgnoreCase(jsonObject.getString("is_soldout"));
 
             saleDay = jsonObject.getString("sday");
+            persons = jsonObject.getInt("persons");
+            category = jsonObject.getString("category");
 
             if (jsonObject.has("rating_value") == true)
             {

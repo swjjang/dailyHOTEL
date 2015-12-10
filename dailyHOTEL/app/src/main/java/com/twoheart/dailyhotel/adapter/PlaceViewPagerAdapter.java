@@ -43,7 +43,7 @@ public abstract class PlaceViewPagerAdapter extends PagerAdapter
 
         LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = layoutInflater.inflate(R.layout.viewpager_column_hotel, null);
+        View view = layoutInflater.inflate(R.layout.viewpager_column_gourmet, null);
 
         PlaceViewItem item = mPlaceViewItemList.get(position);
 

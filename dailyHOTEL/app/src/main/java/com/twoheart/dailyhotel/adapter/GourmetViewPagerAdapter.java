@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
@@ -34,8 +35,10 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
     }
 
     @Override
-    protected void makeLayout(View view, final Place place)
+    protected void makeLayout(View view, Place place)
     {
+        final Gourmet gourmet = (Gourmet) place;
+
         RelativeLayout placeLayout = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
         final ImageView placeImageView = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
         TextView name = (TextView) view.findViewById(R.id.tv_hotel_row_name);
@@ -46,10 +49,11 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         TextView addressTextView = (TextView) view.findViewById(R.id.tv_hotel_row_address);
         TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
         View closeView = view.findViewById(R.id.closeImageVIew);
+        TextView persions = (TextView) view.findViewById(R.id.personsTextView);
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        String address = place.address;
+        String address = gourmet.address;
 
         if (address.indexOf('|') >= 0)
         {
@@ -60,11 +64,21 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         }
 
         addressTextView.setText(address);
-        name.setText(place.name);
+        name.setText(gourmet.name);
+
+        // 인원
+        if (gourmet.persons > 1)
+        {
+            persions.setVisibility(View.VISIBLE);
+            persions.setText(mContext.getString(R.string.label_persions, gourmet.persons));
+        } else
+        {
+            persions.setVisibility(View.GONE);
+        }
 
         Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 
-        int price = place.price;
+        int price = gourmet.price;
 
         if (price <= 0)
         {
@@ -80,21 +94,21 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         }
 
         // 만족도
-        if (place.satisfaction > 0)
+        if (gourmet.satisfaction > 0)
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(place.satisfaction + "%");
+            satisfactionView.setText(gourmet.satisfaction + "%");
         } else
         {
             satisfactionView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(comma.format(place.discountPrice) + currency);
+        discountTextView.setText(comma.format(gourmet.discountPrice) + currency);
 
         name.setSelected(true); // Android TextView marquee bug
 
         final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
 
         PaintDrawable p = new PaintDrawable();
         p.setShape(new RectShape());
@@ -112,36 +126,34 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         placeLayout.setBackgroundDrawable(p);
 
         // grade
-        grade.setVisibility(View.INVISIBLE);
-        //        grade.setText(place.grade.getName(mContext));
-        //        grade.setBackgroundResource(place.grade.getColorResId());
+        grade.setText(gourmet.category);
 
         if (Util.getLCDWidth(mContext) < 720)
         {
-            Glide.with(mContext).load(place.imageUrl).into(placeImageView);
-            Glide.with(mContext).load(place.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
+            Glide.with(mContext).load(gourmet.imageUrl).into(placeImageView);
+            Glide.with(mContext).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
             {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
+                    FileLruCache.getInstance().put(gourmet.imageUrl, resource.getAbsolutePath());
                 }
             });
         } else
         {
-            Glide.with(mContext).load(place.imageUrl).into(placeImageView);
-            Glide.with(mContext).load(place.imageUrl).downloadOnly(new SimpleTarget<File>()
+            Glide.with(mContext).load(gourmet.imageUrl).into(placeImageView);
+            Glide.with(mContext).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>()
             {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                 {
-                    FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
+                    FileLruCache.getInstance().put(gourmet.imageUrl, resource.getAbsolutePath());
                 }
             });
         }
 
         // SOLD OUT 표시
-        if (place.isSoldOut == true)
+        if (gourmet.isSoldOut == true)
         {
             sold_out.setVisibility(View.VISIBLE);
         } else
@@ -168,7 +180,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
             {
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.onInfoWindowClickListener(place);
+                    mOnUserActionListener.onInfoWindowClickListener(gourmet);
                 }
             }
         });

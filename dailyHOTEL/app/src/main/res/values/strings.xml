@@ -576,6 +576,7 @@
     <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
     <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
     <string name="label_fnblistfragment_header_text">매일 오전 9시, 특별한 하루를 선물할 셰프의 만찬!\n\'데일리고메\'에서 오늘의 엄선된 다이닝을 할인 예약하세요!</string>
+    <string name="label_persions">%1$d인</string>
 
     <!-- Country Code List Activity -->
     <string name="label_select_country">국가 선택</string>

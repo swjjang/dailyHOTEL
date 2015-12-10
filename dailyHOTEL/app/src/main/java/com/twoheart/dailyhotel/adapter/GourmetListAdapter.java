@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
@@ -66,7 +66,7 @@ public class GourmetListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_ENTRY:
             {
-                final Place place = item.getPlace();
+                final Gourmet gourmet = (Gourmet) item.getPlace();
                 PlaceViewHolder viewHolder = null;
 
                 if (convertView != null)
@@ -93,17 +93,18 @@ public class GourmetListAdapter extends PlaceListAdapter
                     viewHolder.hotelSoldOutView = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
                     viewHolder.hotelAddressView = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
                     viewHolder.hotelGradeView = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
+                    viewHolder.personsTextView = (TextView) convertView.findViewById(R.id.personsTextView);
 
                     convertView.setTag(viewHolder);
                 }
 
                 DecimalFormat comma = new DecimalFormat("###,##0");
-                int price = place.price;
+                int price = gourmet.price;
 
                 String strPrice = comma.format(price);
-                String strDiscount = comma.format(place.discountPrice);
+                String strDiscount = comma.format(gourmet.discountPrice);
 
-                String address = place.address;
+                String address = gourmet.address;
 
                 if (address.indexOf('|') >= 0)
                 {
@@ -114,7 +115,17 @@ public class GourmetListAdapter extends PlaceListAdapter
                 }
 
                 viewHolder.hotelAddressView.setText(address);
-                viewHolder.hotelNameView.setText(place.name);
+                viewHolder.hotelNameView.setText(gourmet.name);
+
+                // 인원
+                if (gourmet.persons > 1)
+                {
+                    viewHolder.personsTextView.setVisibility(View.VISIBLE);
+                    viewHolder.personsTextView.setText(context.getString(R.string.label_persions, gourmet.persons));
+                } else
+                {
+                    viewHolder.personsTextView.setVisibility(View.GONE);
+                }
 
                 Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
 
@@ -131,10 +142,10 @@ public class GourmetListAdapter extends PlaceListAdapter
                 }
 
                 // 만족도
-                if (place.satisfaction > 0)
+                if (gourmet.satisfaction > 0)
                 {
                     viewHolder.satisfactionView.setVisibility(View.VISIBLE);
-                    viewHolder.satisfactionView.setText(place.satisfaction + "%");
+                    viewHolder.satisfactionView.setText(gourmet.satisfaction + "%");
                 } else
                 {
                     viewHolder.satisfactionView.setVisibility(View.GONE);
@@ -152,38 +163,36 @@ public class GourmetListAdapter extends PlaceListAdapter
                 }
 
                 // grade
-                viewHolder.hotelGradeView.setVisibility(View.GONE);
-                //                viewHolder.hotelGradeView.setText(place.grade.getName(context));
-                //                viewHolder.hotelGradeView.setBackgroundResource(place.grade.getColorResId());
+                viewHolder.hotelGradeView.setText(gourmet.category);
 
                 final ImageView placeImageView = viewHolder.hotelImageView;
 
                 if (Util.getLCDWidth(context) < 720)
                 {
-                    Glide.with(context).load(place.imageUrl).crossFade().into(placeImageView);
-                    Glide.with(context).load(place.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
+                    Glide.with(context).load(gourmet.imageUrl).crossFade().into(placeImageView);
+                    Glide.with(context).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
                     {
                         @Override
                         public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                         {
-                            FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
+                            FileLruCache.getInstance().put(gourmet.imageUrl, resource.getAbsolutePath());
                         }
                     });
                 } else
                 {
-                    Glide.with(context).load(place.imageUrl).crossFade().into(placeImageView);
-                    Glide.with(context).load(place.imageUrl).downloadOnly(new SimpleTarget<File>()
+                    Glide.with(context).load(gourmet.imageUrl).crossFade().into(placeImageView);
+                    Glide.with(context).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>()
                     {
                         @Override
                         public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
                         {
-                            FileLruCache.getInstance().put(place.imageUrl, resource.getAbsolutePath());
+                            FileLruCache.getInstance().put(gourmet.imageUrl, resource.getAbsolutePath());
                         }
                     });
                 }
 
                 // SOLD OUT 표시
-                if (place.isSoldOut)
+                if (gourmet.isSoldOut)
                 {
                     viewHolder.hotelSoldOutView.setVisibility(View.VISIBLE);
                 } else
@@ -208,6 +217,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         TextView hotelAddressView;
         TextView hotelGradeView;
         TextView satisfactionView;
+        TextView personsTextView;
     }
 
     private static class HeaderListViewHolder
