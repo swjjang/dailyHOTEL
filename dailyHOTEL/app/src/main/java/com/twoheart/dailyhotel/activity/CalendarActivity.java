@@ -65,7 +65,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                     , HOTEL_ENABLE_DAYCOUNT_OF_MAX, HOTEL_DAYCOUNT_OF_MAX);
                 break;
 
-            case GOURMET:
+            case FNB:
                 initLayout(CalendarActivity.this, dailyTime//
                     , GOURMET_ENABLE_DAYCOUNT_OF_MAX, GOURMET_DAYCOUNT_OF_MAX);
                 break;
@@ -90,7 +90,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                 setActionBar(R.string.label_calendar_hotel_select_checkin);
                 break;
 
-            case GOURMET:
+            case FNB:
                 setActionBar(R.string.label_calendar_gourmet_select);
                 break;
         }
@@ -273,7 +273,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             dailyTextView.setSelected(true);
             dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
 
-            if (mPlaceType == PlaceMainFragment.TYPE.GOURMET)
+            if (mPlaceType == PlaceMainFragment.TYPE.FNB)
             {
                 lockUiComponent();
 
@@ -299,7 +299,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             }
         } else
         {
-            if (mPlaceType == PlaceMainFragment.TYPE.GOURMET)
+            if (mPlaceType == PlaceMainFragment.TYPE.FNB)
             {
                 return;
             }
