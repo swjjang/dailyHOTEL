@@ -475,15 +475,23 @@ public class PinnedSectionListView extends ListView
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b)
     {
-        super.onLayout(changed, l, t, r, b);
-        if (mPinnedSection != null)
+        try
         {
-            int parentWidth = r - l - getPaddingLeft() - getPaddingRight();
-            int shadowWidth = mPinnedSection.view.getWidth();
-            if (parentWidth != shadowWidth)
+            super.onLayout(changed, l, t, r, b);
+
+            if (mPinnedSection != null)
             {
-                recreatePinnedShadow();
+                int parentWidth = r - l - getPaddingLeft() - getPaddingRight();
+                int shadowWidth = mPinnedSection.view.getWidth();
+                if (parentWidth != shadowWidth)
+                {
+                    recreatePinnedShadow();
+                }
             }
+        } catch (Exception e)
+        {
+            String tag = (String) getTag();
+            throw new NullPointerException(tag + e.toString());
         }
     }
 

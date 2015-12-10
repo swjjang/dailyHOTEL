@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +24,10 @@ public abstract class PlaceBookingDetail implements Parcelable
     public String guestPhone;
     public String guestEmail;
     public String addressSummary;
-    private HashMap<String, List<String>> mSpecification;
+    private Map<String, List<String>> mSpecification = new LinkedHashMap<String, List<String>>();
 
     public PlaceBookingDetail()
     {
-        mSpecification = new HashMap<String, List<String>>();
     }
 
     public abstract void setData(JSONObject jsonObject) throws Exception;
@@ -57,7 +57,7 @@ public abstract class PlaceBookingDetail implements Parcelable
 
         if (mSpecification == null)
         {
-            mSpecification = new HashMap<String, List<String>>();
+            mSpecification = new LinkedHashMap<String, List<String>>();
         }
 
         in.readMap(mSpecification, HashMap.class.getClassLoader());

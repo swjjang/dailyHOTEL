@@ -73,6 +73,7 @@ public class GourmetListFragment extends PlaceListFragment
         View view = inflater.inflate(R.layout.fragment_gourmet_list, container, false);
 
         mListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
+        mListView.setTag("GourmetListFragment");
 
         if (Util.isOverAPI12() == true)
         {

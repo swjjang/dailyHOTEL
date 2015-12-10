@@ -103,6 +103,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 
         mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
+        mHotelListView.setTag("HotelListFragment");
 
         if (Util.isOverAPI12() == true)
         {
