@@ -206,7 +206,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                 break;
             }
 
-            case GOURMET:
+            case FNB:
             {
                 SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd");
                 sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));

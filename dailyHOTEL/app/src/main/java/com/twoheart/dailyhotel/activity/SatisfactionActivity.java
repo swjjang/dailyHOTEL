@@ -99,7 +99,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.GOURMET.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.FNB.name());
 
         return intent;
     }
@@ -130,7 +130,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 break;
             }
 
-            case GOURMET:
+            case FNB:
             {
                 mTicketName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
                 mReservationIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, 0);
@@ -211,7 +211,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 break;
             }
 
-            case GOURMET:
+            case FNB:
             {
                 // 제목
                 titleTextView.setText(R.string.frag_rating_gourmet_title);
@@ -365,7 +365,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 break;
             }
 
-            case GOURMET:
+            case FNB:
             {
                 if (isSatisfaction == true)
                 {
@@ -508,7 +508,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                         break;
                     }
 
-                    case GOURMET:
+                    case FNB:
                     {
                         params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
 
@@ -575,7 +575,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 });
                 break;
 
-            case GOURMET:
+            case FNB:
                 params.put("reservation_rec_idx", String.valueOf(index));
                 DailyNetworkAPI.getInstance().requestGourmetRating(mNetworkTag, params, listener, new ErrorListener()
                 {
@@ -644,7 +644,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                                 params = "?type=HOTEL_DISSATISFACTION";
                                 break;
 
-                            case GOURMET:
+                            case FNB:
                                 params = "?type=FNB_DISSATISFACTION";
                                 break;
                         }

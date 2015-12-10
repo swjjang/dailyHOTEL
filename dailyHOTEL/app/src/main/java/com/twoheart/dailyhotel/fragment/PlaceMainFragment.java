@@ -49,7 +49,7 @@ public abstract class PlaceMainFragment extends BaseFragment
     public enum TYPE
     {
         HOTEL,
-        GOURMET,
+        FNB, // 절대로 바꾸면 안됨 서버에서 fnb로 내려옴
     }
 
     public interface OnUserActionListener
