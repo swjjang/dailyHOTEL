@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,7 @@ public abstract class PlaceBookingDetail implements Parcelable
     public String guestPhone;
     public String guestEmail;
     public String addressSummary;
-    private Map<String, List<String>> mSpecification = new LinkedHashMap<String, List<String>>();
+    private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
     public PlaceBookingDetail()
     {
@@ -54,13 +53,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         address = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
-
-        if (mSpecification == null)
-        {
-            mSpecification = new LinkedHashMap<String, List<String>>();
-        }
-
-        in.readMap(mSpecification, HashMap.class.getClassLoader());
+        in.readMap(mSpecification, Map.class.getClassLoader());
         placeName = in.readString();
         grade = Place.Grade.valueOf(in.readString());
         guestName = in.readString();
