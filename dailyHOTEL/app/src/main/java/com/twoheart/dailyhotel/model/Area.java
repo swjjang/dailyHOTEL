@@ -8,19 +8,6 @@ import org.json.JSONObject;
 
 public class Area extends Province
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Province createFromParcel(Parcel in)
-        {
-            return new Area(in);
-        }
-
-        @Override
-        public Province[] newArray(int size)
-        {
-            return new Area[size];
-        }
-    };
     public Province province;
     public String tag;
     private int provinceIndex;
@@ -84,4 +71,18 @@ public class Area extends Province
 
         province = new Province(in);
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Province createFromParcel(Parcel in)
+        {
+            return new Area(in);
+        }
+
+        @Override
+        public Province[] newArray(int size)
+        {
+            return new Area[size];
+        }
+    };
 }

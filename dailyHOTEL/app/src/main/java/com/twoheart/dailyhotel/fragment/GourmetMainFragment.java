@@ -175,10 +175,10 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void requestProvinceList(BaseActivity baseActivity)
+    protected void requestRegionList(BaseActivity baseActivity)
     {
         // 지역 리스트를 가져온다
-        DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mProvinceListJsonResponseListener, baseActivity);
+        DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
     }
 
     @Override
@@ -596,7 +596,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mProvinceListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -610,11 +610,6 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)
@@ -622,8 +617,13 @@ public class GourmetMainFragment extends PlaceMainFragment
                     throw new NullPointerException("response == null");
                 }
 
-                JSONArray provinceArray = response.getJSONArray("data");
+                JSONObject dataJSONObject = response.getJSONObject("data");
+
+                JSONArray provinceArray = dataJSONObject.getJSONArray("province");
                 ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+
+                JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                 Province selectedProvince = null;
                 String regionName = null;
@@ -660,10 +660,22 @@ public class GourmetMainFragment extends PlaceMainFragment
                                 break;
                             }
                         }
+
+                        if (selectedProvince == null)
+                        {
+                            for (Area area : areaList)
+                            {
+                                if (area.name.equals(regionName) == true)
+                                {
+                                    selectedProvince = area;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
 
-                mAreaItemList = makeAreaItemList(provinceList, null);
+                mAreaItemList = makeAreaItemList(provinceList, areaList);
 
                 // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
                 if (selectedProvince == null)

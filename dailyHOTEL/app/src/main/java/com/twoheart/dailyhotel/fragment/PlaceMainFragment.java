@@ -81,7 +81,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected abstract void setNavigationItemSelected(Province province);
 
-    protected abstract void requestProvinceList(BaseActivity baseActivity);
+    protected abstract void requestRegionList(BaseActivity baseActivity);
 
     protected abstract void refreshList(Province province, boolean isSelectionTop);
 
@@ -448,13 +448,13 @@ public abstract class PlaceMainFragment extends BaseFragment
                             ExLog.d(e.toString());
 
                             // 지역 리스트를 가져온다
-                            requestProvinceList(baseActivity);
+                            requestRegionList(baseActivity);
                         }
                     }
                 } else
                 {
                     // 지역 리스트를 가져온다
-                    requestProvinceList(baseActivity);
+                    requestRegionList(baseActivity);
                 }
             } catch (Exception e)
             {
