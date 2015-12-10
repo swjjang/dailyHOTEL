@@ -35,6 +35,7 @@ public class CountryCodeListLayout implements OnItemClickListener
         mListView = (PinnedSectionListView) mRootView.findViewById(R.id.listView);
         mListView.setOnItemClickListener(this);
         mListView.setFastScrollEnabled(true);
+        mListView.setTag("CountryCodeListLayout");
 
         return mRootView;
     }

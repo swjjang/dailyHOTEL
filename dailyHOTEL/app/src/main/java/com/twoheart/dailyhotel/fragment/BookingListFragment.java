@@ -80,6 +80,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
         mListView.setShadowVisible(false);
+        mListView.setTag("BookingListFragment");
 
         mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
         btnLogin = view.findViewById(R.id.btn_booking_empty_login);

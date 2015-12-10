@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -44,7 +43,7 @@ public class BookingHotelDetail implements Parcelable
     private Hotel mHotel;
     private double mLatitude;
     private double mLongitude;
-    private Map<String, List<String>> mSpecification = new HashMap<String, List<String>>();
+    private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
     private List<String> mImageUrl = new ArrayList<String>();
 
     public BookingHotelDetail()
