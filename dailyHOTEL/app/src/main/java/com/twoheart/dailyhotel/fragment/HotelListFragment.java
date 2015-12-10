@@ -804,11 +804,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)

@@ -200,6 +200,9 @@ public class GourmetListFragment extends PlaceListFragment
 
         if (province instanceof Area)
         {
+            Area area = (Area) province;
+
+            params = String.format("?province_idx=%d&area_idx=%d&sday=%s", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
         } else
         {
             params = String.format("?province_idx=%d&sday=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
@@ -447,7 +450,7 @@ public class GourmetListFragment extends PlaceListFragment
 
                     if (mPlaceListAdapter == null)
                     {
-                        mPlaceListAdapter = new GourmetListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<PlaceViewItem>());
+                        mPlaceListAdapter = new GourmetListAdapter(baseActivity, R.layout.list_row_gourmet, new ArrayList<PlaceViewItem>());
                         mListView.setAdapter(mPlaceListAdapter);
                         mListView.setOnItemClickListener(GourmetListFragment.this);
                     }
