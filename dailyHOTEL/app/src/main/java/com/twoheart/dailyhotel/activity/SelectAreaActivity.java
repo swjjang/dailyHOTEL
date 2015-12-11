@@ -109,7 +109,13 @@ public class SelectAreaActivity extends BaseActivity
 
                     if (mListView.isGroupExpanded(previousGroupPosition))
                     {
-                        mListView.collapseGroupWithAnimation(previousGroupPosition);
+                        try
+                        {
+                            mListView.collapseGroupWithAnimation(previousGroupPosition);
+                        } catch (Exception e)
+                        {
+                            mListView.collapseGroup(previousGroupPosition);
+                        }
 
                         boolean noneView = false;
 
@@ -142,7 +148,14 @@ public class SelectAreaActivity extends BaseActivity
                 {
                     AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
 
-                    mListView.collapseGroupWithAnimation(groupPosition);
+                    try
+                    {
+                        mListView.collapseGroupWithAnimation(groupPosition);
+                    } catch (Exception e)
+                    {
+                        mListView.collapseGroup(groupPosition);
+                    }
+
                     mOnUserActionListener.onGroupCollapse(v, areaItem);
                 } else
                 {
@@ -161,13 +174,22 @@ public class SelectAreaActivity extends BaseActivity
                             public void run()
                             {
                                 mListView.setSelection(groupPosition);
-                                mListView.expandGroupWithAnimation(groupPosition);
+
+                                try
+                                {
+                                    mListView.expandGroupWithAnimation(groupPosition);
+                                } catch (Exception e)
+                                {
+                                    mListView.expandGroup(groupPosition);
+                                }
+
                                 mListView.setTag(groupPosition);
                                 mOnUserActionListener.onGroupExpand(v, areaItem);
                             }
                         });
                     }
                 }
+
                 return true;
             }
         });
@@ -303,44 +325,63 @@ public class SelectAreaActivity extends BaseActivity
         {
             if (view.getVisibility() != View.VISIBLE)
             {
+                releaseUiComponent();
+
+                areaItem.mIsExpandGroup = true;
                 return;
             }
 
-            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
-
-            RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            animation.setFillBefore(true);
-            animation.setFillAfter(true);
-            animation.setDuration(350);
-
-            imageView.setAnimation(animation);
-
-            animation.setAnimationListener(new AnimationListener()
+            if (Util.isOverAPI11() == true)
             {
-                @Override
-                public void onAnimationStart(Animation animation)
+                final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+
+                RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setFillBefore(true);
+                animation.setFillAfter(true);
+                animation.setDuration(350);
+
+                if (imageView != null)
                 {
-                    // TODO Auto-generated method stub
+                    animation.setAnimationListener(new AnimationListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animation animation)
+                        {
+                            // TODO Auto-generated method stub
 
-                }
+                        }
 
-                @Override
-                public void onAnimationRepeat(Animation animation)
-                {
-                    // TODO Auto-generated method stub
+                        @Override
+                        public void onAnimationRepeat(Animation animation)
+                        {
+                            // TODO Auto-generated method stub
 
-                }
+                        }
 
-                @Override
-                public void onAnimationEnd(Animation animation)
+                        @Override
+                        public void onAnimationEnd(Animation animation)
+                        {
+                            releaseUiComponent();
+                            imageView.setAnimation(null);
+                            imageView.setImageResource(R.drawable.ic_details_menu_on);
+
+                            areaItem.mIsExpandGroup = true;
+                        }
+                    });
+
+                    imageView.startAnimation(animation);
+                } else
                 {
                     releaseUiComponent();
-                    imageView.setAnimation(null);
-                    imageView.setImageResource(R.drawable.ic_details_menu_on);
 
                     areaItem.mIsExpandGroup = true;
                 }
-            });
+            } else
+            {
+                releaseUiComponent();
+
+                areaItem.mIsExpandGroup = true;
+            }
         }
 
         @Override
@@ -348,47 +389,63 @@ public class SelectAreaActivity extends BaseActivity
         {
             if (view.getVisibility() != View.VISIBLE)
             {
+                releaseUiComponent();
+
+                areaItem.mIsExpandGroup = false;
                 return;
             }
 
-            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
-
-            RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            animation.setFillBefore(true);
-            animation.setFillAfter(true);
-            animation.setDuration(350);
-
-            if (imageView != null)
+            if (Util.isOverAPI11() == true)
             {
-                imageView.setAnimation(animation);
-                animation.setAnimationListener(new AnimationListener()
+                final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+
+                RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setFillBefore(true);
+                animation.setFillAfter(true);
+                animation.setDuration(350);
+
+                if (imageView != null)
                 {
-
-                    @Override
-                    public void onAnimationStart(Animation animation)
+                    animation.setAnimationListener(new AnimationListener()
                     {
-                        // TODO Auto-generated method stub
+                        @Override
+                        public void onAnimationStart(Animation animation)
+                        {
+                            // TODO Auto-generated method stub
 
-                    }
+                        }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation)
-                    {
-                        // TODO Auto-generated method stub
+                        @Override
+                        public void onAnimationRepeat(Animation animation)
+                        {
+                            // TODO Auto-generated method stub
 
-                    }
+                        }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation)
-                    {
-                        releaseUiComponent();
+                        @Override
+                        public void onAnimationEnd(Animation animation)
+                        {
+                            releaseUiComponent();
 
-                        imageView.setAnimation(null);
-                        imageView.setImageResource(R.drawable.ic_details_menu_off);
+                            imageView.setAnimation(null);
+                            imageView.setImageResource(R.drawable.ic_details_menu_off);
 
-                        areaItem.mIsExpandGroup = false;
-                    }
-                });
+                            areaItem.mIsExpandGroup = false;
+                        }
+                    });
+
+                    imageView.startAnimation(animation);
+                } else
+                {
+                    releaseUiComponent();
+
+                    areaItem.mIsExpandGroup = false;
+                }
+            } else
+            {
+                releaseUiComponent();
+
+                areaItem.mIsExpandGroup = false;
             }
         }
     };

@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.Util;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -77,6 +79,21 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         sday = format.format(new Date(day));
+
+        String phone1 = jsonObject.getString("phone1");
+        String phone2 = jsonObject.getString("phone2");
+        String phone3 = jsonObject.getString("phone3");
+
+        if (Util.isTextEmpty(phone1) == false)
+        {
+            gourmetPhone = phone1;
+        } else if (Util.isTextEmpty(phone2) == false)
+        {
+            gourmetPhone = phone2;
+        } else if (Util.isTextEmpty(phone3) == false)
+        {
+            gourmetPhone = phone3;
+        }
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

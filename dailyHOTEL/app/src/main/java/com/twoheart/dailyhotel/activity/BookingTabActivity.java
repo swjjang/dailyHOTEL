@@ -8,8 +8,13 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -24,6 +29,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
@@ -75,9 +81,82 @@ public class BookingTabActivity extends BaseActivity
         mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        if (mHotelDetail != null && Util.isTextEmpty(mHotelDetail.hotelPhone) == false)
+        {
+            getMenuInflater().inflate(R.menu.actionbar_hotel_booking_call, menu);
+        } else
+        {
+            getMenuInflater().inflate(R.menu.actionbar_hotel_booking_call2, menu);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_daily_call:
+                if (Util.isTelephonyEnabled(BookingTabActivity.this) == true)
+                {
+                    String phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
+
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                } else
+                {
+                    DailyToast.showToast(BookingTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                }
+                break;
+
+            case R.id.action_kakaotalk:
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+                } catch (ActivityNotFoundException e)
+                {
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+                    } catch (ActivityNotFoundException e1)
+                    {
+                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                        startActivity(marketLaunch);
+                    }
+                }
+                break;
+
+            case R.id.action_direct_call:
+                if (Util.isTelephonyEnabled(BookingTabActivity.this) == true)
+                {
+                    String phone = mHotelDetail.hotelPhone;
+
+                    if (Util.isTextEmpty(mHotelDetail.hotelPhone) == true)
+                    {
+                        phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
+                    }
+
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                } else
+                {
+                    String message = getString(R.string.toast_msg_no_hotel_call, mHotelDetail.hotelPhone);
+                    DailyToast.showToast(BookingTabActivity.this, message, Toast.LENGTH_LONG);
+                }
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
+    }
+
     private void loadFragments()
     {
-
         if (mFragmentViewPager == null)
         {
             ArrayList<String> titleList = new ArrayList<String>();
@@ -166,6 +245,7 @@ public class BookingTabActivity extends BaseActivity
         {
         }
     };
+
     private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -215,6 +295,7 @@ public class BookingTabActivity extends BaseActivity
 
                 if (result == true)
                 {
+                    invalidateOptionsMenu();
                     loadFragments();
                 } else
                 {
