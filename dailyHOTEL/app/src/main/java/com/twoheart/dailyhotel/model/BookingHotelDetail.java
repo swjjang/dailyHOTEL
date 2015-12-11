@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,26 +21,13 @@ import java.util.TimeZone;
 
 public class BookingHotelDetail implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public BookingHotelDetail createFromParcel(Parcel in)
-        {
-            return new BookingHotelDetail(in);
-        }
-
-        @Override
-        public BookingHotelDetail[] newArray(int size)
-        {
-            return new BookingHotelDetail[size];
-        }
-    };
-
     public int isOverseas; // 0 : 국내 , 1 : 해외
     public String roomName;
     public String guestName;
     public String guestPhone;
     public String checkInDay;
     public String checkOutDay;
+    public String hotelPhone;
     private Hotel mHotel;
     private double mLatitude;
     private double mLongitude;
@@ -69,6 +57,7 @@ public class BookingHotelDetail implements Parcelable
         dest.writeString(guestPhone);
         dest.writeString(checkInDay);
         dest.writeString(checkOutDay);
+        dest.writeString(hotelPhone);
     }
 
     public boolean setData(JSONObject jsonObject)
@@ -117,6 +106,21 @@ public class BookingHotelDetail implements Parcelable
 
             // Check Out
             checkOutDay = format.format(new Date(checkout));
+
+            String phone1 = jsonObject.getString("phone1");
+            String phone2 = jsonObject.getString("phone2");
+            String phone3 = jsonObject.getString("phone3");
+
+            if (Util.isTextEmpty(phone1) == false)
+            {
+                hotelPhone = phone1;
+            } else if (Util.isTextEmpty(phone2) == false)
+            {
+                hotelPhone = phone2;
+            } else if (Util.isTextEmpty(phone3) == false)
+            {
+                hotelPhone = phone3;
+            }
         } catch (Exception e)
         {
             return false;
@@ -138,6 +142,7 @@ public class BookingHotelDetail implements Parcelable
         guestPhone = in.readString();
         checkInDay = in.readString();
         checkOutDay = in.readString();
+        hotelPhone = in.readString();
     }
 
     public List<String> getImageUrl()
@@ -244,4 +249,17 @@ public class BookingHotelDetail implements Parcelable
         return 0;
     }
 
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public BookingHotelDetail createFromParcel(Parcel in)
+        {
+            return new BookingHotelDetail(in);
+        }
+
+        @Override
+        public BookingHotelDetail[] newArray(int size)
+        {
+            return new BookingHotelDetail[size];
+        }
+    };
 }

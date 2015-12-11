@@ -8,7 +8,13 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
@@ -18,6 +24,9 @@ import com.twoheart.dailyhotel.fragment.PlaceTabInfoFragment;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 
 import org.json.JSONObject;
@@ -58,6 +67,80 @@ public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        if (mPlaceBookingDetail != null && Util.isTextEmpty(mPlaceBookingDetail.gourmetPhone) == false)
+        {
+            getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call, menu);
+        } else
+        {
+            getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call2, menu);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_daily_call:
+                if (Util.isTelephonyEnabled(GourmetBookingDetailActivity.this) == true)
+                {
+                    String phone = DailyPreference.getInstance(GourmetBookingDetailActivity.this).getCompanyPhoneNumber();
+
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                } else
+                {
+                    DailyToast.showToast(GourmetBookingDetailActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                }
+                break;
+
+            case R.id.action_kakaotalk:
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+                } catch (ActivityNotFoundException e)
+                {
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+                    } catch (ActivityNotFoundException e1)
+                    {
+                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                        startActivity(marketLaunch);
+                    }
+                }
+                break;
+
+            case R.id.action_direct_call:
+                if (Util.isTelephonyEnabled(GourmetBookingDetailActivity.this) == true)
+                {
+                    String phone = mPlaceBookingDetail.gourmetPhone;
+
+                    if (Util.isTextEmpty(mPlaceBookingDetail.gourmetPhone) == true)
+                    {
+                        phone = DailyPreference.getInstance(GourmetBookingDetailActivity.this).getCompanyPhoneNumber();
+                    }
+
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                } else
+                {
+                    String message = getString(R.string.toast_msg_no_gourmet_call, mPlaceBookingDetail.gourmetPhone);
+                    DailyToast.showToast(GourmetBookingDetailActivity.this, message, Toast.LENGTH_LONG);
+                }
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
+    }
+
+    @Override
     protected void requestPlaceBookingDetail()
     {
         lockUI();
@@ -94,6 +177,8 @@ public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
                     }
 
                     mPlaceBookingDetail.setData(jsonObject);
+
+                    invalidateOptionsMenu();
 
                     loadFragments();
                 } else

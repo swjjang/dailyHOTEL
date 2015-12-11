@@ -23,6 +23,8 @@ public abstract class PlaceBookingDetail implements Parcelable
     public String guestPhone;
     public String guestEmail;
     public String addressSummary;
+    public String gourmetPhone;
+
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
     public PlaceBookingDetail()
@@ -45,6 +47,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeString(guestPhone);
         dest.writeString(guestEmail);
         dest.writeString(addressSummary);
+        dest.writeString(gourmetPhone);
     }
 
     protected void readFromParcel(Parcel in)
@@ -60,6 +63,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         guestPhone = in.readString();
         guestEmail = in.readString();
         addressSummary = in.readString();
+        gourmetPhone = in.readString();
     }
 
     public Map<String, List<String>> getSpecification()

@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_call"
+        android:icon="@drawable/ic_call"
+        android:orderInCategory="100"
+        android:title="@string/label_question"
+        app:showAsAction="always">
+
+        <menu>
+            <item
+                android:id="@+id/action_daily_call"
+                android:orderInCategory="101"
+                android:title="데일리호텔 고객센터 전화"
+                app:showAsAction="always"/>
+
+            <item
+                android:id="@+id/action_kakaotalk"
+                android:orderInCategory="102"
+                android:title="데일리호텔 카톡 문의"
+                app:showAsAction="always"/>
+
+            <item
+                android:id="@+id/action_direct_call"
+                android:orderInCategory="103"
+                android:title="호텔 직접 전화연결"
+                app:showAsAction="always"/>
+        </menu>
+    </item>
+</menu>

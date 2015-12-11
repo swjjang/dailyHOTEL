@@ -14,6 +14,14 @@ public class DailyPreference
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     private static final String KEY_ALLOW_PUSH = "5";
 
+    private static final String KEY_COMPANY_NAME = "100";
+    private static final String KEY_COMPANY_CEO = "101";
+    private static final String KEY_COMPANY_BIZREGNUMBER = "102";
+    private static final String KEY_COMPANY_ITCREGNUMBER = "103";
+    private static final String KEY_COMPANY_ADDRESS = "104";
+    private static final String KEY_COMPANY_PHONENUMBER = "105";
+
+
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
     private Editor mEditor;
@@ -150,5 +158,131 @@ public class DailyPreference
             mEditor.putBoolean(KEY_ALLOW_PUSH, allow);
             mEditor.apply();
         }
+    }
+
+    public void setCompanyName(String text)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_COMPANY_NAME, text);
+            mEditor.apply();
+        }
+    }
+
+    public void setCompanyCEO(String text)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_COMPANY_CEO, text);
+            mEditor.apply();
+        }
+    }
+
+    public void setCompanyBizRegNumber(String text)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_COMPANY_BIZREGNUMBER, text);
+            mEditor.apply();
+        }
+    }
+
+    public void setCompanyItcRegNumber(String text)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_COMPANY_ITCREGNUMBER, text);
+            mEditor.apply();
+        }
+    }
+
+    public void setCompanyAddress(String text)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_COMPANY_ADDRESS, text);
+            mEditor.apply();
+        }
+    }
+
+    public void setCompanyPhoneNumber(String text)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_COMPANY_PHONENUMBER, text);
+            mEditor.apply();
+        }
+    }
+
+    public String getCompanyName()
+    {
+        String result = null;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getString(KEY_COMPANY_NAME, null);
+        }
+
+        return result;
+    }
+
+    public String getCompanyCEO()
+    {
+        String result = null;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getString(KEY_COMPANY_CEO, null);
+        }
+
+        return result;
+    }
+
+    public String getCompanyBizRegNumber()
+    {
+        String result = null;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getString(KEY_COMPANY_BIZREGNUMBER, null);
+        }
+
+        return result;
+    }
+
+    public String getCompanyItcRegNumber()
+    {
+        String result = null;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getString(KEY_COMPANY_ITCREGNUMBER, null);
+        }
+
+        return result;
+    }
+
+    public String getCompanyAddress()
+    {
+        String result = null;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getString(KEY_COMPANY_ADDRESS, null);
+        }
+
+        return result;
+    }
+
+    public String getCompanyPhoneNumber()
+    {
+        String result = null;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getString(KEY_COMPANY_PHONENUMBER, null);
+        }
+
+        return result;
     }
 }

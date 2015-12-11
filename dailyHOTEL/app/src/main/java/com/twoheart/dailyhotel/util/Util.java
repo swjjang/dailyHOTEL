@@ -486,7 +486,7 @@ public class Util implements Constants
             String[] text = globalPhoneNumber.split("\\^");
 
             // 국제 전화번호 존재 여부 확인
-            if (isValidateCountryCode(text[0]) == false)
+            if (isValidateCountryCode(text[0]) == false || text.length < 2)
             {
                 return false;
             }
@@ -539,7 +539,7 @@ public class Util implements Constants
         mobileNumber = mobileNumber.replaceFirst("\\s", "^");
         String[] number = mobileNumber.split("\\^");
 
-        if (number.length != 2)
+        if (number.length < 2)
         {
             return false;
         }

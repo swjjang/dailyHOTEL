@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -317,7 +318,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         overridePendingTransition(R.anim.hold, R.anim.fade_out);
     }
 
-    private void requestConfigurationABTest()
+    private void requestConfiguration()
     {
         // ABTest
         //        ABTestPreference.getInstance(getApplicationContext()).requestConfiguration(getApplicationContext(), mQueue, new OnABTestListener()
@@ -329,7 +330,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         //            }
         //        });
 
-        doFinish();
+        DailyNetworkAPI.getInstance().requestCompanyInformation(mNetworkTag, mCompanyInformationJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -471,7 +472,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                             editor.putString(KEY_PREFERENCE_SKIP_MAX_VERSION, sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
                             editor.commit();
 
-                            requestConfigurationABTest();
+                            requestConfiguration();
                         }
                     };
 
@@ -487,7 +488,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                     showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener, cancelListener, null, false);
                 } else
                 {
-                    requestConfigurationABTest();
+                    requestConfiguration();
                 }
             } catch (Exception e)
             {
@@ -532,6 +533,43 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject companyJSONObject = jsonObject.getJSONObject("companyInfo");
+
+                    String companyName = companyJSONObject.getString("name");
+                    String companyCEO = companyJSONObject.getString("ceo");
+                    String companyBizRegNumber = companyJSONObject.getString("bizRegNumber");
+                    String companyItcRegNumber = companyJSONObject.getString("itcRegNumber");
+                    String address1 = companyJSONObject.getString("address1");
+                    String phoneNumber1 = companyJSONObject.getString("phoneNumber1");
+
+                    DailyPreference.getInstance(SplashActivity.this).setCompanyName(companyName);
+                    DailyPreference.getInstance(SplashActivity.this).setCompanyCEO(companyCEO);
+                    DailyPreference.getInstance(SplashActivity.this).setCompanyBizRegNumber(companyBizRegNumber);
+                    DailyPreference.getInstance(SplashActivity.this).setCompanyItcRegNumber(companyItcRegNumber);
+                    DailyPreference.getInstance(SplashActivity.this).setCompanyAddress(address1);
+                    DailyPreference.getInstance(SplashActivity.this).setCompanyPhoneNumber(phoneNumber1);
+                }
+
+                doFinish();
+            } catch (Exception e)
+            {
+                onError(e);
             }
         }
     };

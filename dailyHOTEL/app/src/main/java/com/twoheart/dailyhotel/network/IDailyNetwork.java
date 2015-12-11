@@ -431,4 +431,11 @@ public interface IDailyNetwork
      * @return
      */
     public void requestEventPageUrl(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     * 회사 정보 얻어오기
+     *
+     * @return
+     */
+    public void requestCompanyInformation(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 }
