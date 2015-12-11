@@ -17,54 +17,19 @@ public class FontManager
 
     private volatile static FontManager instance;
 
-    private Typeface mBlackTypeface;
     private Typeface mBoldTypeface;
     private Typeface mDemiLightTypeface;
-    private Typeface mLightTypeface;
     private Typeface mMediumTypeface;
     private Typeface mRegularTypeface;
-    private Typeface mThinTypeface;
 
     public FontManager(Context context)
     {
-        try
-        {
-            mBlackTypeface = Typeface.createFromAsset(context.getAssets(), "NotoSans-Black.otf");
-        } catch (Exception e)
-        {
-            mBlackTypeface = Typeface.DEFAULT_BOLD;
-        }
-
         try
         {
             mBoldTypeface = Typeface.createFromAsset(context.getAssets(), "NotoSans-Bold.otf");
         } catch (Exception e)
         {
             mBoldTypeface = Typeface.DEFAULT_BOLD;
-        }
-
-        try
-        {
-            mDemiLightTypeface = Typeface.createFromAsset(context.getAssets(), "NotoSans-DemiLight.otf");
-        } catch (Exception e)
-        {
-            mDemiLightTypeface = Typeface.DEFAULT;
-        }
-
-        try
-        {
-            mLightTypeface = Typeface.createFromAsset(context.getAssets(), "NotoSans-Light.otf");
-        } catch (Exception e)
-        {
-            mLightTypeface = Typeface.DEFAULT;
-        }
-
-        try
-        {
-            mMediumTypeface = Typeface.createFromAsset(context.getAssets(), "NotoSans-Medium.otf");
-        } catch (Exception e)
-        {
-            mMediumTypeface = Typeface.DEFAULT;
         }
 
         try
@@ -77,10 +42,18 @@ public class FontManager
 
         try
         {
-            mThinTypeface = Typeface.createFromAsset(context.getAssets(), "NotoSans-Thin.otf");
+            mMediumTypeface = Typeface.createFromAsset(context.getAssets(), "NotoSans-Medium.otf");
         } catch (Exception e)
         {
-            mThinTypeface = Typeface.DEFAULT;
+            mMediumTypeface = Typeface.DEFAULT;
+        }
+
+        try
+        {
+            mDemiLightTypeface = Typeface.createFromAsset(context.getAssets(), "NotoSans-DemiLight.otf");
+        } catch (Exception e)
+        {
+            mDemiLightTypeface = Typeface.DEFAULT;
         }
     }
 
@@ -132,11 +105,6 @@ public class FontManager
         }
     }
 
-    public Typeface getBlackTypeface()
-    {
-        return mBlackTypeface;
-    }
-
     public Typeface getBoldTypeface()
     {
         return mBoldTypeface;
@@ -147,11 +115,6 @@ public class FontManager
         return mDemiLightTypeface;
     }
 
-    public Typeface getLightTypeface()
-    {
-        return mLightTypeface;
-    }
-
     public Typeface getMediumTypeface()
     {
         return mMediumTypeface;
@@ -160,10 +123,5 @@ public class FontManager
     public Typeface getRegularTypeface()
     {
         return mRegularTypeface;
-    }
-
-    public Typeface getThinTypeface()
-    {
-        return mThinTypeface;
     }
 }

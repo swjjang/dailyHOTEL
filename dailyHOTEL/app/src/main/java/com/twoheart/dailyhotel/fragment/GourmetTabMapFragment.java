@@ -58,11 +58,10 @@ public class GourmetTabMapFragment extends PlaceTabMapFragment implements OnMapC
         hotelAddressTextView.setSelected(true);
 
         TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
-        hotelGradeTextView.setVisibility(View.GONE);
-        hotelNameTextView.setPadding(0, 0, 0, 0);
-
+        hotelGradeTextView.setVisibility(View.VISIBLE);
         hotelGradeTextView.setText(gourmetBookingDetail.category);
-        hotelGradeTextView.setBackgroundResource(R.drawable.shape_rect_whitecolor);
+        hotelGradeTextView.setTextColor(getResources().getColor(R.color.black));
+        hotelGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
 
         return view;
     }

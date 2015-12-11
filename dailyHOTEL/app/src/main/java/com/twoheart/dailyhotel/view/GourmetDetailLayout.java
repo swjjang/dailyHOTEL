@@ -398,7 +398,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             mGradeTextView.setVisibility(View.VISIBLE);
 
             mGradeTextView.setText(gourmetDetail.category);
-            mGradeTextView.setBackgroundResource(R.drawable.shape_rect_whitecolor);
+            mGradeTextView.setTextColor(mActivity.getResources().getColor(R.color.black));
+            mGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
 
             // 호텔명
             mNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);

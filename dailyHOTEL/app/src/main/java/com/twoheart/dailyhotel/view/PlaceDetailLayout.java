@@ -343,6 +343,26 @@ public abstract class PlaceDetailLayout
                 }
             }
 
+            if (Util.isOverAPI11() == true)
+            {
+                if (Float.compare(alphaFactor, 0.0f) <= 0)
+                {
+                    mGradeTextView.setAlpha(0.0f);
+                } else
+                {
+                    mGradeTextView.setAlpha(alphaFactor);
+                }
+            } else
+            {
+                if (Float.compare(alphaFactor, 0.2f) <= 0)
+                {
+                    mGradeTextView.setVisibility(View.INVISIBLE);
+                } else
+                {
+                    mGradeTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
             Rect firstRect = (Rect) mNameTextView.getTag();
 
             if (firstRect != null)
