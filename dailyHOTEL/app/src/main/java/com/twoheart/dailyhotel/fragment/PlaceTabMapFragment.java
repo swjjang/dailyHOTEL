@@ -9,10 +9,7 @@ package com.twoheart.dailyhotel.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,60 +29,15 @@ import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Util;
 
-public class PlaceTabMapFragment extends BaseFragment implements OnMapClickListener
+public abstract class PlaceTabMapFragment extends BaseFragment implements OnMapClickListener
 {
-    private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
+    protected static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
 
-    private PlaceBookingDetail mPlaceBookingDetail;
+    protected PlaceBookingDetail mPlaceBookingDetail;
     private SupportMapFragment mMapFragment;
     private GoogleMap mGoogleMap;
-    private View mPlaceholderMapView;
+    protected View mPlaceholderMapView;
     private Marker mMarker;
-
-    public static PlaceTabMapFragment newInstance(PlaceBookingDetail placeBookingDetail, String title)
-    {
-        PlaceTabMapFragment newFragment = new PlaceTabMapFragment();
-        Bundle arguments = new Bundle();
-
-        //관련 정보들은 BookingTabActivity에서 넘겨받음.
-        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL, placeBookingDetail);
-        newFragment.setArguments(arguments);
-        newFragment.setTitle(title);
-
-        return newFragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        mPlaceBookingDetail = (PlaceBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.fragment_hotel_tab_map, container, false);
-
-        mPlaceholderMapView = view.findViewById(R.id.placeholderMapView);
-
-        TextView hotelNameTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
-        TextView hotelAddressTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
-
-        hotelNameTextView.setText(mPlaceBookingDetail.placeName);
-        hotelNameTextView.setSelected(true);
-        hotelAddressTextView.setText(mPlaceBookingDetail.address);
-        hotelAddressTextView.setSelected(true);
-
-        TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
-        hotelGradeTextView.setVisibility(View.GONE);
-        hotelNameTextView.setPadding(0, 0, 0, 0);
-
-        //        hotelGradeTextView.setText(mPlaceBookingDetail.grade.getName(getActivity()));
-        //        hotelGradeTextView.setBackgroundResource(mPlaceBookingDetail.grade.getColorResId());
-
-        return view;
-    }
 
     @Override
     public void onMapClick(LatLng latLng)

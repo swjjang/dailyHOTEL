@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class GourmetDetail extends PlaceDetail
 {
+    public String category;
+
     public GourmetDetail(int index)
     {
         super(index);
@@ -16,6 +18,7 @@ public class GourmetDetail extends PlaceDetail
     public void setData(JSONObject jsonObject) throws Exception
     {
         grade = Place.Grade.gourmet;
+        category = jsonObject.getString("category");
         name = jsonObject.getString("restaurant_name");
         address = jsonObject.getString("address");
 

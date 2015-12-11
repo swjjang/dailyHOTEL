@@ -7,7 +7,7 @@
         android:id="@+id/action_call"
         android:icon="@drawable/ic_call"
         android:orderInCategory="100"
-        android:title="문의"
+        android:title="@string/label_question"
         app:showAsAction="always"/>
 
 </menu>

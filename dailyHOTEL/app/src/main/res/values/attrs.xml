@@ -59,13 +59,10 @@
     </declare-styleable>
     <declare-styleable name="dailyFont">
         <attr name="style" format="enum">
-            <enum name="Black" value="0"/>
             <enum name="Bold" value="1"/>
             <enum name="DemiLight" value="2"/>
-            <enum name="Light" value="3"/>
             <enum name="Medium" value="4"/>
             <enum name="Regular" value="5"/>
-            <enum name="Thin" value="6"/>
         </attr>
     </declare-styleable>
 

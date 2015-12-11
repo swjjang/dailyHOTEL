@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
+import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -388,18 +389,21 @@ public class GourmetDetailLayout extends PlaceDetailLayout
          */
         private View getTitleView(View view, PlaceDetail placeDetail)
         {
+            GourmetDetail gourmetDetail = (GourmetDetail) placeDetail;
+
             mTitleLayout = view.findViewById(R.id.hotelTitleLayout);
 
             // 등급
             mGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
-            mGradeTextView.setVisibility(View.GONE);
+            mGradeTextView.setVisibility(View.VISIBLE);
 
-            //            mGradeTextView.setText(placeDetail.grade.getName(mFragmentActivity));
-            //            mGradeTextView.setBackgroundResource(placeDetail.grade.getColorResId());
+            mGradeTextView.setText(gourmetDetail.category);
+            mGradeTextView.setTextColor(mActivity.getResources().getColor(R.color.black));
+            mGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
 
             // 호텔명
             mNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-            mNameTextView.setText(placeDetail.name);
+            mNameTextView.setText(gourmetDetail.name);
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(Util.dpToPx(mActivity, 15), 0, Util.dpToPx(mActivity, 40), 0);
@@ -430,13 +434,13 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 
             // 만족도
-            if (Util.isTextEmpty(placeDetail.satisfaction) == true)
+            if (Util.isTextEmpty(gourmetDetail.satisfaction) == true)
             {
                 satisfactionView.setVisibility(View.GONE);
             } else
             {
                 satisfactionView.setVisibility(View.VISIBLE);
-                satisfactionView.setText(placeDetail.satisfaction);
+                satisfactionView.setText(gourmetDetail.satisfaction);
             }
 
             return view;

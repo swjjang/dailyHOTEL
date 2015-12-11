@@ -48,11 +48,6 @@ public class DailyCountryCodeTextView extends AppCompatTextView
 
         switch (fontStyle)
         {
-            // Black
-            case 0:
-                setTypeface(FontManager.getInstance(context).getBlackTypeface());
-                break;
-
             // Bold
             case 1:
                 setTypeface(FontManager.getInstance(context).getBoldTypeface());
@@ -63,11 +58,6 @@ public class DailyCountryCodeTextView extends AppCompatTextView
                 setTypeface(FontManager.getInstance(context).getDemiLightTypeface());
                 break;
 
-            // Light
-            case 3:
-                setTypeface(FontManager.getInstance(context).getLightTypeface());
-                break;
-
             // Medium
             case 4:
                 setTypeface(FontManager.getInstance(context).getMediumTypeface());
@@ -76,11 +66,6 @@ public class DailyCountryCodeTextView extends AppCompatTextView
             // Regular
             case 5:
                 setTypeface(FontManager.getInstance(context).getRegularTypeface());
-                break;
-
-            // Thin
-            case 6:
-                setTypeface(FontManager.getInstance(context).getThinTypeface());
                 break;
         }
     }

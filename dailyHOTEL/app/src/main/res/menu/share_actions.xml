@@ -7,7 +7,7 @@
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share"
         android:orderInCategory="100"
-        android:title="공유"
+        android:title="@string/label_share"
         app:showAsAction="always"/>
 
 </menu>

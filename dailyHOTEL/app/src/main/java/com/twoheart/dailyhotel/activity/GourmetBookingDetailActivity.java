@@ -13,8 +13,8 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.fragment.GourmetTabBookingFragment;
+import com.twoheart.dailyhotel.fragment.GourmetTabMapFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabInfoFragment;
-import com.twoheart.dailyhotel.fragment.PlaceTabMapFragment;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -46,7 +46,7 @@ public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
             BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceBookingDetail, titleList.get(1));
             mFragmentList.add(baseFragment02);
 
-            BaseFragment baseFragment03 = PlaceTabMapFragment.newInstance(mPlaceBookingDetail, titleList.get(2));
+            BaseFragment baseFragment03 = GourmetTabMapFragment.newInstance(mPlaceBookingDetail, titleList.get(2));
             mFragmentList.add(baseFragment03);
 
             mFragmentViewPager.setData(mFragmentList);

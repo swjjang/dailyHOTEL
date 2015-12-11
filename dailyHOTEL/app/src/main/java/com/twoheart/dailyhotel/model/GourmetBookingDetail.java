@@ -13,22 +13,10 @@ import java.util.TimeZone;
 
 public class GourmetBookingDetail extends PlaceBookingDetail
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public GourmetBookingDetail createFromParcel(Parcel in)
-        {
-            return new GourmetBookingDetail(in);
-        }
-
-        @Override
-        public GourmetBookingDetail[] newArray(int size)
-        {
-            return new GourmetBookingDetail[size];
-        }
-    };
     public int ticketCount;
     public String ticketName;
     public String sday;
+    public String category;
 
     public GourmetBookingDetail()
     {
@@ -47,6 +35,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         dest.writeInt(ticketCount);
         dest.writeString(ticketName);
         dest.writeString(sday);
+        dest.writeString(category);
     }
 
     protected void readFromParcel(Parcel in)
@@ -56,6 +45,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         ticketCount = in.readInt();
         ticketName = in.readString();
         sday = in.readString();
+        category = in.readString();
     }
 
     public void setData(JSONObject jsonObject) throws Exception
@@ -67,6 +57,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         placeName = jsonObject.getString("restaurant_name");
 
         grade = Place.Grade.gourmet;
+        category = jsonObject.getString("category");
         guestName = jsonObject.getString("customer_name");
         guestPhone = jsonObject.getString("customer_phone");
         guestEmail = jsonObject.getString("customer_email");
@@ -87,4 +78,18 @@ public class GourmetBookingDetail extends PlaceBookingDetail
 
         sday = format.format(new Date(day));
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public GourmetBookingDetail createFromParcel(Parcel in)
+        {
+            return new GourmetBookingDetail(in);
+        }
+
+        @Override
+        public GourmetBookingDetail[] newArray(int size)
+        {
+            return new GourmetBookingDetail[size];
+        }
+    };
 }
