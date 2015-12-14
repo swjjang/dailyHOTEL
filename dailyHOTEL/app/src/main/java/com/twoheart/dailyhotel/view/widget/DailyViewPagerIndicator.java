@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.view.widget;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -52,9 +51,9 @@ public class DailyViewPagerIndicator extends RelativeLayout
         mPageTextView = new DailyTextView(context);
 
         RelativeLayout.LayoutParams descLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        mDescriptionTextView.setTextColor(getResources().getColor(R.color.black));
-        mDescriptionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
-        mDescriptionTextView.setBackgroundResource(R.color.white_a70);
+        mDescriptionTextView.setTextColor(getResources().getColor(R.color.hoteldetail_image_tag_text));
+        mDescriptionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+        mDescriptionTextView.setBackgroundResource(R.color.white_a55);
         mDescriptionTextView.setPadding(Util.dpToPx(context, 5), Util.dpToPx(context, 2), Util.dpToPx(context, 5), Util.dpToPx(context, 2));
 
         descLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -65,14 +64,15 @@ public class DailyViewPagerIndicator extends RelativeLayout
 
         RelativeLayout.LayoutParams pageLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         mPageTextView.setTextColor(context.getResources().getColor(R.color.white_a80));
-        mPageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        mPageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
 
-        pageLayoutParams.rightMargin = Util.dpToPx(context, 10);
+        pageLayoutParams.rightMargin = Util.dpToPx(context, 13);
         pageLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         pageLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
         mPageTextView.setLayoutParams(pageLayoutParams);
         mPageTextView.setShadowLayer(1, 1, 1, context.getResources().getColor(R.color.black_a40));
+        mPageTextView.setPadding(Util.dpToPx(context, 5), Util.dpToPx(context, 2), Util.dpToPx(context, 5), Util.dpToPx(context, 2));
         addView(mPageTextView);
     }
 
@@ -80,7 +80,7 @@ public class DailyViewPagerIndicator extends RelativeLayout
     {
         mPosition = position;
 
-        if(Util.isTextEmpty(description) == false)
+        if (Util.isTextEmpty(description) == false)
         {
             mDescriptionTextView.setVisibility(View.VISIBLE);
             mDescriptionTextView.setText(description);
@@ -89,7 +89,7 @@ public class DailyViewPagerIndicator extends RelativeLayout
             mDescriptionTextView.setVisibility(View.INVISIBLE);
         }
 
-        if(mTotalCount == 0)
+        if (mTotalCount == 0)
         {
             mPageTextView.setVisibility(View.INVISIBLE);
         } else

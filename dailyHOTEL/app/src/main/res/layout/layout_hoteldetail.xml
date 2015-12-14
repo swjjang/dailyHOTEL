@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/defaultHotelImageView"
             android:layout_alignBottom="@+id/defaultHotelImageView"
-            android:paddingBottom="10dp"/>
+            android:paddingBottom="13dp"/>
     </RelativeLayout>
 
     <View

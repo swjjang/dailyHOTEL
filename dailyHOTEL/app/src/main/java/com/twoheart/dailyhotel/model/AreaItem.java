@@ -58,7 +58,7 @@ public class AreaItem implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        province.writeToParcel(dest, flags);
+        dest.writeParcelable(province, flags);
         dest.writeList(areaList);
     }
 
@@ -70,8 +70,7 @@ public class AreaItem implements Parcelable
 
     private void readFromParcel(Parcel in)
     {
-        province = new Province(in);
+        province = in.readParcelable(Province.class.getClassLoader());
         areaList = in.readArrayList(Area.class.getClassLoader());
     }
-
 }

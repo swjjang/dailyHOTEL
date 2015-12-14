@@ -57,7 +57,13 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     @Override
     protected void initLayout(LayoutInflater inflater, BaseActivity activity)
     {
-        mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+        try
+        {
+            mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -568,8 +574,14 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             if (mGoogleMapLayout == null)
             {
-                LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+                try
+                {
+                    LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
             }
 
             googleMapLayout.addView(mGoogleMapLayout);
