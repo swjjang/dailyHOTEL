@@ -286,7 +286,7 @@ public class HotelMainFragment extends BaseFragment
             case R.id.action_sort:
             {
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-                currentFragment.showSortDialogView(HotelListFragment.SortType.DISTANCE);
+                currentFragment.showSortDialogView();
 
                 return true;
             }
@@ -436,6 +436,12 @@ public class HotelMainFragment extends BaseFragment
     private void refreshHotelList(Province province, boolean isSelectionTop)
     {
         HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+        if (isSelectionTop == true)
+        {
+            hotelListFragment.setSortType(HotelListFragment.SortType.DEFAULT);
+        }
+
         hotelListFragment.refreshHotelList(province, isSelectionTop);
     }
 
@@ -632,7 +638,6 @@ public class HotelMainFragment extends BaseFragment
         }
     };
 
-    ;
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override

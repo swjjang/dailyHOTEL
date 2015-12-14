@@ -213,7 +213,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                 if (mSortType == PlaceListFragment.SortType.DISTANCE)
                 {
                     viewHolder.distanceView.setVisibility(View.VISIBLE);
-                    viewHolder.distanceView.setText(new DecimalFormat("#.##").format(gourmet.distance / 1000) + " km");
+                    viewHolder.distanceView.setText(new DecimalFormat("#.#").format(gourmet.distance / 1000) + "km");
                 } else
                 {
                     viewHolder.distanceView.setVisibility(View.GONE);

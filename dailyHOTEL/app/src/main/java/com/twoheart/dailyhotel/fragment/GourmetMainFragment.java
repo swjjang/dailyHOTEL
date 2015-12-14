@@ -185,6 +185,12 @@ public class GourmetMainFragment extends PlaceMainFragment
     protected void refreshList(Province province, boolean isSelectionTop)
     {
         GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
+
+        if (isSelectionTop == true)
+        {
+            gourmetListFragment.setSortType(PlaceListFragment.SortType.DEFAULT);
+        }
+
         gourmetListFragment.refreshList(province, isSelectionTop);
     }
 
@@ -540,7 +546,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         public void showSortDialogView()
         {
             GourmetListFragment currentFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
-            currentFragment.showSortDialogView(PlaceListFragment.SortType.DISTANCE);
+            currentFragment.showSortDialogView();
         }
 
         @Override

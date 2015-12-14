@@ -172,4 +172,8 @@
     <color name="calendar_month_text">#969696</color>
     <color name="calendar_month_line">#ebebeb</color>
     <color name="calendar_month_background">#f7f7f7</color>
+
+    <!-- Sort -->
+    <color name="sort_by_default">#c5c5c5</color>
+    <color name="sort_by_select">#171717</color>
 </resources>

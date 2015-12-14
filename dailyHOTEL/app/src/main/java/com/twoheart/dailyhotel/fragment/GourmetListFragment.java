@@ -15,15 +15,22 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -39,6 +46,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.GourmetViewItem;
 import com.twoheart.dailyhotel.view.LocationFactory;
@@ -66,7 +74,7 @@ public class GourmetListFragment extends PlaceListFragment
     private GourmetListAdapter mGourmetListAdapter;
 
     // Sort
-    private SortType mSortType = SortType.DEFAULT;
+    protected SortType mSortType = SortType.DEFAULT;
     private Location mMyLocation;
 
     @Override
@@ -166,9 +174,9 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    public void onPageSelected(boolean isRequestHotelList)
+    public void onPageUnSelected()
     {
-        super.onPageSelected(isRequestHotelList);
+        super.onPageUnSelected();
 
         mSortType = SortType.DEFAULT;
     }
@@ -225,10 +233,10 @@ public class GourmetListFragment extends PlaceListFragment
             params = String.format("?province_idx=%d&sday=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
         }
 
-        if (DEBUG == true)
-        {
-            baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-        }
+        //        if (DEBUG == true)
+        //        {
+        //            baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+        //        }
 
         DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
     }
@@ -345,9 +353,107 @@ public class GourmetListFragment extends PlaceListFragment
         mSaleTime = saleTime;
     }
 
-    protected void showSortDialogView(SortType type)
+    protected void showSortDialogView()
     {
-        searchMyLocation();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_sortdialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(baseActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        // 버튼
+        final TextView[] sortByView = new TextView[4];
+
+        sortByView[0] = (TextView) dialogView.findViewById(R.id.sortByAreaView);
+        sortByView[1] = (TextView) dialogView.findViewById(R.id.sortByDistanceView);
+        sortByView[2] = (TextView) dialogView.findViewById(R.id.sortByLowPriceView);
+        sortByView[3] = (TextView) dialogView.findViewById(R.id.sortByHighPriceView);
+
+        sortByView[0].setTag(SortType.DEFAULT);
+        sortByView[1].setTag(SortType.DISTANCE);
+        sortByView[2].setTag(SortType.LOW_PRICE);
+        sortByView[3].setTag(SortType.HIGH_PRICE);
+
+        View.OnClickListener onClickListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                for (TextView textView : sortByView)
+                {
+                    if (textView == v)
+                    {
+                        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+                    } else
+                    {
+                        textView.setTypeface(textView.getTypeface(), Typeface.NORMAL);
+                    }
+                }
+
+                mSortType = (SortType) v.getTag();
+
+                switch (mSortType)
+                {
+                    case DISTANCE:
+                        searchMyLocation();
+                        break;
+
+                    default:
+                        // 리스트를 요청한다
+                        refreshList(getProvince(), true);
+                        break;
+                }
+
+                dialog.cancel();
+            }
+        };
+
+        int ordinal = mSortType.ordinal();
+        sortByView[ordinal].setSelected(true);
+        sortByView[ordinal].setTypeface(sortByView[ordinal].getTypeface(), Typeface.BOLD);
+
+        for (TextView textView : sortByView)
+        {
+            textView.setOnClickListener(onClickListener);
+        }
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    public void setSortType(SortType sortType)
+    {
+        mSortType = sortType;
     }
 
     private void searchMyLocation()

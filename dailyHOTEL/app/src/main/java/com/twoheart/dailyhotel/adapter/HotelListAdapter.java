@@ -353,7 +353,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
         if (mSortType == HotelListFragment.SortType.DISTANCE)
         {
             viewHolder.distanceView.setVisibility(View.VISIBLE);
-            viewHolder.distanceView.setText(new DecimalFormat("#.##").format(element.distance / 1000) + " km");
+            viewHolder.distanceView.setText(new DecimalFormat("#.#").format(element.distance / 1000) + "km");
         } else
         {
             viewHolder.distanceView.setVisibility(View.GONE);
