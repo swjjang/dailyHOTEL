@@ -15,6 +15,8 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +29,6 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.GourmetListAdapter;
-import com.twoheart.dailyhotel.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment.VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -37,8 +38,10 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.GourmetViewItem;
+import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -48,6 +51,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
@@ -58,7 +63,11 @@ public class GourmetListFragment extends PlaceListFragment
 {
     protected SaleTime mSaleTime;
 
-    private PlaceListAdapter mPlaceListAdapter;
+    private GourmetListAdapter mGourmetListAdapter;
+
+    // Sort
+    private SortType mSortType = SortType.DEFAULT;
+    private Location mMyLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -148,12 +157,20 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     protected PlaceViewItem getPlaceViewItem(int position)
     {
-        if (mPlaceListAdapter == null)
+        if (mGourmetListAdapter == null)
         {
             return null;
         }
 
-        return mPlaceListAdapter.getItem(position);
+        return mGourmetListAdapter.getItem(position);
+    }
+
+    @Override
+    public void onPageSelected(boolean isRequestHotelList)
+    {
+        super.onPageSelected(isRequestHotelList);
+
+        mSortType = SortType.DEFAULT;
     }
 
     protected SaleTime getSelectedSaleTime()
@@ -219,12 +236,12 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     protected ArrayList<PlaceViewItem> getPlaceViewItemList()
     {
-        if (mPlaceListAdapter == null)
+        if (mGourmetListAdapter == null)
         {
             return null;
         }
 
-        return mPlaceListAdapter.getData();
+        return mGourmetListAdapter.getData();
     }
 
     @Override
@@ -328,6 +345,102 @@ public class GourmetListFragment extends PlaceListFragment
         mSaleTime = saleTime;
     }
 
+    protected void showSortDialogView(SortType type)
+    {
+        searchMyLocation();
+    }
+
+    private void searchMyLocation()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        lockUI();
+
+        LocationFactory.getInstance(baseActivity).startLocationMeasure(baseActivity, null, new LocationFactory.LocationListenerEx()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                if (Util.isOverAPI23() == true)
+                {
+                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                }
+
+                unLockUI();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+                unLockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                }, null, true);
+            }
+
+            @Override
+            public void onLocationChanged(Location location)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    unLockUI();
+                    return;
+                }
+
+                mSortType = SortType.DISTANCE;
+                mMyLocation = location;
+
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                // 리스트를 요청한다
+                refreshList(getProvince(), true);
+            }
+        });
+    }
+
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -381,6 +494,82 @@ public class GourmetListFragment extends PlaceListFragment
             return placeViewItemList;
         }
 
+        private ArrayList<PlaceViewItem> makeSortHotelList(ArrayList<Gourmet> gourmetList, SortType type)
+        {
+            ArrayList<PlaceViewItem> gourmetViewItemList = new ArrayList<>();
+
+            if (gourmetList == null || gourmetList.size() == 0)
+            {
+                return gourmetViewItemList;
+            }
+
+            switch (type)
+            {
+                case DEFAULT:
+                    return makeSectionList(gourmetList);
+
+                case DISTANCE:
+                {
+                    // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                    Comparator<Gourmet> comparator = new Comparator<Gourmet>()
+                    {
+                        public int compare(Gourmet gourmet1, Gourmet gourmet2)
+                        {
+                            float[] results1 = new float[3];
+                            Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), gourmet1.latitude, gourmet1.longitude, results1);
+                            gourmet1.distance = results1[0];
+
+                            float[] results2 = new float[3];
+                            Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), gourmet2.latitude, gourmet2.longitude, results2);
+                            gourmet2.distance = results2[0];
+
+                            return Float.compare(results1[0], results2[0]);
+                        }
+                    };
+
+                    Collections.sort(gourmetList, comparator);
+                    break;
+                }
+
+                case LOW_PRICE:
+                {
+                    // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                    Comparator<Gourmet> comparator = new Comparator<Gourmet>()
+                    {
+                        public int compare(Gourmet gourmet1, Gourmet gourmet2)
+                        {
+                            return gourmet1.discountPrice - gourmet2.discountPrice;
+                        }
+                    };
+
+                    Collections.sort(gourmetList, comparator);
+                    break;
+                }
+
+                case HIGH_PRICE:
+                {
+                    // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                    Comparator<Gourmet> comparator = new Comparator<Gourmet>()
+                    {
+                        public int compare(Gourmet gourmet1, Gourmet gourmet2)
+                        {
+                            return gourmet2.discountPrice - gourmet1.discountPrice;
+                        }
+                    };
+
+                    Collections.sort(gourmetList, comparator);
+                    break;
+                }
+            }
+
+            for (Gourmet gourmet : gourmetList)
+            {
+                gourmetViewItemList.add(new GourmetViewItem(gourmet));
+            }
+
+            return gourmetViewItemList;
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -420,9 +609,9 @@ public class GourmetListFragment extends PlaceListFragment
 
                 if (length == 0)
                 {
-                    if (mPlaceListAdapter != null)
+                    if (mGourmetListAdapter != null)
                     {
-                        mPlaceListAdapter.clear();
+                        mGourmetListAdapter.clear();
                     }
 
                     setVisibility(VIEW_TYPE.GONE);
@@ -449,12 +638,12 @@ public class GourmetListFragment extends PlaceListFragment
                         }
                     }
 
-                    ArrayList<PlaceViewItem> placeViewItemList = makeSectionList(gourmetList);
+                    ArrayList<PlaceViewItem> placeViewItemList = makeSortHotelList(gourmetList, mSortType);
 
-                    if (mPlaceListAdapter == null)
+                    if (mGourmetListAdapter == null)
                     {
-                        mPlaceListAdapter = new GourmetListAdapter(baseActivity, R.layout.list_row_gourmet, new ArrayList<PlaceViewItem>());
-                        mListView.setAdapter(mPlaceListAdapter);
+                        mGourmetListAdapter = new GourmetListAdapter(baseActivity, R.layout.list_row_gourmet, new ArrayList<PlaceViewItem>());
+                        mListView.setAdapter(mGourmetListAdapter);
                         mListView.setOnItemClickListener(GourmetListFragment.this);
                     }
 
@@ -465,9 +654,9 @@ public class GourmetListFragment extends PlaceListFragment
                         setPlaceMapData(placeViewItemList);
                     }
 
-                    mPlaceListAdapter.clear();
-                    mPlaceListAdapter.addAll(placeViewItemList);
-                    mPlaceListAdapter.notifyDataSetChanged();
+                    mGourmetListAdapter.clear();
+                    mGourmetListAdapter.addAll(placeViewItemList, mSortType);
+                    mGourmetListAdapter.notifyDataSetChanged();
 
                     if (mIsSelectionTop == true)
                     {

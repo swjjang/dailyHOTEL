@@ -3,9 +3,17 @@
     >
 
     <item
-        android:id="@+id/action_map"
+        android:id="@+id/action_sort"
         android:icon="@drawable/actionbar_ic_map"
         android:orderInCategory="100"
+        android:title="@string/label_sort"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_map"
+        android:icon="@drawable/actionbar_ic_map"
+        android:orderInCategory="101"
         android:title="@string/label_map"
         app:showAsAction="always"/>
+
 </menu>

@@ -100,8 +100,8 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="13dp"
-            android:layout_above="@+id/hotel23LineLayout">
+            android:layout_above="@+id/hotel23LineLayout"
+            android:layout_marginLeft="13dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/hv_hotel_grade"
@@ -137,14 +137,14 @@
             android:id="@+id/tv_hotel_row_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/hotel23LineLayout"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginBottom="-3dp"
             android:layout_marginRight="13dp"
             android:gravity="center_vertical"
             android:textColor="@color/white"
-            android:textSize="13dp"
-            android:layout_above="@+id/hotel23LineLayout"/>
+            android:textSize="13dp"/>
     </RelativeLayout>
 
     <ImageView
@@ -173,5 +173,21 @@
         android:layout_height="1px"
         android:layout_alignParentBottom="true"
         android:background="@color/hotel_list_item_underline"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/distanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/black_a40"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        android:textColor="@color/white_a80"
+        android:textSize="12dp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

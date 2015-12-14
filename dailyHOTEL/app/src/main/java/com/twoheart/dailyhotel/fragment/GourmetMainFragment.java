@@ -537,6 +537,13 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
+        public void showSortDialogView()
+        {
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
+            currentFragment.showSortDialogView(PlaceListFragment.SortType.DISTANCE);
+        }
+
+        @Override
         public void onClickActionBarArea()
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.twoheart.dailyhotel.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView.PinnedSectionListAdapter;
@@ -26,6 +27,9 @@ public abstract class PlaceListAdapter extends ArrayAdapter<PlaceViewItem> imple
     protected LayoutInflater inflater;
     protected PaintDrawable mPaintDrawable;
     private ArrayList<PlaceViewItem> mPlaceViewItemList;
+
+    // Sort
+    protected PlaceListFragment.SortType mSortType = PlaceListFragment.SortType.DEFAULT;
 
     public PlaceListAdapter(Context context, int resourceId, ArrayList<PlaceViewItem> arrayList)
     {

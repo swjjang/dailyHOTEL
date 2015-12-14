@@ -370,8 +370,8 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
 
         if (mIsOpenMakrer == true && mSelectedHotelListViewItem != null)
         {
-            latitude = mSelectedHotelListViewItem.getItem().mLatitude;
-            longitude = mSelectedHotelListViewItem.getItem().mLongitude;
+            latitude = mSelectedHotelListViewItem.getItem().latitude;
+            longitude = mSelectedHotelListViewItem.getItem().longitude;
         }
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -407,13 +407,13 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
             HotelClusterItem hotelClusterItem = new HotelClusterItem(hotel);
             mClusterManager.addItem(hotelClusterItem);
 
-            LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
+            LatLng latlng = new LatLng(hotel.latitude, hotel.longitude);
             builder.include(latlng);
 
             // 기존의 마커 정보 창을 보여준다.
             if (mIsOpenMakrer == true)
             {
-                if (latitude == hotel.mLatitude && longitude == hotel.mLongitude)
+                if (latitude == hotel.latitude && longitude == hotel.longitude)
                 {
                     isOpenMarker = true;
 
@@ -591,10 +591,10 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
                 Hotel item02 = o2.getItem();
 
                 float[] results1 = new float[3];
-                Location.distanceBetween(latlng.latitude, latlng.longitude, item01.mLatitude, item01.mLongitude, results1);
+                Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
 
                 float[] results2 = new float[3];
-                Location.distanceBetween(latlng.latitude, latlng.longitude, item02.mLatitude, item02.mLongitude, results2);
+                Location.distanceBetween(latlng.latitude, latlng.longitude, item02.latitude, item02.longitude, results2);
 
                 return Float.compare(results1[0], results2[0]);
             }
@@ -615,7 +615,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
                 item01 = arrangeList.get(i).getItem();
                 item02 = arrangeList.get(i - 1).getItem();
 
-                if (item01.mLatitude == item02.mLatitude && item01.mLongitude == item02.mLongitude)
+                if (item01.latitude == item02.latitude && item01.longitude == item02.longitude)
                 {
                     int item01DisCount = item01.averageDiscount;
                     int item02DisCount = item02.averageDiscount;
@@ -628,7 +628,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
                         arrangeList.remove(i - 1);
                     }
 
-                    String key = Double.toString(item01.mLatitude) + Double.toString(item01.mLongitude);
+                    String key = Double.toString(item01.latitude) + Double.toString(item01.longitude);
 
                     if (hashMap.containsKey(key) == true)
                     {
@@ -678,7 +678,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
             HotelListViewItem hotelListViewItem = mHotelArrangeArrayList.get(i);
             Hotel hotel = hotelListViewItem.getItem();
 
-            if (latlng.latitude == hotel.mLatitude && latlng.longitude == hotel.mLongitude)
+            if (latlng.latitude == hotel.latitude && latlng.longitude == hotel.longitude)
             {
                 position = i;
 
@@ -731,10 +731,10 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
                 Hotel item02 = o2.getItem();
 
                 float[] results1 = new float[3];
-                Location.distanceBetween(latlng.latitude, latlng.longitude, item01.mLatitude, item01.mLongitude, results1);
+                Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
 
                 float[] results2 = new float[3];
-                Location.distanceBetween(latlng.latitude, latlng.longitude, item02.mLatitude, item02.mLongitude, results2);
+                Location.distanceBetween(latlng.latitude, latlng.longitude, item02.latitude, item02.longitude, results2);
 
                 return Float.compare(results1[0], results2[0]);
             }
@@ -762,7 +762,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
             HotelListViewItem hotelListViewItem = mHotelArrangeArrayList.get(i);
             Hotel hotel = hotelListViewItem.getItem();
 
-            if (latlng.latitude == hotel.mLatitude && latlng.longitude == hotel.mLongitude)
+            if (latlng.latitude == hotel.latitude && latlng.longitude == hotel.longitude)
             {
                 position = i;
 

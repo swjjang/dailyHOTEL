@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.fragment.HotelListFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
@@ -40,6 +41,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
     private LayoutInflater inflater;
     private ArrayList<HotelListViewItem> mHoteList;
     private PaintDrawable mPaintDrawable;
+    private HotelListFragment.SortType mSortType;
 
     public HotelListAdapter(Context context, int resourceId, ArrayList<HotelListViewItem> hotelList)
     {
@@ -117,8 +119,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
         return mHoteList.size();
     }
 
-    @Override
-    public void addAll(Collection<? extends HotelListViewItem> collection)
+    public void addAll(Collection<? extends HotelListViewItem> collection, HotelListFragment.SortType sortType)
     {
         if (collection == null)
         {
@@ -129,6 +130,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
         {
             mHoteList = new ArrayList<HotelListViewItem>();
         }
+
+        mSortType = sortType;
 
         mHoteList.addAll(collection);
     }
@@ -231,6 +234,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
             viewHolder.hotelGradeView = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
             viewHolder.dBenefitView = convertView.findViewById(R.id.dBenefitImageView);
             viewHolder.averageView = convertView.findViewById(R.id.averageTextView);
+            viewHolder.distanceView = (TextView) convertView.findViewById(R.id.distanceTextView);
 
             convertView.setTag(viewHolder);
         }
@@ -346,6 +350,15 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
             viewHolder.dBenefitView.setVisibility(View.GONE);
         }
 
+        if (mSortType == HotelListFragment.SortType.DISTANCE)
+        {
+            viewHolder.distanceView.setVisibility(View.VISIBLE);
+            viewHolder.distanceView.setText(new DecimalFormat("#.##").format(element.distance / 1000) + " km");
+        } else
+        {
+            viewHolder.distanceView.setVisibility(View.GONE);
+        }
+
         return convertView;
     }
 
@@ -363,6 +376,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
         TextView satisfactionView;
         View averageView;
         View dBenefitView;
+        TextView distanceView;
     }
 
     private static class HeaderListViewHolder

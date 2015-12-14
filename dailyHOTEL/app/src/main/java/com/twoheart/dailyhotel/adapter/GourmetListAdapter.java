@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
@@ -22,12 +23,20 @@ import com.twoheart.dailyhotel.view.PlaceViewItem;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class GourmetListAdapter extends PlaceListAdapter
 {
     public GourmetListAdapter(Context context, int resourceId, ArrayList<PlaceViewItem> arrayList)
     {
         super(context, resourceId, arrayList);
+    }
+
+    public void addAll(Collection<? extends PlaceViewItem> collection, PlaceListFragment.SortType sortType)
+    {
+        mSortType = sortType;
+
+        addAll(collection);
     }
 
     @Override
@@ -94,6 +103,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                     viewHolder.hotelAddressView = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
                     viewHolder.hotelGradeView = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
                     viewHolder.personsTextView = (TextView) convertView.findViewById(R.id.personsTextView);
+                    viewHolder.distanceView = (TextView) convertView.findViewById(R.id.distanceTextView);
 
                     convertView.setTag(viewHolder);
                 }
@@ -199,6 +209,15 @@ public class GourmetListAdapter extends PlaceListAdapter
                 {
                     viewHolder.hotelSoldOutView.setVisibility(View.GONE);
                 }
+
+                if (mSortType == PlaceListFragment.SortType.DISTANCE)
+                {
+                    viewHolder.distanceView.setVisibility(View.VISIBLE);
+                    viewHolder.distanceView.setText(new DecimalFormat("#.##").format(gourmet.distance / 1000) + " km");
+                } else
+                {
+                    viewHolder.distanceView.setVisibility(View.GONE);
+                }
                 break;
             }
         }
@@ -218,6 +237,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         TextView hotelGradeView;
         TextView satisfactionView;
         TextView personsTextView;
+        TextView distanceView;
     }
 
     private static class HeaderListViewHolder

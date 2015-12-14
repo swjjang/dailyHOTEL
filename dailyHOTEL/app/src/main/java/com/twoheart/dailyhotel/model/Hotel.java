@@ -17,8 +17,8 @@ import java.util.Iterator;
 public class Hotel implements Parcelable
 {
     public int averageDiscount;
-    public double mLatitude;
-    public double mLongitude;
+    public double latitude;
+    public double longitude;
     public boolean isDailyChoice;
     public int saleIndex;
     public boolean isDBenefit;
@@ -34,6 +34,7 @@ public class Hotel implements Parcelable
     private String bedType;
     private String detailRegion;
     public int satisfaction;
+    public float distance; // 정렬시에 보여주는 내용
 
     public Hotel()
     {
@@ -58,8 +59,8 @@ public class Hotel implements Parcelable
         dest.writeInt(availableRoom);
         dest.writeInt(sequence);
         dest.writeString(bedType);
-        dest.writeDouble(mLatitude);
-        dest.writeDouble(mLongitude);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
         dest.writeInt(isDailyChoice ? 1 : 0);
         dest.writeInt(saleIndex);
         dest.writeInt(isDBenefit ? 1 : 0);
@@ -78,8 +79,8 @@ public class Hotel implements Parcelable
         availableRoom = in.readInt();
         sequence = in.readInt();
         bedType = in.readString();
-        mLatitude = in.readDouble();
-        mLongitude = in.readDouble();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
         isDailyChoice = in.readInt() == 1 ? true : false;
         saleIndex = in.readInt();
         isDBenefit = in.readInt() == 1 ? true : false;
@@ -225,12 +226,12 @@ public class Hotel implements Parcelable
 
             if (jsonObject.has("lat") == true)
             {
-                mLatitude = jsonObject.getDouble("lat");
+                latitude = jsonObject.getDouble("lat");
             }
 
             if (jsonObject.has("lng") == true)
             {
-                mLongitude = jsonObject.getDouble("lng");
+                longitude = jsonObject.getDouble("lng");
             }
 
             if (jsonObject.has("is_dailychoice") == true)

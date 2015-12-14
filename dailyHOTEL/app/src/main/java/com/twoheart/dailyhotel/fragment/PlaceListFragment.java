@@ -68,6 +68,14 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         public View mUnderlineView02;
     }
 
+    public enum SortType
+    {
+        DEFAULT,
+        DISTANCE,
+        LOW_PRICE,
+        HIGH_PRICE;
+    }
+
     protected abstract void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
     protected abstract PlaceViewItem getPlaceViewItem(int position);

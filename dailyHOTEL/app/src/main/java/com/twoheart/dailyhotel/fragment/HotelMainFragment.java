@@ -283,6 +283,14 @@ public class HotelMainFragment extends BaseFragment
                 return true;
             }
 
+            case R.id.action_sort:
+            {
+                HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+                currentFragment.showSortDialogView(HotelListFragment.SortType.DISTANCE);
+
+                return true;
+            }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
