@@ -411,9 +411,12 @@ public class GourmetListFragment extends PlaceListFragment
                     throw new NullPointerException("response == null");
                 }
 
-                JSONArray jsonArray = response.getJSONArray("data");
+                JSONObject dataJSONObject = response.getJSONObject("data");
 
-                int length = jsonArray.length();
+                String imageUrl = dataJSONObject.getString("imgUrl");
+                JSONArray gourmetJSONArray = dataJSONObject.getJSONArray("saleList");
+
+                int length = gourmetJSONArray.length();
 
                 if (length == 0)
                 {
@@ -436,11 +439,11 @@ public class GourmetListFragment extends PlaceListFragment
 
                     for (int i = 0; i < length; i++)
                     {
-                        jsonObject = jsonArray.getJSONObject(i);
+                        jsonObject = gourmetJSONArray.getJSONObject(i);
 
                         Gourmet newGourmet = new Gourmet();
 
-                        if (newGourmet.setData(jsonObject) == true)
+                        if (newGourmet.setData(jsonObject, imageUrl) == true)
                         {
                             gourmetList.add(newGourmet); // 추가.
                         }

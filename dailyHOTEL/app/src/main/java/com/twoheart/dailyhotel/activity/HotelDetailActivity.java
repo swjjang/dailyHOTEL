@@ -278,9 +278,9 @@ public class HotelDetailActivity extends BaseActivity
             case R.id.action_share:
                 if (mDefaultImageUrl == null)
                 {
-                    if (mHotelDetail.getImageUrlList() != null && mHotelDetail.getImageUrlList().size() > 0)
+                    if (mHotelDetail.getImageInformationList() != null && mHotelDetail.getImageInformationList().size() > 0)
                     {
-                        mDefaultImageUrl = mHotelDetail.getImageUrlList().get(0);
+                        mDefaultImageUrl = mHotelDetail.getImageInformationList().get(0).url;
                     }
                 }
 
@@ -378,7 +378,7 @@ public class HotelDetailActivity extends BaseActivity
             lockUiComponent();
 
             Intent intent = new Intent(HotelDetailActivity.this, ImageDetailListActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, hotelDetail.getImageUrlList());
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, hotelDetail.getImageInformationList());
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
             startActivity(intent);
         }
@@ -527,7 +527,7 @@ public class HotelDetailActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private DailyHotelJsonResponseListener mHotelSaleDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelDetailInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
         @Override
@@ -801,7 +801,7 @@ public class HotelDetailActivity extends BaseActivity
                         showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                     }
 
-                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this);
+                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
                 } else
                 {
                     SaleTime saleTime = new SaleTime();
@@ -817,7 +817,7 @@ public class HotelDetailActivity extends BaseActivity
                         showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                     }
 
-                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this);
+                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
                 }
             } catch (Exception e)
             {

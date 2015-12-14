@@ -29,8 +29,6 @@ public class Province implements Parcelable
 
     private int saleWeek = 1; // 1 : 1주일,  2 : 2주일
 
-    int abcdefg;
-
     public Province()
     {
         super();

@@ -8,8 +8,11 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Iterator;
 
 public class Hotel implements Parcelable
 {
@@ -20,7 +23,7 @@ public class Hotel implements Parcelable
     public int saleIndex;
     public boolean isDBenefit;
     public int nights;
-    private String image;
+    public String imageUrl;
     private String name;
     private int price;
     private String address;
@@ -45,7 +48,7 @@ public class Hotel implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(image);
+        dest.writeString(imageUrl);
         dest.writeString(name);
         dest.writeInt(price);
         dest.writeInt(averageDiscount);
@@ -65,7 +68,7 @@ public class Hotel implements Parcelable
 
     private void readFromParcel(Parcel in)
     {
-        image = in.readString();
+        imageUrl = in.readString();
         name = in.readString();
         price = in.readInt();
         averageDiscount = in.readInt();
@@ -91,16 +94,6 @@ public class Hotel implements Parcelable
     public void setCategory(String category)
     {
         this.category = HotelGrade.valueOf(category);
-    }
-
-    public String getImage()
-    {
-        return image;
-    }
-
-    public void setImage(String image)
-    {
-        this.image = image;
     }
 
     public String getName()
@@ -189,8 +182,10 @@ public class Hotel implements Parcelable
         return 0;
     }
 
-    public boolean setHotel(JSONObject jsonObject)
+    public boolean setHotel(JSONObject jsonObject, String imageUrl, int nights)
     {
+        this.nights = nights;
+
         try
         {
             name = jsonObject.getString("name");
@@ -210,7 +205,23 @@ public class Hotel implements Parcelable
             availableRoom = jsonObject.getInt("avail_room_count");
             sequence = jsonObject.getInt("seq");
             detailRegion = jsonObject.getString("district_name");
-            image = jsonObject.getString("img");
+
+            JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");
+
+            Iterator<String> iterator = imageJSONObject.keys();
+            while (iterator.hasNext())
+            {
+                String key = iterator.next();
+
+                try
+                {
+                    JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+                    this.imageUrl = imageUrl + key + pathJSONArray.getString(0);
+                    break;
+                } catch (JSONException e)
+                {
+                }
+            }
 
             if (jsonObject.has("lat") == true)
             {
@@ -243,11 +254,6 @@ public class Hotel implements Parcelable
                 {
                     isDBenefit = true;
                 }
-            }
-
-            if (jsonObject.has("nights") == true)
-            {
-                nights = jsonObject.getInt("nights");
             }
 
             if (jsonObject.has("rating_value") == true)

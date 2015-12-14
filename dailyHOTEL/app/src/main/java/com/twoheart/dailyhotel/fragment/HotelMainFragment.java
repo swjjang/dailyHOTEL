@@ -668,7 +668,7 @@ public class HotelMainFragment extends BaseFragment
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, hotel.nights);
 
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotel.getName());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, hotel.getImage());
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, hotel.imageUrl);
 
                     startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
 

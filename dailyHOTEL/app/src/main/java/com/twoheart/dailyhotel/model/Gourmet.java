@@ -5,8 +5,11 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.ExLog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Iterator;
 
 public class Gourmet extends Place implements Parcelable
 {
@@ -42,7 +45,7 @@ public class Gourmet extends Place implements Parcelable
     }
 
     @Override
-    public boolean setData(JSONObject jsonObject)
+    public boolean setData(JSONObject jsonObject, String imageUrl)
     {
         try
         {
@@ -54,7 +57,23 @@ public class Gourmet extends Place implements Parcelable
             address = jsonObject.getString("addr_summary");
             grade = Grade.gourmet;
             districtName = jsonObject.getString("district_name");
-            imageUrl = jsonObject.getString("img");
+
+            JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");
+
+            Iterator<String> iterator = imageJSONObject.keys();
+            while (iterator.hasNext())
+            {
+                String key = iterator.next();
+
+                try
+                {
+                    JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+                    this.imageUrl = imageUrl + key + pathJSONArray.getString(0);
+                    break;
+                } catch (JSONException e)
+                {
+                }
+            }
 
             latitude = jsonObject.getDouble("latitude");
             longitude = jsonObject.getDouble("longitude");

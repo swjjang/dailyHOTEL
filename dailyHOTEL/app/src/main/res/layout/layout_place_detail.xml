@@ -16,14 +16,11 @@
 
         <com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator
             android:id="@+id/viewpagerIndicator"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="7dp"
-            android:layout_alignParentBottom="false"
             android:layout_alignBaseline="@+id/defaultHotelImageView"
-            android:layout_centerHorizontal="true"
-            android:layout_alignBottom="@+id/defaultHotelImageView"/>
+            android:layout_alignBottom="@+id/defaultHotelImageView"
+            android:paddingBottom="13dp"/>
     </RelativeLayout>
 
     <View

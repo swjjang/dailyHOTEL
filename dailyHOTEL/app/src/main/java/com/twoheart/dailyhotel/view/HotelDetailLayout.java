@@ -52,6 +52,7 @@ import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -144,8 +145,8 @@ public class HotelDetailLayout
                 mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
             }
 
-            ArrayList<String> arrayList = new ArrayList<String>();
-            arrayList.add(defaultImageUrl);
+            ArrayList<ImageInformation> arrayList = new ArrayList<>();
+            arrayList.add(new ImageInformation(defaultImageUrl, null));
 
             mImageAdapter.setData(arrayList);
             mViewPager.setAdapter(mImageAdapter);
@@ -227,9 +228,10 @@ public class HotelDetailLayout
 
         mImageAdapter.setOnAnimationListener(mOnUserActionListener);
 
-        mImageAdapter.setData(hotelDetail.getImageUrlList());
+        mImageAdapter.setData(hotelDetail.getImageInformationList());
         mViewPager.setAdapter(mImageAdapter);
-        mDailyViewPagerIndicator.setTotalCount(hotelDetail.getImageUrlList().size());
+        mDailyViewPagerIndicator.setTotalCount(hotelDetail.getImageInformationList().size());
+        mDailyViewPagerIndicator.setImageInformation(hotelDetail.getImageInformationList().get(0).description, 0);
 
         if (mListAdapter == null)
         {
@@ -880,7 +882,7 @@ public class HotelDetailLayout
                 mOnUserActionListener.onSelectedImagePosition(position);
             }
 
-            mDailyViewPagerIndicator.setPosition(position);
+            mDailyViewPagerIndicator.setImageInformation(mHotelDetail.getImageInformationList().get(position).description, position);
         }
 
         @Override

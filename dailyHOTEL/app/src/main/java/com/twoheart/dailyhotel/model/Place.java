@@ -34,7 +34,7 @@ public abstract class Place implements Parcelable
         readFromParcel(in);
     }
 
-    public abstract boolean setData(JSONObject jsonObject);
+    public abstract boolean setData(JSONObject jsonObject, String imageUrl);
 
     @Override
     public void writeToParcel(Parcel dest, int flags)

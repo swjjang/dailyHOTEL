@@ -289,9 +289,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             case R.id.action_share:
                 if (mDefaultImageUrl == null)
                 {
-                    if (mPlaceDetail.getImageUrlList() != null && mPlaceDetail.getImageUrlList().size() > 0)
+                    if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)
                     {
-                        mDefaultImageUrl = mPlaceDetail.getImageUrlList().get(0);
+                        mDefaultImageUrl = mPlaceDetail.getImageInformationList().get(0).url;
                     }
                 }
 
@@ -368,7 +368,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             lockUiComponent();
 
             Intent intent = new Intent(PlaceDetailActivity.this, ImageDetailListActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, ticketDetailDto.getImageUrlList());
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, ticketDetailDto.getImageInformationList());
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
             startActivity(intent);
         }
