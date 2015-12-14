@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
+import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.util.Util;
@@ -220,7 +221,7 @@ public abstract class PlaceDetailLayout
                 mOnUserActionListener.onSelectedImagePosition(position);
             }
 
-            mDailyViewPagerIndicator.setPosition(position);
+            mDailyViewPagerIndicator.setImageInformation(mPlaceDetail.getImageInformationList().get(position).description, position);
         }
 
         @Override
@@ -451,8 +452,8 @@ public abstract class PlaceDetailLayout
                 mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
             }
 
-            ArrayList<String> arrayList = new ArrayList<String>();
-            arrayList.add(defaultImageUrl);
+            ArrayList<ImageInformation> arrayList = new ArrayList<ImageInformation>();
+            arrayList.add(new ImageInformation(defaultImageUrl, null));
 
             mImageAdapter.setData(arrayList);
             mViewPager.setAdapter(mImageAdapter);

@@ -101,9 +101,10 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         mImageAdapter.setOnImageActionListener(mOnImageActionListener);
 
-        mImageAdapter.setData(placeDetail.getImageUrlList());
+        mImageAdapter.setData(placeDetail.getImageInformationList());
         mViewPager.setAdapter(mImageAdapter);
-        mDailyViewPagerIndicator.setTotalCount(placeDetail.getImageUrlList().size());
+        mDailyViewPagerIndicator.setTotalCount(placeDetail.getImageInformationList().size());
+        mDailyViewPagerIndicator.setImageInformation(placeDetail.getImageInformationList().get(0).description, 0);
 
         if (mListAdapter == null)
         {

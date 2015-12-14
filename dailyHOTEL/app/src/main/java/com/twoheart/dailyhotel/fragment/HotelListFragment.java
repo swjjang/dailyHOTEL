@@ -817,7 +817,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     throw new NullPointerException("response == null");
                 }
 
-                JSONArray hotelJSONArray = response.getJSONArray("data");
+                JSONObject dataJSONObject = response.getJSONObject("data");
+
+                String imageUrl = dataJSONObject.getString("imgUrl");
+                int nights = dataJSONObject.getInt("nights");
+                JSONArray hotelJSONArray = dataJSONObject.getJSONArray("saleList");
 
                 int length = hotelJSONArray.length();
 
@@ -846,7 +850,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
                         Hotel newHotel = new Hotel();
 
-                        if (newHotel.setHotel(jsonObject) == true)
+                        if (newHotel.setHotel(jsonObject, imageUrl, nights) == true)
                         {
                             hotelList.add(newHotel); // 추가.
                         }

@@ -14,7 +14,7 @@ public abstract class PlaceDetail
     public String satisfaction;
     public double latitude;
     public double longitude;
-    protected ArrayList<String> mImageUrlList;
+    protected ArrayList<ImageInformation> mImageInformationList;
     protected ArrayList<DetailInformation> mInformationList;
     protected ArrayList<TicketInformation> mTicketInformationList;
 
@@ -25,9 +25,9 @@ public abstract class PlaceDetail
 
     public abstract void setData(JSONObject jsonObject) throws Exception;
 
-    public ArrayList<String> getImageUrlList()
+    public ArrayList<ImageInformation> getImageInformationList()
     {
-        return mImageUrlList;
+        return mImageInformationList;
     }
 
     public ArrayList<TicketInformation> getTicketInformation()

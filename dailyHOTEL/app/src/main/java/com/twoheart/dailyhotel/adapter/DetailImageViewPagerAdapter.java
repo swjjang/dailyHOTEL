@@ -5,13 +5,13 @@ import android.graphics.BitmapFactory;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
+import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class DetailImageViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
-    private List<String> mImageUrlList;
+    private List<ImageInformation> mImageInformationList;
 
     private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
     private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
@@ -31,15 +31,15 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
         mContext = context;
     }
 
-    public void setData(List<String> list)
+    public void setData(List<ImageInformation> list)
     {
-        mImageUrlList = list;
+        mImageInformationList = list;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
-        if (mImageUrlList == null)
+        if (mImageInformationList == null)
         {
             return null;
         }
@@ -50,7 +50,7 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
         imageView.setScaleType(ScaleType.CENTER_CROP);
         imageView.setTag(imageView.getId(), position);
 
-        String url = mImageUrlList.get(position);
+        String url = mImageInformationList.get(position).url;
         String imageFilePath = FileLruCache.getInstance().get(url);
         boolean isExist = false;
 
@@ -76,7 +76,7 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
             }
         }
 
-        LayoutParams layoutParams = new LayoutParams(width, width);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
         container.addView(imageView, 0, layoutParams);
 
         return imageView;
@@ -91,14 +91,14 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
     @Override
     public int getCount()
     {
-        if (mImageUrlList != null)
+        if (mImageInformationList != null)
         {
-            if (mImageUrlList.size() == 0)
+            if (mImageInformationList.size() == 0)
             {
                 return 1;
             } else
             {
-                return mImageUrlList.size();
+                return mImageInformationList.size();
             }
         } else
         {

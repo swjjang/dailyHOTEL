@@ -1,9 +1,11 @@
 package com.twoheart.dailyhotel.model;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class HotelDetail
 {
@@ -18,7 +20,7 @@ public class HotelDetail
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
     public String hotelBenefit;
     public String satisfaction;
-    private ArrayList<String> mImageUrlList;
+    private ArrayList<ImageInformation> mImageInformationList;
     private ArrayList<DetailInformation> mInformationList;
     private ArrayList<DetailInformation> mMoreInformationList;
     private ArrayList<SaleRoomInformation> mSaleRoomList;
@@ -47,14 +49,33 @@ public class HotelDetail
         }
 
         // Image Url
-        JSONArray imageJsonArray = jsonObject.getJSONArray("img_url");
-        int imageLength = imageJsonArray.length();
+        String imageUrl = jsonObject.getString("img_url");
+        JSONObject pahtUrlJSONObject = jsonObject.getJSONObject("img_path");
 
-        mImageUrlList = new ArrayList<String>(imageLength);
-
-        for (int i = 0; i < imageLength; i++)
+        Iterator<String> iterator = pahtUrlJSONObject.keys();
+        while (iterator.hasNext())
         {
-            mImageUrlList.add(imageJsonArray.getString(i));
+            String key = iterator.next();
+
+            try
+            {
+                JSONArray pathJSONArray = pahtUrlJSONObject.getJSONArray(key);
+
+                int length = pathJSONArray.length();
+                mImageInformationList = new ArrayList<ImageInformation>(pathJSONArray.length());
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
+
+                    String description = imageInformationJSONObject.getString("description");
+                    String imageFullUrl = imageUrl + key + imageInformationJSONObject.getString("name");
+                    mImageInformationList.add(new ImageInformation(imageFullUrl, description));
+                }
+                break;
+            } catch (JSONException e)
+            {
+            }
         }
 
         if (jsonObject.has("hotel_benefit") == true)
@@ -102,9 +123,9 @@ public class HotelDetail
         }
     }
 
-    public ArrayList<String> getImageUrlList()
+    public ArrayList<ImageInformation> getImageInformationList()
     {
-        return mImageUrlList;
+        return mImageInformationList;
     }
 
     public ArrayList<SaleRoomInformation> getSaleRoomList()

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
@@ -18,6 +19,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -38,11 +40,11 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         final int position;
 
         Bundle bundle = getIntent().getExtras();
-        ArrayList<String> arrayList = null;
+        ArrayList<ImageInformation> arrayList = null;
 
         if (bundle != null)
         {
-            arrayList = bundle.getStringArrayList(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
+            arrayList = bundle.getParcelableArrayList(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
             position = bundle.getInt(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION);
         } else
         {
@@ -69,9 +71,9 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         });
     }
 
-    private class ImageDetailListAdapter extends ArrayAdapter<String>
+    private class ImageDetailListAdapter extends ArrayAdapter<ImageInformation>
     {
-        public ImageDetailListAdapter(Context context, int resourceId, List<String> list)
+        public ImageDetailListAdapter(Context context, int resourceId, List<ImageInformation> list)
         {
             super(context, resourceId, list);
         }
@@ -81,7 +83,8 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         {
             View view;
 
-            final String url = getItem(position);
+            final String url = getItem(position).url;
+            String description = getItem(position).description;
 
             if (convertView == null)
             {
@@ -92,7 +95,17 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 view = convertView;
             }
 
+            TextView textView = (TextView) view.findViewById(R.id.descriptionTextView);
             final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+
+            if (Util.isTextEmpty(description) == false)
+            {
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(description);
+            } else
+            {
+                textView.setVisibility(View.INVISIBLE);
+            }
 
             imageView.setImageBitmap(null);
 

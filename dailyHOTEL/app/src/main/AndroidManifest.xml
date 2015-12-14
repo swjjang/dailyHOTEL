@@ -343,21 +343,6 @@
             android:name="io.fabric.ApiKey"
             android:value="bd223ac8e751f29e89aacd6487b47df88384f04e"/>
 
-        <receiver
-            android:name="io.branch.referral.InstallListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
-            </intent-filter>
-        </receiver>
-
-        <meta-data
-            android:name="io.branch.sdk.TestMode"
-            android:value="true"/>
-        <meta-data
-            android:name="io.branch.sdk.BranchKey"
-            android:value="key_live_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt"/>
-
         <meta-data
             android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
             android:value="GlideModule" />

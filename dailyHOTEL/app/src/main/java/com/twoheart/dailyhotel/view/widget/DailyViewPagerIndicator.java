@@ -1,105 +1,106 @@
 package com.twoheart.dailyhotel.view.widget;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.RelativeLayout;
 
-public class DailyViewPagerIndicator extends View
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
+
+public class DailyViewPagerIndicator extends RelativeLayout
 {
-    private static final int SELECTED_FACTOR = 2;
-    private static final int SPACING_FACTOR = 4;
+    private DailyTextView mDescriptionTextView;
+    private DailyTextView mPageTextView;
 
     private int mTotalCount;
-    private Paint mPaint;
     private int mPosition;
-    private float mRadius;
-    private ViewPager mViewPager;
 
     public DailyViewPagerIndicator(Context context)
     {
         super(context);
 
-        initLayout();
+        initLayout(context);
     }
 
     public DailyViewPagerIndicator(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
-        initLayout();
+        initLayout(context);
     }
 
     public DailyViewPagerIndicator(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
-        initLayout();
+        initLayout(context);
     }
 
     public DailyViewPagerIndicator(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
 
-        initLayout();
+        initLayout(context);
     }
 
-    private void initLayout()
+    private void initLayout(Context context)
     {
-        mRadius = 4f;
+        mDescriptionTextView = new DailyTextView(context);
+        mPageTextView = new DailyTextView(context);
 
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.WHITE);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
+        RelativeLayout.LayoutParams descLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        mDescriptionTextView.setTextColor(getResources().getColor(R.color.black));
+        mDescriptionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        mDescriptionTextView.setBackgroundResource(R.color.white_a70);
+        mDescriptionTextView.setPadding(Util.dpToPx(context, 5), Util.dpToPx(context, 2), Util.dpToPx(context, 5), Util.dpToPx(context, 2));
+
+        descLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        descLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+        mDescriptionTextView.setLayoutParams(descLayoutParams);
+        addView(mDescriptionTextView);
+
+        RelativeLayout.LayoutParams pageLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        mPageTextView.setTextColor(context.getResources().getColor(R.color.white_a80));
+        mPageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+
+        pageLayoutParams.rightMargin = Util.dpToPx(context, 10);
+        pageLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        pageLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+        mPageTextView.setLayoutParams(pageLayoutParams);
+        mPageTextView.setShadowLayer(1, 1, 1, context.getResources().getColor(R.color.black_a40));
+        addView(mPageTextView);
     }
 
-    @Override
-    protected void onDraw(Canvas canvas)
-    {
-        float x, y;
-
-        for (int i = 0; i < mTotalCount; i++)
-        {
-            x = (i * SELECTED_FACTOR * mRadius) + (i * (mRadius * SPACING_FACTOR)) + mRadius * SELECTED_FACTOR;
-            y = mRadius * SELECTED_FACTOR;
-
-            if (i == mPosition)
-            {
-                canvas.drawCircle(x, y, mRadius * SELECTED_FACTOR, mPaint);
-            } else
-            {
-                canvas.drawCircle(x, y, mRadius, mPaint);
-            }
-        }
-    }
-
-    public void setPosition(int position)
+    public void setImageInformation(String description, int position)
     {
         mPosition = position;
-        invalidate();
-        requestLayout();
+
+        if(Util.isTextEmpty(description) == false)
+        {
+            mDescriptionTextView.setVisibility(View.VISIBLE);
+            mDescriptionTextView.setText(description);
+        } else
+        {
+            mDescriptionTextView.setVisibility(View.INVISIBLE);
+        }
+
+        if(mTotalCount == 0)
+        {
+            mPageTextView.setVisibility(View.INVISIBLE);
+        } else
+        {
+            mPageTextView.setVisibility(View.VISIBLE);
+            mPageTextView.setText(String.format("%d/%d", mPosition + 1, mTotalCount));
+        }
     }
 
     public void setTotalCount(int count)
     {
         mTotalCount = count;
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-    {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        int measuredWidth = (int) (mRadius * SELECTED_FACTOR + (mRadius * (SELECTED_FACTOR + SPACING_FACTOR)) * (mTotalCount - 1));
-        measuredWidth += mRadius * SELECTED_FACTOR;
-
-        int measuredHeight = (int) (mRadius * SELECTED_FACTOR) * 2;
-
-        setMeasuredDimension(measuredWidth, measuredHeight);
     }
 }

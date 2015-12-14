@@ -1,9 +1,11 @@
 package com.twoheart.dailyhotel.model;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GourmetDetail extends PlaceDetail
 {
@@ -31,14 +33,33 @@ public class GourmetDetail extends PlaceDetail
         }
 
         // Image Url
-        JSONArray imageJsonArray = jsonObject.getJSONArray("img_url");
-        int imageLength = imageJsonArray.length();
+        String imageUrl = jsonObject.getString("img_url");
+        JSONObject pahtUrlJSONObject = jsonObject.getJSONObject("img_path");
 
-        mImageUrlList = new ArrayList<String>(imageLength);
-
-        for (int i = 0; i < imageLength; i++)
+        Iterator<String> iterator = pahtUrlJSONObject.keys();
+        while (iterator.hasNext())
         {
-            mImageUrlList.add(imageJsonArray.getString(i));
+            String key = iterator.next();
+
+            try
+            {
+                JSONArray pathJSONArray = pahtUrlJSONObject.getJSONArray(key);
+
+                int length = pathJSONArray.length();
+                mImageInformationList = new ArrayList<ImageInformation>(pathJSONArray.length());
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(0);
+
+                    String description = imageInformationJSONObject.getString("description");
+                    String imageFullUrl = imageUrl + key + imageInformationJSONObject.getString("name");
+                    mImageInformationList.add(new ImageInformation(imageFullUrl, description));
+                }
+                break;
+            } catch (JSONException e)
+            {
+            }
         }
 
         // Detail
