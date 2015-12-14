@@ -439,6 +439,7 @@ public class GourmetListFragment extends PlaceListFragment
                 releaseUiComponent();
             }
         });
+        dialog.setCanceledOnTouchOutside(true);
 
         try
         {

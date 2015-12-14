@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -25,6 +26,11 @@ public class LauncherActivity extends Activity
         {
             return;
         }
+
+        // Google Android first open conversion tracking snippet
+        // Add this code to the onCreate() method of your application activity
+        AdWordsConversionReporter.reportWithConversionId(getApplicationContext(),//
+            "972698918", "FtZiCNvClGIQpurozwM", "0.00", false);
 
         Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
 

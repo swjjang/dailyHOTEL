@@ -596,6 +596,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                 releaseUiComponent();
             }
         });
+        dialog.setCanceledOnTouchOutside(true);
 
         try
         {
