@@ -18,9 +18,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -81,7 +79,6 @@ import com.twoheart.dailyhotel.view.CloseOnBackPressed;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -200,12 +197,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         fragmentManager = getSupportFragmentManager();
         backButtonHandler = new CloseOnBackPressed(this);
-
-        // Facebook SDK를 관리하기 위한 패키지 Hash 값 표시
-        if (DEBUG)
-        {
-            printPackageHashKey();
-        }
     }
 
     @Override
@@ -591,26 +582,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     public void removeFragment(Fragment fragment)
     {
         fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
-    }
-
-    /**
-     * 페이스북 SDK를 사용하기 위해선 개발하는 컴퓨터의 해시키를 페이스북 개발 콘솔에 등록 할 필요가 있음. 이에따라서 현재 컴퓨터의
-     * 해시키를 출력해주어 등록을 돕게함.
-     */
-    public void printPackageHashKey()
-    {
-        try
-        {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures)
-            {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-            }
-        } catch (Exception e)
-        {
-            onError(e);
-        }
     }
 
     @Override

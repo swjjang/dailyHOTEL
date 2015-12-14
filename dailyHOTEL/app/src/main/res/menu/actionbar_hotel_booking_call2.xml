@@ -13,13 +13,13 @@
             <item
                 android:id="@+id/action_daily_call"
                 android:orderInCategory="101"
-                android:title="데일리호텔 고객센터 전화"
+                android:title="@string/label_daily_customer_service"
                 app:showAsAction="always"/>
 
             <item
                 android:id="@+id/action_kakaotalk"
                 android:orderInCategory="102"
-                android:title="데일리호텔 카톡 문의"
+                android:title="@string/label_daily_kakaotalk"
                 app:showAsAction="always"/>
         </menu>
     </item>

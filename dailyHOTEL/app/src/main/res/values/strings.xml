@@ -18,6 +18,16 @@
     <string name="label_paradise">PARADISE IS WHERE WE ARE</string>
     <string name="label_share">공유</string>
     <string name="label_question">문의</string>
+    <string name="label_sort">정렬</string>
+    <string name="label_daily_customer_service">데일리 고객센터 전화</string>
+    <string name="label_daily_kakaotalk">데일리 카톡 문의</string>
+    <string name="label_restaurant_direct_phone">레스토랑 직접 전화연결</string>
+    <string name="label_hotel_direct_phone">호텔 직접 전화연결</string>
+    <string name="label_sort_by">정렬 기준</string>
+    <string name="label_sort_by_distance">거리순</string>
+    <string name="label_sort_by_low_price">낮은 가격순</string>
+    <string name="label_sort_by_high_price">높은 가격순</string>
+    <string name="label_sort_by_area">지역별</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>

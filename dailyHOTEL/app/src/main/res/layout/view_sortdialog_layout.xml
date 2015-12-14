@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:text="@string/label_sort_by"
+        android:textColor="@color/dh_theme_color"
+        android:textSize="17dp"
+        android:textStyle="bold"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/satisfaction_box_default"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/sortByAreaView"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/label_sort_by_area"
+        android:textColor="@drawable/selector_sort_textcolor"
+        android:textSize="15dp"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/sortByDistanceView"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/label_sort_by_distance"
+        android:textColor="@drawable/selector_sort_textcolor"
+        android:textSize="15dp"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/sortByLowPriceView"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/label_sort_by_low_price"
+        android:textColor="@drawable/selector_sort_textcolor"
+        android:textSize="15dp"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/sortByHighPriceView"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/label_sort_by_high_price"
+        android:textColor="@drawable/selector_sort_textcolor"
+        android:textSize="15dp"/>
+
+</LinearLayout>

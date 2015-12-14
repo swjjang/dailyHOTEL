@@ -12,7 +12,7 @@ public class HotelClusterItem implements ClusterItem
     public HotelClusterItem(Hotel hotel)
     {
         mHotel = hotel;
-        mPosition = new LatLng(hotel.mLatitude, hotel.mLongitude);
+        mPosition = new LatLng(hotel.latitude, hotel.longitude);
     }
 
     @Override

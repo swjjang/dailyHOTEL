@@ -62,6 +62,8 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         public void toggleViewType();
 
+        public void showSortDialogView();
+
         public void onClickActionBarArea();
 
         public void setMapViewVisible(boolean isVisible);
@@ -226,6 +228,15 @@ public abstract class PlaceMainFragment extends BaseFragment
                     }
 
                     baseActivity.invalidateOptionsMenu();
+                }
+                return true;
+            }
+
+            case R.id.action_sort:
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.showSortDialogView();
                 }
                 return true;
             }

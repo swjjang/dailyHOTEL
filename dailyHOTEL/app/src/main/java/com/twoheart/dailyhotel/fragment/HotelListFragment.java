@@ -19,16 +19,24 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -44,8 +52,10 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
+import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
@@ -54,6 +64,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
@@ -83,11 +95,23 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     private int mDirection;
     private ActionbarViewHolder mActionbarViewHolder;
 
+    // Sort
+    protected SortType mSortType = SortType.DEFAULT;
+    private Location mMyLocation;
+
     private static class ActionbarViewHolder
     {
         public View mAnchorView;
         public View mActionbarLayout;
         public View mTabindicatorView;
+    }
+
+    public enum SortType
+    {
+        DEFAULT,
+        DISTANCE,
+        LOW_PRICE,
+        HIGH_PRICE;
     }
 
     @Override
@@ -216,6 +240,14 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         if (mHotelListMapFragment != null)
         {
             mHotelListMapFragment.onActivityResult(requestCode, resultCode, data);
+        } else
+        {
+            switch (requestCode)
+            {
+                case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+                    searchMyLocation();
+                    break;
+            }
         }
     }
 
@@ -260,6 +292,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     public void onPageUnSelected()
     {
         mDirection = MotionEvent.ACTION_CANCEL;
+
+        mSortType = SortType.DEFAULT;
     }
 
     public void onRefreshComplete()
@@ -468,13 +502,207 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         //		}
 
         // 호텔 리스트를 가져온다.
-        DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelJsonResponseListener, baseActivity);
+        DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);
     }
 
     public Province getProvince()
     {
         return mSelectedProvince;
     }
+
+    protected void showSortDialogView()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_sortdialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(baseActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        // 버튼
+        final TextView[] sortByView = new TextView[4];
+
+        sortByView[0] = (TextView) dialogView.findViewById(R.id.sortByAreaView);
+        sortByView[1] = (TextView) dialogView.findViewById(R.id.sortByDistanceView);
+        sortByView[2] = (TextView) dialogView.findViewById(R.id.sortByLowPriceView);
+        sortByView[3] = (TextView) dialogView.findViewById(R.id.sortByHighPriceView);
+
+        sortByView[0].setTag(SortType.DEFAULT);
+        sortByView[1].setTag(SortType.DISTANCE);
+        sortByView[2].setTag(SortType.LOW_PRICE);
+        sortByView[3].setTag(SortType.HIGH_PRICE);
+
+        View.OnClickListener onClickListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                for (TextView textView : sortByView)
+                {
+                    if (textView == v)
+                    {
+                        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+                    } else
+                    {
+                        textView.setTypeface(textView.getTypeface(), Typeface.NORMAL);
+                    }
+                }
+
+                mSortType = (SortType) v.getTag();
+
+                switch (mSortType)
+                {
+                    case DISTANCE:
+                        searchMyLocation();
+                        break;
+
+                    default:
+                        // 리스트를 요청한다
+                        refreshHotelList(mSelectedProvince, true);
+                        break;
+                }
+
+                dialog.cancel();
+            }
+        };
+
+        int ordinal = mSortType.ordinal();
+        sortByView[ordinal].setSelected(true);
+        sortByView[ordinal].setTypeface(sortByView[ordinal].getTypeface(), Typeface.BOLD);
+
+        for (TextView textView : sortByView)
+        {
+            textView.setOnClickListener(onClickListener);
+        }
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+
+        {
+            ExLog.d(e.toString());
+        }
+
+    }
+
+    public void setSortType(SortType sortType)
+    {
+        mSortType = sortType;
+    }
+
+    private void searchMyLocation()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUI();
+
+        LocationFactory.getInstance(baseActivity).startLocationMeasure(baseActivity, null, new LocationFactory.LocationListenerEx()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                if (Util.isOverAPI23() == true)
+                {
+                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                }
+
+                unLockUI();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+                unLockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                }, null, true);
+            }
+
+            @Override
+            public void onLocationChanged(Location location)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    unLockUI();
+                    return;
+                }
+
+                mMyLocation = location;
+
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                // 리스트를 요청한다
+                refreshHotelList(mSelectedProvince, true);
+            }
+        });
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ScrollListener
@@ -743,7 +971,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     /**
      * Hotel List Listener
      */
-    private DailyHotelJsonResponseListener mHotelJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         private ArrayList<HotelListViewItem> makeSectionHotelList(ArrayList<Hotel> hotelList)
         {
@@ -786,6 +1014,82 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     }
                 }
 
+                hotelListViewItemList.add(new HotelListViewItem(hotel));
+            }
+
+            return hotelListViewItemList;
+        }
+
+        private ArrayList<HotelListViewItem> makeSortHotelList(ArrayList<Hotel> hotelList, SortType type)
+        {
+            ArrayList<HotelListViewItem> hotelListViewItemList = new ArrayList<HotelListViewItem>();
+
+            if (hotelList == null || hotelList.size() == 0)
+            {
+                return hotelListViewItemList;
+            }
+
+            switch (type)
+            {
+                case DEFAULT:
+                    return makeSectionHotelList(hotelList);
+
+                case DISTANCE:
+                {
+                    // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                    Comparator<Hotel> comparator = new Comparator<Hotel>()
+                    {
+                        public int compare(Hotel hotel1, Hotel hotel2)
+                        {
+                            float[] results1 = new float[3];
+                            Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
+                            hotel1.distance = results1[0];
+
+                            float[] results2 = new float[3];
+                            Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
+                            hotel2.distance = results2[0];
+
+                            return Float.compare(results1[0], results2[0]);
+                        }
+                    };
+
+                    Collections.sort(hotelList, comparator);
+                    break;
+                }
+
+                case LOW_PRICE:
+                {
+                    // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                    Comparator<Hotel> comparator = new Comparator<Hotel>()
+                    {
+                        public int compare(Hotel hotel1, Hotel hotel2)
+                        {
+                            return hotel1.averageDiscount - hotel2.averageDiscount;
+                        }
+                    };
+
+                    Collections.sort(hotelList, comparator);
+                    break;
+                }
+
+                case HIGH_PRICE:
+                {
+                    // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                    Comparator<Hotel> comparator = new Comparator<Hotel>()
+                    {
+                        public int compare(Hotel hotel1, Hotel hotel2)
+                        {
+                            return hotel2.averageDiscount - hotel1.averageDiscount;
+                        }
+                    };
+
+                    Collections.sort(hotelList, comparator);
+                    break;
+                }
+            }
+
+            for (Hotel hotel : hotelList)
+            {
                 hotelListViewItemList.add(new HotelListViewItem(hotel));
             }
 
@@ -857,7 +1161,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     }
 
                     // section 및 HotelListViewItem 으로 바꾸어 주기.
-                    ArrayList<HotelListViewItem> hotelListViewItemList = makeSectionHotelList(hotelList);
+                    ArrayList<HotelListViewItem> hotelListViewItemList = makeSortHotelList(hotelList, mSortType);
 
                     if (mHotelListAdapter == null)
                     {
@@ -883,7 +1187,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     }
 
                     mHotelListAdapter.clear();
-                    mHotelListAdapter.addAll(hotelListViewItemList);
+                    mHotelListAdapter.addAll(hotelListViewItemList, mSortType);
                     mHotelListAdapter.notifyDataSetChanged();
 
                     if (mIsSelectionTop == true)
