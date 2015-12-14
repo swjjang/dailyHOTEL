@@ -360,6 +360,15 @@
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt"/>
+
+        <!-- Google adwords -->
+
+        <receiver android:name="com.google.ads.conversiontracking.InstallReceiver"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
