@@ -78,7 +78,7 @@ public class SelectAreaActivity extends BaseActivity
         mListView.setOnGroupClickListener(new OnGroupClickListener()
         {
             @Override
-            public boolean onGroupClick(ExpandableListView parent, final View v, final int groupPosition, long id)
+            public boolean onGroupClick(ExpandableListView parent, View v, final int groupPosition, long id)
             {
                 if (isLockUiComponent() == true || v.getTag() == null)
                 {
@@ -102,93 +102,114 @@ public class SelectAreaActivity extends BaseActivity
 
                 Integer tag = (Integer) mListView.getTag();
 
+                int previousGroupPosition = -1;
+
                 if (tag != null)
                 {
-                    int previousGroupPosition = tag.intValue();
+                    previousGroupPosition = tag.intValue();
+
                     AreaItem areaItem = mAdapter.getAreaItem(previousGroupPosition);
 
                     if (mListView.isGroupExpanded(previousGroupPosition))
                     {
-                        try
+                        if (previousGroupPosition == groupPosition)
                         {
                             mListView.collapseGroupWithAnimation(previousGroupPosition);
-                        } catch (Exception e)
+
+                            View preGroupView = getGroupView(previousGroupPosition);
+
+                            if (preGroupView == null)
+                            {
+                                areaItem.isExpandGroup = false;
+                            } else
+                            {
+                                mOnUserActionListener.onGroupCollapse(preGroupView, areaItem);
+                            }
+                        } else
                         {
                             mListView.collapseGroup(previousGroupPosition);
+                            areaItem.isExpandGroup = false;
                         }
-
-                        boolean noneView = false;
-
-                        int count = mListView.getChildCount();
-                        for (int i = 0; i < count; i++)
-                        {
-                            View childView = mListView.getChildAt(i);
-
-                            if (childView != null)
-                            {
-                                Integer childTag = (Integer) childView.getTag();
-
-                                if (childTag != null && childTag.intValue() == previousGroupPosition)
-                                {
-                                    noneView = true;
-                                    mOnUserActionListener.onGroupCollapse(childView, areaItem);
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (noneView == false)
-                        {
-                            areaItem.mIsExpandGroup = false;
-                        }
+                    } else
+                    {
+                        previousGroupPosition = -1;
                     }
                 }
 
-                if (mListView.isGroupExpanded(groupPosition))
+                if (previousGroupPosition == groupPosition)
                 {
-                    AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
-
-                    try
-                    {
-                        mListView.collapseGroupWithAnimation(groupPosition);
-                    } catch (Exception e)
-                    {
-                        mListView.collapseGroup(groupPosition);
-                    }
-
-                    mOnUserActionListener.onGroupCollapse(v, areaItem);
-                } else
-                {
-                    final AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
-
-                    try
-                    {
-                        mListView.expandGroupWithAnimation(groupPosition);
-                        mListView.setTag(groupPosition);
-                        mOnUserActionListener.onGroupExpand(v, areaItem);
-                    } catch (Exception e)
-                    {
-                        mListView.post(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                mListView.setSelection(groupPosition);
-
-                                try
-                                {
-                                    mListView.expandGroupWithAnimation(groupPosition);
-                                } catch (Exception e)
-                                {
-                                    mListView.expandGroup(groupPosition);
-                                }
-
-                                mListView.setTag(groupPosition);
-                                mOnUserActionListener.onGroupExpand(v, areaItem);
-                            }
-                        });
-                    }
+                    releaseUiComponent();
+                    return true;
                 }
+
+                postExpandGroupWithAnimation(groupPosition);
+
+//                mListView.postDelayed(new Runnable()
+//                {
+//                    @Override
+//                    public void run()
+//                    {
+//                        ExLog.d("groupPosition : " + groupPosition);
+//
+//                        if (mListView.isGroupExpanded(groupPosition))
+//                        {
+//                            AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
+//
+//                            mListView.collapseGroupWithAnimation(groupPosition);
+//
+//                            View groupView = getGroupView(groupPosition);
+//
+//                            if (groupView != null)
+//                            {
+//                                mOnUserActionListener.onGroupCollapse(groupView, areaItem);
+//                            }
+//                        } else
+//                        {
+//                            final AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
+//
+//                            try
+//                            {
+//                                mListView.expandGroupWithAnimation(groupPosition);
+//                                mListView.setTag(groupPosition);
+//
+//                                View groupView = getGroupView(groupPosition);
+//
+//                                if (groupView != null)
+//                                {
+//                                    mOnUserActionListener.onGroupExpand(groupView, areaItem);
+//                                }
+//                            } catch (Exception e)
+//                            {
+//                                mListView.setSelection(groupPosition);
+//                                mListView.postDelayed(new Runnable()
+//                                {
+//                                    @Override
+//                                    public void run()
+//                                    {
+//                                        try
+//                                        {
+//                                            mListView.expandGroupWithAnimation(groupPosition);
+//                                            mListView.setTag(groupPosition);
+//
+//                                            View groupView = getGroupView(groupPosition);
+//
+//                                            if (groupView != null)
+//                                            {
+//                                                mOnUserActionListener.onGroupExpand(groupView, areaItem);
+//                                            }
+//                                        } catch (Exception e)
+//                                        {
+//                                            mListView.expandGroup(groupPosition);
+//                                            mListView.setTag(groupPosition);
+//                                            areaItem.isExpandGroup = true;
+//                                            releaseUiComponent();
+//                                        }
+//                                    }
+//                                }, 100);
+//                            }
+//                        }
+//                    }
+//                }, 100);
 
                 return true;
             }
@@ -224,6 +245,77 @@ public class SelectAreaActivity extends BaseActivity
         });
     }
 
+    private View getGroupView(int groupPosition)
+    {
+        int count = mListView.getChildCount();
+        for (int i = 0; i < count; i++)
+        {
+            View childView = mListView.getChildAt(i);
+
+            if (childView != null)
+            {
+                Integer childTag = (Integer) childView.getTag();
+
+                if (childTag != null && childTag.intValue() == groupPosition)
+                {
+                    return childView;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private void expandGroupWidthAnimation(int groupPosition, AreaItem areaItem)
+    {
+        mListView.expandGroupWithAnimation(groupPosition);
+        mListView.setTag(groupPosition);
+
+        View groupView = getGroupView(groupPosition);
+
+        if (groupView != null)
+        {
+            mOnUserActionListener.onGroupExpand(groupView, areaItem);
+        }
+    }
+
+    private void postExpandGroupWithAnimation(final int groupPosition)
+    {
+        mListView.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (mListView.isGroupExpanded(groupPosition))
+                {
+                    AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
+
+                    mListView.collapseGroupWithAnimation(groupPosition);
+
+                    View groupView = getGroupView(groupPosition);
+
+                    if (groupView != null)
+                    {
+                        mOnUserActionListener.onGroupCollapse(groupView, areaItem);
+                    }
+                } else
+                {
+                    final AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
+
+                    try
+                    {
+                        expandGroupWidthAnimation(groupPosition, areaItem);
+                    } catch (Exception e)
+                    {
+                        mListView.setSelection(groupPosition);
+
+                        postExpandGroupWithAnimation(groupPosition);
+                    }
+                }
+            }
+        }, 100);
+    }
+
     private void selectedPreviousArea(Province province, ArrayList<AreaItem> arrayList)
     {
         if (province == null || arrayList == null)
@@ -248,7 +340,7 @@ public class SelectAreaActivity extends BaseActivity
                         mListView.setSelection(i);
                         mListView.setSelectedGroup(i);
 
-                        areaItem.mIsExpandGroup = false;
+                        areaItem.isExpandGroup = false;
                     } else
                     {
                         ArrayList<Area> areaList = areaItem.getAreaList();
@@ -264,7 +356,7 @@ public class SelectAreaActivity extends BaseActivity
                                 mListView.expandGroup(i);
                                 mListView.setTag(i);
 
-                                areaItem.mIsExpandGroup = true;
+                                areaItem.isExpandGroup = true;
                                 break;
                             }
                         }
@@ -288,14 +380,14 @@ public class SelectAreaActivity extends BaseActivity
                         mListView.setSelection(i);
                         mListView.setSelectedGroup(i);
 
-                        areaItem.mIsExpandGroup = false;
+                        areaItem.isExpandGroup = false;
                     } else
                     {
                         mListView.setSelection(i);
                         mListView.expandGroup(i);
                         mListView.setTag(i);
 
-                        areaItem.mIsExpandGroup = true;
+                        areaItem.isExpandGroup = true;
                     }
                     break;
                 }
@@ -327,7 +419,7 @@ public class SelectAreaActivity extends BaseActivity
             {
                 releaseUiComponent();
 
-                areaItem.mIsExpandGroup = true;
+                areaItem.isExpandGroup = true;
                 return;
             }
 
@@ -365,7 +457,7 @@ public class SelectAreaActivity extends BaseActivity
                             imageView.setAnimation(null);
                             imageView.setImageResource(R.drawable.ic_details_menu_on);
 
-                            areaItem.mIsExpandGroup = true;
+                            areaItem.isExpandGroup = true;
                         }
                     });
 
@@ -374,13 +466,13 @@ public class SelectAreaActivity extends BaseActivity
                 {
                     releaseUiComponent();
 
-                    areaItem.mIsExpandGroup = true;
+                    areaItem.isExpandGroup = true;
                 }
             } else
             {
                 releaseUiComponent();
 
-                areaItem.mIsExpandGroup = true;
+                areaItem.isExpandGroup = true;
             }
         }
 
@@ -391,7 +483,7 @@ public class SelectAreaActivity extends BaseActivity
             {
                 releaseUiComponent();
 
-                areaItem.mIsExpandGroup = false;
+                areaItem.isExpandGroup = false;
                 return;
             }
 
@@ -430,7 +522,7 @@ public class SelectAreaActivity extends BaseActivity
                             imageView.setAnimation(null);
                             imageView.setImageResource(R.drawable.ic_details_menu_off);
 
-                            areaItem.mIsExpandGroup = false;
+                            areaItem.isExpandGroup = false;
                         }
                     });
 
@@ -439,13 +531,13 @@ public class SelectAreaActivity extends BaseActivity
                 {
                     releaseUiComponent();
 
-                    areaItem.mIsExpandGroup = false;
+                    areaItem.isExpandGroup = false;
                 }
             } else
             {
                 releaseUiComponent();
 
-                areaItem.mIsExpandGroup = false;
+                areaItem.isExpandGroup = false;
             }
         }
     };
@@ -673,7 +765,7 @@ public class SelectAreaActivity extends BaseActivity
 
             if (hasChildren == true)
             {
-                if (getAreaItem(groupPosition).mIsExpandGroup == true)
+                if (getAreaItem(groupPosition).isExpandGroup == true)
                 {
                     imageView.setImageResource(R.drawable.ic_details_menu_on);
                 } else
