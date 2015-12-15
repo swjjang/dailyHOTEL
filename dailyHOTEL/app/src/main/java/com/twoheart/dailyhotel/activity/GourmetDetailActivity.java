@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.GourmetDetailLayout;
 import com.twoheart.dailyhotel.view.PlaceDetailLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -47,7 +48,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        KakaoLinkManager.newInstance(this).shareGourmet(placeDetail.name, placeDetail.index, //
+        String name = sharedPreference.getString(KEY_PREFERENCE_USER_NAME, null);
+
+        if (Util.isTextEmpty(name) == true)
+        {
+            name = getString(R.string.label_friend);
+        }
+
+        KakaoLinkManager.newInstance(this).shareGourmet(name, placeDetail.name, placeDetail.index, //
             imageUrl, //
             checkInSaleTime.getDailyTime(), //
             checkInSaleTime.getOffsetDailyDay());

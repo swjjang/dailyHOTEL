@@ -515,12 +515,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     {
         String id = mEmailEditText.getText().toString();
         String pwd = Crypto.encrypt(mPasswordEditText.getText().toString()).replace("\n", "");
+        String name = mNameEditText.getText().toString();
 
         SharedPreferences.Editor ed = sharedPreference.edit();
         ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
         ed.putString(KEY_PREFERENCE_USER_ID, id);
         ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
         ed.putString(KEY_PREFERENCE_USER_TYPE, "normal");
+        ed.putString(KEY_PREFERENCE_USER_NAME, name);
         ed.commit();
 
         setResult(RESULT_OK);

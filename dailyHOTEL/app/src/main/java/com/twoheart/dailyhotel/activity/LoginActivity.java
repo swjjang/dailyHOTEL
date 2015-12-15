@@ -812,9 +812,18 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 // GCM 등록을 위해 값이 필요한다.
                 userIndex = String.valueOf(response.getInt("idx"));
 
+                Editor editor = sharedPreference.edit();
+
+                String name = response.getString("name");
+
+                if(Util.isTextEmpty(name) == false)
+                {
+                    editor.putString(KEY_PREFERENCE_USER_NAME, name);
+                    editor.apply();
+                }
+
                 if (sharedPreference.getBoolean("Social Signup", false) == true)
                 {
-                    Editor editor = sharedPreference.edit();
                     editor.putBoolean("Social Signup", false);
                     editor.commit();
 
