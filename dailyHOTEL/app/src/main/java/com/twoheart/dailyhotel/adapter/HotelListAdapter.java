@@ -131,9 +131,14 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
             mHoteList = new ArrayList<HotelListViewItem>();
         }
 
-        mSortType = sortType;
+        setSortType(sortType);
 
         mHoteList.addAll(collection);
+    }
+
+    public void setSortType(HotelListFragment.SortType sortType)
+    {
+        mSortType = sortType;
     }
 
     public ArrayList<HotelListViewItem> getData()

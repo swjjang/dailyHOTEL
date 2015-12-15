@@ -34,9 +34,14 @@ public class GourmetListAdapter extends PlaceListAdapter
 
     public void addAll(Collection<? extends PlaceViewItem> collection, PlaceListFragment.SortType sortType)
     {
-        mSortType = sortType;
+        setSortType(sortType);
 
         addAll(collection);
+    }
+
+    public void setSortType(PlaceListFragment.SortType sortType)
+    {
+        mSortType = sortType;
     }
 
     @Override

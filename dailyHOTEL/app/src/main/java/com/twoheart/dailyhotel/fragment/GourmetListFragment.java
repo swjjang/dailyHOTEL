@@ -39,6 +39,7 @@ import com.twoheart.dailyhotel.adapter.GourmetListAdapter;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment.VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -393,32 +394,30 @@ public class GourmetListFragment extends PlaceListFragment
             @Override
             public void onClick(View v)
             {
-                for (TextView textView : sortByView)
+                if (dialog.isShowing() == false)
                 {
-                    if (textView == v)
-                    {
-                        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-                    } else
-                    {
-                        textView.setTypeface(textView.getTypeface(), Typeface.NORMAL);
-                    }
+                    return;
                 }
+
+                dialog.cancel();
 
                 mSortType = (SortType) v.getTag();
 
                 switch (mSortType)
                 {
+                    case DEFAULT:
+                        refreshList(getProvince(), true);
+                        break;
+
                     case DISTANCE:
                         searchMyLocation();
                         break;
 
-                    default:
-                        // 리스트를 요청한다
-                        refreshList(getProvince(), true);
+                    case LOW_PRICE:
+                    case HIGH_PRICE:
+                        requestSortHotelList(mSortType);
                         break;
                 }
-
-                dialog.cancel();
             }
         };
 
@@ -536,15 +535,108 @@ public class GourmetListFragment extends PlaceListFragment
                     return;
                 }
 
-                mSortType = SortType.DISTANCE;
                 mMyLocation = location;
 
                 LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
-                // 리스트를 요청한다
-                refreshList(getProvince(), true);
+                if (SortType.DISTANCE == mSortType)
+                {
+                    requestSortHotelList(mSortType);
+                }
             }
         });
+    }
+
+    private void requestSortHotelList(PlaceListFragment.SortType type)
+    {
+        if (SortType.DEFAULT == type)
+        {
+            ExLog.d("Not supported type");
+            return;
+        }
+
+        ArrayList<PlaceViewItem> arrayList = mGourmetListAdapter.getData();
+
+        int size = arrayList.size();
+
+        for (int i = size - 1; i >= 0; i--)
+        {
+            PlaceViewItem placeViewItem = arrayList.get(i);
+
+            if (placeViewItem.type == PlaceViewItem.TYPE_SECTION)
+            {
+                arrayList.remove(i);
+            }
+        }
+
+        switch (type)
+        {
+            case DISTANCE:
+            {
+                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
+                {
+                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
+                    {
+                        Place place1 = placeViewItem1.getPlace();
+                        Place place2 = placeViewItem2.getPlace();
+
+                        float[] results1 = new float[3];
+                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), place1.latitude, place1.longitude, results1);
+                        ((Gourmet) place1).distance = results1[0];
+
+                        float[] results2 = new float[3];
+                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), place2.latitude, place2.longitude, results2);
+                        ((Gourmet) place2).distance = results2[0];
+
+                        return Float.compare(results1[0], results2[0]);
+                    }
+                };
+
+                Collections.sort(arrayList, comparator);
+                break;
+            }
+
+            case LOW_PRICE:
+            {
+                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
+                {
+                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
+                    {
+                        Place place1 = placeViewItem1.getPlace();
+                        Place place2 = placeViewItem2.getPlace();
+
+                        return place1.discountPrice - place2.discountPrice;
+                    }
+                };
+
+                Collections.sort(arrayList, comparator);
+                break;
+            }
+
+            case HIGH_PRICE:
+            {
+                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
+                {
+                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
+                    {
+                        Place place1 = placeViewItem1.getPlace();
+                        Place place2 = placeViewItem2.getPlace();
+
+                        return place2.discountPrice - place1.discountPrice;
+                    }
+                };
+
+                Collections.sort(arrayList, comparator);
+                break;
+            }
+        }
+
+        mGourmetListAdapter.setSortType(mSortType);
+        mGourmetListAdapter.notifyDataSetChanged();
+        unLockUI();
     }
 
 

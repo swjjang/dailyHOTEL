@@ -550,32 +550,30 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             @Override
             public void onClick(View v)
             {
-                for (TextView textView : sortByView)
+                if (dialog.isShowing() == false)
                 {
-                    if (textView == v)
-                    {
-                        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-                    } else
-                    {
-                        textView.setTypeface(textView.getTypeface(), Typeface.NORMAL);
-                    }
+                    return;
                 }
+
+                dialog.cancel();
 
                 mSortType = (SortType) v.getTag();
 
                 switch (mSortType)
                 {
+                    case DEFAULT:
+                        refreshHotelList(mSelectedProvince, true);
+                        break;
+
                     case DISTANCE:
                         searchMyLocation();
                         break;
 
-                    default:
-                        // 리스트를 요청한다
-                        refreshHotelList(mSelectedProvince, true);
+                    case LOW_PRICE:
+                    case HIGH_PRICE:
+                        requestSortHotelList(mSortType);
                         break;
                 }
-
-                dialog.cancel();
             }
         };
 
@@ -698,10 +696,104 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
                 LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
-                // 리스트를 요청한다
-                refreshHotelList(mSelectedProvince, true);
+                if (SortType.DISTANCE == mSortType)
+                {
+                    requestSortHotelList(mSortType);
+                }
             }
         });
+    }
+
+    private void requestSortHotelList(SortType type)
+    {
+        if (SortType.DEFAULT == type)
+        {
+            ExLog.d("Not supported type");
+            return;
+        }
+
+        ArrayList<HotelListViewItem> arrayList = mHotelListAdapter.getData();
+
+        int size = arrayList.size();
+
+        for (int i = size - 1; i >= 0; i--)
+        {
+            HotelListViewItem hotelListViewItem = arrayList.get(i);
+
+            if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
+            {
+                arrayList.remove(i);
+            }
+        }
+
+        switch (type)
+        {
+            case DISTANCE:
+            {
+                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
+                {
+                    public int compare(HotelListViewItem hotelListViewItem1, HotelListViewItem hotelListViewItem2)
+                    {
+                        Hotel hotel1 = hotelListViewItem1.getItem();
+                        Hotel hotel2 = hotelListViewItem2.getItem();
+
+                        float[] results1 = new float[3];
+                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
+                        hotel1.distance = results1[0];
+
+                        float[] results2 = new float[3];
+                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
+                        hotel2.distance = results2[0];
+
+                        return Float.compare(results1[0], results2[0]);
+                    }
+                };
+
+                Collections.sort(arrayList, comparator);
+                break;
+            }
+
+            case LOW_PRICE:
+            {
+                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
+                {
+                    public int compare(HotelListViewItem hotelListViewItem1, HotelListViewItem hotelListViewItem2)
+                    {
+                        Hotel hotel1 = hotelListViewItem1.getItem();
+                        Hotel hotel2 = hotelListViewItem2.getItem();
+
+                        return hotel1.averageDiscount - hotel2.averageDiscount;
+                    }
+                };
+
+                Collections.sort(arrayList, comparator);
+                break;
+            }
+
+            case HIGH_PRICE:
+            {
+                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
+                {
+                    public int compare(HotelListViewItem hotelListViewItem1, HotelListViewItem hotelListViewItem2)
+                    {
+                        Hotel hotel1 = hotelListViewItem1.getItem();
+                        Hotel hotel2 = hotelListViewItem2.getItem();
+
+                        return hotel2.averageDiscount - hotel1.averageDiscount;
+                    }
+                };
+
+                Collections.sort(arrayList, comparator);
+                break;
+            }
+        }
+
+        mHotelListAdapter.setSortType(mSortType);
+        mHotelListAdapter.notifyDataSetChanged();
+        unLockUI();
     }
 
 
