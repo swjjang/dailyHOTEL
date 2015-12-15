@@ -1538,9 +1538,8 @@ public class HotelDetailLayout
             mHotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
             mHotelGradeTextView.setVisibility(View.VISIBLE);
 
-            Hotel.HotelGrade hotelGrade = Hotel.HotelGrade.valueOf(hotelDetail.grade);
-            mHotelGradeTextView.setText(hotelGrade.getName(mFragmentActivity));
-            mHotelGradeTextView.setBackgroundResource(hotelGrade.getColorResId());
+            mHotelGradeTextView.setText(hotelDetail.grade.getName(mFragmentActivity));
+            mHotelGradeTextView.setBackgroundResource(hotelDetail.grade.getColorResId());
 
             // 호텔명
             mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);

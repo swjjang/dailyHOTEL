@@ -11,7 +11,7 @@ public class HotelDetail
 {
     public int hotelIndex;
     public int nights;
-    public String grade;
+    public Hotel.HotelGrade grade;
     public String hotelName;
     public String address;
     public String addressNatural;
@@ -33,7 +33,14 @@ public class HotelDetail
 
     public void setData(JSONObject jsonObject) throws Exception
     {
-        grade = jsonObject.getString("grade");
+        try
+        {
+            grade = Hotel.HotelGrade.valueOf(jsonObject.getString("grade"));
+        } catch (Exception e)
+        {
+            grade = Hotel.HotelGrade.etc;
+        }
+
         hotelName = jsonObject.getString("hotel_name");
         address = jsonObject.getString("address");
         addressNatural = jsonObject.getString("address_natural");
