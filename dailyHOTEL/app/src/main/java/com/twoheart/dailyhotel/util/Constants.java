@@ -121,6 +121,7 @@ public interface Constants
     public static final String KEY_PREFERENCE_USER_ID = "USER_ID";
     public static final String KEY_PREFERENCE_USER_PWD = "USER_PWD";
     public static final String KEY_PREFERENCE_USER_TYPE = "USER_TYPE";
+    public static final String KEY_PREFERENCE_USER_NAME = "USER_NAME";
     public static final String KEY_PREFERENCE_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
     public static final String KEY_PREFERENCE_GCM_ID = "PUSH_ID";
     public static final String KEY_PREFERENCE_OVERSEAS_NAME = "OVERSEAS_NAME";

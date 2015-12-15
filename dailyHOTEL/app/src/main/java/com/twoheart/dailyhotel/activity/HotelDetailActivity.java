@@ -284,7 +284,14 @@ public class HotelDetailActivity extends BaseActivity
                     }
                 }
 
-                KakaoLinkManager.newInstance(this).shareHotel(mHotelDetail.hotelName, mHotelDetail.hotelIndex, //
+                String name = sharedPreference.getString(KEY_PREFERENCE_USER_NAME, null);
+
+                if (Util.isTextEmpty(name) == true)
+                {
+                    name = getString(R.string.label_friend);
+                }
+
+                KakaoLinkManager.newInstance(this).shareHotel(name, mHotelDetail.hotelName, mHotelDetail.hotelIndex, //
                     mDefaultImageUrl, //
                     mCheckInSaleTime.getDailyTime(), //
                     mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);

@@ -54,7 +54,7 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareHotel(String hotelName, int hotelIndex, String imageUrl, long dailyTime, int dailyDayOfDays, int nights)
+    public void shareHotel(String name, String hotelName, int hotelIndex, String imageUrl, long dailyTime, int dailyDayOfDays, int nights)
     {
         try
         {
@@ -62,13 +62,13 @@ public class KakaoLinkManager implements Constants
 
             kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd", Locale.KOREA);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
             Date checkInDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * dailyDayOfDays);
             Date chekcOutDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * (dailyDayOfDays + nights));
 
-            String text = mContext.getString(R.string.kakao_btn_share_hotel, hotelName, simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate), nights, nights + 1);
+            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName, simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate), nights, nights + 1);
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
@@ -84,7 +84,7 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareGourmet(String name, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
+    public void shareGourmet(String name, String planceName, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
     {
         try
         {
@@ -97,7 +97,7 @@ public class KakaoLinkManager implements Constants
 
             Date checkInDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * dailyDayOfDays);
 
-            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, simpleDateFormat.format(checkInDate));
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, planceName, simpleDateFormat.format(checkInDate));
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
