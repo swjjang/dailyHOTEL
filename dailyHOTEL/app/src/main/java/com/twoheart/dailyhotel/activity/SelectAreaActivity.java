@@ -199,9 +199,19 @@ public class SelectAreaActivity extends BaseActivity
         return null;
     }
 
-    private void expandGroupWidthAnimation(int groupPosition, AreaItem areaItem)
+    private void expandGroupWidthAnimation(int groupPosition, final AreaItem areaItem)
     {
-        mListView.expandGroupWithAnimation(groupPosition);
+        mListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+        {
+            @Override
+            public void onAnimationEnd()
+            {
+                releaseUiComponent();
+
+                areaItem.isExpandGroup = true;
+            }
+        });
+
         mListView.setTag(groupPosition);
 
         View groupView = getGroupView(groupPosition);
@@ -363,7 +373,7 @@ public class SelectAreaActivity extends BaseActivity
                 RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setFillBefore(true);
                 animation.setFillAfter(true);
-                animation.setDuration(350);
+                animation.setDuration(250);
 
                 if (imageView != null)
                 {
@@ -427,7 +437,7 @@ public class SelectAreaActivity extends BaseActivity
                 RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setFillBefore(true);
                 animation.setFillAfter(true);
-                animation.setDuration(350);
+                animation.setDuration(250);
 
                 if (imageView != null)
                 {

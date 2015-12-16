@@ -40,12 +40,18 @@ import java.util.List;
 
 public class DailyAnimatedExpandableListView extends ExpandableListView
 {
+    public interface OnAnimationListener
+    {
+        void onAnimationEnd();
+    }
+
     /**
      * The duration of the expand/collapse animations
      */
     private static final int ANIMATION_DURATION = 300;
 
     private AnimatedExpandableListAdapter adapter;
+    private static OnAnimationListener mOnAnimationListener;
 
     public DailyAnimatedExpandableListView(Context context)
     {
@@ -88,8 +94,10 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
      * already expanded.
      */
     @SuppressLint("NewApi")
-    public boolean expandGroupWithAnimation(int groupPos)
+    public boolean expandGroupWithAnimation(int groupPos, OnAnimationListener onAnimationListener)
     {
+        mOnAnimationListener = onAnimationListener;
+
         boolean lastGroup = groupPos == adapter.getGroupCount() - 1;
         if (lastGroup && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         {
@@ -427,6 +435,11 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
                             stopAnimation(groupPosition);
                             notifyDataSetChanged();
                             dummyView.setTag(STATE_IDLE);
+
+                            if(mOnAnimationListener != null)
+                            {
+                                mOnAnimationListener.onAnimationEnd();
+                            }
                         }
 
                         @Override

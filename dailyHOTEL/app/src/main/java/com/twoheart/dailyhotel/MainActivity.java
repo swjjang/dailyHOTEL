@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     {
         super.onCreate(savedInstanceState);
 
-        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         VolleyHttpClient.cookieManagerCreate();
 
