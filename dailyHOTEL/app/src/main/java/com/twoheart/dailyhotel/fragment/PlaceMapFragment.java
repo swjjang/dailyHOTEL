@@ -887,9 +887,9 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
     public interface OnUserActionListener
     {
-        public void onInfoWindowClickListener(Place selectedPlace);
+        void onInfoWindowClickListener(Place selectedPlace);
 
-        public void onCloseInfoWindowClickListener();
+        void onCloseInfoWindowClickListener();
     }
 
     private class MapWindowAdapter implements GoogleMap.InfoWindowAdapter

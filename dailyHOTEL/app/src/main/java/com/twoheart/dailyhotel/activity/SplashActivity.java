@@ -557,6 +557,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                     String companyItcRegNumber = companyJSONObject.getString("itcRegNumber");
                     String address1 = companyJSONObject.getString("address1");
                     String phoneNumber1 = companyJSONObject.getString("phoneNumber1");
+                    String fax = companyJSONObject.getString("fax1");
 
                     DailyPreference.getInstance(SplashActivity.this).setCompanyName(companyName);
                     DailyPreference.getInstance(SplashActivity.this).setCompanyCEO(companyCEO);
@@ -564,6 +565,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                     DailyPreference.getInstance(SplashActivity.this).setCompanyItcRegNumber(companyItcRegNumber);
                     DailyPreference.getInstance(SplashActivity.this).setCompanyAddress(address1);
                     DailyPreference.getInstance(SplashActivity.this).setCompanyPhoneNumber(phoneNumber1);
+                    DailyPreference.getInstance(SplashActivity.this).setCompanyFax(fax);
                 }
 
                 doFinish();

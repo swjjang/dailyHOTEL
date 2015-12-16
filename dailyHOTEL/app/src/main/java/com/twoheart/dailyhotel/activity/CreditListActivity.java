@@ -73,12 +73,6 @@ public class CreditListActivity extends BaseActivity
     }
 
     @Override
-    public void onResume()
-    {
-        super.onResume();
-    }
-
-    @Override
     public void finish()
     {
         super.finish();

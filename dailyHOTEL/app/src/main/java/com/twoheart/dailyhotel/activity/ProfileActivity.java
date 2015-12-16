@@ -46,7 +46,7 @@ import java.util.Map;
 
 public class ProfileActivity extends BaseActivity implements OnClickListener
 {
-    private static int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
+    private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
 
     private InputMethodManager mInputMethodManager;
     private String prevName;
@@ -361,11 +361,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 String userEmail = response.getString("email");
                 String userName = response.getString("name");
                 String userPhone = response.getString("phone");
@@ -432,11 +427,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 String result = response.getString("success");
                 String msg = null;
 

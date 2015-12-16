@@ -17,7 +17,6 @@ import java.util.ArrayList;
 public class CountryCodeListLayout implements OnItemClickListener
 {
     private Context mContext;
-    private View mRootView;
     private PinnedSectionListView mListView;
     private CountryCodeListAdapter mCountryCodeListAdapter;
     private CountryCodeListActivity.OnUserActionListener mOnUserActionListener;
@@ -30,14 +29,14 @@ public class CountryCodeListLayout implements OnItemClickListener
     public View createView()
     {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mRootView = inflater.inflate(R.layout.activity_countrycode_list, null, false);
+        View view = inflater.inflate(R.layout.activity_countrycode_list, null, false);
 
-        mListView = (PinnedSectionListView) mRootView.findViewById(R.id.listView);
+        mListView = (PinnedSectionListView) view.findViewById(R.id.listView);
         mListView.setOnItemClickListener(this);
         mListView.setFastScrollEnabled(true);
         mListView.setTag("CountryCodeListLayout");
 
-        return mRootView;
+        return view;
     }
 
     public void setData(ArrayList<String[]> list, String selectedCountryCode)

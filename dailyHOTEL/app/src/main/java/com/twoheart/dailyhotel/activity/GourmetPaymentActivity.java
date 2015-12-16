@@ -52,30 +52,30 @@ import java.util.TimeZone;
 @SuppressLint({"NewApi", "ResourceAsColor"})
 public class GourmetPaymentActivity extends TicketPaymentActivity
 {
-    private static int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
+    private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
 
     private GourmetBookingLayout mGourmetBookingLayout;
     private boolean mIsChangedTime;
 
     public interface OnUserActionListener
     {
-        public void selectTicketTime(String selectedTime);
+        void selectTicketTime(String selectedTime);
 
-        public void plusTicketCount();
+        void plusTicketCount();
 
-        public void minusTicketCount();
+        void minusTicketCount();
 
-        public void editUserInformation();
+        void editUserInformation();
 
-        public void showCreditCardManager();
+        void showCreditCardManager();
 
-        public void setPaymentType(TicketPayment.PaymentType type);
+        void setPaymentType(TicketPayment.PaymentType type);
 
-        public void pay();
+        void pay();
 
-        public void showCallDialog();
+        void showCallDialog();
 
-        public void showInputMobileNumberDialog(String mobileNumber);
+        void showInputMobileNumberDialog(String mobileNumber);
     }
 
     @Override

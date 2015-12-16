@@ -23,9 +23,6 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
     private Context mContext;
     private List<ImageInformation> mImageInformationList;
 
-    private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
-    private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
-
     public DetailImageViewPagerAdapter(Context context)
     {
         mContext = context;
@@ -116,15 +113,5 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
     public void destroyItem(ViewGroup container, int position, Object object)
     {
         container.removeView((View) object);
-    }
-
-    public void setOnAnimationListener(HotelDetailActivity.OnUserActionListener listener)
-    {
-        mOnUserActionListener = listener;
-    }
-
-    public void setOnImageActionListener(PlaceDetailActivity.OnImageActionListener listener)
-    {
-        mOnImageActionListener = listener;
     }
 }

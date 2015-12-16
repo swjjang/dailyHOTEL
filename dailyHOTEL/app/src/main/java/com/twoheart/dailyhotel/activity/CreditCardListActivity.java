@@ -50,11 +50,11 @@ public class CreditCardListActivity extends BaseActivity
 
     public interface OnUserActionListener
     {
-        public void addCreditCard();
+        void addCreditCard();
 
-        public void deleteCreditCard(CreditCard card);
+        void deleteCreditCard(CreditCard card);
 
-        public void onItemClick(CreditCard card);
+        void onItemClick(CreditCard card);
     }
 
     @Override
@@ -280,11 +280,6 @@ public class CreditCardListActivity extends BaseActivity
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 // 해당 화면은 메시지를 넣지 않는다.
                 msg_code = response.getInt("msg_code");
 
@@ -321,13 +316,10 @@ public class CreditCardListActivity extends BaseActivity
 
                         arrayList.add(creditCard);
 
-                        if (mIsPickMode == true)
+                        if (mIsPickMode == true && mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(creditCard.billingkey) == true)
                         {
-                            if (mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(creditCard.billingkey) == true)
-                            {
-                                hasCreditCard = true;
-                                mSelectedCreditCard = creditCard;
-                            }
+                            hasCreditCard = true;
+                            mSelectedCreditCard = creditCard;
                         }
                     }
 
@@ -361,11 +353,6 @@ public class CreditCardListActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -458,11 +445,6 @@ public class CreditCardListActivity extends BaseActivity
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 // 해당 화면은 메시지를 넣지 않는다.
                 msg_code = response.getInt("msg_code");
 

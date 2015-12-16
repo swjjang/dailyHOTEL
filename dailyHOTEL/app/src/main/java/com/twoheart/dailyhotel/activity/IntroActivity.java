@@ -23,8 +23,6 @@ import java.util.List;
 
 public class IntroActivity extends BaseActivity implements OnClickListener, OnPageChangeListener
 {
-
-    private FragmentPagerAdapter mAdapter;
     private ViewPager mPager;
     //	private CirclePageIndicator mIndicator;
     private LinearLayout llIntroStart;
@@ -62,7 +60,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 
         initializeGuideContents();
 
-        mAdapter = new FragmentPagerAdapter(getSupportFragmentManager())
+        FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager())
         {
 
             @Override
@@ -79,7 +77,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 
         };
 
-        mPager.setAdapter(mAdapter);
+        mPager.setAdapter(adapter);
         //		mIndicator.setViewPager(mPager);
         //		mIndicator.setSnap(true);
         //		mIndicator.setOnPageChangeListener(this);
@@ -189,13 +187,4 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
         super.finish();
         overridePendingTransition(R.anim.hold, R.anim.fade_out);
     }
-
-    @Override
-    protected void onResume()
-    {
-        //		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("landing", "/landing");
-
-        super.onResume();
-    }
-
 }

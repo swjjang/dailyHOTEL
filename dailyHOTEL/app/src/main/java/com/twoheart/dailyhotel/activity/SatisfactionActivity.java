@@ -611,11 +611,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 JSONObject jsonObject = response.getJSONObject("data");
 
                 boolean result = jsonObject.getBoolean("is_success");
@@ -680,11 +675,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msgCode = response.getInt("msg_code");
 
                 if (msgCode == 0)
@@ -735,11 +725,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msgCode = response.getInt("msg_code");
 
                 if (msgCode == 0)

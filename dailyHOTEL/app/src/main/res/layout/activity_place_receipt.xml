@@ -272,18 +272,19 @@
                     android:id="@+id/textView47"
                     android:layout_width="wrap_content"
                     android:layout_height="12dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@id/textView42"
+                    android:layout_alignParentRight="false"
+                    android:layout_below="@+id/textView46"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp"
+                    android:layout_alignParentLeft="true"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:id="@+id/textView48"
                     android:layout_width="wrap_content"
                     android:layout_height="12dp"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@id/textView47"
+                    android:layout_below="@+id/textView46"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp"/>

@@ -40,9 +40,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
     private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
-    private TextView tvCustomerName, tvCustomerPhone, tvBedtype, tvHotelName, tvAddress;
-    private TextView tvCheckIn, tvCheckOut;
-
     private Booking mBooking;
     private BookingHotelDetail mHotelDetail;
 
@@ -81,13 +78,13 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
         }
 
         View view = inflater.inflate(R.layout.fragment_booking_tab_booking, container, false);
-        tvCustomerName = (TextView) view.findViewById(R.id.tv_booking_tab_user_name);
-        tvCustomerPhone = (TextView) view.findViewById(R.id.tv_booking_tab_user_phone);
-        tvHotelName = (TextView) view.findViewById(R.id.tv_booking_tab_hotel_name);
-        tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
-        tvBedtype = (TextView) view.findViewById(R.id.tv_booking_tab_bedtype);
-        tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
-        tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
+        TextView tvCustomerName = (TextView) view.findViewById(R.id.tv_booking_tab_user_name);
+        TextView tvCustomerPhone = (TextView) view.findViewById(R.id.tv_booking_tab_user_phone);
+        TextView tvHotelName = (TextView) view.findViewById(R.id.tv_booking_tab_hotel_name);
+        TextView tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
+        TextView tvBedtype = (TextView) view.findViewById(R.id.tv_booking_tab_bedtype);
+        TextView tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
+        TextView tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
 
         tvHotelName.setText(mBooking.placeName);
         tvAddress.setText(mHotelDetail.getHotel().getAddress());
@@ -172,11 +169,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)

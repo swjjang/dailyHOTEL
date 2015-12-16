@@ -38,7 +38,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_MOBILE_NUMBER = "mobileNumber";
 
-    private static int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
+    private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
 
     private Dialog mMobileDialog;
     private String mCountryCode;

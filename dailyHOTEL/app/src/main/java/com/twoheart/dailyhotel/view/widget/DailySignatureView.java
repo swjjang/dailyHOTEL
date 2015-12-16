@@ -259,7 +259,7 @@ public class DailySignatureView extends View
 
     public interface OnUserActionListener
     {
-        public void onConfirmSignature();
+        void onConfirmSignature();
     }
 
     private static class Point

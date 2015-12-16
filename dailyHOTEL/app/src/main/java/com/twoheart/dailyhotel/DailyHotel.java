@@ -77,12 +77,6 @@ public class DailyHotel extends Application implements Constants
         VolleyHttpClient.init(this);
     }
 
-    @Override
-    public void onLowMemory()
-    {
-        super.onLowMemory();
-    }
-
     public static DailyHotel getGlobalApplicationContext()
     {
         return mInstance;

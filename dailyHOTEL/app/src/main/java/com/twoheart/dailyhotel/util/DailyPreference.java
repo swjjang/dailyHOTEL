@@ -20,6 +20,7 @@ public class DailyPreference
     private static final String KEY_COMPANY_ITCREGNUMBER = "103";
     private static final String KEY_COMPANY_ADDRESS = "104";
     private static final String KEY_COMPANY_PHONENUMBER = "105";
+    private static final String KEY_COMPANY_FAX = "106";
 
 
     private static DailyPreference mInstance;
@@ -214,6 +215,15 @@ public class DailyPreference
         }
     }
 
+    public void setCompanyFax(String text)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_COMPANY_FAX, text);
+            mEditor.apply();
+        }
+    }
+
     public String getCompanyName()
     {
         String result = null;
@@ -281,6 +291,18 @@ public class DailyPreference
         if (mPreferences != null)
         {
             result = mPreferences.getString(KEY_COMPANY_PHONENUMBER, null);
+        }
+
+        return result;
+    }
+
+    public String getCompanyFax()
+    {
+        String result = null;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getString(KEY_COMPANY_FAX, null);
         }
 
         return result;

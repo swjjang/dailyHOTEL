@@ -160,11 +160,6 @@ public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)

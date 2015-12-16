@@ -45,8 +45,6 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
      */
     private static final int ANIMATION_DURATION = 300;
 
-    private SelectAreaActivity.OnUserActionListener mOnUserActionListener;
-
     private AnimatedExpandableListAdapter adapter;
 
     public DailyAnimatedExpandableListView(Context context)
@@ -80,11 +78,6 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
         {
             throw new ClassCastException(adapter.toString() + " must implement AnimatedExpandableListAdapter");
         }
-    }
-
-    public void setOnUserActionListener(SelectAreaActivity.OnUserActionListener listener)
-    {
-        mOnUserActionListener = listener;
     }
 
     /**

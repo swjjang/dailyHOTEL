@@ -12,14 +12,11 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class MyLocationMarker
 {
-    private Context mContext;
     private Bitmap mBitmap;
 
     public MyLocationMarker(Context context)
     {
-        mContext = context;
-
-        mBitmap = Bitmap.createBitmap(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap(Util.dpToPx(context, 15), Util.dpToPx(context, 15), Bitmap.Config.ARGB_8888);
     }
 
     public BitmapDescriptor makeIcon()

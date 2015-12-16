@@ -97,7 +97,7 @@ import java.util.TimeZone;
 @SuppressLint({"NewApi", "ResourceAsColor"})
 public class BookingActivity extends BaseActivity implements OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener
 {
-    private static int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
+    private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
     private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
@@ -1571,7 +1571,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             strDate = dateFormat2.format(date);
 
-            AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, String.valueOf(saleRoomInformation.roomIndex), //
+            AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, Integer.toString(saleRoomInformation.roomIndex), //
                 saleRoomInformation.hotelName, Label.PAYMENT, pay.checkInTime, pay.checkOutTime, pay.getType().name(), strDate, price);
         } catch (Exception e)
         {
@@ -1771,11 +1771,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 // 해당 화면은 메시지를 넣지 않는다.
                 msg_code = response.getInt("msg_code");
 
@@ -1875,11 +1870,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 // 해당 화면은 메시지를 넣지 않는다.
                 msg_code = response.getInt("msg_code");
 
@@ -1929,11 +1919,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msgCode = response.getInt("msgCode");
 
                 // 0	성공
@@ -1945,12 +1930,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 {
                     case 6:
                     case 7:
-                        if (mWarningDialogMessage == null)
+                        if (mWarningDialogMessage == null && response.has("msg") == true)
                         {
-                            if (response.has("msg") == true)
-                            {
-                                mWarningDialogMessage = response.getString("msg");
-                            }
+                            mWarningDialogMessage = response.getString("msg");
                         }
                     case 0:
                     {
@@ -2076,11 +2058,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 // 해당 화면은 메시지를 넣지 않는다.
                 int msgCode = response.getInt("msgCode");
                 String message = response.getString("msg");
@@ -2113,11 +2090,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msgCode = response.getInt("msgCode");
 
                 switch (msgCode)
@@ -2231,11 +2203,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)
@@ -2425,11 +2392,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 SaleTime saleTime = new SaleTime();
 
                 saleTime.setCurrentTime(response.getLong("currentDateTime"));
@@ -2465,11 +2427,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)

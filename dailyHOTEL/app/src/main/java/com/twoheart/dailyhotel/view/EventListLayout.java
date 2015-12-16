@@ -23,7 +23,6 @@ import java.util.Collection;
 public class EventListLayout implements OnItemClickListener
 {
     private Context mContext;
-    private View mRootView;
     private View mEmptyView;
     private ListView mListView;
     private EventListAdapter mEventListAdapter;
@@ -36,15 +35,15 @@ public class EventListLayout implements OnItemClickListener
 
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        mRootView = inflater.inflate(R.layout.layout_eventlist, container, false);
-        mRootView.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
+        View view = inflater.inflate(R.layout.layout_eventlist, container, false);
+        view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
 
-        mEmptyView = mRootView.findViewById(R.id.emptyLayout);
+        mEmptyView = view.findViewById(R.id.emptyLayout);
 
-        mListView = (ListView) mRootView.findViewById(R.id.listView);
+        mListView = (ListView) view.findViewById(R.id.listView);
         mListView.setOnItemClickListener(this);
 
-        return mRootView;
+        return view;
     }
 
     public void setData(ArrayList<Event> list)

@@ -37,7 +37,6 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
     private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
     private BookingHotelDetail mHotelDetail;
-    private SupportMapFragment mMapFragment;
     private GoogleMap mGoogleMap;
     private View mPlaceholderMapView;
     private Marker mMarker;
@@ -108,13 +107,13 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
     {
         super.onActivityCreated(savedInstanceState);
 
-        mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frag_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frag_map);
 
         if (Util.isGooglePlayServicesAvailable(getActivity()) == true)
         {
             mPlaceholderMapView.setVisibility(View.GONE);
 
-            mMapFragment.getMapAsync(new OnMapReadyCallback()
+            mapFragment.getMapAsync(new OnMapReadyCallback()
             {
                 @Override
                 public void onMapReady(GoogleMap googleMap)
@@ -139,7 +138,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
                 }
             });
 
-            getChildFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
+            getChildFragmentManager().beginTransaction().remove(mapFragment).commitAllowingStateLoss();
         }
     }
 

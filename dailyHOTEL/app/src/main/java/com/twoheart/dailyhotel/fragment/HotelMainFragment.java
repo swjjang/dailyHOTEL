@@ -69,19 +69,19 @@ public class HotelMainFragment extends BaseFragment
 
     public interface OnUserActionListener
     {
-        public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime);
+        void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime);
 
-        public void selectHotel(int hotelIndex, long dailyTime, int dailyDayOfDays, int nights);
+        void selectHotel(int hotelIndex, long dailyTime, int dailyDayOfDays, int nights);
 
-        public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop);
+        void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop);
 
-        public void toggleViewType();
+        void toggleViewType();
 
-        public void onClickActionBarArea();
+        void onClickActionBarArea();
 
-        public void setMapViewVisible(boolean isVisible);
+        void setMapViewVisible(boolean isVisible);
 
-        public void refreshAll();
+        void refreshAll();
     }
 
     public interface UserAnalyticsActionListener
@@ -1121,11 +1121,6 @@ public class HotelMainFragment extends BaseFragment
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
                 mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
 

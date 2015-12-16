@@ -29,7 +29,6 @@ public class SaleTime implements Constants, Parcelable
 
     };
 
-    private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.KOREA);
     private Date mCurrentTime;
     private Date mDailyTime;
     private int mDayOfDays; // 데이즈 날짜. curentTime으로 부터 몇일.
@@ -37,8 +36,6 @@ public class SaleTime implements Constants, Parcelable
     public SaleTime()
     {
         super();
-
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     public SaleTime(Parcel in)
@@ -57,23 +54,6 @@ public class SaleTime implements Constants, Parcelable
         stringBuilder.append("\ndailyTime : " + sFormat.format(mDailyTime));
 
         return stringBuilder.toString();
-    }
-
-    public static String attachCurrentDate(String currentYear, String currentMonth, String currentDay, String time)
-    {
-
-        return new StringBuilder(currentYear).append("-").append(currentMonth).append("-").append(currentDay).append(" ").append(time).toString();
-
-    }
-
-    public static Date stringToDate(String string) throws ParseException
-    {
-        return format.parse(string);
-    }
-
-    public static String dateToString(Date date) throws ParseException
-    {
-        return format.format(date);
     }
 
     public String getDailyDayOftheWeek()

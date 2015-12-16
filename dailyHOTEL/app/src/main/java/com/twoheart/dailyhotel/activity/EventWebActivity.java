@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class EventWebActivity extends WebViewActivity implements Constants
 {
-    private String URL_WEBAPI_EVENT;
     private WebView mWebView;
 
     @JavascriptInterface
@@ -38,8 +37,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
             finish();
             return;
         }
-
-        URL_WEBAPI_EVENT = url;
 
         setContentView(R.layout.activity_event_web);
         setActionBar(R.string.actionbar_title_event_list_frag);
@@ -64,7 +61,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         mWebView.clearCache(true);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-        setWebView(URL_WEBAPI_EVENT);
+        setWebView(url);
     }
 
     @Override

@@ -105,8 +105,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
         }
 
-        mImageAdapter.setOnImageActionListener(mOnImageActionListener);
-
         mImageAdapter.setData(placeDetail.getImageInformationList());
         mViewPager.setAdapter(mImageAdapter);
         mDailyViewPagerIndicator.setTotalCount(placeDetail.getImageInformationList().size());

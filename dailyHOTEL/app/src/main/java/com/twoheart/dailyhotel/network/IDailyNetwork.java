@@ -18,7 +18,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener
 
 import java.util.Map;
 
-public interface IDailyNetwork
+interface IDailyNetwork
 {
     /**
      * http://status.dailyhotel.kr/status/health/check
@@ -28,7 +28,7 @@ public interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    public void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * common/ver_dual
@@ -36,7 +36,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/common/code/review
@@ -44,7 +44,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestCommonReview(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCommonReview(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/common/datetime
@@ -52,7 +52,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestCommonDatetime(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCommonDatetime(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -61,7 +61,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserLogout(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserLogout(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * user/session/myinfo
@@ -69,7 +69,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserInformation(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserInformation(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * user/session/bonus/all
@@ -77,7 +77,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserBonus(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserBonus(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * user/alive
@@ -85,7 +85,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserAlive(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserAlive(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * user/update
@@ -93,7 +93,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -102,7 +102,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserCheckEmail(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserCheckEmail(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -111,7 +111,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserChangePassword(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserChangePassword(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -120,7 +120,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserRegisterNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserRegisterNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -129,7 +129,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserInformationEx(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserInformationEx(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/user/signin
@@ -137,7 +137,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/user/signup
@@ -145,7 +145,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/user/information
@@ -153,7 +153,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserInformationForPayment(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserInformationForPayment(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -162,7 +162,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserUpdateInformationForSocial(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserUpdateInformationForSocial(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -171,7 +171,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserBillingCardList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserBillingCardList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -180,7 +180,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestUserDeleteBillingCard(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserDeleteBillingCard(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/sale/hotel_list
@@ -188,7 +188,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelList(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelList(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/sale/region/all
@@ -196,7 +196,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelRegionList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelRegionList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -205,7 +205,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelPaymentInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelPaymentInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/hotel/v1/sale/detail
@@ -213,7 +213,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/hotel/v1/payment/session/easy
@@ -221,7 +221,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelPayment(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelPayment(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/reservation/session/rating/msg/update
@@ -229,7 +229,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetDetailRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetDetailRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -238,7 +238,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestBookingList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestBookingList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/reservation/booking/detail
@@ -246,7 +246,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetBookingDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetBookingDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/reservation/booking/receipt
@@ -254,7 +254,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetReceipt(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetReceipt(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/reservation/session/rating/exist
@@ -262,7 +262,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetIsExistRating(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetIsExistRating(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/reservation/session/rating/update
@@ -270,7 +270,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/reservation/session/hidden
@@ -278,7 +278,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetHiddenBooking(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetHiddenBooking(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -287,7 +287,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetAccountInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetAccountInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -297,7 +297,7 @@ public interface IDailyNetwork
      * @return
      */
     //
-    public void requestGourmetRegionList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetRegionList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/sale/list
@@ -305,7 +305,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetList(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetList(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -314,7 +314,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/sale/ticket/payment/info
@@ -322,7 +322,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetPaymentInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetPaymentInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -331,7 +331,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetCheckTicket(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetCheckTicket(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/fnb/payment/session/easy
@@ -339,7 +339,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestGourmetPayment(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestGourmetPayment(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -348,7 +348,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestDepositWaitDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestDepositWaitDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -357,7 +357,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestBonus(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
+    void requestBonus(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/reserv/satisfaction_rating/update
@@ -365,7 +365,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/reserv/satisfaction_rating/exist
@@ -373,7 +373,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelIsExistRating(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelIsExistRating(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/reserv/detail
@@ -381,7 +381,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelBookingDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelBookingDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/reserv/mine/hidden
@@ -389,7 +389,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelHiddenBooking(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelHiddenBooking(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/reserv/receipt
@@ -397,7 +397,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelReceipt(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelReceipt(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -406,7 +406,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestHotelDetailRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelDetailRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/daily/event/list
@@ -414,7 +414,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestEventList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/daily/event/count
@@ -422,7 +422,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestEventNewCount(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventNewCount(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/daily/event/page
@@ -430,12 +430,12 @@ public interface IDailyNetwork
      *
      * @return
      */
-    public void requestEventPageUrl(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventPageUrl(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * 회사 정보 얻어오기
      *
      * @return
      */
-    public void requestCompanyInformation(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCompanyInformation(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 }

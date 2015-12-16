@@ -88,11 +88,6 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
             //적립금 내역리스트
             try
             {
-                if (null == response)
-                {
-                    throw new NullPointerException("response is null.");
-                }
-
                 if (null == mCreditList)
                 {
                     mCreditList = new ArrayList<Credit>();
@@ -138,11 +133,6 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
             try
             {
-                if (null == response)
-                {
-                    throw new NullPointerException("response is null.");
-                }
-
                 mRecommendCode = response.getString("rndnum");
                 tvRecommenderCode.setText(response.getString("rndnum"));
                 mUserName = response.getString("name");
@@ -218,11 +208,6 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)

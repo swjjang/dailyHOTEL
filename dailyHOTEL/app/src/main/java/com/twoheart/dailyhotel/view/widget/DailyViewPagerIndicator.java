@@ -15,7 +15,6 @@ public class DailyViewPagerIndicator extends RelativeLayout
     private DailyTextView mPageTextView;
 
     private int mTotalCount;
-    private int mPosition;
 
     public DailyViewPagerIndicator(Context context)
     {
@@ -78,8 +77,6 @@ public class DailyViewPagerIndicator extends RelativeLayout
 
     public void setImageInformation(String description, int position)
     {
-        mPosition = position;
-
         if (Util.isTextEmpty(description) == false)
         {
             mDescriptionTextView.setVisibility(View.VISIBLE);
@@ -95,7 +92,7 @@ public class DailyViewPagerIndicator extends RelativeLayout
         } else
         {
             mPageTextView.setVisibility(View.VISIBLE);
-            mPageTextView.setText(String.format("%d/%d", mPosition + 1, mTotalCount));
+            mPageTextView.setText(String.format("%d/%d", position + 1, mTotalCount));
         }
     }
 

@@ -28,7 +28,6 @@ import java.util.List;
 
 public class ImageDetailListActivity extends BaseActivity implements Constants
 {
-    private ImageDetailListAdapter mAdapter;
     private ListView mListView;
 
     @Override
@@ -59,8 +58,8 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
         mListView = (ListView) findViewById(R.id.listView);
 
-        mAdapter = new ImageDetailListAdapter(this, 0, arrayList);
-        mListView.setAdapter(mAdapter);
+        ImageDetailListAdapter adapter = new ImageDetailListAdapter(this, 0, arrayList);
+        mListView.setAdapter(adapter);
         mListView.post(new Runnable()
         {
             @Override
@@ -169,11 +168,10 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
 
             float scale = (float) Util.getLCDWidth(getContext()) / width;
+            int viewheight = (int) (scale * height);
 
             if (width >= height)
             {
-                int viewheight = (int) (scale * height);
-
                 if (layoutParms == null)
                 {
                     layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, viewheight);
@@ -185,8 +183,6 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 imageView.setLayoutParams(layoutParms);
             } else
             {
-                int viewheight = (int) (scale * height);
-
                 if (layoutParms == null)
                 {
                     layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, viewheight);
