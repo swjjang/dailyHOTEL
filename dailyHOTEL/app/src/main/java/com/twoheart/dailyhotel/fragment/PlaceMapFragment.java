@@ -799,6 +799,12 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
             }
 
             @Override
+            public void onFailed()
+            {
+
+            }
+
+            @Override
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
                 // TODO Auto-generated method stub

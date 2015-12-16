@@ -75,6 +75,7 @@ public class GourmetListFragment extends PlaceListFragment
     private GourmetListAdapter mGourmetListAdapter;
 
     // Sort
+    protected SortType mPrevSortType;
     protected SortType mSortType = SortType.DEFAULT;
     private Location mMyLocation;
 
@@ -401,6 +402,7 @@ public class GourmetListFragment extends PlaceListFragment
 
                 dialog.cancel();
 
+                mPrevSortType = mSortType;
                 mSortType = (SortType) v.getTag();
 
                 switch (mSortType)
@@ -481,6 +483,12 @@ public class GourmetListFragment extends PlaceListFragment
             }
 
             @Override
+            public void onFailed()
+            {
+                mSortType = mPrevSortType;
+            }
+
+            @Override
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
                 // TODO Auto-generated method stub
@@ -521,7 +529,14 @@ public class GourmetListFragment extends PlaceListFragment
                         Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                     }
-                }, null, true);
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mSortType = mPrevSortType;
+                    }
+                }, true);
             }
 
             @Override
@@ -781,11 +796,6 @@ public class GourmetListFragment extends PlaceListFragment
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)
