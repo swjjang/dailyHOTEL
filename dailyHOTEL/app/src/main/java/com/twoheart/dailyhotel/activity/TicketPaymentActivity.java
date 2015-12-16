@@ -783,7 +783,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             strDate = dateFormat2.format(date);
 
-            AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, String.valueOf(ticketInformation.index), //
+            AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, Integer.toString(ticketInformation.index), //
                 ticketInformation.placeName, Label.PAYMENT, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.paymentType.name(), strDate, price);
         } catch (Exception e)
         {

@@ -1048,7 +1048,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     protected void onDestroy()
     {
         // 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
-        DailyNetworkAPI.getInstance().requestUserLogout(mNetworkTag, null, null);
+//        DailyNetworkAPI.getInstance().requestUserLogout(mNetworkTag, null, null);
         VolleyHttpClient.destroyCookie();
 
         super.onDestroy();

@@ -1571,7 +1571,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             strDate = dateFormat2.format(date);
 
-            AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, String.valueOf(saleRoomInformation.roomIndex), //
+            AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, Integer.toString(saleRoomInformation.roomIndex), //
                 saleRoomInformation.hotelName, Label.PAYMENT, pay.checkInTime, pay.checkOutTime, pay.getType().name(), strDate, price);
         } catch (Exception e)
         {

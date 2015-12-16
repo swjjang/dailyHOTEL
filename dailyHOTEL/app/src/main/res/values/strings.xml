@@ -212,7 +212,7 @@
     <string name="dialog_msg_changed_time">방문 가능한 시간이 변경되었습니다. 확인 후 재선택 해주세요.</string>
     <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_issuing_account">가상계좌가 발급되었습니다.\n입금 대기 내역을 확인해주세요.</string>
-    <string name="dialog_message_cs_operating_time">데일리호텔 고객센터 운영시간은\n아침 %1$d시 ~ 익일 새벽 %2$d시입니다.</string>
+    <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n아침 %1$d시 ~ 익일 새벽 %2$d시입니다.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -455,7 +455,7 @@
     <string name="kakao_btn_go_hotel">추천 호텔 확인!</string>
     <string name="kakao_btn_go_fnb">추천 레스토랑 확인!</string>
     <string name="kakao_btn_share_hotel">%1$s 추천하는 근사한 호텔!\n\n%2$s\n체크인 : %3$s\n체크아웃 : %4$s (%5$d박 %6$d일)\n주소 : %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!</string>
-    <string name="kakao_btn_share_fnb">%1$s 추천하는 근사한 레스토랑\n\n장소 : %2$s\n날짜 : %3$s\n주소 : %4$s\n\n지금 데일리호텔에서 메뉴와\n이용시간을 확인할 수 있어요!</string>
+    <string name="kakao_btn_share_fnb">%1$s 추천하는 근사한 레스토랑\n\n%2$s\n날짜 : %3$s\n주소 : %4$s\n\n지금 데일리호텔에서 메뉴와\n이용시간을 확인할 수 있어요!</string>
 
     <!-- Base Activity -->
     <string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>
