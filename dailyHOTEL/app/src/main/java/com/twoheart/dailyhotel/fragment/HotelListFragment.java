@@ -96,6 +96,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     private ActionbarViewHolder mActionbarViewHolder;
 
     // Sort
+    protected SortType mPrevSortType;
     protected SortType mSortType = SortType.DEFAULT;
     private Location mMyLocation;
 
@@ -496,10 +497,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
         }
 
-        //		if (DEBUG == true)
-        //		{
-        //			baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-        //		}
+        if (DEBUG == true)
+        {
+            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
+        }
 
         // 호텔 리스트를 가져온다.
         DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);
@@ -557,6 +558,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
                 dialog.cancel();
 
+                mPrevSortType = mSortType;
                 mSortType = (SortType) v.getTag();
 
                 switch (mSortType)
@@ -638,6 +640,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             }
 
             @Override
+            public void onFailed()
+            {
+                mSortType = mPrevSortType;
+            }
+
+            @Override
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
                 // TODO Auto-generated method stub
@@ -678,7 +686,14 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                         Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                     }
-                }, null, true);
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mSortType = mPrevSortType;
+                    }
+                }, false);
             }
 
             @Override
@@ -1254,6 +1269,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     }
 
                     // section 및 HotelListViewItem 으로 바꾸어 주기.
+                    // 거리순인데 위치 정보가 없는 경우.
+                    if (mMyLocation == null && mSortType == SortType.DISTANCE)
+                    {
+                        mSortType = SortType.DEFAULT;
+                    }
+
                     ArrayList<HotelListViewItem> hotelListViewItemList = makeSortHotelList(hotelList, mSortType);
 
                     if (mHotelListAdapter == null)

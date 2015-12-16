@@ -53,7 +53,7 @@ public class DailyViewPagerIndicator extends RelativeLayout
         RelativeLayout.LayoutParams descLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         mDescriptionTextView.setTextColor(getResources().getColor(R.color.hoteldetail_image_tag_text));
         mDescriptionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-        mDescriptionTextView.setBackgroundResource(R.color.white_a55);
+        mDescriptionTextView.setBackgroundResource(R.color.white_a70);
         mDescriptionTextView.setPadding(Util.dpToPx(context, 5), Util.dpToPx(context, 2), Util.dpToPx(context, 5), Util.dpToPx(context, 2));
 
         descLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);

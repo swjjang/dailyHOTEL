@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.util.Util;
 
 public class GourmetTabMapFragment extends PlaceTabMapFragment implements OnMapClickListener
 {
@@ -58,10 +59,17 @@ public class GourmetTabMapFragment extends PlaceTabMapFragment implements OnMapC
         hotelAddressTextView.setSelected(true);
 
         TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
-        hotelGradeTextView.setVisibility(View.VISIBLE);
-        hotelGradeTextView.setText(gourmetBookingDetail.category);
-        hotelGradeTextView.setTextColor(getResources().getColor(R.color.black));
-        hotelGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
+
+        if (Util.isTextEmpty(gourmetBookingDetail.category) == true)
+        {
+            hotelGradeTextView.setVisibility(View.GONE);
+        } else
+        {
+            hotelGradeTextView.setVisibility(View.VISIBLE);
+            hotelGradeTextView.setText(gourmetBookingDetail.category);
+            hotelGradeTextView.setTextColor(getResources().getColor(R.color.black));
+            hotelGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
+        }
 
         return view;
     }

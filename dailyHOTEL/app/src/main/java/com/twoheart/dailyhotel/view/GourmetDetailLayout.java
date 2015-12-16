@@ -402,10 +402,17 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             // 등급
             mGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
-            mGradeTextView.setVisibility(View.VISIBLE);
-            mGradeTextView.setText(gourmetDetail.category);
-            mGradeTextView.setTextColor(mActivity.getResources().getColor(R.color.black));
-            mGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
+
+            if (Util.isTextEmpty(gourmetDetail.category) == true)
+            {
+                mGradeTextView.setVisibility(View.GONE);
+            } else
+            {
+                mGradeTextView.setVisibility(View.VISIBLE);
+                mGradeTextView.setText(gourmetDetail.category);
+                mGradeTextView.setTextColor(mActivity.getResources().getColor(R.color.black));
+                mGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
+            }
 
             // 호텔명
             mNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);

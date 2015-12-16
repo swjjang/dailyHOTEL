@@ -53,6 +53,11 @@ public class LocationFactory
                 case 0:
                     stopLocationMeasure();
 
+                    if (mLocationListener != null)
+                    {
+                        mLocationListener.onFailed();
+                    }
+
                     if (mBaseActivity != null)
                     {
                         DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
@@ -123,6 +128,8 @@ public class LocationFactory
     public interface LocationListenerEx extends LocationListener
     {
         void onRequirePermission();
+
+        void onFailed();
     }
 
     private LocationFactory()

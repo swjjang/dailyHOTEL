@@ -178,7 +178,14 @@ public class GourmetListAdapter extends PlaceListAdapter
                 }
 
                 // grade
-                viewHolder.hotelGradeView.setText(gourmet.category);
+                if (Util.isTextEmpty(gourmet.category) == true)
+                {
+                    viewHolder.hotelGradeView.setVisibility(View.GONE);
+                } else
+                {
+                    viewHolder.hotelGradeView.setVisibility(View.VISIBLE);
+                    viewHolder.hotelGradeView.setText(gourmet.category);
+                }
 
                 final ImageView placeImageView = viewHolder.hotelImageView;
 

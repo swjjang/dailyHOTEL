@@ -808,6 +808,12 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
             }
 
             @Override
+            public void onFailed()
+            {
+
+            }
+
+            @Override
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
                 // TODO Auto-generated method stub

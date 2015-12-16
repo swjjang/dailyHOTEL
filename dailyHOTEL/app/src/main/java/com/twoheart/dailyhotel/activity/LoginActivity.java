@@ -356,10 +356,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             }
 
             // 서버 포트 바꾸기
-            if (changeServerPort() == true)
-            {
-                return;
-            }
+            //            if (changeServerPort() == true)
+            //            {
+            //                return;
+            //            }
 
             lockUI();
 
@@ -389,35 +389,35 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     }
 
-    private boolean changeServerPort()
-    {
-        boolean isChanged = false;
-
-        // 서버 포트 바꾸기
-        if ("dh.8080".equalsIgnoreCase(mIdEditText.getText().toString().trim()) == true || "dh.8080".equalsIgnoreCase(mPasswordEditText.getText().toString().trim()) == true)
-        {
-            isChanged = true;
-            VolleyHttpClient.URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_8080;
-            VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_SERVER_8080;
-
-            DailyToast.showToast(this, "8080(으)로 변경되었습니다.", Toast.LENGTH_LONG);
-        } else if ("dh.8081".equalsIgnoreCase(mIdEditText.getText().toString().trim()) == true || "dh.8081".equalsIgnoreCase(mPasswordEditText.getText().toString().trim()) == true)
-        {
-            isChanged = true;
-            VolleyHttpClient.URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_8081;
-            VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_SERVER_8081;
-
-            DailyToast.showToast(this, "8081(으)로 변경되었습니다.", Toast.LENGTH_LONG);
-        }
-
-        if (isChanged == true)
-        {
-            mIdEditText.setText(null);
-            mPasswordEditText.setText(null);
-        }
-
-        return isChanged;
-    }
+    //    private boolean changeServerPort()
+    //    {
+    //        boolean isChanged = false;
+    //
+    //        // 서버 포트 바꾸기
+    //        if ("dh.8080".equalsIgnoreCase(mIdEditText.getText().toString().trim()) == true || "dh.8080".equalsIgnoreCase(mPasswordEditText.getText().toString().trim()) == true)
+    //        {
+    //            isChanged = true;
+    //            VolleyHttpClient.URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_8080;
+    //            VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_SERVER_8080;
+    //
+    //            DailyToast.showToast(this, "8080(으)로 변경되었습니다.", Toast.LENGTH_LONG);
+    //        } else if ("dh.8081".equalsIgnoreCase(mIdEditText.getText().toString().trim()) == true || "dh.8081".equalsIgnoreCase(mPasswordEditText.getText().toString().trim()) == true)
+    //        {
+    //            isChanged = true;
+    //            VolleyHttpClient.URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_8081;
+    //            VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_SERVER_8081;
+    //
+    //            DailyToast.showToast(this, "8081(으)로 변경되었습니다.", Toast.LENGTH_LONG);
+    //        }
+    //
+    //        if (isChanged == true)
+    //        {
+    //            mIdEditText.setText(null);
+    //            mPasswordEditText.setText(null);
+    //        }
+    //
+    //        return isChanged;
+    //    }
 
     public boolean isBlankFields()
     {
@@ -816,7 +816,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                 String name = response.getString("name");
 
-                if(Util.isTextEmpty(name) == false)
+                if (Util.isTextEmpty(name) == false)
                 {
                     editor.putString(KEY_PREFERENCE_USER_NAME, name);
                     editor.apply();
