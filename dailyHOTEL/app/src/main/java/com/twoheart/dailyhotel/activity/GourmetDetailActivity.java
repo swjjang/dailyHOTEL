@@ -52,13 +52,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (Util.isTextEmpty(name) == true)
         {
-            name = getString(R.string.label_friend);
+            name = getString(R.string.label_friend) + "가";
+        } else
+        {
+            name += "님이";
         }
 
-        KakaoLinkManager.newInstance(this).shareGourmet(name, placeDetail.name, placeDetail.index, //
-            imageUrl, //
-            checkInSaleTime.getDailyTime(), //
-            checkInSaleTime.getOffsetDailyDay());
+        KakaoLinkManager.newInstance(this).shareGourmet(name, placeDetail.name, placeDetail.address//
+            , placeDetail.index //
+            , imageUrl //
+            , checkInSaleTime.getDailyTime() //
+            , checkInSaleTime.getOffsetDailyDay());
     }
 
     @Override

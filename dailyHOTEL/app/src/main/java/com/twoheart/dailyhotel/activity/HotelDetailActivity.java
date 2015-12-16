@@ -288,13 +288,17 @@ public class HotelDetailActivity extends BaseActivity
 
                 if (Util.isTextEmpty(name) == true)
                 {
-                    name = getString(R.string.label_friend);
+                    name = getString(R.string.label_friend) + "가";
+                } else
+                {
+                    name += "님이";
                 }
 
-                KakaoLinkManager.newInstance(this).shareHotel(name, mHotelDetail.hotelName, mHotelDetail.hotelIndex, //
-                    mDefaultImageUrl, //
-                    mCheckInSaleTime.getDailyTime(), //
-                    mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
+                KakaoLinkManager.newInstance(this).shareHotel(name, mHotelDetail.hotelName, mHotelDetail.address//
+                    , mHotelDetail.hotelIndex//
+                    , mDefaultImageUrl//
+                    , mCheckInSaleTime.getDailyTime()//
+                    , mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
 
                 // 호텔 공유하기 로그 추가
                 SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);

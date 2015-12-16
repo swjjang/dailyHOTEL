@@ -50,7 +50,7 @@ public class GourmetDetail extends PlaceDetail
 
                 for (int i = 0; i < length; i++)
                 {
-                    JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(0);
+                    JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
 
                     String description = imageInformationJSONObject.getString("description");
                     String imageFullUrl = imageUrl + key + imageInformationJSONObject.getString("name");
