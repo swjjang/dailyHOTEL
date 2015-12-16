@@ -33,7 +33,7 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected boolean mMapEnabled;
 
     boolean mMenuEnabled;
-    private boolean mDontReloadAtOnResume;
+    boolean mDontReloadAtOnResume;
 
     public enum VIEW_TYPE
     {

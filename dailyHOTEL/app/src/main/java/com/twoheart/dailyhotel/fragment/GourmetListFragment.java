@@ -165,6 +165,23 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (mPlaceMapFragment != null)
+        {
+            mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
+        } else
+        {
+            switch (requestCode)
+            {
+                case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+                    searchMyLocation();
+                    break;
+            }
+        }
+    }
+
+    @Override
     protected PlaceViewItem getPlaceViewItem(int position)
     {
         if (mGourmetListAdapter == null)

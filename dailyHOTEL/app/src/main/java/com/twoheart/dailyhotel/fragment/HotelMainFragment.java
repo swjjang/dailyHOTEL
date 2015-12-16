@@ -350,6 +350,8 @@ public class HotelMainFragment extends BaseFragment
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             case CODE_REQUEST_ACTIVITY_CALENDAR:
             {
+                mDontReloadAtOnResume = true;
+
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
                 currentFragment.onActivityResult(requestCode, resultCode, data);
                 break;

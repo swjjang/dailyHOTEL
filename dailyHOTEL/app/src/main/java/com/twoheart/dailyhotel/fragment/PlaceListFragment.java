@@ -107,15 +107,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (mPlaceMapFragment != null)
-        {
-            mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
         if (mPlaceMapFragment != null)

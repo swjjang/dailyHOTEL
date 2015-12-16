@@ -318,6 +318,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             case CODE_REQUEST_ACTIVITY_CALENDAR:
             {
+                mDontReloadAtOnResume = true;
+
                 PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
                 currentFragment.onActivityResult(requestCode, resultCode, data);
                 break;
