@@ -357,7 +357,7 @@ public class GourmetListFragment extends PlaceListFragment
 
     protected void showSortDialogView()
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
 
         if (baseActivity == null || baseActivity.isFinishing() == true)
         {
@@ -409,6 +409,8 @@ public class GourmetListFragment extends PlaceListFragment
                 {
                     case DEFAULT:
                         refreshList(getProvince(), true);
+
+                        baseActivity.invalidateOptionsMenu();
                         break;
 
                     case DISTANCE:
@@ -418,6 +420,8 @@ public class GourmetListFragment extends PlaceListFragment
                     case LOW_PRICE:
                     case HIGH_PRICE:
                         requestSortHotelList(mSortType);
+
+                        baseActivity.invalidateOptionsMenu();
                         break;
                 }
             }
@@ -456,6 +460,11 @@ public class GourmetListFragment extends PlaceListFragment
     public void setSortType(SortType sortType)
     {
         mSortType = sortType;
+    }
+
+    public SortType getSortType()
+    {
+        return mSortType;
     }
 
     private void searchMyLocation()
@@ -557,6 +566,8 @@ public class GourmetListFragment extends PlaceListFragment
                 if (SortType.DISTANCE == mSortType)
                 {
                     requestSortHotelList(mSortType);
+
+                    baseActivity.invalidateOptionsMenu();
                 }
             }
         });

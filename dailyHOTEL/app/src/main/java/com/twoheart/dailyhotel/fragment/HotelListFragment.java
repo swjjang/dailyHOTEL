@@ -510,7 +510,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
     protected void showSortDialogView()
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
 
         if (baseActivity == null || baseActivity.isFinishing() == true)
         {
@@ -562,6 +562,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                 {
                     case DEFAULT:
                         refreshHotelList(mSelectedProvince, true);
+
+                        baseActivity.invalidateOptionsMenu();
                         break;
 
                     case DISTANCE:
@@ -571,6 +573,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     case LOW_PRICE:
                     case HIGH_PRICE:
                         requestSortHotelList(mSortType);
+
+                        baseActivity.invalidateOptionsMenu();
                         break;
                 }
             }
@@ -610,6 +614,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     public void setSortType(SortType sortType)
     {
         mSortType = sortType;
+    }
+
+    public SortType getSortType()
+    {
+        return mSortType;
     }
 
     private void searchMyLocation()
@@ -711,6 +720,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                 if (SortType.DISTANCE == mSortType)
                 {
                     requestSortHotelList(mSortType);
+
+                    baseActivity.invalidateOptionsMenu();
                 }
             }
         });
