@@ -166,7 +166,7 @@
     <string name="dialog_msg_gourmet_payment_message08">간편결제 시 일시불만 가능하므로 할부를 원하실 경우 일반결제를 선택해주세요.</string>
 
     <string name="dialog_btn_call">전화 연결</string>
-    <string name="dialog_msg_call">데일리호텔 고객센터로 전화 연결합니다.</string>
+    <string name="dialog_msg_call">데일리 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_title_payment_confirm">확인 사항</string>
     <string name="dialog_btn_payment_no_reserve">이벤트 호텔의 경우\n적립금 사용을 할 수 없습니다.</string>
@@ -269,9 +269,9 @@
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>
     <string name="frag_about_business_license01">(주)데일리</string>
-    <string name="frag_about_business_license02">대표 : 신인식 | 사업자등록번호 : 144-81-15781</string>
-    <string name="frag_about_business_license03">통신판매업 신고번호 : 제2014-경기성남-0215호</string>
-    <string name="frag_about_business_license04">대표연락처 : 1800-9120</string>
+    <string name="frag_about_business_license02">대표 : %1$s | 사업자등록번호 : %2$s</string>
+    <string name="frag_about_business_license03">통신판매업 신고번호 : %1$s</string>
+    <string name="frag_about_business_license04">대표연락처 : %1$s</string>
 
     <!-- Version Activity -->
     <string name="act_current_version">현재 버전: </string>
@@ -454,8 +454,8 @@
     <string name="kakao_btn_invited_friend">데일리호텔 다운받기</string>
     <string name="kakao_btn_go_hotel">추천 호텔 확인!</string>
     <string name="kakao_btn_go_fnb">추천 레스토랑 확인!</string>
-    <string name="kakao_btn_share_hotel">%1$s가 추천하는 근사한 호텔!\n\n%2$s\n체크인 %3$s\n체크아웃 %4$s (%5$d박 %6$d일)\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!</string>
-    <string name="kakao_btn_share_fnb">%1$s가 추천하는 근사한 레스토랑\n\n장소 : %2$s\n날짜 : %3$s\n\n지금 데일리호텔에서 메뉴와\n이용시간을 확인할 수 있어요!</string>
+    <string name="kakao_btn_share_hotel">%1$s 추천하는 근사한 호텔!\n\n%2$s\n체크인 : %3$s\n체크아웃 : %4$s (%5$d박 %6$d일)\n주소 : %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!</string>
+    <string name="kakao_btn_share_fnb">%1$s 추천하는 근사한 레스토랑\n\n장소 : %2$s\n날짜 : %3$s\n주소 : %4$s\n\n지금 데일리호텔에서 메뉴와\n이용시간을 확인할 수 있어요!</string>
 
     <!-- Base Activity -->
     <string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>

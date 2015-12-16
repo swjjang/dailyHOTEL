@@ -74,6 +74,7 @@
 # to avoid problem on Samsung 4.2.2 devices with appcompat v21
 # see https://code.google.com/p/android/issues/detail?id=78377
 -keep class !android.support.v7.internal.view.menu.**, android.support.v7.** { *; }
+-keep class !android.support.v7.view.menu.**, android.support.v7.** { *; }
 
 -keep class com.google.android.** { *; }
 -keep interface com.google.android.** { *; }

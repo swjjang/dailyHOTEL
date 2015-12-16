@@ -44,7 +44,19 @@ public class SaleTime implements Constants, Parcelable
     public SaleTime(Parcel in)
     {
         readFromParcel(in);
+    }
 
+    public String toString()
+    {
+        SimpleDateFormat sFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss", Locale.KOREA);
+        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("currentTime : " + sFormat.format(mCurrentTime));
+        stringBuilder.append("\ndailyTime : " + sFormat.format(mDailyTime));
+
+        return stringBuilder.toString();
     }
 
     public static String attachCurrentDate(String currentYear, String currentMonth, String currentDay, String time)

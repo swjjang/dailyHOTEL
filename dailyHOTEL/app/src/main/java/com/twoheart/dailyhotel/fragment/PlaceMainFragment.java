@@ -420,9 +420,9 @@ public abstract class PlaceMainFragment extends BaseFragment
                                 int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
                                 int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
 
-                                if (nights != 1 || dailyDayOfDays < 0)
+                                if (dailyDayOfDays < 0)
                                 {
-                                    throw new NullPointerException("nights != 1 || dailyDayOfDays < 0");
+                                    throw new NullPointerException("dailyDayOfDays < 0");
                                 }
 
                                 if (mOnUserActionListener != null)
@@ -444,9 +444,9 @@ public abstract class PlaceMainFragment extends BaseFragment
 
                                 int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
-                                if (nights != 1 || dailyDayOfDays < 0)
+                                if (dailyDayOfDays < 0)
                                 {
-                                    throw new NullPointerException("nights != 1 || dailyDayOfDays < 0");
+                                    throw new NullPointerException("dailyDayOfDays < 0");
                                 }
 
                                 if (mOnUserActionListener != null)

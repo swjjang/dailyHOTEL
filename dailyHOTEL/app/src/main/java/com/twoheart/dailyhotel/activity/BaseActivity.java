@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -289,6 +290,9 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             TextView textView = (TextView) view.findViewById(R.id.titleTextView);
             textView.setText(title);
             textView.setTextColor(getResources().getColor(R.color.black));
+            textView.setMaxLines(1);
+            textView.setSingleLine();
+            textView.setEllipsize(TextUtils.TruncateAt.END);
 
             view.setOnClickListener(new View.OnClickListener()
             {
@@ -326,6 +330,9 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             TextView textView = (TextView) view.findViewById(R.id.titleTextView);
             textView.setText(title);
             textView.setTextColor(getResources().getColor(R.color.black));
+            textView.setMaxLines(1);
+            textView.setSingleLine();
+            textView.setEllipsize(TextUtils.TruncateAt.END);
 
             view.setOnClickListener(new View.OnClickListener()
             {
@@ -776,7 +783,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
     public void showSimpleDialog(String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
     {
-        showSimpleDialog(title, msg, positive, negative, positiveListener, null, null, null, isCancelable);
+        showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
     }
 
     public void showSimpleDialog(String titleText, String msg, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
