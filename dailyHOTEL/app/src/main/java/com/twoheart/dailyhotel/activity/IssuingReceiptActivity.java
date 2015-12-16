@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -155,13 +156,13 @@ public class IssuingReceiptActivity extends BaseActivity
 
             JSONObject provider = jsonObject.getJSONObject("provider");
 
-            String phone = provider.getString("phone");
+            String phone = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyPhoneNumber();
             String fax = provider.getString("fax");
             String memo = provider.getString("memo");
-            String address = provider.getString("address");
-            String ceoName = provider.getString("ceoName");
-            String registrationNo = provider.getString("registrationNo");
-            String companyName = provider.getString("companyName");
+            String address = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyAddress();
+            String ceoName = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyCEO();
+            String registrationNo = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyBizRegNumber();
+            String companyName = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyName();
 
             View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 

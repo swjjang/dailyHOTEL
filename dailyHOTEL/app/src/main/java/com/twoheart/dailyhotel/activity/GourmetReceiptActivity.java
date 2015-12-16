@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -96,13 +97,13 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         JSONObject providerJSONObject = jsonObject.getJSONObject("provider");
 
-        String phone = providerJSONObject.getString("phone");
+        String phone = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyPhoneNumber();
         String fax = providerJSONObject.getString("fax");
         String memo = providerJSONObject.getString("memo");
-        String address = providerJSONObject.getString("address");
-        String ceoName = providerJSONObject.getString("ceoName");
-        String registrationNo = providerJSONObject.getString("registrationNo");
-        String companyName = providerJSONObject.getString("companyName");
+        String address = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyAddress();
+        String ceoName = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyCEO();
+        String registrationNo = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyBizRegNumber();
+        String companyName = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyName();
 
         View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 
@@ -222,5 +223,4 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             }
         }
     };
-
 }

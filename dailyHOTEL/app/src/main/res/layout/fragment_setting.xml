@@ -58,14 +58,15 @@
             android:orientation="horizontal">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/companyTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/frag_about_business_license01"
                 android:textColor="@color/setting_business_license"
                 android:textSize="10dp"
                 android:textStyle="bold"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/ceoTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -75,6 +76,7 @@
         </LinearLayout>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/itcRegTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -83,6 +85,7 @@
             android:textSize="10dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/companyPhoneTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"

@@ -185,6 +185,23 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             }
         });
 
+        TextView companyTextView = (TextView) view.findViewById(R.id.companyTextView);
+        TextView ceoTextView = (TextView) view.findViewById(R.id.ceoTextView);
+        TextView itcRegTextView = (TextView) view.findViewById(R.id.itcRegTextView);
+        TextView companyPhoneTextView = (TextView) view.findViewById(R.id.companyPhoneTextView);
+
+        companyTextView.setText(DailyPreference.getInstance(mHostActivity).getCompanyName());
+
+        ceoTextView.setText(getString(R.string.frag_about_business_license02//
+            , DailyPreference.getInstance(mHostActivity).getCompanyCEO()//
+            , DailyPreference.getInstance(mHostActivity).getCompanyBizRegNumber()));
+
+        itcRegTextView.setText(getString(R.string.frag_about_business_license03//
+            , DailyPreference.getInstance(mHostActivity).getCompanyItcRegNumber()));
+
+        companyPhoneTextView.setText(getString(R.string.frag_about_business_license04//
+            , DailyPreference.getInstance(mHostActivity).getCompanyPhoneNumber()));
+
         //
         //        viewFacebook.setOnClickListener(new OnClickListener()
         //        {
