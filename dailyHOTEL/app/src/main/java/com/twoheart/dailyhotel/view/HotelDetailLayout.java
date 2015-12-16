@@ -225,8 +225,6 @@ public class HotelDetailLayout
             mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
         }
 
-        mImageAdapter.setOnAnimationListener(mOnUserActionListener);
-
         mImageAdapter.setData(hotelDetail.getImageInformationList());
         mViewPager.setAdapter(mImageAdapter);
         mDailyViewPagerIndicator.setTotalCount(hotelDetail.getImageInformationList().size());

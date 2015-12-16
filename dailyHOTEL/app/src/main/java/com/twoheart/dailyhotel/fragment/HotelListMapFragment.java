@@ -893,9 +893,9 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
 
     public interface OnUserActionListener
     {
-        public void onInfoWindowClickListener(Hotel hotel);
+        void onInfoWindowClickListener(Hotel hotel);
 
-        public void onCloseInfoWindowClickListener();
+        void onCloseInfoWindowClickListener();
     }
 
     private class MapWindowAdapter implements GoogleMap.InfoWindowAdapter

@@ -338,9 +338,9 @@ public class SelectAreaActivity extends BaseActivity
 
     public interface OnUserActionListener
     {
-        public void onGroupExpand(View view, AreaItem areaItem);
+        void onGroupExpand(View view, AreaItem areaItem);
 
-        public void onGroupCollapse(View view, AreaItem areaItem);
+        void onGroupCollapse(View view, AreaItem areaItem);
     }
 
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()

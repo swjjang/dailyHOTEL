@@ -457,7 +457,7 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 
     public interface OnTabSelectedListener
     {
-        public void onTabSelected(int position);
+        void onTabSelected(int position);
     }
 
     private class TabIndicatorItem extends RelativeLayout

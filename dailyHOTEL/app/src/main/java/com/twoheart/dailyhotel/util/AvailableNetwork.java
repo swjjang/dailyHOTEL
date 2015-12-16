@@ -45,13 +45,11 @@ public class AvailableNetwork
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if (ni != null)
+        if (ni != null && ni.isConnected())
         {
-            if (ni.isConnected())
-            {
-                return true;
-            }
+            return true;
         }
+
         return false;
     }
 

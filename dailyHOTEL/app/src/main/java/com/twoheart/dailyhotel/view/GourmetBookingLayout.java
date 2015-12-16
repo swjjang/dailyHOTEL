@@ -50,7 +50,6 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
     private BaseActivity mActivity;
 
     private ViewGroup mViewGroupRoot;
-    private View mPaymentInformation;
     private View mUserInformation;
     private View mTicketInformation;
     private TextView mTicketCountTextView, mTicketTimeTextView;
@@ -84,10 +83,10 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         ViewGroup bookingLayout = (ViewGroup) mViewGroupRoot.findViewById(R.id.bookingLayout);
 
         // 결제 정보 넣기
-        mPaymentInformation = inflater.inflate(R.layout.layout_booking_gourmet_payment_information, null, false);
-        bookingLayout.addView(mPaymentInformation, 0);
+        View paymentInformation = inflater.inflate(R.layout.layout_booking_gourmet_payment_information, null, false);
+        bookingLayout.addView(paymentInformation, 0);
 
-        initPaymentInformationLayout(activity, mPaymentInformation);
+        initPaymentInformationLayout(activity, paymentInformation);
 
         // 예약자 정보 넣기
         mUserInformation = inflater.inflate(R.layout.layout_booking_gourmet_user_information, null, false);

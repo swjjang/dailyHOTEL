@@ -23,14 +23,10 @@ public class CountryCodeListActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_COUNTRY_CODE = "countryCode";
 
-    private CountryCodeListLayout mCountryCodeListLayout;
-
     public interface OnUserActionListener
     {
-        public void selectCountry(String[] country);
+        void selectCountry(String[] country);
     }
-
-    ;
 
     public static Intent newInstance(Context context, String selectedCountryCode)
     {
@@ -61,26 +57,14 @@ public class CountryCodeListActivity extends BaseActivity
 
     private void initLayout(String countryCode)
     {
-        mCountryCodeListLayout = new CountryCodeListLayout(this);
-        setContentView(mCountryCodeListLayout.createView());
+        CountryCodeListLayout countryCodeListLayout = new CountryCodeListLayout(this);
+        setContentView(countryCodeListLayout.createView());
         setActionBar(R.string.label_select_country);
 
-        mCountryCodeListLayout.setOnUserActionListener(mOnUserActionListener);
+        countryCodeListLayout.setOnUserActionListener(mOnUserActionListener);
 
         CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
-        mCountryCodeListLayout.setData(countryCodeNumber.getCountryValue(), countryCode);
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
+        countryCodeListLayout.setData(countryCodeNumber.getCountryValue(), countryCode);
     }
 
     @Override

@@ -186,13 +186,10 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
                 mMapLayout.setVisibility(View.VISIBLE);
 
                 // 맵과 리스트에서 당일상품 탭 안보이도록 수정
-                if (isCurrentPage == true)
+                if (isCurrentPage == true && mPlaceMapFragment == null)
                 {
-                    if (mPlaceMapFragment == null)
-                    {
-                        mPlaceMapFragment = createPlaceMapFragment();
-                        getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mPlaceMapFragment).commitAllowingStateLoss();
-                    }
+                    mPlaceMapFragment = createPlaceMapFragment();
+                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mPlaceMapFragment).commitAllowingStateLoss();
                 }
 
                 mPullToRefreshLayout.setVisibility(View.INVISIBLE);

@@ -355,12 +355,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 return;
             }
 
-            // 서버 포트 바꾸기
-            //            if (changeServerPort() == true)
-            //            {
-            //                return;
-            //            }
-
             lockUI();
 
             String md5 = Crypto.encrypt(mPasswordEditText.getText().toString().trim()).replace("\n", "");
@@ -388,36 +382,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN, 0L);
         }
     }
-
-    //    private boolean changeServerPort()
-    //    {
-    //        boolean isChanged = false;
-    //
-    //        // 서버 포트 바꾸기
-    //        if ("dh.8080".equalsIgnoreCase(mIdEditText.getText().toString().trim()) == true || "dh.8080".equalsIgnoreCase(mPasswordEditText.getText().toString().trim()) == true)
-    //        {
-    //            isChanged = true;
-    //            VolleyHttpClient.URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_8080;
-    //            VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_SERVER_8080;
-    //
-    //            DailyToast.showToast(this, "8080(으)로 변경되었습니다.", Toast.LENGTH_LONG);
-    //        } else if ("dh.8081".equalsIgnoreCase(mIdEditText.getText().toString().trim()) == true || "dh.8081".equalsIgnoreCase(mPasswordEditText.getText().toString().trim()) == true)
-    //        {
-    //            isChanged = true;
-    //            VolleyHttpClient.URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_8081;
-    //            VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_SERVER_8081;
-    //
-    //            DailyToast.showToast(this, "8081(으)로 변경되었습니다.", Toast.LENGTH_LONG);
-    //        }
-    //
-    //        if (isChanged == true)
-    //        {
-    //            mIdEditText.setText(null);
-    //            mPasswordEditText.setText(null);
-    //        }
-    //
-    //        return isChanged;
-    //    }
 
     public boolean isBlankFields()
     {
@@ -510,11 +474,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         super.finish();
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-    }
-
-    private String getGcmId()
-    {
-        return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
     }
 
     private void regGcmId(final String userIndex)
@@ -686,11 +645,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -768,11 +722,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             // 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 ExLog.e("MSG : " + response.toString());
 
                 if (response.getString("result").equals("true") == true)
@@ -804,11 +753,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 // GCM 등록을 위해 값이 필요한다.
                 userIndex = String.valueOf(response.getInt("idx"));
 
@@ -854,11 +798,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -907,11 +846,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
                 JSONObject jsonObject = response.getJSONObject("data");
                 boolean isSignin = jsonObject.getBoolean("is_signin");

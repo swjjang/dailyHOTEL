@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
 
 public class SignupActivity extends BaseActivity implements OnClickListener
 {
-    private static int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
+    private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
 
     private static final int MAX_OF_RECOMMENDER = 45;
 
@@ -302,12 +302,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     {
         AnalyticsManager.getInstance(SignupActivity.this).recordScreen(Screen.SIGNUP);
         super.onStart();
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
     }
 
     @Override
@@ -647,11 +641,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             {
                 unLockUI();
 
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 JSONObject jsonObject = response.getJSONObject("data");
 
                 boolean result = jsonObject.getBoolean("is_success");
@@ -763,11 +752,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 String result = response.getString("success");
                 String msg = null;
 
@@ -861,11 +845,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -912,11 +891,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)

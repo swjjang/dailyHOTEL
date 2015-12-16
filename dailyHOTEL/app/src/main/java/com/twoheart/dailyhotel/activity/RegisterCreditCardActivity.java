@@ -28,6 +28,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
@@ -84,16 +85,9 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
             }
         }); // 롱클릭 에러 방지.
 
-        String url = DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SERVER) + DailyHotelRequest.getUrlDecoderEx(Constants.URL_REGISTER_CREDIT_CARD);
+        String url = DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER) + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_REGISTER_CREDIT_CARD);
 
         webView.postUrl(url, null);
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
     }
 
     @Override

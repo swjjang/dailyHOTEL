@@ -90,11 +90,6 @@ public class NoticeActivity extends BaseActivity
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 JSONArray json = response.getJSONArray("articles");
 
                 int length = json.length();

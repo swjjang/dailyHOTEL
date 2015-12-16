@@ -57,32 +57,32 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     public interface OnUserActionListener
     {
-        public void showActionBar();
+        void showActionBar();
 
-        public void hideActionBar();
+        void hideActionBar();
 
-        public void onClickImage(PlaceDetail placeDetail);
+        void onClickImage(PlaceDetail placeDetail);
 
-        public void onSelectedImagePosition(int position);
+        void onSelectedImagePosition(int position);
 
-        public void doBooking(TicketInformation ticketInformation);
+        void doBooking(TicketInformation ticketInformation);
 
-        public void doKakaotalkConsult();
+        void doKakaotalkConsult();
 
-        public void showTicketInformationLayout();
+        void showTicketInformationLayout();
 
-        public void hideTicketInformationLayout();
+        void hideTicketInformationLayout();
 
-        public void showMap();
+        void showMap();
 
-        public void finish();
+        void finish();
     }
 
     public interface OnImageActionListener
     {
-        public void nextSlide();
+        void nextSlide();
 
-        public void prevSlide();
+        void prevSlide();
     }
 
     private Handler mImageHandler = new Handler()

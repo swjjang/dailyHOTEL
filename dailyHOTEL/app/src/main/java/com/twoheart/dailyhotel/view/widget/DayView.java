@@ -9,7 +9,6 @@ import android.widget.TextView;
 public class DayView extends LinearLayout
 {
     private TextView mDayTextView;
-    private TextView mWeekTextView;
 
     public DayView(Context context)
     {
@@ -45,10 +44,10 @@ public class DayView extends LinearLayout
         setGravity(Gravity.CENTER_HORIZONTAL);
 
         mDayTextView = new DailyTextView(getContext());
-        mWeekTextView = new DailyTextView(getContext());
+        DailyTextView weekTextView = new DailyTextView(getContext());
 
         addView(mDayTextView);
-        addView(mWeekTextView);
+        addView(weekTextView);
     }
 
     public void setSelected(boolean selected)

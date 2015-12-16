@@ -157,7 +157,7 @@ public class IssuingReceiptActivity extends BaseActivity
             JSONObject provider = jsonObject.getJSONObject("provider");
 
             String phone = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyPhoneNumber();
-            String fax = provider.getString("fax");
+            String fax = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyFax();
             String memo = provider.getString("memo");
             String address = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyAddress();
             String ceoName = DailyPreference.getInstance(IssuingReceiptActivity.this).getCompanyCEO();
@@ -269,11 +269,6 @@ public class IssuingReceiptActivity extends BaseActivity
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)

@@ -65,12 +65,6 @@ public class GcmIntentService extends IntentService implements Constants
     }
 
     @Override
-    public void onCreate()
-    {
-        super.onCreate();
-    }
-
-    @Override
     protected void onHandleIntent(Intent intent)
     {
         if (intent == null)

@@ -98,7 +98,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         JSONObject providerJSONObject = jsonObject.getJSONObject("provider");
 
         String phone = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyPhoneNumber();
-        String fax = providerJSONObject.getString("fax");
+        String fax = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyFax();
         String memo = providerJSONObject.getString("memo");
         String address = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyAddress();
         String ceoName = DailyPreference.getInstance(GourmetReceiptActivity.this).getCompanyCEO();
@@ -184,11 +184,6 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)

@@ -904,11 +904,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -946,11 +941,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 // 해당 화면은 메시지를 넣지 않는다.
                 msg_code = response.getInt("msg_code");
 

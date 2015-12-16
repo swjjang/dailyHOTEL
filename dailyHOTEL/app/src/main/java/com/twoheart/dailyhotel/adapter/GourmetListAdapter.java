@@ -59,7 +59,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                 {
                     Object tag = convertView.getTag();
 
-                    if (tag != null && tag instanceof HeaderListViewHolder)
+                    if (tag instanceof HeaderListViewHolder)
                     {
                         headerViewHolder = (HeaderListViewHolder) convertView.getTag();
                     }
@@ -87,7 +87,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                 {
                     Object tag = convertView.getTag();
 
-                    if (tag != null && tag instanceof PlaceViewHolder)
+                    if (tag instanceof PlaceViewHolder)
                     {
                         viewHolder = (PlaceViewHolder) convertView.getTag();
                     }

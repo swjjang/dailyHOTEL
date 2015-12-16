@@ -164,7 +164,7 @@ public class EventListFragment extends BaseFragment implements Constants
 
     public interface OnUserActionListener
     {
-        public void onEventClick(Event event);
+        void onEventClick(Event event);
     }
 
     private boolean isEmptyTextField(String... fieldText)
@@ -246,11 +246,6 @@ public class EventListFragment extends BaseFragment implements Constants
 
             try
             {
-                if (null == response)
-                {
-                    throw new NullPointerException("response is null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)
@@ -311,11 +306,6 @@ public class EventListFragment extends BaseFragment implements Constants
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -418,11 +408,6 @@ public class EventListFragment extends BaseFragment implements Constants
 
             try
             {
-                if (null == response)
-                {
-                    throw new NullPointerException("response is null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)
@@ -462,11 +447,6 @@ public class EventListFragment extends BaseFragment implements Constants
 
             try
             {
-                if (null == response)
-                {
-                    throw new NullPointerException("response is null.");
-                }
-
                 JSONObject jsonObject = response.getJSONObject("data");
 
                 Customer user = new Customer();

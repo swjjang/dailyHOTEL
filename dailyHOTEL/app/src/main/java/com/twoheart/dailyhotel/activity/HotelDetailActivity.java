@@ -61,27 +61,27 @@ public class HotelDetailActivity extends BaseActivity
 
     public interface OnUserActionListener
     {
-        public void showActionBar();
+        void showActionBar();
 
-        public void hideActionBar();
+        void hideActionBar();
 
-        public void onClickImage(HotelDetail hotelDetail);
+        void onClickImage(HotelDetail hotelDetail);
 
-        public void nextSlide();
+        void nextSlide();
 
-        public void prevSlide();
+        void prevSlide();
 
-        public void onSelectedImagePosition(int position);
+        void onSelectedImagePosition(int position);
 
-        public void doBooking(SaleRoomInformation saleRoomInformation);
+        void doBooking(SaleRoomInformation saleRoomInformation);
 
-        public void doKakaotalkConsult();
+        void doKakaotalkConsult();
 
-        public void showRoomType();
+        void showRoomType();
 
-        public void hideRoomType();
+        void hideRoomType();
 
-        public void showMap();
+        void showMap();
     }
 
     private Handler mImageHandler = new Handler()
@@ -276,12 +276,9 @@ public class HotelDetailActivity extends BaseActivity
         switch (item.getItemId())
         {
             case R.id.action_share:
-                if (mDefaultImageUrl == null)
+                if (mDefaultImageUrl == null && mHotelDetail.getImageInformationList() != null && mHotelDetail.getImageInformationList().size() > 0)
                 {
-                    if (mHotelDetail.getImageInformationList() != null && mHotelDetail.getImageInformationList().size() > 0)
-                    {
-                        mDefaultImageUrl = mHotelDetail.getImageInformationList().get(0).url;
-                    }
+                    mDefaultImageUrl = mHotelDetail.getImageInformationList().get(0).url;
                 }
 
                 String name = sharedPreference.getString(KEY_PREFERENCE_USER_NAME, null);
@@ -546,11 +543,6 @@ public class HotelDetailActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msgCode = response.getInt("msgCode");
 
                 // 0	성공
@@ -632,11 +624,6 @@ public class HotelDetailActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -724,11 +711,6 @@ public class HotelDetailActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -778,11 +760,6 @@ public class HotelDetailActivity extends BaseActivity
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 if (mIsStartByShare == true)
                 {
                     mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));

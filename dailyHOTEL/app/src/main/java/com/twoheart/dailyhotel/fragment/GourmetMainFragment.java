@@ -55,9 +55,9 @@ public class GourmetMainFragment extends PlaceMainFragment
 
     private interface OnUserAnalyticsActionListener
     {
-        public void selectPlace(String name, long index, String checkInTime);
+        void selectPlace(String name, long index, String checkInTime);
 
-        public void selectRegion(Province province);
+        void selectRegion(Province province);
     }
 
     @Override

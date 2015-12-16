@@ -38,9 +38,6 @@ import java.util.TimeZone;
 
 public class PaymentWaitActivity extends BaseActivity
 {
-    private Booking booking;
-
-    private TextView tvHotelName;
     private TextView tvAccount;
     private TextView tvName;
     private TextView tvPrice;
@@ -54,7 +51,7 @@ public class PaymentWaitActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
 
-        booking = new Booking();
+        Booking booking = new Booking();
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null)
@@ -65,7 +62,7 @@ public class PaymentWaitActivity extends BaseActivity
         setContentView(R.layout.activity_payment_wait);
         setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
 
-        tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
+        TextView tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
         tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
         tvName = (TextView) findViewById(R.id.tv_payment_wait_name);
         tvPrice = (TextView) findViewById(R.id.tv_payment_wait_price);
@@ -173,11 +170,6 @@ public class PaymentWaitActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 if (response.getBoolean("result") == false)
                 {
                     unLockUI();
@@ -220,11 +212,6 @@ public class PaymentWaitActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)
@@ -276,11 +263,6 @@ public class PaymentWaitActivity extends BaseActivity
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 

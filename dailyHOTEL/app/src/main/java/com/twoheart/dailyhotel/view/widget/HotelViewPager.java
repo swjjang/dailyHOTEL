@@ -24,20 +24,14 @@ public class HotelViewPager extends LoopViewPager
     @Override
     protected boolean canScroll(View v, boolean checkV, int dx, int x, int y)
     {
-        if (v != null)
+        if (v != null && v.getClass() != null && v.getClass().getPackage() != null)
         {
-            if (v.getClass() != null)
+            if (v.getClass().getPackage().getName().startsWith("maps."))
             {
-                if (v.getClass().getPackage() != null)
-                {
-                    if (v.getClass().getPackage().getName().startsWith("maps."))
-                    {
-                        return true;
-                    } else if (v != this && v instanceof ViewPager)
-                    {
-                        return true;
-                    }
-                }
+                return true;
+            } else if (v != this && v instanceof ViewPager)
+            {
+                return true;
             }
         }
 

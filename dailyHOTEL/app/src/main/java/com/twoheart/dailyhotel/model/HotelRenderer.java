@@ -13,23 +13,20 @@ import java.text.DecimalFormat;
 
 public class HotelRenderer
 {
-    private Context mContext;
     private String mPrice;
     private int mMarkerResId;
     private HotelIconGenerator mIconGenerator;
 
     public HotelRenderer(Context context, Hotel hotel)
     {
-        mContext = context;
-
         DecimalFormat comma = new DecimalFormat("###,##0");
 
         mPrice = "₩" + comma.format(hotel.averageDiscount);
 
         mMarkerResId = hotel.getCategory().getMarkerResId();
 
-        mIconGenerator = new HotelIconGenerator(mContext);
-        mIconGenerator.setTextColor(mContext.getResources().getColor(R.color.white));
+        mIconGenerator = new HotelIconGenerator(context);
+        mIconGenerator.setTextColor(context.getResources().getColor(R.color.white));
     }
 
     public BitmapDescriptor getBitmap(boolean isSelected)

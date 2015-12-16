@@ -50,12 +50,9 @@ public interface Constants
     // 웹서버 호스트
     //"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
     public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://lb2.dailyhotel.kr/goodnight/" : "MTE2JDEzJDEwMiQ1OCQxMTEk$MDQzNkMwNTRCOBDgzNjM1MTM4NDY1M0VFMkIwRkM3QzMzQUE0NzU4OEI1MFEEzN0IwNkE3NUExRkM2QjNDNUFBNUE1MzI2RDNDQThGNJEFFQkJFGNzk4QTc0FRkFDMDgzOEQw$";
-    public static final String URL_DAILYHOTEL_SERVER_8080 = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr:8080/goodnight/" : "MjEkNzYkMTI5JDk1JDUzJA==$QTY2MTMyRUQ5RURFRkZBQHzU1RUIwNkI0Qjk5MTVFMTk5MEFDQkNFLMzQwQzQzNTNDQzJGMDk0N0EJwRjIwRUYzMEJEM0U5NNzFDNUE4NTMzREMzM0ZCQzc4M0VCQjMyMTQQ1$";
-    public static final String URL_DAILYHOTEL_SERVER_8081 = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr:8081/goodnight/" : "MjgkMTA1JDEyMSQ4MiQxMjIk$NTU0NTQwMTExRDVDNUVFMzJEMTc3BNTA3QTQ0QTVDMDM1OTNBNEFGRjlDRTZEQTU0NzUyMTNFRTY1NjIxNTjZFQjM2RDVDNjAxRjI4NzJBNMTdFMTk1RUJFQzAQNwNDdFQTg4$";
-    //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
-
-    public static final String URL_DAILYHOTEL_LB_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://lb2.dailyhotel.kr/goodnight/" : "MTE2JDEzJDEwMiQ1OCQxMTEk$MDQzNkMwNTRCOBDgzNjM1MTM4NDY1M0VFMkIwRkM3QzMzQUE0NzU4OEI1MFEEzN0IwNkE3NUExRkM2QjNDNUFBNUE1MzI2RDNDQThGNJEFFQkJFGNzk4QTc0FRkFDMDgzOEQw$";
-    //    public static final String URL_DAILYHOTEL_LB_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
+    public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://api.dailyhotel.kr/goodnight/" : "MCQ4MyQxMjckMzYkMTck$CQTgwMkY4MTZFRTM2BODI4NDAyRDY1NDAzQjMBzMTg4REQ4RjUyNTJBQzNGMkI1RDk1QUE1OTU4N0RCOTREMEGQ0MjJGREQwNzYwNUI4QTM5NTcxNzk4NDJGQTFGNEQxMOEU4$";
+//    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
+//    public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
 
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -68,21 +65,6 @@ public interface Constants
 
     // Volley의 최대 retry 횟수,  여기서 0은 리퀘스트를 리트라이 하지 않음을 말함.
     public static final int REQUEST_MAX_RETRY = 0;
-
-    // DailyHOTEL Reservation Controller WebAPI URL
-    // api/hotel/v1/payment/session/common
-    public static final String URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/hotel/v1/payment/session/common" : "MjAkNiQ0NiQ0NSQ0MyQ=$RTQ2MEIMxRTFGRjUyMUIxXMzVDRERBQzBBOThFNkE5NYUJWBINzJCRjMxMTM2MUYwNEEzMkU0OURBNzVBRTg4NDU0NkYzRkI2REJFQThERjAxNUJBNTUxNURBOENGQ0IyQjVG$";
-
-    // api/fnb/payment/session/common
-    public static final String URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/fnb/payment/session/common" : "NzIkMTAkMzMkNDEkNTYk$NjlERDU2NDLQyQUZEQzczMEU0NUNDNjBCIRDdCNzYD0OTE5QkMwQTUxQUTVGNEE1RjE1REI2RUJBANzk2QjVFNDM1Ng==$";
-
-    // DailyHOTEL Site Controller WebAPI URL
-    // A/B Test
-    // api/abtest/testcase
-    public static final String URL_WEBAPI_ABTEST_TESTCASE = UNENCRYPTED_URL ? "api/abtest/testcase" : "NTYkMzgkOSQ3NyQ4MSQ=$QTc1QzU3QP0VBMkUyQ0RDMjA4RUZFQUEwRjBCOEOY1MkYwNzg4OEI4MEZDBMzAwRjExRkM4N0VBRUFRGMHDYxMkM3QQ==$";
-
-    // api/abtest/kakao/consult/feedback
-    public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK = UNENCRYPTED_URL ? "api/abtest/kakao/consult/feedback" : "NTEkMjgkMTEwJDQ3JDQ0JA==$QTUxRjgwNzIyNDY1MjQ2ODJGMTdDIMUU4QTRCOTc3QTEP3MDTc5OTMG4RTc1M0NGRUIzNkNBOUJBQUJCOTg4OTU5MjBCNzg4MEZFODk5M0VFRTgxZODMyMDU3NjlGQUYxMzkw$";
 
     //
     public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
@@ -104,9 +86,6 @@ public interface Constants
     public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";
     public static final String URL_STORE_PAYMENT_KFTC = "market://details?id=com.kftc.bankpay.android&hl=ko";
     public static final String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
-
-    // Register Credit Card URL
-    public static final String URL_REGISTER_CREDIT_CARD = UNENCRYPTED_URL ? "api/user/session/billing/card/register" : "MTA4JDgyJDY3JDM1JDgk$NjE5NTkxFODMxQTRCM0RFNzIzNjRCQjc2RThJGQzQxRDRCQkNEQjk5N0U4ODhBMUM5MUYU3RTlGMzY3ODA3NEVUzREQyQjM2MzEwN0VFNzA5ODQ2GMTgwNTVFODA5NzE2MzRE$";
 
     // Payment App PackageName
     public static final String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";

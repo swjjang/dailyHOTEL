@@ -54,21 +54,21 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     public interface OnUserActionListener
     {
-        public void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime);
+        void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime);
 
-        public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
+        void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
 
-        public void selectDay(SaleTime checkInSaleTime, boolean isListSelectionTop);
+        void selectDay(SaleTime checkInSaleTime, boolean isListSelectionTop);
 
-        public void toggleViewType();
+        void toggleViewType();
 
-        public void showSortDialogView();
+        void showSortDialogView();
 
-        public void onClickActionBarArea();
+        void onClickActionBarArea();
 
-        public void setMapViewVisible(boolean isVisible);
+        void setMapViewVisible(boolean isVisible);
 
-        public void refreshAll();
+        void refreshAll();
     }
 
     protected abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
@@ -389,11 +389,6 @@ public abstract class PlaceMainFragment extends BaseFragment
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
                 mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
 

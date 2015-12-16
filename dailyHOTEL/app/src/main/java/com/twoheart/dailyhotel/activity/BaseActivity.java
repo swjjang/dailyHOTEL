@@ -125,12 +125,9 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         onBackPressed();
 
-        if (this instanceof MainActivity == false)
+        if (this instanceof MainActivity == false && isFinishing() == false)
         {
-            if (isFinishing() == false)
-            {
-                finish();
-            }
+            finish();
         }
     }
 

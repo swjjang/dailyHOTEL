@@ -122,11 +122,11 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterIte
 
     public interface OnSelectedClusterItemListener
     {
-        public void onSelectedClusterItemListener(Marker marker);
+        void onSelectedClusterItemListener(Marker marker);
     }
 
     public interface OnClusterRenderedListener
     {
-        public void onClusterRenderedListener(Renderer renderer);
+        void onClusterRenderedListener(Renderer renderer);
     }
 }

@@ -68,11 +68,6 @@ public class StringFilter
         Pattern pattern = null;
         switch (mode)
         {
-            default:
-            case ALLOW_ALPHANUMERIC:
-                pattern = Pattern.compile("^[a-zA-Z0-9\\s]+$");
-                break;
-
             case ALLOW_ALPHANUMERIC_HANGUL:
                 pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]+$");
                 break;
@@ -83,6 +78,11 @@ public class StringFilter
 
             case ALLOW_NUMERIC:
                 pattern = Pattern.compile("^[0-9]+$");
+                break;
+
+            case ALLOW_ALPHANUMERIC:
+            default:
+                pattern = Pattern.compile("^[a-zA-Z0-9\\s]+$");
                 break;
         }
 
@@ -98,11 +98,6 @@ public class StringFilter
             {
                 switch (mode)
                 {
-                    default:
-                    case ALLOW_ALPHANUMERIC:
-                        DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanum), Toast.LENGTH_SHORT);
-                        break;
-
                     case ALLOW_ALPHANUMERIC_HANGUL:
                         DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanumeric_hangul), Toast.LENGTH_SHORT);
                         break;
@@ -113,6 +108,11 @@ public class StringFilter
 
                     case ALLOW_NUMERIC:
                         DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_numeric), Toast.LENGTH_SHORT);
+                        break;
+
+                    case ALLOW_ALPHANUMERIC:
+                    default:
+                        DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanum), Toast.LENGTH_SHORT);
                         break;
                 }
 

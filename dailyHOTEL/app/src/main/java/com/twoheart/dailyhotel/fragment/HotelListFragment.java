@@ -374,13 +374,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
-                if (isCurrentPage == true)
+                if (isCurrentPage == true && mHotelListMapFragment == null)
                 {
-                    if (mHotelListMapFragment == null)
-                    {
-                        mHotelListMapFragment = new HotelListMapFragment();
-                        getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
-                    }
+                    mHotelListMapFragment = new HotelListMapFragment();
+                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
                 }
 
                 //				mDailyFloatingActionButton.setVisibility(View.VISIBLE);

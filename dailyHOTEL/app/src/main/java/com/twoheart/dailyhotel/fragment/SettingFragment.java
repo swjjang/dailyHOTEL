@@ -63,12 +63,11 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
     private MainActivity mHostActivity;
     private RequestQueue mQueue;
 
-    private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall, tvAbout, tvVersion;
+    private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall, tvAbout;
     private TextView mSettingCardTextView;
     private View mSettingCardLayout;
-    private LinearLayout llVersion, llLogin;
+    private LinearLayout llLogin;
     private String profileStr, loginStr;
-    private DailySwitchCompat mSwitchCompat;
     private String mCSoperatingTimeMessage;
 
 
@@ -82,8 +81,8 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         mQueue = VolleyHttpClient.getRequestQueue();
 
         tvNotice = (TextView) view.findViewById(R.id.tv_setting_notice);
-        tvVersion = (TextView) view.findViewById(R.id.tv_setting_version);
-        llVersion = (LinearLayout) view.findViewById(R.id.ll_setting_version);
+        TextView tvVersion = (TextView) view.findViewById(R.id.tv_setting_version);
+        LinearLayout llVersion = (LinearLayout) view.findViewById(R.id.ll_setting_version);
         tvHelp = (TextView) view.findViewById(R.id.tv_setting_help);
         tvMail = (TextView) view.findViewById(R.id.tv_setting_mail);
         llLogin = (LinearLayout) view.findViewById(R.id.ll_setting_login);
@@ -91,7 +90,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         tvEmail = (TextView) view.findViewById(R.id.tv_setting_email);
         tvCall = (TextView) view.findViewById(R.id.tv_setting_call);
         tvAbout = (TextView) view.findViewById(R.id.tv_setting_introduction);
-        mSwitchCompat = (DailySwitchCompat) view.findViewById(R.id.pushSwitch);
+        DailySwitchCompat switchCompat = (DailySwitchCompat) view.findViewById(R.id.pushSwitch);
 
         mSettingCardLayout = view.findViewById(R.id.settingCardLayout);
         mSettingCardTextView = (TextView) view.findViewById(R.id.settingCardTextView);
@@ -105,8 +104,8 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         tvAbout.setOnClickListener(this);
         mSettingCardTextView.setOnClickListener(this);
 
-        mSwitchCompat.setChecked(DailyPreference.getInstance(mHostActivity).isAllowPush());
-        mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        switchCompat.setChecked(DailyPreference.getInstance(mHostActivity).isAllowPush());
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -408,11 +407,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 String userEmail = response.getString("email");
 
                 if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null")))
@@ -480,11 +474,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 

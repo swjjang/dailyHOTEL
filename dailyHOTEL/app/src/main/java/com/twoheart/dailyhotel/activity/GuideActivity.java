@@ -9,16 +9,12 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 
 public class GuideActivity extends BaseActivity implements View.OnClickListener
 {
-    private int mGuideStatus;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_guide);
-
-        mGuideStatus = 0;
 
         ImageView imageView = (ImageView) findViewById(R.id.frontImageView);
         imageView.setOnClickListener(this);

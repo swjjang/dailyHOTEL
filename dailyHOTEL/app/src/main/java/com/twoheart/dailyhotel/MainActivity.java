@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     {
         super.onCreate(savedInstanceState);
 
-        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         VolleyHttpClient.cookieManagerCreate();
 
@@ -929,12 +929,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
     public void closeDrawer()
     {
-        if (mDrawerLayout != null)
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START) == true)
         {
-            if (mDrawerLayout.isDrawerOpen(GravityCompat.START) == true)
-            {
-                mDrawerLayout.closeDrawer(mDrawerList);
-            }
+            mDrawerLayout.closeDrawer(mDrawerList);
         }
     }
 
@@ -951,19 +948,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         }
     }
 
-    private void showNewFnB(boolean isShowAuctionBar)
-    {
-        if (isShowAuctionBar == true)
-        {
-            showActionBarNewIcon();
-        }
-
-        if (menuGourmetListFragment != null)
-        {
-            menuGourmetListFragment.hasEvent = true;
-        }
-    }
-
     private void showActionBarNewIcon()
     {
         if (mNewEventView != null)
@@ -974,12 +958,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
     private void hideActionBarNewIcon(boolean isForce)
     {
-        if (isForce == false)
+        if (isForce == false && sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true)
         {
-            if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true)
-            {
-                return;
-            }
+            return;
         }
 
         if (mNewEventView != null && mNewEventView.getVisibility() != View.GONE)
@@ -1293,11 +1274,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)
@@ -1346,11 +1322,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0 && response.has("data") == true)
@@ -1377,11 +1348,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0 && response.has("data") == true)
@@ -1421,11 +1387,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         {
             try
             {
-                if (null == response)
-                {
-                    throw new NullPointerException();
-                }
-
                 String loginuser_idx = response.getString("idx");
 
                 if (true == Util.isTextEmpty(loginuser_idx))
