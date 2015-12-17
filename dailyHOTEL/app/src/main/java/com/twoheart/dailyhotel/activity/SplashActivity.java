@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * SplashActivity (로딩화면)
- * <p>
+ * <p/>
  * 어플리케이션 처음 시작 시 나타나는 화면이며, 이는 MainActivity에 의해서
  * 호출된다. SplashActivity는 어플리케이션 처음 실행 시 가장 먼저 나타나는
  * 화면이나 어플리케이션의 주 화면은 아니므로 MainActivity가 처음 실행됐을 시
@@ -33,6 +33,7 @@ import android.view.animation.AnimationUtils;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -94,11 +95,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         mIsRequestLogin = false;
         mDoService = true;
 
-        SharedPreferences.Editor editor = sharedPreference.edit();
-        editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
-        editor.putBoolean(KEY_PREFERENCE_FNB_REGION_SETTING, false);
-        editor.remove(KEY_PREFERENCE_GCM_ID);
-        editor.apply();
+        DailyPreference.getInstance(this).setSettingRegion(false);
+        DailyPreference.getInstance(this).setSettingGourmetRegion(false);
+        DailyPreference.getInstance(this).setGcmId(null);
 
         mProgressView = findViewById(R.id.progressLayout);
         mProgressView.setVisibility(View.INVISIBLE);
@@ -289,9 +288,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             mStatusBarHeight = rectgle.top;
         }
 
-        if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+        if (DailyPreference.getInstance(this).isAutoLogin() == true)
         {
-            HashMap<String, String> params = Util.getLoginParams(SplashActivity.this, sharedPreference);
+            HashMap<String, String> params = Util.getLoginParams(SplashActivity.this);
             DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, this);
         }
 
@@ -362,12 +361,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
                 // 로그인 실패
                 // data 초기화
-                SharedPreferences.Editor ed = sharedPreference.edit();
-                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                ed.putString(KEY_PREFERENCE_USER_ID, null);
-                ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
-                ed.commit();
+                DailyPreference.getInstance(SplashActivity.this).removeUserInformation();
             } catch (Exception e)
             {
                 onError(e);
@@ -386,28 +380,35 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         {
             try
             {
-                SharedPreferences.Editor editor = sharedPreference.edit();
+                String maxVersionName;
+                String minVersionName;
 
-                if (RELEASE_STORE == Stores.PLAY_STORE)
+                switch (RELEASE_STORE)
                 {
-                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("play_max"));
-                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("play_min"));
-                } else if (RELEASE_STORE == Stores.T_STORE)
-                {
-                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("tstore_max"));
-                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("tstore_min"));
-                } else if (RELEASE_STORE == Stores.N_STORE)
-                {
-                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("nstore_max"));
-                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("nstore_min"));
+                    case N_STORE:
+                        maxVersionName = response.getString("nstore_max");
+                        minVersionName = response.getString("nstore_min");
+                        break;
+
+                    case T_STORE:
+                        maxVersionName = response.getString("tstore_max");
+                        minVersionName = response.getString("tstore_min");
+                        break;
+
+                    case PLAY_STORE:
+                    default:
+                        maxVersionName = response.getString("play_max");
+                        minVersionName = response.getString("play_min");
+                        break;
                 }
 
-                editor.commit();
+                DailyPreference.getInstance(SplashActivity.this).setMaxVersion(maxVersionName);
+                DailyPreference.getInstance(SplashActivity.this).setMinVersion(minVersionName);
 
-                int maxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".", ""));
-                int minVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(".", ""));
-                int currentVersion = Integer.parseInt(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.replace(".", ""));
-                int skipMaxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(".", ""));
+                int maxVersion = Integer.parseInt(maxVersionName.replace(".", ""));
+                int minVersion = Integer.parseInt(minVersionName.replace(".", ""));
+                int currentVersion = Integer.parseInt(DailyHotel.VERSION.replace(".", ""));
+                int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(SplashActivity.this).getSkipVersion().replace(".", ""));
 
                 ExLog.d("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
 
@@ -468,9 +469,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                         @Override
                         public void onCancel(DialogInterface dialog)
                         {
-                            SharedPreferences.Editor editor = sharedPreference.edit();
-                            editor.putString(KEY_PREFERENCE_SKIP_MAX_VERSION, sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
-                            editor.commit();
+                            String maxVersion = DailyPreference.getInstance(SplashActivity.this).getMaxVersion();
+                            DailyPreference.getInstance(SplashActivity.this).setSkipVersion(maxVersion);
 
                             requestConfiguration();
                         }
@@ -555,17 +555,12 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                     String companyCEO = companyJSONObject.getString("ceo");
                     String companyBizRegNumber = companyJSONObject.getString("bizRegNumber");
                     String companyItcRegNumber = companyJSONObject.getString("itcRegNumber");
-                    String address1 = companyJSONObject.getString("address1");
-                    String phoneNumber1 = companyJSONObject.getString("phoneNumber1");
+                    String address = companyJSONObject.getString("address1");
+                    String phoneNumber = companyJSONObject.getString("phoneNumber1");
                     String fax = companyJSONObject.getString("fax1");
 
-                    DailyPreference.getInstance(SplashActivity.this).setCompanyName(companyName);
-                    DailyPreference.getInstance(SplashActivity.this).setCompanyCEO(companyCEO);
-                    DailyPreference.getInstance(SplashActivity.this).setCompanyBizRegNumber(companyBizRegNumber);
-                    DailyPreference.getInstance(SplashActivity.this).setCompanyItcRegNumber(companyItcRegNumber);
-                    DailyPreference.getInstance(SplashActivity.this).setCompanyAddress(address1);
-                    DailyPreference.getInstance(SplashActivity.this).setCompanyPhoneNumber(phoneNumber1);
-                    DailyPreference.getInstance(SplashActivity.this).setCompanyFax(fax);
+                    DailyPreference.getInstance(SplashActivity.this).setCompanyInformation(companyName//
+                        , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax);
                 }
 
                 doFinish();

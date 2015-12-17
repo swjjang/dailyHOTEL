@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
@@ -272,12 +273,12 @@ public class GourmetMainFragment extends PlaceMainFragment
         baseActivity.setActionBarRegionEnable(isShowSpinner);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "")) == false)
+        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedGourmetRegion();
+
+        if (province.name.equalsIgnoreCase(savedRegion) == false)
         {
-            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, ""));
-            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT, province.name);
-            editor.commit();
+            DailyPreference.getInstance(baseActivity).setPreviouslySelectedGourmetRegion(savedRegion);
+            DailyPreference.getInstance(baseActivity).setSelectedGourmetRegion(province.name);
 
             isSelectionTop = true;
         }
@@ -535,11 +536,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                 {
                     Gourmet fnb = (Gourmet) baseListViewItem.getPlace();
 
-                    String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
-                    SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_PLACE_REGION_SELECT_GA, region);
-                    editor.putString(KEY_PREFERENCE_PLACE_NAME_GA, fnb.name);
-                    editor.commit();
+                    String region = DailyPreference.getInstance(baseActivity).getSelectedGourmetRegion();
+
+
+                    DailyPreference.getInstance(baseActivity).setGASelectedPlaceRegion(region);
+                    DailyPreference.getInstance(baseActivity).setGASelectedPlaceName(fnb.name);
 
                     Intent intent = new Intent(baseActivity, GourmetDetailActivity.class);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
@@ -769,12 +770,12 @@ public class GourmetMainFragment extends PlaceMainFragment
                 } else
                 {
                     // 마지막으로 선택한 지역을 가져온다.
-                    regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
+                    regionName = DailyPreference.getInstance(baseActivity).getSelectedGourmetRegion();
 
                     if (Util.isTextEmpty(regionName) == true)
                     {
                         // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
-                        regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, "");
+                        regionName = DailyPreference.getInstance(baseActivity).getPreviouslySelectedGourmetRegion();
 
                         // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
                         if (Util.isTextEmpty(regionName) == true)
@@ -818,10 +819,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     regionName = selectedProvince.name;
                 }
 
-                boolean mIsProvinceSetting = baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_FNB_REGION_SETTING, false);
-                SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-                editor.putBoolean(KEY_PREFERENCE_FNB_REGION_SETTING, true);
-                editor.commit();
+                boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).IsSettingGourmetRegion();
+                DailyPreference.getInstance(baseActivity).setSettingGourmetRegion(true);
 
                 // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
                 if (mIsProvinceSetting == false && selectedProvince instanceof Area)

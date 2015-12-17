@@ -57,7 +57,6 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 public class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
     protected static int mStatusBarHeight;
-    public SharedPreferences sharedPreference;
     private Toolbar mToolbar;
     private Dialog mDialog;
     private LoadingDialog mLockUI;
@@ -77,7 +76,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         super.onCreate(savedInstanceState);
 
-        sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         mLockUI = new LoadingDialog(this);
         handler = new Handler();
         mNetworkTag = getClass().getName();

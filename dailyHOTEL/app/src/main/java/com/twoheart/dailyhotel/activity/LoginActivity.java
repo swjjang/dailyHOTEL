@@ -62,6 +62,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -413,22 +414,20 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String accessToken = mStoreParams.get("social_id");
         String type = mStoreParams.get("user_type");
 
-        SharedPreferences.Editor ed = sharedPreference.edit();
-        ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
+        DailyPreference.getInstance(this).setAutoLogin(true);
 
         if (Util.isTextEmpty(accessToken) == false && "0".equals(accessToken) == false)
         {
-            ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, accessToken);
-            ed.putString(KEY_PREFERENCE_USER_ID, null);
+            DailyPreference.getInstance(this).setUserAccessToken(accessToken);
+            DailyPreference.getInstance(this).setUserId(null);
         } else
         {
-            ed.putString(KEY_PREFERENCE_USER_ID, id);
-            ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+            DailyPreference.getInstance(this).setUserId(id);
+            DailyPreference.getInstance(this).setUserAccessToken(null);
         }
 
-        ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
-        ed.putString(KEY_PREFERENCE_USER_TYPE, type);
-        ed.commit();
+        DailyPreference.getInstance(this).setUserPassword(pwd);
+        DailyPreference.getInstance(this).setUserType(type);
     }
 
     @Override
@@ -656,9 +655,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     if (isSignup == true)
                     {
                         // 회원가입에 성공하면 이제 로그인 절차
-                        Editor ed = sharedPreference.edit();
-                        ed.putBoolean("Social Signup", true);
-                        ed.commit();
+
+                        DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(true);
 
                         HashMap<String, String> params = new HashMap<String, String>();
 
@@ -726,9 +724,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                 if (response.getString("result").equals("true") == true)
                 {
-                    Editor editor = sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_GCM_ID, mRegPushParams.get("notification_id"));
-                    editor.apply();
+                    DailyPreference.getInstance(LoginActivity.this).setGcmId(mRegPushParams.get("notification_id"));
                 }
 
                 DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
@@ -756,20 +752,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 // GCM 등록을 위해 값이 필요한다.
                 userIndex = String.valueOf(response.getInt("idx"));
 
-                Editor editor = sharedPreference.edit();
-
                 String name = response.getString("name");
 
                 if (Util.isTextEmpty(name) == false)
                 {
-                    editor.putString(KEY_PREFERENCE_USER_NAME, name);
-                    editor.apply();
+                    DailyPreference.getInstance(LoginActivity.this).setUserName(name);
                 }
 
-                if (sharedPreference.getBoolean("Social Signup", false) == true)
+                if (DailyPreference.getInstance(LoginActivity.this).isSocialSignUp() == true)
                 {
-                    editor.putBoolean("Social Signup", false);
-                    editor.commit();
+                    DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(false);
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 
@@ -812,10 +804,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         storeLoginInfo();
 
                         DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
-
-                        Editor editor = sharedPreference.edit();
-                        editor.putString("collapseKey", "");
-                        editor.apply();
+                        DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         return;
                     }
                 }
@@ -856,10 +845,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     storeLoginInfo();
 
                     DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
-
-                    Editor editor = sharedPreference.edit();
-                    editor.putString("collapseKey", "");
-                    editor.apply();
+                    DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                 } else
                 {
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다

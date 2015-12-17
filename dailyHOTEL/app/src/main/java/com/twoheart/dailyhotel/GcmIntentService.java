@@ -121,8 +121,6 @@ public class GcmIntentService extends IntentService implements Constants
                     mIsSound = jsonMsg.getBoolean("sound");
                 }
 
-                SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-
                 switch (type)
                 {
                     case PUSH_TYPE_ACCOUNT_COMPLETE:
@@ -137,10 +135,10 @@ public class GcmIntentService extends IntentService implements Constants
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
                         Date date = new Date();
                         String strDate = dateFormat.format(date);
-                        String userIdxStr = pref.getString(KEY_PREFERENCE_USER_IDX, "0");
-                        String roomIdx = pref.getString(KEY_PREFERENCE_HOTEL_ROOM_IDX, "0");
-                        String checkInTime = pref.getString(KEY_PREFERENCE_HOTEL_CHECKIN, "0");
-                        String checkOutTime = pref.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, "0");
+                        String userIdxStr = DailyPreference.getInstance(this).getVirtualAccountUserIndex();
+                        String roomIdx = DailyPreference.getInstance(this).getVirtualAccountRoomIndex();
+                        String checkInTime = DailyPreference.getInstance(this).getVirtualAccountCheckIn();
+                        String checkOutTime = DailyPreference.getInstance(this).getVirtualAccountCheckOut();
                         String transId = strDate + userIdxStr; //기타 결제수단은 이걸 transaction ID로 사용하고 계좌이체의 경우 넘겨받는 tid값을 사용함.
 
                         SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
@@ -149,31 +147,21 @@ public class GcmIntentService extends IntentService implements Constants
                         AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(tid, transId, roomIdx, hotelName, Screen.GCMSERVICE, checkInTime, checkOutTime, strDate, Pay.Type.VBANK.name(), Double.parseDouble(paidPrice));
 
                         // 가상계좌 내용 정리
-                        Editor editor = pref.edit();
-                        editor.remove(KEY_PREFERENCE_USER_IDX);
-                        editor.remove(KEY_PREFERENCE_HOTEL_NAME);
-                        editor.remove(KEY_PREFERENCE_HOTEL_ROOM_IDX);
-                        editor.remove(KEY_PREFERENCE_HOTEL_CHECKOUT);
-                        editor.remove(KEY_PREFERENCE_HOTEL_CHECKIN);
-                        editor.commit();
+                        DailyPreference.getInstance(this).removeVirtualAccountInformation();
                         break;
                     }
 
                     case PUSH_TYPE_NOTICE:
                     {
                         // 푸쉬 알림을 해지하면 푸쉬를 받지 않는다
-                        if (DailyPreference.getInstance(getApplicationContext()).isAllowPush() == false)
+                        if (DailyPreference.getInstance(this).isAllowPush() == false)
                         {
                             return;
                         }
 
-                        if (collapseKey.equals(pref.getString("collapseKey", "")))
+                        if (collapseKey.equalsIgnoreCase(DailyPreference.getInstance(this).getCollapsekey()) == false)
                         {
-                        } else
-                        {
-                            Editor editor = pref.edit();
-                            editor.putString("collapseKey", collapseKey);
-                            editor.apply();
+                            DailyPreference.getInstance(this).setCollapsekey(collapseKey);
 
                             String link = null;
 

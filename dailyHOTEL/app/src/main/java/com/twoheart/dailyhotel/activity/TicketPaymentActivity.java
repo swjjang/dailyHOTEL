@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -298,18 +299,15 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     {
                         TicketPayment ticketPayment = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT);
 
-                        Editor editor = sharedPreference.edit();
-                        editor.putString(KEY_PREFERENCE_USER_IDX, ticketPayment.getCustomer().getUserIdx());
-                        editor.putString(KEY_PREFERENCE_PLACE_NAME, ticketPayment.getTicketInformation().placeName);
-                        editor.putInt(KEY_PREFERENCE_PLACE_TICKET_IDX, ticketPayment.getTicketInformation().index);
-                        editor.putString(KEY_PREFERENCE_PLACE_TICKET_CHECKOUT, ticketPayment.checkOutTime);
-                        editor.putString(KEY_PREFERENCE_PLACE_TICKET_CHECKIN, ticketPayment.checkInTime);
-                        editor.commit();
+                        DailyPreference.getInstance(TicketPaymentActivity.this).setVirtuaAccountInformation(//
+                            ticketPayment.getCustomer().getUserIdx()//
+                            , ticketPayment.getTicketInformation().placeName//
+                            , Integer.toString(ticketPayment.getTicketInformation().index)//
+                            , ticketPayment.checkInTime//
+                            , ticketPayment.checkOutTime);
                     }
 
-                    Editor editor = sharedPreference.edit();
-                    editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                    editor.apply();
+                    DailyPreference.getInstance(TicketPaymentActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 
                     if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
                     {
@@ -546,7 +544,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             showAgreeTermDialog(mTicketPayment.paymentType);
         }
 
-        String region = sharedPreference.getString(KEY_PREFERENCE_PLACE_REGION_SELECT_GA, null);
+        String region = DailyPreference.getInstance(TicketPaymentActivity.this).getGASelectedPlaceRegion();
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
@@ -794,9 +792,9 @@ public abstract class TicketPaymentActivity extends BaseActivity
     private void requestLogin()
     {
         // 세션이 종료되어있으면 다시 로그인한다.
-        if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
+        if (DailyPreference.getInstance(TicketPaymentActivity.this).isAutoLogin()  == true)
         {
-            HashMap<String, String> params = Util.getLoginParams(TicketPaymentActivity.this, sharedPreference);
+            HashMap<String, String> params = Util.getLoginParams(TicketPaymentActivity.this);
             DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, TicketPaymentActivity.this);
         } else
         {

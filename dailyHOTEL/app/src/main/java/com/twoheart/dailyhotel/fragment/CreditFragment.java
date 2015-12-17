@@ -44,6 +44,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -228,12 +229,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
                 // 로그인 실패
                 // data 초기화
-                SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
-                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                ed.putString(KEY_PREFERENCE_USER_ID, null);
-                ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
-                ed.commit();
+                DailyPreference.getInstance(baseActivity).removeUserInformation();
 
                 unLockUI();
                 loadLoginProcess(false);
@@ -275,9 +271,9 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
             {
                 // session dead
                 // 재로그인
-                if (true == baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+                if (true == DailyPreference.getInstance(baseActivity).isAutoLogin())
                 {
-                    HashMap<String, String> params = Util.getLoginParams(baseActivity, baseActivity.sharedPreference);
+                    HashMap<String, String> params = Util.getLoginParams(baseActivity);
                     DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, baseActivity);
                 } else
                 {

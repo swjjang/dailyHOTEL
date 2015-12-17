@@ -13,11 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
+import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -28,6 +30,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
@@ -436,12 +439,11 @@ public class HotelMainFragment extends BaseFragment
         baseActivity.setActionBarArea(province.name, mOnUserActionListener);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
+        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion();
+        if (province.name.equalsIgnoreCase(savedRegion) == false)
         {
-            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-            editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-            editor.putString(KEY_PREFERENCE_REGION_SELECT, province.name);
-            editor.commit();
+            DailyPreference.getInstance(baseActivity).setPreviouslySelectedRegion(savedRegion);
+            DailyPreference.getInstance(baseActivity).setSelectedRegion(province.name);
 
             isSelectionTop = true;
         }
@@ -697,11 +699,9 @@ public class HotelMainFragment extends BaseFragment
                 {
                     Hotel hotel = hotelListViewItem.getItem();
 
-                    String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-                    SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
-                    editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, hotel.getName());
-                    editor.commit();
+                    String region = DailyPreference.getInstance(baseActivity).getSelectedRegion();
+                    DailyPreference.getInstance(baseActivity).setGASelectedRegion(region);
+                    DailyPreference.getInstance(baseActivity).setGAHotelName(hotel.getName());
 
                     Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
@@ -893,12 +893,12 @@ public class HotelMainFragment extends BaseFragment
                 } else
                 {
                     // 마지막으로 선택한 지역을 가져온다.
-                    regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+                    regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion();
 
                     if (Util.isTextEmpty(regionName) == true)
                     {
                         // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
-                        regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "");
+                        regionName = DailyPreference.getInstance(baseActivity).getPreviouslySelectedRegion();
 
                         // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
                         if (Util.isTextEmpty(regionName) == true)
@@ -943,10 +943,8 @@ public class HotelMainFragment extends BaseFragment
                 }
 
                 // 처음 시작시에는 지역이 Area로 저장된 경우 Province로 변경하기 위한 저장값.
-                boolean mIsProvinceSetting = baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_REGION_SETTING, false);
-                SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-                editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, true);
-                editor.commit();
+                boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).IsSettingRegion();
+                DailyPreference.getInstance(baseActivity).setSettingRegion(true);
 
                 // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
                 if (mIsProvinceSetting == false && selectedProvince instanceof Area)
@@ -1157,67 +1155,65 @@ public class HotelMainFragment extends BaseFragment
                     initShow();
                 }
 
-                if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
+                String deepLink = DailyPreference.getInstance(baseActivity).getDeepLink();
+
+                if (Util.isTextEmpty(deepLink)== false)
                 {
-                    String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
-                    baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
+                    DailyPreference.getInstance(baseActivity).removeDeepLink();
 
-                    if (param != null)
+                    unLockUI();
+
+                    try
                     {
-                        unLockUI();
+                        String previousType = Util.getValueForLinkUrl(deepLink, "hotelIndex");
 
-                        try
+                        if (Util.isTextEmpty(previousType) == false)
                         {
-                            String previousType = Util.getValueForLinkUrl(param, "hotelIndex");
+                            // 이전 타입의 화면 이동
+                            int hotelIndex = Integer.parseInt(previousType);
+                            long dailyTime = Long.parseLong(Util.getValueForLinkUrl(deepLink, "dailyTime"));
+                            int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "dailyDayOfDays"));
+                            int nights = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "nights"));
 
-                            if (Util.isTextEmpty(previousType) == false)
+                            if (nights <= 0 || dailyDayOfDays < 0)
                             {
-                                // 이전 타입의 화면 이동
-                                int hotelIndex = Integer.parseInt(previousType);
-                                long dailyTime = Long.parseLong(Util.getValueForLinkUrl(param, "dailyTime"));
-                                int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
-                                int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
-
-                                if (nights <= 0 || dailyDayOfDays < 0)
-                                {
-                                    throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
-                                }
-
-                                if (mOnUserActionListener != null)
-                                {
-                                    mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
-                                }
-                            } else
-                            {
-                                // 신규 타입의 화면이동
-                                int hotelIndex = Integer.parseInt(Util.getValueForLinkUrl(param, "idx"));
-                                long dailyTime = mTodaySaleTime.getDailyTime();
-                                int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
-
-                                String date = Util.getValueForLinkUrl(param, "date");
-                                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-                                Date schemeDate = format.parse(date);
-                                Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
-
-                                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                                if (nights <= 0 || dailyDayOfDays < 0)
-                                {
-                                    throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
-                                }
-
-                                if (mOnUserActionListener != null)
-                                {
-                                    mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
-                                }
+                                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
                             }
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
 
-                            // 지역 리스트를 가져온다
-                            DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+                            }
+                        } else
+                        {
+                            // 신규 타입의 화면이동
+                            int hotelIndex = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "idx"));
+                            long dailyTime = mTodaySaleTime.getDailyTime();
+                            int nights = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "nights"));
+
+                            String date = Util.getValueForLinkUrl(deepLink, "date");
+                            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                            Date schemeDate = format.parse(date);
+                            Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+
+                            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                            if (nights <= 0 || dailyDayOfDays < 0)
+                            {
+                                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+                            }
+
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+                            }
                         }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+
+                        // 지역 리스트를 가져온다
+                        DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
                     }
                 } else
                 {

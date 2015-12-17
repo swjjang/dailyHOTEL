@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CreditCardLayout;
@@ -371,12 +372,7 @@ public class CreditCardListActivity extends BaseActivity
 
                 // 로그인 실패
                 // data 초기화
-                SharedPreferences.Editor ed = sharedPreference.edit();
-                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                ed.putString(KEY_PREFERENCE_USER_ID, null);
-                ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
-                ed.commit();
+                DailyPreference.getInstance(CreditCardListActivity.this).removeUserInformation();
 
                 unLockUI();
                 mCreditCardLayout.setViewLoginLayout(false);
@@ -416,9 +412,9 @@ public class CreditCardListActivity extends BaseActivity
                 // session dead
                 // 재로그인
 
-                if (true == sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+                if (true == DailyPreference.getInstance(CreditCardListActivity.this).isAutoLogin())
                 {
-                    HashMap<String, String> params = Util.getLoginParams(CreditCardListActivity.this, sharedPreference);
+                    HashMap<String, String> params = Util.getLoginParams(CreditCardListActivity.this);
 
                     DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, CreditCardListActivity.this);
                 } else

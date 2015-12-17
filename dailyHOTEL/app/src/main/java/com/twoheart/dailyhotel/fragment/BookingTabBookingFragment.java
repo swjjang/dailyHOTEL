@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
@@ -186,12 +187,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
                 // 로그인 실패
                 // data 초기화
-                SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
-                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                ed.putString(KEY_PREFERENCE_USER_ID, null);
-                ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
-                ed.commit();
+                DailyPreference.getInstance(baseActivity).removeUserInformation();
 
                 showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
             } catch (JSONException e)
@@ -229,9 +225,9 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
             } else if ("dead".equalsIgnoreCase(result) == true)
             { // session dead
                 // 재로그인
-                if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+                if (DailyPreference.getInstance(baseActivity).isAutoLogin() == true)
                 {
-                    HashMap<String, String> params = Util.getLoginParams(baseActivity, baseActivity.sharedPreference);
+                    HashMap<String, String> params = Util.getLoginParams(baseActivity);
                     DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, baseActivity);
                 } else
                 {

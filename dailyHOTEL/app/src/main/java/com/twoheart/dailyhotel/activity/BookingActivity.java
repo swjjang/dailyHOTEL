@@ -58,6 +58,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
@@ -72,6 +73,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -360,11 +362,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                 if (mPay.getSaleRoomInformation().isOverseas == true)
                 {
-                    Editor editor = sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_OVERSEAS_NAME, guest.name);
-                    editor.putString(KEY_PREFERENCE_OVERSEAS_PHONE, guest.phone);
-                    editor.putString(KEY_PREFERENCE_OVERSEAS_EMAIL, guest.email);
-                    editor.commit();
+                    DailyPreference.getInstance(BookingActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
                 }
             }
 
@@ -402,7 +400,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             {
                 mClickView = v;
 
-                String gcmId = sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
+                String gcmId = DailyPreference.getInstance(BookingActivity.this).getGcmId();
 
                 if (mPay.getType() == Pay.Type.VBANK && Util.isTextEmpty(gcmId) == true)
                 {
@@ -492,7 +490,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             showAgreeTermDialog(mPay.getType());
         }
 
-        String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+        String region = DailyPreference.getInstance(BookingActivity.this).getGASelectedRegion();
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
@@ -827,18 +825,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     {
                         Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
 
-                        Editor editor = sharedPreference.edit();
-                        editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
-                        editor.putString(KEY_PREFERENCE_HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-                        editor.putInt(KEY_PREFERENCE_HOTEL_ROOM_IDX, payData.getSaleRoomInformation().roomIndex);
-                        editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.checkOutTime);
-                        editor.putString(KEY_PREFERENCE_HOTEL_CHECKIN, payData.checkInTime);
-                        editor.commit();
+                        DailyPreference.getInstance(this).setVirtuaAccountInformation(payData.getCustomer().getUserIdx()//
+                            , mPay.getSaleRoomInformation().hotelName//
+                            , Integer.toString(payData.getSaleRoomInformation().roomIndex)//
+                            , payData.checkInTime//
+                            , payData.checkOutTime//
+                        );
                     }
 
-                    Editor editor = sharedPreference.edit();
-                    editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                    editor.apply();
+                    DailyPreference.getInstance(BookingActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 
                     msg = getString(R.string.dialog_msg_issuing_account);
 
@@ -1582,9 +1577,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private void requestLogin()
     {
         // 세션이 종료되어있으면 다시 로그인한다.
-        if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
+        if (DailyPreference.getInstance(this).isAutoLogin() == true)
         {
-            HashMap<String, String> params = Util.getLoginParams(BookingActivity.this, sharedPreference);
+            HashMap<String, String> params = Util.getLoginParams(BookingActivity.this);
 
             DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, BookingActivity.this);
         } else
@@ -2307,9 +2302,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         // 해외 호텔인 경우.
                         if (mPay.getSaleRoomInformation().isOverseas == true)
                         {
-                            String overseasName = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_NAME, guest.name);
-                            String overseasPhone = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_PHONE, guest.phone);
-                            String overseasEmail = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_EMAIL, guest.email);
+                            String overseasName = DailyPreference.getInstance(BookingActivity.this).getOverseasName();
+                            String overseasPhone = DailyPreference.getInstance(BookingActivity.this).getOverseasPhone();
+                            String overseasEmail = DailyPreference.getInstance(BookingActivity.this).getOverseasEmail();
 
                             guest.name = overseasName;
                             guest.phone = overseasPhone;
