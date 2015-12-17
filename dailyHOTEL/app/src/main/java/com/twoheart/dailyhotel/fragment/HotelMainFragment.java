@@ -465,6 +465,9 @@ public class HotelMainFragment extends BaseFragment
         if (isSelectionTop == true)
         {
             hotelListFragment.setSortType(HotelListFragment.SortType.DEFAULT);
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.invalidateOptionsMenu();
         }
 
         hotelListFragment.refreshHotelList(province, isSelectionTop);

@@ -305,6 +305,9 @@ public class GourmetMainFragment extends PlaceMainFragment
         if (isSelectionTop == true)
         {
             gourmetListFragment.setSortType(PlaceListFragment.SortType.DEFAULT);
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.invalidateOptionsMenu();
         }
 
         gourmetListFragment.refreshList(province, isSelectionTop);
