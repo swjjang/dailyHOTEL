@@ -300,6 +300,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         setActionBarAnimationLock(true);
 
         mDirection = MotionEvent.ACTION_CANCEL;
+
+        mSortType = SortType.DEFAULT;
+
+        baseActivity.invalidateOptionsMenu();
     }
 
     public void onPageUnSelected()

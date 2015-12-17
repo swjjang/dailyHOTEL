@@ -213,6 +213,22 @@ public class GourmetListFragment extends PlaceListFragment
         return mGourmetListAdapter.getItem(position);
     }
 
+    public void onPageSelected(boolean isRequestHotelList)
+    {
+        super.onPageSelected(isRequestHotelList);
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        mSortType = SortType.DEFAULT;
+
+        baseActivity.invalidateOptionsMenu();
+    }
+
     @Override
     public void onPageUnSelected()
     {

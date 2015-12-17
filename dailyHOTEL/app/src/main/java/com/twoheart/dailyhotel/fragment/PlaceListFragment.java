@@ -119,6 +119,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     //            refreshList(mSelectedProvince, true);
     //        }
     //    }
+
     public void onPageSelected(boolean isRequestHotelList)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
