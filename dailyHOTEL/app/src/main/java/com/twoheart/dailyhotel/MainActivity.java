@@ -134,9 +134,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         VolleyHttpClient.cookieManagerCreate();
 
-        Editor editor = sharedPreference.edit();
-        editor.remove(KEY_PREFERENCE_BY_SHARE);
-        editor.apply();
+        DailyPreference.getInstance(this).removeDeepLink();
 
         // 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
         // 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
@@ -204,9 +202,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     {
         super.onNewIntent(intent);
 
-        Editor editor = sharedPreference.edit();
-        editor.remove(KEY_PREFERENCE_BY_SHARE);
-        editor.apply();
+        DailyPreference.getInstance(this).removeDeepLink();
 
         Uri intentData = intent.getData();
         checkExternalLink(intentData);
@@ -294,42 +290,36 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             //                startActivityForResult(new Intent(this, GuideActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
             //            } else
             {
-                if (sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
+                String deepLink = DailyPreference.getInstance(MainActivity.this).getDeepLink();
+
+                if (Util.isTextEmpty(deepLink)== false)
                 {
-                    String param = sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
-
-                    if (param != null)
-                    {
-                        if (param.contains("hotelIndex") == true)
-                        {
-                            selectMenuDrawer(menuHotelListFragment);
-                        } else if (param.contains("fnbIndex"))
-                        {
-                            selectMenuDrawer(menuGourmetListFragment);
-                        } else
-                        {
-                            String value = Util.getValueForLinkUrl(param, "view");
-
-                            if ("hotel".equalsIgnoreCase(value) == true)
-                            {
-                                selectMenuDrawer(menuHotelListFragment);
-                            } else if ("gourmet".equalsIgnoreCase(value) == true)
-                            {
-                                selectMenuDrawer(menuGourmetListFragment);
-                            } else if ("bookings".equalsIgnoreCase(value) == true)
-                            {
-                                selectMenuDrawer(menuBookingListFragment);
-                            } else if ("bonus".equalsIgnoreCase(value) == true)
-                            {
-                                selectMenuDrawer(menuCreditFragment);
-                            } else if ("event".equalsIgnoreCase(value) == true)
-                            {
-                                selectMenuDrawer(menuEventListFragment);
-                            }
-                        }
-                    } else
+                    if (deepLink.contains("hotelIndex") == true)
                     {
                         selectMenuDrawer(menuHotelListFragment);
+                    } else if (deepLink.contains("fnbIndex"))
+                    {
+                        selectMenuDrawer(menuGourmetListFragment);
+                    } else
+                    {
+                        String value = Util.getValueForLinkUrl(deepLink, "view");
+
+                        if ("hotel".equalsIgnoreCase(value) == true)
+                        {
+                            selectMenuDrawer(menuHotelListFragment);
+                        } else if ("gourmet".equalsIgnoreCase(value) == true)
+                        {
+                            selectMenuDrawer(menuGourmetListFragment);
+                        } else if ("bookings".equalsIgnoreCase(value) == true)
+                        {
+                            selectMenuDrawer(menuBookingListFragment);
+                        } else if ("bonus".equalsIgnoreCase(value) == true)
+                        {
+                            selectMenuDrawer(menuCreditFragment);
+                        } else if ("event".equalsIgnoreCase(value) == true)
+                        {
+                            selectMenuDrawer(menuEventListFragment);
+                        }
                     }
                 } else
                 {
@@ -407,18 +397,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         }
 
         String param = link.substring(startIndex);
-
-        // param 저장하기
-        Editor editor = sharedPreference.edit();
-        editor.putString(KEY_PREFERENCE_BY_SHARE, param);
-        editor.apply();
+        DailyPreference.getInstance(this).setDeepLink(param);
 
         return param;
-    }
-
-    private String getGcmId()
-    {
-        return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
     }
 
     private void regGcmId(final String idx)
@@ -622,12 +603,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 indexLastFragment = INDEX_EVENT_FRAGMENT;
 
                 // 이벤트 진입시에 이벤트 new를 제거한다.
-                Editor editor = sharedPreference.edit();
-                editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+                DailyPreference.getInstance(MainActivity.this).setNewEvent(false);
 
-                long currentDateTime = sharedPreference.getLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0);
-                editor.putLong(KEY_PREFERENCE_NEW_EVENT_TIME, currentDateTime);
-                editor.commit();
+
+                long currentDateTime = DailyPreference.getInstance(MainActivity.this).getLookUpEventTime();
+                DailyPreference.getInstance(MainActivity.this).setNewEventTime(currentDateTime);
 
                 hideNewEvent(true);
 
@@ -775,7 +755,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 {
                     setActionBarRegionEnable(true);
 
-                    if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true)
+                    if (DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
                     {
                         showActionBarNewIcon();
                     }
@@ -831,7 +811,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         mDrawerMenuList.add(menuSettingFragment);
 
         // New Icon
-        if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false))
+        if (DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
         {
             menuEventListFragment.hasEvent = true;
         } else
@@ -958,7 +938,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
     private void hideActionBarNewIcon(boolean isForce)
     {
-        if (isForce == false && sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true)
+        if (isForce == false && DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
         {
             return;
         }
@@ -1009,11 +989,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 try
                 {
                     long currentDateTime = response.getLong("currentDateTime");
-                    long lastLookupDateTime = sharedPreference.getLong(KEY_PREFERENCE_NEW_EVENT_TIME, 0);
+                    long lastLookupDateTime = DailyPreference.getInstance(MainActivity.this).getNewEventTime();
 
-                    Editor editor = sharedPreference.edit();
-                    editor.putLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, currentDateTime);
-                    editor.apply();
+                    DailyPreference.getInstance(MainActivity.this).setLookUpEventTime(currentDateTime);
 
                     String params = String.format("?date_time=%d", lastLookupDateTime);
                     DailyNetworkAPI.getInstance().requestEventNewCount(mNetworkTag, params, mDailyEventCountJsonResponseListener, null);
@@ -1253,9 +1231,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
                 if (true == "true".equalsIgnoreCase(result))
                 {
-                    Editor editor = sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
-                    editor.apply();
+                    DailyPreference.getInstance(MainActivity.this).setGcmId(regPushParams.get("notification_id"));
                 }
             } catch (Exception e)
             {
@@ -1270,8 +1246,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            Editor editor = sharedPreference.edit();
-
             try
             {
                 int msg_code = response.getInt("msg_code");
@@ -1287,8 +1261,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
                 if (count > 0)
                 {
-                    editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
-                    editor.commit();
+                    DailyPreference.getInstance(MainActivity.this).setNewEvent(true);
 
                     if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
                     {
@@ -1299,11 +1272,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     }
                 } else
                 {
-                    editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+                    DailyPreference.getInstance(MainActivity.this).setNewEvent(false);
 
-                    long currentDateTime = sharedPreference.getLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0);
-                    editor.putLong(KEY_PREFERENCE_NEW_EVENT_TIME, currentDateTime);
-                    editor.commit();
+                    long currentDateTime = DailyPreference.getInstance(MainActivity.this).getLookUpEventTime();
+                    DailyPreference.getInstance(MainActivity.this).setNewEventTime(currentDateTime);
 
                     hideNewEvent(true);
                 }
@@ -1394,7 +1366,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     throw new NullPointerException("loginuser_idx is empty.");
                 }
 
-                if (getGcmId().isEmpty() == true)
+                if (Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getGcmId()) == true)
                 {
                     regGcmId(loginuser_idx);
                 }
@@ -1440,7 +1412,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, MainActivity.this);
             } else
             {
-                if (getGcmId().isEmpty() == true)
+                if (Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getGcmId()) == true)
                 {
                     regGcmId("-1");
                 }

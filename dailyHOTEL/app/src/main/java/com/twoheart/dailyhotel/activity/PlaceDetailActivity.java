@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelDetailLayout;
 import com.twoheart.dailyhotel.view.PlaceDetailLayout;
@@ -600,9 +601,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 // session dead
                 // 재로그인
-                if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+                if (DailyPreference.getInstance(PlaceDetailActivity.this).isAutoLogin() == true)
                 {
-                    HashMap<String, String> params = Util.getLoginParams(PlaceDetailActivity.this, sharedPreference);
+                    HashMap<String, String> params = Util.getLoginParams(PlaceDetailActivity.this);
 
                     DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, PlaceDetailActivity.this);
                 } else
@@ -648,13 +649,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 // 로그인 실패
                 // data 초기화
-                SharedPreferences.Editor ed = sharedPreference.edit();
-                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-                ed.putString(KEY_PREFERENCE_USER_ID, null);
-                ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
-                ed.commit();
+                DailyPreference.getInstance(PlaceDetailActivity.this).removeUserInformation();
 
                 unLockUI();
                 startLoginActivity();

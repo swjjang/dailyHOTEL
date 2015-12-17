@@ -45,7 +45,7 @@ public class DailyHotel extends Application implements Constants
     {
         super.onCreate();
 
-        io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
+//        io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
 
         if (Util.isOverAPI14() == true)
         {

@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -511,13 +512,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         String pwd = Crypto.encrypt(mPasswordEditText.getText().toString()).replace("\n", "");
         String name = mNameEditText.getText().toString();
 
-        SharedPreferences.Editor ed = sharedPreference.edit();
-        ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
-        ed.putString(KEY_PREFERENCE_USER_ID, id);
-        ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
-        ed.putString(KEY_PREFERENCE_USER_TYPE, "normal");
-        ed.putString(KEY_PREFERENCE_USER_NAME, name);
-        ed.commit();
+        DailyPreference.getInstance(SignupActivity.this).setUserInformation(true, id, pwd, "normal", name);
 
         setResult(RESULT_OK);
     }
@@ -796,9 +791,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 if (true == "true".equalsIgnoreCase(result))
                 {
-                    Editor editor = sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
-                    editor.apply();
+                    DailyPreference.getInstance(SignupActivity.this).setGcmId(regPushParams.get("notification_id"));
                 }
             } catch (Exception e)
             {

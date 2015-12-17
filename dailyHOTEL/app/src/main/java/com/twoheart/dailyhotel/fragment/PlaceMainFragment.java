@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
@@ -300,68 +301,66 @@ public abstract class PlaceMainFragment extends BaseFragment
 
                 showSlidingDrawer();
 
-                if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
+                String deepLink = DailyPreference.getInstance(baseActivity).getDeepLink();
+
+                if (Util.isTextEmpty(deepLink) == false)
                 {
-                    String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
-                    baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
+                    DailyPreference.getInstance(baseActivity).removeDeepLink();
 
-                    if (param != null)
+                    unLockUI();
+
+                    try
                     {
-                        unLockUI();
+                        String previousType = Util.getValueForLinkUrl(deepLink, "fnbIndex");
 
-                        try
+                        if (Util.isTextEmpty(previousType) == false)
                         {
-                            String previousType = Util.getValueForLinkUrl(param, "fnbIndex");
+                            // 이전 타입의 화면 이동
+                            int fnbIndex = Integer.parseInt(previousType);
+                            long dailyTime = Long.parseLong(Util.getValueForLinkUrl(deepLink, "dailyTime"));
+                            int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "dailyDayOfDays"));
+                            int nights = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "nights"));
 
-                            if (Util.isTextEmpty(previousType) == false)
+                            if (dailyDayOfDays < 0)
                             {
-                                // 이전 타입의 화면 이동
-                                int fnbIndex = Integer.parseInt(previousType);
-                                long dailyTime = Long.parseLong(Util.getValueForLinkUrl(param, "dailyTime"));
-                                int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(param, "dailyDayOfDays"));
-                                int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
-
-                                if (dailyDayOfDays < 0)
-                                {
-                                    throw new NullPointerException("dailyDayOfDays < 0");
-                                }
-
-                                if (mOnUserActionListener != null)
-                                {
-                                    mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
-                                }
-
-                            } else
-                            {
-                                // 신규 타입의 화면이동
-                                int fnbIndex = Integer.parseInt(Util.getValueForLinkUrl(param, "idx"));
-                                long dailyTime = mTodaySaleTime.getDailyTime();
-                                int nights = Integer.parseInt(Util.getValueForLinkUrl(param, "nights"));
-
-                                String date = Util.getValueForLinkUrl(param, "date");
-                                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-                                Date schemeDate = format.parse(date);
-                                Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
-
-                                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                                if (dailyDayOfDays < 0)
-                                {
-                                    throw new NullPointerException("dailyDayOfDays < 0");
-                                }
-
-                                if (mOnUserActionListener != null)
-                                {
-                                    mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
-                                }
+                                throw new NullPointerException("dailyDayOfDays < 0");
                             }
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
 
-                            // 지역 리스트를 가져온다
-                            requestRegionList(baseActivity);
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
+                            }
+
+                        } else
+                        {
+                            // 신규 타입의 화면이동
+                            int fnbIndex = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "idx"));
+                            long dailyTime = mTodaySaleTime.getDailyTime();
+                            int nights = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "nights"));
+
+                            String date = Util.getValueForLinkUrl(deepLink, "date");
+                            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                            Date schemeDate = format.parse(date);
+                            Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+
+                            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                            if (dailyDayOfDays < 0)
+                            {
+                                throw new NullPointerException("dailyDayOfDays < 0");
+                            }
+
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
+                            }
                         }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+
+                        // 지역 리스트를 가져온다
+                        requestRegionList(baseActivity);
                     }
                 } else
                 {

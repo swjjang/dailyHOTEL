@@ -97,7 +97,7 @@ public class AnalyticsManager
         try
         {
             mTracker.send(MapBuilder.createTransaction(transId, "DailyHOTEL", price, 0d, 0d, "KRW").set("payType", payType).build());
-            mTracker.send(MapBuilder.createItem(transId, hotelName, "1", category, price, 1L, "KRW").set("checkInTime", checkInTime).set("checkOutTime", checkOutTime).set("currentTime", currentTime).build());
+            mTracker.send(MapBuilder.createItem(transId, hotelName, "1", category, price, 1L, "KRW").set("roomIndex", roomIndex).set("checkInTime", checkInTime).set("checkOutTime", checkOutTime).set("currentTime", currentTime).build());
             mTracker.send(MapBuilder.createEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L).build());
         } catch (Exception e)
         {

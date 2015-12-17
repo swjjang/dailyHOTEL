@@ -176,9 +176,6 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 
     private void disableShowGuide()
     {
-        Editor edit = sharedPreference.edit();
-        edit.putBoolean(KEY_PREFERENCE_SHOW_GUIDE, false);
-        edit.commit();
     }
 
     @Override

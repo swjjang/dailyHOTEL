@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
@@ -365,12 +366,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 // 로그인 실패
                 // data 초기화
-                SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
-                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                ed.putString(KEY_PREFERENCE_USER_ID, null);
-                ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
-                ed.commit();
+                DailyPreference.getInstance(baseActivity).removeUserInformation();
             } catch (Exception e)
             {
                 onError(e);
@@ -504,16 +500,13 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     mEmptyLayout.setVisibility(View.GONE);
 
                     // flag가 가상계좌 입금 대기에서 날아온경우
-                    SharedPreferences pref = getActivity().getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-                    int flag = pref.getInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, -1);
+                    int flag = DailyPreference.getInstance(baseActivity).getVirtualAccountReadyFlag();
                     if (flag == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                     {
                         unLockUI();
 
                         mListView.performItemClick(null, 1, 0);
-                        Editor editor = pref.edit();
-                        editor.remove(KEY_PREFERENCE_ACCOUNT_READY_FLAG);
-                        editor.apply();
+                        DailyPreference.getInstance(baseActivity).setVirtualAccountReadyFlag(-1);
                     }
                 }
             } catch (Exception e)
@@ -582,9 +575,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             } else if ("dead".equalsIgnoreCase(result) == true)
             { // session dead
                 // 재로그인
-                if (true == baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+                if (true == DailyPreference.getInstance(baseActivity).isAutoLogin())
                 {
-                    HashMap<String, String> params = Util.getLoginParams(baseActivity, baseActivity.sharedPreference);
+                    HashMap<String, String> params = Util.getLoginParams(baseActivity);
                     DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, baseActivity);
 
                     mListView.setVisibility(View.GONE);

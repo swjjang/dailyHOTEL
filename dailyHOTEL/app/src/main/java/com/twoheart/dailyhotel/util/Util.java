@@ -390,14 +390,12 @@ public class Util implements Constants
         }
     }
 
-    public static HashMap<String, String> getLoginParams(Context context, SharedPreferences sharedPreference)
+    public static HashMap<String, String> getLoginParams(Context context)
     {
-        String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-        String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-        String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
-        String type = sharedPreference.getString(KEY_PREFERENCE_USER_TYPE, null);
-
-        SharedPreferences.Editor editor = sharedPreference.edit();
+        String id = DailyPreference.getInstance(context).getUserId();
+        String accessToken = DailyPreference.getInstance(context).getUserAccessToken();
+        String pw = DailyPreference.getInstance(context).getUserPassword();
+        String type = DailyPreference.getInstance(context).getUserType();
 
         HashMap<String, String> params = new HashMap<String, String>();
 
@@ -410,7 +408,7 @@ public class Util implements Constants
             {
                 params.put("user_type", "facebook");
 
-                editor.putString(KEY_PREFERENCE_USER_TYPE, "facebook").apply();
+                DailyPreference.getInstance(context).setUserType("facebook");
             }
         } else
         {
@@ -421,11 +419,11 @@ public class Util implements Constants
             {
                 params.put("user_type", "normal");
 
-                editor.putString(KEY_PREFERENCE_USER_TYPE, "normal").apply();
+                DailyPreference.getInstance(context).setUserType("normal");
             }
         }
 
-        params.put("is_auto", sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) ? "true" : "false");
+        params.put("is_auto", DailyPreference.getInstance(context).isAutoLogin() ? "true" : "false");
         params.put("pw", pw);
 
         if (Util.isTextEmpty(type) == false)
@@ -434,9 +432,6 @@ public class Util implements Constants
         } else
         {
             // 만일 정보가 없으면 다시 로그인 하도록 수정한다
-            editor.clear();
-            editor.commit();
-
             DailyPreference.getInstance(context).clear();
 
             try

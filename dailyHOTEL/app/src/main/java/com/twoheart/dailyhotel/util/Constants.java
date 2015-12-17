@@ -91,57 +91,50 @@ public interface Constants
     public static final String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
     public static final String PACKAGE_NAME_KFTC = "com.kftc.bankpay.android";
     public static final String PACKAGE_NAME_MPOCKET = "kr.co.samsungcard.mpocket";
-    // Preference
-    public static final String NAME_DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT";
-    public static final String RESULT_ACTIVITY_SPLASH_NEW_EVENT = "NEW_EVENT";
+
     public static final String KEY_PREFERENCE_RESENT_CNT = "RESENT_CNT";
     // user info
-    public static final String KEY_PREFERENCE_AUTO_LOGIN = "AUTO_LOGIN";
-    public static final String KEY_PREFERENCE_USER_ID = "USER_ID";
-    public static final String KEY_PREFERENCE_USER_PWD = "USER_PWD";
-    public static final String KEY_PREFERENCE_USER_TYPE = "USER_TYPE";
-    public static final String KEY_PREFERENCE_USER_NAME = "USER_NAME";
-    public static final String KEY_PREFERENCE_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
-    public static final String KEY_PREFERENCE_GCM_ID = "PUSH_ID";
+
+
+
+
+
+
+
     public static final String KEY_PREFERENCE_OVERSEAS_NAME = "OVERSEAS_NAME";
     public static final String KEY_PREFERENCE_OVERSEAS_PHONE = "OVERSEAS_PHONE";
     public static final String KEY_PREFERENCE_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
     // version
     public static final String KEY_PREFERENCE_CURRENT_VERSION_NAME = "CURRENT_VERSION_NAME";
-    public static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
-    public static final String KEY_PREFERENCE_MAX_VERSION_NAME = "MAX_VERSION_NAME";
-    public static final String KEY_PREFERENCE_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
+
     // region
-    public static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
-    public static final String KEY_PREFERENCE_REGION_SELECT_BEFORE = "REGION_SELECT_BEFORE";
+
+
     public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
-    public static final String KEY_PREFERENCE_REGION_SETTING = "REGION_SETTING";
-    public static final String KEY_PREFERENCE_FNB_REGION_SETTING = "FNB_REGION_SETTING";
-    public static final String KEY_PREFERENCE_FNB_REGION_SELECT = "FNB_REGION_SELECT";
-    public static final String KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE = "FNB_REGION_SELECT_BEFORE";
+
+
+
     // ga
-    public static final String KEY_PREFERENCE_REGION_SELECT_GA = "REGION_SELECT_GA";
-    public static final String KEY_PREFERENCE_HOTEL_NAME_GA = "HOTEL_NAME_GA";
-    public static final String KEY_PREFERENCE_PLACE_REGION_SELECT_GA = "PLACE_REGION_SELECT_GA";
-    public static final String KEY_PREFERENCE_PLACE_NAME_GA = "PLACE_NAME_GA";
+
+
+
     public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
-    public static final String KEY_PREFERENCE_HOTEL_NAME = "HOTEL_NAME";
-    public static final String KEY_PREFERENCE_PLACE_NAME = "PLACE_NAME";
-    public static final String KEY_PREFERENCE_HOTEL_CHECKOUT = "HOTEL_CHECKOUT";
-    public static final String KEY_PREFERENCE_HOTEL_CHECKIN = "HOTEL_CHECKIN";
-    public static final String KEY_PREFERENCE_PLACE_TICKET_CHECKOUT = "PLACE_TICKET_CHECKOUT";
-    public static final String KEY_PREFERENCE_PLACE_TICKET_CHECKIN = "PLACE_TICKET_CHECKIN";
+
+
+
+
+
     public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
     public static final int VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT = 1;
     public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
-    public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
-    public static final String KEY_PREFERENCE_HOTEL_ROOM_IDX = "HOTEL_RESERVATION_IDX";
-    public static final String KEY_PREFERENCE_PLACE_TICKET_IDX = "PLACE_TICKET_RESERVATION_IDX";
-    public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
-    public static final String KEY_PREFERENCE_BY_SHARE = "BY_SHARE";
+
+
+
+
+
     // Event
-    public static final String KEY_PREFERENCE_LOOKUP_EVENT_TIME = "LOOKUP_EVENT_TIME";
-    public static final String KEY_PREFERENCE_NEW_EVENT_TIME = "NEW_EVENT_TIME";
+
+
     // Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
     public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
     public static final String NAME_INTENT_EXTRA_DATA_HOTELLIST = "hotellist";

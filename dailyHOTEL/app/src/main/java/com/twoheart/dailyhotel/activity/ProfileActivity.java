@@ -459,15 +459,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         {
             VolleyHttpClient.destroyCookie();
 
-            SharedPreferences.Editor ed = sharedPreference.edit();
-            //			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-            //			ed.putString(KEY_PREFERENCE_USER_ID, null);
-            //			ed.putString(KEY_PREFERENCE_USER_PWD, null);
-            //			ed.putString(KEY_PREFERENCE_GCM_ID, null);
-
-            ed.clear();
-            ed.commit();
-
             DailyPreference.getInstance(ProfileActivity.this).clear();
 
             try

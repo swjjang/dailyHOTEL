@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.FinalCheckLayout;
@@ -686,7 +687,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 mTicketPayment.setGuest(guest);
             }
 
-            String gcmId = sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
+            String gcmId = DailyPreference.getInstance(GourmetPaymentActivity.this).getGcmId();
 
             if (mTicketPayment.paymentType == TicketPayment.PaymentType.VBANK && Util.isTextEmpty(gcmId) == true)
             {
