@@ -123,6 +123,8 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             calendar.add(Calendar.MONTH, 1);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
         }
+
+        mDailyTextViews[dayCountOfMax - 1].setEnabled(false);
     }
 
     private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
@@ -296,6 +298,8 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                         textview.setEnabled(false);
                     }
                 }
+
+                mDailyTextViews[mDailyTextViews.length - 1].setEnabled(true);
             }
         } else
         {
@@ -322,6 +326,8 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                         dailTextView.setEnabled(true);
                     }
                 }
+
+                mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
                 return;
             }
 

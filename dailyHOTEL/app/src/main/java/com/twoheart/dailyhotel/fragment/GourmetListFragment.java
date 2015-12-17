@@ -165,6 +165,44 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (mViewType == VIEW_TYPE.MAP)
+        {
+            if (mPlaceMapFragment != null)
+            {
+                mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
+            }
+        } else
+        {
+            switch (requestCode)
+            {
+                case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+                    searchMyLocation();
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        if (mViewType == VIEW_TYPE.MAP)
+        {
+            if (mPlaceMapFragment != null)
+            {
+                mPlaceMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        } else
+        {
+            if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+            {
+                searchMyLocation();
+            }
+        }
+    }
+
+    @Override
     protected PlaceViewItem getPlaceViewItem(int position)
     {
         if (mGourmetListAdapter == null)
@@ -173,6 +211,22 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         return mGourmetListAdapter.getItem(position);
+    }
+
+    public void onPageSelected(boolean isRequestHotelList)
+    {
+        super.onPageSelected(isRequestHotelList);
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        mSortType = SortType.DEFAULT;
+
+        baseActivity.invalidateOptionsMenu();
     }
 
     @Override
@@ -357,7 +411,7 @@ public class GourmetListFragment extends PlaceListFragment
 
     protected void showSortDialogView()
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
 
         if (baseActivity == null || baseActivity.isFinishing() == true)
         {
@@ -409,6 +463,8 @@ public class GourmetListFragment extends PlaceListFragment
                 {
                     case DEFAULT:
                         refreshList(getProvince(), true);
+
+                        baseActivity.invalidateOptionsMenu();
                         break;
 
                     case DISTANCE:
@@ -418,6 +474,8 @@ public class GourmetListFragment extends PlaceListFragment
                     case LOW_PRICE:
                     case HIGH_PRICE:
                         requestSortHotelList(mSortType);
+
+                        baseActivity.invalidateOptionsMenu();
                         break;
                 }
             }
@@ -458,6 +516,11 @@ public class GourmetListFragment extends PlaceListFragment
         mSortType = sortType;
     }
 
+    public SortType getSortType()
+    {
+        return mSortType;
+    }
+
     private void searchMyLocation()
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -486,6 +549,36 @@ public class GourmetListFragment extends PlaceListFragment
             public void onFailed()
             {
                 mSortType = mPrevSortType;
+
+                if (Util.isOverAPI23() == true)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null || baseActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps_android6)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mSortType = mPrevSortType;
+                        }
+                    }, true);
+                }
             }
 
             @Override
@@ -557,6 +650,8 @@ public class GourmetListFragment extends PlaceListFragment
                 if (SortType.DISTANCE == mSortType)
                 {
                     requestSortHotelList(mSortType);
+
+                    baseActivity.invalidateOptionsMenu();
                 }
             }
         });

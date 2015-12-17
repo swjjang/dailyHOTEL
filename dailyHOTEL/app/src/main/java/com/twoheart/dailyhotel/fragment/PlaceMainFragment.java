@@ -4,14 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
@@ -36,8 +32,8 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected VIEW_TYPE mViewType = VIEW_TYPE.LIST;
     protected boolean mMapEnabled;
 
-    private boolean mMenuEnabled;
-    private boolean mDontReloadAtOnResume;
+    boolean mMenuEnabled;
+    boolean mDontReloadAtOnResume;
 
     public enum VIEW_TYPE
     {
@@ -129,38 +125,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         super.onResume();
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        MenuInflater inflater = baseActivity.getMenuInflater();
-
-        menu.clear();
-
-        if (mMenuEnabled == true)
-        {
-            switch (mViewType)
-            {
-                case LIST:
-                    inflater.inflate(R.menu.actionbar_icon_map, menu);
-                    break;
-
-                case MAP:
-                    inflater.inflate(R.menu.actionbar_icon_list, menu);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
     public void setMenuEnabled(boolean enabled)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -186,64 +150,6 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         // 메뉴가 열리는 시점이다.
         setActionBarAnimationLock(enabled);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return false;
-        }
-
-        switch (item.getItemId())
-        {
-            case R.id.action_list:
-            {
-                boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
-
-                if (isInstalledGooglePlayServices == true)
-                {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.toggleViewType();
-                    }
-
-                    baseActivity.invalidateOptionsMenu();
-                }
-                return true;
-            }
-
-            case R.id.action_map:
-            {
-                boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
-
-                if (isInstalledGooglePlayServices == true)
-                {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.toggleViewType();
-                    }
-
-                    baseActivity.invalidateOptionsMenu();
-                }
-                return true;
-            }
-
-            case R.id.action_sort:
-            {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.showSortDialogView();
-                }
-                return true;
-            }
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

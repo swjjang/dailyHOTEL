@@ -196,6 +196,29 @@ public class HotelMainFragment extends BaseFragment
             {
                 case LIST:
                     inflater.inflate(R.menu.actionbar_icon_map, menu);
+
+                    MenuItem menuItem = menu.getItem(0);
+
+                    HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+                    switch (currentFragment.getSortType())
+                    {
+                        case DEFAULT:
+                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_01);
+                            break;
+
+                        case DISTANCE:
+                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_02);
+                            break;
+
+                        case LOW_PRICE:
+                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_03);
+                            break;
+
+                        case HIGH_PRICE:
+                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_04);
+                            break;
+                    }
                     break;
 
                 case MAP:
@@ -327,6 +350,8 @@ public class HotelMainFragment extends BaseFragment
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             case CODE_REQUEST_ACTIVITY_CALENDAR:
             {
+                mDontReloadAtOnResume = true;
+
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
                 currentFragment.onActivityResult(requestCode, resultCode, data);
                 break;
@@ -440,6 +465,9 @@ public class HotelMainFragment extends BaseFragment
         if (isSelectionTop == true)
         {
             hotelListFragment.setSortType(HotelListFragment.SortType.DEFAULT);
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.invalidateOptionsMenu();
         }
 
         hotelListFragment.refreshHotelList(province, isSelectionTop);

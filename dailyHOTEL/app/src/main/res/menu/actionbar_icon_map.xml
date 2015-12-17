@@ -1,10 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_sort"
-        android:icon="@drawable/actionbar_ic_sorting"
+        android:icon="@drawable/actionbar_ic_sorting_01"
         android:orderInCategory="100"
         android:title="@string/label_sort"
         app:showAsAction="always"/>

@@ -60,6 +60,7 @@ public class DailyViewPagerIndicator extends RelativeLayout
 
         mDescriptionTextView.setLayoutParams(descLayoutParams);
         addView(mDescriptionTextView);
+        mDescriptionTextView.setVisibility(View.INVISIBLE);
 
         RelativeLayout.LayoutParams pageLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         mPageTextView.setTextColor(context.getResources().getColor(R.color.white_a80));
@@ -73,6 +74,7 @@ public class DailyViewPagerIndicator extends RelativeLayout
         mPageTextView.setShadowLayer(1, 1, 1, context.getResources().getColor(R.color.black_a40));
         mPageTextView.setPadding(Util.dpToPx(context, 5), Util.dpToPx(context, 2), Util.dpToPx(context, 5), Util.dpToPx(context, 2));
         addView(mPageTextView);
+        mPageTextView.setVisibility(View.INVISIBLE);
     }
 
     public void setImageInformation(String description, int position)

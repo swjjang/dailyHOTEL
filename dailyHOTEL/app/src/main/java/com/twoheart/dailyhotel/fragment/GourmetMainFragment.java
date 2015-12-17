@@ -12,6 +12,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -102,6 +105,119 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        MenuInflater inflater = baseActivity.getMenuInflater();
+
+        menu.clear();
+
+        if (mMenuEnabled == true)
+        {
+            switch (mViewType)
+            {
+                case LIST:
+                    inflater.inflate(R.menu.actionbar_icon_map, menu);
+
+                    MenuItem menuItem = menu.getItem(0);
+
+                    GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
+
+                    switch (gourmetListFragment.getSortType())
+                    {
+                        case DEFAULT:
+                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_01);
+                            break;
+
+                        case DISTANCE:
+                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_02);
+                            break;
+
+                        case LOW_PRICE:
+                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_03);
+                            break;
+
+                        case HIGH_PRICE:
+                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_04);
+                            break;
+                    }
+                    break;
+
+                case MAP:
+                    inflater.inflate(R.menu.actionbar_icon_list, menu);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return false;
+        }
+
+        switch (item.getItemId())
+        {
+            case R.id.action_list:
+            {
+                boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
+
+                if (isInstalledGooglePlayServices == true)
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.toggleViewType();
+                    }
+
+                    baseActivity.invalidateOptionsMenu();
+                }
+                return true;
+            }
+
+            case R.id.action_map:
+            {
+                boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
+
+                if (isInstalledGooglePlayServices == true)
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.toggleViewType();
+                    }
+
+                    baseActivity.invalidateOptionsMenu();
+                }
+                return true;
+            }
+
+            case R.id.action_sort:
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.showSortDialogView();
+                }
+                return true;
+            }
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void showSlidingDrawer()
     {
         mTabIndicator.setVisibility(View.VISIBLE);
@@ -189,6 +305,9 @@ public class GourmetMainFragment extends PlaceMainFragment
         if (isSelectionTop == true)
         {
             gourmetListFragment.setSortType(PlaceListFragment.SortType.DEFAULT);
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.invalidateOptionsMenu();
         }
 
         gourmetListFragment.refreshList(province, isSelectionTop);
@@ -202,6 +321,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             case CODE_REQUEST_ACTIVITY_CALENDAR:
             {
+                mDontReloadAtOnResume = true;
+
                 PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
                 currentFragment.onActivityResult(requestCode, resultCode, data);
                 break;

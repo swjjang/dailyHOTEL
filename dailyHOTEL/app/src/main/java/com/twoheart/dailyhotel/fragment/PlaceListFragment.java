@@ -19,7 +19,6 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
@@ -106,23 +105,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         super.onDestroyView();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (mPlaceMapFragment != null)
-        {
-            mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        if (mPlaceMapFragment != null)
-        {
-            mPlaceMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
 
     /**
      * 토글이 아닌 경우에만 진행하는 프로세스.
@@ -137,6 +119,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     //            refreshList(mSelectedProvince, true);
     //        }
     //    }
+
     public void onPageSelected(boolean isRequestHotelList)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();

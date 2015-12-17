@@ -71,12 +71,12 @@
                     android:freezesText="true"
                     android:gravity="center_vertical"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:paddingRight="3dp"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginRight="3dp"/>
             </RelativeLayout>
 
             <RelativeLayout

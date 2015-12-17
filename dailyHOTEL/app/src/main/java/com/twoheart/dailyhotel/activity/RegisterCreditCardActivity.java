@@ -65,6 +65,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.getSettings().setSavePassword(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
