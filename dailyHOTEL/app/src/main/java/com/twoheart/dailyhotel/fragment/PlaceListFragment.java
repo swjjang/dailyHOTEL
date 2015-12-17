@@ -19,7 +19,6 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
@@ -105,7 +104,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
         super.onDestroyView();
     }
-
 
 
     /**

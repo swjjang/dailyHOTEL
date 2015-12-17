@@ -33,7 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -83,13 +82,13 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         handler = new Handler();
         mNetworkTag = getClass().getName();
 
-//        if (Util.isOverAPI21() == true)
-//        {
-//            Window window = getWindow();
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            window.setStatusBarColor(getResources().getColor(R.color.dh_theme_color));
-//        }
+        //        if (Util.isOverAPI21() == true)
+        //        {
+        //            Window window = getWindow();
+        //            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //            window.setStatusBarColor(getResources().getColor(R.color.dh_theme_color));
+        //        }
     }
 
     @Override

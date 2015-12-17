@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;

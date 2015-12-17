@@ -86,7 +86,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
                 if (cancelRequest != null && cancelRequest.getTag() != null && cancelRequest.getTag().equals(tag))
                 {
-                        return true;
+                    return true;
                 }
 
                 return false;

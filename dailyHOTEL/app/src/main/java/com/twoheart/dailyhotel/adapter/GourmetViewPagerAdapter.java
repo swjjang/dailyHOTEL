@@ -126,7 +126,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         placeLayout.setBackgroundDrawable(p);
 
         // grade
-        if(Util.isTextEmpty(gourmet.category) == true)
+        if (Util.isTextEmpty(gourmet.category) == true)
         {
             grade.setVisibility(View.INVISIBLE);
         } else

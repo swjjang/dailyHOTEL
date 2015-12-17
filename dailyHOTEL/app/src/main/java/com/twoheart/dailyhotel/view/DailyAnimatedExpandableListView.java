@@ -33,8 +33,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
-import com.twoheart.dailyhotel.activity.SelectAreaActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -436,7 +434,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
                             notifyDataSetChanged();
                             dummyView.setTag(STATE_IDLE);
 
-                            if(mOnAnimationListener != null)
+                            if (mOnAnimationListener != null)
                             {
                                 mOnAnimationListener.onAnimationEnd();
                             }
