@@ -101,12 +101,7 @@ public class ZoomMapActivity extends BaseActivity
     {
         if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
         {
-            boolean permission = LocationFactory.getInstance(this).hasPermission();
-
-            if (permission == true)
-            {
-                searchMyLocation(this);
-            }
+            searchMyLocation(this);
         }
     }
 

@@ -167,9 +167,12 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (mPlaceMapFragment != null)
+        if (mViewType == VIEW_TYPE.MAP)
         {
-            mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
+            if (mPlaceMapFragment != null)
+            {
+                mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
+            }
         } else
         {
             switch (requestCode)
@@ -177,6 +180,24 @@ public class GourmetListFragment extends PlaceListFragment
                 case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
                     searchMyLocation();
                     break;
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        if (mViewType == VIEW_TYPE.MAP)
+        {
+            if (mPlaceMapFragment != null)
+            {
+                mPlaceMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        } else
+        {
+            if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+            {
+                searchMyLocation();
             }
         }
     }
@@ -512,6 +533,36 @@ public class GourmetListFragment extends PlaceListFragment
             public void onFailed()
             {
                 mSortType = mPrevSortType;
+
+                if (Util.isOverAPI23() == true)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null || baseActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps_android6)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mSortType = mPrevSortType;
+                        }
+                    }, true);
+                }
             }
 
             @Override

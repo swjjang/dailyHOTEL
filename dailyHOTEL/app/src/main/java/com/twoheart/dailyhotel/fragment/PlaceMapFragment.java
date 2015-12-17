@@ -237,12 +237,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
                 return;
             }
 
-            boolean permission = LocationFactory.getInstance(baseActivity).hasPermission();
-
-            if (permission == true)
-            {
-                searchMyLocation(baseActivity);
-            }
+            searchMyLocation(baseActivity);
         }
     }
 
@@ -801,7 +796,28 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
             @Override
             public void onFailed()
             {
+                if (Util.isOverAPI23() == true)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
 
+                    if (baseActivity == null || baseActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps_android6)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                        }
+                    }, null, true);
+                }
             }
 
             @Override

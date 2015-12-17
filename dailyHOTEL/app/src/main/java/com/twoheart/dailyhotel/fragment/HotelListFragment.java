@@ -238,9 +238,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (mHotelListMapFragment != null)
+        if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
         {
-            mHotelListMapFragment.onActivityResult(requestCode, resultCode, data);
+            if (mHotelListMapFragment != null)
+            {
+                mHotelListMapFragment.onActivityResult(requestCode, resultCode, data);
+            }
         } else
         {
             switch (requestCode)
@@ -255,9 +258,18 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        if (mHotelListMapFragment != null)
+        if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
         {
-            mHotelListMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            if (mHotelListMapFragment != null)
+            {
+                mHotelListMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        } else
+        {
+            if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+            {
+                searchMyLocation();
+            }
         }
     }
 
@@ -649,6 +661,36 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             public void onFailed()
             {
                 mSortType = mPrevSortType;
+
+                if (Util.isOverAPI23() == true)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null || baseActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps_android6)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mSortType = mPrevSortType;
+                        }
+                    }, true);
+                }
             }
 
             @Override

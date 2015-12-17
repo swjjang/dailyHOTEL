@@ -1,11 +1,13 @@
 package com.twoheart.dailyhotel.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -13,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -198,14 +201,14 @@ public class LocationFactory
             return;
         }
 
-        if (hasPermission() == false)
-        {
-            if (mLocationListener != null)
-            {
-                mLocationListener.onRequirePermission();
-            }
-            return;
-        }
+//        if (hasPermission() == false)
+//        {
+//            if (mLocationListener != null)
+//            {
+//                mLocationListener.onRequirePermission();
+//            }
+//            return;
+//        }
 
         mIsMeasuringLocation = true;
 
@@ -250,33 +253,34 @@ public class LocationFactory
         startLocationMeasure(fragment.getActivity(), myLocation, listener);
     }
 
-    public boolean hasPermission()
-    {
-        if (Util.isOverAPI23() == true)
-        {
-            if (mLocationManager == null)
-            {
-                mLocationManager = (LocationManager) mBaseActivity.getSystemService(Context.LOCATION_SERVICE);
-            }
-
-            List<String> matchingProviders = mLocationManager.getAllProviders();
-
-            for (String provider : matchingProviders)
-            {
-                Location location = mLocationManager.getLastKnownLocation(provider);
-
-                if (location != null)
-                {
-                    return true;
-                }
-            }
-        } else
-        {
-            return true;
-        }
-
-        return false;
-    }
+//    public boolean hasPermission()
+//    {
+//        if (Util.isOverAPI23() == true)
+//        {
+//            if (mLocationManager == null)
+//            {
+//                mLocationManager = (LocationManager) mBaseActivity.getSystemService(Context.LOCATION_SERVICE);
+//            }
+//
+//            List<String> matchingProviders = mLocationManager.getAllProviders();
+//
+//            for (String provider : matchingProviders)
+//            {
+//                Location location = mLocationManager.getLastKnownLocation(provider);
+//                boolean isEnabled = mLocationManager.isProviderEnabled(provider);
+//
+//                if (location != null)
+//                {
+//                    return true;
+//                }
+//            }
+//        } else
+//        {
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     public Location getLastBestLocation(Context context, int minDistance, long minTime)
     {
