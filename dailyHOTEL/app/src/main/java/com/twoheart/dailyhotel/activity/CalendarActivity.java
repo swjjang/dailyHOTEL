@@ -141,13 +141,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
 
         // day
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2;
-
-        // 일요일 이면
-        if (dayOfWeek < 0)
-        {
-            dayOfWeek = 6;
-        }
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 
         int length = maxDayOfMonth - day + 1 + dayOfWeek;
         final int LENGHT_OF_WEEK = 7;
