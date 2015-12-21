@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -52,6 +53,7 @@ public class HotelMainFragment extends BaseFragment
 {
     private  static final int TAB_COUNT = 3;
 
+    private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -133,6 +135,7 @@ public class HotelMainFragment extends BaseFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
+        mAppBarLayout = (AppBarLayout)view.findViewById(R.id.appBarLayout);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         LayoutInflater inflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -538,6 +541,8 @@ public class HotelMainFragment extends BaseFragment
             {
                 mViewPager.setCurrentItem(tab.getPosition());
             }
+
+            mAppBarLayout.setExpanded(true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);

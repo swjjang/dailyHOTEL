@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 
@@ -119,23 +120,21 @@ public class MainActivity extends BaseActivity implements Constants
     {
         setContentView(R.layout.activity_main);
 
-        //순서 중요
-        // 1
-//        Toolbar toolbar;
-//
-//        if (Util.isTextEmpty(title) == false)
-//        {
-//            toolbar = setActionBar(title, false);
-//        } else
-//        {
-//            if (getString(R.string.label_dailygourmet).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
-//            {
-//                toolbar = setActionBar(getString(R.string.actionbar_title_gourmet_list_frag), false);
-//            } else
-//            {
-//                toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
-//            }
-//        }
+        View bottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
+
+        bottomMenuBarLayout.findViewById(R.id.hotelView);
+        bottomMenuBarLayout.findViewById(R.id.gourmetView);
+        bottomMenuBarLayout.findViewById(R.id.bookingView);
+        View informationView = bottomMenuBarLayout.findViewById(R.id.informationView);
+        informationView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                selectMenu(INDEX_INFORMATION_FRAGMENT);
+            }
+        });
+
 
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
 
@@ -389,27 +388,27 @@ public class MainActivity extends BaseActivity implements Constants
     {
         switch (index)
         {
-            case R.drawable.selector_drawermenu_todayshotel:
+            case INDEX_HOTEL_FRAGMENT:
                 mIndexLastFragment = INDEX_HOTEL_FRAGMENT;
 
                 DailyPreference.getInstance(this).setLastMenu(getString(R.string.label_dailyhotel));
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_hotel_list_frag), (long) index);
                 break;
 
-            case R.drawable.selector_drawermenu_gourmet:
+            case INDEX_GOURMET_FRAGMENT:
                 mIndexLastFragment = INDEX_GOURMET_FRAGMENT;
 
                 DailyPreference.getInstance(this).setLastMenu(getString(R.string.label_dailygourmet));
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_gourmet_list_frag), (long) index);
                 break;
 
-            case R.drawable.selector_drawermenu_reservation:
+            case INDEX_BOOKING_FRAGMENT:
                 mIndexLastFragment = INDEX_BOOKING_FRAGMENT;
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_booking_list_frag), (long) index);
                 break;
 
-            case R.drawable.selector_drawermenu_setting:
+            case INDEX_INFORMATION_FRAGMENT:
                 mIndexLastFragment = INDEX_INFORMATION_FRAGMENT;
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_setting_frag), (long) index);

@@ -53,7 +53,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-public class HotelListMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<HotelClusterItem>, ClusterManager.OnClusterItemClickListener<HotelClusterItem>
+public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<HotelClusterItem>, ClusterManager.OnClusterItemClickListener<HotelClusterItem>
 {
     protected HotelMainFragment.OnUserActionListener mUserActionListener;
     private GoogleMap mGoogleMap;
@@ -82,13 +82,13 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
         @Override
         public boolean onMarkerClick(Marker marker)
         {
-            HotelListMapFragment.this.onMarkerClick(marker.getPosition());
+            HotelMapFragment.this.onMarkerClick(marker.getPosition());
 
             return true;
         }
     };
 
-    public HotelListMapFragment()
+    public HotelMapFragment()
     {
     }
 
@@ -390,8 +390,8 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
 
         mClusterManager.clearItems();
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
-        mClusterManager.setOnClusterClickListener(HotelListMapFragment.this);
-        mClusterManager.setOnClusterItemClickListener(HotelListMapFragment.this);
+        mClusterManager.setOnClusterClickListener(HotelMapFragment.this);
+        mClusterManager.setOnClusterItemClickListener(HotelMapFragment.this);
 
         for (HotelListViewItem hotelListViewItem : mHotelArrangeArrayList)
         {
@@ -791,7 +791,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
 
     private void searchMyLocation(BaseActivity baseActivity)
     {
-        LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelListMapFragment.this, mMyLocationView, new LocationFactory.LocationListenerEx()
+        LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelMapFragment.this, mMyLocationView, new LocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()

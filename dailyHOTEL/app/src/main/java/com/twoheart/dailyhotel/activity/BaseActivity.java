@@ -54,7 +54,6 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 public class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
-    private Toolbar mToolbar;
     private Dialog mDialog;
     private LoadingDialog mLockUI;
     private Handler handler;
@@ -148,34 +147,31 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
      *
      * @param title 액션바에 표시할 화면의 제목을 받는다.
      */
-    public Toolbar setActionBar(String title, boolean isFinish)
+    public void setActionBar(Toolbar toolbar, String title, boolean isFinish)
     {
-        if (mToolbar == null)
+        if(toolbar == null)
         {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
-            try
-            {
-                setSupportActionBar(mToolbar);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-            mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
+            return;
         }
 
-        FontManager.apply(mToolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
+        try
+        {
+            setSupportActionBar(toolbar);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
-        setActionBarAreaEnabled(false);
-        //		mToolbar.setTitle(title);
-        getSupportActionBar().setTitle(title);
+        toolbar.setTitle(title);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.white));
+
+        FontManager.apply(toolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
         if (isFinish == true)
         {
-            mToolbar.setNavigationIcon(R.drawable.back);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener()
+            toolbar.setNavigationIcon(R.drawable.back);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -184,48 +180,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 }
             });
         }
-
-        return mToolbar;
-    }
-
-    public void setActionBarBackgroundVisible(boolean visible)
-    {
-        if (mToolbar == null)
-        {
-            return;
-        }
-
-        View view = findViewById(R.id.toolbar_actionbarUnderLine);
-
-        if (visible == true)
-        {
-            if (view.getVisibility() != View.VISIBLE)
-            {
-                mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-                mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
-
-                view.setVisibility(View.VISIBLE);
-            }
-        } else
-        {
-            if (view.getVisibility() != View.INVISIBLE)
-            {
-                mToolbar.setTitleTextColor(getResources().getColor(android.R.color.transparent));
-                mToolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
-                view.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    public void setActionBar(int strId)
-    {
-        setActionBar(getString(strId), true);
-    }
-
-    public Toolbar setActionBar(String text)
-    {
-        return setActionBar(text, true);
     }
 
     public void setActionBarRegionEnable(boolean isEnable)

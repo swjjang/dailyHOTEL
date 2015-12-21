@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class HotelFragmentPagerAdapter extends FragmentPagerAdapter
 {
     private ArrayList<HotelListFragment> mFragmentList;
-    private HotelMainFragment.OnUserActionListener mOnUserActionListener;
     private int mTabCount;
 
     public HotelFragmentPagerAdapter(FragmentManager fragmentManager, int count, HotelMainFragment.OnUserActionListener listener)
@@ -20,15 +19,15 @@ public class HotelFragmentPagerAdapter extends FragmentPagerAdapter
         mFragmentList = new ArrayList<>(count);
 
         HotelListFragment hotelListFragment01 = new HotelListFragment();
-        hotelListFragment01.setOnUserActionListener(mOnUserActionListener);
+        hotelListFragment01.setOnUserActionListener(listener);
         mFragmentList.add(hotelListFragment01);
 
         HotelListFragment hotelListFragment02 = new HotelListFragment();
-        hotelListFragment02.setOnUserActionListener(mOnUserActionListener);
+        hotelListFragment02.setOnUserActionListener(listener);
         mFragmentList.add(hotelListFragment02);
 
         HotelDaysListFragment hotelListFragment03 = new HotelDaysListFragment();
-        hotelListFragment03.setOnUserActionListener(mOnUserActionListener);
+        hotelListFragment03.setOnUserActionListener(listener);
         mFragmentList.add(hotelListFragment03);
     }
 

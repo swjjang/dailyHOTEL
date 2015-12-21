@@ -1,49 +1,21 @@
-/*
- * Copyright (C) 2013 Sergej Shafarenka, halfbit.de
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file kt in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.twoheart.dailyhotel.view.widget;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
 import android.os.Parcelable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.accessibility.AccessibilityEvent;
-import android.widget.AbsListView;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SectionIndexer;
 
-/**
- * ListView, which is capable to pin section views at its top while the rest is
- * still scrolled.
- */
-public class PinnedSectionListView extends ListView
+public class PinnedSectionRecycleView extends RecyclerView
 {
-
     //-- inner classes
 
     // fields used for handling touch events
@@ -79,31 +51,36 @@ public class PinnedSectionListView extends ListView
      */
     private final OnScrollListener mOnScrollListener = new OnScrollListener()
     {
-
         @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState)
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
         {
             if (mDelegateOnScrollListener != null)
             { // delegate
-                mDelegateOnScrollListener.onScrollStateChanged(view, scrollState);
+                mDelegateOnScrollListener.onScrollStateChanged(recyclerView, newState);
             }
         }
 
         @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-
             if (mDelegateOnScrollListener != null)
             { // delegate
-                mDelegateOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                mDelegateOnScrollListener.onScrolled(recyclerView, dx, dy);
             }
 
             // get expected adapter or fail fast
-            ListAdapter adapter = getAdapter();
-            if (adapter == null || visibleItemCount == 0)
+            Adapter adapter = getAdapter();
+            if (adapter == null)
             {
                 return; // nothing to do
             }
+
+            View firstView = findChildViewUnder(recyclerView.getLeft() + 1, getTop() + 1);
+            View lastView = findChildViewUnder(recyclerView.getLeft() + 1, getBottom() - 1);
+
+            int firstVisibleItem = getChildAdapterPosition(firstView);
+            int lastVisibleItem = getChildAdapterPosition(lastView);
+            int visibleItemCount = lastVisibleItem - firstVisibleItem + 1;
 
             final boolean isFirstVisibleItemSection = isItemViewTypePinned(adapter, adapter.getItemViewType(firstVisibleItem));
 
@@ -121,6 +98,7 @@ public class PinnedSectionListView extends ListView
             } else
             { // section is not at the first visible position
                 int sectionPosition = findCurrentSectionPosition(firstVisibleItem);
+
                 if (sectionPosition > -1)
                 { // we have section position
                     ensureShadowForPosition(sectionPosition, firstVisibleItem, visibleItemCount);
@@ -134,29 +112,23 @@ public class PinnedSectionListView extends ListView
     /**
      * Default change observer.
      */
-    private final DataSetObserver mDataSetObserver = new DataSetObserver()
+    private final AdapterDataObserver mDataSetObserver = new AdapterDataObserver()
     {
         @Override
         public void onChanged()
         {
             recreatePinnedShadow();
         }
-
-        @Override
-        public void onInvalidated()
-        {
-            recreatePinnedShadow();
-        }
     };
     private int mShadowHeight;
 
-    public PinnedSectionListView(Context context, AttributeSet attrs)
+    public PinnedSectionRecycleView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         initView();
     }
 
-    public PinnedSectionListView(Context context, AttributeSet attrs, int defStyle)
+    public PinnedSectionRecycleView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
         initView();
@@ -164,12 +136,8 @@ public class PinnedSectionListView extends ListView
 
     //-- constructors
 
-    public static boolean isItemViewTypePinned(ListAdapter adapter, int viewType)
+    public boolean isItemViewTypePinned(Adapter adapter, int viewType)
     {
-        if (adapter instanceof HeaderViewListAdapter)
-        {
-            adapter = ((HeaderViewListAdapter) adapter).getWrappedAdapter();
-        }
         return ((PinnedSectionListAdapter) adapter).isItemViewTypePinned(viewType);
     }
 
@@ -185,7 +153,7 @@ public class PinnedSectionListView extends ListView
         initShadow(visible);
         if (mPinnedSection != null)
         {
-            View v = mPinnedSection.view;
+            View v = mPinnedSection.viewHolder.itemView;
             invalidate(v.getLeft(), v.getTop(), v.getRight(), v.getBottom() + mShadowHeight);
         }
     }
@@ -198,7 +166,7 @@ public class PinnedSectionListView extends ListView
         {
             if (mShadowDrawable == null)
             {
-                mShadowDrawable = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{Color.parseColor("#ffa0a0a0"), Color.parseColor("#50a0a0a0"), Color.parseColor("#00a0a0a0")});
+                mShadowDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{Color.parseColor("#ffa0a0a0"), Color.parseColor("#50a0a0a0"), Color.parseColor("#00a0a0a0")});
                 mShadowHeight = (int) (8 * getResources().getDisplayMetrics().density);
             }
         } else
@@ -228,14 +196,15 @@ public class PinnedSectionListView extends ListView
             pinnedShadow = new PinnedSection();
         }
         // request new view using recycled view, if such
-        View pinnedView = getAdapter().getView(position, pinnedShadow.view, PinnedSectionListView.this);
+        ViewHolder pinnedViewHolder = getAdapter().createViewHolder(null, 1);
+        getAdapter().onBindViewHolder(pinnedViewHolder, position);
 
         // read layout parameters
-        LayoutParams layoutParams = (LayoutParams) pinnedView.getLayoutParams();
+        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) pinnedViewHolder.itemView.getLayoutParams();
         if (layoutParams == null)
         {
-            layoutParams = (LayoutParams) generateDefaultLayoutParams();
-            pinnedView.setLayoutParams(layoutParams);
+            layoutParams = (RecyclerView.LayoutParams) generateDefaultLayoutParams();
+            pinnedViewHolder.itemView.setLayoutParams(layoutParams);
         }
 
         int heightMode = MeasureSpec.getMode(layoutParams.height);
@@ -246,21 +215,21 @@ public class PinnedSectionListView extends ListView
             heightMode = MeasureSpec.EXACTLY;
         }
 
-        int maxHeight = getHeight() - getListPaddingTop() - getListPaddingBottom();
+        int maxHeight = getHeight() - getPaddingTop() - getPaddingBottom();
         if (heightSize > maxHeight)
         {
             heightSize = maxHeight;
         }
 
         // measure & layout
-        int ws = MeasureSpec.makeMeasureSpec(getWidth() - getListPaddingLeft() - getListPaddingRight(), MeasureSpec.EXACTLY);
+        int ws = MeasureSpec.makeMeasureSpec(getWidth() - getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY);
         int hs = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
-        pinnedView.measure(ws, hs);
-        pinnedView.layout(0, 0, pinnedView.getMeasuredWidth(), pinnedView.getMeasuredHeight());
+        pinnedViewHolder.itemView.measure(ws, hs);
+        pinnedViewHolder.itemView.layout(0, 0, pinnedViewHolder.itemView.getMeasuredWidth(), pinnedViewHolder.itemView.getMeasuredHeight());
         mTranslateY = 0;
 
         // initialize pinned shadow
-        pinnedShadow.view = pinnedView;
+        pinnedShadow.viewHolder = pinnedViewHolder;
         pinnedShadow.position = position;
         pinnedShadow.id = getAdapter().getItemId(position);
 
@@ -304,13 +273,16 @@ public class PinnedSectionListView extends ListView
 
         // align shadow according to next section position, if needed
         int nextPosition = sectionPosition + 1;
-        if (nextPosition < getCount())
+
+        if (nextPosition < getAdapter().getItemCount())
         {
             int nextSectionPosition = findFirstVisibleSectionPosition(nextPosition, visibleItemCount - (nextPosition - firstVisibleItem));
+
             if (nextSectionPosition > -1)
             {
                 View nextSectionView = getChildAt(nextSectionPosition - firstVisibleItem);
-                final int bottom = mPinnedSection.view.getBottom() + getPaddingTop();
+
+                final int bottom = mPinnedSection.viewHolder.itemView.getBottom() + getPaddingTop();
                 mSectionsDistanceY = nextSectionView.getTop() - bottom;
                 if (mSectionsDistanceY < 0)
                 {
@@ -328,15 +300,17 @@ public class PinnedSectionListView extends ListView
                 mSectionsDistanceY = Integer.MAX_VALUE;
             }
         }
-
     }
 
     int findFirstVisibleSectionPosition(int firstVisibleItem, int visibleItemCount)
     {
-        ListAdapter adapter = getAdapter();
+        Adapter adapter = getAdapter();
 
-        int adapterDataCount = adapter.getCount();
-        if (getLastVisiblePosition() >= adapterDataCount)
+        int adapterDataCount = adapter.getItemCount();
+        View view = findChildViewUnder(getLeft() + 1, getBottom() - 1);
+        int lastVisibleItem = getChildAdapterPosition(view);
+
+        if (lastVisibleItem >= adapterDataCount)
         {
             return -1; // dataset has changed, no candidate
         }
@@ -360,9 +334,9 @@ public class PinnedSectionListView extends ListView
 
     int findCurrentSectionPosition(int fromPosition)
     {
-        ListAdapter adapter = getAdapter();
+        Adapter adapter = getAdapter();
 
-        if (fromPosition >= adapter.getCount())
+        if (fromPosition >= adapter.getItemCount())
         {
             return -1; // dataset has changed, no candidate
         }
@@ -395,16 +369,22 @@ public class PinnedSectionListView extends ListView
     void recreatePinnedShadow()
     {
         destroyPinnedShadow();
-        ListAdapter adapter = getAdapter();
-        if (adapter != null && adapter.getCount() > 0)
+        Adapter adapter = getAdapter();
+        if (adapter != null && adapter.getItemCount() > 0)
         {
-            int firstVisiblePosition = getFirstVisiblePosition();
+            View firstView = findChildViewUnder(getLeft() + 1, getTop() + 1);
+            View lastView = findChildViewUnder(getLeft() + 1, getBottom() - 1);
+
+            int firstVisibleItem = getChildAdapterPosition(firstView);
+            int lastVisibleItem = getChildAdapterPosition(lastView);
+
+            int firstVisiblePosition = firstVisibleItem;
             int sectionPosition = findCurrentSectionPosition(firstVisiblePosition);
             if (sectionPosition == -1)
             {
                 return; // no views to pin, exit
             }
-            ensureShadowForPosition(sectionPosition, firstVisiblePosition, getLastVisiblePosition() - firstVisiblePosition);
+            ensureShadowForPosition(sectionPosition, firstVisiblePosition, lastVisibleItem - firstVisiblePosition);
         }
     }
 
@@ -435,31 +415,22 @@ public class PinnedSectionListView extends ListView
     }
 
     @Override
-    public void setAdapter(ListAdapter adapter)
+    public void setAdapter(Adapter adapter)
     {
-
         // assert adapter in debug mode
         if (adapter != null)
         {
-            if (!(adapter instanceof PinnedSectionListAdapter))
-            {
-                throw new IllegalArgumentException("Does your adapter implement PinnedSectionListAdapter?");
-            }
-            if (adapter.getViewTypeCount() < 2)
-            {
-                throw new IllegalArgumentException("Does your adapter handle at least two types" + " of views in getViewTypeCount() method: items and sections?");
-            }
         }
 
         // unregister observer at old adapter and register on new one
-        ListAdapter oldAdapter = getAdapter();
+        Adapter oldAdapter = getAdapter();
         if (oldAdapter != null)
         {
-            oldAdapter.unregisterDataSetObserver(mDataSetObserver);
+            oldAdapter.unregisterAdapterDataObserver(mDataSetObserver);
         }
         if (adapter != null)
         {
-            adapter.registerDataSetObserver(mDataSetObserver);
+            adapter.registerAdapterDataObserver(mDataSetObserver);
         }
 
         // destroy pinned shadow, if new adapter is not same as old one
@@ -481,7 +452,7 @@ public class PinnedSectionListView extends ListView
             if (mPinnedSection != null)
             {
                 int parentWidth = r - l - getPaddingLeft() - getPaddingRight();
-                int shadowWidth = mPinnedSection.view.getWidth();
+                int shadowWidth = mPinnedSection.viewHolder.itemView.getWidth();
                 if (parentWidth != shadowWidth)
                 {
                     recreatePinnedShadow();
@@ -501,24 +472,22 @@ public class PinnedSectionListView extends ListView
 
         if (mPinnedSection != null)
         {
-
             // prepare variables
-            int pLeft = getListPaddingLeft();
-            int pTop = getListPaddingTop();
-            View view = mPinnedSection.view;
+            int pLeft = getPaddingLeft();
+            int pTop = getPaddingTop();
+            View view = mPinnedSection.viewHolder.itemView;
 
             // draw child
             canvas.save();
 
             int clipHeight = view.getHeight() + (mShadowDrawable == null ? 0 : Math.min(mShadowHeight, mSectionsDistanceY));
             canvas.clipRect(pLeft, pTop, pLeft + view.getWidth(), pTop + clipHeight);
-
             canvas.translate(pLeft, pTop + mTranslateY);
-            drawChild(canvas, mPinnedSection.view, getDrawingTime());
+            drawChild(canvas, mPinnedSection.viewHolder.itemView, getDrawingTime());
 
             if (mShadowDrawable != null && mSectionsDistanceY > 0)
             {
-                mShadowDrawable.setBounds(mPinnedSection.view.getLeft(), mPinnedSection.view.getBottom(), mPinnedSection.view.getRight(), mPinnedSection.view.getBottom() + mShadowHeight);
+                mShadowDrawable.setBounds(mPinnedSection.viewHolder.itemView.getLeft(), mPinnedSection.viewHolder.itemView.getBottom(), mPinnedSection.viewHolder.itemView.getRight(), mPinnedSection.viewHolder.itemView.getBottom() + mShadowHeight);
                 mShadowDrawable.draw(canvas);
             }
 
@@ -533,11 +502,11 @@ public class PinnedSectionListView extends ListView
         final float y = ev.getY();
         final int action = ev.getAction();
 
-        if (action == MotionEvent.ACTION_DOWN && mTouchTarget == null && mPinnedSection != null && isPinnedViewTouched(mPinnedSection.view, x, y))
+        if (action == MotionEvent.ACTION_DOWN && mTouchTarget == null && mPinnedSection != null && isPinnedViewTouched(mPinnedSection.viewHolder.itemView, x, y))
         { // create touch target
 
             // user touched pinned view
-            mTouchTarget = mPinnedSection.view;
+            mTouchTarget = mPinnedSection.viewHolder.itemView;
             mTouchPoint.x = x;
             mTouchPoint.y = y;
 
@@ -555,7 +524,6 @@ public class PinnedSectionListView extends ListView
             if (action == MotionEvent.ACTION_UP)
             { // perform onClick on pinned view
                 super.dispatchTouchEvent(ev);
-                performPinnedItemClick();
                 clearTouchTarget();
 
             } else if (action == MotionEvent.ACTION_CANCEL)
@@ -612,33 +580,11 @@ public class PinnedSectionListView extends ListView
         }
     }
 
-    private boolean performPinnedItemClick()
-    {
-        if (mPinnedSection == null)
-        {
-            return false;
-        }
-
-        OnItemClickListener listener = getOnItemClickListener();
-        if (listener != null && getAdapter().isEnabled(mPinnedSection.position))
-        {
-            View view = mPinnedSection.view;
-            playSoundEffect(SoundEffectConstants.CLICK);
-            if (view != null)
-            {
-                view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
-            }
-            listener.onItemClick(this, view, mPinnedSection.position, mPinnedSection.id);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * List adapter to be implemented for being used with PinnedSectionListView
      * adapter.
      */
-    public interface PinnedSectionListAdapter extends ListAdapter
+    public interface PinnedSectionListAdapter
     {
         /**
          * This method shall return 'true' if views of given type has to be
@@ -650,11 +596,10 @@ public class PinnedSectionListView extends ListView
     /**
      * Wrapper class for pinned section view and its position in the list.
      */
-    static class PinnedSection
+    public class PinnedSection
     {
-        public View view;
+        public ViewHolder viewHolder;
         public int position;
         public long id;
     }
-
 }

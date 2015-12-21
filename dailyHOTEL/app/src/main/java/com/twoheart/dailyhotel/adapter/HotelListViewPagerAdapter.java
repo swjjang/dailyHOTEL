@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.hotellist.HotelListMapFragment;
+import com.twoheart.dailyhotel.screen.hotellist.HotelMapFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
@@ -36,7 +36,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private ArrayList<HotelListViewItem> mHotelListViewItemList;
-    private HotelListMapFragment.OnUserActionListener mOnUserActionListener;
+    private HotelMapFragment.OnUserActionListener mOnUserActionListener;
 
     public HotelListViewPagerAdapter(Context context)
     {
@@ -45,7 +45,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         mHotelListViewItemList = new ArrayList<HotelListViewItem>();
     }
 
-    public void setOnUserActionListener(HotelListMapFragment.OnUserActionListener listener)
+    public void setOnUserActionListener(HotelMapFragment.OnUserActionListener listener)
     {
         mOnUserActionListener = listener;
     }
