@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +20,10 @@ import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.ErrorFragment;
-import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
-import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
+import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
@@ -122,9 +121,36 @@ public class MainActivity extends BaseActivity implements Constants
 
         View bottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
 
-        bottomMenuBarLayout.findViewById(R.id.hotelView);
-        bottomMenuBarLayout.findViewById(R.id.gourmetView);
-        bottomMenuBarLayout.findViewById(R.id.bookingView);
+        View hotelView = bottomMenuBarLayout.findViewById(R.id.hotelView);
+        hotelView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                selectMenu(INDEX_HOTEL_FRAGMENT);
+            }
+        });
+
+        View gourmetView = bottomMenuBarLayout.findViewById(R.id.gourmetView);
+        gourmetView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                selectMenu(INDEX_GOURMET_FRAGMENT);
+            }
+        });
+
+        View bookingView = bottomMenuBarLayout.findViewById(R.id.bookingView);
+        bookingView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                selectMenu(INDEX_BOOKING_FRAGMENT);
+            }
+        });
+
         View informationView = bottomMenuBarLayout.findViewById(R.id.informationView);
         informationView.setOnClickListener(new View.OnClickListener()
         {

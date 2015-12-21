@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@drawable/gradient_window_background">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#ffffff"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <com.twoheart.dailyhotel.view.widget.PinnedSectionListView
         android:id="@+id/listview_booking"
@@ -10,13 +18,15 @@
         android:layout_height="match_parent"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
-        android:fadingEdge="none"/>
+        android:fadingEdge="none"
+        android:layout_below="@+id/toolbar"/>
 
     <RelativeLayout
         android:id="@+id/layout_booking_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient_window_background"
+        android:layout_below="@+id/toolbar"
         android:visibility="gone">
 
         <RelativeLayout
@@ -92,4 +102,4 @@
         </LinearLayout>
     </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>

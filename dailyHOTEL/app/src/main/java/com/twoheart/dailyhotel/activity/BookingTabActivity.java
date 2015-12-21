@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -69,7 +70,9 @@ public class BookingTabActivity extends BaseActivity
         }
 
         setContentView(R.layout.activity_booking_tab);
-        setActionBar(booking.placeName);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, booking.placeName);
 
         ArrayList<String> titleList = new ArrayList<String>();
         titleList.add(getString(R.string.frag_booking_tab_title));

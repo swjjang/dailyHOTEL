@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,7 +64,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_profile);
-        setActionBar(R.string.actionbar_title_profile_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_profile_activity));
 
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 

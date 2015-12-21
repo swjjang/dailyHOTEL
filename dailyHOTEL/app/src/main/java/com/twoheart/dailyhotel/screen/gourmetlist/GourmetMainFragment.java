@@ -9,7 +9,10 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +54,11 @@ import java.util.HashMap;
 
 public class GourmetMainFragment extends PlaceMainFragment
 {
+    private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+
     private TabIndicator mTabIndicator;
     private ArrayList<GourmetListFragment> mFragmentList;
     private ArrayList<AreaItem> mAreaItemList;
@@ -267,11 +275,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         mSelectedProvince = province;
 
-        baseActivity.setActionBarAreaEnabled(true);
-        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
-
-        boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
-        baseActivity.setActionBarRegionEnable(isShowSpinner);
+        baseActivity.setToolbarRegionText(mToolbar, province.name);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedGourmetRegion();

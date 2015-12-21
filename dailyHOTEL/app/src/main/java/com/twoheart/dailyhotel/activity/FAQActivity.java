@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
@@ -28,7 +29,9 @@ public class FAQActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_board);
-        setActionBar(R.string.actionbar_title_faq_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_faq_activity));
 
         mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
         mListView.setOnGroupExpandListener(new OnGroupExpandListener()

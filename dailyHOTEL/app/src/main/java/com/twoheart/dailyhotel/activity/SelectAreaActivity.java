@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,9 @@ public class SelectAreaActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectarea);
-        setActionBar(R.string.label_selectarea_area);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.label_selectarea_area));
 
         Intent intent = getIntent();
 

@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,8 +77,12 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
         View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
-        view.setPadding(0, Util.dpToPx(container.getContext(), 56), 0, 0);
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        baseActivity.initToolbar(toolbar, getString(R.string.actionbar_title_booking_list_frag));
 
         mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
         mListView.setShadowVisible(false);
@@ -87,6 +92,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         btnLogin = view.findViewById(R.id.btn_booking_empty_login);
 
         btnLogin.setOnClickListener(this);
+
+
 
         return view;
     }
@@ -110,8 +117,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         {
             return;
         }
-
-        baseActivity.setActionBar(getString(R.string.actionbar_title_booking_list_frag), false);
 
         lockUI();
         DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);

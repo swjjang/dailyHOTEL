@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.webkit.JavascriptInterface;
@@ -53,7 +54,9 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_regcreditcard);
-        setActionBar(R.string.actionbar_title_reg_creditcard);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_reg_creditcard));
 
         webView = (WebView) findViewById(R.id.webView);
 

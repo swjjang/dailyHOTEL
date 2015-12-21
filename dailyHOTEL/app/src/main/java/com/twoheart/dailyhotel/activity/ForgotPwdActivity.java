@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +38,9 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_forgot_pwd);
-        setActionBar(R.string.actionbar_title_forgot_pwd_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_forgot_pwd_activity));
 
         etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
         btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);

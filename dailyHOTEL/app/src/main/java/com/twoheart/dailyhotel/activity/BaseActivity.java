@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -38,12 +39,12 @@ import android.widget.Toast;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -142,148 +143,161 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     }
 
 
-    /**
-     * 액션바를 설정하는 메서드로서, 어플리케이션 액션바 테마를 설정하고 제목을 지정한다.
-     *
-     * @param title 액션바에 표시할 화면의 제목을 받는다.
-     */
-    public void setActionBar(Toolbar toolbar, String title, boolean isFinish)
+
+    //    public void setActionBarRegionEnable(boolean isEnable)
+    //    {
+    //        if (mActionBarRegionEnabled == isEnable)
+    //        {
+    //            return;
+    //        }
+    //
+    //        mActionBarRegionEnabled = isEnable;
+    //
+    //        if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
+    //        {
+    //            View view = mToolbar.getChildAt(mSpinnderIndex);
+    //            View imageView = view.findViewById(R.id.spinnerImageView);
+    //
+    //            if (isEnable == true)
+    //            {
+    //                view.setEnabled(true);
+    //                imageView.setVisibility(View.VISIBLE);
+    //            } else
+    //            {
+    //                view.setEnabled(false);
+    //                imageView.setVisibility(View.INVISIBLE);
+    //            }
+    //        }
+    //    }
+
+    //    public void setActionBarAreaEnabled(boolean isEnable)
+    //    {
+    //        if (isEnable == true)
+    //        {
+    //            if (mSpinnderIndex == -1)
+    //            {
+    //                mToolbar.setTitle("");
+    //
+    //                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    //                View view = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
+    //
+    //                mSpinnderIndex = mToolbar.getChildCount();
+    //                mToolbar.addView(view, mSpinnderIndex);
+    //
+    //                mActionBarRegionEnabled = true;
+    //            }
+    //        } else
+    //        {
+    //            if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
+    //            {
+    //                mToolbar.removeViewAt(mSpinnderIndex);
+    //                mSpinnderIndex = -1;
+    //
+    //                mActionBarRegionEnabled = false;
+    //            }
+    //        }
+    //    }
+
+    public void initToolbarRegion(Toolbar toolbar, String title, View.OnClickListener listener)
+    {
+        if (toolbar.getTag() != null)
+        {
+            return;
+        }
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View spinnerView = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
+
+        TextView textView = (TextView) spinnerView.findViewById(R.id.titleTextView);
+        textView.setTextColor(getResources().getColor(R.color.black));
+        textView.setMaxLines(1);
+        textView.setSingleLine();
+        textView.setEllipsize(TextUtils.TruncateAt.END);
+        textView.setText(R.string.label_dailyhotel);
+        textView.setOnClickListener(listener);
+
+        toolbar.addView(spinnerView);
+        toolbar.setTag(toolbar.getId(), textView);
+
+        setSupportActionBar(toolbar);
+    }
+
+    public void initToolbar(Toolbar toolbar, String title)
+    {
+        initToolbar(toolbar, title, false);
+    }
+
+    public void initToolbar(Toolbar toolbar, String title, boolean isTransparent)
     {
         if(toolbar == null)
         {
             return;
         }
 
-        try
-        {
-            setSupportActionBar(toolbar);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        toolbar.setTitle(title);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-        toolbar.setBackgroundColor(getResources().getColor(R.color.white));
+        setSupportActionBar(toolbar);
+        setToolbarTransparent(toolbar, isTransparent);
 
         FontManager.apply(toolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
-        if (isFinish == true)
+        getSupportActionBar().setTitle(title);
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
         {
-            toolbar.setNavigationIcon(R.drawable.back);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    finish();
-                }
-            });
-        }
+                finish();
+            }
+        });
     }
 
-    public void setActionBarRegionEnable(boolean isEnable)
+    public void setToolbarRegionText(Toolbar toolbar, String title)
     {
-        if (mActionBarRegionEnabled == isEnable)
+        if(toolbar == null)
         {
             return;
         }
 
-        mActionBarRegionEnabled = isEnable;
+        // 인덱스 번호는 나중에 바뀜
+        View view = toolbar.getChildAt(0);
 
-        if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
-        {
-            View view = mToolbar.getChildAt(mSpinnderIndex);
-            View imageView = view.findViewById(R.id.spinnerImageView);
-
-            if (isEnable == true)
-            {
-                view.setEnabled(true);
-                imageView.setVisibility(View.VISIBLE);
-            } else
-            {
-                view.setEnabled(false);
-                imageView.setVisibility(View.INVISIBLE);
-            }
-        }
+        TextView textView = (TextView) view.findViewById(R.id.titleTextView);
+        textView.setText(title);
     }
 
-    public void setActionBarAreaEnabled(boolean isEnable)
+    public void setToolbarText(String title)
     {
-        if (isEnable == true)
+        ActionBar actionBar = getSupportActionBar();
+
+        if(actionBar == null)
         {
-            if (mSpinnderIndex == -1)
-            {
-                mToolbar.setTitle("");
+            return;
+        }
 
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
+        actionBar.setTitle(title);
+    }
 
-                mSpinnderIndex = mToolbar.getChildCount();
-                mToolbar.addView(view, mSpinnderIndex);
+    public void setToolbarTransparent(Toolbar toolbar, boolean isTransparent)
+    {
+        if(toolbar == null)
+        {
+            return;
+        }
 
-                mActionBarRegionEnabled = true;
-            }
+        if(isTransparent == true)
+        {
+            toolbar.setTitleTextColor(getResources().getColor(android.R.color.transparent));
+            toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         } else
         {
-            if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
-            {
-                mToolbar.removeViewAt(mSpinnderIndex);
-                mSpinnderIndex = -1;
-
-                mActionBarRegionEnabled = false;
-            }
+            toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.white));
         }
     }
 
-    public void setActionBarArea(String title, final HotelMainFragment.OnUserActionListener listener)
+    public void setActionBarArea(Toolbar toolbar, String title, final PlaceMainFragment.OnUserActionListener listener)
     {
-        if (mSpinnderIndex == -1)
-        {
-            return;
-        }
-
-        View view = mToolbar.getChildAt(mSpinnderIndex);
-
-        if (view != null)
-        {
-            TextView textView = (TextView) view.findViewById(R.id.titleTextView);
-            textView.setText(title);
-            textView.setTextColor(getResources().getColor(R.color.black));
-            textView.setMaxLines(1);
-            textView.setSingleLine();
-            textView.setEllipsize(TextUtils.TruncateAt.END);
-
-            view.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (mActionBarRegionEnabled == false || isLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    lockUiComponent();
-
-                    // 지역표시를 선택할 경우.
-                    if (listener != null)
-                    {
-                        listener.onClickActionBarArea();
-                    }
-                }
-            });
-        }
-    }
-
-    public void setActionBarArea(String title, final PlaceMainFragment.OnUserActionListener listener)
-    {
-        if (mSpinnderIndex == -1)
-        {
-            return;
-        }
-
-        View view = mToolbar.getChildAt(mSpinnderIndex);
+        View view = toolbar.getChildAt(mSpinnderIndex);
 
         if (view != null)
         {

@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -50,6 +51,7 @@ public class HotelDetailActivity extends BaseActivity
 {
     private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 
+    private Toolbar mToolbar;
     private HotelDetail mHotelDetail;
     private SaleTime mCheckInSaleTime;
 
@@ -185,7 +187,8 @@ public class HotelDetailActivity extends BaseActivity
 
         if (hotelName != null)
         {
-            setActionBar(hotelName);
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            initToolbar(mToolbar, hotelName);
         }
 
         mOnUserActionListener.hideActionBar();
@@ -367,13 +370,13 @@ public class HotelDetailActivity extends BaseActivity
         @Override
         public void showActionBar()
         {
-            setActionBarBackgroundVisible(true);
+            setToolbarTransparent(mToolbar, true);
         }
 
         @Override
         public void hideActionBar()
         {
-            setActionBarBackgroundVisible(false);
+            setToolbarTransparent(mToolbar, false);
         }
 
         @Override

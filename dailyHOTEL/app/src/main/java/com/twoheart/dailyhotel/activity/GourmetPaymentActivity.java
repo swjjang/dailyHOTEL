@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -105,7 +106,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         mIsChangedPrice = false;
         mDoReload = true;
 
-        setActionBar(mTicketPayment.getTicketInformation().placeName);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, mTicketPayment.getTicketInformation().placeName);
     }
 
     @Override

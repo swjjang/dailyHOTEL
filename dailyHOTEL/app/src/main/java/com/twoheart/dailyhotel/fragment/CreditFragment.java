@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -291,8 +292,12 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
         View view = inflater.inflate(R.layout.fragment_credit, container, false);
-        view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        baseActivity.initToolbar(toolbar, getString(R.string.actionbar_title_credit_frag));
 
         rlCreditNotLoggedIn = (RelativeLayout) view.findViewById(R.id.rl_credit_not_logged_in);
         llCreditLoggedIn = (LinearLayout) view.findViewById(R.id.ll_credit_logged_in);
@@ -350,9 +355,6 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
         {
             return;
         }
-
-        // ActionBar Setting
-        baseActivity.setActionBar(getString(R.string.actionbar_title_credit_frag), false);
 
         lockUI();
         DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);

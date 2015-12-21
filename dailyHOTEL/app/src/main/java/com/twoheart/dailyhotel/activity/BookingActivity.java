@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -158,7 +159,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         mDoReload = true;
         mWarningDialogMessage = null;
 
-        setActionBar(mPay.getSaleRoomInformation().hotelName);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, mPay.getSaleRoomInformation().hotelName);
 
         mCheckinDayTextView = (TextView) findViewById(R.id.checkinDayTextView);
         mCheckinTimeTextView = (TextView) findViewById(R.id.checkinTimeTextView);

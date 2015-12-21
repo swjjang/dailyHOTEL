@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -69,7 +70,8 @@ public class ZoomMapActivity extends BaseActivity
             return;
         }
 
-        setActionBar(placeName);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, placeName);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
 

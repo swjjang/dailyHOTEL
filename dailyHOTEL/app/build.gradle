@@ -48,10 +48,10 @@ dependencies {
     compile 'com.android.support:gridlayout-v7:23.+'
     compile 'com.android.support:design:23.+'
     compile 'com.facebook.android:facebook-android-sdk:4.5.0'
-    compile 'com.google.android.gms:play-services-base:8.+'
-    compile 'com.google.android.gms:play-services-maps:8.+'
-    compile 'com.google.android.gms:play-services-location:8.+'
-    compile 'com.google.android.gms:play-services-gcm:8.+'
+    compile 'com.google.android.gms:play-services-base:+'
+    compile 'com.google.android.gms:play-services-maps:+'
+    compile 'com.google.android.gms:play-services-location:+'
+    compile 'com.google.android.gms:play-services-gcm:+'
     compile 'com.squareup.okhttp:okhttp:2.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.+'
     compile 'com.squareup.okio:okio:1.+'
@@ -67,5 +67,5 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
-    compile 'com.google.android.gms:play-services-appindexing:8.3.0'
+    compile 'com.google.android.gms:play-services-appindexing:+'
 }

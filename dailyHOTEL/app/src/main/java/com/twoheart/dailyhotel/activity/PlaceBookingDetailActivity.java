@@ -10,6 +10,7 @@ package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
@@ -56,7 +57,9 @@ public abstract class PlaceBookingDetailActivity extends BaseActivity
         }
 
         setContentView(R.layout.activity_booking_tab);
-        setActionBar(booking.placeName);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, booking.placeName);
 
         ArrayList<String> titleList = new ArrayList<String>();
         titleList.add(getString(R.string.frag_booking_tab_title));

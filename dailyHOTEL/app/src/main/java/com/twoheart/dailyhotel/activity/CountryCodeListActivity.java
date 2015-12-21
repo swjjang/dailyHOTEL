@@ -14,6 +14,7 @@ package com.twoheart.dailyhotel.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.CountryCodeNumber;
@@ -59,7 +60,9 @@ public class CountryCodeListActivity extends BaseActivity
     {
         CountryCodeListLayout countryCodeListLayout = new CountryCodeListLayout(this);
         setContentView(countryCodeListLayout.createView());
-        setActionBar(R.string.label_select_country);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.label_select_country));
 
         countryCodeListLayout.setOnUserActionListener(mOnUserActionListener);
 

@@ -17,10 +17,8 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
-import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -90,11 +88,11 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         switch (mPlaceType)
         {
             case HOTEL:
-                initToolbar(R.string.label_calendar_hotel_select_checkin);
+                initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
                 break;
 
             case FNB:
-                initToolbar(R.string.label_calendar_gourmet_select);
+                initToolbar(getString(R.string.label_calendar_gourmet_select));
                 break;
         }
 
@@ -130,27 +128,11 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         mDailyTextViews[dayCountOfMax - 1].setEnabled(false);
     }
 
-    private void initToolbar(int title)
+    private void initToolbar(String title)
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
-
-        toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-        toolbar.setBackgroundColor(getResources().getColor(R.color.white));
-
-        FontManager.apply(toolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
-
-        toolbar.setTitle(title);
-        toolbar.setNavigationIcon(R.drawable.back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                finish();
-            }
-        });
+        initToolbar(toolbar, title);
     }
 
     private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
@@ -306,7 +288,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                 finish();
             } else
             {
-                setActionBar(R.string.label_calendar_hotel_select_checkout);
+                setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
 
                 for (View textview : mDailyTextViews)
                 {
@@ -334,7 +316,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                 view.setSelected(false);
                 dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
 
-                setActionBar(R.string.label_calendar_hotel_select_checkin);
+                setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
 
                 for (View dailTextView : mDailyTextViews)
                 {

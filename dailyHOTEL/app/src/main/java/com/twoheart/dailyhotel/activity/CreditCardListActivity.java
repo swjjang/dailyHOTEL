@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
@@ -81,7 +82,8 @@ public class CreditCardListActivity extends BaseActivity
 
     private void initLayout(boolean isPickMode)
     {
-        setActionBar(R.string.actionbar_title_creditcard_activity);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_creditcard_activity));
 
         mCreditCardLayout = (CreditCardLayout) findViewById(R.id.creditCardLayout);
         mCreditCardLayout.setUserActionListener(mOnUserActionListener);

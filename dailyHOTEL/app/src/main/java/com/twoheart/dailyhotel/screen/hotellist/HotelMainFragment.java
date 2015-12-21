@@ -138,40 +138,14 @@ public class HotelMainFragment extends BaseFragment
         mAppBarLayout = (AppBarLayout)view.findViewById(R.id.appBarLayout);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        LayoutInflater inflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View spinnerView = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
-        TextView textView = (TextView) spinnerView.findViewById(R.id.titleTextView);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        textView.setMaxLines(1);
-        textView.setSingleLine();
-        textView.setEllipsize(TextUtils.TruncateAt.END);
-        textView.setText(R.string.label_dailyhotel);
-        textView.setOnClickListener(new View.OnClickListener()
+        baseActivity.initToolbarRegion(mToolbar, getString(R.string.label_dailyhotel), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener != null)
-                {
-                    lockUiComponent();
-
-                    mOnUserActionListener.onClickActionBarArea();
-                }
+                mOnUserActionListener.onClickActionBarArea();
             }
         });
-
-        mToolbar.addView(spinnerView);
-        mToolbar.setTag(mToolbar.getId(), textView);
-
-        baseActivity.setSupportActionBar(mToolbar);
-    }
-
-    private void setToolbar(String text, boolean isEnabled)
-    {
-        View view = mToolbar.getChildAt(0);
-
-        TextView textView = (TextView) view.findViewById(R.id.titleTextView);
-        textView.setText(text);
     }
 
     private void initHide()
@@ -447,7 +421,7 @@ public class HotelMainFragment extends BaseFragment
 
         mSelectedProvince = province;
 
-        setToolbar(province.name, true);
+        baseActivity.setToolbarRegionText(mToolbar, province.name);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion();

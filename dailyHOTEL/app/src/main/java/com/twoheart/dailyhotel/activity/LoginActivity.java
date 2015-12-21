@@ -22,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -104,7 +105,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_login);
-        setActionBar(R.string.actionbar_title_login_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_login_activity));
 
         mIdEditText = (EditText) findViewById(R.id.et_login_id);
         mPasswordEditText = (EditText) findViewById(R.id.et_login_pwd);

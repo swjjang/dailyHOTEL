@@ -133,11 +133,6 @@ public abstract class PlaceMainFragment extends BaseFragment
             return;
         }
 
-        if (enabled == true)
-        {
-            baseActivity.setActionBarRegionEnable(isEnabledRegionMenu());
-        }
-
         if (mMenuEnabled == enabled)
         {
             return;

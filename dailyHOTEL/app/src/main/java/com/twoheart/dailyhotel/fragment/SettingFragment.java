@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,7 +69,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
     private TextView mSettingCardTextView;
     private View mSettingCardLayout;
     private LinearLayout llLogin;
-    private String profileStr, loginStr;
     private String mCSoperatingTimeMessage;
 
 
@@ -80,6 +80,9 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         // ActionBar Setting
         mHostActivity = (MainActivity) getActivity();
         mQueue = VolleyHttpClient.getRequestQueue();
+
+        Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+        mHostActivity.initToolbar(toolbar, getString(R.string.actionbar_title_setting_frag));
 
         tvNotice = (TextView) view.findViewById(R.id.tv_setting_notice);
         TextView tvVersion = (TextView) view.findViewById(R.id.tv_setting_version);
@@ -227,10 +230,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
     {
         super.onResume();
 
-        mHostActivity.setActionBar(getString(R.string.actionbar_title_setting_frag), false);
-        profileStr = getString(R.string.frag_profile);
-        loginStr = getString(R.string.frag_login);
-
         lockUI();
         DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, mHostActivity);
     }
@@ -340,11 +339,11 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
         if (login)
         {
-            tvLogin.setText(profileStr);
+            tvLogin.setText(R.string.frag_profile);
             tvEmail.setVisibility(View.VISIBLE);
         } else
         {
-            tvLogin.setText(loginStr);
+            tvLogin.setText(R.string.frag_login);
             tvEmail.setVisibility(View.GONE);
         }
 

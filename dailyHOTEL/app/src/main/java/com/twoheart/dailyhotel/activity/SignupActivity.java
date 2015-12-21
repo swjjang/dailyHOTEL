@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.view.View;
@@ -104,7 +105,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             mRecommender = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, -1);
             mIsDailyUser = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, true);
 
-            setActionBar(R.string.actionbar_title_userinfo_update_activity);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            initToolbar(toolbar, getString(R.string.actionbar_title_userinfo_update_activity));
 
             if (user == null)
             {
@@ -169,7 +171,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
             phoneNumber = Util.getLine1Number(this);
 
-            setActionBar(R.string.actionbar_title_signup_activity);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            initToolbar(toolbar, getString(R.string.actionbar_title_signup_activity));
         }
 
         initLayout(user, phoneNumber, isVisibleRecommender);

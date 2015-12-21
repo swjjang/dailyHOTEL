@@ -288,14 +288,15 @@ public class GcmIntentService extends IntentService implements Constants
         {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setSmallIcon(R.drawable.icon_noti_small) //
-                .setContentTitle(title).setAutoCancel(true).setSound(uri).setContentText(msg) //
+                .setContentTitle(title).setAutoCancel(true).setSound(uri) //
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
                 .setPriority(NotificationCompat.PRIORITY_MAX)//
                 .setColor(getResources().getColor(R.color.dh_theme_color))//
                 .setContentIntent(contentIntent);
 
-            if (msg.indexOf('\n') >= 0)
+            if (msg.indexOf("\\n") < 0)
             {
+                builder.setContentText(msg);
                 builder.setStyle(new NotificationCompat.BigTextStyle().bigText(msg));
             } else
             {
@@ -308,6 +309,7 @@ public class GcmIntentService extends IntentService implements Constants
                     inboxStyle.addLine(text);
                 }
 
+                builder.setContentText(message[0]);
                 builder.setStyle(inboxStyle);
             }
 
