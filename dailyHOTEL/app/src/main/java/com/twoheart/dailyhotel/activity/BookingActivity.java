@@ -11,11 +11,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -58,7 +58,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
@@ -400,7 +399,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             {
                 mClickView = v;
 
-                String gcmId = DailyPreference.getInstance(BookingActivity.this).getGcmId();
+                String gcmId = DailyPreference.getInstance(BookingActivity.this).getGCMRegistrationId();
 
                 if (mPay.getType() == Pay.Type.VBANK && Util.isTextEmpty(gcmId) == true)
                 {
@@ -1442,8 +1441,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                 if (Util.isTelephonyEnabled(BookingActivity.this) == true)
                 {
-                    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-                    startActivity(i);
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
+                    }catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);

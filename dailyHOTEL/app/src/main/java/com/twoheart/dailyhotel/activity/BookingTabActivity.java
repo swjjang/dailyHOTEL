@@ -103,9 +103,15 @@ public class BookingTabActivity extends BaseActivity
             case R.id.action_daily_call:
                 if (Util.isTelephonyEnabled(BookingTabActivity.this) == true)
                 {
-                    String phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
+                    try
+                    {
+                        String phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
 
-                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    }catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(BookingTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     DailyToast.showToast(BookingTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
@@ -140,7 +146,14 @@ public class BookingTabActivity extends BaseActivity
                         phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
                     }
 
-                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    }catch (ActivityNotFoundException e)
+                    {
+                        String message = getString(R.string.toast_msg_no_hotel_call, mHotelDetail.hotelPhone);
+                        DailyToast.showToast(BookingTabActivity.this, message, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     String message = getString(R.string.toast_msg_no_hotel_call, mHotelDetail.hotelPhone);

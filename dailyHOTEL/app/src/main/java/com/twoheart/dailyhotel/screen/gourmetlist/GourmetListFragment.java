@@ -1,19 +1,4 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * HotelListFragment (호텔 목록 화면)
- * <p>
- * 어플리케이션의 가장 주가 되는 화면으로서 호텔들의 목록을 보여주는 화면이다.
- * 호텔 리스트는 따로 커스텀되어 구성되어 있으며, 액션바의 네비게이션을 이용
- * 하여 큰 지역을 분리하고 리스트뷰 헤더를 이용하여 세부 지역을 나누어 표시
- * 한다. 리스트뷰의 맨 첫 아이템은 이벤트 참여하기 버튼이 있으며, 이 버튼은
- * 서버의 이벤트 API에 따라 NEW 아이콘을 붙여주기도 한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -36,7 +21,9 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.GourmetListAdapter;
+import com.twoheart.dailyhotel.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment.VIEW_TYPE;
+import com.twoheart.dailyhotel.fragment.PlaceMapFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
@@ -94,15 +81,6 @@ public class GourmetListFragment extends PlaceListFragment
         mListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
         mListView.setTag("GourmetListFragment");
 
-        if (Util.isOverAPI12() == true)
-        {
-            mListView.addHeaderView(inflater.inflate(R.layout.list_header_empty, null, true));
-            mListView.setOnScrollListener(mOnScrollListener);
-        } else
-        {
-            mListView.setPadding(0, Util.dpToPx(baseActivity, 119), 0, 0);
-        }
-
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
         mEmptyView = view.findViewById(R.id.emptyView);
 
@@ -116,13 +94,6 @@ public class GourmetListFragment extends PlaceListFragment
         ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this).useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
         mListView.setShadowVisible(false);
-
-        ActionbarViewHolder actionbarViewHolder = new ActionbarViewHolder();
-        actionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
-        actionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionBarLayout);
-        actionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.tabindicator);
-
-        setActionbarViewHolder(actionbarViewHolder);
 
         return view;
     }
@@ -203,7 +174,7 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    protected PlaceViewItem getPlaceViewItem(int position)
+    public PlaceViewItem getPlaceViewItem(int position)
     {
         if (mGourmetListAdapter == null)
         {
@@ -243,7 +214,7 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    public void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
         if (checkInSaleTime == null)
         {
@@ -298,7 +269,7 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    protected ArrayList<PlaceViewItem> getPlaceViewItemList()
+    public ArrayList<PlaceViewItem> getPlaceViewItemList()
     {
         if (mGourmetListAdapter == null)
         {
@@ -309,13 +280,13 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    protected PlaceMapFragment createPlaceMapFragment()
+    public PlaceMapFragment createPlaceMapFragment()
     {
         return new GourmetMapFragment();
     }
 
     @Override
-    protected boolean hasSalesPlace()
+    public boolean hasSalesPlace()
     {
         boolean hasPlace = false;
 
@@ -978,8 +949,6 @@ public class GourmetListFragment extends PlaceListFragment
 
                 // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
                 onRefreshComplete();
-
-                setActionBarAnimationLock(false);
             } catch (Exception e)
             {
                 onError(e);

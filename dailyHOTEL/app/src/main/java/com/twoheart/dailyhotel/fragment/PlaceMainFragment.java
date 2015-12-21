@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
@@ -33,8 +33,8 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected VIEW_TYPE mViewType = VIEW_TYPE.LIST;
     protected boolean mMapEnabled;
 
-    boolean mMenuEnabled;
-    boolean mDontReloadAtOnResume;
+    protected boolean mMenuEnabled;
+    protected boolean mDontReloadAtOnResume;
 
     public enum VIEW_TYPE
     {
@@ -68,25 +68,23 @@ public abstract class PlaceMainFragment extends BaseFragment
         void refreshAll();
     }
 
-    protected abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+    public abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
-    protected abstract void activityResult(int requestCode, int resultCode, Intent data);
+    public abstract void activityResult(int requestCode, int resultCode, Intent data);
 
-    protected abstract void hideSlidingDrawer();
+    public abstract void hideSlidingDrawer();
 
-    protected abstract void showSlidingDrawer();
+    public abstract void showSlidingDrawer();
 
-    protected abstract void onNavigationItemSelected(Province province, boolean isSelectionTop);
+    public abstract void onNavigationItemSelected(Province province, boolean isSelectionTop);
 
-    protected abstract void setNavigationItemSelected(Province province);
+    public abstract void setNavigationItemSelected(Province province);
 
-    protected abstract void requestRegionList(BaseActivity baseActivity);
+    public abstract void requestRegionList(BaseActivity baseActivity);
 
-    protected abstract void refreshList(Province province, boolean isSelectionTop);
+    public abstract void refreshList(Province province, boolean isSelectionTop);
 
-    protected abstract void setActionBarAnimationLock(boolean enabled);
-
-    protected abstract boolean isEnabledRegionMenu();
+    public abstract boolean isEnabledRegionMenu();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -148,9 +146,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         mMenuEnabled = enabled;
 
         baseActivity.invalidateOptionsMenu();
-
-        // 메뉴가 열리는 시점이다.
-        setActionBarAnimationLock(enabled);
     }
 
     @Override
@@ -171,10 +166,10 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+//                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
                 } else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
-                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+//                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
                 }
                 break;
             }

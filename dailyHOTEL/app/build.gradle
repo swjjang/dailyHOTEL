@@ -46,6 +46,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.+'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:gridlayout-v7:23.+'
+    compile 'com.android.support:design:23.+'
     compile 'com.facebook.android:facebook-android-sdk:4.5.0'
     compile 'com.google.android.gms:play-services-base:8.+'
     compile 'com.google.android.gms:play-services-maps:8.+'

@@ -9,7 +9,6 @@
         <item name="colorPrimary">@color/actionbar_background</item>
         <item name="colorAccent">@color/actionbar_hamburger</item>
         <item name="colorButtonNormal">@color/actionbar_hamburger</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="numberPickerStyle">@style/NPWidget.Holo.Light.NumberPicker</item>
     </style>
@@ -74,26 +73,6 @@
         <item name="textColorHint">?android:attr/textColorHint</item>
         <item name="textColorLink">?android:attr/textColorLink</item>
         <item name="textSize">16sp</item>
-    </style>
-
-    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@color/actionbar_hamburger</item>
-    </style>
-
-    <style name="ToolBarStyle" parent="">
-        <item name="android:elevation">0dp</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-    </style>
-
-    <style name="Bubble.TextAppearance.Dark" parent="android:TextAppearance.Medium">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#ff7f7f7f</item>
-    </style>
-
-    <style name="Bubble.TextAppearance.Light" parent="Bubble.TextAppearance.Dark">
-        <item name="android:textColor">#ffeeeeee</item>
     </style>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.content.Context;
 import android.content.Intent;

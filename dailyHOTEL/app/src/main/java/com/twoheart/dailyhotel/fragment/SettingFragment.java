@@ -14,6 +14,7 @@
 package com.twoheart.dailyhotel.fragment;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -29,7 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
@@ -283,7 +284,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             } else
             {
                 // 로그아웃 상태
-                chgClickable(llLogin);
                 Intent i = new Intent(mHostActivity, LoginActivity.class);
                 startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
                 mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -325,12 +325,12 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
         if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
         {
-            chgClickable(llLogin);
-
-            if (resultCode == Activity.RESULT_OK)
-            {
-                mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
-            }
+//            chgClickable(llLogin);
+//
+//            if (resultCode == Activity.RESULT_OK)
+//            {
+//                mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
+//            }
         }
     }
 
@@ -366,8 +366,13 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
                 if (Util.isTelephonyEnabled(mHostActivity) == true)
                 {
-                    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-                    startActivity(i);
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
+                    }catch(ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);

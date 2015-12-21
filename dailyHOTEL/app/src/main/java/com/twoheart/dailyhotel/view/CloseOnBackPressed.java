@@ -15,7 +15,7 @@ package com.twoheart.dailyhotel.view;
 
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 

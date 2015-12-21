@@ -43,7 +43,7 @@ public class GourmetTabBookingFragment extends BaseFragment implements Constants
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
 
         newFragment.setArguments(arguments);
-        newFragment.setTitle(title);
+//        newFragment.setTitle(title);
 
         return newFragment;
     }

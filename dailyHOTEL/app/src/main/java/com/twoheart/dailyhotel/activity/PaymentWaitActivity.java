@@ -8,6 +8,7 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -134,8 +135,13 @@ public class PaymentWaitActivity extends BaseActivity
 
                 if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
                 {
-                    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-                    startActivity(i);
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
+                    }catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);

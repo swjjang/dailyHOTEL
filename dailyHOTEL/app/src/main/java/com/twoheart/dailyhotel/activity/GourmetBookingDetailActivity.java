@@ -88,9 +88,15 @@ public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
             case R.id.action_daily_call:
                 if (Util.isTelephonyEnabled(GourmetBookingDetailActivity.this) == true)
                 {
-                    String phone = DailyPreference.getInstance(GourmetBookingDetailActivity.this).getCompanyPhoneNumber();
+                    try
+                    {
+                        String phone = DailyPreference.getInstance(GourmetBookingDetailActivity.this).getCompanyPhoneNumber();
 
-                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    }catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(GourmetBookingDetailActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     DailyToast.showToast(GourmetBookingDetailActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
@@ -125,7 +131,14 @@ public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
                         phone = DailyPreference.getInstance(GourmetBookingDetailActivity.this).getCompanyPhoneNumber();
                     }
 
-                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    }catch (ActivityNotFoundException e)
+                    {
+                        String message = getString(R.string.toast_msg_no_gourmet_call, mPlaceBookingDetail.gourmetPhone);
+                        DailyToast.showToast(GourmetBookingDetailActivity.this, message, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     String message = getString(R.string.toast_msg_no_gourmet_call, mPlaceBookingDetail.gourmetPhone);

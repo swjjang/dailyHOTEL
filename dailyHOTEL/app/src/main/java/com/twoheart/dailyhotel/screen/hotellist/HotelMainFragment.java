@@ -1,25 +1,28 @@
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
-import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -34,13 +37,11 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
-import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
-import com.twoheart.dailyhotel.view.widget.TabIndicator;
-import com.twoheart.dailyhotel.view.widget.TabIndicator.OnTabSelectedListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,9 +50,12 @@ import java.util.HashMap;
 
 public class HotelMainFragment extends BaseFragment
 {
-    private TabIndicator mTabIndicator;
-    private FragmentViewPager mFragmentViewPager;
-    private ArrayList<HotelListFragment> mFragmentList;
+    private  static final int TAB_COUNT = 3;
+
+    private Toolbar mToolbar;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private HotelFragmentPagerAdapter mFragmentPagerAdapter;
 
     private SaleTime mTodaySaleTime;
     private ArrayList<AreaItem> mAreaItemList;
@@ -89,9 +93,9 @@ public class HotelMainFragment extends BaseFragment
 
     public interface UserAnalyticsActionListener
     {
-        public void selectHotel(String hotelName, long hotelIndex, String checkInTime, int nights);
+        void selectHotel(String hotelName, long hotelIndex, String checkInTime, int nights);
 
-        public void selectRegion(Province province);
+        void selectRegion(Province province);
     }
 
     @Override
@@ -99,42 +103,24 @@ public class HotelMainFragment extends BaseFragment
     {
         View view = inflater.inflate(R.layout.fragment_hotel_main, container, false);
 
-        ArrayList<String> titleList = new ArrayList<String>();
-        titleList.add(getString(R.string.label_today));
-        titleList.add(getString(R.string.label_tomorrow));
-        titleList.add(getString(R.string.label_selecteday));
+        initToolbar(view);
 
         mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
-        mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
-
-        //		mTabIndicator.setData(titleList, dayList, true);
-        mTabIndicator.setData(titleList, true);
-        mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
-
-        mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
-        //		mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
-
-        mFragmentList = new ArrayList<HotelListFragment>();
         mTodaySaleTime = new SaleTime();
 
-        HotelListFragment hotelListFragment = new HotelListFragment();
-        hotelListFragment.setUserActionListener(mOnUserActionListener);
-        mFragmentList.add(hotelListFragment);
+        mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_today), true);
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
+        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        HotelListFragment hotelListFragment01 = new HotelListFragment();
-        hotelListFragment01.setUserActionListener(mOnUserActionListener);
-        mFragmentList.add(hotelListFragment01);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
-        HotelDaysListFragment hotelListFragment02 = new HotelDaysListFragment();
-        hotelListFragment02.setUserActionListener(mOnUserActionListener);
-        mFragmentList.add(hotelListFragment02);
+        mFragmentPagerAdapter = new HotelFragmentPagerAdapter(getChildFragmentManager(), TAB_COUNT, mOnUserActionListener);
 
-        mFragmentViewPager.setData(mFragmentList);
-        mFragmentViewPager.setAdapter(getChildFragmentManager());
-
-        mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
-        mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
+        mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
         setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
 
@@ -143,17 +129,55 @@ public class HotelMainFragment extends BaseFragment
         return view;
     }
 
+    private void initToolbar(View view)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        LayoutInflater inflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View spinnerView = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
+        TextView textView = (TextView) spinnerView.findViewById(R.id.titleTextView);
+        textView.setTextColor(getResources().getColor(R.color.black));
+        textView.setMaxLines(1);
+        textView.setSingleLine();
+        textView.setEllipsize(TextUtils.TruncateAt.END);
+        textView.setText(R.string.label_dailyhotel);
+        textView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener != null)
+                {
+                    lockUiComponent();
+
+                    mOnUserActionListener.onClickActionBarArea();
+                }
+            }
+        });
+
+        mToolbar.addView(spinnerView);
+        mToolbar.setTag(mToolbar.getId(), textView);
+
+        baseActivity.setSupportActionBar(mToolbar);
+    }
+
+    private void setToolbar(String text, boolean isEnabled)
+    {
+        View view = mToolbar.getChildAt(0);
+
+        TextView textView = (TextView) view.findViewById(R.id.titleTextView);
+        textView.setText(text);
+    }
+
     private void initHide()
     {
-        mTabIndicator.setVisibility(View.INVISIBLE);
-
         setMenuEnabled(false);
     }
 
     private void initShow()
     {
-        mTabIndicator.setVisibility(View.VISIBLE);
-
         setMenuEnabled(true);
     }
 
@@ -202,7 +226,7 @@ public class HotelMainFragment extends BaseFragment
 
                     MenuItem menuItem = menu.getItem(0);
 
-                    HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+                    HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
                     switch (currentFragment.getSortType())
                     {
@@ -248,21 +272,6 @@ public class HotelMainFragment extends BaseFragment
         mMenuEnabled = enabled;
 
         baseActivity.invalidateOptionsMenu();
-
-        // 메뉴가 열리는 시점이다.
-        HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-        if (currentFragment != null)
-        {
-            if (enabled == true)
-            {
-                currentFragment.setActionBarAnimationLock(false);
-            } else
-            {
-                currentFragment.showActionBarAnimatoin(baseActivity);
-                currentFragment.setActionBarAnimationLock(true);
-            }
-        }
     }
 
     @Override
@@ -311,7 +320,7 @@ public class HotelMainFragment extends BaseFragment
 
             case R.id.action_sort:
             {
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.showSortDialogView();
 
                 return true;
@@ -342,10 +351,10 @@ public class HotelMainFragment extends BaseFragment
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+//                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
                 } else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
-                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+//                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
                 }
                 break;
             }
@@ -355,7 +364,7 @@ public class HotelMainFragment extends BaseFragment
             {
                 mDontReloadAtOnResume = true;
 
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.onActivityResult(requestCode, resultCode, data);
                 break;
             }
@@ -402,7 +411,7 @@ public class HotelMainFragment extends BaseFragment
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
         if (hotelListFragment != null)
         {
@@ -435,8 +444,7 @@ public class HotelMainFragment extends BaseFragment
 
         mSelectedProvince = province;
 
-        baseActivity.setActionBarAreaEnabled(true);
-        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
+        setToolbar(province.name, true);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion();
@@ -462,7 +470,7 @@ public class HotelMainFragment extends BaseFragment
 
     private void refreshHotelList(Province province, boolean isSelectionTop)
     {
-        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
         if (isSelectionTop == true)
         {
@@ -521,108 +529,43 @@ public class HotelMainFragment extends BaseFragment
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
+    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
         @Override
-        public void onTabSelected(int position)
+        public void onTabSelected(TabLayout.Tab tab)
         {
-            if (mFragmentViewPager == null)
+            if(mViewPager != null)
             {
-                return;
+                mViewPager.setCurrentItem(tab.getPosition());
             }
 
-            if (mFragmentViewPager.getCurrentItem() == position)
-            {
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-                currentFragment.onPageSelected(false);
-            } else
-            {
-                mFragmentViewPager.setCurrentItem(position);
-            }
-        }
-    };
+            HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
+            fragment.onPageSelected(true);
 
-    private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
-    {
-        @Override
-        public void onPageSelected(int position)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
+            if (mOnUserActionListener != null)
             {
-                return;
+                mOnUserActionListener.refreshAll();
             }
 
-            try
-            {
-                mTabIndicator.setCurrentItem(position);
+            // Google Analytics
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put(Label.PROVINCE, mSelectedProvince.name);
+            params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
 
-                // 현재 페이지 선택 상태를 Fragment에게 알려준다.
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-                for (HotelListFragment hotelListFragment : mFragmentList)
-                {
-                    if (hotelListFragment == currentFragment)
-                    {
-                        hotelListFragment.onPageSelected(true);
-                    } else
-                    {
-                        hotelListFragment.onPageUnSelected();
-                    }
-                }
-
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.refreshAll();
-                }
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Label.PROVINCE, mSelectedProvince.name);
-                params.put(Label.DATE_TAB, mTabIndicator.getMainText(position));
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-
-                // 릴리즈 버전에서 메모리 해지에 문제가 생기는 경우가 있어 앱을 재 시작 시킨다.
-                if (DEBUG == false)
-                {
-                    baseActivity.restartApp();
-                }
-            }
+            AnalyticsManager.getInstance(getActivity()).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
         }
 
         @Override
-        public void onPageScrollStateChanged(int state)
+        public void onTabUnselected(TabLayout.Tab tab)
         {
-            switch (state)
-            {
-                case ViewPager.SCROLL_STATE_IDLE:
-                {
-                    HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-                    currentFragment.setFloatingActionButtonVisible(true);
-                    break;
-                }
-
-                case ViewPager.SCROLL_STATE_DRAGGING:
-                {
-                    HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-                    currentFragment.setFloatingActionButtonVisible(false);
-                    break;
-                }
-
-                case ViewPager.SCROLL_STATE_SETTLING:
-                {
-                    break;
-                }
-            }
+            HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
+            fragment.onPageUnSelected();
         }
 
         @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2)
+        public void onTabReselected(TabLayout.Tab tab)
         {
+
         }
     };
 
@@ -638,10 +581,8 @@ public class HotelMainFragment extends BaseFragment
                 return;
             }
 
-            String text = mTabIndicator.getMainText(mFragmentViewPager.getCurrentItem());
-
             HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.DATE_TAB, text);
+            params.put(Label.DATE_TAB, Integer.toString(mTabLayout.getSelectedTabPosition()));
             params.put(Label.HOTEL_INDEX, String.valueOf(hotelIndex));
             params.put(Label.CHECK_IN, checkInTime);
             params.put(Label.NIGHTS, String.valueOf(nights));
@@ -659,10 +600,8 @@ public class HotelMainFragment extends BaseFragment
                 return;
             }
 
-            String text = mTabIndicator.getMainText(mFragmentViewPager.getCurrentItem());
-
             HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.DATE_TAB, text);
+            params.put(Label.DATE_TAB, Integer.toString(mTabLayout.getSelectedTabPosition()));
 
             AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mHotelViewType.name(), Action.CLICK, province.name, params);
         }
@@ -769,11 +708,9 @@ public class HotelMainFragment extends BaseFragment
                 checkOutSaleTime.getDayOfDaysHotelDateFormat("d"));
 
             // 선택탭의 이름을 수정한다.
-            mTabIndicator.setSubTextEnable(2, true);
-            mTabIndicator.setSubText(2, checkInDay + "-" + checkOutDay);
+            mTabLayout.getTabAt(2).setText(checkInDay + "-" + checkOutDay);
 
             refreshHotelList(mSelectedProvince, isListSelectionTop);
-
             releaseUiComponent();
         }
 
@@ -799,9 +736,9 @@ public class HotelMainFragment extends BaseFragment
             }
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
-            HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-            for (HotelListFragment hotelListFragment : mFragmentList)
+            for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
             {
                 boolean isCurrentFragment = hotelListFragment == currentFragment;
 
@@ -980,13 +917,11 @@ public class HotelMainFragment extends BaseFragment
             //탭에 들어갈 날짜를 만든다.
             SaleTime[] tabSaleTime = null;
 
-            int fragmentSize = mFragmentList.size();
+            tabSaleTime = new SaleTime[TAB_COUNT];
 
-            tabSaleTime = new SaleTime[3];
-
-            for (int i = 0; i < fragmentSize; i++)
+            for (int i = 0; i < TAB_COUNT; i++)
             {
-                HotelListFragment hotelListFragment = mFragmentList.get(i);
+                HotelListFragment hotelListFragment = (HotelListFragment)mFragmentPagerAdapter.getItem(i);
 
                 SaleTime saleTime;
 
@@ -1006,45 +941,35 @@ public class HotelMainFragment extends BaseFragment
             // 임시로 여기서 날짜를 넣는다.
             ArrayList<String> dayList = new ArrayList<String>();
 
-            dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getDailyDay(), tabSaleTime[0].getDailyDayOftheWeek()));
-            dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getDailyDay(), tabSaleTime[1].getDailyDayOftheWeek()));
+            dayList.add(String.format("%s(%s일)", getString(R.string.label_today), tabSaleTime[0].getDailyDay()));
+            dayList.add(String.format("%s(%s일)", getString(R.string.label_tomorrow), tabSaleTime[1].getDailyDay()));
 
-            if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
+            String text = (String) mTabLayout.getTabAt(2).getTag();
+
+            if (Util.isTextEmpty(text) == true)
             {
                 SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
                 SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
 
-                String checkInDay = getString(R.string.label_format_tabmonth, //
-                    checkInSaleTime.getDayOfDaysHotelDateFormat("M"),//
-                    checkInSaleTime.getDayOfDaysHotelDateFormat("d"));
-                String checkOutDay = getString(R.string.label_format_tabmonth, //
-                    checkOutSaleTime.getDayOfDaysHotelDateFormat("M"),//
-                    checkOutSaleTime.getDayOfDaysHotelDateFormat("d"));
+                String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("d");
+                String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("d");
 
-                String checkInOutDate = checkInDay + "-" + checkOutDay;
-                dayList.add(checkInOutDate);
-
-                HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentList.get(2);
+                HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(2);
                 fragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
+
+                String checkInOutDate = String.format("%s(%s-%s일)" , getString(R.string.label_day), checkInDay , checkOutDay);
+
+                mTabLayout.getTabAt(2).setTag(checkInOutDate);
+                dayList.add(checkInOutDate);
             } else
             {
-                dayList.add(mTabIndicator.getSubText(2));
+                dayList.add(getString(R.string.label_selecteday));
             }
 
-            int tabSize = mTabIndicator.size();
-
-            for (int i = 0; i < tabSize; i++)
+            for (int i = 0; i < TAB_COUNT; i++)
             {
                 String day = dayList.get(i);
-
-                if (Util.isTextEmpty(day) == true)
-                {
-                    mTabIndicator.setSubTextEnable(i, false);
-                } else
-                {
-                    mTabIndicator.setSubTextEnable(i, true);
-                    mTabIndicator.setSubText(i, day);
-                }
+                mTabLayout.getTabAt(i).setText(day);
             }
         }
 
@@ -1053,9 +978,9 @@ public class HotelMainFragment extends BaseFragment
             boolean isSelectionTop = false;
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
-            HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-            for (HotelListFragment hotelListFragment : mFragmentList)
+            for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
             {
                 if (hotelListFragment == currentFragment)
                 {
@@ -1150,7 +1075,7 @@ public class HotelMainFragment extends BaseFragment
                 mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
                 mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-                if (mTabIndicator.getVisibility() != View.VISIBLE)
+                if (mTabLayout.getVisibility() != View.VISIBLE)
                 {
                     initShow();
                 }
@@ -1228,5 +1153,4 @@ public class HotelMainFragment extends BaseFragment
             }
         }
     };
-
 }

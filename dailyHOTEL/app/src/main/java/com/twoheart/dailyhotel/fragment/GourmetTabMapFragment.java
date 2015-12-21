@@ -29,7 +29,7 @@ public class GourmetTabMapFragment extends PlaceTabMapFragment implements OnMapC
         //관련 정보들은 BookingTabActivity에서 넘겨받음.
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL, placeBookingDetail);
         newFragment.setArguments(arguments);
-        newFragment.setTitle(title);
+//        newFragment.setTitle(title);
 
         return newFragment;
     }

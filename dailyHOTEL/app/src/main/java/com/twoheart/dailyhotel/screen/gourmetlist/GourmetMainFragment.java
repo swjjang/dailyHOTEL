@@ -5,10 +5,9 @@
  * <p>
  * 호텔 탭 중 예약 탭 프래그먼트
  */
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -23,6 +22,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
+import com.twoheart.dailyhotel.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -219,7 +220,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void showSlidingDrawer()
+    public void showSlidingDrawer()
     {
         mTabIndicator.setVisibility(View.VISIBLE);
 
@@ -227,7 +228,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void hideSlidingDrawer()
+    public void hideSlidingDrawer()
     {
         mTabIndicator.setVisibility(View.INVISIBLE);
 
@@ -292,14 +293,14 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void requestRegionList(BaseActivity baseActivity)
+    public void requestRegionList(BaseActivity baseActivity)
     {
         // 지역 리스트를 가져온다
         DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
     }
 
     @Override
-    protected void refreshList(Province province, boolean isSelectionTop)
+    public void refreshList(Province province, boolean isSelectionTop)
     {
         GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
 
@@ -315,7 +316,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void activityResult(int requestCode, int resultCode, Intent data)
+    public void activityResult(int requestCode, int resultCode, Intent data)
     {
         switch (requestCode)
         {
@@ -332,25 +333,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    protected void setActionBarAnimationLock(boolean isLock)
-    {
-        PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
-
-        if (currentFragment != null)
-        {
-            if (isLock == true)
-            {
-                currentFragment.setActionBarAnimationLock(false);
-            } else
-            {
-                currentFragment.showActionBarAnimatoin();
-                currentFragment.setActionBarAnimationLock(true);
-            }
-        }
-    }
-
-    @Override
-    protected boolean isEnabledRegionMenu()
+    public boolean isEnabledRegionMenu()
     {
         if (mAreaItemList != null && mAreaItemList.size() > 1)
         {

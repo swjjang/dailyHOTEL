@@ -13,7 +13,7 @@
  * @author Mike Han(mike@dailyhotel.co.kr)
  * @since 2014-02-24
  */
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.view.HotelListViewItem;

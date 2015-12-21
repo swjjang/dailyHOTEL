@@ -15,8 +15,6 @@ package com.twoheart.dailyhotel.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -791,7 +789,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 if (true == "true".equalsIgnoreCase(result))
                 {
-                    DailyPreference.getInstance(SignupActivity.this).setGcmId(regPushParams.get("notification_id"));
+                    DailyPreference.getInstance(SignupActivity.this).setGCMRegistrationId(regPushParams.get("notification_id"));
                 }
             } catch (Exception e)
             {

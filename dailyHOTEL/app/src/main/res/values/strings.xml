@@ -61,7 +61,7 @@
 
     <!-- Actionbar Titles -->
     <string name="actionbar_title_hotel_list_frag">데일리호텔</string>
-    <string name="actionbar_title_fnb_list_frag">데일리고메</string>
+    <string name="actionbar_title_gourmet_list_frag">데일리고메</string>
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_reg_creditcard">신용카드 추가하기</string>
@@ -536,7 +536,8 @@
     <!-- Main Tab -->
     <string name="label_today">오늘</string>
     <string name="label_tomorrow">내일</string>
-    <string name="label_selecteday">날짜</string>
+    <string name="label_day">날짜</string>
+    <string name="label_selecteday">날짜 선택</string>
     <string name="label_format_tabday">%1$s일(%2$s)</string>
     <string name="label_format_tabmonth">%1$s월%2$s일</string>
     <string name="label_format_gourmet_tabmonth">%1$s월 %2$s일(%3$s)</string>

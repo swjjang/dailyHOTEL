@@ -19,14 +19,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -40,9 +38,9 @@ import android.widget.Toast;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.HotelMainFragment;
+import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -56,7 +54,6 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 public class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
-    protected static int mStatusBarHeight;
     private Toolbar mToolbar;
     private Dialog mDialog;
     private LoadingDialog mLockUI;
@@ -140,6 +137,12 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         }
     }
 
+    public String getNetworkTag()
+    {
+        return mNetworkTag;
+    }
+
+
     /**
      * 액션바를 설정하는 메서드로서, 어플리케이션 액션바 테마를 설정하고 제목을 지정한다.
      *
@@ -149,7 +152,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         if (mToolbar == null)
         {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
             try
             {
@@ -442,9 +445,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
             mLockUI.show();
         }
-
-        // 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
-        //		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
     }
 
     /**
@@ -550,11 +550,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         ExLog.e(error.toString());
 
-        if (Constants.DEBUG == true)
-        {
-            Log.e("DailyHotel", error.toString(), error.fillInStackTrace());
-        }
-
         onError();
     }
 
@@ -591,21 +586,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 finish();
             }
         }, null, false);
-    }
-
-    /**
-     * 버튼 난타를 방지하기 위한 메서드, 버튼의 클릭 가능 여부를 반대로 변경.
-     *
-     * @param v 타겟 뷰
-     */
-    protected void chgClickable(View v)
-    {
-        v.setClickable(!v.isClickable());
-    }
-
-    protected void chgClickable(View v, boolean isClickable)
-    {
-        v.setClickable(isClickable);
     }
 
     private void recursiveRecycle(View root)

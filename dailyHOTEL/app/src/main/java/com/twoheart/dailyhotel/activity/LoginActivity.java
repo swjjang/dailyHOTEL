@@ -17,8 +17,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -724,7 +722,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                 if (response.getString("result").equals("true") == true)
                 {
-                    DailyPreference.getInstance(LoginActivity.this).setGcmId(mRegPushParams.get("notification_id"));
+                    DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(mRegPushParams.get("notification_id"));
                 }
 
                 DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,8 +17,10 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -87,11 +90,11 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         switch (mPlaceType)
         {
             case HOTEL:
-                setActionBar(R.string.label_calendar_hotel_select_checkin);
+                initToolbar(R.string.label_calendar_hotel_select_checkin);
                 break;
 
             case FNB:
-                setActionBar(R.string.label_calendar_gourmet_select);
+                initToolbar(R.string.label_calendar_gourmet_select);
                 break;
         }
 
@@ -125,6 +128,29 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         }
 
         mDailyTextViews[dayCountOfMax - 1].setEnabled(false);
+    }
+
+    private void initToolbar(int title)
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+
+        toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.white));
+
+        FontManager.apply(toolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
+
+        toolbar.setTitle(title);
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)

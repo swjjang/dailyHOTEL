@@ -104,7 +104,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".screen.main.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>

@@ -687,7 +687,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 mTicketPayment.setGuest(guest);
             }
 
-            String gcmId = DailyPreference.getInstance(GourmetPaymentActivity.this).getGcmId();
+            String gcmId = DailyPreference.getInstance(GourmetPaymentActivity.this).getGCMRegistrationId();
 
             if (mTicketPayment.paymentType == TicketPayment.PaymentType.VBANK && Util.isTextEmpty(gcmId) == true)
             {

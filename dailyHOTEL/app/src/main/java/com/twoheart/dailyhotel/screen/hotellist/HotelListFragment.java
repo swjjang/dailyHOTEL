@@ -13,7 +13,7 @@
  * @author Mike Han(mike@dailyhotel.co.kr)
  * @since 2014-02-24
  */
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -42,7 +42,7 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
-import com.twoheart.dailyhotel.fragment.HotelMainFragment.HOTEL_VIEW_TYPE;
+import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Province;
@@ -75,10 +75,6 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDeleg
 
 public class HotelListFragment extends BaseFragment implements Constants, OnItemClickListener, OnRefreshListener
 {
-    private static boolean mIsClosedActionBar = false;
-    private static ValueAnimator mValueAnimator = null;
-    private static boolean mLockActionBar = false;
-    private static int mAnchorY = Integer.MAX_VALUE;
     protected PinnedSectionListView mHotelListView;
     protected HotelListAdapter mHotelListAdapter;
     protected SaleTime mSaleTime;
@@ -89,11 +85,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     private View mEmptyView;
     private FrameLayout mMapLayout;
     private HotelListMapFragment mHotelListMapFragment;
-    private HOTEL_VIEW_TYPE mHotelViewType;
+    private HotelMainFragment.HOTEL_VIEW_TYPE mHotelViewType;
     private float mOldY;
     private int mOldfirstVisibleItem;
     private int mDirection;
-    private ActionbarViewHolder mActionbarViewHolder;
 
     // Sort
     protected SortType mPrevSortType;
@@ -130,24 +125,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
         mHotelListView.setTag("HotelListFragment");
 
-        if (Util.isOverAPI12() == true)
-        {
-            mHotelListView.addHeaderView(inflater.inflate(R.layout.list_header_empty, null, true));
-            mHotelListView.setOnScrollListener(mOnScrollListener);
-        } else
-        {
-            mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 119), 0, 0);
-        }
-
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
         mEmptyView = view.findViewById(R.id.emptyView);
 
         mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
         mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 119) + 2, 0, 0);
 
-        mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+        mHotelViewType = HotelMainFragment.HOTEL_VIEW_TYPE.LIST;
 
-        setVisibility(HOTEL_VIEW_TYPE.LIST);
+        setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.LIST);
 
         // Now find the PullToRefreshLayout and set it up
         ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this)
@@ -155,12 +141,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             .useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
         mHotelListView.setShadowVisible(false);
-
-        mActionbarViewHolder = new ActionbarViewHolder();
-
-        mActionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
-        mActionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionBarLayout);
-        mActionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.tabindicator);
 
         return view;
     }
@@ -170,38 +150,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     {
         AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.HOTEL_LIST);
         super.onStart();
-    }
-
-    @Override
-    public void onResume()
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        showActionBar(baseActivity);
-        setActionBarAnimationLock(false);
-
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroyView()
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        showActionBar(baseActivity);
-        setActionBarAnimationLock(true);
-
-        super.onDestroyView();
     }
 
     @Override
@@ -238,7 +186,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
+        if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
         {
             if (mHotelListMapFragment != null)
             {
@@ -258,7 +206,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
+        if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
         {
             if (mHotelListMapFragment != null)
             {
@@ -281,7 +229,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     public void processSelectedDetailRegion(String detailRegion)
     {
         // 현재 맵화면을 보고 있으면 맵화면을 유지 시켜중어야 한다.
-        if (detailRegion != null && mHotelViewType == HOTEL_VIEW_TYPE.MAP)
+        if (detailRegion != null && mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
         {
             refreshHotelList(mSelectedProvince, true);
         }
@@ -295,9 +243,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         {
             return;
         }
-
-        showActionBarAnimatoin(baseActivity);
-        setActionBarAnimationLock(true);
 
         mDirection = MotionEvent.ACTION_CANCEL;
 
@@ -324,23 +269,23 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
      * @param type
      * @param isCurrentPage
      */
-    public void setHotelViewType(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
+    public void setHotelViewType(HotelMainFragment.HOTEL_VIEW_TYPE type, boolean isCurrentPage)
     {
         mHotelViewType = type;
 
         if (mEmptyView.getVisibility() == View.VISIBLE)
         {
-            setVisibility(HOTEL_VIEW_TYPE.GONE);
+            setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.GONE);
         } else
         {
             switch (mHotelViewType)
             {
                 case LIST:
-                    setVisibility(HOTEL_VIEW_TYPE.LIST, isCurrentPage);
+                    setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.LIST, isCurrentPage);
                     break;
 
                 case MAP:
-                    setVisibility(HOTEL_VIEW_TYPE.MAP, isCurrentPage);
+                    setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.MAP, isCurrentPage);
 
                     if (mHotelListMapFragment != null)
                     {
@@ -365,7 +310,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         }
     }
 
-    private void setVisibility(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
+    private void setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE type, boolean isCurrentPage)
     {
         switch (type)
         {
@@ -411,7 +356,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         }
     }
 
-    private void setVisibility(HOTEL_VIEW_TYPE type)
+    private void setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE type)
     {
         setVisibility(type, true);
     }
@@ -426,7 +371,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         mSaleTime = saleTime;
     }
 
-    public void setUserActionListener(HotelMainFragment.OnUserActionListener userActionLister)
+    public void setOnUserActionListener(HotelMainFragment.OnUserActionListener userActionLister)
     {
         mUserActionListener = userActionLister;
     }
@@ -879,253 +824,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         }
     }
 
-    public void setActionBarAnimationLock(boolean lock)
-    {
-        mLockActionBar = lock;
-
-        mDirection = MotionEvent.ACTION_CANCEL;
-    }
-
-    private void showActionBar(BaseActivity baseActivity)
-    {
-        if (Util.isOverAPI12() == false)
-        {
-            return;
-        }
-
-        mIsClosedActionBar = false;
-
-        if (mValueAnimator != null)
-        {
-            mValueAnimator.cancel();
-            mValueAnimator.removeAllListeners();
-            mValueAnimator = null;
-        }
-
-        mActionbarViewHolder.mAnchorView.setVisibility(View.VISIBLE);
-
-        mAnchorY = 0;
-
-        mActionbarViewHolder.mAnchorView.setTranslationY(0);
-        mActionbarViewHolder.mActionbarLayout.setTranslationY(0);
-        mActionbarViewHolder.mTabindicatorView.setTranslationY(0);
-
-        mActionbarViewHolder.mAnchorView.setVisibility(View.INVISIBLE);
-    }
-
-    public void showActionBarAnimatoin(BaseActivity baseActivity)
-    {
-        if (Util.isOverAPI12() == false || mIsClosedActionBar == false || mLockActionBar == true)
-        {
-            return;
-        }
-
-        mIsClosedActionBar = false;
-
-        mActionbarViewHolder.mAnchorView.setVisibility(View.VISIBLE);
-
-        if (mValueAnimator != null)
-        {
-            mValueAnimator.cancel();
-            mValueAnimator.removeAllListeners();
-            mValueAnimator = null;
-        }
-
-        if (mAnchorY == Integer.MAX_VALUE)
-        {
-            mAnchorY = -mActionbarViewHolder.mAnchorView.getHeight();
-        }
-
-        mValueAnimator = ValueAnimator.ofInt(mAnchorY, 0);
-        mValueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (Integer) animation.getAnimatedValue();
-
-                mAnchorY = value;
-
-                mActionbarViewHolder.mAnchorView.setTranslationY(value);
-                mActionbarViewHolder.mActionbarLayout.setTranslationY(value);
-                mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
-            }
-        });
-
-        mValueAnimator.addListener(new AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mActionbarViewHolder.mAnchorView.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-            }
-        });
-
-        mValueAnimator.start();
-
-    }
-
-    private void hideActionbarAnimation(BaseActivity baseActivity)
-    {
-        if (Util.isOverAPI12() == false || mIsClosedActionBar == true || mLockActionBar == true)
-        {
-            return;
-        }
-
-        mIsClosedActionBar = true;
-
-        mActionbarViewHolder.mAnchorView.setVisibility(View.VISIBLE);
-
-        if (mValueAnimator != null)
-        {
-            mValueAnimator.cancel();
-            mValueAnimator.removeAllListeners();
-            mValueAnimator = null;
-        }
-
-        if (mAnchorY == Integer.MAX_VALUE)
-        {
-            mAnchorY = 0;
-        }
-
-        mValueAnimator = ValueAnimator.ofInt(mAnchorY, -mActionbarViewHolder.mAnchorView.getHeight());
-        mValueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (Integer) animation.getAnimatedValue();
-
-                mAnchorY = value;
-
-                mActionbarViewHolder.mAnchorView.setTranslationY(value);
-                mActionbarViewHolder.mActionbarLayout.setTranslationY(value);
-                mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
-            }
-        });
-
-        mValueAnimator.addListener(new AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-            }
-        });
-
-        mValueAnimator.start();
-    }
-
-    private AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener()
-    {
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState)
-        {
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            View firstView = view.getChildAt(0);
-
-            if (null == firstView)
-            {
-                return;
-            }
-
-            int[] lastViewRect = new int[2];
-            float y = Float.MAX_VALUE;
-
-            View lastView = view.getChildAt(view.getChildCount() - 1);
-
-            if (null != lastView)
-            {
-                lastView.getLocationOnScreen(lastViewRect);
-                y = lastViewRect[1];
-            }
-
-            if (Float.compare(mOldY, Float.MAX_VALUE) == 0)
-            {
-                mOldY = y;
-                mOldfirstVisibleItem = firstVisibleItem;
-            } else
-            {
-                // MotionEvent.ACTION_CANCEL을 사용하는 이유는 가끔씩 내리거나 올리면 갑자기 좌표가 튀는 경우가
-                // 있는데 해당 튀는 경우를 무시하기 위해서
-                if (mOldfirstVisibleItem > firstVisibleItem)
-                {
-                    mDirection = MotionEvent.ACTION_DOWN;
-                } else if (mOldfirstVisibleItem < firstVisibleItem)
-                {
-                    mDirection = MotionEvent.ACTION_UP;
-                }
-
-                mOldY = y;
-                mOldfirstVisibleItem = firstVisibleItem;
-            }
-
-            switch (mDirection)
-            {
-                case MotionEvent.ACTION_DOWN:
-                {
-                    showActionBarAnimatoin(baseActivity);
-                    break;
-                }
-
-                case MotionEvent.ACTION_UP:
-                {
-                    // 전체 내용을 위로 올린다.
-                    if (firstVisibleItem >= 1)
-                    {
-                        hideActionbarAnimation(baseActivity);
-                    }
-                    break;
-                }
-            }
-        }
-    };
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1298,7 +996,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                         mHotelListAdapter.clear();
                     }
 
-                    setVisibility(HOTEL_VIEW_TYPE.GONE);
+                    setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.GONE);
 
                     if (mUserActionListener != null)
                     {
@@ -1341,7 +1039,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     setVisibility(mHotelViewType);
 
                     // 지역이 변경되면 다시 리스트를 받아오는데 어떻게 해야할지 의문.
-                    if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
+                    if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
                     {
                         mHotelListMapFragment.setUserActionListener(mUserActionListener);
 
@@ -1374,8 +1072,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
                 // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
                 onRefreshComplete();
-
-                setActionBarAnimationLock(false);
             } catch (Exception e)
             {
                 onError(e);

@@ -428,12 +428,12 @@ public class DailyPreference
         setValue(KEY_PREFERENCE_BY_SHARE, value);
     }
 
-    public String getGcmId()
+    public String getGCMRegistrationId()
     {
         return getValue(KEY_PREFERENCE_GCM_ID, null);
     }
 
-    public void setGcmId(String value)
+    public void setGCMRegistrationId(String value)
     {
         setValue(KEY_PREFERENCE_GCM_ID, value);
     }
