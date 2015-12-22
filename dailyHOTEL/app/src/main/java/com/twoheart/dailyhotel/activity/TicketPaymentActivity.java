@@ -15,7 +15,6 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
@@ -662,7 +661,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
-                    }catch (ActivityNotFoundException e)
+                    } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(TicketPaymentActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
                     }
@@ -798,7 +797,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     private void requestLogin()
     {
         // 세션이 종료되어있으면 다시 로그인한다.
-        if (DailyPreference.getInstance(TicketPaymentActivity.this).isAutoLogin()  == true)
+        if (DailyPreference.getInstance(TicketPaymentActivity.this).isAutoLogin() == true)
         {
             HashMap<String, String> params = Util.getLoginParams(TicketPaymentActivity.this);
             DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, TicketPaymentActivity.this);

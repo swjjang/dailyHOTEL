@@ -105,6 +105,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         mHotelRecycleView.setTag("HotelListFragment");
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setProgressViewEndTarget(true, 200);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -113,7 +114,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             {
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.refreshAll();
+                    mOnUserActionListener.refreshAll(false);
                 } else
                 {
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -387,10 +388,10 @@ public class HotelListFragment extends BaseFragment implements Constants
             params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
         }
 
-        if (DEBUG == true)
-        {
-            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
-        }
+        //        if (DEBUG == true)
+        //        {
+        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
+        //        }
 
         // 호텔 리스트를 가져온다.
         DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);

@@ -18,16 +18,17 @@
         android:layout_marginTop="56dp"
         android:visibility="gone"/>
 
-    <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
-        android:id="@+id/ptr_layout"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.twoheart.dailyhotel.view.widget.PinnedSectionListView
-            android:id="@+id/listview_hotel_list"
+        <com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView
+            android:id="@+id/recycleView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="@null"/>
-    </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
+            android:divider="@null"
+            android:scrollbars="vertical"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

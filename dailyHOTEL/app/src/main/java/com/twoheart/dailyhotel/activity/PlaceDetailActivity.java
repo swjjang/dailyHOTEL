@@ -8,7 +8,6 @@ package com.twoheart.dailyhotel.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -199,7 +198,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         if (placeName != null)
         {
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
-            initToolbar(mToolbar, placeName);
+            initToolbar(mToolbar, placeName, true);
         }
 
         mOnUserActionListener.hideActionBar();
@@ -352,13 +351,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
         @Override
         public void showActionBar()
         {
-            setToolbarTransparent(mToolbar, true);
+            setToolbarTransparent(mToolbar, false);
         }
 
         @Override
         public void hideActionBar()
         {
-            setToolbarTransparent(mToolbar, false);
+            setToolbarTransparent(mToolbar, true);
         }
 
         @Override

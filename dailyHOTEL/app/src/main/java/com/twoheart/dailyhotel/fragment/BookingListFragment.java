@@ -11,10 +11,7 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -92,7 +89,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         btnLogin = view.findViewById(R.id.btn_booking_empty_login);
 
         btnLogin.setOnClickListener(this);
-
 
 
         return view;

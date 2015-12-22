@@ -1,29 +1,24 @@
 package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
+import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -42,7 +37,6 @@ import com.twoheart.dailyhotel.view.HotelListViewItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,7 +45,7 @@ import java.util.HashMap;
 
 public class HotelMainFragment extends BaseFragment
 {
-    private  static final int TAB_COUNT = 3;
+    private static final int TAB_COUNT = 3;
 
     private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
@@ -90,7 +84,7 @@ public class HotelMainFragment extends BaseFragment
 
         void setMapViewVisible(boolean isVisible);
 
-        void refreshAll();
+        void refreshAll(boolean isShowProgress);
     }
 
     public interface UserAnalyticsActionListener
@@ -121,6 +115,7 @@ public class HotelMainFragment extends BaseFragment
 
         mFragmentPagerAdapter = new HotelFragmentPagerAdapter(getChildFragmentManager(), TAB_COUNT, mOnUserActionListener);
 
+        mViewPager.setOffscreenPageLimit(TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
@@ -135,7 +130,7 @@ public class HotelMainFragment extends BaseFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        mAppBarLayout = (AppBarLayout)view.findViewById(R.id.appBarLayout);
+        mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         baseActivity.initToolbarRegion(mToolbar, getString(R.string.label_dailyhotel), new View.OnClickListener()
@@ -328,10 +323,10 @@ public class HotelMainFragment extends BaseFragment
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-//                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+                    //                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
                 } else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
-//                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+                    //                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
                 }
                 break;
             }
@@ -363,7 +358,7 @@ public class HotelMainFragment extends BaseFragment
 
                             if (mOnUserActionListener != null)
                             {
-                                mOnUserActionListener.refreshAll();
+                                mOnUserActionListener.refreshAll(true);
                             }
                         } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
                         {
@@ -373,7 +368,7 @@ public class HotelMainFragment extends BaseFragment
 
                             if (mOnUserActionListener != null)
                             {
-                                mOnUserActionListener.refreshAll();
+                                mOnUserActionListener.refreshAll(true);
                             }
                         }
                     }
@@ -511,7 +506,7 @@ public class HotelMainFragment extends BaseFragment
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
-            if(mViewPager != null)
+            if (mViewPager != null)
             {
                 mViewPager.setCurrentItem(tab.getPosition());
             }
@@ -523,7 +518,7 @@ public class HotelMainFragment extends BaseFragment
 
             if (mOnUserActionListener != null)
             {
-                mOnUserActionListener.refreshAll();
+                mOnUserActionListener.refreshAll(true);
             }
 
             // Google Analytics
@@ -679,15 +674,11 @@ public class HotelMainFragment extends BaseFragment
 
             lockUiComponent();
 
-            String checkInDay = getString(R.string.label_format_tabmonth, //
-                checkInSaleTime.getDayOfDaysHotelDateFormat("M"),//
-                checkInSaleTime.getDayOfDaysHotelDateFormat("d"));
-            String checkOutDay = getString(R.string.label_format_tabmonth, //
-                checkOutSaleTime.getDayOfDaysHotelDateFormat("M"),//
-                checkOutSaleTime.getDayOfDaysHotelDateFormat("d"));
+            String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("d");
+            String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("d");
 
             // 선택탭의 이름을 수정한다.
-            mTabLayout.getTabAt(2).setText(checkInDay + "-" + checkOutDay);
+            mTabLayout.getTabAt(2).setText(String.format("%s(%s-%s일)", getString(R.string.label_day), checkInDay, checkOutDay));
 
             refreshHotelList(mSelectedProvince, isListSelectionTop);
             releaseUiComponent();
@@ -751,7 +742,7 @@ public class HotelMainFragment extends BaseFragment
         }
 
         @Override
-        public void refreshAll()
+        public void refreshAll(boolean isShowProgress)
         {
             if (isLockUiComponent() == true)
             {
@@ -765,7 +756,7 @@ public class HotelMainFragment extends BaseFragment
                 return;
             }
 
-            lockUI();
+            lockUI(isShowProgress);
             DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
     };
@@ -900,7 +891,7 @@ public class HotelMainFragment extends BaseFragment
 
             for (int i = 0; i < TAB_COUNT; i++)
             {
-                HotelListFragment hotelListFragment = (HotelListFragment)mFragmentPagerAdapter.getItem(i);
+                HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(i);
 
                 SaleTime saleTime;
 
@@ -925,24 +916,23 @@ public class HotelMainFragment extends BaseFragment
 
             String text = (String) mTabLayout.getTabAt(2).getTag();
 
+            SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
+            SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
+
             if (Util.isTextEmpty(text) == true)
             {
-                SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
-                SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
-
-                String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("d");
-                String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("d");
-
                 HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(2);
                 fragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
 
-                String checkInOutDate = String.format("%s(%s-%s일)" , getString(R.string.label_day), checkInDay , checkOutDay);
-
-                mTabLayout.getTabAt(2).setTag(checkInOutDate);
-                dayList.add(checkInOutDate);
+                mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
+                dayList.add(getString(R.string.label_selecteday));
             } else
             {
-                dayList.add(getString(R.string.label_selecteday));
+                String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("d");
+                String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("d");
+                String checkInOutDate = String.format("%s(%s-%s일)", getString(R.string.label_day), checkInDay, checkOutDay);
+
+                dayList.add(checkInOutDate);
             }
 
             for (int i = 0; i < TAB_COUNT; i++)
@@ -1061,7 +1051,7 @@ public class HotelMainFragment extends BaseFragment
 
                 String deepLink = DailyPreference.getInstance(baseActivity).getDeepLink();
 
-                if (Util.isTextEmpty(deepLink)== false)
+                if (Util.isTextEmpty(deepLink) == false)
                 {
                     DailyPreference.getInstance(baseActivity).removeDeepLink();
 

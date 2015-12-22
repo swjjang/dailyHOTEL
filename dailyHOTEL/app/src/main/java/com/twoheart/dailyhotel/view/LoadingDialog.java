@@ -19,6 +19,7 @@ import android.content.DialogInterface.OnKeyListener;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ProgressBar;
 
@@ -28,6 +29,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 public class LoadingDialog
 {
+    private ProgressBar mProgressBar;
     private BaseActivity mActivity;
     private Dialog mDialog;
     private Handler mHandler = new Handler()
@@ -52,9 +54,9 @@ public class LoadingDialog
         mActivity = activity;
 
         mDialog = new Dialog(activity, R.style.TransDialog);
-        ProgressBar pb = new ProgressBar(activity);
+        mProgressBar = new ProgressBar(activity);
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        mDialog.addContentView(pb, params);
+        mDialog.addContentView(mProgressBar, params);
         mDialog.setCancelable(false);
 
         mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
@@ -89,7 +91,7 @@ public class LoadingDialog
 
     }
 
-    public void show()
+    public void show(boolean isShowProgress)
     {
         if (mActivity == null || mActivity.isFinishing() == true)
         {
@@ -100,6 +102,8 @@ public class LoadingDialog
 
         if (mDialog != null && mDialog.isShowing() == false)
         {
+            mProgressBar.setVisibility(isShowProgress ? View.VISIBLE : View.INVISIBLE);
+
             try
             {
                 mDialog.show();

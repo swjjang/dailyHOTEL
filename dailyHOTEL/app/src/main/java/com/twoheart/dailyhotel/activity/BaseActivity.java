@@ -40,10 +40,8 @@ import android.widget.Toast;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -143,7 +141,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     }
 
 
-
     //    public void setActionBarRegionEnable(boolean isEnable)
     //    {
     //        if (mActionBarRegionEnabled == isEnable)
@@ -178,8 +175,8 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     //            {
     //                mToolbar.setTitle("");
     //
-    //                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    //                View view = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
+    //                LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    //                View view = mInflater.inflate(R.layout.view_actionbar_spinner, null, true);
     //
     //                mSpinnderIndex = mToolbar.getChildCount();
     //                mToolbar.addView(view, mSpinnderIndex);
@@ -208,12 +205,15 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View spinnerView = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
 
+        View imageView = spinnerView.findViewById(R.id.spinnerImageView);
+        imageView.setVisibility(View.INVISIBLE);
+
         TextView textView = (TextView) spinnerView.findViewById(R.id.titleTextView);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setMaxLines(1);
         textView.setSingleLine();
         textView.setEllipsize(TextUtils.TruncateAt.END);
-        textView.setText(R.string.label_dailyhotel);
+        textView.setText(title);
         textView.setOnClickListener(listener);
 
         toolbar.addView(spinnerView);
@@ -229,7 +229,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
     public void initToolbar(Toolbar toolbar, String title, boolean isTransparent)
     {
-        if(toolbar == null)
+        if (toolbar == null)
         {
             return;
         }
@@ -253,13 +253,16 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
     public void setToolbarRegionText(Toolbar toolbar, String title)
     {
-        if(toolbar == null)
+        if (toolbar == null)
         {
             return;
         }
 
         // 인덱스 번호는 나중에 바뀜
         View view = toolbar.getChildAt(0);
+
+        View imageView = view.findViewById(R.id.spinnerImageView);
+        imageView.setVisibility(View.VISIBLE);
 
         TextView textView = (TextView) view.findViewById(R.id.titleTextView);
         textView.setText(title);
@@ -269,7 +272,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         ActionBar actionBar = getSupportActionBar();
 
-        if(actionBar == null)
+        if (actionBar == null)
         {
             return;
         }
@@ -279,12 +282,12 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
     public void setToolbarTransparent(Toolbar toolbar, boolean isTransparent)
     {
-        if(toolbar == null)
+        if (toolbar == null)
         {
             return;
         }
 
-        if(isTransparent == true)
+        if (isTransparent == true)
         {
             toolbar.setTitleTextColor(getResources().getColor(android.R.color.transparent));
             toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -292,41 +295,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         {
             toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
             toolbar.setBackgroundColor(getResources().getColor(R.color.white));
-        }
-    }
-
-    public void setActionBarArea(Toolbar toolbar, String title, final PlaceMainFragment.OnUserActionListener listener)
-    {
-        View view = toolbar.getChildAt(mSpinnderIndex);
-
-        if (view != null)
-        {
-            TextView textView = (TextView) view.findViewById(R.id.titleTextView);
-            textView.setText(title);
-            textView.setTextColor(getResources().getColor(R.color.black));
-            textView.setMaxLines(1);
-            textView.setSingleLine();
-            textView.setEllipsize(TextUtils.TruncateAt.END);
-
-            view.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (mActionBarRegionEnabled == false || isLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    lockUiComponent();
-
-                    // 지역표시를 선택할 경우.
-                    if (listener != null)
-                    {
-                        listener.onClickActionBarArea();
-                    }
-                }
-            });
         }
     }
 
@@ -399,8 +367,12 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     /**
      * LoadingDialog를 띄워 로딩 중임을 나타내어 사용자가 UI를 사용할 수 없도록 한다.
      */
-    @Override
     public void lockUI()
+    {
+        lockUI(true);
+    }
+
+    public void lockUI(boolean isShowProgress)
     {
         lockUiComponent();
 
@@ -411,14 +383,13 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 mLockUI = new LoadingDialog(this);
             }
 
-            mLockUI.show();
+            mLockUI.show(isShowProgress);
         }
     }
 
     /**
      * 로딩이 완료되어 LoadingDialog를 제거하고 전역 폰트를 설정한다.
      */
-    @Override
     public void unLockUI()
     {
         releaseUiComponent();

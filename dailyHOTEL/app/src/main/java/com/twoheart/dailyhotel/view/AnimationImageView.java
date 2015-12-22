@@ -166,22 +166,22 @@ public class AnimationImageView extends ImageView
         initLayout(context);
     }
 
-    //	public AnimationImageView(Context context, AttributeSet attrs)
+    //	public AnimationImageView(Context mContext, AttributeSet attrs)
     //	{
-    //		super(context, attrs);
-    //		initLayout(context);
+    //		super(mContext, attrs);
+    //		initLayout(mContext);
     //	}
     //
-    //	public AnimationImageView(Context context, AttributeSet attrs, int defStyleAttr)
+    //	public AnimationImageView(Context mContext, AttributeSet attrs, int defStyleAttr)
     //	{
-    //		super(context, attrs, defStyleAttr);
-    //		initLayout(context);
+    //		super(mContext, attrs, defStyleAttr);
+    //		initLayout(mContext);
     //	}
     //
-    //	public AnimationImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    //	public AnimationImageView(Context mContext, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     //	{
-    //		super(context, attrs, defStyleAttr, defStyleRes);
-    //		initLayout(context);
+    //		super(mContext, attrs, defStyleAttr, defStyleRes);
+    //		initLayout(mContext);
     //	}
 
     private void initLayout(Context context)

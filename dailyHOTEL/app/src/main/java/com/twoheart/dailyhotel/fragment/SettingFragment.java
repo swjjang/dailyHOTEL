@@ -13,7 +13,6 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
@@ -43,6 +41,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
@@ -81,7 +80,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         mHostActivity = (MainActivity) getActivity();
         mQueue = VolleyHttpClient.getRequestQueue();
 
-        Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mHostActivity.initToolbar(toolbar, getString(R.string.actionbar_title_setting_frag));
 
         tvNotice = (TextView) view.findViewById(R.id.tv_setting_notice);
@@ -324,12 +323,12 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
         if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
         {
-//            chgClickable(llLogin);
-//
-//            if (resultCode == Activity.RESULT_OK)
-//            {
-//                mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
-//            }
+            //            chgClickable(llLogin);
+            //
+            //            if (resultCode == Activity.RESULT_OK)
+            //            {
+            //                mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
+            //            }
         }
     }
 
@@ -368,7 +367,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
-                    }catch(ActivityNotFoundException e)
+                    } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
                     }

@@ -96,11 +96,6 @@ public interface Constants
     // user info
 
 
-
-
-
-
-
     public static final String KEY_PREFERENCE_OVERSEAS_NAME = "OVERSEAS_NAME";
     public static final String KEY_PREFERENCE_OVERSEAS_PHONE = "OVERSEAS_PHONE";
     public static final String KEY_PREFERENCE_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
@@ -113,23 +108,15 @@ public interface Constants
     public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
 
 
-
     // ga
-
 
 
     public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
 
 
-
-
-
     public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
     public static final int VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT = 1;
     public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
-
-
-
 
 
     // Event

@@ -82,8 +82,12 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
         baseActivity.onErrorResponse(error);
     }
 
-    @Override
     public void lockUI()
+    {
+        lockUI(true);
+    }
+
+    public void lockUI(boolean isShowProgress)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -94,10 +98,9 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
         lockUiComponent();
 
-        baseActivity.lockUI();
+        baseActivity.lockUI(isShowProgress);
     }
 
-    @Override
     public void unLockUI()
     {
         releaseUiComponent();

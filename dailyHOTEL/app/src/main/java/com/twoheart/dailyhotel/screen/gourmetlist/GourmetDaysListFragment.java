@@ -18,7 +18,6 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.twoheart.dailyhotel.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
@@ -66,7 +65,7 @@ public class GourmetDaysListFragment extends GourmetListFragment
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    mSortType = PlaceListFragment.SortType.DEFAULT;
+                    mSortType = GourmetListFragment.SortType.DEFAULT;
 
                     mSelectedSaleTime = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECKINDATE);
 

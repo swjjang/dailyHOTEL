@@ -1446,7 +1446,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
-                    }catch (ActivityNotFoundException e)
+                    } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
                     }

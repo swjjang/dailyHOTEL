@@ -111,7 +111,7 @@ public class BookingTabActivity extends BaseActivity
                         String phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
 
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
-                    }catch (ActivityNotFoundException e)
+                    } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(BookingTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
                     }
@@ -152,7 +152,7 @@ public class BookingTabActivity extends BaseActivity
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
-                    }catch (ActivityNotFoundException e)
+                    } catch (ActivityNotFoundException e)
                     {
                         String message = getString(R.string.toast_msg_no_hotel_call, mHotelDetail.hotelPhone);
                         DailyToast.showToast(BookingTabActivity.this, message, Toast.LENGTH_LONG);

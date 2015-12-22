@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.adapter.PlaceViewPagerAdapter;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -55,7 +56,7 @@ import java.util.HashMap;
 
 public abstract class PlaceMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
-    protected PlaceMainFragment.OnUserActionListener mUserActionListener;
+    protected GourmetMainFragment.OnUserActionListener mUserActionListener;
     private GoogleMap mGoogleMap;
     private ArrayList<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
     private ArrayList<PlaceViewItem> mPlaceViewItemViewPagerList; // ViewPager을 위한 리스트
@@ -241,7 +242,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         }
     }
 
-    public void setUserActionListener(PlaceMainFragment.OnUserActionListener userActionLister)
+    public void setOnUserActionListener(GourmetMainFragment.OnUserActionListener userActionLister)
     {
         mUserActionListener = userActionLister;
     }
@@ -329,7 +330,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
         if (mLoadingDialog != null)
         {
-            mLoadingDialog.show();
+            mLoadingDialog.show(true);
         }
 
         if (mCallMakeMarker == false && isChangedRegion == false)

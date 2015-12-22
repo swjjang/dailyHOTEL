@@ -338,7 +338,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
         if (mLoadingDialog != null)
         {
-            mLoadingDialog.show();
+            mLoadingDialog.show(true);
         }
 
         if (mCallMakeMarker == false && isChangedRegion == false)

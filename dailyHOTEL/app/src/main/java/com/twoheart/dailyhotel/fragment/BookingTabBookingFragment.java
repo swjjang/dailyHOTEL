@@ -8,7 +8,6 @@
 package com.twoheart.dailyhotel.fragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +53,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
 
         newFragment.setArguments(arguments);
-//        newFragment.setTitle(title);
+        //        newFragment.setTitle(title);
 
         return newFragment;
     }
