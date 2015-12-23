@@ -1,18 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * BaseActivity
- * <p>
- * ActionBarCompat 라이브러리의 ActionBarActivity를 상속받는 A
- * ctivity로서 어플리케이션에서 사용되는 Activity들의 UI를 기본적으로 구
- * 성하는데 필요한 API 메서드들을 제공한다. 뿐만 아니라, CookieSyncMana
- * ger의 인스턴스를 관리하기도 하며, 어플리케이션의 SharedPreference를
- * 관리하기도 한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.activity;
 
 import android.app.Dialog;

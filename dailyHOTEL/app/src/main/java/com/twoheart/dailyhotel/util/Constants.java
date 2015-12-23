@@ -43,6 +43,14 @@ public interface Constants
         }
     }
 
+    public enum SortType
+    {
+        DEFAULT,
+        DISTANCE,
+        LOW_PRICE,
+        HIGH_PRICE;
+    }
+
     // 항상 열리게 셋팅 여부
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
@@ -191,7 +199,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
     public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 12;
     public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
-    public static final int CODE_REQUEST_ACTIVITY_SELECT_AREA = 14;
+    public static final int CODE_REQUEST_ACTIVITY_REGIONLIST = 14;
     public static final int CODE_REQUEST_ACTIVITY_USERINFO_UPDATE = 15;
     public static final int CODE_REQUEST_FRAGMENT_PLACE_MAIN = 20;
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL = 21;

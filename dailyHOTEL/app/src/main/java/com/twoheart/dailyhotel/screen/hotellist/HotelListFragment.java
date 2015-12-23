@@ -35,10 +35,11 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.adapter.HotelAdapter;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -48,7 +49,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
@@ -59,6 +59,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class HotelListFragment extends BaseFragment implements Constants
 {
@@ -78,17 +79,8 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected HotelMainFragment.OnUserActionListener mOnUserActionListener;
 
     // Sort
-    protected SortType mPrevSortType;
-    protected SortType mSortType = SortType.DEFAULT;
-
-
-    public enum SortType
-    {
-        DEFAULT,
-        DISTANCE,
-        LOW_PRICE,
-        HIGH_PRICE;
-    }
+    protected Constants.SortType mPrevSortType;
+    protected Constants.SortType mSortType = Constants.SortType.DEFAULT;
 
     public interface OnItemClickListener
     {
@@ -105,7 +97,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         mHotelRecycleView.setTag("HotelListFragment");
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setProgressViewEndTarget(true, 200);
+        mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -250,10 +242,10 @@ public class HotelListFragment extends BaseFragment implements Constants
                         {
                             if (HotelListFragment.this instanceof HotelDaysListFragment)
                             {
-                                mHotelMapFragment.setHotelList(mHotelAdapter.getData(), ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), false);
+                                mHotelMapFragment.setHotelList(mHotelAdapter.getAll(), ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), false);
                             } else
                             {
-                                mHotelMapFragment.setHotelList(mHotelAdapter.getData(), mSaleTime, false);
+                                mHotelMapFragment.setHotelList(mHotelAdapter.getAll(), mSaleTime, false);
                             }
                         }
                     }
@@ -659,15 +651,15 @@ public class HotelListFragment extends BaseFragment implements Constants
             return;
         }
 
-        ArrayList<HotelListViewItem> arrayList = mHotelAdapter.getData();
+        List<PlaceViewItem> arrayList = mHotelAdapter.getAll();
 
         int size = arrayList.size();
 
         for (int i = size - 1; i >= 0; i--)
         {
-            HotelListViewItem hotelListViewItem = arrayList.get(i);
+            PlaceViewItem hotelListViewItem = arrayList.get(i);
 
-            if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
+            if (hotelListViewItem.getType() == PlaceViewItem.TYPE_SECTION)
             {
                 arrayList.remove(i);
             }
@@ -678,12 +670,12 @@ public class HotelListFragment extends BaseFragment implements Constants
             case DISTANCE:
             {
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
+                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
                 {
-                    public int compare(HotelListViewItem hotelListViewItem1, HotelListViewItem hotelListViewItem2)
+                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Hotel hotel1 = hotelListViewItem1.getItem();
-                        Hotel hotel2 = hotelListViewItem2.getItem();
+                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
+                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
 
                         float[] results1 = new float[3];
                         Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
@@ -704,12 +696,12 @@ public class HotelListFragment extends BaseFragment implements Constants
             case LOW_PRICE:
             {
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
+                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
                 {
-                    public int compare(HotelListViewItem hotelListViewItem1, HotelListViewItem hotelListViewItem2)
+                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Hotel hotel1 = hotelListViewItem1.getItem();
-                        Hotel hotel2 = hotelListViewItem2.getItem();
+                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
+                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
 
                         return hotel1.averageDiscount - hotel2.averageDiscount;
                     }
@@ -722,12 +714,12 @@ public class HotelListFragment extends BaseFragment implements Constants
             case HIGH_PRICE:
             {
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
+                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
                 {
-                    public int compare(HotelListViewItem hotelListViewItem1, HotelListViewItem hotelListViewItem2)
+                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Hotel hotel1 = hotelListViewItem1.getItem();
-                        Hotel hotel2 = hotelListViewItem2.getItem();
+                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
+                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
 
                         return hotel2.averageDiscount - hotel1.averageDiscount;
                     }
@@ -748,10 +740,10 @@ public class HotelListFragment extends BaseFragment implements Constants
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private OnItemClickListener mOnItemClickListener = new OnItemClickListener()
+    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
     {
         @Override
-        public void onItemClick(View view)
+        public void onClick(View view)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -770,14 +762,14 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             if (mOnUserActionListener != null)
             {
-                HotelListViewItem hotelListViewItem = mHotelAdapter.getItem(position);
+                PlaceViewItem placeViewItem = mHotelAdapter.getItem(position);
 
-                if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
+                if (placeViewItem.getType() == PlaceViewItem.TYPE_SECTION)
                 {
                     return;
                 }
 
-                mOnUserActionListener.selectHotel(hotelListViewItem, mSaleTime);
+                mOnUserActionListener.selectHotel(placeViewItem, mSaleTime);
             }
         }
     };
@@ -791,16 +783,16 @@ public class HotelListFragment extends BaseFragment implements Constants
      */
     private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private ArrayList<HotelListViewItem> makeSectionHotelList(ArrayList<Hotel> hotelList)
+        private ArrayList<PlaceViewItem> makeSectionHotelList(ArrayList<Hotel> hotelList)
         {
-            ArrayList<HotelListViewItem> hotelListViewItemList = new ArrayList<HotelListViewItem>();
+            ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
 
             if (hotelList == null || hotelList.size() == 0)
             {
                 return hotelListViewItemList;
             }
 
-            String area = null;
+            String previousRegion = null;
             boolean hasDailyChoice = false;
 
             for (Hotel hotel : hotelList)
@@ -818,29 +810,29 @@ public class HotelListFragment extends BaseFragment implements Constants
                     {
                         hasDailyChoice = true;
 
-                        HotelListViewItem section = new HotelListViewItem(getString(R.string.label_dailychoice));
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getString(R.string.label_dailychoice));
                         hotelListViewItemList.add(section);
                     }
                 } else
                 {
-                    if (Util.isTextEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+                    if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
                     {
-                        area = region;
+                        previousRegion = region;
 
-                        HotelListViewItem section = new HotelListViewItem(region);
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
                         hotelListViewItemList.add(section);
                     }
                 }
 
-                hotelListViewItemList.add(new HotelListViewItem(hotel));
+                hotelListViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel));
             }
 
             return hotelListViewItemList;
         }
 
-        private ArrayList<HotelListViewItem> makeSortHotelList(ArrayList<Hotel> hotelList, SortType type)
+        private ArrayList<PlaceViewItem> makeSortHotelList(ArrayList<Hotel> hotelList, SortType type)
         {
-            ArrayList<HotelListViewItem> hotelListViewItemList = new ArrayList<HotelListViewItem>();
+            ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
 
             if (hotelList == null || hotelList.size() == 0)
             {
@@ -908,7 +900,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             for (Hotel hotel : hotelList)
             {
-                hotelListViewItemList.add(new HotelListViewItem(hotel));
+                hotelListViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel));
             }
 
             return hotelListViewItemList;
@@ -985,11 +977,11 @@ public class HotelListFragment extends BaseFragment implements Constants
                         mSortType = SortType.DEFAULT;
                     }
 
-                    ArrayList<HotelListViewItem> hotelListViewItemList = makeSortHotelList(hotelList, mSortType);
+                    ArrayList<PlaceViewItem> hotelListViewItemList = makeSortHotelList(hotelList, mSortType);
 
                     if (mHotelAdapter == null)
                     {
-                        mHotelAdapter = new HotelAdapter(baseActivity, new ArrayList<HotelListViewItem>(), mOnItemClickListener);
+                        mHotelAdapter = new HotelAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
                         mHotelRecycleView.setAdapter(mHotelAdapter);
                     }
 
@@ -1007,6 +999,24 @@ public class HotelListFragment extends BaseFragment implements Constants
                         {
                             mHotelMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mIsSelectionTop);
                         }
+                    }
+
+                    {
+                        ArrayList<EventBanner> arrayList = new ArrayList<>();
+                        EventBanner eventBanner01 = new EventBanner();
+                        eventBanner01.link = "http://mediamails.com/wp-content/uploads/events_banner.jpg";
+                        arrayList.add(eventBanner01);
+
+                        EventBanner eventBanner02 = new EventBanner();
+                        eventBanner02.link = "http://redtix.airasia.com/Events/F1/images/event_banner_F1.jpg";
+                        arrayList.add(eventBanner02);
+
+                        EventBanner eventBanner03 = new EventBanner();
+                        eventBanner03.link = "http://redtix.airasia.com/events/SundownMusicFestivalAsia2013/images/event-banner-sundown.jpg";
+                        arrayList.add(eventBanner03);
+
+                        PlaceViewItem hotelListViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, arrayList);
+                        hotelListViewItemList.add(0, hotelListViewItem);
                     }
 
                     mHotelAdapter.clear();

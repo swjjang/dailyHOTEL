@@ -29,6 +29,8 @@
     <string name="label_sort_by_high_price">높은 가격순</string>
     <string name="label_sort_by_area">지역별(기본)</string>
     <string name="label_friend">친구</string>
+    <string name="label_domestic">국내</string>
+    <string name="label_global">해외</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>

@@ -17,22 +17,23 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
-import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.region.RegionListActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.HotelListViewItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +73,7 @@ public class HotelMainFragment extends BaseFragment
 
     public interface OnUserActionListener
     {
-        void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime);
+        void selectHotel(PlaceViewItem hotelListViewItem, SaleTime checkSaleTime);
 
         void selectHotel(int hotelIndex, long dailyTime, int dailyDayOfDays, int nights);
 
@@ -342,7 +343,7 @@ public class HotelMainFragment extends BaseFragment
             }
 
             // 지역을 선택한 후에 되돌아 온경우.
-            case CODE_REQUEST_ACTIVITY_SELECT_AREA:
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
             {
                 mDontReloadAtOnResume = true;
 
@@ -584,7 +585,7 @@ public class HotelMainFragment extends BaseFragment
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override
-        public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime)
+        public void selectHotel(PlaceViewItem placeViewItem, SaleTime checkSaleTime)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -598,7 +599,7 @@ public class HotelMainFragment extends BaseFragment
                 return;
             }
 
-            if (hotelListViewItem == null)
+            if (placeViewItem == null)
             {
                 unLockUI();
                 return;
@@ -606,11 +607,11 @@ public class HotelMainFragment extends BaseFragment
 
             lockUI();
 
-            switch (hotelListViewItem.getType())
+            switch (placeViewItem.getType())
             {
-                case HotelListViewItem.TYPE_ENTRY:
+                case PlaceViewItem.TYPE_ENTRY:
                 {
-                    Hotel hotel = hotelListViewItem.getItem();
+                    Hotel hotel = placeViewItem.<Hotel>getItem();
 
                     String region = DailyPreference.getInstance(baseActivity).getSelectedRegion();
                     DailyPreference.getInstance(baseActivity).setGASelectedRegion(region);
@@ -626,11 +627,11 @@ public class HotelMainFragment extends BaseFragment
 
                     startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
 
-                    mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotel.getIdx(), checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), hotel.nights);
+                    mUserAnalyticsActionListener.selectHotel(hotel.getName(), hotel.getIdx(), checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), hotel.nights);
                     break;
                 }
 
-                case HotelListViewItem.TYPE_SECTION:
+                case PlaceViewItem.TYPE_SECTION:
                 default:
                     unLockUI();
                     break;
@@ -728,10 +729,8 @@ public class HotelMainFragment extends BaseFragment
                 return;
             }
 
-            Intent intent = new Intent(baseActivity, SelectAreaActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
-            intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
+            Intent intent = RegionListActivity.newInstance(baseActivity, PlaceMainFragment.TYPE.HOTEL, mSelectedProvince);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
         }
 
         @Override

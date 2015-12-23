@@ -1,17 +1,13 @@
-package com.twoheart.dailyhotel.adapter;
+package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,13 +18,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.adapter.PlaceAdapter;
+import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.screen.gourmetlist.GourmetListFragment;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.screen.hotellist.EventBannerViewPagerAdapter;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.GourmetViewItem;
-import com.twoheart.dailyhotel.view.HotelListViewItem;
-import com.twoheart.dailyhotel.view.PlaceViewItem;
+import com.twoheart.dailyhotel.view.LoopViewPager;
+import com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
 
 import java.io.File;
@@ -36,107 +35,62 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class GourmetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecycleView.PinnedSectionListAdapter
+public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycleView.PinnedSectionListAdapter
 {
-    protected Context mContext;
-    protected LayoutInflater mInflater;
-    protected PaintDrawable mPaintDrawable;
-    private ArrayList<PlaceViewItem> mGourmetViewItemList;
-    private GourmetListFragment.OnItemClickListener mOnItemClickListener;
+    private Constants.SortType mSortType;
+    private View.OnClickListener mOnClickListener;
+    private int mLastEventBannerPosition;
 
-    protected GourmetListFragment.SortType mSortType = GourmetListFragment.SortType.DEFAULT;
-
-    public GourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, GourmetListFragment.OnItemClickListener listener)
+    private Handler mEventBannerHandler = new Handler()
     {
-        if (mGourmetViewItemList == null)
+        @Override
+        public void handleMessage(Message msg)
         {
-            mGourmetViewItemList = new ArrayList<>();
-        }
+            EventBannerViewHolder eventBannerViewHolder = (EventBannerViewHolder) msg.obj;
 
-        mContext = context;
-
-        mGourmetViewItemList.clear();
-        mGourmetViewItemList.addAll(arrayList);
-
-        mOnItemClickListener = listener;
-
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        makeShaderFactory();
-    }
-
-    private void makeShaderFactory()
-    {
-        // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
-
-        mPaintDrawable = new PaintDrawable();
-        mPaintDrawable.setShape(new RectShape());
-
-        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-        {
-            @Override
-            public Shader resize(int width, int height)
+            if (eventBannerViewHolder != null)
             {
-                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+                eventBannerViewHolder.loopViewPager.setCurrentItem(msg.arg1 + 1);
             }
-        };
+        }
+    };
 
-        mPaintDrawable.setShaderFactory(sf);
+    public GourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
+    {
+        super(context, arrayList);
+
+        mOnClickListener = listener;
+
+        setSortType(Constants.SortType.DEFAULT);
     }
 
-    public void clear()
+    public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
-        if (mGourmetViewItemList == null)
-        {
-            mGourmetViewItemList = new ArrayList<>();
-        }
-
-        mGourmetViewItemList.clear();
-    }
-
-    public PlaceViewItem getItem(int position)
-    {
-        if (mGourmetViewItemList == null)
-        {
-            return null;
-        }
-
-        return mGourmetViewItemList.get(position);
-    }
-
-    public void addAll(Collection<? extends PlaceViewItem> collection, GourmetListFragment.SortType sortType)
-    {
-        if (collection == null)
-        {
-            return;
-        }
-
-        if (mGourmetViewItemList == null)
-        {
-            mGourmetViewItemList = new ArrayList<>();
-        }
+        addAll(collection);
 
         setSortType(sortType);
-
-        mGourmetViewItemList.addAll(collection);
     }
 
-    public void setSortType(GourmetListFragment.SortType sortType)
+    public void setSortType(Constants.SortType sortType)
     {
         mSortType = sortType;
-    }
-
-    public ArrayList<PlaceViewItem> getData()
-    {
-        return mGourmetViewItemList;
     }
 
     @Override
     public boolean isItemViewTypePinned(int viewType)
     {
-        return viewType == HotelListViewItem.TYPE_SECTION;
+        return viewType == PlaceViewItem.TYPE_SECTION;
+    }
+
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder)
+    {
+        super.onViewRecycled(holder);
+
+        if (holder instanceof EventBannerViewHolder)
+        {
+            mEventBannerHandler.removeMessages(0);
+        }
     }
 
     @Override
@@ -144,18 +98,25 @@ public class GourmetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     {
         switch (viewType)
         {
-            case GourmetViewItem.TYPE_SECTION:
+            case PlaceViewItem.TYPE_SECTION:
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel_section, parent, false);
 
                 return new SectionViewHolder(view);
             }
 
-            case GourmetViewItem.TYPE_ENTRY:
+            case PlaceViewItem.TYPE_ENTRY:
             {
                 View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
 
                 return new GourmetViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_EVENT_BANNER:
+            {
+                View view = mInflater.inflate(R.layout.list_row_eventbanner, parent, false);
+
+                return new EventBannerViewHolder(view);
             }
         }
 
@@ -165,39 +126,87 @@ public class GourmetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        GourmetViewItem item = (GourmetViewItem) getItem(position);
+        PlaceViewItem item = getItem(position);
 
-        if (holder instanceof SectionViewHolder)
+        if (item == null)
         {
-            SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;
-            sectionViewHolder.regionDetailName.setText(item.title);
+            return;
+        }
 
-        } else if (holder instanceof GourmetViewHolder)
+        switch (item.getType())
         {
-            makeEntryView((GourmetViewHolder) holder, item);
+            case PlaceViewItem.TYPE_ENTRY:
+                onBindViewHolder((GourmetViewHolder) holder, item);
+                break;
+
+            case PlaceViewItem.TYPE_SECTION:
+                onBindViewHolder((SectionViewHolder) holder, item);
+                break;
+
+            case PlaceViewItem.TYPE_EVENT_BANNER:
+                onBindViewHolder((EventBannerViewHolder) holder, item);
+                break;
         }
     }
 
-    @Override
-    public int getItemViewType(int position)
+    private void onBindViewHolder(SectionViewHolder holder, PlaceViewItem placeViewItem)
     {
-        return getItem(position).type;
+        holder.regionDetailName.setText(placeViewItem.<String>getItem());
     }
 
-    @Override
-    public int getItemCount()
+    private void onBindViewHolder(final EventBannerViewHolder holder, PlaceViewItem placeViewItem)
     {
-        if (mGourmetViewItemList == null)
+        ArrayList<EventBanner> eventBannerList = placeViewItem.<ArrayList<EventBanner>>getItem();
+
+        EventBannerViewPagerAdapter adapter = new EventBannerViewPagerAdapter(mContext, eventBannerList);
+        holder.loopViewPager.setOnPageChangeListener(null);
+        holder.loopViewPager.setAdapter(adapter);
+        holder.viewpagerCircleIndicator.setTotalCount(eventBannerList.size());
+        holder.loopViewPager.setCurrentItem(mLastEventBannerPosition);
+        holder.loopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
-            return 0;
-        }
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+            }
 
-        return mGourmetViewItemList.size();
+            @Override
+            public void onPageSelected(int position)
+            {
+                mLastEventBannerPosition = position;
+
+                holder.viewpagerCircleIndicator.setPosition(position);
+
+                nextEventBannerPosition(holder, position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+                if (state == LoopViewPager.SCROLL_STATE_DRAGGING)
+                {
+                    mEventBannerHandler.removeMessages(0);
+                }
+            }
+        });
+
+        nextEventBannerPosition(holder, mLastEventBannerPosition);
     }
 
-    private void makeEntryView(GourmetViewHolder holder, GourmetViewItem gourmetViewItem)
+    private void nextEventBannerPosition(EventBannerViewHolder eventViewHolder, int position)
     {
-        final Gourmet gourmet = (Gourmet) gourmetViewItem.getPlace();
+        mEventBannerHandler.removeMessages(0);
+
+        Message message = new Message();
+        message.what = 0;
+        message.arg1 = position;
+        message.obj = eventViewHolder;
+        mEventBannerHandler.sendMessageDelayed(message, 5000);
+    }
+
+    private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
+    {
+        final Gourmet gourmet = placeViewItem.<Gourmet>getItem();
 
         DecimalFormat comma = new DecimalFormat("###,##0");
         int price = gourmet.price;
@@ -308,7 +317,7 @@ public class GourmetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (mSortType == GourmetListFragment.SortType.DISTANCE)
+        if (mSortType == Constants.SortType.DISTANCE)
         {
             holder.distanceView.setVisibility(View.VISIBLE);
             holder.distanceView.setText(new DecimalFormat("#.#").format(gourmet.distance / 1000) + "km");
@@ -348,17 +357,7 @@ public class GourmetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             personsTextView = (TextView) itemView.findViewById(R.id.personsTextView);
             distanceView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
-            itemView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (mOnItemClickListener != null)
-                    {
-                        mOnItemClickListener.onItemClick(v);
-                    }
-                }
-            });
+            itemView.setOnClickListener(mOnClickListener);
         }
     }
 
@@ -371,6 +370,20 @@ public class GourmetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
 
             regionDetailName = (TextView) itemView.findViewById(R.id.hotelListRegionName);
+        }
+    }
+
+    private class EventBannerViewHolder extends RecyclerView.ViewHolder
+    {
+        LoopViewPager loopViewPager;
+        DailyViewPagerCircleIndicator viewpagerCircleIndicator;
+
+        public EventBannerViewHolder(View itemView)
+        {
+            super(itemView);
+
+            loopViewPager = (LoopViewPager) itemView.findViewById(R.id.loopViewPager);
+            viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
         }
     }
 }

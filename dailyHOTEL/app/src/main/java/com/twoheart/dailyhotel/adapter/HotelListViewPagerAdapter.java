@@ -23,26 +23,27 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.screen.hotellist.HotelMapFragment;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.HotelListViewItem;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HotelListViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
-    private ArrayList<HotelListViewItem> mHotelListViewItemList;
+    private ArrayList<PlaceViewItem> mHotelListViewItemList;
     private HotelMapFragment.OnUserActionListener mOnUserActionListener;
 
     public HotelListViewPagerAdapter(Context context)
     {
         mContext = context;
 
-        mHotelListViewItemList = new ArrayList<HotelListViewItem>();
+        mHotelListViewItemList = new ArrayList<PlaceViewItem>();
     }
 
     public void setOnUserActionListener(HotelMapFragment.OnUserActionListener listener)
@@ -62,9 +63,9 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 
         View view = layoutInflater.inflate(R.layout.viewpager_column_hotel, null);
 
-        HotelListViewItem item = mHotelListViewItemList.get(position);
+        PlaceViewItem item = mHotelListViewItemList.get(position);
 
-        makeLayout(view, item.getItem());
+        makeLayout(view, item.<Hotel>getItem());
 
         container.addView(view, 0);
 
@@ -263,11 +264,11 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         container.removeView((View) object);
     }
 
-    public void setData(ArrayList<HotelListViewItem> list)
+    public void setData(List<PlaceViewItem> list)
     {
         if (mHotelListViewItemList == null)
         {
-            mHotelListViewItemList = new ArrayList<HotelListViewItem>();
+            mHotelListViewItemList = new ArrayList<>();
         }
 
         mHotelListViewItemList.clear();

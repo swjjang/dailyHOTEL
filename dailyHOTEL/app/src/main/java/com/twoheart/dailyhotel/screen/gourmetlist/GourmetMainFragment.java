@@ -17,22 +17,22 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
-import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.region.RegionListActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONArray;
@@ -447,27 +447,27 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            switch (baseListViewItem.type)
+            switch (baseListViewItem.getType())
             {
                 case PlaceViewItem.TYPE_ENTRY:
                 {
-                    Gourmet fnb = (Gourmet) baseListViewItem.getPlace();
+                    Gourmet gourmet = baseListViewItem.<Gourmet>getItem();
 
                     String region = DailyPreference.getInstance(baseActivity).getSelectedGourmetRegion();
 
 
                     DailyPreference.getInstance(baseActivity).setGASelectedPlaceRegion(region);
-                    DailyPreference.getInstance(baseActivity).setGASelectedPlaceName(fnb.name);
+                    DailyPreference.getInstance(baseActivity).setGASelectedPlaceName(gourmet.name);
 
                     Intent intent = new Intent(baseActivity, GourmetDetailActivity.class);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, fnb.index);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, fnb.name);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, fnb.imageUrl);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
 
                     startActivityForResult(intent, CODE_REQUEST_FRAGMENT_PLACE_MAIN);
 
-                    mOnUserAnalyticsActionListener.selectPlace(fnb.name, fnb.index, checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+                    mOnUserAnalyticsActionListener.selectPlace(gourmet.name, gourmet.index, checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
                     break;
                 }
 
@@ -607,10 +607,10 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             lockUI();
 
-            Intent intent = new Intent(baseActivity, SelectAreaActivity.class);
+            Intent intent = new Intent(baseActivity, RegionListActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
             intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
         }
 
         @Override

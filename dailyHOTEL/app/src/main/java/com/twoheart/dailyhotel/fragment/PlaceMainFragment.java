@@ -146,7 +146,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             }
 
             // 지역을 선택한 후에 되돌아 온경우.
-            case CODE_REQUEST_ACTIVITY_SELECT_AREA:
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
             {
                 mDontReloadAtOnResume = true;
 

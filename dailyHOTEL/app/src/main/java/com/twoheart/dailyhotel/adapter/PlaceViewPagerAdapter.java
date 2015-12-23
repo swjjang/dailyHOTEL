@@ -8,10 +8,12 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.PlaceMapFragment;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.view.PlaceViewItem;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PlaceViewPagerAdapter extends PagerAdapter
 {
@@ -47,7 +49,7 @@ public abstract class PlaceViewPagerAdapter extends PagerAdapter
 
         PlaceViewItem item = mPlaceViewItemList.get(position);
 
-        makeLayout(view, item.getPlace());
+        makeLayout(view, item.<Gourmet>getItem());
 
         container.addView(view, 0);
 
@@ -84,7 +86,7 @@ public abstract class PlaceViewPagerAdapter extends PagerAdapter
         container.removeView((View) object);
     }
 
-    public void setData(ArrayList<PlaceViewItem> list)
+    public void setData(List<PlaceViewItem> list)
     {
         if (mPlaceViewItemList == null)
         {

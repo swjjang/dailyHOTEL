@@ -20,13 +20,14 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.adapter.GourmetAdapter;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment.VIEW_TYPE;
 import com.twoheart.dailyhotel.fragment.PlaceMapFragment;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -36,9 +37,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.GourmetViewItem;
 import com.twoheart.dailyhotel.view.LocationFactory;
-import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
 
@@ -48,6 +47,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class GourmetListFragment extends BaseFragment implements Constants
 {
@@ -66,17 +66,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
     protected GourmetMainFragment.OnUserActionListener mOnUserActionListener;
 
     // Sort
-    protected SortType mPrevSortType;
-    protected SortType mSortType = SortType.DEFAULT;
+    protected Constants.SortType mPrevSortType;
+    protected Constants.SortType mSortType = Constants.SortType.DEFAULT;
     private Location mMyLocation;
-
-    public enum SortType
-    {
-        DEFAULT,
-        DISTANCE,
-        LOW_PRICE,
-        HIGH_PRICE;
-    }
 
     public interface OnItemClickListener
     {
@@ -93,7 +85,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecycleView.setTag("GourmetListFragment");
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setProgressViewEndTarget(true, 200);
+        mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -261,14 +253,14 @@ public class GourmetListFragment extends BaseFragment implements Constants
         DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
     }
 
-    public ArrayList<PlaceViewItem> getPlaceViewItemList()
+    public List<PlaceViewItem> getPlaceViewItemList()
     {
         if (mGourmetAdapter == null)
         {
             return null;
         }
 
-        return mGourmetAdapter.getData();
+        return mGourmetAdapter.getAll();
     }
 
     public PlaceMapFragment createPlaceMapFragment()
@@ -306,7 +298,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                         if (isCurrentPage == true)
                         {
-                            ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
+                            List<PlaceViewItem> arrayList = getPlaceViewItemList();
 
                             if (arrayList != null)
                             {
@@ -528,13 +520,14 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         boolean hasPlace = false;
 
-        ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
+        List<PlaceViewItem> arrayList = getPlaceViewItemList();
 
         if (arrayList != null)
         {
             for (PlaceViewItem placeViewItem : arrayList)
             {
-                if (placeViewItem.getPlace() != null && placeViewItem.getPlace().isSoldOut == false)
+                if (placeViewItem.getType() == PlaceViewItem.TYPE_ENTRY//
+                    && placeViewItem.<Gourmet>getItem().isSoldOut == false)
                 {
                     hasPlace = true;
                     break;
@@ -689,7 +682,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             return;
         }
 
-        ArrayList<PlaceViewItem> arrayList = mGourmetAdapter.getData();
+        List<PlaceViewItem> arrayList = mGourmetAdapter.getAll();
 
         int size = arrayList.size();
 
@@ -697,7 +690,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         {
             PlaceViewItem placeViewItem = arrayList.get(i);
 
-            if (placeViewItem.type == PlaceViewItem.TYPE_SECTION)
+            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
             {
                 arrayList.remove(i);
             }
@@ -712,8 +705,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Place place1 = placeViewItem1.getPlace();
-                        Place place2 = placeViewItem2.getPlace();
+                        Place place1 = placeViewItem1.<Gourmet>getItem();
+                        Place place2 = placeViewItem2.<Gourmet>getItem();
 
                         float[] results1 = new float[3];
                         Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), place1.latitude, place1.longitude, results1);
@@ -738,8 +731,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Place place1 = placeViewItem1.getPlace();
-                        Place place2 = placeViewItem2.getPlace();
+                        Place place1 = placeViewItem1.<Gourmet>getItem();
+                        Place place2 = placeViewItem2.<Gourmet>getItem();
 
                         return place1.discountPrice - place2.discountPrice;
                     }
@@ -756,8 +749,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Place place1 = placeViewItem1.getPlace();
-                        Place place2 = placeViewItem2.getPlace();
+                        Place place1 = placeViewItem1.<Gourmet>getItem();
+                        Place place2 = placeViewItem2.<Gourmet>getItem();
 
                         return place2.discountPrice - place1.discountPrice;
                     }
@@ -777,10 +770,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private OnItemClickListener mOnItemClickListener = new OnItemClickListener()
+    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
     {
         @Override
-        public void onItemClick(View view)
+        public void onClick(View view)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -801,7 +794,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             {
                 PlaceViewItem gourmetViewItem = mGourmetAdapter.getItem(position);
 
-                if (gourmetViewItem.type == GourmetViewItem.TYPE_SECTION)
+                if (gourmetViewItem.getType() == PlaceViewItem.TYPE_SECTION)
                 {
                     return;
                 }
@@ -818,11 +811,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private ArrayList<PlaceViewItem> makeSectionList(ArrayList<Gourmet> fnbList)
+        private ArrayList<PlaceViewItem> makeSectionList(ArrayList<Gourmet> gourmetList)
         {
             ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
 
-            if (fnbList == null || fnbList.size() == 0)
+            if (gourmetList == null || gourmetList.size() == 0)
             {
                 return placeViewItemList;
             }
@@ -830,22 +823,22 @@ public class GourmetListFragment extends BaseFragment implements Constants
             String area = null;
             boolean hasDailyChoice = false;
 
-            for (Gourmet fnb : fnbList)
+            for (Gourmet gourmet : gourmetList)
             {
-                String region = fnb.districtName;
+                String region = gourmet.districtName;
 
                 if (Util.isTextEmpty(region) == true)
                 {
                     continue;
                 }
 
-                if (fnb.isDailyChoice == true)
+                if (gourmet.isDailyChoice == true)
                 {
                     if (hasDailyChoice == false)
                     {
                         hasDailyChoice = true;
 
-                        GourmetViewItem section = new GourmetViewItem(getString(R.string.label_dailychoice));
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getString(R.string.label_dailychoice));
                         placeViewItemList.add(section);
                     }
                 } else
@@ -854,12 +847,12 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     {
                         area = region;
 
-                        GourmetViewItem section = new GourmetViewItem(region);
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
                         placeViewItemList.add(section);
                     }
                 }
 
-                placeViewItemList.add(new GourmetViewItem(fnb));
+                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
             }
 
             return placeViewItemList;
@@ -935,7 +928,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             for (Gourmet gourmet : gourmetList)
             {
-                gourmetViewItemList.add(new GourmetViewItem(gourmet));
+                gourmetViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
             }
 
             return gourmetViewItemList;
@@ -1017,6 +1010,24 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     if (mViewType == VIEW_TYPE.MAP)
                     {
                         setPlaceMapData(placeViewItemList);
+                    }
+
+                    {
+                        ArrayList<EventBanner> arrayList = new ArrayList<>();
+                        EventBanner eventBanner01 = new EventBanner();
+                        eventBanner01.link = "http://blog.timesinternet.in/wp-content/uploads/2013/07/gourmetweek_banner-21.jpg";
+                        arrayList.add(eventBanner01);
+
+                        EventBanner eventBanner02 = new EventBanner();
+                        eventBanner02.link = "http://www.finefoodsathome.com/wp-content/themes/finefoods/images/banner03.jpg";
+                        arrayList.add(eventBanner02);
+
+                        EventBanner eventBanner03 = new EventBanner();
+                        eventBanner03.link = "http://www.harrysgourmetcatering.com/images/HarryBanner/banner1.jpg";
+                        arrayList.add(eventBanner03);
+
+                        PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, arrayList);
+                        placeViewItemList.add(0, placeViewItem);
                     }
 
                     mGourmetAdapter.clear();

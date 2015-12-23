@@ -36,6 +36,7 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_push_lock_dialog_gcm);
 
+        String title = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_TITLE);
         String message = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
         int type = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
         mLink = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_LINK);
@@ -69,6 +70,14 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
                 break;
             }
         }
+
+        if (Util.isTextEmpty(title) == true)
+        {
+            title = getString(R.string.dialog_notice2);
+        }
+
+        TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
+        titleTextView.setText(title);
 
         messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
 
