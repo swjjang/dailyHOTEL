@@ -45,34 +45,37 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
         imageView.setScaleType(ScaleType.CENTER_CROP);
         imageView.setTag(imageView.getId(), position);
 
-        String url = mImageInformationList.get(position).url;
-        String imageFilePath = FileLruCache.getInstance().get(url);
-        boolean isExist = false;
-
-        if (Util.isTextEmpty(imageFilePath) == false)
+        if (mImageInformationList.size() > position)
         {
-            File file = new File(imageFilePath);
+            String url = mImageInformationList.get(position).url;
+            String imageFilePath = FileLruCache.getInstance().get(url);
+            boolean isExist = false;
 
-            if (file.isFile() == true && file.exists() == true)
+            if (Util.isTextEmpty(imageFilePath) == false)
             {
-                imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
-                isExist = true;
+                File file = new File(imageFilePath);
+
+                if (file.isFile() == true && file.exists() == true)
+                {
+                    imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                    isExist = true;
+                }
             }
-        }
 
-        if (isExist == false)
-        {
-            if (Util.getLCDWidth(mContext) < 720)
+            if (isExist == false)
             {
-                Glide.with(mContext).load(url).override(360, 240).crossFade().into(imageView);
-            } else
-            {
-                Glide.with(mContext).load(url).crossFade().into(imageView);
+                if (Util.getLCDWidth(mContext) < 720)
+                {
+                    Glide.with(mContext).load(url).override(360, 240).crossFade().into(imageView);
+                } else
+                {
+                    Glide.with(mContext).load(url).crossFade().into(imageView);
+                }
             }
         }
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
-        container.addView(imageView, 0, layoutParams);
+        container.addView(imageView, layoutParams);
 
         return imageView;
     }

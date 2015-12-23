@@ -8,10 +8,12 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,7 +62,9 @@ public class PaymentWaitActivity extends BaseActivity
         }
 
         setContentView(R.layout.activity_payment_wait);
-        setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_payment_wait_activity));
 
         TextView tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
         tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
@@ -134,8 +138,13 @@ public class PaymentWaitActivity extends BaseActivity
 
                 if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
                 {
-                    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-                    startActivity(i);
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);

@@ -231,10 +231,10 @@ public class LocationFactory
 
             if (hasLastLocation == true)
             {
-                mHandler.sendEmptyMessageDelayed(4, 20 * 1000);
+                mHandler.sendEmptyMessageDelayed(4, 10 * 1000);
             } else
             {
-                mHandler.sendEmptyMessageDelayed(0, 20 * 1000);
+                mHandler.sendEmptyMessageDelayed(0, 10 * 1000);
             }
         } catch (Exception e)
         {

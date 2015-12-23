@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -69,7 +70,9 @@ public class BookingTabActivity extends BaseActivity
         }
 
         setContentView(R.layout.activity_booking_tab);
-        setActionBar(booking.placeName);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, booking.placeName);
 
         ArrayList<String> titleList = new ArrayList<String>();
         titleList.add(getString(R.string.frag_booking_tab_title));
@@ -103,9 +106,15 @@ public class BookingTabActivity extends BaseActivity
             case R.id.action_daily_call:
                 if (Util.isTelephonyEnabled(BookingTabActivity.this) == true)
                 {
-                    String phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
+                    try
+                    {
+                        String phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
 
-                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(BookingTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     DailyToast.showToast(BookingTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
@@ -140,7 +149,14 @@ public class BookingTabActivity extends BaseActivity
                         phone = DailyPreference.getInstance(BookingTabActivity.this).getCompanyPhoneNumber();
                     }
 
-                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        String message = getString(R.string.toast_msg_no_hotel_call, mHotelDetail.hotelPhone);
+                        DailyToast.showToast(BookingTabActivity.this, message, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     String message = getString(R.string.toast_msg_no_hotel_call, mHotelDetail.hotelPhone);

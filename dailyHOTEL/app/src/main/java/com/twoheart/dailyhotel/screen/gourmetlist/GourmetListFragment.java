@@ -1,19 +1,4 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * HotelListFragment (호텔 목록 화면)
- * <p>
- * 어플리케이션의 가장 주가 되는 화면으로서 호텔들의 목록을 보여주는 화면이다.
- * 호텔 리스트는 따로 커스텀되어 구성되어 있으며, 액션바의 네비게이션을 이용
- * 하여 큰 지역을 분리하고 리스트뷰 헤더를 이용하여 세부 지역을 나누어 표시
- * 한다. 리스트뷰의 맨 첫 아이템은 이벤트 참여하기 버튼이 있으며, 이 버튼은
- * 서버의 이벤트 API에 따라 NEW 아이콘을 붙여주기도 한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -23,23 +8,26 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.adapter.GourmetListAdapter;
+import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment.VIEW_TYPE;
+import com.twoheart.dailyhotel.fragment.PlaceMapFragment;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -49,12 +37,9 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.GourmetViewItem;
 import com.twoheart.dailyhotel.view.LocationFactory;
-import com.twoheart.dailyhotel.view.PlaceViewItem;
-import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
+import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,99 +47,72 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
-
-public class GourmetListFragment extends PlaceListFragment
+public class GourmetListFragment extends BaseFragment implements Constants
 {
+    protected PinnedSectionRecycleView mGourmetRecycleView;
+    protected GourmetAdapter mGourmetAdapter;
     protected SaleTime mSaleTime;
+    private Province mSelectedProvince;
 
-    private GourmetListAdapter mGourmetListAdapter;
+    protected View mEmptyView;
+    protected FrameLayout mMapLayout;
+    protected PlaceMapFragment mPlaceMapFragment;
+    protected SwipeRefreshLayout mSwipeRefreshLayout;
+
+    protected boolean mIsSelectionTop;
+    protected VIEW_TYPE mViewType;
+    protected GourmetMainFragment.OnUserActionListener mOnUserActionListener;
 
     // Sort
-    protected SortType mPrevSortType;
-    protected SortType mSortType = SortType.DEFAULT;
+    protected Constants.SortType mPrevSortType;
+    protected Constants.SortType mSortType = Constants.SortType.DEFAULT;
     private Location mMyLocation;
+
+    public interface OnItemClickListener
+    {
+        void onItemClick(View view);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return null;
-        }
-
         View view = inflater.inflate(R.layout.fragment_gourmet_list, container, false);
 
-        mListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
-        mListView.setTag("GourmetListFragment");
+        mGourmetRecycleView = (PinnedSectionRecycleView) view.findViewById(R.id.recycleView);
+        mGourmetRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mGourmetRecycleView.setTag("GourmetListFragment");
 
-        if (Util.isOverAPI12() == true)
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
-            mListView.addHeaderView(inflater.inflate(R.layout.list_header_empty, null, true));
-            mListView.setOnScrollListener(mOnScrollListener);
-        } else
-        {
-            mListView.setPadding(0, Util.dpToPx(baseActivity, 119), 0, 0);
-        }
+            @Override
+            public void onRefresh()
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.refreshAll(false);
+                } else
+                {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
 
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
         mEmptyView = view.findViewById(R.id.emptyView);
 
         mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
-        mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 119) + 2, 0, 0);
 
         mViewType = VIEW_TYPE.LIST;
 
         setVisibility(mViewType);
 
-        ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this).useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
-
-        mListView.setShadowVisible(false);
-
-        ActionbarViewHolder actionbarViewHolder = new ActionbarViewHolder();
-        actionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
-        actionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionBarLayout);
-        actionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.tabindicator);
-
-        setActionbarViewHolder(actionbarViewHolder);
+        mGourmetRecycleView.setShadowVisible(false);
 
         return view;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        position -= mListView.getHeaderViewsCount();
-
-        if (position < 0)
-        {
-            return;
-        }
-
-        if (mOnUserActionListener != null)
-        {
-            GourmetViewItem gourmetViewItem = (GourmetViewItem) getPlaceViewItem(position);
-
-            if (gourmetViewItem.type == PlaceViewItem.TYPE_SECTION)
-            {
-                return;
-            }
-
-            mOnUserActionListener.selectPlace(gourmetViewItem, getSelectedSaleTime());
-        }
     }
 
     @Override
@@ -202,21 +160,18 @@ public class GourmetListFragment extends PlaceListFragment
         }
     }
 
-    @Override
-    protected PlaceViewItem getPlaceViewItem(int position)
+    public PlaceViewItem getPlaceViewItem(int position)
     {
-        if (mGourmetListAdapter == null)
+        if (mGourmetAdapter == null)
         {
             return null;
         }
 
-        return mGourmetListAdapter.getItem(position);
+        return mGourmetAdapter.getItem(position);
     }
 
     public void onPageSelected(boolean isRequestHotelList)
     {
-        super.onPageSelected(isRequestHotelList);
-
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         if (baseActivity == null)
@@ -229,12 +184,14 @@ public class GourmetListFragment extends PlaceListFragment
         baseActivity.invalidateOptionsMenu();
     }
 
-    @Override
     public void onPageUnSelected()
     {
-        super.onPageUnSelected();
-
         mSortType = SortType.DEFAULT;
+    }
+
+    public void onRefreshComplete()
+    {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     protected SaleTime getSelectedSaleTime()
@@ -242,8 +199,7 @@ public class GourmetListFragment extends PlaceListFragment
         return mSaleTime;
     }
 
-    @Override
-    protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    public void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
         if (checkInSaleTime == null)
         {
@@ -297,43 +253,19 @@ public class GourmetListFragment extends PlaceListFragment
         DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
     }
 
-    @Override
-    protected ArrayList<PlaceViewItem> getPlaceViewItemList()
+    public List<PlaceViewItem> getPlaceViewItemList()
     {
-        if (mGourmetListAdapter == null)
+        if (mGourmetAdapter == null)
         {
             return null;
         }
 
-        return mGourmetListAdapter.getData();
+        return mGourmetAdapter.getAll();
     }
 
-    @Override
-    protected PlaceMapFragment createPlaceMapFragment()
+    public PlaceMapFragment createPlaceMapFragment()
     {
         return new GourmetMapFragment();
-    }
-
-    @Override
-    protected boolean hasSalesPlace()
-    {
-        boolean hasPlace = false;
-
-        ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
-
-        if (arrayList != null)
-        {
-            for (PlaceViewItem placeViewItem : arrayList)
-            {
-                if (placeViewItem.getPlace() != null && placeViewItem.getPlace().isSoldOut == false)
-                {
-                    hasPlace = true;
-                    break;
-                }
-            }
-        }
-
-        return hasPlace;
     }
 
     /**
@@ -362,11 +294,11 @@ public class GourmetListFragment extends PlaceListFragment
 
                     if (mPlaceMapFragment != null)
                     {
-                        mPlaceMapFragment.setUserActionListener(mOnUserActionListener);
+                        mPlaceMapFragment.setOnUserActionListener(mOnUserActionListener);
 
                         if (isCurrentPage == true)
                         {
-                            ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
+                            List<PlaceViewItem> arrayList = getPlaceViewItemList();
 
                             if (arrayList != null)
                             {
@@ -382,11 +314,54 @@ public class GourmetListFragment extends PlaceListFragment
         }
     }
 
+    protected void setVisibility(VIEW_TYPE type, boolean isCurrentPage)
+    {
+        switch (type)
+        {
+            case LIST:
+                mEmptyView.setVisibility(View.GONE);
+                mMapLayout.setVisibility(View.GONE);
+
+                // 맵과 리스트에서 당일상품 탭 안보이도록 수정
+
+                if (mPlaceMapFragment != null)
+                {
+                    getChildFragmentManager().beginTransaction().remove(mPlaceMapFragment).commitAllowingStateLoss();
+                    mMapLayout.removeAllViews();
+                    mPlaceMapFragment = null;
+                }
+
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                break;
+
+            case MAP:
+                mEmptyView.setVisibility(View.GONE);
+                mMapLayout.setVisibility(View.VISIBLE);
+
+                // 맵과 리스트에서 당일상품 탭 안보이도록 수정
+                if (isCurrentPage == true && mPlaceMapFragment == null)
+                {
+                    mPlaceMapFragment = createPlaceMapFragment();
+                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mPlaceMapFragment).commitAllowingStateLoss();
+                }
+
+                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+                break;
+
+            case GONE:
+                mEmptyView.setVisibility(View.VISIBLE);
+                mMapLayout.setVisibility(View.GONE);
+
+                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+                break;
+        }
+    }
+
     protected void setPlaceMapData(ArrayList<PlaceViewItem> placeViewItemList)
     {
         if (mViewType == VIEW_TYPE.MAP && mPlaceMapFragment != null)
         {
-            mPlaceMapFragment.setUserActionListener(mOnUserActionListener);
+            mPlaceMapFragment.setOnUserActionListener(mOnUserActionListener);
             mPlaceMapFragment.setPlaceViewItemList(placeViewItemList, getSelectedSaleTime(), mIsSelectionTop);
         }
     }
@@ -511,6 +486,26 @@ public class GourmetListFragment extends PlaceListFragment
         }
     }
 
+    protected void setVisibility(VIEW_TYPE type)
+    {
+        setVisibility(type, true);
+    }
+
+    public void setOnUserActionListener(GourmetMainFragment.OnUserActionListener userActionLister)
+    {
+        mOnUserActionListener = userActionLister;
+    }
+
+    public Province getProvince()
+    {
+        return mSelectedProvince;
+    }
+
+    protected void setProvince(Province province)
+    {
+        mSelectedProvince = province;
+    }
+
     public void setSortType(SortType sortType)
     {
         mSortType = sortType;
@@ -519,6 +514,28 @@ public class GourmetListFragment extends PlaceListFragment
     public SortType getSortType()
     {
         return mSortType;
+    }
+
+    public boolean hasSalesPlace()
+    {
+        boolean hasPlace = false;
+
+        List<PlaceViewItem> arrayList = getPlaceViewItemList();
+
+        if (arrayList != null)
+        {
+            for (PlaceViewItem placeViewItem : arrayList)
+            {
+                if (placeViewItem.getType() == PlaceViewItem.TYPE_ENTRY//
+                    && placeViewItem.<Gourmet>getItem().isSoldOut == false)
+                {
+                    hasPlace = true;
+                    break;
+                }
+            }
+        }
+
+        return hasPlace;
     }
 
     private void searchMyLocation()
@@ -657,7 +674,7 @@ public class GourmetListFragment extends PlaceListFragment
         });
     }
 
-    private void requestSortHotelList(PlaceListFragment.SortType type)
+    private void requestSortHotelList(GourmetListFragment.SortType type)
     {
         if (SortType.DEFAULT == type)
         {
@@ -665,7 +682,7 @@ public class GourmetListFragment extends PlaceListFragment
             return;
         }
 
-        ArrayList<PlaceViewItem> arrayList = mGourmetListAdapter.getData();
+        List<PlaceViewItem> arrayList = mGourmetAdapter.getAll();
 
         int size = arrayList.size();
 
@@ -673,7 +690,7 @@ public class GourmetListFragment extends PlaceListFragment
         {
             PlaceViewItem placeViewItem = arrayList.get(i);
 
-            if (placeViewItem.type == PlaceViewItem.TYPE_SECTION)
+            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
             {
                 arrayList.remove(i);
             }
@@ -688,8 +705,8 @@ public class GourmetListFragment extends PlaceListFragment
                 {
                     public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Place place1 = placeViewItem1.getPlace();
-                        Place place2 = placeViewItem2.getPlace();
+                        Place place1 = placeViewItem1.<Gourmet>getItem();
+                        Place place2 = placeViewItem2.<Gourmet>getItem();
 
                         float[] results1 = new float[3];
                         Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), place1.latitude, place1.longitude, results1);
@@ -714,8 +731,8 @@ public class GourmetListFragment extends PlaceListFragment
                 {
                     public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Place place1 = placeViewItem1.getPlace();
-                        Place place2 = placeViewItem2.getPlace();
+                        Place place1 = placeViewItem1.<Gourmet>getItem();
+                        Place place2 = placeViewItem2.<Gourmet>getItem();
 
                         return place1.discountPrice - place2.discountPrice;
                     }
@@ -732,8 +749,8 @@ public class GourmetListFragment extends PlaceListFragment
                 {
                     public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
                     {
-                        Place place1 = placeViewItem1.getPlace();
-                        Place place2 = placeViewItem2.getPlace();
+                        Place place1 = placeViewItem1.<Gourmet>getItem();
+                        Place place2 = placeViewItem2.<Gourmet>getItem();
 
                         return place2.discountPrice - place1.discountPrice;
                     }
@@ -744,10 +761,48 @@ public class GourmetListFragment extends PlaceListFragment
             }
         }
 
-        mGourmetListAdapter.setSortType(mSortType);
-        mGourmetListAdapter.notifyDataSetChanged();
+        mGourmetAdapter.setSortType(mSortType);
+        mGourmetAdapter.notifyDataSetChanged();
         unLockUI();
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            int position = mGourmetRecycleView.getChildAdapterPosition(view);
+
+            if (position < 0)
+            {
+                refreshList(mSelectedProvince, true);
+                return;
+            }
+
+            if (mOnUserActionListener != null)
+            {
+                PlaceViewItem gourmetViewItem = mGourmetAdapter.getItem(position);
+
+                if (gourmetViewItem.getType() == PlaceViewItem.TYPE_SECTION)
+                {
+                    return;
+                }
+
+                mOnUserActionListener.selectPlace(gourmetViewItem, getSelectedSaleTime());
+            }
+        }
+    };
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -756,11 +811,11 @@ public class GourmetListFragment extends PlaceListFragment
 
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private ArrayList<PlaceViewItem> makeSectionList(ArrayList<Gourmet> fnbList)
+        private ArrayList<PlaceViewItem> makeSectionList(ArrayList<Gourmet> gourmetList)
         {
             ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
 
-            if (fnbList == null || fnbList.size() == 0)
+            if (gourmetList == null || gourmetList.size() == 0)
             {
                 return placeViewItemList;
             }
@@ -768,22 +823,22 @@ public class GourmetListFragment extends PlaceListFragment
             String area = null;
             boolean hasDailyChoice = false;
 
-            for (Gourmet fnb : fnbList)
+            for (Gourmet gourmet : gourmetList)
             {
-                String region = fnb.districtName;
+                String region = gourmet.districtName;
 
                 if (Util.isTextEmpty(region) == true)
                 {
                     continue;
                 }
 
-                if (fnb.isDailyChoice == true)
+                if (gourmet.isDailyChoice == true)
                 {
                     if (hasDailyChoice == false)
                     {
                         hasDailyChoice = true;
 
-                        GourmetViewItem section = new GourmetViewItem(getString(R.string.label_dailychoice));
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getString(R.string.label_dailychoice));
                         placeViewItemList.add(section);
                     }
                 } else
@@ -792,12 +847,12 @@ public class GourmetListFragment extends PlaceListFragment
                     {
                         area = region;
 
-                        GourmetViewItem section = new GourmetViewItem(region);
+                        PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
                         placeViewItemList.add(section);
                     }
                 }
 
-                placeViewItemList.add(new GourmetViewItem(fnb));
+                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
             }
 
             return placeViewItemList;
@@ -873,7 +928,7 @@ public class GourmetListFragment extends PlaceListFragment
 
             for (Gourmet gourmet : gourmetList)
             {
-                gourmetViewItemList.add(new GourmetViewItem(gourmet));
+                gourmetViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
             }
 
             return gourmetViewItemList;
@@ -913,9 +968,9 @@ public class GourmetListFragment extends PlaceListFragment
 
                 if (length == 0)
                 {
-                    if (mGourmetListAdapter != null)
+                    if (mGourmetAdapter != null)
                     {
-                        mGourmetListAdapter.clear();
+                        mGourmetAdapter.clear();
                     }
 
                     setVisibility(VIEW_TYPE.GONE);
@@ -944,11 +999,10 @@ public class GourmetListFragment extends PlaceListFragment
 
                     ArrayList<PlaceViewItem> placeViewItemList = makeSortHotelList(gourmetList, mSortType);
 
-                    if (mGourmetListAdapter == null)
+                    if (mGourmetAdapter == null)
                     {
-                        mGourmetListAdapter = new GourmetListAdapter(baseActivity, R.layout.list_row_gourmet, new ArrayList<PlaceViewItem>());
-                        mListView.setAdapter(mGourmetListAdapter);
-                        mListView.setOnItemClickListener(GourmetListFragment.this);
+                        mGourmetAdapter = new GourmetAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
+                        mGourmetRecycleView.setAdapter(mGourmetAdapter);
                     }
 
                     setVisibility(mViewType);
@@ -958,13 +1012,31 @@ public class GourmetListFragment extends PlaceListFragment
                         setPlaceMapData(placeViewItemList);
                     }
 
-                    mGourmetListAdapter.clear();
-                    mGourmetListAdapter.addAll(placeViewItemList, mSortType);
-                    mGourmetListAdapter.notifyDataSetChanged();
+                    {
+                        ArrayList<EventBanner> arrayList = new ArrayList<>();
+                        EventBanner eventBanner01 = new EventBanner();
+                        eventBanner01.link = "http://blog.timesinternet.in/wp-content/uploads/2013/07/gourmetweek_banner-21.jpg";
+                        arrayList.add(eventBanner01);
+
+                        EventBanner eventBanner02 = new EventBanner();
+                        eventBanner02.link = "http://www.finefoodsathome.com/wp-content/themes/finefoods/images/banner03.jpg";
+                        arrayList.add(eventBanner02);
+
+                        EventBanner eventBanner03 = new EventBanner();
+                        eventBanner03.link = "http://www.harrysgourmetcatering.com/images/HarryBanner/banner1.jpg";
+                        arrayList.add(eventBanner03);
+
+                        PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, arrayList);
+                        placeViewItemList.add(0, placeViewItem);
+                    }
+
+                    mGourmetAdapter.clear();
+                    mGourmetAdapter.addAll(placeViewItemList, mSortType);
+                    mGourmetAdapter.notifyDataSetChanged();
 
                     if (mIsSelectionTop == true)
                     {
-                        mListView.setSelection(0);
+                        mGourmetRecycleView.scrollToPosition(0);
                     }
 
                     if (mOnUserActionListener != null)
@@ -973,13 +1045,8 @@ public class GourmetListFragment extends PlaceListFragment
                     }
                 }
 
-                // Notify PullToRefreshLayout that the refresh has finished
-                mPullToRefreshLayout.setRefreshComplete();
-
                 // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
                 onRefreshComplete();
-
-                setActionBarAnimationLock(false);
             } catch (Exception e)
             {
                 onError(e);

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;

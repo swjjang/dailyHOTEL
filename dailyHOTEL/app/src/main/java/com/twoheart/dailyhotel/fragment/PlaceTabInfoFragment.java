@@ -38,7 +38,7 @@ public class PlaceTabInfoFragment extends BaseFragment
 
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL, placeBookingDetail);
         newFragment.setArguments(arguments);
-        newFragment.setTitle(title);
+        //        newFragment.setTitle(title);
 
         return newFragment;
     }

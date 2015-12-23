@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -87,11 +88,11 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         switch (mPlaceType)
         {
             case HOTEL:
-                setActionBar(R.string.label_calendar_hotel_select_checkin);
+                initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
                 break;
 
             case FNB:
-                setActionBar(R.string.label_calendar_gourmet_select);
+                initToolbar(getString(R.string.label_calendar_gourmet_select));
                 break;
         }
 
@@ -125,6 +126,13 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         }
 
         mDailyTextViews[dayCountOfMax - 1].setEnabled(false);
+    }
+
+    private void initToolbar(String title)
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        initToolbar(toolbar, title);
     }
 
     private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
@@ -280,7 +288,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                 finish();
             } else
             {
-                setActionBar(R.string.label_calendar_hotel_select_checkout);
+                setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
 
                 for (View textview : mDailyTextViews)
                 {
@@ -308,7 +316,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                 view.setSelected(false);
                 dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
 
-                setActionBar(R.string.label_calendar_hotel_select_checkin);
+                setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
 
                 for (View dailTextView : mDailyTextViews)
                 {

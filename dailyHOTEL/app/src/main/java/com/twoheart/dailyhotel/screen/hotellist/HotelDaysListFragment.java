@@ -13,17 +13,14 @@
  * @author Mike Han(mike@dailyhotel.co.kr)
  * @since 2014-02-24
  */
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.view.View;
-import android.widget.AdapterView;
 
-import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.view.HotelListViewItem;
 
 public class HotelDaysListFragment extends HotelListFragment
 {
@@ -53,37 +50,6 @@ public class HotelDaysListFragment extends HotelListFragment
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        position -= mHotelListView.getHeaderViewsCount();
-
-        if (position < 0)
-        {
-            refreshHotelList(mSelectedProvince, true);
-            return;
-        }
-
-        if (mUserActionListener != null)
-        {
-            HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(position);
-
-            if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
-            {
-                return;
-            }
-
-            mUserActionListener.selectHotel(hotelListViewItem, mSelectedCheckInSaleTime);
-        }
-    }
-
-    @Override
     public void refreshHotelList(Province province, boolean isSelectionTop)
     {
         mSelectedProvince = province;
@@ -106,9 +72,9 @@ public class HotelDaysListFragment extends HotelListFragment
                     mSelectedCheckInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
                     mSelectedCheckOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
 
-                    if (mUserActionListener != null)
+                    if (mOnUserActionListener != null)
                     {
-                        mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
+                        mOnUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
                     }
                 }
                 break;

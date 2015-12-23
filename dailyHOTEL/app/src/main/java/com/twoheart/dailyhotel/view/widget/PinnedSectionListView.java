@@ -218,7 +218,6 @@ public class PinnedSectionListView extends ListView
      */
     void createPinnedShadow(int position)
     {
-
         // try to recycle shadow
         PinnedSection pinnedShadow = mRecycleSection;
         mRecycleSection = null;

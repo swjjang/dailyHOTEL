@@ -13,6 +13,7 @@ package com.twoheart.dailyhotel.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,7 +41,9 @@ public class CreditListActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_credit_list);
-        setActionBar(R.string.act_credit_history);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.act_credit_history));
 
         Intent intent = getIntent();
 

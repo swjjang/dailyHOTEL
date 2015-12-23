@@ -32,9 +32,12 @@ import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgor
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.PlaceViewPagerAdapter;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -46,19 +49,19 @@ import com.twoheart.dailyhotel.view.PlaceClusterItem;
 import com.twoheart.dailyhotel.view.PlaceClusterRenderer;
 import com.twoheart.dailyhotel.view.PlaceClusterRenderer.OnSelectedClusterItemListener;
 import com.twoheart.dailyhotel.view.PlaceClusterRenderer.Renderer;
-import com.twoheart.dailyhotel.view.PlaceViewItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class PlaceMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
-    protected PlaceMainFragment.OnUserActionListener mUserActionListener;
+    protected GourmetMainFragment.OnUserActionListener mUserActionListener;
     private GoogleMap mGoogleMap;
-    private ArrayList<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
-    private ArrayList<PlaceViewItem> mPlaceViewItemViewPagerList; // ViewPager을 위한 리스트
+    private List<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
+    private List<PlaceViewItem> mPlaceViewItemViewPagerList; // ViewPager을 위한 리스트
     private LoadingDialog mLoadingDialog;
     private MarkerOptions mMyLocationMarkerOptions;
     private Marker mMyLocationMarker;
@@ -241,12 +244,12 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         }
     }
 
-    public void setUserActionListener(PlaceMainFragment.OnUserActionListener userActionLister)
+    public void setOnUserActionListener(GourmetMainFragment.OnUserActionListener userActionLister)
     {
         mUserActionListener = userActionLister;
     }
 
-    public void setPlaceViewItemList(ArrayList<PlaceViewItem> arrayList, SaleTime saleTime, boolean isChangedRegion)
+    public void setPlaceViewItemList(List<PlaceViewItem> arrayList, SaleTime saleTime, boolean isChangedRegion)
     {
         mPlaceViewItemList = arrayList;
         mSaleTime = saleTime;
@@ -329,7 +332,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
         if (mLoadingDialog != null)
         {
-            mLoadingDialog.show();
+            mLoadingDialog.show(true);
         }
 
         if (mCallMakeMarker == false && isChangedRegion == false)
@@ -356,8 +359,8 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
         if (mIsOpenMakrer == true && mSelectedPlaceViewItem != null)
         {
-            latitude = mSelectedPlaceViewItem.getPlace().latitude;
-            longitude = mSelectedPlaceViewItem.getPlace().longitude;
+            latitude = mSelectedPlaceViewItem.<Gourmet>getItem().latitude;
+            longitude = mSelectedPlaceViewItem.<Gourmet>getItem().longitude;
         }
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -386,7 +389,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
         for (PlaceViewItem placeViewItem : mPlaceViewItemViewPagerList)
         {
-            Place place = placeViewItem.getPlace();
+            Place place = placeViewItem.<Gourmet>getItem();
 
             count++;
 
@@ -542,7 +545,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
      * @param hashMap
      * @return
      */
-    private ArrayList<PlaceViewItem> searchDuplicateLocateion(ArrayList<PlaceViewItem> hotelArrayList, HashMap<String, ArrayList<Place>> hashMap)
+    private ArrayList<PlaceViewItem> searchDuplicateLocateion(List<PlaceViewItem> hotelArrayList, HashMap<String, ArrayList<Place>> hashMap)
     {
         ArrayList<PlaceViewItem> arrangeList = new ArrayList<PlaceViewItem>(hotelArrayList);
 
@@ -554,12 +557,12 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         {
             placeViewItem = arrangeList.get(i);
 
-            if (placeViewItem.type == PlaceViewItem.TYPE_SECTION)
+            if (placeViewItem.getType() == PlaceViewItem.TYPE_SECTION)
             {
                 arrangeList.remove(i);
             } else
             {
-                if (placeViewItem.getPlace().isSoldOut)
+                if (placeViewItem.<Gourmet>getItem().isSoldOut == true)
                 {
                     arrangeList.remove(i);
                 }
@@ -571,10 +574,10 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         {
             final LatLng latlng = new LatLng(37.23945, 131.8689);
 
-            public int compare(PlaceViewItem o1, PlaceViewItem o2)
+            public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                Place item01 = o1.getPlace();
-                Place item02 = o2.getPlace();
+                Place item01 = placeViewItem1.<Gourmet>getItem();
+                Place item02 = placeViewItem2.<Gourmet>getItem();
 
                 float[] results1 = new float[3];
                 Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -598,8 +601,8 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
             for (int i = size - 1; i > 0; i--)
             {
-                item01 = arrangeList.get(i).getPlace();
-                item02 = arrangeList.get(i - 1).getPlace();
+                item01 = arrangeList.get(i).<Gourmet>getItem();
+                item02 = arrangeList.get(i - 1).<Gourmet>getItem();
 
                 if (item01.latitude == item02.latitude && item01.longitude == item02.longitude)
                 {
@@ -662,7 +665,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         for (int i = 0; i < size; i++)
         {
             PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(i);
-            Place place = placeViewItem.getPlace();
+            Place place = placeViewItem.<Gourmet>getItem();
 
             if (latlng.latitude == place.latitude && latlng.longitude == place.longitude)
             {
@@ -711,10 +714,10 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
         Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
         {
-            public int compare(PlaceViewItem o1, PlaceViewItem o2)
+            public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                Place item01 = o1.getPlace();
-                Place item02 = o2.getPlace();
+                Place item01 = placeViewItem1.<Gourmet>getItem();
+                Place item02 = placeViewItem2.<Gourmet>getItem();
 
                 float[] results1 = new float[3];
                 Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -746,7 +749,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         for (int i = 0; i < size; i++)
         {
             PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(i);
-            Place place = placeViewItem.getPlace();
+            Place place = placeViewItem.<Gourmet>getItem();
 
             if (latlng.latitude == place.latitude && latlng.longitude == place.longitude)
             {
@@ -943,7 +946,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
             PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(page);
 
-            Place place = placeViewItem.getPlace();
+            Place place = placeViewItem.<Gourmet>getItem();
 
             if (place != null)
             {
@@ -1027,12 +1030,12 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
             {
                 for (PlaceViewItem placeViewItem : mPlaceViewItemList)
                 {
-                    if (placeViewItem.type == PlaceViewItem.TYPE_SECTION)
+                    if (placeViewItem.getType() == PlaceViewItem.TYPE_SECTION)
                     {
                         continue;
                     }
 
-                    Place place = placeViewItem.getPlace();
+                    Place place = placeViewItem.<Gourmet>getItem();
 
                     if (place.equals(selectedPlace) == true)
                     {

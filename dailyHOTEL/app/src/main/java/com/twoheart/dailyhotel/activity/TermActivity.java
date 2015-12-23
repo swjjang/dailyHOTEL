@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
@@ -14,7 +15,9 @@ public class TermActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setActionBar(R.string.actionbar_title_term_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_term_activity));
     }
 
     @Override

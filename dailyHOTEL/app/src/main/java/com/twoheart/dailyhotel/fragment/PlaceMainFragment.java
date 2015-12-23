@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
@@ -18,7 +17,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.PlaceViewItem;
 
 import org.json.JSONObject;
 
@@ -29,12 +27,11 @@ import java.util.Date;
 public abstract class PlaceMainFragment extends BaseFragment
 {
     protected SaleTime mTodaySaleTime;
-    protected OnUserActionListener mOnUserActionListener;
     protected VIEW_TYPE mViewType = VIEW_TYPE.LIST;
     protected boolean mMapEnabled;
 
-    boolean mMenuEnabled;
-    boolean mDontReloadAtOnResume;
+    protected boolean mMenuEnabled;
+    protected boolean mDontReloadAtOnResume;
 
     public enum VIEW_TYPE
     {
@@ -49,44 +46,23 @@ public abstract class PlaceMainFragment extends BaseFragment
         FNB, // 절대로 바꾸면 안됨 서버에서 fnb로 내려옴
     }
 
-    public interface OnUserActionListener
-    {
-        void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime);
+    public abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
-        void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
+    public abstract void activityResult(int requestCode, int resultCode, Intent data);
 
-        void selectDay(SaleTime checkInSaleTime, boolean isListSelectionTop);
+    public abstract void onNavigationItemSelected(Province province, boolean isSelectionTop);
 
-        void toggleViewType();
+    public abstract void setNavigationItemSelected(Province province);
 
-        void showSortDialogView();
+    public abstract void requestRegionList(BaseActivity baseActivity);
 
-        void onClickActionBarArea();
+    public abstract void refreshList(Province province, boolean isSelectionTop);
 
-        void setMapViewVisible(boolean isVisible);
+    public abstract boolean isEnabledRegionMenu();
 
-        void refreshAll();
-    }
+    public abstract void refreshAll();
 
-    protected abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
-
-    protected abstract void activityResult(int requestCode, int resultCode, Intent data);
-
-    protected abstract void hideSlidingDrawer();
-
-    protected abstract void showSlidingDrawer();
-
-    protected abstract void onNavigationItemSelected(Province province, boolean isSelectionTop);
-
-    protected abstract void setNavigationItemSelected(Province province);
-
-    protected abstract void requestRegionList(BaseActivity baseActivity);
-
-    protected abstract void refreshList(Province province, boolean isSelectionTop);
-
-    protected abstract void setActionBarAnimationLock(boolean enabled);
-
-    protected abstract boolean isEnabledRegionMenu();
+    public abstract void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -98,8 +74,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         View view = createView(inflater, container, savedInstanceState);
 
         setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
-
-        hideSlidingDrawer();
 
         return view;
     }
@@ -135,11 +109,6 @@ public abstract class PlaceMainFragment extends BaseFragment
             return;
         }
 
-        if (enabled == true)
-        {
-            baseActivity.setActionBarRegionEnable(isEnabledRegionMenu());
-        }
-
         if (mMenuEnabled == enabled)
         {
             return;
@@ -148,9 +117,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         mMenuEnabled = enabled;
 
         baseActivity.invalidateOptionsMenu();
-
-        // 메뉴가 열리는 시점이다.
-        setActionBarAnimationLock(enabled);
     }
 
     @Override
@@ -171,16 +137,16 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+                    //                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
                 } else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
-                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+                    //                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
                 }
                 break;
             }
 
             // 지역을 선택한 후에 되돌아 온경우.
-            case CODE_REQUEST_ACTIVITY_SELECT_AREA:
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
             {
                 mDontReloadAtOnResume = true;
 
@@ -194,20 +160,14 @@ public abstract class PlaceMainFragment extends BaseFragment
 
                             setNavigationItemSelected(province);
 
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.refreshAll();
-                            }
+                            refreshAll();
                         } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
                         {
                             Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
                             setNavigationItemSelected(province);
 
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.refreshAll();
-                            }
+                            refreshAll();
                         }
                     }
                 }
@@ -269,15 +229,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         return arrayList;
     }
 
-    protected void setOnUserActionListener(OnUserActionListener listener)
-    {
-        mOnUserActionListener = listener;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -298,8 +249,6 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
                 mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-                showSlidingDrawer();
 
                 String deepLink = DailyPreference.getInstance(baseActivity).getDeepLink();
 
@@ -326,11 +275,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                                 throw new NullPointerException("dailyDayOfDays < 0");
                             }
 
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
-                            }
-
+                            selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
                         } else
                         {
                             // 신규 타입의 화면이동
@@ -350,10 +295,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                                 throw new NullPointerException("dailyDayOfDays < 0");
                             }
 
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
-                            }
+                            selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
                         }
                     } catch (Exception e)
                     {

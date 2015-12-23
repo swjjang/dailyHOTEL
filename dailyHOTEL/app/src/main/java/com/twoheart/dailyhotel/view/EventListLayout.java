@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.EventListFragment;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.util.Util;
@@ -22,21 +23,23 @@ import java.util.Collection;
 
 public class EventListLayout implements OnItemClickListener
 {
-    private Context mContext;
+    private BaseActivity mBaseActivity;
     private View mEmptyView;
     private ListView mListView;
     private EventListAdapter mEventListAdapter;
     private EventListFragment.OnUserActionListener mOnUserActionListener;
 
-    public EventListLayout(Context context)
+    public EventListLayout(BaseActivity baseActivity)
     {
-        mContext = context;
+        mBaseActivity = baseActivity;
     }
 
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.layout_eventlist, container, false);
-        view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
+
+        //        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        //        mBaseActivity.initToolbar(toolbar, getString(R.string.actionbar_title_event_list_frag));
 
         mEmptyView = view.findViewById(R.id.emptyLayout);
 
@@ -50,7 +53,7 @@ public class EventListLayout implements OnItemClickListener
     {
         if (mEventListAdapter == null)
         {
-            mEventListAdapter = new EventListAdapter(mContext, 0, new ArrayList<Event>());
+            mEventListAdapter = new EventListAdapter(mBaseActivity, 0, new ArrayList<Event>());
         }
 
         mEventListAdapter.clear();

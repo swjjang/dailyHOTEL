@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
@@ -14,9 +12,6 @@ import com.twoheart.dailyhotel.view.OnLoadListener;
 
 public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener
 {
-    protected Toast mToast;
-
-    private String mTitle;
     protected String mNetworkTag;
 
     /**
@@ -32,18 +27,8 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         mNetworkTag = getClass().getName();
-    }
-
-    @Override
-    public void onPause()
-    {
-        if (mToast != null)
-        {
-            mToast.cancel();
-        }
-
-        super.onPause();
     }
 
     @Override
@@ -52,27 +37,6 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
         DailyNetworkAPI.getInstance().cancelAll(mNetworkTag);
 
         super.onDestroy();
-    }
-
-    public void showToast(String message, int length, boolean isAttachToFragment)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        if (isAttachToFragment)
-        {
-            mToast = Toast.makeText(baseActivity.getApplicationContext(), message, length);
-            mToast.show();
-
-        } else
-        {
-            Toast.makeText(baseActivity.getApplicationContext(), message, length).show();
-
-        }
     }
 
     public void onError(Exception error)
@@ -118,8 +82,12 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
         baseActivity.onErrorResponse(error);
     }
 
-    @Override
     public void lockUI()
+    {
+        lockUI(true);
+    }
+
+    public void lockUI(boolean isShowProgress)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -130,10 +98,9 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
         lockUiComponent();
 
-        baseActivity.lockUI();
+        baseActivity.lockUI(isShowProgress);
     }
 
-    @Override
     public void unLockUI()
     {
         releaseUiComponent();
@@ -172,20 +139,5 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
     protected void releaseUiComponent()
     {
         mIsLockUiComponent = false;
-    }
-
-    public String getTitle()
-    {
-        return mTitle;
-    }
-
-    public void setTitle(String title)
-    {
-        this.mTitle = title;
-    }
-
-    protected void chgClickable(View v)
-    {
-        v.setClickable(!v.isClickable());
     }
 }

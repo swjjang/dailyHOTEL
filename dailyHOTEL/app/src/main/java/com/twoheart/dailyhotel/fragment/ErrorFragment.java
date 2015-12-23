@@ -13,6 +13,7 @@
 package com.twoheart.dailyhotel.fragment;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,16 +21,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 public class ErrorFragment extends BaseFragment implements OnClickListener
 {
-    private TextView btnRetry;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -41,39 +42,56 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         }
 
         View view = inflater.inflate(R.layout.fragment_error, container, false);
-        view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
 
-        baseActivity.setActionBar(getString(R.string.actionbar_title_error_frag), false);
+        initToolbar(view, getString(R.string.actionbar_title_error_frag));
 
-        btnRetry = (TextView) view.findViewById(R.id.btn_error);
-        btnRetry.setOnClickListener(this);
+        TextView retryTextView = (TextView) view.findViewById(R.id.btn_error);
+        retryTextView.setOnClickListener(this);
 
         return view;
+    }
+
+    private void initToolbar(View view, String title)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        try
+        {
+            baseActivity.setSupportActionBar(toolbar);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.white));
+
+        FontManager.apply(toolbar, FontManager.getInstance(baseActivity).getRegularTypeface());
+
+        toolbar.setTitle(title);
     }
 
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == btnRetry.getId())
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
+            return;
+        }
 
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            // network 연결이 안되있으면
-            if (!VolleyHttpClient.isAvailableNetwork())
-            {
-                showToast(getString(R.string.toast_msg_please_chk_network_status), Toast.LENGTH_SHORT, true);
-                return;
-            } else
-            {
-                int index = ((MainActivity) baseActivity).indexLastFragment;
-                ((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(index), String.valueOf(index));
-
-            }
+        // network 연결이 안되있으면
+        if (!VolleyHttpClient.isAvailableNetwork())
+        {
+            DailyToast.showToast(baseActivity, getString(R.string.toast_msg_please_chk_network_status), Toast.LENGTH_SHORT);
+            return;
+        } else
+        {
+            int index = ((MainActivity) baseActivity).getIndexLastFragment();
+            ((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(index), String.valueOf(index));
         }
     }
 }

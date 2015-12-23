@@ -8,7 +8,6 @@
 package com.twoheart.dailyhotel.fragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +53,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
 
         newFragment.setArguments(arguments);
-        newFragment.setTitle(title);
+        //        newFragment.setTitle(title);
 
         return newFragment;
     }
@@ -189,7 +188,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
                 // data 초기화
                 DailyPreference.getInstance(baseActivity).removeUserInformation();
 
-                showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
+                DailyToast.showToast(baseActivity, getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT);
             } catch (JSONException e)
             {
                 onError(e);

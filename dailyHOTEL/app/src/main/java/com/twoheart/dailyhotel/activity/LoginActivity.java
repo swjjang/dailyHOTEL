@@ -17,13 +17,12 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -106,7 +105,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_login);
-        setActionBar(R.string.actionbar_title_login_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_login_activity));
 
         mIdEditText = (EditText) findViewById(R.id.et_login_id);
         mPasswordEditText = (EditText) findViewById(R.id.et_login_pwd);
@@ -724,7 +725,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                 if (response.getString("result").equals("true") == true)
                 {
-                    DailyPreference.getInstance(LoginActivity.this).setGcmId(mRegPushParams.get("notification_id"));
+                    DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(mRegPushParams.get("notification_id"));
                 }
 
                 DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);

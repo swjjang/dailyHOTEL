@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
@@ -39,8 +40,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         setContentView(R.layout.activity_event_web);
-        setActionBar(R.string.actionbar_title_event_list_frag);
-        setActionBarBackgroundVisible(false);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(toolbar, getString(R.string.actionbar_title_event_list_frag), true);
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.

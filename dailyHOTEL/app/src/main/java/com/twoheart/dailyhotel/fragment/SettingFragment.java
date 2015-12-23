@@ -13,12 +13,13 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
-import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
@@ -67,7 +68,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
     private TextView mSettingCardTextView;
     private View mSettingCardLayout;
     private LinearLayout llLogin;
-    private String profileStr, loginStr;
     private String mCSoperatingTimeMessage;
 
 
@@ -79,6 +79,9 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         // ActionBar Setting
         mHostActivity = (MainActivity) getActivity();
         mQueue = VolleyHttpClient.getRequestQueue();
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        mHostActivity.initToolbar(toolbar, getString(R.string.actionbar_title_setting_frag));
 
         tvNotice = (TextView) view.findViewById(R.id.tv_setting_notice);
         TextView tvVersion = (TextView) view.findViewById(R.id.tv_setting_version);
@@ -226,10 +229,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
     {
         super.onResume();
 
-        mHostActivity.setActionBar(getString(R.string.actionbar_title_setting_frag), false);
-        profileStr = getString(R.string.frag_profile);
-        loginStr = getString(R.string.frag_login);
-
         lockUI();
         DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, mHostActivity);
     }
@@ -283,7 +282,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             } else
             {
                 // 로그아웃 상태
-                chgClickable(llLogin);
                 Intent i = new Intent(mHostActivity, LoginActivity.class);
                 startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
                 mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -325,12 +323,12 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
         if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
         {
-            chgClickable(llLogin);
-
-            if (resultCode == Activity.RESULT_OK)
-            {
-                mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
-            }
+            //            chgClickable(llLogin);
+            //
+            //            if (resultCode == Activity.RESULT_OK)
+            //            {
+            //                mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
+            //            }
         }
     }
 
@@ -340,11 +338,11 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
         if (login)
         {
-            tvLogin.setText(profileStr);
+            tvLogin.setText(R.string.frag_profile);
             tvEmail.setVisibility(View.VISIBLE);
         } else
         {
-            tvLogin.setText(loginStr);
+            tvLogin.setText(R.string.frag_login);
             tvEmail.setVisibility(View.GONE);
         }
 
@@ -366,8 +364,13 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
                 if (Util.isTelephonyEnabled(mHostActivity) == true)
                 {
-                    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-                    startActivity(i);
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    }
                 } else
                 {
                     DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);

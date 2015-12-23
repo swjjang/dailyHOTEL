@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -21,6 +20,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
@@ -42,6 +43,7 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -388,6 +390,48 @@ public class Util implements Constants
 
             return false;
         }
+    }
+
+    public interface OnGoogleCloudMessagingListener
+    {
+        void onResult(String registrationId);
+    }
+
+    public static void requestGoogleCloudMessaging(final BaseActivity baseActivity, final OnGoogleCloudMessagingListener listener)
+    {
+        if (Util.isGooglePlayServicesAvailable(baseActivity) == false)
+        {
+            return;
+        }
+
+        new AsyncTask<Void, Void, String>()
+        {
+            @Override
+            protected String doInBackground(Void... params)
+            {
+                GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(baseActivity);
+                String registrationId = null;
+
+                try
+                {
+                    registrationId = instance.register(GCM_PROJECT_NUMBER);
+                } catch (IOException e)
+                {
+                    ExLog.e(e.toString());
+                }
+
+                return registrationId;
+            }
+
+            @Override
+            protected void onPostExecute(String registrationId)
+            {
+                if (listener != null)
+                {
+                    listener.onResult(registrationId);
+                }
+            }
+        }.execute();
     }
 
     public static HashMap<String, String> getLoginParams(Context context)

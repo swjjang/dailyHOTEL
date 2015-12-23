@@ -79,7 +79,7 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
-                    android:host="dailyhotel.kr"
+                    android:host="dailyhotel.co.kr"
                     android:scheme="dailyhotel"/>
             </intent-filter>
             <intent-filter>
@@ -104,7 +104,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".screen.main.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>
@@ -221,7 +221,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.SelectAreaActivity"
+            android:name=".screen.region.RegionListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

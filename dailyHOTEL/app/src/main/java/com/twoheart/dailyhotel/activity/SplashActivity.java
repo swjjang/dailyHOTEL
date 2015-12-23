@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * SplashActivity (로딩화면)
- * <p/>
+ * <p>
  * 어플리케이션 처음 시작 시 나타나는 화면이며, 이는 MainActivity에 의해서
  * 호출된다. SplashActivity는 어플리케이션 처음 실행 시 가장 먼저 나타나는
  * 화면이나 어플리케이션의 주 화면은 아니므로 MainActivity가 처음 실행됐을 시
@@ -20,8 +20,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -97,7 +95,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
         DailyPreference.getInstance(this).setSettingRegion(false);
         DailyPreference.getInstance(this).setSettingGourmetRegion(false);
-        DailyPreference.getInstance(this).setGcmId(null);
+        DailyPreference.getInstance(this).setGCMRegistrationId(null);
 
         mProgressView = findViewById(R.id.progressLayout);
         mProgressView.setVisibility(View.INVISIBLE);
@@ -281,13 +279,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
     private void processLogin()
     {
-        if (mStatusBarHeight == 0)
-        {
-            Rect rectgle = new Rect();
-            getWindow().getDecorView().getWindowVisibleDisplayFrame(rectgle);
-            mStatusBarHeight = rectgle.top;
-        }
-
         if (DailyPreference.getInstance(this).isAutoLogin() == true)
         {
             HashMap<String, String> params = Util.getLoginParams(SplashActivity.this);

@@ -15,7 +15,6 @@ package com.twoheart.dailyhotel.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +56,9 @@ public class EventListFragment extends BaseFragment implements Constants
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        mEventListLayout = new EventListLayout(getActivity());
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        mEventListLayout = new EventListLayout(baseActivity);
         mEventListLayout.setOnUserActionListener(mOnUserActionListener);
 
         return mEventListLayout.createView(inflater, container, savedInstanceState);
@@ -95,9 +96,6 @@ public class EventListFragment extends BaseFragment implements Constants
         {
             return;
         }
-
-        // ActionBar Setting
-        baseActivity.setActionBar(getString(R.string.actionbar_title_event_list_frag), false);
 
         lockUI();
         DailyNetworkAPI.getInstance().requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, baseActivity);

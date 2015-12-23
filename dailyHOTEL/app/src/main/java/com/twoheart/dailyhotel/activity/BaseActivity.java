@@ -1,32 +1,16 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * BaseActivity
- * <p>
- * ActionBarCompat 라이브러리의 ActionBarActivity를 상속받는 A
- * ctivity로서 어플리케이션에서 사용되는 Activity들의 UI를 기본적으로 구
- * 성하는데 필요한 API 메서드들을 제공한다. 뿐만 아니라, CookieSyncMana
- * ger의 인스턴스를 관리하기도 하며, 어플리케이션의 SharedPreference를
- * 관리하기도 한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.activity;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -40,12 +24,10 @@ import android.widget.Toast;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.HotelMainFragment;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -56,8 +38,6 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 public class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
-    protected static int mStatusBarHeight;
-    private Toolbar mToolbar;
     private Dialog mDialog;
     private LoadingDialog mLockUI;
     private Handler handler;
@@ -140,222 +120,166 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         }
     }
 
-    /**
-     * 액션바를 설정하는 메서드로서, 어플리케이션 액션바 테마를 설정하고 제목을 지정한다.
-     *
-     * @param title 액션바에 표시할 화면의 제목을 받는다.
-     */
-    public Toolbar setActionBar(String title, boolean isFinish)
+    public String getNetworkTag()
     {
-        if (mToolbar == null)
+        return mNetworkTag;
+    }
+
+
+    //    public void setActionBarRegionEnable(boolean isEnable)
+    //    {
+    //        if (mActionBarRegionEnabled == isEnable)
+    //        {
+    //            return;
+    //        }
+    //
+    //        mActionBarRegionEnabled = isEnable;
+    //
+    //        if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
+    //        {
+    //            View view = mToolbar.getChildAt(mSpinnderIndex);
+    //            View imageView = view.findViewById(R.id.spinnerImageView);
+    //
+    //            if (isEnable == true)
+    //            {
+    //                view.setEnabled(true);
+    //                imageView.setVisibility(View.VISIBLE);
+    //            } else
+    //            {
+    //                view.setEnabled(false);
+    //                imageView.setVisibility(View.INVISIBLE);
+    //            }
+    //        }
+    //    }
+
+    //    public void setActionBarAreaEnabled(boolean isEnable)
+    //    {
+    //        if (isEnable == true)
+    //        {
+    //            if (mSpinnderIndex == -1)
+    //            {
+    //                mToolbar.setTitle("");
+    //
+    //                LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    //                View view = mInflater.inflate(R.layout.view_actionbar_spinner, null, true);
+    //
+    //                mSpinnderIndex = mToolbar.getChildCount();
+    //                mToolbar.addView(view, mSpinnderIndex);
+    //
+    //                mActionBarRegionEnabled = true;
+    //            }
+    //        } else
+    //        {
+    //            if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
+    //            {
+    //                mToolbar.removeViewAt(mSpinnderIndex);
+    //                mSpinnderIndex = -1;
+    //
+    //                mActionBarRegionEnabled = false;
+    //            }
+    //        }
+    //    }
+
+    public void initToolbarRegion(Toolbar toolbar, String title, View.OnClickListener listener)
+    {
+        if (toolbar.getTag() != null)
         {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-
-            try
-            {
-                setSupportActionBar(mToolbar);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-            mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
+            return;
         }
 
-        FontManager.apply(mToolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View spinnerView = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
 
-        setActionBarAreaEnabled(false);
-        //		mToolbar.setTitle(title);
+        View imageView = spinnerView.findViewById(R.id.spinnerImageView);
+        imageView.setVisibility(View.INVISIBLE);
+
+        TextView textView = (TextView) spinnerView.findViewById(R.id.titleTextView);
+        textView.setTextColor(getResources().getColor(R.color.black));
+        textView.setMaxLines(1);
+        textView.setSingleLine();
+        textView.setEllipsize(TextUtils.TruncateAt.END);
+        textView.setText(title);
+        textView.setOnClickListener(listener);
+
+        toolbar.addView(spinnerView);
+        toolbar.setTag(toolbar.getId(), textView);
+
+        setSupportActionBar(toolbar);
+    }
+
+    public void initToolbar(Toolbar toolbar, String title)
+    {
+        initToolbar(toolbar, title, false);
+    }
+
+    public void initToolbar(Toolbar toolbar, String title, boolean isTransparent)
+    {
+        if (toolbar == null)
+        {
+            return;
+        }
+
+        setSupportActionBar(toolbar);
+        setToolbarTransparent(toolbar, isTransparent);
+
+        FontManager.apply(toolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
+
         getSupportActionBar().setTitle(title);
-
-        if (isFinish == true)
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
         {
-            mToolbar.setNavigationIcon(R.drawable.back);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    finish();
-                }
-            });
-        }
-
-        return mToolbar;
+                finish();
+            }
+        });
     }
 
-    public void setActionBarBackgroundVisible(boolean visible)
+    public void setToolbarRegionText(Toolbar toolbar, String title)
     {
-        if (mToolbar == null)
+        if (toolbar == null)
         {
             return;
         }
 
-        View view = findViewById(R.id.toolbar_actionbarUnderLine);
+        // 인덱스 번호는 나중에 바뀜
+        View view = toolbar.getChildAt(0);
 
-        if (visible == true)
+        View imageView = view.findViewById(R.id.spinnerImageView);
+        imageView.setVisibility(View.VISIBLE);
+
+        TextView textView = (TextView) view.findViewById(R.id.titleTextView);
+        textView.setText(title);
+    }
+
+    public void setToolbarText(String title)
+    {
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar == null)
         {
-            if (view.getVisibility() != View.VISIBLE)
-            {
-                mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-                mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
+            return;
+        }
 
-                view.setVisibility(View.VISIBLE);
-            }
+        actionBar.setTitle(title);
+    }
+
+    public void setToolbarTransparent(Toolbar toolbar, boolean isTransparent)
+    {
+        if (toolbar == null)
+        {
+            return;
+        }
+
+        if (isTransparent == true)
+        {
+            toolbar.setTitleTextColor(getResources().getColor(android.R.color.transparent));
+            toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         } else
         {
-            if (view.getVisibility() != View.INVISIBLE)
-            {
-                mToolbar.setTitleTextColor(getResources().getColor(android.R.color.transparent));
-                mToolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
-                view.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    public void setActionBar(int strId)
-    {
-        setActionBar(getString(strId), true);
-    }
-
-    public Toolbar setActionBar(String text)
-    {
-        return setActionBar(text, true);
-    }
-
-    public void setActionBarRegionEnable(boolean isEnable)
-    {
-        if (mActionBarRegionEnabled == isEnable)
-        {
-            return;
-        }
-
-        mActionBarRegionEnabled = isEnable;
-
-        if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
-        {
-            View view = mToolbar.getChildAt(mSpinnderIndex);
-            View imageView = view.findViewById(R.id.spinnerImageView);
-
-            if (isEnable == true)
-            {
-                view.setEnabled(true);
-                imageView.setVisibility(View.VISIBLE);
-            } else
-            {
-                view.setEnabled(false);
-                imageView.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    public void setActionBarAreaEnabled(boolean isEnable)
-    {
-        if (isEnable == true)
-        {
-            if (mSpinnderIndex == -1)
-            {
-                mToolbar.setTitle("");
-
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
-
-                mSpinnderIndex = mToolbar.getChildCount();
-                mToolbar.addView(view, mSpinnderIndex);
-
-                mActionBarRegionEnabled = true;
-            }
-        } else
-        {
-            if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
-            {
-                mToolbar.removeViewAt(mSpinnderIndex);
-                mSpinnderIndex = -1;
-
-                mActionBarRegionEnabled = false;
-            }
-        }
-    }
-
-    public void setActionBarArea(String title, final HotelMainFragment.OnUserActionListener listener)
-    {
-        if (mSpinnderIndex == -1)
-        {
-            return;
-        }
-
-        View view = mToolbar.getChildAt(mSpinnderIndex);
-
-        if (view != null)
-        {
-            TextView textView = (TextView) view.findViewById(R.id.titleTextView);
-            textView.setText(title);
-            textView.setTextColor(getResources().getColor(R.color.black));
-            textView.setMaxLines(1);
-            textView.setSingleLine();
-            textView.setEllipsize(TextUtils.TruncateAt.END);
-
-            view.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (mActionBarRegionEnabled == false || isLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    lockUiComponent();
-
-                    // 지역표시를 선택할 경우.
-                    if (listener != null)
-                    {
-                        listener.onClickActionBarArea();
-                    }
-                }
-            });
-        }
-    }
-
-    public void setActionBarArea(String title, final PlaceMainFragment.OnUserActionListener listener)
-    {
-        if (mSpinnderIndex == -1)
-        {
-            return;
-        }
-
-        View view = mToolbar.getChildAt(mSpinnderIndex);
-
-        if (view != null)
-        {
-            TextView textView = (TextView) view.findViewById(R.id.titleTextView);
-            textView.setText(title);
-            textView.setTextColor(getResources().getColor(R.color.black));
-            textView.setMaxLines(1);
-            textView.setSingleLine();
-            textView.setEllipsize(TextUtils.TruncateAt.END);
-
-            view.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (mActionBarRegionEnabled == false || isLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    lockUiComponent();
-
-                    // 지역표시를 선택할 경우.
-                    if (listener != null)
-                    {
-                        listener.onClickActionBarArea();
-                    }
-                }
-            });
+            toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.white));
         }
     }
 
@@ -428,8 +352,12 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     /**
      * LoadingDialog를 띄워 로딩 중임을 나타내어 사용자가 UI를 사용할 수 없도록 한다.
      */
-    @Override
     public void lockUI()
+    {
+        lockUI(true);
+    }
+
+    public void lockUI(boolean isShowProgress)
     {
         lockUiComponent();
 
@@ -440,17 +368,13 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 mLockUI = new LoadingDialog(this);
             }
 
-            mLockUI.show();
+            mLockUI.show(isShowProgress);
         }
-
-        // 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
-        //		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
     }
 
     /**
      * 로딩이 완료되어 LoadingDialog를 제거하고 전역 폰트를 설정한다.
      */
-    @Override
     public void unLockUI()
     {
         releaseUiComponent();
@@ -550,11 +474,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         ExLog.e(error.toString());
 
-        if (Constants.DEBUG == true)
-        {
-            Log.e("DailyHotel", error.toString(), error.fillInStackTrace());
-        }
-
         onError();
     }
 
@@ -591,21 +510,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 finish();
             }
         }, null, false);
-    }
-
-    /**
-     * 버튼 난타를 방지하기 위한 메서드, 버튼의 클릭 가능 여부를 반대로 변경.
-     *
-     * @param v 타겟 뷰
-     */
-    protected void chgClickable(View v)
-    {
-        v.setClickable(!v.isClickable());
-    }
-
-    protected void chgClickable(View v, boolean isClickable)
-    {
-        v.setClickable(isClickable);
     }
 
     private void recursiveRecycle(View root)

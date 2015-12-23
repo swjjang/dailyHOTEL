@@ -43,6 +43,14 @@ public interface Constants
         }
     }
 
+    public enum SortType
+    {
+        DEFAULT,
+        DISTANCE,
+        LOW_PRICE,
+        HIGH_PRICE;
+    }
+
     // 항상 열리게 셋팅 여부
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
@@ -96,11 +104,6 @@ public interface Constants
     // user info
 
 
-
-
-
-
-
     public static final String KEY_PREFERENCE_OVERSEAS_NAME = "OVERSEAS_NAME";
     public static final String KEY_PREFERENCE_OVERSEAS_PHONE = "OVERSEAS_PHONE";
     public static final String KEY_PREFERENCE_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
@@ -113,23 +116,15 @@ public interface Constants
     public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
 
 
-
     // ga
-
 
 
     public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
 
 
-
-
-
     public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
     public static final int VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT = 1;
     public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
-
-
-
 
 
     // Event
@@ -204,7 +199,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
     public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 12;
     public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
-    public static final int CODE_REQUEST_ACTIVITY_SELECT_AREA = 14;
+    public static final int CODE_REQUEST_ACTIVITY_REGIONLIST = 14;
     public static final int CODE_REQUEST_ACTIVITY_USERINFO_UPDATE = 15;
     public static final int CODE_REQUEST_FRAGMENT_PLACE_MAIN = 20;
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL = 21;
