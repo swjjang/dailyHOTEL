@@ -57,13 +57,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     @Override
     protected void initLayout(LayoutInflater inflater, BaseActivity activity)
     {
-        try
-        {
-            mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
     }
 
     @Override
@@ -549,7 +542,34 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 if (googleMapLayout.getBackground() == null)
                 {
-                    googleMapSetting(googleMapLayout);
+                    try
+                    {
+                        googleMapSetting(googleMapLayout);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+
+                        googleMapLayout.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Util.installGooglePlayService((BaseActivity) mFragmentActivity);
+                            }
+                        });
+                    } catch (Error error)
+                    {
+                        ExLog.d(error.toString());
+
+                        googleMapLayout.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Util.installGooglePlayService((BaseActivity) mFragmentActivity);
+                            }
+                        });
+                    }
                 }
             } else
             {
@@ -578,14 +598,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             if (mGoogleMapLayout == null)
             {
-                try
-                {
-                    LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                }
+                LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
             }
 
             googleMapLayout.addView(mGoogleMapLayout);

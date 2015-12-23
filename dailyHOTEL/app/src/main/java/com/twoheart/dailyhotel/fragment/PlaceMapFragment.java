@@ -44,11 +44,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoadingDialog;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.LoopViewPager;
-import com.twoheart.dailyhotel.view.MyLocationMarker;
-import com.twoheart.dailyhotel.view.PlaceClusterItem;
-import com.twoheart.dailyhotel.view.PlaceClusterRenderer;
-import com.twoheart.dailyhotel.view.PlaceClusterRenderer.OnSelectedClusterItemListener;
-import com.twoheart.dailyhotel.view.PlaceClusterRenderer.Renderer;
+import com.twoheart.dailyhotel.model.MyLocationMarker;
+import com.twoheart.dailyhotel.model.PlaceClusterItem;
+import com.twoheart.dailyhotel.model.PlaceClusterRenderer;
+import com.twoheart.dailyhotel.model.PlaceClusterRenderer.OnSelectedClusterItemListener;
+import com.twoheart.dailyhotel.model.PlaceClusterRenderer.Renderer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1007,7 +1007,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
     private PlaceClusterRenderer.OnClusterRenderedListener mOnClusterRenderedListener = new PlaceClusterRenderer.OnClusterRenderedListener()
     {
         @Override
-        public void onClusterRenderedListener(com.twoheart.dailyhotel.view.PlaceClusterRenderer.Renderer renderer)
+        public void onClusterRenderedListener(PlaceClusterRenderer.Renderer renderer)
         {
             if (renderer == Renderer.CLUSTER)
             {

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.adapter;
+package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.adapter.PlaceViewPagerAdapter;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.util.FileLruCache;

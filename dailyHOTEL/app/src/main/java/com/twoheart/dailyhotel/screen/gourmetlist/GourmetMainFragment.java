@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.AreaItem;
+import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -51,7 +51,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private GourmetFragmentPagerAdapter mFragmentPagerAdapter;
-    private ArrayList<AreaItem> mAreaItemList;
+    private ArrayList<RegionViewItem> mRegionViewItemList;
     private Province mSelectedProvince;
 
     public interface OnUserActionListener
@@ -323,7 +323,7 @@ public class GourmetMainFragment extends PlaceMainFragment
     @Override
     public boolean isEnabledRegionMenu()
     {
-        if (mAreaItemList != null && mAreaItemList.size() > 1)
+        if (mRegionViewItemList != null && mRegionViewItemList.size() > 1)
         {
             return true;
         } else
@@ -595,7 +595,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 return;
             }
 
-            if (mAreaItemList == null || mAreaItemList.size() == 1)
+            if (mRegionViewItemList == null || mRegionViewItemList.size() == 1)
             {
                 return;
             }
@@ -609,7 +609,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             Intent intent = new Intent(baseActivity, RegionListActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
-            intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
+            intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mRegionViewItemList);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
         }
 
@@ -723,7 +723,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     }
                 }
 
-                mAreaItemList = makeAreaItemList(provinceList, areaList);
+//                mRegionViewItemList = makeAreaItemList(provinceList, areaList);
 
                 // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
                 if (selectedProvince == null)

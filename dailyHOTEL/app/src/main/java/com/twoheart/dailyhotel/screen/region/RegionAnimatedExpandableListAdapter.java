@@ -1,19 +1,17 @@
 package com.twoheart.dailyhotel.screen.region;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.content.res.XmlResourceParser;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
     private Context mContext;
     private LayoutInflater mInflater;
     private Province mSelectedProvince;
-    private List<AreaItem> items;
+    private List<RegionViewItem> items;
 
     public RegionAnimatedExpandableListAdapter(Context context)
     {
@@ -32,7 +30,7 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         mInflater = LayoutInflater.from(context);
     }
 
-    public void setData(List<AreaItem> items)
+    public void setData(List<RegionViewItem> items)
     {
         this.items = items;
     }
@@ -42,18 +40,18 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         mSelectedProvince = province;
     }
 
-    public ArrayList<Area> getChildren(int groupPosition)
+    public ArrayList<Area[]> getChildren(int groupPosition)
     {
         return items.get(groupPosition).getAreaList();
     }
 
     @Override
-    public Area getChild(int groupPosition, int childPosition)
+    public Area[] getChild(int groupPosition, int childPosition)
     {
         return items.get(groupPosition).getAreaList().get(childPosition);
     }
 
-    public AreaItem getAreaItem(int groupPosition)
+    public RegionViewItem getAreaItem(int groupPosition)
     {
         return items.get(groupPosition);
     }
@@ -67,7 +65,7 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
     @Override
     public View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
     {
-        Area area = getChild(groupPosition, childPosition);
+        Area[] area = getChild(groupPosition, childPosition);
 
         if (convertView == null)
         {
@@ -84,46 +82,31 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
 
         convertView.setTag(parent.getId(), R.layout.list_row_area);
 
-        TextView textView = (TextView) convertView.findViewById(R.id.areaTextView);
+        TextView areaTextView1 = (TextView) convertView.findViewById(R.id.areaTextView1);
+        TextView areaSubTextView1 = (TextView) convertView.findViewById(R.id.areaSubTextView1);
 
-        textView.setText(area.tag);
+        TextView areaTextView2 = (TextView) convertView.findViewById(R.id.areaTextView2);
+        TextView areaSubTextView2 = (TextView) convertView.findViewById(R.id.areaSubTextView2);
 
-        boolean isSelected = false;
-
-        if (mSelectedProvince != null)
+        if(childPosition == 0)
         {
-            if (mSelectedProvince instanceof Area)
-            {
-                if (mSelectedProvince.index == area.index && mSelectedProvince.name.equalsIgnoreCase(area.name) == true)
-                {
-                    isSelected = true;
-                }
-            } else
-            {
-                if (mSelectedProvince.getProvinceIndex() == ((Province) area).getProvinceIndex() && area.index == -1)
-                {
-                    isSelected = true;
-                }
-            }
-        }
-
-        if (isSelected == true)
-        {
-            textView.setTextColor(mContext.getResources().getColor(R.color.white));
-            textView.setBackgroundColor(mContext.getResources().getColor(R.color.dh_theme_color));
+            areaTextView1.setText(area[0].tag);
+            areaSubTextView1.setVisibility(View.GONE);
         } else
         {
-            try
-            {
-                XmlResourceParser parser = mContext.getResources().getXml(R.drawable.selector_textview_selectarea_childcolor);
-                ColorStateList colors = ColorStateList.createFromXml(mContext.getResources(), parser);
-                textView.setTextColor(colors);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
+            areaTextView1.setText(area[0].name);
+            areaSubTextView1.setVisibility(View.VISIBLE);
+            areaSubTextView1.setText(area[0].tag);
+        }
 
-            textView.setBackgroundResource(R.drawable.selector_background_area);
+        if(area[1] != null)
+        {
+            areaTextView2.setText(area[1].name);
+            areaSubTextView2.setText(area[1].tag);
+        } else
+        {
+            areaTextView2.setText(null);
+            areaSubTextView2.setText(null);
         }
 
         return convertView;
@@ -191,8 +174,11 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         convertView.setTag(parent.getId(), R.layout.list_row_province);
         convertView.setTag(groupPosition);
 
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);
+        ImageView provinceImageView = (ImageView) convertView.findViewById(R.id.provinceImageView);
+        ImageView arrowImageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
+
+        Glide.with(mContext).load(province.imageUrl).crossFade().into(provinceImageView);
 
         textView.setText(province.name);
 
@@ -202,54 +188,20 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         // 우측 위아래 화살펴 표시 여부.
         if (hasChildren == true)
         {
-            imageView.setVisibility(View.VISIBLE);
+            arrowImageView.setVisibility(View.VISIBLE);
         } else
         {
-            imageView.setVisibility(View.GONE);
-        }
-
-        if (mSelectedProvince instanceof Area == false && mSelectedProvince.index == province.index)
-        {
-            if (hasChildren == false)
-            {
-                isSelected = true;
-            }
-        }
-
-        if (isSelected == true)
-        {
-            textView.setBackgroundColor(mContext.getResources().getColor(R.color.dh_theme_color));
-            textView.setTextColor(mContext.getResources().getColor(R.color.white));
-        } else
-        {
-            if (hasChildren == true)
-            {
-                textView.setTextColor(mContext.getResources().getColor(R.color.selectarea_text_group));
-                textView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-            } else
-            {
-                try
-                {
-                    XmlResourceParser parser = mContext.getResources().getXml(R.drawable.selector_textview_selectarea_groupcolor);
-                    ColorStateList colors = ColorStateList.createFromXml(mContext.getResources(), parser);
-                    textView.setTextColor(colors);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-
-                textView.setBackgroundResource(R.drawable.selector_background_province);
-            }
+            arrowImageView.setVisibility(View.GONE);
         }
 
         if (hasChildren == true)
         {
             if (getAreaItem(groupPosition).isExpandGroup == true)
             {
-                imageView.setImageResource(R.drawable.ic_details_menu_on);
+                arrowImageView.setImageResource(R.drawable.ic_details_menu_on);
             } else
             {
-                imageView.setImageResource(R.drawable.ic_details_menu_off);
+                arrowImageView.setImageResource(R.drawable.ic_details_menu_off);
             }
         }
 

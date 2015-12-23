@@ -22,12 +22,9 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
@@ -53,35 +50,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
     private Dialog mAlertDlg;
     private View mProgressView;
-    private View[] mCircleViewList;
-    private boolean mIsRequestLogin;
-    private boolean mDoService;
-
-    private Handler mHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch (msg.what)
-            {
-                case 0:
-                    if (mDoService == true)
-                    {
-                        processLogin();
-                    }
-                    break;
-
-                case 1:
-                    if (mProgressView.getVisibility() != View.VISIBLE)
-                    {
-                        mProgressView.setVisibility(View.VISIBLE);
-
-                        showSplashView();
-                    }
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -90,22 +58,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
         setContentView(R.layout.activity_splash);
 
-        mIsRequestLogin = false;
-        mDoService = true;
-
         DailyPreference.getInstance(this).setSettingRegion(false);
         DailyPreference.getInstance(this).setSettingGourmetRegion(false);
         DailyPreference.getInstance(this).setGCMRegistrationId(null);
-
-        mProgressView = findViewById(R.id.progressLayout);
-        mProgressView.setVisibility(View.INVISIBLE);
-
-        mCircleViewList = new View[PROGRESS_CIRCLE_COUNT];
-
-        for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
-        {
-            mCircleViewList[i] = findViewById(R.id.iv_splash_circle1 + i);
-        }
     }
 
     @Override
@@ -120,6 +75,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
+                processLogin();
             }
         });
     }
@@ -132,25 +88,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         if (VolleyHttpClient.isAvailableNetwork() == false)
         {
             showDisabledNetworkPopup();
-        } else
-        {
-            if (mIsRequestLogin == false)
-            {
-                mIsRequestLogin = true;
-
-                mHandler.sendEmptyMessageDelayed(0, 1500);
-            }
-
-            showProgress();
         }
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        mHandler.removeMessages(1);
     }
 
     @Override
@@ -167,15 +105,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         }
 
         super.onDestroy();
-    }
-
-    private void showProgress()
-    {
-        if (mProgressView.getVisibility() != View.VISIBLE)
-        {
-            mHandler.removeMessages(1);
-            mHandler.sendEmptyMessageDelayed(1, 1000);
-        }
     }
 
     private void showDisabledNetworkPopup()
@@ -197,18 +126,12 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             {
                 mAlertDlg.dismiss();
 
-                if (VolleyHttpClient.isAvailableNetwork())
+                if (VolleyHttpClient.isAvailableNetwork() == true)
                 {
-                    if (mProgressView.getVisibility() != View.VISIBLE)
-                    {
-                        mHandler.removeMessages(1);
-                        mHandler.sendEmptyMessageDelayed(1, 1000);
-                    }
-
                     processLogin();
                 } else
                 {
-                    mHandler.postDelayed(new Runnable()
+                    view.postDelayed(new Runnable()
                     {
                         @Override
                         public void run()
@@ -257,23 +180,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         } catch (Exception e)
         {
             ExLog.d(e.toString());
-        }
-    }
-
-    private void showSplashView()
-    {
-        for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
-        {
-            final int idx = i;
-            mHandler.postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    mCircleViewList[idx].setVisibility(View.VISIBLE);
-                    mCircleViewList[idx].startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_load));
-                }
-            }, 250 * (i + 1));
         }
     }
 
@@ -365,7 +271,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
     private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -505,8 +410,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
                     if (isSuspend == true)
                     {
-                        mDoService = false;
-
                         String title = jsonObject.getString("messageTitle");
                         String message = jsonObject.getString("messageBody");
 
@@ -519,6 +422,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                                 finish();
                             }
                         }, null, false);
+                    } else
+                    {
+                        processLogin();
                     }
                 }
             } catch (Exception e)

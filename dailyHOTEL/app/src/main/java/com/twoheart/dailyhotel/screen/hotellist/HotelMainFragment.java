@@ -18,9 +18,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.AreaItem;
+import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -55,7 +54,7 @@ public class HotelMainFragment extends BaseFragment
     private HotelFragmentPagerAdapter mFragmentPagerAdapter;
 
     private SaleTime mTodaySaleTime;
-    private ArrayList<AreaItem> mAreaItemList;
+//    private ArrayList<RegionViewItem> mRegionViewItemList;
     private Province mSelectedProvince;
 
     private boolean mMenuEnabled;
@@ -456,47 +455,47 @@ public class HotelMainFragment extends BaseFragment
         hotelListFragment.refreshHotelList(province, isSelectionTop);
     }
 
-    private ArrayList<AreaItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
-    {
-        ArrayList<AreaItem> arrayList = new ArrayList<AreaItem>(provinceList.size());
-
-        for (Province province : provinceList)
-        {
-            AreaItem item = new AreaItem();
-
-            item.setProvince(province);
-            item.setAreaList(new ArrayList<Area>());
-
-            for (Area area : areaList)
-            {
-                if (province.getProvinceIndex() == area.getProvinceIndex())
-                {
-                    ArrayList<Area> areaArrayList = item.getAreaList();
-
-                    if (areaArrayList.size() == 0)
-                    {
-                        Area totalArea = new Area();
-
-                        totalArea.index = -1;
-                        totalArea.name = province.name + " 전체";
-                        totalArea.setProvince(province);
-                        totalArea.sequence = -1;
-                        totalArea.tag = totalArea.name;
-                        totalArea.setProvinceIndex(province.getProvinceIndex());
-
-                        areaArrayList.add(totalArea);
-                    }
-
-                    area.setProvince(province);
-                    areaArrayList.add(area);
-                }
-            }
-
-            arrayList.add(item);
-        }
-
-        return arrayList;
-    }
+//    private ArrayList<RegionViewItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+//    {
+//        ArrayList<RegionViewItem> arrayList = new ArrayList<RegionViewItem>(provinceList.size());
+//
+//        for (Province province : provinceList)
+//        {
+//            RegionViewItem item = new RegionViewItem();
+//
+//            item.setProvince(province);
+//            item.setAreaList(new ArrayList<Area>());
+//
+//            for (Area area : areaList)
+//            {
+//                if (province.getProvinceIndex() == area.getProvinceIndex())
+//                {
+//                    ArrayList<Area> areaArrayList = item.getAreaList();
+//
+//                    if (areaArrayList.size() == 0)
+//                    {
+//                        Area totalArea = new Area();
+//
+//                        totalArea.index = -1;
+//                        totalArea.name = province.name + " 전체";
+//                        totalArea.setProvince(province);
+//                        totalArea.sequence = -1;
+//                        totalArea.tag = totalArea.name;
+//                        totalArea.setProvinceIndex(province.getProvinceIndex());
+//
+//                        areaArrayList.add(totalArea);
+//                    }
+//
+//                    area.setProvince(province);
+//                    areaArrayList.add(area);
+//                }
+//            }
+//
+//            arrayList.add(item);
+//        }
+//
+//        return arrayList;
+//    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
@@ -729,7 +728,7 @@ public class HotelMainFragment extends BaseFragment
                 return;
             }
 
-            Intent intent = RegionListActivity.newInstance(baseActivity, PlaceMainFragment.TYPE.HOTEL, mSelectedProvince);
+            Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.HOTEL, mSelectedProvince);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
         }
 
@@ -839,7 +838,7 @@ public class HotelMainFragment extends BaseFragment
                     }
                 }
 
-                mAreaItemList = makeAreaItemList(provinceList, areaList);
+//                mRegionViewItemList = makeAreaItemList(provinceList, areaList);
 
                 // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
                 if (selectedProvince == null)

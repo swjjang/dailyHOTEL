@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.view;
+package com.twoheart.dailyhotel.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;

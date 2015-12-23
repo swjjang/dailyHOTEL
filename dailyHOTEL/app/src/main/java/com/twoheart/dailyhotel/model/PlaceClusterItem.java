@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.view;
+package com.twoheart.dailyhotel.model;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;

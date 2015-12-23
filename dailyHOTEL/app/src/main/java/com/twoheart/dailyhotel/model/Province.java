@@ -8,24 +8,12 @@ import org.json.JSONObject;
 
 public class Province implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Province createFromParcel(Parcel in)
-        {
-            return new Province(in);
-        }
-
-        @Override
-        public Province[] newArray(int size)
-        {
-            return new Province[size];
-        }
-
-    };
     public int index;
     public String name;
+    public String subName;
     public int sequence;
     public boolean isOverseas;
+    public String imageUrl;
 
     private int saleWeek = 1; // 1 : 1주일,  2 : 2주일
 
@@ -52,14 +40,7 @@ public class Province implements Parcelable
             sequence = 0;
         }
 
-        // 2주는 당분간 하지 않음
-        //		if (jsonObject.has("sale_week") == true)
-        //		{
-        //			saleWeek = jsonObject.getInt("sale_week");
-        //		} else
-        {
-            saleWeek = 1;
-        }
+        saleWeek = 1;
 
         if (jsonObject.has("is_overseas") == true)
         {
@@ -68,6 +49,8 @@ public class Province implements Parcelable
         {
             isOverseas = false;
         }
+
+        imageUrl = "http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg";
     }
 
     public int getProvinceIndex()
@@ -80,9 +63,22 @@ public class Province implements Parcelable
     {
         dest.writeInt(index);
         dest.writeString(name);
+        dest.writeString(subName);
         dest.writeInt(sequence);
         dest.writeInt(saleWeek);
         dest.writeInt(isOverseas ? 1 : 0);
+        dest.writeString(imageUrl);
+    }
+
+    protected void readFromParcel(Parcel in)
+    {
+        index = in.readInt();
+        name = in.readString();
+        subName = in.readString();
+        sequence = in.readInt();
+        saleWeek = in.readInt();
+        isOverseas = in.readInt() == 1 ? true : false;
+        imageUrl = in.readString();
     }
 
     @Override
@@ -91,12 +87,18 @@ public class Province implements Parcelable
         return 0;
     }
 
-    protected void readFromParcel(Parcel in)
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        index = in.readInt();
-        name = in.readString();
-        sequence = in.readInt();
-        saleWeek = in.readInt();
-        isOverseas = in.readInt() == 1 ? true : false;
-    }
+        public Province createFromParcel(Parcel in)
+        {
+            return new Province(in);
+        }
+
+        @Override
+        public Province[] newArray(int size)
+        {
+            return new Province[size];
+        }
+
+    };
 }

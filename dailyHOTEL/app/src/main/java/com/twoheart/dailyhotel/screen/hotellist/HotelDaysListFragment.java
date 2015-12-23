@@ -18,7 +18,6 @@ package com.twoheart.dailyhotel.screen.hotellist;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 
@@ -45,7 +44,7 @@ public class HotelDaysListFragment extends HotelListFragment
 
         SaleTime saleTime = mSelectedCheckInSaleTime.getClone(0);
 
-        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), PlaceMainFragment.TYPE.HOTEL, saleTime);
+        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), TYPE.HOTEL, saleTime);
         getParentFragment().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
