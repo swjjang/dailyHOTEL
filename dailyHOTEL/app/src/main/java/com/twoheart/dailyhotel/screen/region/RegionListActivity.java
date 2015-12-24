@@ -62,7 +62,7 @@ public class RegionListActivity extends BaseActivity
         }
 
         // 호텔 인지 고메인지
-        mType = PlaceMainFragment.TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        mType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
         // 국내로 시작하는지 헤외로 시작하는지
@@ -115,6 +115,8 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.setOffscreenPageLimit(HOTEL_TAB_COUNT);
                 mViewPager.setAdapter(mFragmentPagerAdapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+
+                mViewPager.setCurrentItem(province.isOverseas ? 1 : 0);
                 break;
             }
 

@@ -82,7 +82,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.HOTEL.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, TYPE.HOTEL.name());
 
         return intent;
     }
@@ -99,7 +99,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.FNB.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, TYPE.FNB.name());
 
         return intent;
     }
@@ -117,7 +117,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             return;
         }
 
-        mPlaceType = PlaceMainFragment.TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
+        mPlaceType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
 
         switch (mPlaceType)
         {

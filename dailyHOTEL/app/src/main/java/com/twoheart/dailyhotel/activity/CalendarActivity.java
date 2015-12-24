@@ -56,7 +56,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
 
         Intent intent = getIntent();
 
-        mPlaceType = PlaceMainFragment.TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        mPlaceType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
 
         switch (mPlaceType)
@@ -277,7 +277,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             dailyTextView.setSelected(true);
             dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
 
-            if (mPlaceType == PlaceMainFragment.TYPE.FNB)
+            if (mPlaceType == TYPE.FNB)
             {
                 lockUiComponent();
 
@@ -305,7 +305,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             }
         } else
         {
-            if (mPlaceType == PlaceMainFragment.TYPE.FNB)
+            if (mPlaceType == TYPE.FNB)
             {
                 return;
             }

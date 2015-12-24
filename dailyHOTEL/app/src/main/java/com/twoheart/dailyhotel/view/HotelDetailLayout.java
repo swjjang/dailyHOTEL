@@ -176,14 +176,6 @@ public class HotelDetailLayout
             }
         });
 
-        try
-        {
-            mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
         setBookingStatus(STATUS_NONE);
         hideRoomType();
     }
@@ -1677,6 +1669,18 @@ public class HotelDetailLayout
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
+
+                        googleMapLayout.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Util.installGooglePlayService((BaseActivity) mFragmentActivity);
+                            }
+                        });
+                    } catch (Error error)
+                    {
+                        ExLog.d(error.toString());
 
                         googleMapLayout.setOnClickListener(new View.OnClickListener()
                         {

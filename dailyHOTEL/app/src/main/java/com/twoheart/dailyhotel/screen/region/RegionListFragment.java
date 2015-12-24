@@ -10,7 +10,6 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.RotateAnimation;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
 
@@ -19,8 +18,8 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 
 public class RegionListFragment extends BaseFragment
 {
+    public static final int CHILD_GRID_COLUMN = 2;
     private RegionListActivity.OnUserActionListener mOnUserActionListener;
 
     private DailyAnimatedExpandableListView mListView;
@@ -71,7 +71,16 @@ public class RegionListFragment extends BaseFragment
             return;
         }
 
-        DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+        switch (mType)
+        {
+            case HOTEL:
+                DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
+                break;
+
+            case FNB:
+                DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mGourmetRegionListJsonResponseListener, baseActivity);
+                break;
+        }
     }
 
     public void setInformation(PlaceMainFragment.TYPE type, RegionListActivity.Region region, Province province)
@@ -107,7 +116,7 @@ public class RegionListFragment extends BaseFragment
         return null;
     }
 
-    private void expandGroupWidthAnimation(int groupPosition, final AreaItem areaItem)
+    private void expandGroupWidthAnimation(int groupPosition, final RegionViewItem regionViewItem)
     {
         mListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
         {
@@ -116,7 +125,7 @@ public class RegionListFragment extends BaseFragment
             {
                 releaseUiComponent();
 
-                areaItem.isExpandGroup = true;
+                regionViewItem.isExpandGroup = true;
             }
         });
 
@@ -126,7 +135,7 @@ public class RegionListFragment extends BaseFragment
 
         if (groupView != null)
         {
-            onGroupExpand(groupView, areaItem);
+            onGroupExpand(groupView, regionViewItem);
         }
     }
 
@@ -139,7 +148,7 @@ public class RegionListFragment extends BaseFragment
             {
                 if (mListView.isGroupExpanded(groupPosition))
                 {
-                    AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
+                    RegionViewItem regionViewItem = mAdapter.getAreaItem(groupPosition);
 
                     mListView.collapseGroupWithAnimation(groupPosition);
 
@@ -147,15 +156,15 @@ public class RegionListFragment extends BaseFragment
 
                     if (groupView != null)
                     {
-                        onGroupCollapse(groupView, areaItem);
+                        onGroupCollapse(groupView, regionViewItem);
                     }
                 } else
                 {
-                    final AreaItem areaItem = mAdapter.getAreaItem(groupPosition);
+                    final RegionViewItem regionViewItem = mAdapter.getAreaItem(groupPosition);
 
                     try
                     {
-                        expandGroupWidthAnimation(groupPosition, areaItem);
+                        expandGroupWidthAnimation(groupPosition, regionViewItem);
                     } catch (Exception e)
                     {
                         mListView.setSelection(groupPosition);
@@ -167,92 +176,48 @@ public class RegionListFragment extends BaseFragment
         }, 100);
     }
 
-    private void selectedPreviousArea(Province province, ArrayList<AreaItem> arrayList)
+    private void selectedPreviousArea(Province province, ArrayList<RegionViewItem> arrayList)
     {
         if (province == null || arrayList == null)
         {
             return;
         }
 
-        if (province instanceof Area)
+        int size = arrayList.size();
+
+        for (int i = 0; i < size; i++)
         {
-            int size = arrayList.size();
-            Area selectedArea = (Area) province;
+            RegionViewItem regionViewItem = arrayList.get(i);
 
-            for (int i = 0; i < size; i++)
+            if (province.getProvinceIndex() == regionViewItem.getProvince().getProvinceIndex())
             {
-                AreaItem areaItem = arrayList.get(i);
-
-                if (selectedArea.getProvinceIndex() == areaItem.getProvince().getProvinceIndex())
+                if (regionViewItem.getAreaList().size() == 0)
                 {
-                    if (areaItem.getAreaList().size() == 0)
-                    {
-                        // 상세 지역이 없는 경우.
-                        mListView.setSelection(i);
-                        mListView.setSelectedGroup(i);
+                    // 상세 지역이 없는 경우.
+                    mListView.setSelection(i);
+                    mListView.setSelectedGroup(i);
 
-                        areaItem.isExpandGroup = false;
-                    } else
-                    {
-                        ArrayList<Area> areaList = areaItem.getAreaList();
-                        int areaSize = areaList.size();
-
-                        for (int j = 0; j < areaSize; j++)
-                        {
-                            Area area = areaList.get(j);
-
-                            if (area.index == selectedArea.index)
-                            {
-                                mListView.setSelection(i);
-                                mListView.expandGroup(i);
-                                mListView.setTag(i);
-
-                                areaItem.isExpandGroup = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                }
-            }
-        } else
-        {
-            int size = arrayList.size();
-
-            for (int i = 0; i < size; i++)
-            {
-                AreaItem areaItem = arrayList.get(i);
-
-                if (province.getProvinceIndex() == areaItem.getProvince().getProvinceIndex())
+                    regionViewItem.isExpandGroup = false;
+                } else
                 {
-                    if (areaItem.getAreaList().size() == 0)
-                    {
-                        // 상세 지역이 없는 경우.
-                        mListView.setSelection(i);
-                        mListView.setSelectedGroup(i);
+                    mListView.setSelection(i);
+                    mListView.expandGroup(i);
+                    mListView.setTag(i);
 
-                        areaItem.isExpandGroup = false;
-                    } else
-                    {
-                        mListView.setSelection(i);
-                        mListView.expandGroup(i);
-                        mListView.setTag(i);
-
-                        areaItem.isExpandGroup = true;
-                    }
-                    break;
+                    regionViewItem.isExpandGroup = true;
                 }
+                break;
             }
         }
     }
 
-    public void onGroupExpand(View view, final AreaItem areaItem)
+    public void onGroupExpand(View view, final RegionViewItem regionViewItem)
     {
         if (view.getVisibility() != View.VISIBLE)
         {
             releaseUiComponent();
 
-            areaItem.isExpandGroup = true;
+            regionViewItem.isExpandGroup = true;
             return;
         }
 
@@ -290,7 +255,7 @@ public class RegionListFragment extends BaseFragment
                         imageView.setAnimation(null);
                         imageView.setImageResource(R.drawable.ic_details_menu_on);
 
-                        areaItem.isExpandGroup = true;
+                        regionViewItem.isExpandGroup = true;
                     }
                 });
 
@@ -299,23 +264,23 @@ public class RegionListFragment extends BaseFragment
             {
                 releaseUiComponent();
 
-                areaItem.isExpandGroup = true;
+                regionViewItem.isExpandGroup = true;
             }
         } else
         {
             releaseUiComponent();
 
-            areaItem.isExpandGroup = true;
+            regionViewItem.isExpandGroup = true;
         }
     }
 
-    public void onGroupCollapse(View view, final AreaItem areaItem)
+    public void onGroupCollapse(View view, final RegionViewItem regionViewItem)
     {
         if (view.getVisibility() != View.VISIBLE)
         {
             releaseUiComponent();
 
-            areaItem.isExpandGroup = false;
+            regionViewItem.isExpandGroup = false;
             return;
         }
 
@@ -354,7 +319,7 @@ public class RegionListFragment extends BaseFragment
                         imageView.setAnimation(null);
                         imageView.setImageResource(R.drawable.ic_details_menu_off);
 
-                        areaItem.isExpandGroup = false;
+                        regionViewItem.isExpandGroup = false;
                     }
                 });
 
@@ -363,13 +328,13 @@ public class RegionListFragment extends BaseFragment
             {
                 releaseUiComponent();
 
-                areaItem.isExpandGroup = false;
+                regionViewItem.isExpandGroup = false;
             }
         } else
         {
             releaseUiComponent();
 
-            areaItem.isExpandGroup = false;
+            regionViewItem.isExpandGroup = false;
         }
     }
 
@@ -407,7 +372,7 @@ public class RegionListFragment extends BaseFragment
             {
                 previousGroupPosition = tag.intValue();
 
-                AreaItem areaItem = mAdapter.getAreaItem(previousGroupPosition);
+                RegionViewItem regionViewItem = mAdapter.getAreaItem(previousGroupPosition);
 
                 if (mListView.isGroupExpanded(previousGroupPosition))
                 {
@@ -419,15 +384,15 @@ public class RegionListFragment extends BaseFragment
 
                         if (preGroupView == null)
                         {
-                            areaItem.isExpandGroup = false;
+                            regionViewItem.isExpandGroup = false;
                         } else
                         {
-                            onGroupCollapse(preGroupView, areaItem);
+                            onGroupCollapse(preGroupView, regionViewItem);
                         }
                     } else
                     {
                         mListView.collapseGroup(previousGroupPosition);
-                        areaItem.isExpandGroup = false;
+                        regionViewItem.isExpandGroup = false;
                     }
                 } else
                 {
@@ -447,53 +412,65 @@ public class RegionListFragment extends BaseFragment
         }
     };
 
-    private OnChildClickListener mOnChildClickListener = new OnChildClickListener()
+    private View.OnClickListener mOnChildClickListener = new View.OnClickListener()
     {
         @Override
-        public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
+        public void onClick(View view)
         {
+            Area area = (Area) view.getTag();
+
+            if (area == null)
+            {
+                return;
+            }
+
+            view.setSelected(true);
+
             Intent intent = new Intent();
 
-            if (childPosition == 0)
+            if (area.index == -1)
             {
-                mAdapter.setSelected(mAdapter.getChildren(groupPosition).get(childPosition));
-                mAdapter.notifyDataSetChanged();
-
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition));
+                    Integer groupPosition = (Integer) view.getTag(view.getId());
+
+                    if (groupPosition != null)
+                    {
+                        mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition.intValue()));
+                    }
                 }
             } else
             {
-                mAdapter.setSelected(mAdapter.getChildren(groupPosition).get(childPosition));
-                mAdapter.notifyDataSetChanged();
-
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.onRegionClick(mAdapter.getChildren(groupPosition).get(childPosition));
+                    mOnUserActionListener.onRegionClick(area);
                 }
             }
-
-            return false;
         }
     };
 
-    private ArrayList<AreaItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    private ArrayList<RegionViewItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
     {
-        ArrayList<AreaItem> arrayList = new ArrayList<AreaItem>(provinceList.size());
+        ArrayList<RegionViewItem> arrayList = new ArrayList<RegionViewItem>(provinceList.size());
 
         for (Province province : provinceList)
         {
-            AreaItem item = new AreaItem();
+            RegionViewItem item = new RegionViewItem();
 
             item.setProvince(province);
-            item.setAreaList(new ArrayList<Area>());
+
+            int i = 0;
+            Area[] areas = null;
+            ArrayList<Area[]> areaArrayList = new ArrayList<>();
 
             for (Area area : areaList)
             {
                 if (province.getProvinceIndex() == area.getProvinceIndex())
                 {
-                    ArrayList<Area> areaArrayList = item.getAreaList();
+                    if (areas == null)
+                    {
+                        areas = new Area[CHILD_GRID_COLUMN];
+                    }
 
                     if (areaArrayList.size() == 0)
                     {
@@ -506,21 +483,38 @@ public class RegionListFragment extends BaseFragment
                         totalArea.tag = totalArea.name;
                         totalArea.setProvinceIndex(province.getProvinceIndex());
 
-                        areaArrayList.add(totalArea);
+                        areas[i++] = totalArea;
                     }
 
                     area.setProvince(province);
-                    areaArrayList.add(area);
+
+                    if (i != 0 && i % CHILD_GRID_COLUMN == 1)
+                    {
+                        areas[i++] = area;
+                        areaArrayList.add(areas);
+
+                        i = 0;
+                        areas = null;
+                    } else
+                    {
+                        areas[i++] = area;
+                    }
                 }
             }
 
+            if (areas != null)
+            {
+                areaArrayList.add(areas);
+            }
+
+            item.setAreaList(areaArrayList);
             arrayList.add(item);
         }
 
         return arrayList;
     }
 
-    private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -549,15 +543,129 @@ public class RegionListFragment extends BaseFragment
                 JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
                 ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
-                ArrayList<AreaItem> areaItemList = makeAreaItemList(provinceList, areaList);
+                ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
 
                 if (mAdapter == null)
                 {
                     mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
+                    mAdapter.setOnChildClickListener(mOnChildClickListener);
                 }
 
-                mAdapter.setData(areaItemList);
+                mAdapter.setData(regionViewItemList);
                 mListView.setAdapter(mAdapter);
+
+                selectedPreviousArea(mSelectedProvince, regionViewItemList);
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+
+        private ArrayList<Area> makeAreaList(JSONArray jsonArray)
+        {
+            ArrayList<Area> areaList = new ArrayList<Area>();
+
+            try
+            {
+                int length = jsonArray.length();
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    try
+                    {
+                        Area area = new Area(jsonObject);
+
+                        areaList.add(area);
+                    } catch (JSONException e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            return areaList;
+        }
+
+        private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
+        {
+            ArrayList<Province> provinceList = new ArrayList<Province>();
+
+            try
+            {
+                int length = jsonArray.length();
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    try
+                    {
+                        Province province = new Province(jsonObject);
+
+                        provinceList.add(province);
+                    } catch (JSONException e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            return provinceList;
+        }
+    };
+
+    private DailyHotelJsonResponseListener mGourmetRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                JSONObject dataJSONObject = response.getJSONObject("data");
+
+                JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+
+                JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+
+                ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
+
+                if (mAdapter == null)
+                {
+                    mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
+                    mAdapter.setOnChildClickListener(mOnChildClickListener);
+                }
+
+                mAdapter.setData(regionViewItemList);
+                mListView.setAdapter(mAdapter);
+
+                selectedPreviousArea(mSelectedProvince, regionViewItemList);
             } catch (Exception e)
             {
                 onError(e);

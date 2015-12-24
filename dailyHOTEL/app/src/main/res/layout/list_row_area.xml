@@ -1,18 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="wrap_content">
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
-        android:id="@+id/areaTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/selector_background_area"
-        android:gravity="center_vertical"
-        android:paddingLeft="30dp"
-        android:paddingRight="15dp"
-        android:textColor="@drawable/selector_textview_selectarea_childcolor"
-        android:textSize="16dp"/>
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/areaLayout1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background_area"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/areaTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@drawable/selector_textview_selectarea_childcolor"
+                android:textSize="16dp"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/areaSubTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@drawable/selector_textview_selectarea_childcolor"
+                android:textSize="10dp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/selectarea_underline"/>
+
+        <LinearLayout
+            android:id="@+id/areaLayout2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background_area"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/areaTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@drawable/selector_textview_selectarea_childcolor"
+                android:textSize="16dp"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/areaSubTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@drawable/selector_textview_selectarea_childcolor"
+                android:textSize="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
