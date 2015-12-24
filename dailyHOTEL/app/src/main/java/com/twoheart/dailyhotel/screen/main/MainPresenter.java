@@ -4,6 +4,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -23,6 +24,11 @@ public class MainPresenter implements Response.ErrorListener
 
     public MainPresenter(BaseActivity baseActivity, MainActivity.OnResponsePresenterListener listener)
     {
+        if(listener == null)
+        {
+            throw new NullPointerException("listener == null");
+        }
+
         mBaseActivity = baseActivity;
         mListener = listener;
     }
@@ -30,10 +36,36 @@ public class MainPresenter implements Response.ErrorListener
     @Override
     public void onErrorResponse(VolleyError volleyError)
     {
-        if (mListener != null)
+        mListener.onErrorResponse(volleyError);
+    }
+
+    protected void requestCheckServer()
+    {
+        // 서버 상태 체크
+        DailyNetworkAPI.getInstance().requestCheckServer(mBaseActivity.getNetworkTag(), mStatusHealthCheckJsonResponseListener, new Response.ErrorListener()
         {
-            mListener.onErrorResponse(volleyError);
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                requestSignin();
+            }
+        });
+    }
+
+    public void requestConfiguration()
+    {
+        DailyNetworkAPI.getInstance().requestCompanyInformation(mBaseActivity.getNetworkTag(), mCompanyInformationJsonResponseListener, this);
+    }
+
+    private void requestSignin()
+    {
+        if (DailyPreference.getInstance(mBaseActivity).isAutoLogin() == true)
+        {
+            HashMap<String, String> params = Util.getLoginParams(mBaseActivity);
+            DailyNetworkAPI.getInstance().requestUserSignin(mBaseActivity.getNetworkTag(), params, mUserLoginJsonResponseListener, this);
         }
+
+        DailyNetworkAPI.getInstance().requestCommonVer(mBaseActivity.getNetworkTag(), mAppVersionJsonResponseListener, this);
     }
 
     /**
@@ -79,6 +111,148 @@ public class MainPresenter implements Response.ErrorListener
         DailyNetworkAPI.getInstance().requestGourmetIsExistRating(mBaseActivity.getNetworkTag(), mGourmetSatisfactionRatingExistJsonResponseListener, null);
     }
 
+    private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 200)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSuspend = jsonObject.getBoolean("isSuspend");
+
+                    if (isSuspend == true)
+                    {
+                        String title = jsonObject.getString("messageTitle");
+                        String message = jsonObject.getString("messageBody");
+
+                        mListener.onCheckServerResponse(title, message);
+                    } else
+                    {
+                        requestSignin();
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        VolleyHttpClient.createCookie();
+                        return;
+                    }
+                }
+
+                // 로그인 실패
+                // data 초기화
+                DailyPreference.getInstance(mBaseActivity).removeUserInformation();
+            } catch (Exception e)
+            {
+                mListener.onError();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                String maxVersionName;
+                String minVersionName;
+
+                switch (Constants.RELEASE_STORE)
+                {
+                    case N_STORE:
+                        maxVersionName = response.getString("nstore_max");
+                        minVersionName = response.getString("nstore_min");
+                        break;
+
+                    case T_STORE:
+                        maxVersionName = response.getString("tstore_max");
+                        minVersionName = response.getString("tstore_min");
+                        break;
+
+                    case PLAY_STORE:
+                    default:
+                        maxVersionName = response.getString("play_max");
+                        minVersionName = response.getString("play_min");
+                        break;
+                }
+
+                DailyPreference.getInstance(mBaseActivity).setMaxVersion(maxVersionName);
+                DailyPreference.getInstance(mBaseActivity).setMinVersion(minVersionName);
+
+                int maxVersion = Integer.parseInt(maxVersionName.replace(".", ""));
+                int minVersion = Integer.parseInt(minVersionName.replace(".", ""));
+
+                mListener.onAppVersionResponse(maxVersion, minVersion);
+            } catch (Exception e)
+            {
+                mListener.onError();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject companyJSONObject = jsonObject.getJSONObject("companyInfo");
+
+                    String companyName = companyJSONObject.getString("name");
+                    String companyCEO = companyJSONObject.getString("ceo");
+                    String companyBizRegNumber = companyJSONObject.getString("bizRegNumber");
+                    String companyItcRegNumber = companyJSONObject.getString("itcRegNumber");
+                    String address = companyJSONObject.getString("address1");
+                    String phoneNumber = companyJSONObject.getString("phoneNumber1");
+                    String fax = companyJSONObject.getString("fax1");
+
+                    DailyPreference.getInstance(mBaseActivity).setCompanyInformation(companyName//
+                        , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax);
+                }
+
+                mListener.onConfigurationRespose();
+            } catch (Exception e)
+            {
+                mListener.onError();
+            }
+        }
+    };
+
     private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -98,10 +272,7 @@ public class MainPresenter implements Response.ErrorListener
                     {
                         DailyPreference.getInstance(mBaseActivity).setNewEvent(true);
 
-                        if (mListener != null)
-                        {
-                            mListener.setNewIconVisible(true);
-                        }
+                        mListener.setNewIconVisible(true);
                     } else
                     {
                         DailyPreference.getInstance(mBaseActivity).setNewEvent(false);
@@ -109,10 +280,7 @@ public class MainPresenter implements Response.ErrorListener
                         long currentDateTime = DailyPreference.getInstance(mBaseActivity).getLookUpEventTime();
                         DailyPreference.getInstance(mBaseActivity).setNewEventTime(currentDateTime);
 
-                        if (mListener != null)
-                        {
-                            mListener.setNewIconVisible(false);
-                        }
+                        mListener.setNewIconVisible(false);
                     }
                 } else
                 {
@@ -142,10 +310,7 @@ public class MainPresenter implements Response.ErrorListener
                     String ticketName = jsonObject.getString("ticket_name");
                     int reservationIndex = jsonObject.getInt("reservation_rec_idx");
 
-                    if (mListener != null)
-                    {
-                        mListener.onSatisfactionGourmet(ticketName, reservationIndex, checkInTime);
-                    }
+                    mListener.onSatisfactionGourmet(ticketName, reservationIndex, checkInTime);
                 }
             } catch (Exception e)
             {
@@ -174,10 +339,7 @@ public class MainPresenter implements Response.ErrorListener
                     String hotelName = jsonObject.getString("hotel_name");
                     int reservationIndex = jsonObject.getInt("reserv_idx");
 
-                    if (mListener != null)
-                    {
-                        mListener.onSatisfactionHotel(hotelName, reservationIndex, checkInDate, checkOutDate);
-                    }
+                    mListener.onSatisfactionHotel(hotelName, reservationIndex, checkInDate, checkOutDate);
                 } else
                 {
                     requestGourmetIsExistRating();
@@ -226,16 +388,7 @@ public class MainPresenter implements Response.ErrorListener
                 DailyNetworkAPI.getInstance().requestHotelIsExistRating(mBaseActivity.getNetworkTag(), mHotelSatisfactionRatingExistJsonResponseListener, null);
             } catch (Exception e)
             {
-                if (mListener != null)
-                {
-                    mListener.onError();
-                }
-            } finally
-            {
-                if (mListener != null)
-                {
-                    mListener.unLockUI();
-                }
+                mListener.onError();
             }
         }
     };

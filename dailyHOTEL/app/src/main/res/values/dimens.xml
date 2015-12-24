@@ -18,4 +18,6 @@
 
     <dimen name="issuingreceipt_linespacing">9dp</dimen>
     <dimen name="hdpi_issuingreceipt_linespacing">5dp</dimen>
+
+    <dimen name="toolbar_height">56dp</dimen>
 </resources>

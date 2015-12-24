@@ -17,7 +17,10 @@ package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.View;
 
+import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 
@@ -82,4 +85,44 @@ public class HotelDaysListFragment extends HotelListFragment
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override
+    public View.OnClickListener getOnItemClickListener()
+    {
+        return mOnItemClickListener;
+    }
+
+    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            int position = mHotelRecycleView.getChildAdapterPosition(view);
+
+            if (position < 0)
+            {
+                refreshHotelList(mSelectedProvince, true);
+                return;
+            }
+
+            if (mOnUserActionListener != null)
+            {
+                PlaceViewItem placeViewItem = mHotelAdapter.getItem(position);
+
+                if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+                {
+                    return;
+                }
+
+                mOnUserActionListener.selectHotel(placeViewItem, mSelectedCheckInSaleTime);
+            }
+        }
+    };
 }

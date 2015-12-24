@@ -453,7 +453,13 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             mDialog = null;
         }
 
-        recursiveRecycle(getWindow().getDecorView());
+        try
+        {
+            recursiveRecycle(getWindow().getDecorView());
+        }catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
 
         super.onDestroy();
     }
@@ -474,7 +480,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         ExLog.e(error.toString());
 
-        onError();
+       onError();
     }
 
     /**

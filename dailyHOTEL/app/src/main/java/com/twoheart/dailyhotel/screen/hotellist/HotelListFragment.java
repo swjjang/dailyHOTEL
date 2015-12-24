@@ -91,6 +91,9 @@ public class HotelListFragment extends BaseFragment implements Constants
         mHotelRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mHotelRecycleView.setTag("HotelListFragment");
 
+        mHotelAdapter = new HotelAdapter(getContext(), new ArrayList<PlaceViewItem>(), getOnItemClickListener());
+        mHotelRecycleView.setAdapter(mHotelAdapter);
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
@@ -233,7 +236,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                     {
                         mHotelMapFragment.setUserActionListener(mOnUserActionListener);
 
-                        if (isCurrentPage == true && mHotelAdapter != null)
+                        if (isCurrentPage == true)
                         {
                             if (HotelListFragment.this instanceof HotelDaysListFragment)
                             {
@@ -308,6 +311,11 @@ public class HotelListFragment extends BaseFragment implements Constants
         return mSaleTime;
     }
 
+    public View.OnClickListener getOnItemClickListener()
+    {
+        return mOnItemClickListener;
+    }
+
     public void setSaleTime(SaleTime saleTime)
     {
         mSaleTime = saleTime;
@@ -375,10 +383,10 @@ public class HotelListFragment extends BaseFragment implements Constants
             params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
         }
 
-        //        if (DEBUG == true)
-        //        {
-        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
-        //        }
+        if (DEBUG == true && this instanceof HotelDaysListFragment)
+        {
+            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
+        }
 
         // 호텔 리스트를 가져온다.
         DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);
@@ -650,6 +658,12 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         int size = arrayList.size();
 
+        if(size == 0)
+        {
+            unLockUI();
+            return;
+        }
+
         for (int i = size - 1; i >= 0; i--)
         {
             PlaceViewItem hotelListViewItem = arrayList.get(i);
@@ -759,7 +773,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             {
                 PlaceViewItem placeViewItem = mHotelAdapter.getItem(position);
 
-                if (placeViewItem.getType() == PlaceViewItem.TYPE_SECTION)
+                if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
                 {
                     return;
                 }
@@ -936,10 +950,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 if (length == 0)
                 {
-                    if (mHotelAdapter != null)
-                    {
-                        mHotelAdapter.clear();
-                    }
+                    mHotelAdapter.clear();
 
                     setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.GONE);
 
@@ -973,12 +984,6 @@ public class HotelListFragment extends BaseFragment implements Constants
                     }
 
                     ArrayList<PlaceViewItem> hotelListViewItemList = makeSortHotelList(hotelList, mSortType);
-
-                    if (mHotelAdapter == null)
-                    {
-                        mHotelAdapter = new HotelAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
-                        mHotelRecycleView.setAdapter(mHotelAdapter);
-                    }
 
                     setVisibility(mHotelViewType);
 

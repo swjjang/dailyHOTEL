@@ -62,7 +62,6 @@ import java.util.TimeZone;
 public class SettingFragment extends BaseFragment implements Constants, OnClickListener
 {
     private MainActivity mHostActivity;
-    private RequestQueue mQueue;
 
     private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall, tvAbout;
     private TextView mSettingCardTextView;
@@ -78,7 +77,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
         // ActionBar Setting
         mHostActivity = (MainActivity) getActivity();
-        mQueue = VolleyHttpClient.getRequestQueue();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mHostActivity.initToolbar(toolbar, getString(R.string.actionbar_title_setting_frag));
