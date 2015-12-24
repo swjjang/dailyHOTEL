@@ -10,7 +10,7 @@ public class Province implements Parcelable
 {
     public int index;
     public String name;
-    public String subName;
+    public String englishName;
     public int sequence;
     public boolean isOverseas;
     public String imageUrl;
@@ -63,7 +63,7 @@ public class Province implements Parcelable
     {
         dest.writeInt(index);
         dest.writeString(name);
-        dest.writeString(subName);
+        dest.writeString(englishName);
         dest.writeInt(sequence);
         dest.writeInt(saleWeek);
         dest.writeInt(isOverseas ? 1 : 0);
@@ -74,7 +74,7 @@ public class Province implements Parcelable
     {
         index = in.readInt();
         name = in.readString();
-        subName = in.readString();
+        englishName = in.readString();
         sequence = in.readInt();
         saleWeek = in.readInt();
         isOverseas = in.readInt() == 1 ? true : false;

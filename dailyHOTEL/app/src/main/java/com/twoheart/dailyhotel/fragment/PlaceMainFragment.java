@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -21,7 +19,6 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public abstract class PlaceMainFragment extends BaseFragment
@@ -51,8 +48,6 @@ public abstract class PlaceMainFragment extends BaseFragment
     public abstract void requestRegionList(BaseActivity baseActivity);
 
     public abstract void refreshList(Province province, boolean isSelectionTop);
-
-    public abstract boolean isEnabledRegionMenu();
 
     public abstract void refreshAll();
 
@@ -178,50 +173,50 @@ public abstract class PlaceMainFragment extends BaseFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-//    protected ArrayList<RegionViewItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
-//    {
-//        ArrayList<RegionViewItem> arrayList = new ArrayList<RegionViewItem>(provinceList.size());
-//
-//        for (Province province : provinceList)
-//        {
-//            RegionViewItem item = new RegionViewItem();
-//
-//            item.setProvince(province);
-//            item.setAreaList(new ArrayList<Area>());
-//
-//            if (areaList != null)
-//            {
-//                for (Area area : areaList)
-//                {
-//                    if (province.getProvinceIndex() == area.getProvinceIndex())
-//                    {
-//                        ArrayList<Area> areaArrayList = item.getAreaList();
-//
-//                        if (areaArrayList.size() == 0)
-//                        {
-//                            Area totalArea = new Area();
-//
-//                            totalArea.index = -1;
-//                            totalArea.name = province.name + " 전체";
-//                            totalArea.setProvince(province);
-//                            totalArea.sequence = -1;
-//                            totalArea.tag = totalArea.name;
-//                            totalArea.setProvinceIndex(province.getProvinceIndex());
-//
-//                            areaArrayList.add(totalArea);
-//                        }
-//
-//                        area.setProvince(province);
-//                        areaArrayList.add(area);
-//                    }
-//                }
-//            }
-//
-//            arrayList.add(item);
-//        }
-//
-//        return arrayList;
-//    }
+    //    protected ArrayList<RegionViewItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    //    {
+    //        ArrayList<RegionViewItem> arrayList = new ArrayList<RegionViewItem>(provinceList.size());
+    //
+    //        for (Province province : provinceList)
+    //        {
+    //            RegionViewItem item = new RegionViewItem();
+    //
+    //            item.setProvince(province);
+    //            item.setAreaList(new ArrayList<Area>());
+    //
+    //            if (areaList != null)
+    //            {
+    //                for (Area area : areaList)
+    //                {
+    //                    if (province.getProvinceIndex() == area.getProvinceIndex())
+    //                    {
+    //                        ArrayList<Area> areaArrayList = item.getAreaList();
+    //
+    //                        if (areaArrayList.size() == 0)
+    //                        {
+    //                            Area totalArea = new Area();
+    //
+    //                            totalArea.index = -1;
+    //                            totalArea.name = province.name + " 전체";
+    //                            totalArea.setProvince(province);
+    //                            totalArea.sequence = -1;
+    //                            totalArea.tag = totalArea.name;
+    //                            totalArea.setProvinceIndex(province.getProvinceIndex());
+    //
+    //                            areaArrayList.add(totalArea);
+    //                        }
+    //
+    //                        area.setProvince(province);
+    //                        areaArrayList.add(area);
+    //                    }
+    //                }
+    //            }
+    //
+    //            arrayList.add(item);
+    //        }
+    //
+    //        return arrayList;
+    //    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NetworkActionListener

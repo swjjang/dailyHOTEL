@@ -58,8 +58,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
         setContentView(R.layout.activity_splash);
 
-        DailyPreference.getInstance(this).setSettingRegion(false);
-        DailyPreference.getInstance(this).setSettingGourmetRegion(false);
+        DailyPreference.getInstance(this).setSettingRegion(TYPE.HOTEL, false);
+        DailyPreference.getInstance(this).setSettingRegion(TYPE.FNB, false);
         DailyPreference.getInstance(this).setGCMRegistrationId(null);
     }
 

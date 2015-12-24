@@ -15,7 +15,6 @@ import java.util.List;
 
 public class CreditListAdapter extends ArrayAdapter<Credit>
 {
-
     private List<Credit> mItems;
     private Context mContext;
     private int mResourceId;
@@ -56,8 +55,6 @@ public class CreditListAdapter extends ArrayAdapter<Credit>
             expires.setText(mContext.getString(R.string.prefix_expire_time) + ", " + element.getExpires() + "");
         }
 
-        // pinkred_font
-        //		GlobalFont.apply((ViewGroup) v);
         return v;
     }
 

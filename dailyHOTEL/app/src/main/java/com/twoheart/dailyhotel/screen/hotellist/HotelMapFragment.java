@@ -32,20 +32,20 @@ import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgor
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelClusterItem;
+import com.twoheart.dailyhotel.model.HotelClusterRenderer;
+import com.twoheart.dailyhotel.model.HotelClusterRenderer.OnSelectedClusterItemListener;
+import com.twoheart.dailyhotel.model.HotelClusterRenderer.Renderer;
 import com.twoheart.dailyhotel.model.HotelRenderer;
+import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.model.HotelClusterItem;
-import com.twoheart.dailyhotel.model.HotelClusterRenderer;
-import com.twoheart.dailyhotel.model.HotelClusterRenderer.OnSelectedClusterItemListener;
-import com.twoheart.dailyhotel.model.HotelClusterRenderer.Renderer;
 import com.twoheart.dailyhotel.view.LoadingDialog;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.LoopViewPager;
-import com.twoheart.dailyhotel.model.MyLocationMarker;
 
 import java.util.ArrayList;
 import java.util.Collections;

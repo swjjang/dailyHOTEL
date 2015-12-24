@@ -23,6 +23,7 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
     private LayoutInflater mInflater;
     private Province mSelectedProvince;
     private List<RegionViewItem> items;
+    private View.OnClickListener mOnItemclickListener;
 
     public RegionAnimatedExpandableListAdapter(Context context)
     {
@@ -38,6 +39,11 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
     public void setSelected(Province province)
     {
         mSelectedProvince = province;
+    }
+
+    public void setOnChildClickListener(View.OnClickListener listener)
+    {
+        mOnItemclickListener = listener;
     }
 
     public ArrayList<Area[]> getChildren(int groupPosition)
@@ -82,13 +88,22 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
 
         convertView.setTag(parent.getId(), R.layout.list_row_area);
 
-        TextView areaTextView1 = (TextView) convertView.findViewById(R.id.areaTextView1);
-        TextView areaSubTextView1 = (TextView) convertView.findViewById(R.id.areaSubTextView1);
+        View areaLayout1 = convertView.findViewById(R.id.areaLayout1);
+        View areaLayout2 = convertView.findViewById(R.id.areaLayout2);
 
-        TextView areaTextView2 = (TextView) convertView.findViewById(R.id.areaTextView2);
-        TextView areaSubTextView2 = (TextView) convertView.findViewById(R.id.areaSubTextView2);
+        TextView areaTextView1 = (TextView) areaLayout1.findViewById(R.id.areaTextView1);
+        TextView areaSubTextView1 = (TextView) areaLayout1.findViewById(R.id.areaSubTextView1);
 
-        if(childPosition == 0)
+        TextView areaTextView2 = (TextView) areaLayout2.findViewById(R.id.areaTextView2);
+        TextView areaSubTextView2 = (TextView) areaLayout2.findViewById(R.id.areaSubTextView2);
+
+        areaLayout1.setOnClickListener(mOnItemclickListener);
+        areaLayout2.setOnClickListener(mOnItemclickListener);
+
+        areaLayout1.setTag(area[0]);
+        areaLayout1.setTag(areaLayout1.getId(), groupPosition);
+
+        if (childPosition == 0)
         {
             areaTextView1.setText(area[0].tag);
             areaSubTextView1.setVisibility(View.GONE);
@@ -99,12 +114,20 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             areaSubTextView1.setText(area[0].tag);
         }
 
-        if(area[1] != null)
+        if (area[1] != null)
         {
+            areaLayout2.setTag(area[1]);
+            areaLayout2.setTag(areaLayout2.getId(), groupPosition);
+            areaLayout2.setEnabled(true);
+
             areaTextView2.setText(area[1].name);
             areaSubTextView2.setText(area[1].tag);
         } else
         {
+            areaLayout2.setTag(null);
+            areaLayout2.setTag(areaLayout2.getId(), null);
+            areaLayout2.setEnabled(false);
+
             areaTextView2.setText(null);
             areaSubTextView2.setText(null);
         }

@@ -24,6 +24,9 @@ public class DailyPreference
     private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
     private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
 
+    private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
+    private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
+
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
     private static final String KEY_COMPANY_BIZREGNUMBER = "102";
@@ -46,11 +49,11 @@ public class DailyPreference
 
     // Region
     private static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
-    private static final String KEY_PREFERENCE_REGION_SELECT_BEFORE = "REGION_SELECT_BEFORE";
+    //    private static final String KEY_PREFERENCE_REGION_SELECT_BEFORE = "REGION_SELECT_BEFORE";
     private static final String KEY_PREFERENCE_REGION_SETTING = "REGION_SETTING";
     private static final String KEY_PREFERENCE_FNB_REGION_SETTING = "FNB_REGION_SETTING";
     private static final String KEY_PREFERENCE_FNB_REGION_SELECT = "FNB_REGION_SELECT";
-    private static final String KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE = "FNB_REGION_SELECT_BEFORE";
+    //    private static final String KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE = "FNB_REGION_SELECT_BEFORE";
 
     // Virtual Account
     private static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
@@ -315,6 +318,32 @@ public class DailyPreference
         setV1Value(KEY_SOCIAL_SIGNUP, value);
     }
 
+    public boolean isSelectedOverseaRegion(Constants.TYPE type)
+    {
+        switch (type)
+        {
+            case FNB:
+                return getV1Value(KEY_GOURMET_REGION_ISOVERSEA, false);
+
+            case HOTEL:
+            default:
+                return getV1Value(KEY_HOTEL_REGION_ISOVERSEA, false);
+        }
+    }
+
+    public void setSelectedOverseaRegion(Constants.TYPE type, boolean value)
+    {
+        switch (type)
+        {
+            case HOTEL:
+                setV1Value(KEY_HOTEL_REGION_ISOVERSEA, value);
+                break;
+
+            case FNB:
+                setV1Value(KEY_GOURMET_REGION_ISOVERSEA, value);
+                break;
+        }
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
@@ -468,64 +497,58 @@ public class DailyPreference
         setValue(KEY_PREFERENCE_NEW_EVENT_TIME, value);
     }
 
-    public String getSelectedRegion()
+    public String getSelectedRegion(Constants.TYPE type)
     {
-        return getValue(KEY_PREFERENCE_REGION_SELECT, null);
+        switch (type)
+        {
+            case FNB:
+                return getValue(KEY_PREFERENCE_FNB_REGION_SELECT, null);
+
+            case HOTEL:
+            default:
+                return getValue(KEY_PREFERENCE_REGION_SELECT, null);
+        }
     }
 
-    public void setSelectedRegion(String value)
+    public void setSelectedRegion(Constants.TYPE type, String value)
     {
-        setValue(KEY_PREFERENCE_REGION_SELECT, value);
+        switch (type)
+        {
+            case HOTEL:
+                setValue(KEY_PREFERENCE_REGION_SELECT, value);
+                break;
+
+            case FNB:
+                setValue(KEY_PREFERENCE_FNB_REGION_SELECT, value);
+                break;
+        }
     }
 
-    public String getSelectedGourmetRegion()
+    public boolean isSettingRegion(Constants.TYPE type)
     {
-        return getValue(KEY_PREFERENCE_FNB_REGION_SELECT, null);
+        switch (type)
+        {
+            case FNB:
+                return getValue(KEY_PREFERENCE_FNB_REGION_SETTING, false);
+
+            case HOTEL:
+            default:
+                return getValue(KEY_PREFERENCE_REGION_SETTING, false);
+        }
     }
 
-    public void setSelectedGourmetRegion(String value)
+    public void setSettingRegion(Constants.TYPE type, boolean value)
     {
-        setValue(KEY_PREFERENCE_FNB_REGION_SELECT, value);
-    }
+        switch (type)
+        {
+            case HOTEL:
+                setValue(KEY_PREFERENCE_REGION_SETTING, value);
+                break;
 
-    public String getPreviouslySelectedRegion()
-    {
-        return getValue(KEY_PREFERENCE_REGION_SELECT_BEFORE, null);
-    }
-
-    public void setPreviouslySelectedRegion(String value)
-    {
-        setValue(KEY_PREFERENCE_REGION_SELECT_BEFORE, value);
-    }
-
-    public String getPreviouslySelectedGourmetRegion()
-    {
-        return getValue(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, null);
-    }
-
-    public void setPreviouslySelectedGourmetRegion(String value)
-    {
-        setValue(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, value);
-    }
-
-    public boolean IsSettingRegion()
-    {
-        return getValue(KEY_PREFERENCE_REGION_SETTING, false);
-    }
-
-    public void setSettingRegion(boolean value)
-    {
-        setValue(KEY_PREFERENCE_REGION_SETTING, value);
-    }
-
-    public boolean IsSettingGourmetRegion()
-    {
-        return getValue(KEY_PREFERENCE_FNB_REGION_SETTING, false);
-    }
-
-    public void setSettingGourmetRegion(boolean value)
-    {
-        setValue(KEY_PREFERENCE_FNB_REGION_SETTING, value);
+            case FNB:
+                setValue(KEY_PREFERENCE_FNB_REGION_SETTING, value);
+                break;
+        }
     }
 
     public String getOverseasName()

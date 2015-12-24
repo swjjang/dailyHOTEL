@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.model;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
-import com.twoheart.dailyhotel.model.Place;
 
 public class PlaceClusterItem implements ClusterItem
 {

@@ -82,11 +82,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected Constants.SortType mPrevSortType;
     protected Constants.SortType mSortType = Constants.SortType.DEFAULT;
 
-    public interface OnItemClickListener
-    {
-        void onItemClick(View view);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -458,7 +453,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                     case LOW_PRICE:
                     case HIGH_PRICE:
-                        requestSortHotelList(mSortType);
+                        requestSortList(mSortType);
 
                         baseActivity.invalidateOptionsMenu();
                         break;
@@ -635,7 +630,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 if (SortType.DISTANCE == mSortType)
                 {
-                    requestSortHotelList(mSortType);
+                    requestSortList(mSortType);
 
                     baseActivity.invalidateOptionsMenu();
                 }
@@ -643,7 +638,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         });
     }
 
-    private void requestSortHotelList(SortType type)
+    private void requestSortList(SortType type)
     {
         if (SortType.DEFAULT == type)
         {
@@ -659,7 +654,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             PlaceViewItem hotelListViewItem = arrayList.get(i);
 
-            if (hotelListViewItem.getType() == PlaceViewItem.TYPE_SECTION)
+            if (hotelListViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
             {
                 arrayList.remove(i);
             }
@@ -1001,6 +996,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                         }
                     }
 
+                    if (mSortType == SortType.DEFAULT)
                     {
                         ArrayList<EventBanner> arrayList = new ArrayList<>();
                         EventBanner eventBanner01 = new EventBanner();

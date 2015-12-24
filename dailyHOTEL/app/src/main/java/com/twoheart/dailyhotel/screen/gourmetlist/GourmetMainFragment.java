@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -51,7 +50,6 @@ public class GourmetMainFragment extends PlaceMainFragment
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private GourmetFragmentPagerAdapter mFragmentPagerAdapter;
-    private ArrayList<RegionViewItem> mRegionViewItemList;
     private Province mSelectedProvince;
 
     public interface OnUserActionListener
@@ -262,12 +260,12 @@ public class GourmetMainFragment extends PlaceMainFragment
         baseActivity.setToolbarRegionText(mToolbar, province.name);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedGourmetRegion();
+        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
 
         if (province.name.equalsIgnoreCase(savedRegion) == false)
         {
-            DailyPreference.getInstance(baseActivity).setPreviouslySelectedGourmetRegion(savedRegion);
-            DailyPreference.getInstance(baseActivity).setSelectedGourmetRegion(province.name);
+            DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(TYPE.FNB, province.isOverseas);
+            DailyPreference.getInstance(baseActivity).setSelectedRegion(TYPE.FNB, province.name);
 
             isSelectionTop = true;
         }
@@ -317,18 +315,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                 currentFragment.onActivityResult(requestCode, resultCode, data);
                 break;
             }
-        }
-    }
-
-    @Override
-    public boolean isEnabledRegionMenu()
-    {
-        if (mRegionViewItemList != null && mRegionViewItemList.size() > 1)
-        {
-            return true;
-        } else
-        {
-            return false;
         }
     }
 
@@ -453,7 +439,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 {
                     Gourmet gourmet = baseListViewItem.<Gourmet>getItem();
 
-                    String region = DailyPreference.getInstance(baseActivity).getSelectedGourmetRegion();
+                    String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
 
 
                     DailyPreference.getInstance(baseActivity).setGASelectedPlaceRegion(region);
@@ -590,26 +576,14 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            if (baseActivity == null)
+            if (baseActivity == null || isLockUiComponent() == true)
             {
                 return;
             }
 
-            if (mRegionViewItemList == null || mRegionViewItemList.size() == 1)
-            {
-                return;
-            }
+            lockUiComponent();
 
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI();
-
-            Intent intent = new Intent(baseActivity, RegionListActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
-            intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mRegionViewItemList);
+            Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.FNB, mSelectedProvince);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
         }
 
@@ -683,19 +657,12 @@ public class GourmetMainFragment extends PlaceMainFragment
                 } else
                 {
                     // 마지막으로 선택한 지역을 가져온다.
-                    regionName = DailyPreference.getInstance(baseActivity).getSelectedGourmetRegion();
+                    regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
 
                     if (Util.isTextEmpty(regionName) == true)
                     {
-                        // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
-                        regionName = DailyPreference.getInstance(baseActivity).getPreviouslySelectedGourmetRegion();
-
-                        // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
-                        if (Util.isTextEmpty(regionName) == true)
-                        {
-                            selectedProvince = provinceList.get(0);
-                            regionName = selectedProvince.name;
-                        }
+                        selectedProvince = provinceList.get(0);
+                        regionName = selectedProvince.name;
                     }
 
                     if (selectedProvince == null)
@@ -723,8 +690,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                     }
                 }
 
-//                mRegionViewItemList = makeAreaItemList(provinceList, areaList);
-
                 // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
                 if (selectedProvince == null)
                 {
@@ -732,8 +697,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     regionName = selectedProvince.name;
                 }
 
-                boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).IsSettingGourmetRegion();
-                DailyPreference.getInstance(baseActivity).setSettingGourmetRegion(true);
+                boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(TYPE.FNB);
+                DailyPreference.getInstance(baseActivity).setSettingRegion(TYPE.FNB, true);
 
                 // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
                 if (mIsProvinceSetting == false && selectedProvince instanceof Area)
@@ -890,6 +855,5 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             return provinceList;
         }
-
     };
 }

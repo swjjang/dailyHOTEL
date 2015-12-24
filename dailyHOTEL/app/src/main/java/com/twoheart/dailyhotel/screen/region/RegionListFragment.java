@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.region;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,16 @@ public class RegionListFragment extends BaseFragment
             return;
         }
 
-        DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+        switch (mType)
+        {
+            case HOTEL:
+                DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
+                break;
+
+            case FNB:
+                DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mGourmetRegionListJsonResponseListener, baseActivity);
+                break;
+        }
     }
 
     public void setInformation(PlaceMainFragment.TYPE type, RegionListActivity.Region region, Province province)
@@ -166,84 +176,40 @@ public class RegionListFragment extends BaseFragment
         }, 100);
     }
 
-    //    private void selectedPreviousArea(Province province, ArrayList<RegionViewItem> arrayList)
-    //    {
-    //        if (province == null || arrayList == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        if (province instanceof Area)
-    //        {
-    //            int size = arrayList.size();
-    //            Area selectedArea = (Area) province;
-    //
-    //            for (int i = 0; i < size; i++)
-    //            {
-    //                RegionViewItem regionViewItem = arrayList.get(i);
-    //
-    //                if (selectedArea.getProvinceIndex() == regionViewItem.getProvince().getProvinceIndex())
-    //                {
-    //                    if (regionViewItem.getAreaList().size() == 0)
-    //                    {
-    //                        // 상세 지역이 없는 경우.
-    //                        mListView.setSelection(i);
-    //                        mListView.setSelectedGroup(i);
-    //
-    //                        regionViewItem.isExpandGroup = false;
-    //                    } else
-    //                    {
-    //                        ArrayList<Area> areaList = regionViewItem.getAreaList();
-    //                        int areaSize = areaList.size();
-    //
-    //                        for (int j = 0; j < areaSize; j++)
-    //                        {
-    //                            Area area = areaList.get(j);
-    //
-    //                            if (area.index == selectedArea.index)
-    //                            {
-    //                                mListView.setSelection(i);
-    //                                mListView.expandGroup(i);
-    //                                mListView.setTag(i);
-    //
-    //                                regionViewItem.isExpandGroup = true;
-    //                                break;
-    //                            }
-    //                        }
-    //                    }
-    //                    break;
-    //                }
-    //            }
-    //        } else
-    //        {
-    //            int size = arrayList.size();
-    //
-    //            for (int i = 0; i < size; i++)
-    //            {
-    //                RegionViewItem regionViewItem = arrayList.get(i);
-    //
-    //                if (province.getProvinceIndex() == regionViewItem.getProvince().getProvinceIndex())
-    //                {
-    //                    if (regionViewItem.getAreaList().size() == 0)
-    //                    {
-    //                        // 상세 지역이 없는 경우.
-    //                        mListView.setSelection(i);
-    //                        mListView.setSelectedGroup(i);
-    //
-    //                        regionViewItem.isExpandGroup = false;
-    //                    } else
-    //                    {
-    //                        mListView.setSelection(i);
-    //                        mListView.expandGroup(i);
-    //                        mListView.setTag(i);
-    //
-    //                        regionViewItem.isExpandGroup = true;
-    //                    }
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //    }
+    private void selectedPreviousArea(Province province, ArrayList<RegionViewItem> arrayList)
+    {
+        if (province == null || arrayList == null)
+        {
+            return;
+        }
+
+        int size = arrayList.size();
+
+        for (int i = 0; i < size; i++)
+        {
+            RegionViewItem regionViewItem = arrayList.get(i);
+
+            if (province.getProvinceIndex() == regionViewItem.getProvince().getProvinceIndex())
+            {
+                if (regionViewItem.getAreaList().size() == 0)
+                {
+                    // 상세 지역이 없는 경우.
+                    mListView.setSelection(i);
+                    mListView.setSelectedGroup(i);
+
+                    regionViewItem.isExpandGroup = false;
+                } else
+                {
+                    mListView.setSelection(i);
+                    mListView.expandGroup(i);
+                    mListView.setTag(i);
+
+                    regionViewItem.isExpandGroup = true;
+                }
+                break;
+            }
+        }
+    }
 
     public void onGroupExpand(View view, final RegionViewItem regionViewItem)
     {
@@ -446,36 +412,42 @@ public class RegionListFragment extends BaseFragment
         }
     };
 
-    //    private OnChildClickListener mOnChildClickListener = new OnChildClickListener()
-    //    {
-    //        @Override
-    //        public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
-    //        {
-    //            Intent intent = new Intent();
-    //
-    //            if (childPosition == 0)
-    //            {
-    //                mAdapter.setSelected(mAdapter.getChildren(groupPosition).get(childPosition));
-    //                mAdapter.notifyDataSetChanged();
-    //
-    //                if (mOnUserActionListener != null)
-    //                {
-    //                    mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition));
-    //                }
-    //            } else
-    //            {
-    //                mAdapter.setSelected(mAdapter.getChildren(groupPosition).get(childPosition));
-    //                mAdapter.notifyDataSetChanged();
-    //
-    //                if (mOnUserActionListener != null)
-    //                {
-    //                    mOnUserActionListener.onRegionClick(mAdapter.getChildren(groupPosition).get(childPosition));
-    //                }
-    //            }
-    //
-    //            return false;
-    //        }
-    //    };
+    private View.OnClickListener mOnChildClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            Area area = (Area) view.getTag();
+
+            if (area == null)
+            {
+                return;
+            }
+
+            view.setSelected(true);
+
+            Intent intent = new Intent();
+
+            if (area.index == -1)
+            {
+                if (mOnUserActionListener != null)
+                {
+                    Integer groupPosition = (Integer) view.getTag(view.getId());
+
+                    if (groupPosition != null)
+                    {
+                        mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition.intValue()));
+                    }
+                }
+            } else
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.onRegionClick(area);
+                }
+            }
+        }
+    };
 
     private ArrayList<RegionViewItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
     {
@@ -542,7 +514,7 @@ public class RegionListFragment extends BaseFragment
         return arrayList;
     }
 
-    private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -576,10 +548,124 @@ public class RegionListFragment extends BaseFragment
                 if (mAdapter == null)
                 {
                     mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
+                    mAdapter.setOnChildClickListener(mOnChildClickListener);
                 }
 
                 mAdapter.setData(regionViewItemList);
                 mListView.setAdapter(mAdapter);
+
+                selectedPreviousArea(mSelectedProvince, regionViewItemList);
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+
+        private ArrayList<Area> makeAreaList(JSONArray jsonArray)
+        {
+            ArrayList<Area> areaList = new ArrayList<Area>();
+
+            try
+            {
+                int length = jsonArray.length();
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    try
+                    {
+                        Area area = new Area(jsonObject);
+
+                        areaList.add(area);
+                    } catch (JSONException e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            return areaList;
+        }
+
+        private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
+        {
+            ArrayList<Province> provinceList = new ArrayList<Province>();
+
+            try
+            {
+                int length = jsonArray.length();
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    try
+                    {
+                        Province province = new Province(jsonObject);
+
+                        provinceList.add(province);
+                    } catch (JSONException e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            return provinceList;
+        }
+    };
+
+    private DailyHotelJsonResponseListener mGourmetRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                JSONObject dataJSONObject = response.getJSONObject("data");
+
+                JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+
+                JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+
+                ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
+
+                if (mAdapter == null)
+                {
+                    mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
+                    mAdapter.setOnChildClickListener(mOnChildClickListener);
+                }
+
+                mAdapter.setData(regionViewItemList);
+                mListView.setAdapter(mAdapter);
+
+                selectedPreviousArea(mSelectedProvince, regionViewItemList);
             } catch (Exception e)
             {
                 onError(e);

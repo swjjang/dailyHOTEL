@@ -64,8 +64,11 @@ public class CreditListActivity extends BaseActivity
         ListView listView = (ListView) findViewById(R.id.listview_credit);
         listView.setEmptyView((TextView) findViewById(R.id.empty_listview_credit));
 
-        CreditListAdapter adapter = new CreditListAdapter(CreditListActivity.this, R.layout.list_row_credit, mCreditList);
-        listView.setAdapter(adapter);
+        if (mCreditList.size() != 0)
+        {
+            CreditListAdapter adapter = new CreditListAdapter(CreditListActivity.this, R.layout.list_row_credit, mCreditList);
+            listView.setAdapter(adapter);
+        }
     }
 
     @Override
