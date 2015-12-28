@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -16,7 +17,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="호텔"
-            android:textSize="12dp"/>
+            android:textSize="12dp"
+            android:textStyle="bold"
+            dailyFont:style="Regular"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/gourmetView"
@@ -25,7 +28,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="고메"
-            android:textSize="12dp"/>
+            android:textSize="12dp"
+            dailyFont:style="Regular"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/bookingView"
@@ -34,7 +38,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="예약"
-            android:textSize="12dp"/>
+            android:textSize="12dp"
+            dailyFont:style="Regular"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/informationView"
@@ -43,25 +48,33 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="정보"
-            android:textSize="12dp"/>
+            android:textSize="12dp"
+            dailyFont:style="Regular"/>
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/textLogoImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:src="@drawable/splash_logo"
-        android:paddingBottom="26dp"
-        android:layout_marginTop="104dp"
-        android:background="@color/black_a25"
-        android:scaleType="center"
-        android:layout_above="@+id/bottomMenuBarLayout"/>
 
     <FrameLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomMenuBarLayout"/>
+
+    <FrameLayout
+        android:id="@+id/splashLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottomMenuBarLayout"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="104dp"
+            android:background="@color/black_a25"
+            android:scaleType="center"
+            android:src="@drawable/splash_logo"/>
+    </FrameLayout>
+
 
 </RelativeLayout>

@@ -15,6 +15,8 @@ public class DailyTextView extends AppCompatTextView
     public DailyTextView(Context context)
     {
         super(context);
+
+        setFontStyle(context, null);
     }
 
     public DailyTextView(Context context, AttributeSet attrs)
@@ -33,37 +35,47 @@ public class DailyTextView extends AppCompatTextView
 
     private void setFontStyle(Context context, AttributeSet attrs)
     {
-        int fontStyle = context.obtainStyledAttributes(attrs, R.styleable.dailyFont).getInt(R.styleable.dailyFont_style, -1);
+        int fontStyle = 3;
+
+        boolean isBold = getTypeface().isBold();
+
+        if(isBold == true)
+        {
+            fontStyle = 0;
+        } else
+        {
+            if(attrs != null)
+            {
+                fontStyle = context.obtainStyledAttributes(attrs, R.styleable.dailyFont).getInt(R.styleable.dailyFont_style, 3);
+            }
+        }
 
         //		 <attr name="fontStyle" >
-        //	        <enum name="Black" value="0" />
-        //	        <enum name="Bold" value="1" />
-        //	        <enum name="DemiLight" value="2" />
-        //	        <enum name="Light" value="3" />
-        //	        <enum name="Medium" value="4" />
-        //	        <enum name="Regular" value="5" />
-        //	        <enum name="Thin" value="6" />
+        //	        <enum name="Bold" value="0" />
+        //	        <enum name="DemiLight" value="1" />
+        //	        <enum name="Medium" value="2 />
+        //	        <enum name="Regular" value="3" />
         //	    </attr>
 
         switch (fontStyle)
         {
             // Bold
-            case 1:
+            case 0:
                 setTypeface(FontManager.getInstance(context).getBoldTypeface());
                 break;
 
             // DemiLight
-            case 2:
+            case 1:
                 setTypeface(FontManager.getInstance(context).getDemiLightTypeface());
                 break;
 
             // Medium
-            case 4:
+            case 2:
                 setTypeface(FontManager.getInstance(context).getMediumTypeface());
                 break;
 
             // Regular
-            case 5:
+            case 3:
                 setTypeface(FontManager.getInstance(context).getRegularTypeface());
                 break;
         }

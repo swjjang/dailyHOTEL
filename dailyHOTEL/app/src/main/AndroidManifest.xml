@@ -130,11 +130,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.BookingTabActivity"
+            android:name=".screen.bookingdetail.HotelBookingDetailTabActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.GourmetBookingDetailActivity"
+            android:name=".screen.bookingdetail.GourmetBookingDetailTabActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

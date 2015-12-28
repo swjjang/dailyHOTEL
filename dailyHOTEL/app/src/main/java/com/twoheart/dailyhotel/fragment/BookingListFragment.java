@@ -25,8 +25,8 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.activity.BookingTabActivity;
-import com.twoheart.dailyhotel.activity.GourmetBookingDetailActivity;
+import com.twoheart.dailyhotel.screen.bookingdetail.GourmetBookingDetailTabActivity;
+import com.twoheart.dailyhotel.screen.bookingdetail.HotelBookingDetailTabActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
@@ -172,11 +172,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             switch (item.placeType)
             {
                 case HOTEL:
-                    intent = new Intent(baseActivity, BookingTabActivity.class);
+                    intent = new Intent(baseActivity, HotelBookingDetailTabActivity.class);
                     break;
 
                 case FNB:
-                    intent = new Intent(baseActivity, GourmetBookingDetailActivity.class);
+                    intent = new Intent(baseActivity, GourmetBookingDetailTabActivity.class);
                     break;
             }
 

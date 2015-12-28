@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.util.ArrayList;
 
@@ -78,6 +79,8 @@ public class RegionListActivity extends BaseActivity
         initToolbar();
 
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
+
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
         switch (type)

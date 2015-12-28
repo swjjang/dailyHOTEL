@@ -1,2 +1,2 @@
-include ':app', ':AndroidMapsUtils', ':refresh_library', ':refresh_library_extra'
+include ':app', ':AndroidMapsUtils'
 include ':androidnumberpicker'

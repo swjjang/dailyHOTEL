@@ -788,7 +788,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             {
                 PlaceViewItem gourmetViewItem = mGourmetAdapter.getItem(position);
 
-                if (gourmetViewItem.getType() == PlaceViewItem.TYPE_SECTION)
+                if (gourmetViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
                 {
                     return;
                 }

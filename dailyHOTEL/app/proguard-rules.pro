@@ -76,6 +76,9 @@
 -keep class !android.support.v7.internal.view.menu.**, android.support.v7.** { *; }
 -keep class !android.support.v7.view.menu.**, android.support.v7.** { *; }
 
+-keep class com.google.** { *; }
+-keep interface com.google.** { *; }
+
 -keep class com.google.android.** { *; }
 -keep interface com.google.android.** { *; }
 
