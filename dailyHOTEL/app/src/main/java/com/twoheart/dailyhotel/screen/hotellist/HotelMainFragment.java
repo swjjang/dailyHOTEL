@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,6 +108,7 @@ public class HotelMainFragment extends BaseFragment
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_today), true);
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
+        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
@@ -635,6 +637,7 @@ public class HotelMainFragment extends BaseFragment
 
             // 선택탭의 이름을 수정한다.
             mTabLayout.getTabAt(2).setText(String.format("%s(%s-%s일)", getString(R.string.label_day), checkInDay, checkOutDay));
+            FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
             refreshHotelList(mSelectedProvince, isListSelectionTop);
             releaseUiComponent();
@@ -787,8 +790,6 @@ public class HotelMainFragment extends BaseFragment
                     }
                 }
 
-                //                mRegionViewItemList = makeAreaItemList(provinceList, areaList);
-
                 // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
                 if (selectedProvince == null)
                 {
@@ -883,6 +884,8 @@ public class HotelMainFragment extends BaseFragment
                 String day = dayList.get(i);
                 mTabLayout.getTabAt(i).setText(day);
             }
+
+            FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
         }
 
         private boolean isSelectionTop()
@@ -986,11 +989,6 @@ public class HotelMainFragment extends BaseFragment
             {
                 mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
                 mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-                if (mTabLayout.getVisibility() != View.VISIBLE)
-                {
-                    initShow();
-                }
 
                 String deepLink = DailyPreference.getInstance(baseActivity).getDeepLink();
 

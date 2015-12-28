@@ -557,7 +557,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         {
             placeViewItem = arrangeList.get(i);
 
-            if (placeViewItem.getType() == PlaceViewItem.TYPE_SECTION)
+            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
             {
                 arrangeList.remove(i);
             } else
@@ -1030,7 +1030,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
             {
                 for (PlaceViewItem placeViewItem : mPlaceViewItemList)
                 {
-                    if (placeViewItem.getType() == PlaceViewItem.TYPE_SECTION)
+                    if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
                     {
                         continue;
                     }

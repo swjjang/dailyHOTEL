@@ -6,21 +6,77 @@ import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 
+import com.twoheart.dailyhotel.R;
+
 public class DailyButton extends AppCompatButton
 {
     public DailyButton(Context context)
     {
         super(context);
+
+        setFontStyle(context, null);
     }
 
     public DailyButton(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+
+        setFontStyle(context, attrs);
     }
 
     public DailyButton(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
+
+        setFontStyle(context, attrs);
+    }
+
+    private void setFontStyle(Context context, AttributeSet attrs)
+    {
+        int fontStyle = 3;
+
+        boolean isBold = getTypeface().isBold();
+
+        if(isBold == true)
+        {
+            fontStyle = 0;
+        } else
+        {
+            if(attrs != null)
+            {
+                fontStyle = context.obtainStyledAttributes(attrs, R.styleable.dailyFont).getInt(R.styleable.dailyFont_style, 3);
+            }
+        }
+
+        //		 <attr name="fontStyle" >
+        //	        <enum name="Bold" value="0" />
+        //	        <enum name="DemiLight" value="1" />
+        //	        <enum name="Medium" value="2 />
+        //	        <enum name="Regular" value="3" />
+        //	    </attr>
+
+        switch (fontStyle)
+        {
+            // Bold
+            case 0:
+                setTypeface(FontManager.getInstance(context).getBoldTypeface());
+                break;
+
+            // DemiLight
+            case 1:
+                setTypeface(FontManager.getInstance(context).getDemiLightTypeface());
+                break;
+
+            // Medium
+            case 2:
+                setTypeface(FontManager.getInstance(context).getMediumTypeface());
+                break;
+
+            // Regular
+            case 3:
+                setTypeface(FontManager.getInstance(context).getRegularTypeface());
+                break;
+        }
     }
 
     @Override

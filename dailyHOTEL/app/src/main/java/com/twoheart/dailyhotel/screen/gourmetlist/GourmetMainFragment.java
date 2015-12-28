@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,6 +90,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_today), true);
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
+        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);

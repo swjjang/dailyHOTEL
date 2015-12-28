@@ -13,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 
 import com.android.volley.VolleyError;
@@ -33,7 +35,6 @@ import com.twoheart.dailyhotel.view.CloseOnBackPressed;
 public class MainActivity extends BaseActivity implements Constants, View.OnClickListener
 {
     private ViewGroup mContentLayout;
-    private View mBottomMenuBarLayout;
 
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed mBackButtonHandler;
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
     private MainPresenter mMainPresenter;
     private MainFragmentManager mMainFragmentManager;
     private Dialog mSettingNetworkDialog;
+    private View mSplashLayout;
 
     private boolean mIsInitialization;
     private Handler mDelayTimeHandler = new Handler()
@@ -127,26 +129,25 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
     {
         setContentView(R.layout.activity_main);
 
-        mBottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
-        mBottomMenuBarLayout.setVisibility(View.INVISIBLE);
+        mSplashLayout = findViewById(R.id.splashLayout);
+        mSplashLayout.setVisibility(View.VISIBLE);
 
-        View hotelView = mBottomMenuBarLayout.findViewById(R.id.hotelView);
+        View bottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
+
+        View hotelView = bottomMenuBarLayout.findViewById(R.id.hotelView);
         hotelView.setOnClickListener(this);
 
-        View gourmetView = mBottomMenuBarLayout.findViewById(R.id.gourmetView);
+        View gourmetView = bottomMenuBarLayout.findViewById(R.id.gourmetView);
         gourmetView.setOnClickListener(this);
 
-        View bookingView = mBottomMenuBarLayout.findViewById(R.id.bookingView);
+        View bookingView = bottomMenuBarLayout.findViewById(R.id.bookingView);
         bookingView.setOnClickListener(this);
 
-        View informationView = mBottomMenuBarLayout.findViewById(R.id.informationView);
+        View informationView = bottomMenuBarLayout.findViewById(R.id.informationView);
         informationView.setOnClickListener(this);
 
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
-        mContentLayout.setVisibility(View.INVISIBLE);
-
         mMainFragmentManager = new MainFragmentManager(this, mContentLayout);
-
         mBackButtonHandler = new CloseOnBackPressed(this);
     }
 
@@ -481,6 +482,38 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         }
     }
 
+    private void finishSplash()
+    {
+//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+//        animation.setDuration(300);
+//        animation.setAnimationListener(new Animation.AnimationListener()
+//        {
+//            @Override
+//            public void onAnimationStart(Animation animation)
+//            {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation)
+//            {
+//                mSplashLayout.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation)
+//            {
+//
+//            }
+//        });
+//
+//        mSplashLayout.startAnimation(animation);
+
+        mSplashLayout.setVisibility(View.GONE);
+        mDelayTimeHandler.removeMessages(0);
+        mIsInitialization = false;
+    }
+
     private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
     {
         @Override
@@ -628,10 +661,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         @Override
         public void onConfigurationRespose()
         {
-            mDelayTimeHandler.removeMessages(0);
-            mIsInitialization = false;
-            mContentLayout.setVisibility(View.VISIBLE);
-            mBottomMenuBarLayout.setVisibility(View.VISIBLE);
+            finishSplash();
 
             String deepLink = DailyPreference.getInstance(MainActivity.this).getDeepLink();
 

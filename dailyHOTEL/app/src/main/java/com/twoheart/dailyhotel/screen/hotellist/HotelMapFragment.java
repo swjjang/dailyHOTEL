@@ -563,7 +563,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         {
             hotelListViewItem = arrangeList.get(i);
 
-            if (hotelListViewItem.getType() == PlaceViewItem.TYPE_SECTION)
+            if (hotelListViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
             {
                 arrangeList.remove(i);
             } else
@@ -1037,7 +1037,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             {
                 for (PlaceViewItem hotelListViewItem : mHotelArrayList)
                 {
-                    if (hotelListViewItem.getType() == PlaceViewItem.TYPE_SECTION)
+                    if (hotelListViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
                     {
                         continue;
                     }
