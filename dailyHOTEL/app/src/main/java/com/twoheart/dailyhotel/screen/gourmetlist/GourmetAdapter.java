@@ -39,6 +39,7 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
 {
     private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
+    private View.OnClickListener mOnEventBannerClickListener;
     private int mLastEventBannerPosition;
 
     private Handler mEventBannerHandler = new Handler()
@@ -55,11 +56,12 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
         }
     };
 
-    public GourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
+    public GourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
         super(context, arrayList);
 
         mOnClickListener = listener;
+        mOnEventBannerClickListener = eventBannerListener;
 
         setSortType(Constants.SortType.DEFAULT);
     }
@@ -158,7 +160,7 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
     {
         ArrayList<EventBanner> eventBannerList = placeViewItem.<ArrayList<EventBanner>>getItem();
 
-        EventBannerViewPagerAdapter adapter = new EventBannerViewPagerAdapter(mContext, eventBannerList);
+        EventBannerViewPagerAdapter adapter = new EventBannerViewPagerAdapter(mContext, eventBannerList, mOnEventBannerClickListener);
         holder.loopViewPager.setOnPageChangeListener(null);
         holder.loopViewPager.setAdapter(adapter);
         holder.viewpagerCircleIndicator.setTotalCount(eventBannerList.size());

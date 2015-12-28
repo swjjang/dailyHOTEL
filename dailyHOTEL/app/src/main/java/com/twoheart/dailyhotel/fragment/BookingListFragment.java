@@ -25,8 +25,6 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.screen.bookingdetail.GourmetBookingDetailTabActivity;
-import com.twoheart.dailyhotel.screen.bookingdetail.HotelBookingDetailTabActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
@@ -35,6 +33,8 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.screen.bookingdetail.GourmetBookingDetailTabActivity;
+import com.twoheart.dailyhotel.screen.bookingdetail.HotelBookingDetailTabActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
@@ -79,7 +79,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        baseActivity.initToolbar(toolbar, getString(R.string.actionbar_title_booking_list_frag));
+        baseActivity.initToolbar(toolbar, getString(R.string.actionbar_title_booking_list_frag), false, false);
 
         mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
         mListView.setShadowVisible(false);

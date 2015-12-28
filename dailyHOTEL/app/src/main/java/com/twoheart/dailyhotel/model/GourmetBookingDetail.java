@@ -15,6 +15,7 @@ import java.util.TimeZone;
 
 public class GourmetBookingDetail extends PlaceBookingDetail
 {
+    public Place.Grade grade;
     public int ticketCount;
     public String ticketName;
     public String sday;
@@ -34,6 +35,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
     {
         super.writeToParcel(dest, flags);
 
+        dest.writeString(grade.name());
         dest.writeInt(ticketCount);
         dest.writeString(ticketName);
         dest.writeString(sday);
@@ -44,6 +46,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
     {
         super.readFromParcel(in);
 
+        grade = Place.Grade.valueOf(in.readString());
         ticketCount = in.readInt();
         ticketName = in.readString();
         sday = in.readString();
@@ -52,7 +55,6 @@ public class GourmetBookingDetail extends PlaceBookingDetail
 
     public void setData(JSONObject jsonObject) throws Exception
     {
-        index = jsonObject.getInt("idx");
         address = jsonObject.getString("address");
         latitude = jsonObject.getDouble("latitude");
         longitude = jsonObject.getDouble("longitude");

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -18,7 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
+import com.twoheart.dailyhotel.adapter.NameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -27,10 +28,10 @@ import com.twoheart.dailyhotel.view.LocationFactory;
 public class ZoomMapActivity extends BaseActivity
 {
     private GoogleMap mGoogleMap;
-
     private View mMyLocationView;
     private MarkerOptions mMyLocationMarkerOptions;
     private Marker mMyLocationMarker;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -140,15 +141,14 @@ public class ZoomMapActivity extends BaseActivity
     {
         if (googleMap != null)
         {
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+            final Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
-            marker.showInfoWindow();
 
             LatLng address = new LatLng(lat, lng);
             CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-            googleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(this));
+            googleMap.setInfoWindowAdapter(new NameInfoWindowAdapter(this));
             googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
             {
                 @Override
@@ -156,6 +156,16 @@ public class ZoomMapActivity extends BaseActivity
                 {
                     marker.showInfoWindow();
                     return true;
+                }
+            });
+
+            marker.hideInfoWindow();
+            mHandler.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    marker.showInfoWindow();
                 }
             });
         }

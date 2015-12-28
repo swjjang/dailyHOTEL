@@ -18,7 +18,6 @@
             android:gravity="center"
             android:text="호텔"
             android:textSize="12dp"
-            android:textStyle="bold"
             dailyFont:style="Regular"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView

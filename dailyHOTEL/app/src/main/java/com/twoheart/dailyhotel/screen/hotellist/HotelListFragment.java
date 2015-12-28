@@ -33,6 +33,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
@@ -73,6 +75,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     private HotelMapFragment mHotelMapFragment;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Location mMyLocation;
+    private List<EventBanner> mEventBannerList;
 
     private HotelMainFragment.HOTEL_VIEW_TYPE mHotelViewType;
     protected boolean mIsSelectionTop;
@@ -91,7 +94,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         mHotelRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mHotelRecycleView.setTag("HotelListFragment");
 
-        mHotelAdapter = new HotelAdapter(getContext(), new ArrayList<PlaceViewItem>(), getOnItemClickListener());
+        mHotelAdapter = new HotelAdapter(getContext(), new ArrayList<PlaceViewItem>(), getOnItemClickListener(), mOnEventBannerItemClickListener);
         mHotelRecycleView.setAdapter(mHotelAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
@@ -331,11 +334,28 @@ public class HotelListFragment extends BaseFragment implements Constants
         mSelectedProvince = province;
         mIsSelectionTop = isSelectionTop;
 
-        fetchHotelList(province, mSaleTime, null);
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                fetchHotelList();
+            }
+        });
     }
 
     /**
-     * 호텔리스트를 보여준다.
+     * 이벤트 리스트를 얻어오는 API가 생겨서 어쩔수 없이 상속구조로 바꿈
+     */
+    protected void fetchHotelList()
+    {
+        fetchHotelList(mSelectedProvince, mSaleTime, null);
+    }
+
+    /**
+     * @param province
+     * @param checkInSaleTime
+     * @param checkOutSaleTime
      */
     protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
@@ -388,7 +408,6 @@ public class HotelListFragment extends BaseFragment implements Constants
             baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
         }
 
-        // 호텔 리스트를 가져온다.
         DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);
     }
 
@@ -658,7 +677,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         int size = arrayList.size();
 
-        if(size == 0)
+        if (size == 0)
         {
             unLockUI();
             return;
@@ -773,12 +792,33 @@ public class HotelListFragment extends BaseFragment implements Constants
             {
                 PlaceViewItem placeViewItem = mHotelAdapter.getItem(position);
 
-                if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+                if (placeViewItem.getType() == PlaceViewItem.TYPE_ENTRY)
                 {
-                    return;
+                    mOnUserActionListener.selectHotel(placeViewItem, mSaleTime);
                 }
+            }
+        }
+    };
 
-                mOnUserActionListener.selectHotel(placeViewItem, mSaleTime);
+    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            Integer index = (Integer) view.getTag(view.getId());
+
+            if (index != null)
+            {
+                EventBanner eventBanner = mEventBannerList.get(index.intValue());
+
+                mOnUserActionListener.selectEventBanner(eventBanner);
             }
         }
     };
@@ -787,9 +827,54 @@ public class HotelListFragment extends BaseFragment implements Constants
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Hotel List Listener
-     */
+
+    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String baseUrl = dataJSONObject.getString("imgUrl");
+
+                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
+
+                    if (mEventBannerList == null)
+                    {
+                        mEventBannerList = new ArrayList<>();
+                    }
+
+                    mEventBannerList.clear();
+
+                    int length = jsonArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        try
+                        {
+                            EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
+                            mEventBannerList.add(eventBanner);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            } finally
+            {
+                fetchHotelList();
+            }
+        }
+    };
+
     private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         private ArrayList<PlaceViewItem> makeSectionHotelList(ArrayList<Hotel> hotelList)
@@ -927,9 +1012,9 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code != 0)
+                if (msgCode != 0)
                 {
                     if (response.has("msg") == true)
                     {
@@ -1005,19 +1090,41 @@ public class HotelListFragment extends BaseFragment implements Constants
                     {
                         ArrayList<EventBanner> arrayList = new ArrayList<>();
                         EventBanner eventBanner01 = new EventBanner();
-                        eventBanner01.link = "http://mediamails.com/wp-content/uploads/events_banner.jpg";
+                        eventBanner01.index = 1490;
+                        eventBanner01.nights = 1;
+                        eventBanner01.mIsHotel = true;
+                        eventBanner01.checkInTime = 1451314800000L - 3600 * 9 * 1000;
+                        eventBanner01.imageUrl = "http://mediamails.com/wp-content/uploads/events_banner.jpg";
                         arrayList.add(eventBanner01);
 
                         EventBanner eventBanner02 = new EventBanner();
-                        eventBanner02.link = "http://redtix.airasia.com/Events/F1/images/event_banner_F1.jpg";
+                        eventBanner02.index = 50168;
+                        eventBanner02.nights = 1;
+                        eventBanner02.checkInTime = 1451314800000L - 3600 * 9 * 1000;
+                        eventBanner02.mIsHotel = false;
+                        eventBanner02.imageUrl = "http://redtix.airasia.com/Events/F1/images/event_banner_F1.jpg";
                         arrayList.add(eventBanner02);
 
                         EventBanner eventBanner03 = new EventBanner();
-                        eventBanner03.link = "http://redtix.airasia.com/events/SundownMusicFestivalAsia2013/images/event-banner-sundown.jpg";
+                        eventBanner03.webLink = "http://web.dailyhotel.co.kr/eventinapp/event/notice_9.php?number=lglg";
+                        eventBanner03.imageUrl = "http://redtix.airasia.com/events/SundownMusicFestivalAsia2013/images/event-banner-sundown.jpg";
                         arrayList.add(eventBanner03);
 
-                        PlaceViewItem hotelListViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, arrayList);
-                        hotelListViewItemList.add(0, hotelListViewItem);
+                        if (mEventBannerList == null)
+                        {
+                            mEventBannerList = new ArrayList<>();
+                        }
+
+                        mEventBannerList.clear();
+                        mEventBannerList.add(eventBanner01);
+                        mEventBannerList.add(eventBanner02);
+                        mEventBannerList.add(eventBanner03);
+
+                        if (mEventBannerList != null && mEventBannerList.size() > 0)
+                        {
+                            PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
+                            hotelListViewItemList.add(0, placeViewItem);
+                        }
                     }
 
                     mHotelAdapter.clear();

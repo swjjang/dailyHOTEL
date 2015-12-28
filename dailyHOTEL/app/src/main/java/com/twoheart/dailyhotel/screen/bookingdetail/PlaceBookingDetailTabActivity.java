@@ -28,28 +28,25 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
-
-    protected PlaceBookingDetail mPlaceBookingDetail;
-    protected Booking booking;
+    protected Booking mBooking;
 
     protected abstract void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail);
 
-    protected abstract void requestPlaceBookingDetail();
+    protected abstract void requestPlaceBookingDetail(int reservationIndex);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        booking = new Booking();
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null)
         {
-            booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+            mBooking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
         }
 
-        if (booking == null)
+        if (mBooking == null)
         {
             Util.restartApp(this);
             return;
@@ -63,7 +60,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         setContentView(R.layout.activity_booking_tab);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, booking.placeName);
+        initToolbar(toolbar, mBooking.placeName);
 
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.frag_booking_tab_title), true);
@@ -85,13 +82,14 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(Screen.BOOKING_DETAIL);
         super.onStart();
 
         lockUI();
 
         // 호텔 정보를 가져온다.
-        requestPlaceBookingDetail();
+        requestPlaceBookingDetail(mBooking.reservationIndex);
+
+        AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(Screen.BOOKING_DETAIL);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

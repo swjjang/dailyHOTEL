@@ -24,7 +24,7 @@ public class MainPresenter implements Response.ErrorListener
 
     public MainPresenter(BaseActivity baseActivity, MainActivity.OnResponsePresenterListener listener)
     {
-        if(listener == null)
+        if (listener == null)
         {
             throw new NullPointerException("listener == null");
         }
@@ -245,7 +245,7 @@ public class MainPresenter implements Response.ErrorListener
                         , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax);
                 }
 
-                mListener.onConfigurationRespose();
+                mListener.onConfigurationResponse();
             } catch (Exception e)
             {
                 mListener.onError();

@@ -1,17 +1,4 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * SettingFragment (설정 화면)
- * <p>
- * 어플리케이션의 설정 화면이다. 뷰는 리스트뷰처럼 보이나 리스트뷰처럼 보이도록
- * 구성된 화면일 뿐이다. 이 화면에서 현재 로그인 상태를 가져오기 위해 네트워
- * 크 작업을 하기도 한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel.screen.information;
 
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -29,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
@@ -37,8 +23,8 @@ import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
+import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -59,7 +45,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class SettingFragment extends BaseFragment implements Constants, OnClickListener
+public class InformationFragment extends BaseFragment implements Constants, OnClickListener
 {
     private MainActivity mHostActivity;
 
@@ -79,7 +65,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         mHostActivity = (MainActivity) getActivity();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mHostActivity.initToolbar(toolbar, getString(R.string.actionbar_title_setting_frag));
+        mHostActivity.initToolbar(toolbar, getString(R.string.actionbar_title_setting_frag), false, false);
 
         tvNotice = (TextView) view.findViewById(R.id.tv_setting_notice);
         TextView tvVersion = (TextView) view.findViewById(R.id.tv_setting_version);
@@ -281,7 +267,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             {
                 // 로그아웃 상태
                 Intent i = new Intent(mHostActivity, LoginActivity.class);
-                startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
+                mHostActivity.startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
                 mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.LOGIN, 0L);
@@ -309,24 +295,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         } else
         {
             releaseUiComponent();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent)
-    {
-        releaseUiComponent();
-
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
-        {
-            //            chgClickable(llLogin);
-            //
-            //            if (resultCode == Activity.RESULT_OK)
-            //            {
-            //                mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
-            //            }
         }
     }
 

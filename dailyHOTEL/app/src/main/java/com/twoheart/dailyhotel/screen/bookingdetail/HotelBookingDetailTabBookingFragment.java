@@ -20,8 +20,8 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.IssuingReceiptActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.BookingHotelDetail;
+import com.twoheart.dailyhotel.model.HotelBookingDetail;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -38,23 +38,25 @@ import java.util.HashMap;
 
 public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants
 {
-    private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
-    private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
+    private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
+    private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
+    private static final String KEY_BUNDLE_ARGUMENTS_ISUSED = "isUsed";
 
-    private Booking mBooking;
-    private BookingHotelDetail mHotelDetail;
+    private HotelBookingDetail mBookingDetail;
+    private int mReservationIndex;
+    private boolean mIsUsed;
 
-    public static HotelBookingDetailTabBookingFragment newInstance(BookingHotelDetail hotelDetail, Booking booking)
+    public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex, boolean isUsed)
     {
         HotelBookingDetailTabBookingFragment newFragment = new HotelBookingDetailTabBookingFragment();
 
         //관련 정보는 BookingTabActivity에서 넘겨받음.
         Bundle arguments = new Bundle();
-        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
-        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
+        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL, bookingDetail);
+        arguments.putInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX, reservationIndex);
+        arguments.putBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED, isUsed);
 
         newFragment.setArguments(arguments);
-        //        newFragment.setTitle(title);
 
         return newFragment;
     }
@@ -64,8 +66,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
     {
         super.onCreate(savedInstanceState);
 
-        mHotelDetail = (BookingHotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-        mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
+        mBookingDetail = (HotelBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
+        mReservationIndex = getArguments().getInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX);
+        mIsUsed = getArguments().getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
     }
 
     @Override
@@ -87,13 +90,13 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         TextView tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
         TextView tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
 
-        tvHotelName.setText(mBooking.placeName);
-        tvAddress.setText(mHotelDetail.getHotel().getAddress());
-        tvBedtype.setText(mHotelDetail.roomName);
-        tvCustomerName.setText(mHotelDetail.guestName);
-        tvCustomerPhone.setText(Util.addHippenMobileNumber(baseActivity, mHotelDetail.guestPhone));
-        tvCheckIn.setText(mHotelDetail.checkInDay);
-        tvCheckOut.setText(mHotelDetail.checkOutDay);
+        tvHotelName.setText(mBookingDetail.placeName);
+        tvAddress.setText(mBookingDetail.address);
+        tvBedtype.setText(mBookingDetail.roomName);
+        tvCustomerName.setText(mBookingDetail.guestName);
+        tvCustomerPhone.setText(Util.addHippenMobileNumber(baseActivity, mBookingDetail.guestPhone));
+        tvCheckIn.setText(mBookingDetail.checkInDay);
+        tvCheckOut.setText(mBookingDetail.checkOutDay);
 
         // Android Marquee bug...
         tvCustomerName.setSelected(true);
@@ -109,10 +112,10 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         if (DEBUG == true)
         {
-            mBooking.isUsed = true;
+            mIsUsed = true;
         }
 
-        if (mBooking.isUsed == true)
+        if (mIsUsed == true)
         {
             viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
             viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
@@ -129,7 +132,7 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
                     }
 
                     Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mBooking.reservationIndex);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
                     startActivity(intent);
                 }
             });

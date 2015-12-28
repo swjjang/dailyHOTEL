@@ -415,8 +415,7 @@ public class EventListFragment extends BaseFragment implements Constants
                 {
                     String eventUrl = response.getJSONObject("data").getString("url");
 
-                    Intent intent = new Intent(baseActivity, EventWebActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, eventUrl);
+                    Intent intent = EventWebActivity.newInstance(baseActivity, eventUrl);
                     startActivity(intent);
                 }
             } catch (Exception e)

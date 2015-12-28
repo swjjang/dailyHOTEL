@@ -3,17 +3,17 @@ package com.twoheart.dailyhotel.adapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.view.widget.DailyTextView;
 
-public class HotelNameInfoWindowAdapter implements InfoWindowAdapter
+public class NameInfoWindowAdapter implements InfoWindowAdapter
 {
     private LayoutInflater mLayoutInflaterinflater = null;
 
-    public HotelNameInfoWindowAdapter(Context context)
+    public NameInfoWindowAdapter(Context context)
     {
         mLayoutInflaterinflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -29,7 +29,7 @@ public class HotelNameInfoWindowAdapter implements InfoWindowAdapter
     {
         View view = mLayoutInflaterinflater.inflate(R.layout.fragment_tabmap_popup, null);
 
-        TextView textView = (TextView) view.findViewById(R.id.titleTextView);
+        DailyTextView textView = (DailyTextView) view.findViewById(R.id.titleTextView);
 
         textView.setText(marker.getTitle());
 

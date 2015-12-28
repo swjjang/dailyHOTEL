@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * LoadingDialog
- * <p/>
+ * <p>
  * Activity 전체를 핸들하는 로딩 다이얼로그 창이다. 로딩 작업을 수행하는
  * 동안 로딩 다이얼로그 창을 띄우며 취소시 Activity의 onBackPressed
  * 메서드도 같이 수행된다.

@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -23,6 +24,19 @@ public class EventWebActivity extends WebViewActivity implements Constants
 {
     private WebView mWebView;
 
+    public static Intent newInstance(Context context, String url)
+    {
+        if (Util.isTextEmpty(url) == true)
+        {
+            return null;
+        }
+
+        Intent intent = new Intent(context, EventWebActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, url);
+
+        return intent;
+    }
+
     @JavascriptInterface
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,7 +56,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         setContentView(R.layout.activity_event_web);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_event_list_frag), true);
+        initToolbar(toolbar, getString(R.string.actionbar_title_event_list_frag));
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.

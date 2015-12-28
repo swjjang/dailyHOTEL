@@ -170,29 +170,15 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             float scale = (float) Util.getLCDWidth(getContext()) / width;
             int viewheight = (int) (scale * height);
 
-            if (width >= height)
+            if (layoutParms == null)
             {
-                if (layoutParms == null)
-                {
-                    layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, viewheight);
-                } else
-                {
-                    layoutParms.height = viewheight;
-                }
-
-                imageView.setLayoutParams(layoutParms);
+                layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, viewheight);
             } else
             {
-                if (layoutParms == null)
-                {
-                    layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, viewheight);
-                } else
-                {
-                    layoutParms.height = viewheight;
-                }
-
-                imageView.setLayoutParams(layoutParms);
+                layoutParms.height = viewheight;
             }
+
+            imageView.setLayoutParams(layoutParms);
         }
     }
 }

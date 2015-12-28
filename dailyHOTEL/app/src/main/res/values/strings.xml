@@ -31,6 +31,8 @@
     <string name="label_friend">친구</string>
     <string name="label_domestic">국내</string>
     <string name="label_global">해외</string>
+    <string name="label_on">ON</string>
+    <string name="label_off">OFF</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
@@ -259,15 +261,15 @@
 
     <!-- Setting Fragment -->
     <string name="frag_customer_center">고객센터</string>
-    <string name="frag_call_res_contact">전화예약 &amp; 문의</string>
-    <string name="frag_send_mail">의견 메일 보내기</string>
+    <string name="frag_call_res_contact">데일리호텔 전화문의</string>
+    <string name="frag_send_mail">데일리호텔 의견메일 보내기</string>
     <string name="frag_notice">공지사항</string>
     <string name="frag_faqs">자주 묻는 질문</string>
     <string name="frag_info">소개</string>
-    <string name="frag_about">데일리호텔이란?</string>
+    <string name="frag_about">데일리호텔 소개</string>
     <string name="frag_app">앱</string>
-    <string name="frag_version_info">버전정보</string>
-    <string name="frag_push_alert">알림설정</string>
+    <string name="frag_version_info">앱 버전정보</string>
+    <string name="frag_push_alert">앱 알림설정</string>
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>

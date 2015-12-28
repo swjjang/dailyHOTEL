@@ -18,6 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
@@ -56,19 +58,21 @@ public class GourmetListFragment extends BaseFragment implements Constants
     protected SaleTime mSaleTime;
     private Province mSelectedProvince;
 
-    protected View mEmptyView;
-    protected FrameLayout mMapLayout;
-    protected PlaceMapFragment mPlaceMapFragment;
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
+    private View mEmptyView;
+    private FrameLayout mMapLayout;
+    private PlaceMapFragment mPlaceMapFragment;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private Location mMyLocation;
+    private List<EventBanner> mEventBannerList;
 
+    private VIEW_TYPE mViewType;
     protected boolean mIsSelectionTop;
-    protected VIEW_TYPE mViewType;
     protected GourmetMainFragment.OnUserActionListener mOnUserActionListener;
 
     // Sort
     protected Constants.SortType mPrevSortType;
     protected Constants.SortType mSortType = Constants.SortType.DEFAULT;
-    private Location mMyLocation;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -79,7 +83,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mGourmetRecycleView.setTag("GourmetListFragment");
 
-        mGourmetAdapter = new GourmetAdapter(getContext(), new ArrayList<PlaceViewItem>(), mOnItemClickListener);
+        mGourmetAdapter = new GourmetAdapter(getContext(), new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
         mGourmetRecycleView.setAdapter(mGourmetAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
@@ -192,7 +196,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         return mSaleTime;
     }
 
-    public void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
         if (checkInSaleTime == null)
         {
@@ -238,9 +242,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
             params = String.format("?province_idx=%d&sday=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
         }
 
-        if (DEBUG == true)
+        if (DEBUG == true && this instanceof GourmetDaysListFragment)
         {
-            baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
@@ -356,10 +360,22 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public void refreshList(Province province, boolean isSelectionTop)
     {
-        setProvince(province);
+        mSelectedProvince = province;
         mIsSelectionTop = isSelectionTop;
 
-        fetchHotelList(province, getSelectedSaleTime(), null);
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                fetchList();
+            }
+        });
+    }
+
+    public void fetchList()
+    {
+        fetchList(mSelectedProvince, getSelectedSaleTime(), null);
     }
 
     public SaleTime getSaleTime()
@@ -487,11 +503,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
     public Province getProvince()
     {
         return mSelectedProvince;
-    }
-
-    protected void setProvince(Province province)
-    {
-        mSelectedProvince = province;
     }
 
     public void setSortType(SortType sortType)
@@ -674,7 +685,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         int size = arrayList.size();
 
-        if(size == 0)
+        if (size == 0)
         {
             unLockUI();
             return;
@@ -788,12 +799,33 @@ public class GourmetListFragment extends BaseFragment implements Constants
             {
                 PlaceViewItem gourmetViewItem = mGourmetAdapter.getItem(position);
 
-                if (gourmetViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+                if (gourmetViewItem.getType() == PlaceViewItem.TYPE_ENTRY)
                 {
-                    return;
+                    mOnUserActionListener.selectPlace(gourmetViewItem, getSelectedSaleTime());
                 }
+            }
+        }
+    };
 
-                mOnUserActionListener.selectPlace(gourmetViewItem, getSelectedSaleTime());
+    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            Integer index = (Integer) view.getTag(view.getId());
+
+            if (index != null)
+            {
+                EventBanner eventBanner = mEventBannerList.get(index.intValue());
+
+                mOnUserActionListener.selectEventBanner(eventBanner);
             }
         }
     };
@@ -802,6 +834,53 @@ public class GourmetListFragment extends BaseFragment implements Constants
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String baseUrl = dataJSONObject.getString("imgUrl");
+
+                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
+
+                    if (mEventBannerList == null)
+                    {
+                        mEventBannerList = new ArrayList<>();
+                    }
+
+                    mEventBannerList.clear();
+
+                    int length = jsonArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        try
+                        {
+                            EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
+                            mEventBannerList.add(eventBanner);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            } finally
+            {
+                fetchList();
+            }
+        }
+    };
 
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -1001,19 +1080,41 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     {
                         ArrayList<EventBanner> arrayList = new ArrayList<>();
                         EventBanner eventBanner01 = new EventBanner();
-                        eventBanner01.link = "http://blog.timesinternet.in/wp-content/uploads/2013/07/gourmetweek_banner-21.jpg";
+                        eventBanner01.index = 1490;
+                        eventBanner01.nights = 1;
+                        eventBanner01.mIsHotel = true;
+                        eventBanner01.checkInTime = 1451314800000L - 3600 * 9 * 1000;
+                        eventBanner01.imageUrl = "http://blog.timesinternet.in/wp-content/uploads/2013/07/gourmetweek_banner-21.jpg";
                         arrayList.add(eventBanner01);
 
                         EventBanner eventBanner02 = new EventBanner();
-                        eventBanner02.link = "http://www.finefoodsathome.com/wp-content/themes/finefoods/images/banner03.jpg";
+                        eventBanner02.index = 50168;
+                        eventBanner02.nights = 1;
+                        eventBanner02.checkInTime = 1451314800000L - 3600 * 9 * 1000;
+                        eventBanner02.mIsHotel = false;
+                        eventBanner02.imageUrl = "http://www.finefoodsathome.com/wp-content/themes/finefoods/images/banner03.jpg";
                         arrayList.add(eventBanner02);
 
                         EventBanner eventBanner03 = new EventBanner();
-                        eventBanner03.link = "http://www.harrysgourmetcatering.com/images/HarryBanner/banner1.jpg";
+                        eventBanner03.webLink = "http://web.dailyhotel.co.kr/eventinapp/event/notice_9.php?number=lglg";
+                        eventBanner03.imageUrl = "http://www.harrysgourmetcatering.com/images/HarryBanner/banner1.jpg";
                         arrayList.add(eventBanner03);
 
-                        PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, arrayList);
-                        placeViewItemList.add(0, placeViewItem);
+                        if (mEventBannerList == null)
+                        {
+                            mEventBannerList = new ArrayList<>();
+                        }
+
+                        mEventBannerList.clear();
+                        mEventBannerList.add(eventBanner01);
+                        mEventBannerList.add(eventBanner02);
+                        mEventBannerList.add(eventBanner03);
+
+                        if (mEventBannerList != null && mEventBannerList.size() > 0)
+                        {
+                            PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
+                            placeViewItemList.add(0, placeViewItem);
+                        }
                     }
 
                     mGourmetAdapter.clear();

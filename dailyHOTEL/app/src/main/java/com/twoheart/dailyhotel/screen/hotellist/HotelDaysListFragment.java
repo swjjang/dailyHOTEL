@@ -21,7 +21,6 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 
 public class HotelDaysListFragment extends HotelListFragment
@@ -52,12 +51,9 @@ public class HotelDaysListFragment extends HotelListFragment
     }
 
     @Override
-    public void refreshHotelList(Province province, boolean isSelectionTop)
+    protected void fetchHotelList()
     {
-        mSelectedProvince = province;
-        mIsSelectionTop = isSelectionTop;
-
-        fetchHotelList(province, mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
+        fetchHotelList(mSelectedProvince, mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
     }
 
     @Override

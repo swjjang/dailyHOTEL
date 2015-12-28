@@ -11,6 +11,7 @@ package com.twoheart.dailyhotel.screen.bookingdetail;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,14 +34,15 @@ import java.util.ArrayList;
 
 public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
+    private GourmetBookingDetail mGourmetBookingDetail;
     private BookingDetailFragmentPagerAdapter mFragmentPagerAdapter;
 
     @Override
     protected void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail)
     {
-        String tag = (String)viewPager.getTag();
+        String tag = (String) viewPager.getTag();
 
-        if(tag != null)
+        if (tag != null)
         {
             return;
         }
@@ -49,7 +51,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<BaseFragment>();
 
-        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, booking);
+        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex, mBooking.isUsed);
         fragmentList.add(baseFragment01);
 
         BaseFragment baseFragment02 = GourmetBookingDetailTabInfomationFragment.newInstance(placeBookingDetail);
@@ -63,14 +65,31 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     }
 
     @Override
+    protected void onDestroy()
+    {
+        for (Fragment fragment : mFragmentPagerAdapter.getFragmentList())
+        {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
+        }
+
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        if (mPlaceBookingDetail != null && Util.isTextEmpty(mPlaceBookingDetail.gourmetPhone) == false)
+        if (mGourmetBookingDetail == null)
         {
-            getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call, menu);
+            menu.clear();
         } else
         {
-            getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call2, menu);
+            if (Util.isTextEmpty(mGourmetBookingDetail.gourmetPhone) == false)
+            {
+                getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call, menu);
+            } else
+            {
+                getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call2, menu);
+            }
         }
 
         return true;
@@ -120,9 +139,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             case R.id.action_direct_call:
                 if (Util.isTelephonyEnabled(GourmetBookingDetailTabActivity.this) == true)
                 {
-                    String phone = mPlaceBookingDetail.gourmetPhone;
+                    String phone = mGourmetBookingDetail.gourmetPhone;
 
-                    if (Util.isTextEmpty(mPlaceBookingDetail.gourmetPhone) == true)
+                    if (Util.isTextEmpty(mGourmetBookingDetail.gourmetPhone) == true)
                     {
                         phone = DailyPreference.getInstance(GourmetBookingDetailTabActivity.this).getCompanyPhoneNumber();
                     }
@@ -132,12 +151,12 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
                     } catch (ActivityNotFoundException e)
                     {
-                        String message = getString(R.string.toast_msg_no_gourmet_call, mPlaceBookingDetail.gourmetPhone);
+                        String message = getString(R.string.toast_msg_no_gourmet_call, mGourmetBookingDetail.gourmetPhone);
                         DailyToast.showToast(GourmetBookingDetailTabActivity.this, message, Toast.LENGTH_LONG);
                     }
                 } else
                 {
-                    String message = getString(R.string.toast_msg_no_gourmet_call, mPlaceBookingDetail.gourmetPhone);
+                    String message = getString(R.string.toast_msg_no_gourmet_call, mGourmetBookingDetail.gourmetPhone);
                     DailyToast.showToast(GourmetBookingDetailTabActivity.this, message, Toast.LENGTH_LONG);
                 }
                 break;
@@ -150,11 +169,11 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     }
 
     @Override
-    protected void requestPlaceBookingDetail()
+    protected void requestPlaceBookingDetail(int reservationIndex)
     {
         lockUI();
 
-        String params = String.format("?reservation_rec_idx=%d", booking.reservationIndex);
+        String params = String.format("?reservation_rec_idx=%d", reservationIndex);
         DailyNetworkAPI.getInstance().requestGourmetBookingDetailInformation(mNetworkTag, params, mReservationBookingDetailJsonResponseListener, this);
     }
 
@@ -169,22 +188,22 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
-                    if (mPlaceBookingDetail == null)
+                    if (mGourmetBookingDetail == null)
                     {
-                        mPlaceBookingDetail = new GourmetBookingDetail();
+                        mGourmetBookingDetail = new GourmetBookingDetail();
                     }
 
-                    mPlaceBookingDetail.setData(jsonObject);
+                    mGourmetBookingDetail.setData(jsonObject);
 
                     invalidateOptionsMenu();
 
-                    loadFragments(getViewPager(), mPlaceBookingDetail);
+                    loadFragments(getViewPager(), mGourmetBookingDetail);
                 } else
                 {
                     if (response.has("msg") == true)

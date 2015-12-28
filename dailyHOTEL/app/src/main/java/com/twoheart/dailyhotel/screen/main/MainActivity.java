@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.main;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,8 +14,6 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 
 import com.android.volley.VolleyError;
@@ -69,7 +68,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
 
         void onAppVersionResponse(int maxVersion, int minVersion);
 
-        void onConfigurationRespose();
+        void onConfigurationResponse();
 
         void onError();
 
@@ -88,7 +87,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         super.onCreate(savedInstanceState);
 
         // URL 만들때 사용
-        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
@@ -111,9 +110,9 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         }
 
         Uri uri = getIntent().getData();
-        String title = checkDeepLink(uri);
+        checkDeepLink(uri);
 
-        initLayout(title);
+        initLayout();
 
         mMainPresenter.requestCheckServer();
 
@@ -125,7 +124,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private void initLayout(String title)
+    private void initLayout()
     {
         setContentView(R.layout.activity_main);
 
@@ -160,6 +159,8 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
 
         Uri intentData = intent.getData();
         checkDeepLink(intentData);
+
+        mOnResponsePresenterListener.onConfigurationResponse();
     }
 
     @Override
@@ -210,9 +211,25 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL)
+        switch (requestCode)
         {
-            mMainPresenter.requestGourmetIsExistRating();
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+                mMainPresenter.requestGourmetIsExistRating();
+                break;
+
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                }
+                break;
+
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                }
+                break;
         }
     }
 
@@ -237,11 +254,11 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         }
     }
 
-    private String checkDeepLink(Uri uri)
+    private void checkDeepLink(Uri uri)
     {
         if (uri == null)
         {
-            return null;
+            return;
         }
 
         final String KAKAOLINK = "kakaolink";
@@ -252,37 +269,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         if (link.indexOf(KAKAOLINK) >= 0 || link.indexOf(DAILYHOTEL) >= 0)
         {
             String params = writeDeepLinkPreference(link);
-
-            if (link.contains("hotelIndex") == true)
-            {
-                return getString(R.string.actionbar_title_hotel_list_frag);
-            } else if (link.contains("fnbIndex") == true)
-            {
-                return getString(R.string.actionbar_title_gourmet_list_frag);
-            } else
-            {
-                String value = Util.getValueForLinkUrl(params, "view");
-
-                if ("hotel".equalsIgnoreCase(value) == true)
-                {
-                    return getString(R.string.actionbar_title_hotel_list_frag);
-                } else if ("gourmet".equalsIgnoreCase(value) == true)
-                {
-                    return getString(R.string.actionbar_title_gourmet_list_frag);
-                } else if ("bookings".equalsIgnoreCase(value) == true)
-                {
-                    return getString(R.string.actionbar_title_booking_list_frag);
-                } else if ("bonus".equalsIgnoreCase(value) == true)
-                {
-                    return getString(R.string.actionbar_title_credit_frag);
-                } else if ("event".equalsIgnoreCase(value) == true)
-                {
-                    return getString(R.string.actionbar_title_event_list_frag);
-                }
-            }
         }
-
-        return null;
     }
 
     private String writeDeepLinkPreference(String link)
@@ -330,6 +317,9 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
 
                 super.onBackPressed();
             }
+        } else
+        {
+            mMainFragmentManager.select(mMainFragmentManager.getLastMainIndexFragment());
         }
     }
 
@@ -354,7 +344,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
     @Override
     public void onError()
     {
-        if(mIsInitialization == false)
+        if (mIsInitialization == false)
         {
             super.onError();
 
@@ -484,30 +474,30 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
 
     private void finishSplash()
     {
-//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-//        animation.setDuration(300);
-//        animation.setAnimationListener(new Animation.AnimationListener()
-//        {
-//            @Override
-//            public void onAnimationStart(Animation animation)
-//            {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation)
-//            {
-//                mSplashLayout.setVisibility(View.GONE);
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation)
-//            {
-//
-//            }
-//        });
-//
-//        mSplashLayout.startAnimation(animation);
+        //        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+        //        animation.setDuration(300);
+        //        animation.setAnimationListener(new Animation.AnimationListener()
+        //        {
+        //            @Override
+        //            public void onAnimationStart(Animation animation)
+        //            {
+        //
+        //            }
+        //
+        //            @Override
+        //            public void onAnimationEnd(Animation animation)
+        //            {
+        //                mSplashLayout.setVisibility(View.GONE);
+        //            }
+        //
+        //            @Override
+        //            public void onAnimationRepeat(Animation animation)
+        //            {
+        //
+        //            }
+        //        });
+        //
+        //        mSplashLayout.startAnimation(animation);
 
         mSplashLayout.setVisibility(View.GONE);
         mDelayTimeHandler.removeMessages(0);
@@ -659,7 +649,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         }
 
         @Override
-        public void onConfigurationRespose()
+        public void onConfigurationResponse()
         {
             finishSplash();
 

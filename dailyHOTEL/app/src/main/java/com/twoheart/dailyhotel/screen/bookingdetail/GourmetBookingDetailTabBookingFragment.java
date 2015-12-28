@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.GourmetReceiptActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Constants;
@@ -28,23 +27,25 @@ import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 public class GourmetBookingDetailTabBookingFragment extends BaseFragment implements Constants
 {
-    private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
-    private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
+    private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
+    private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
+    private static final String KEY_BUNDLE_ARGUMENTS_ISUSED = "isUsed";
 
-    private Booking mBooking;
-    private GourmetBookingDetail mGourmetBookingDetail;
+    private GourmetBookingDetail mBookingDetail;
+    private int mReservationIndex;
+    private boolean mIsUsed;
 
-    public static GourmetBookingDetailTabBookingFragment newInstance(PlaceBookingDetail placeBookingDetail, Booking booking)
+    public static GourmetBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex, boolean isUsed)
     {
         GourmetBookingDetailTabBookingFragment newFragment = new GourmetBookingDetailTabBookingFragment();
 
         //관련 정보는 BookingTabActivity에서 넘겨받음.
         Bundle arguments = new Bundle();
-        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL, placeBookingDetail);
-        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
+        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL, bookingDetail);
+        arguments.putInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX, reservationIndex);
+        arguments.putBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED, isUsed);
 
         newFragment.setArguments(arguments);
-        //        newFragment.setTitle(title);
 
         return newFragment;
     }
@@ -54,8 +55,9 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
     {
         super.onCreate(savedInstanceState);
 
-        mGourmetBookingDetail = (GourmetBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
-        mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
+        mBookingDetail = (GourmetBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
+        mReservationIndex = getArguments().getInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX);
+        mIsUsed = getArguments().getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
     }
 
     @Override
@@ -77,13 +79,13 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         TextView userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
         TextView userPhoneTextView = (TextView) view.findViewById(R.id.userPhoneTextView);
 
-        ticketNameTextView.setText(mBooking.placeName);
-        addressTextView.setText(mGourmetBookingDetail.address);
-        ticketTypeTextView.setText(mGourmetBookingDetail.ticketName);
-        ticketCountTextView.setText(getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount));
-        dateTextView.setText(mGourmetBookingDetail.sday);
-        userNameTextView.setText(mGourmetBookingDetail.guestName);
-        userPhoneTextView.setText(Util.addHippenMobileNumber(baseActivity, mGourmetBookingDetail.guestPhone));
+        ticketNameTextView.setText(mBookingDetail.placeName);
+        addressTextView.setText(mBookingDetail.address);
+        ticketTypeTextView.setText(mBookingDetail.ticketName);
+        ticketCountTextView.setText(getString(R.string.label_booking_count, mBookingDetail.ticketCount));
+        dateTextView.setText(mBookingDetail.sday);
+        userNameTextView.setText(mBookingDetail.guestName);
+        userPhoneTextView.setText(Util.addHippenMobileNumber(baseActivity, mBookingDetail.guestPhone));
 
         // Android Marquee bug...
         ticketNameTextView.setSelected(true);
@@ -97,10 +99,10 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         if (DEBUG == true)
         {
-            mBooking.isUsed = true;
+            mIsUsed = true;
         }
 
-        if (mBooking.isUsed == true)
+        if (mIsUsed == true)
         {
             viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
             viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
@@ -117,7 +119,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                     }
 
                     Intent intent = new Intent(baseActivity, GourmetReceiptActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mBooking.reservationIndex);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
                     startActivity(intent);
                 }
             });
