@@ -188,6 +188,27 @@ public class DailyPreference
         }
     }
 
+    private int getV1Value(String key, int defaultValue)
+    {
+        int result = defaultValue;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getInt(key, defaultValue);
+        }
+
+        return result;
+    }
+
+    private void setV1Value(String key, int value)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putInt(key, value);
+            mEditor.apply();
+        }
+    }
+
     private void removeV1Value(String key)
     {
         if (mEditor != null)

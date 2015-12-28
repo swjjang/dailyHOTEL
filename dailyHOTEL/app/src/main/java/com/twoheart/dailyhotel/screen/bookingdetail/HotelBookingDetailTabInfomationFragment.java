@@ -20,27 +20,28 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.model.BookingHotelDetail;
+import com.twoheart.dailyhotel.model.HotelBookingDetail;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 
 import java.util.List;
 
 public class HotelBookingDetailTabInfomationFragment extends BaseFragment
 {
-    private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
+    private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
 
-    private BookingHotelDetail mHotelDetail;
+    private HotelBookingDetail mBookingDetail;
     private LinearLayout layout;
 
     private int infoViewCount;
 
-    public static HotelBookingDetailTabInfomationFragment newInstance(BookingHotelDetail hotelDetail)
+    public static HotelBookingDetailTabInfomationFragment newInstance(PlaceBookingDetail bookingDetail)
     {
 
         HotelBookingDetailTabInfomationFragment newFragment = new HotelBookingDetailTabInfomationFragment();
         Bundle arguments = new Bundle();
 
         //호텔의 정보는 BookingTabActivity에서 넘겨받음.
-        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL, bookingDetail);
         newFragment.setArguments(arguments);
         //        newFragment.setTitle(title);
 
@@ -52,7 +53,8 @@ public class HotelBookingDetailTabInfomationFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mHotelDetail = (BookingHotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+
+        mBookingDetail = (HotelBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
     }
 
     @Override
@@ -64,11 +66,11 @@ public class HotelBookingDetailTabInfomationFragment extends BaseFragment
 
         infoViewCount = 1;
 
-        if (mHotelDetail != null)
+        if (mBookingDetail != null)
         {
-            for (String key : mHotelDetail.getSpecification().keySet())
+            for (String key : mBookingDetail.getSpecification().keySet())
             {
-                addView(view, key, mHotelDetail.getSpecification().get(key));
+                addView(view, key, mBookingDetail.getSpecification().get(key));
             }
         }
 

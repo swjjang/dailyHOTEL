@@ -87,17 +87,8 @@ public class RegionListActivity extends BaseActivity
         {
             case HOTEL:
             {
-                int selectTab = 0;
-
-                if (province.isOverseas == true)
-                {
-                    mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_domestic));
-                    mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_global));
-                } else
-                {
-                    mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_domestic));
-                    mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_global));
-                }
+                mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_domestic));
+                mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_global));
 
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(HOTEL_TAB_COUNT);
 

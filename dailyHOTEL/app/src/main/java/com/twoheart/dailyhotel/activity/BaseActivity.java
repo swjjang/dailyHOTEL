@@ -125,61 +125,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         return mNetworkTag;
     }
 
-
-    //    public void setActionBarRegionEnable(boolean isEnable)
-    //    {
-    //        if (mActionBarRegionEnabled == isEnable)
-    //        {
-    //            return;
-    //        }
-    //
-    //        mActionBarRegionEnabled = isEnable;
-    //
-    //        if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
-    //        {
-    //            View view = mToolbar.getChildAt(mSpinnderIndex);
-    //            View imageView = view.findViewById(R.id.spinnerImageView);
-    //
-    //            if (isEnable == true)
-    //            {
-    //                view.setEnabled(true);
-    //                imageView.setVisibility(View.VISIBLE);
-    //            } else
-    //            {
-    //                view.setEnabled(false);
-    //                imageView.setVisibility(View.INVISIBLE);
-    //            }
-    //        }
-    //    }
-
-    //    public void setActionBarAreaEnabled(boolean isEnable)
-    //    {
-    //        if (isEnable == true)
-    //        {
-    //            if (mSpinnderIndex == -1)
-    //            {
-    //                mToolbar.setTitle("");
-    //
-    //                LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    //                View view = mInflater.inflate(R.layout.view_actionbar_spinner, null, true);
-    //
-    //                mSpinnderIndex = mToolbar.getChildCount();
-    //                mToolbar.addView(view, mSpinnderIndex);
-    //
-    //                mActionBarRegionEnabled = true;
-    //            }
-    //        } else
-    //        {
-    //            if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
-    //            {
-    //                mToolbar.removeViewAt(mSpinnderIndex);
-    //                mSpinnderIndex = -1;
-    //
-    //                mActionBarRegionEnabled = false;
-    //            }
-    //        }
-    //    }
-
     public void initToolbarRegion(Toolbar toolbar, String title, View.OnClickListener listener)
     {
         if (toolbar.getTag() != null)
@@ -214,6 +159,11 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
     public void initToolbar(Toolbar toolbar, String title, boolean isTransparent)
     {
+        initToolbar(toolbar, title, true, isTransparent);
+    }
+
+    public void initToolbar(Toolbar toolbar, String title, boolean isBackPressed, boolean isTransparent)
+    {
         if (toolbar == null)
         {
             return;
@@ -225,15 +175,19 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         FontManager.apply(toolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
         getSupportActionBar().setTitle(title);
-        toolbar.setNavigationIcon(R.drawable.back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+
+        if (isBackPressed == true)
         {
-            @Override
-            public void onClick(View v)
+            toolbar.setNavigationIcon(R.drawable.back);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener()
             {
-                finish();
-            }
-        });
+                @Override
+                public void onClick(View v)
+                {
+                    finish();
+                }
+            });
+        }
     }
 
     public void setToolbarRegionText(Toolbar toolbar, String title)
@@ -456,7 +410,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         try
         {
             recursiveRecycle(getWindow().getDecorView());
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
@@ -480,7 +434,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         ExLog.e(error.toString());
 
-       onError();
+        onError();
     }
 
     /**

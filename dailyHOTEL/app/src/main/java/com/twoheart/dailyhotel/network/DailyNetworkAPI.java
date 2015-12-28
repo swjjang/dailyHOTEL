@@ -253,7 +253,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/sale/hotel_list" : "NTgkNzMkMzckNzUkOCQ=$NkE2OTgyROEY2QTg2Qjc5MkIwODczNUZGRjI2NLkYwNjFGM0ZGRkUyQTIyRjWY3NzVFN0RDNEEwTINTYxOTZFNDc4Nw==$";
 
-        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
+        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
@@ -261,7 +261,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/sale/region/all" : "MTEkMjckMzQkMTUkNDIk$RjgwRDA0OUUU2QjYBEODJDMEM5RTIYxODc2PMDJGOTBZBRUY3ODUwMzYwRUJEQjA2MEUwRDA3NkVGOEY0OUIzMDM5Qw==$";
 
-        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL).toString(), null, listener, errorListener));
+        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), null, listener, errorListener));
     }
 
     @Override
@@ -357,7 +357,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/region/list" : "MjAkODQkMjckMSQ4MCQ=$QNTBGMkQ3N0E3MjA2RTUwJOTQzMDXg2QzY1NTgzNzJGMDE5ODdCRDI3MkRGQ0I5QTZFRkU1MkFEMTZEMQEQzMzAG4RQ==$";
 
-        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL).toString(), null, listener, errorListener));
+        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), null, listener, errorListener));
     }
 
     @Override
@@ -365,7 +365,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/list" : "NDEkODUkNTckNDEkOTEk$QzZDMTM2NTc4MUExRjQ1NDg4OUExRDY4MkE5RjcxRAPjdEQkUwMjFEODNDKQjQzQzY3RTI2QzkxNUQxRTcyMTBEPQQ=L=$";
 
-        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
+        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
@@ -493,6 +493,14 @@ public class DailyNetworkAPI implements IDailyNetwork
     public void requestCompanyInformation(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/common/company_info" : "NiQzMCQxOSQyNCQyMCQ=$OTMyN0LEyMjYzNTA5NEDDY0NkXY3QTQwQDzJDMUU0MzkzODQ0RTVCNTJFMjYxMTdBMkRFQjY4NTcxNzIxQzM2RTdFMQ==$";
+
+        mQueue.add(new DailyHotelJsonRequest(Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), null, listener, errorListener));
+    }
+
+    @Override
+    public void requestEventBannerList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "event/v1/banner" : "MjUkNyQ1JDQwJDE2JA==$MzdCQPzlAGQkRCNDZNGNzE2NEY4OLEU1MjMzMkQ3NFzU3Mjk=$";
 
         mQueue.add(new DailyHotelJsonRequest(Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), null, listener, errorListener));
     }

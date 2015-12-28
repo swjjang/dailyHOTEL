@@ -122,18 +122,6 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         switch (requestCode)
         {
-            case CODE_REQUEST_FRAGMENT_PLACE_MAIN:
-            {
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    //                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
-                } else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
-                {
-                    //                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
-                }
-                break;
-            }
-
             // 지역을 선택한 후에 되돌아 온경우.
             case CODE_REQUEST_ACTIVITY_REGIONLIST:
             {

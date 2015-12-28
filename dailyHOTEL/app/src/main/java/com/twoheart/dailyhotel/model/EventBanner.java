@@ -1,73 +1,101 @@
 package com.twoheart.dailyhotel.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
-public class EventBanner implements Parcelable
+public class EventBanner
 {
     public int index;
-    public int type;
-    public String link;
+    public long checkInTime;
+    public int nights;
+    public boolean mIsHotel;
+    public String imageUrl;
+    public String webLink;
 
     public EventBanner()
     {
+
     }
 
-    public EventBanner(Parcel in)
+    public EventBanner(JSONObject jsonObject, String url) throws Exception
     {
-        readFromParcel(in);
-    }
-
-    public EventBanner(JSONObject jsonObject)
-    {
-        try
+        if (jsonObject.isNull("linkUrl") == false)
         {
-            index = jsonObject.getInt("idx");
-            type = jsonObject.getInt("type");
-            link = jsonObject.getString("link");
-        } catch (Exception e)
+            // 웹링크인 경우
+            webLink = jsonObject.getString("linkUrl");
+        } else
         {
-            ExLog.e(e.toString());
-        }
-    }
+            // 딥링크인 경우
+            if (jsonObject.isNull("hotelIdx") == false)
+            {
+                mIsHotel = true;
+                index = jsonObject.getInt("hotelIdx");
+            } else if (jsonObject.isNull("fnbRestaurantIdx") == false)
+            {
+                mIsHotel = false;
+                index = jsonObject.getInt("fnbRestaurantIdx");
+            } else
+            {
+                throw new NullPointerException();
+            }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags)
-    {
-        dest.writeInt(index);
-        dest.writeInt(type);
-        dest.writeString(link);
-    }
-
-    private void readFromParcel(Parcel in)
-    {
-        index = in.readInt();
-        type = in.readInt();
-        link = in.readString();
-    }
-
-    @Override
-    public int describeContents()
-    {
-        return 0;
-    }
-
-    public static final Creator CREATOR = new Creator()
-    {
-        public EventBanner createFromParcel(Parcel in)
-        {
-            return new EventBanner(in);
+            checkInTime = jsonObject.getLong("dateCheckIn");
+            nights = jsonObject.getInt("nights");
         }
 
-        @Override
-        public EventBanner[] newArray(int size)
-        {
-            return new EventBanner[size];
-        }
+        imageUrl = url + jsonObject.getString("imagePath");
+    }
 
-    };
+    public boolean isDeepLink()
+    {
+        return Util.isTextEmpty(webLink) == true;
+    }
+
+    public boolean isHotel()
+    {
+        return mIsHotel;
+    }
+
+    //    public String getLink()
+    //    {
+    //        if(isDeepLink() == true)
+    //        {
+    //            // dailyhotel://dailyhotel.co.kr?view=hotel&idx=131&date=20151109&nights=1
+    //            StringBuilder targetLink = new StringBuilder();
+    //            targetLink.append("dailyhotel://dailyhotel.co.kr?view=");
+    //
+    //            // view
+    //            if(isHotel() == true)
+    //            {
+    //                targetLink.append("hotel");
+    //            } else
+    //            {
+    //                targetLink.append("gourmet");
+    //            }
+    //
+    //            // index
+    //            targetLink.append("&idx=");
+    //            targetLink.append(mIndex);
+    //
+    //            // date
+    //            targetLink.append("&date=");
+    //
+    //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+    //            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+9"));
+    //
+    //            targetLink.append(simpleDateFormat.format(new Date(mCheckInTime)));
+    //
+    //            // nights
+    //            targetLink.append("&nights=");
+    //            targetLink.append(mNights);
+    //
+    //            // 딥링크인 경우
+    //            return targetLink.toString();
+    //        } else
+    //        {
+    //            // 웹링크인 경우
+    //            return mLink;
+    //        }
+    //    }
 }

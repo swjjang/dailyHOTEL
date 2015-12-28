@@ -192,7 +192,7 @@ public interface Constants
     public static final int PUSH_TYPE_ACCOUNT_COMPLETE = 1;
 
     // Android Activity의 Request Code들이다.
-    public static final int CODE_REQUEST_ACTIVITY_HOTELTAB = 1;
+    public static final int CODE_REQUEST_ACTIVITY_HOTEL_DETAIL = 1;
     public static final int CODE_REQUEST_FRAGMENT_BOOKINGLIST = 2;
     public static final int CODE_REQUEST_ACTIVITY_LOGIN = 3;
     public static final int CODE_REQUEST_ACTIVITY_PAYMENT = 4;
@@ -207,7 +207,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
     public static final int CODE_REQUEST_ACTIVITY_REGIONLIST = 14;
     public static final int CODE_REQUEST_ACTIVITY_USERINFO_UPDATE = 15;
-    public static final int CODE_REQUEST_FRAGMENT_PLACE_MAIN = 20;
+    public static final int CODE_REQUEST_ACTIVITY_PLACE_DETAIL = 20;
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL = 21;
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET = 22;
     public static final int CODE_REQUEST_ACTIVITY_CALENDAR = 30;

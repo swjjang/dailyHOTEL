@@ -28,29 +28,29 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
-import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
+import com.twoheart.dailyhotel.adapter.NameInfoWindowAdapter;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.model.BookingHotelDetail;
+import com.twoheart.dailyhotel.model.HotelBookingDetail;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Util;
 
 public class HotelBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
-    private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
+    private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
 
-    private BookingHotelDetail mHotelDetail;
+    private HotelBookingDetail mBookingDetail;
     private GoogleMap mGoogleMap;
     private View mPlaceholderMapView;
     private Marker mMarker;
 
-    public static HotelBookingDetailTabMapFragment newInstance(BookingHotelDetail hotelDetail)
+    public static HotelBookingDetailTabMapFragment newInstance(PlaceBookingDetail bookingDetail)
     {
         HotelBookingDetailTabMapFragment newFragment = new HotelBookingDetailTabMapFragment();
         Bundle arguments = new Bundle();
 
         //관련 정보들은 BookingTabActivity에서 넘겨받음.
-        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+        arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL, bookingDetail);
         newFragment.setArguments(arguments);
-        //        newFragment.setTitle(title);
 
         return newFragment;
     }
@@ -59,7 +59,8 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mHotelDetail = (BookingHotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+
+        mBookingDetail = (HotelBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
     }
 
     @Override
@@ -72,15 +73,15 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         TextView hotelNameTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
         TextView hotelAddressTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
 
-        hotelNameTextView.setText(mHotelDetail.getHotel().getName());
+        hotelNameTextView.setText(mBookingDetail.placeName);
         hotelNameTextView.setSelected(true);
-        hotelAddressTextView.setText(mHotelDetail.getHotel().getAddress());
+        hotelAddressTextView.setText(mBookingDetail.address);
         hotelAddressTextView.setSelected(true);
 
         TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
-        hotelGradeTextView.setText(mHotelDetail.getHotel().getCategory().getName(getActivity()));
-        hotelGradeTextView.setBackgroundResource(mHotelDetail.getHotel().getCategory().getColorResId());
+        hotelGradeTextView.setText(mBookingDetail.grade.getName(getActivity()));
+        hotelGradeTextView.setBackgroundResource(mBookingDetail.grade.getColorResId());
 
         return view;
     }
@@ -96,9 +97,9 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         }
 
         Intent intent = new Intent(baseActivity, ZoomMapActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, mHotelDetail.getHotel().getName());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mHotelDetail.getLatitude());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mHotelDetail.getLongitude());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, mBookingDetail.placeName);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mBookingDetail.latitude);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mBookingDetail.longitude);
 
         startActivity(intent);
     }
@@ -124,7 +125,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     mGoogleMap.setMyLocationEnabled(false);
                     mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                    addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());
+                    addMarker(mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.placeName);
                 }
             });
         } else
@@ -173,7 +174,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
             LatLng address = new LatLng(lat, lng);
             CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-            mGoogleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(baseActivity));
+            mGoogleMap.setInfoWindowAdapter(new NameInfoWindowAdapter(baseActivity));
             mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener()
             {
                 @Override

@@ -17,8 +17,9 @@ public class EventBannerViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private List<EventBanner> mEventBannerList;
+    private View.OnClickListener mOnClickListener;
 
-    public EventBannerViewPagerAdapter(Context context, List<EventBanner> list)
+    public EventBannerViewPagerAdapter(Context context, List<EventBanner> list, View.OnClickListener listener)
     {
         mContext = context;
 
@@ -27,6 +28,8 @@ public class EventBannerViewPagerAdapter extends PagerAdapter
             mEventBannerList = new ArrayList<>();
             mEventBannerList.addAll(list);
         }
+
+        mOnClickListener = listener;
     }
 
     @Override
@@ -43,12 +46,14 @@ public class EventBannerViewPagerAdapter extends PagerAdapter
 
         if (mEventBannerList.size() > position)
         {
-            String url = mEventBannerList.get(position).link;
+            String url = mEventBannerList.get(position).imageUrl;
             Glide.with(mContext).load(url).crossFade().into(imageView);
         }
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         container.addView(imageView, layoutParams);
+
+        imageView.setOnClickListener(mOnClickListener);
 
         return imageView;
     }

@@ -3,12 +3,9 @@ package com.twoheart.dailyhotel.view.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.R;
 
 /**
  * asset의 폰트를 싱글톤으로 관리하기 위해서 사용. (여기저기서 막 사용하면 메모리 낭비가 심해지므로)

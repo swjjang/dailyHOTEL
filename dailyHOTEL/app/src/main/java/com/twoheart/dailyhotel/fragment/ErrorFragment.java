@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
@@ -81,7 +80,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
             return;
         } else
         {
-            if(mMainFragmentManager != null)
+            if (mMainFragmentManager != null)
             {
                 mMainFragmentManager.select(mMainFragmentManager.getLastIndexFragment());
             }

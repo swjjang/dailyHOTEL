@@ -16,9 +16,12 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
+import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -29,6 +32,7 @@ import com.twoheart.dailyhotel.screen.region.RegionListActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -39,8 +43,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class GourmetMainFragment extends PlaceMainFragment
 {
@@ -60,6 +68,8 @@ public class GourmetMainFragment extends PlaceMainFragment
         void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
 
         void selectDay(SaleTime checkInSaleTime, boolean isListSelectionTop);
+
+        void selectEventBanner(EventBanner eventBanner);
 
         void toggleViewType();
 
@@ -453,7 +463,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
 
-                    startActivityForResult(intent, CODE_REQUEST_FRAGMENT_PLACE_MAIN);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
                     mOnUserAnalyticsActionListener.selectPlace(gourmet.name, gourmet.index, checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
                     break;
@@ -491,7 +501,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
 
-            startActivityForResult(intent, CODE_REQUEST_FRAGMENT_PLACE_MAIN);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
         }
 
         @Override
@@ -512,6 +522,57 @@ public class GourmetMainFragment extends PlaceMainFragment
             refreshList(mSelectedProvince, isListSelectionTop);
 
             releaseUiComponent();
+        }
+
+        @Override
+        public void selectEventBanner(EventBanner eventBanner)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            if (eventBanner.isDeepLink() == true)
+            {
+                try
+                {
+                    long dailyTime = mTodaySaleTime.getDailyTime();
+
+                    Calendar calendar = DailyCalendar.getInstance();
+                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
+                    calendar.setTimeInMillis(eventBanner.checkInTime);
+
+                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                    Date schemeDate = format.parse(format.format(calendar.getTime()));
+                    Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+
+                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                    if (eventBanner.isHotel() == true)
+                    {
+                        Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, eventBanner.index);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
+
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                    } else
+                    {
+                        selectPlace(eventBanner.index, dailyTime, dailyDayOfDays, eventBanner.nights);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+            } else
+            {
+                Intent intent = EventWebActivity.newInstance(baseActivity, eventBanner.webLink);
+                startActivity(intent);
+            }
         }
 
         @Override
