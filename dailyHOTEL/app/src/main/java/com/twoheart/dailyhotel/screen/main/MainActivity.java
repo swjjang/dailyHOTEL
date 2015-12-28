@@ -1,11 +1,15 @@
 package com.twoheart.dailyhotel.screen.main;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,44 +18,42 @@ import android.webkit.CookieManager;
 import com.android.volley.VolleyError;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
-import com.twoheart.dailyhotel.activity.SplashActivity;
-import com.twoheart.dailyhotel.fragment.BookingListFragment;
-import com.twoheart.dailyhotel.fragment.ErrorFragment;
-import com.twoheart.dailyhotel.fragment.SettingFragment;
+import com.twoheart.dailyhotel.activity.SatisfactionActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
-import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
 
-public class MainActivity extends BaseActivity implements Constants
+public class MainActivity extends BaseActivity implements Constants, View.OnClickListener
 {
-    private static final int ERROR_FRAGMENT = -1;
-    private static final int INDEX_HOTEL_FRAGMENT = 0;
-    private static final int INDEX_GOURMET_FRAGMENT = 1;
-    private static final int INDEX_BOOKING_FRAGMENT = 2;
-    private static final int INDEX_INFORMATION_FRAGMENT = 3;
-
-    // 마지막으로 머물렀던 Fragment의 index
-    private int mIndexLastFragment; // Error Fragment에서 다시 돌아올 때 필요.
-
-    private FragmentManager mFragmentManager;
     private ViewGroup mContentLayout;
+    private View mBottomMenuBarLayout;
 
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed mBackButtonHandler;
 
     private MainPresenter mMainPresenter;
-    private OnResponsePresenterListener mOnResponsePresenterListener;
+    private MainFragmentManager mMainFragmentManager;
+    private Dialog mSettingNetworkDialog;
+
+    private boolean mIsInitialization;
+    private Handler mDelayTimeHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            if (mIsInitialization == true)
+            {
+                lockUI();
+            }
+        }
+    };
 
     public interface OnResponsePresenterListener
     {
@@ -61,9 +63,11 @@ public class MainActivity extends BaseActivity implements Constants
 
         void onSatisfactionHotel(String hotelName, int reservationIndex, long checkInTime, long checkOutTime);
 
-        void lockUI();
+        void onCheckServerResponse(String title, String message);
 
-        void unLockUI();
+        void onAppVersionResponse(int maxVersion, int minVersion);
+
+        void onConfigurationRespose();
 
         void onError();
 
@@ -84,7 +88,9 @@ public class MainActivity extends BaseActivity implements Constants
         // URL 만들때 사용
         //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
+        mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
+
         VolleyHttpClient.cookieManagerCreate();
         DailyPreference.getInstance(this).removeDeepLink();
 
@@ -107,8 +113,10 @@ public class MainActivity extends BaseActivity implements Constants
 
         initLayout(title);
 
-        // 스플래시 화면을 띄운다
-        startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
+        mMainPresenter.requestCheckServer();
+
+        // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
+        mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -119,52 +127,26 @@ public class MainActivity extends BaseActivity implements Constants
     {
         setContentView(R.layout.activity_main);
 
-        View bottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
+        mBottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
+        mBottomMenuBarLayout.setVisibility(View.INVISIBLE);
 
-        View hotelView = bottomMenuBarLayout.findViewById(R.id.hotelView);
-        hotelView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                selectMenu(INDEX_HOTEL_FRAGMENT);
-            }
-        });
+        View hotelView = mBottomMenuBarLayout.findViewById(R.id.hotelView);
+        hotelView.setOnClickListener(this);
 
-        View gourmetView = bottomMenuBarLayout.findViewById(R.id.gourmetView);
-        gourmetView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                selectMenu(INDEX_GOURMET_FRAGMENT);
-            }
-        });
+        View gourmetView = mBottomMenuBarLayout.findViewById(R.id.gourmetView);
+        gourmetView.setOnClickListener(this);
 
-        View bookingView = bottomMenuBarLayout.findViewById(R.id.bookingView);
-        bookingView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                selectMenu(INDEX_BOOKING_FRAGMENT);
-            }
-        });
+        View bookingView = mBottomMenuBarLayout.findViewById(R.id.bookingView);
+        bookingView.setOnClickListener(this);
 
-        View informationView = bottomMenuBarLayout.findViewById(R.id.informationView);
-        informationView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                selectMenu(INDEX_INFORMATION_FRAGMENT);
-            }
-        });
-
+        View informationView = mBottomMenuBarLayout.findViewById(R.id.informationView);
+        informationView.setOnClickListener(this);
 
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
+        mContentLayout.setVisibility(View.INVISIBLE);
 
-        mFragmentManager = getSupportFragmentManager();
+        mMainFragmentManager = new MainFragmentManager(this, mContentLayout);
+
         mBackButtonHandler = new CloseOnBackPressed(this);
     }
 
@@ -184,7 +166,42 @@ public class MainActivity extends BaseActivity implements Constants
     {
         super.onResume();
 
-        mMainPresenter.requestEvent();
+        if (mIsInitialization == true)
+        {
+            if (VolleyHttpClient.isAvailableNetwork() == false)
+            {
+                showDisabledNetworkPopup();
+            }
+        } else
+        {
+            if (mIsInitialization == false)
+            {
+                mMainPresenter.requestEvent();
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.hotelView:
+                mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                break;
+
+            case R.id.gourmetView:
+                mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                break;
+
+            case R.id.bookingView:
+                mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                break;
+
+            case R.id.informationView:
+                mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                break;
+        }
     }
 
     @Override
@@ -192,69 +209,7 @@ public class MainActivity extends BaseActivity implements Constants
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH)
-        {
-            switch (resultCode)
-            {
-                // 스플래시 화면이 정상적으로 종료되었을 경우
-                case RESULT_OK:
-                    break;
-
-                default: // 스플래시가 비정상적으로 종료되었을 경우
-                    super.finish(); // 어플리케이션(메인 화면)을 종료해버린다
-                    return; // 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
-            }
-
-            String deepLink = DailyPreference.getInstance(MainActivity.this).getDeepLink();
-
-            if (Util.isTextEmpty(deepLink) == false)
-            {
-                if (deepLink.contains("hotelIndex") == true)
-                {
-                    selectMenu(INDEX_HOTEL_FRAGMENT);
-                } else if (deepLink.contains("fnbIndex"))
-                {
-                    selectMenu(INDEX_GOURMET_FRAGMENT);
-                } else
-                {
-                    String value = Util.getValueForLinkUrl(deepLink, "view");
-
-                    if ("hotel".equalsIgnoreCase(value) == true)
-                    {
-                        selectMenu(INDEX_HOTEL_FRAGMENT);
-                    } else if ("gourmet".equalsIgnoreCase(value) == true)
-                    {
-                        selectMenu(INDEX_GOURMET_FRAGMENT);
-                    } else if ("bookings".equalsIgnoreCase(value) == true)
-                    {
-                        selectMenu(INDEX_BOOKING_FRAGMENT);
-                    } else
-                    {
-                        selectMenu(INDEX_HOTEL_FRAGMENT);
-                    }
-                }
-            } else
-            {
-                if (getString(R.string.label_dailygourmet).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
-                {
-                    selectMenu(INDEX_GOURMET_FRAGMENT);
-                } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
-                {
-                    selectMenu(INDEX_HOTEL_FRAGMENT);
-                } else
-                {
-                    if (mIndexLastFragment == INDEX_GOURMET_FRAGMENT)
-                    {
-                        selectMenu(INDEX_GOURMET_FRAGMENT);
-                    } else
-                    {
-                        selectMenu(INDEX_HOTEL_FRAGMENT);
-                    }
-                }
-
-                mMainPresenter.requestUserAlive();
-            }
-        } else if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL)
+        if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL)
         {
             mMainPresenter.requestGourmetIsExistRating();
         }
@@ -270,7 +225,7 @@ public class MainActivity extends BaseActivity implements Constants
             case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    Fragment fragment = mFragmentManager.findFragmentByTag(String.valueOf(mIndexLastFragment));
+                    Fragment fragment = mMainFragmentManager.getCurrentFragment();
 
                     if (fragment != null)
                     {
@@ -349,101 +304,6 @@ public class MainActivity extends BaseActivity implements Constants
         return param;
     }
 
-    /**
-     * 네비게이션 드로워 메뉴에서 선택할 수 있는 Fragment를 반환하는 메서드이다.
-     *
-     * @param index Fragment 리스트에 해당하는 index를 받는다.
-     * @return 요청한 index에 해당하는 Fragment를 반환한다. => 기능 변경, 누를때마다 리프레시
-     */
-    public Fragment getFragment(int index)
-    {
-        switch (index)
-        {
-            case INDEX_HOTEL_FRAGMENT:
-                return new HotelMainFragment();
-            case INDEX_GOURMET_FRAGMENT:
-                return new GourmetMainFragment();
-            case INDEX_BOOKING_FRAGMENT:
-                return new BookingListFragment();
-            case INDEX_INFORMATION_FRAGMENT:
-                return new SettingFragment();
-        }
-
-        return null;
-    }
-
-    /**
-     * Fragment 컨테이너에서 해당 Fragment로 변경하여 표시한다.
-     *
-     * @param fragment Fragment 리스트에 보관된 Fragement들을 받는 것이 좋다.
-     */
-    public void replaceFragment(Fragment fragment, String tag)
-    {
-        try
-        {
-            clearFragmentBackStack();
-
-            mFragmentManager.beginTransaction().replace(mContentLayout.getId(), fragment, tag).commitAllowingStateLoss();
-        } catch (IllegalStateException e)
-        {
-            // 에러가 나는 경우 앱을 재부팅 시킨다.
-            Util.restartApp(MainActivity.this);
-        }
-
-        // 액션바 위치를 다시 잡아준다.
-    }
-
-    /**
-     * Fragment 컨테이너의 표시되는 Fragment를 변경할 때 Fragment 컨테이너에 적재된 Fragment들을 정리한다.
-     */
-    private void clearFragmentBackStack()
-    {
-        for (int i = 0; i < mFragmentManager.getBackStackEntryCount(); ++i)
-        {
-            mFragmentManager.popBackStackImmediate();
-        }
-    }
-
-    @Deprecated
-    public void removeFragment(Fragment fragment)
-    {
-        mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
-    }
-
-    public void selectMenu(int index)
-    {
-        switch (index)
-        {
-            case INDEX_HOTEL_FRAGMENT:
-                mIndexLastFragment = INDEX_HOTEL_FRAGMENT;
-
-                DailyPreference.getInstance(this).setLastMenu(getString(R.string.label_dailyhotel));
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_hotel_list_frag), (long) index);
-                break;
-
-            case INDEX_GOURMET_FRAGMENT:
-                mIndexLastFragment = INDEX_GOURMET_FRAGMENT;
-
-                DailyPreference.getInstance(this).setLastMenu(getString(R.string.label_dailygourmet));
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_gourmet_list_frag), (long) index);
-                break;
-
-            case INDEX_BOOKING_FRAGMENT:
-                mIndexLastFragment = INDEX_BOOKING_FRAGMENT;
-
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_booking_list_frag), (long) index);
-                break;
-
-            case INDEX_INFORMATION_FRAGMENT:
-                mIndexLastFragment = INDEX_INFORMATION_FRAGMENT;
-
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_setting_frag), (long) index);
-                break;
-        }
-
-        replaceFragment(getFragment(mIndexLastFragment), String.valueOf(mIndexLastFragment));
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
@@ -459,7 +319,9 @@ public class MainActivity extends BaseActivity implements Constants
     @Override
     public void onBackPressed()
     {
-        if (mIndexLastFragment == INDEX_HOTEL_FRAGMENT || mIndexLastFragment == INDEX_GOURMET_FRAGMENT)
+        int lastIndex = mMainFragmentManager.getLastIndexFragment();
+
+        if (lastIndex == MainFragmentManager.INDEX_HOTEL_FRAGMENT || lastIndex == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
         {
             if (mBackButtonHandler.onBackPressed())
             {
@@ -473,6 +335,16 @@ public class MainActivity extends BaseActivity implements Constants
     @Override
     protected void onDestroy()
     {
+        if (mSettingNetworkDialog != null)
+        {
+            if (mSettingNetworkDialog.isShowing() == true)
+            {
+                mSettingNetworkDialog.dismiss();
+            }
+
+            mSettingNetworkDialog = null;
+        }
+
         VolleyHttpClient.destroyCookie();
 
         super.onDestroy();
@@ -481,10 +353,12 @@ public class MainActivity extends BaseActivity implements Constants
     @Override
     public void onError()
     {
-        super.onError();
+        if(mIsInitialization == false)
+        {
+            super.onError();
 
-        // Error Fragment를 표시한다. -> stackoverflow가 발생하는 경우가 있음. 에러 원인 파악해야 함.
-        replaceFragment(new ErrorFragment(), String.valueOf(ERROR_FRAGMENT));
+            mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT);
+        }
     }
 
     @Override
@@ -525,8 +399,291 @@ public class MainActivity extends BaseActivity implements Constants
         client.disconnect();
     }
 
-    public int getIndexLastFragment()
+    private void showDisabledNetworkPopup()
     {
-        return mIndexLastFragment;
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        if (mSettingNetworkDialog != null)
+        {
+            if (mSettingNetworkDialog.isShowing() == true)
+            {
+                mSettingNetworkDialog.dismiss();
+            }
+
+            mSettingNetworkDialog = null;
+        }
+
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mSettingNetworkDialog.dismiss();
+
+                if (VolleyHttpClient.isAvailableNetwork() == true)
+                {
+                    lockUI();
+                    mMainPresenter.requestCheckServer();
+                } else
+                {
+                    mDelayTimeHandler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            showDisabledNetworkPopup();
+                        }
+                    }, 100);
+                }
+            }
+        };
+
+        View.OnClickListener negativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                mSettingNetworkDialog.dismiss();
+            }
+        };
+
+        DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener()
+        {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
+            {
+                if (keyCode == KeyEvent.KEYCODE_BACK)
+                {
+                    mSettingNetworkDialog.dismiss();
+                    finish();
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        mSettingNetworkDialog = createSimpleDialog(getString(R.string.dialog_btn_text_waiting)//
+            , getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi)//
+            , getString(R.string.dialog_btn_text_retry)//
+            , getString(R.string.dialog_btn_text_setting), positiveListener, negativeListener);
+        mSettingNetworkDialog.setOnKeyListener(keyListener);
+
+        try
+        {
+            mSettingNetworkDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
+
+    private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
+    {
+        @Override
+        public void setNewIconVisible(boolean visible)
+        {
+            // 아직 어디 화면에 New아이콘을 보여줄지 모른다
+        }
+
+        @Override
+        public void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime)
+        {
+            Intent intent = SatisfactionActivity.newInstance(MainActivity.this, ticketName, reservationIndex, checkInTime);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+        }
+
+        @Override
+        public void onSatisfactionHotel(String hotelName, int reservationIndex, long checkInTime, long checkOutTime)
+        {
+            Intent intent = SatisfactionActivity.newInstance(MainActivity.this, hotelName, reservationIndex, checkInTime, checkOutTime);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+        }
+
+        @Override
+        public void onError()
+        {
+            mDelayTimeHandler.removeMessages(0);
+
+            MainActivity.this.onError();
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mDelayTimeHandler.removeMessages(0);
+
+            MainActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onCheckServerResponse(String title, String message)
+        {
+            showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+            }, null, false);
+        }
+
+        @Override
+        public void onAppVersionResponse(int maxVersion, int minVersion)
+        {
+            int currentVersion = Integer.parseInt(DailyHotel.VERSION.replace(".", ""));
+            int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
+
+            ExLog.d("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
+
+            if (minVersion > currentVersion)
+            {
+                View.OnClickListener posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                        marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                        if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                        {
+                            marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                        }
+
+                        startActivity(marketLaunch);
+                        finish();
+                    }
+                };
+
+                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        setResult(RESULT_CANCELED);
+                        finish();
+                    }
+                };
+
+                showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+
+            } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
+            {
+                View.OnClickListener posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                        marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                        if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                        {
+                            marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                        }
+
+                        startActivity(marketLaunch);
+                        finish();
+                    }
+                };
+
+                final DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        String maxVersion = DailyPreference.getInstance(MainActivity.this).getMaxVersion();
+                        DailyPreference.getInstance(MainActivity.this).setSkipVersion(maxVersion);
+
+                        mMainPresenter.requestConfiguration();
+                    }
+                };
+
+                View.OnClickListener negListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        cancelListener.onCancel(null);
+                    }
+                };
+
+                showSimpleDialog(getString(R.string.dialog_title_notice)//
+                    , getString(R.string.dialog_msg_update_now)//
+                    , getString(R.string.dialog_btn_text_update)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , posListener, negListener, cancelListener, null, false);
+            } else
+            {
+                mMainPresenter.requestConfiguration();
+            }
+        }
+
+        @Override
+        public void onConfigurationRespose()
+        {
+            mDelayTimeHandler.removeMessages(0);
+            mIsInitialization = false;
+            mContentLayout.setVisibility(View.VISIBLE);
+            mBottomMenuBarLayout.setVisibility(View.VISIBLE);
+
+            String deepLink = DailyPreference.getInstance(MainActivity.this).getDeepLink();
+
+            if (Util.isTextEmpty(deepLink) == false)
+            {
+                if (deepLink.contains("hotelIndex") == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                } else if (deepLink.contains("fnbIndex"))
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                } else
+                {
+                    String value = Util.getValueForLinkUrl(deepLink, "view");
+
+                    if ("hotel".equalsIgnoreCase(value) == true)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    } else if ("gourmet".equalsIgnoreCase(value) == true)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                    } else if ("bookings".equalsIgnoreCase(value) == true)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                    } else
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    }
+                }
+            } else
+            {
+                String lastMenu = DailyPreference.getInstance(MainActivity.this).getLastMenu();
+
+                if (getString(R.string.label_dailygourmet).equalsIgnoreCase(lastMenu) == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(lastMenu) == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                } else
+                {
+                    if (mMainFragmentManager.getLastIndexFragment() == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                    } else
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    }
+                }
+
+                mMainPresenter.requestUserAlive();
+            }
+        }
+    };
 }

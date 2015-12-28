@@ -25,12 +25,13 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.FontManager;
 
 public class ErrorFragment extends BaseFragment implements OnClickListener
 {
+    private MainFragmentManager mMainFragmentManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -43,7 +44,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 
         View view = inflater.inflate(R.layout.fragment_error, container, false);
 
-        initToolbar(view, getString(R.string.actionbar_title_error_frag));
+        initToolbar(baseActivity, view, getString(R.string.actionbar_title_error_frag));
 
         TextView retryTextView = (TextView) view.findViewById(R.id.btn_error);
         retryTextView.setOnClickListener(this);
@@ -51,26 +52,16 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         return view;
     }
 
-    private void initToolbar(View view, String title)
+    public void setMenuManager(MainFragmentManager mainFragmentManager)
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
+        mMainFragmentManager = mainFragmentManager;
+    }
 
+    private void initToolbar(BaseActivity baseActivity, View view, String title)
+    {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        try
-        {
-            baseActivity.setSupportActionBar(toolbar);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-        toolbar.setBackgroundColor(getResources().getColor(R.color.white));
-
-        FontManager.apply(toolbar, FontManager.getInstance(baseActivity).getRegularTypeface());
-
-        toolbar.setTitle(title);
+        baseActivity.initToolbar(toolbar, title);
     }
 
     @Override
@@ -84,14 +75,16 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         }
 
         // network 연결이 안되있으면
-        if (!VolleyHttpClient.isAvailableNetwork())
+        if (VolleyHttpClient.isAvailableNetwork() == false)
         {
             DailyToast.showToast(baseActivity, getString(R.string.toast_msg_please_chk_network_status), Toast.LENGTH_SHORT);
             return;
         } else
         {
-            int index = ((MainActivity) baseActivity).getIndexLastFragment();
-            ((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(index), String.valueOf(index));
+            if(mMainFragmentManager != null)
+            {
+                mMainFragmentManager.select(mMainFragmentManager.getLastIndexFragment());
+            }
         }
     }
 }

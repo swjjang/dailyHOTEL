@@ -79,6 +79,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mGourmetRecycleView.setTag("GourmetListFragment");
 
+        mGourmetAdapter = new GourmetAdapter(getContext(), new ArrayList<PlaceViewItem>(), mOnItemClickListener);
+        mGourmetRecycleView.setAdapter(mGourmetAdapter);
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
@@ -157,11 +160,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public PlaceViewItem getPlaceViewItem(int position)
     {
-        if (mGourmetAdapter == null)
-        {
-            return null;
-        }
-
         return mGourmetAdapter.getItem(position);
     }
 
@@ -240,21 +238,16 @@ public class GourmetListFragment extends BaseFragment implements Constants
             params = String.format("?province_idx=%d&sday=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
         }
 
-        //        if (DEBUG == true)
-        //        {
-        //            baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-        //        }
+        if (DEBUG == true)
+        {
+            baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+        }
 
         DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
     }
 
     public List<PlaceViewItem> getPlaceViewItemList()
     {
-        if (mGourmetAdapter == null)
-        {
-            return null;
-        }
-
         return mGourmetAdapter.getAll();
     }
 
@@ -681,6 +674,12 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         int size = arrayList.size();
 
+        if(size == 0)
+        {
+            unLockUI();
+            return;
+        }
+
         for (int i = size - 1; i >= 0; i--)
         {
             PlaceViewItem placeViewItem = arrayList.get(i);
@@ -963,10 +962,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                 if (length == 0)
                 {
-                    if (mGourmetAdapter != null)
-                    {
-                        mGourmetAdapter.clear();
-                    }
+                    mGourmetAdapter.clear();
 
                     setVisibility(VIEW_TYPE.GONE);
 
@@ -993,12 +989,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     }
 
                     ArrayList<PlaceViewItem> placeViewItemList = makeSortHotelList(gourmetList, mSortType);
-
-                    if (mGourmetAdapter == null)
-                    {
-                        mGourmetAdapter = new GourmetAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
-                        mGourmetRecycleView.setAdapter(mGourmetAdapter);
-                    }
 
                     setVisibility(mViewType);
 

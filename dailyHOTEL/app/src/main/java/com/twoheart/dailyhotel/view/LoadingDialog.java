@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * LoadingDialog
- * <p>
+ * <p/>
  * Activity 전체를 핸들하는 로딩 다이얼로그 창이다. 로딩 작업을 수행하는
  * 동안 로딩 다이얼로그 창을 띄우며 취소시 Activity의 onBackPressed
  * 메서드도 같이 수행된다.
@@ -16,11 +16,14 @@ package com.twoheart.dailyhotel.view;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.twoheart.dailyhotel.R;
@@ -55,9 +58,11 @@ public class LoadingDialog
 
         mDialog = new Dialog(activity, R.style.TransDialog);
         mProgressBar = new ProgressBar(activity);
+        mProgressBar.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         mDialog.addContentView(mProgressBar, params);
         mDialog.setCancelable(false);
+        mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {

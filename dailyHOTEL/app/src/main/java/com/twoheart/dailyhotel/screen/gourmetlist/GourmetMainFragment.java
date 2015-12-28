@@ -759,10 +759,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 dayList.add(getString(R.string.label_selecteday));
             } else
             {
-                String checkInDay = tabSaleTime[2].getDayOfDaysHotelDateFormat("d");
-                String chekcInDate = String.format("%s(%s일)", getString(R.string.label_day), checkInDay);
-
-                dayList.add(chekcInDate);
+                dayList.add(mTabLayout.getTabAt(2).getText().toString());
             }
 
             for (int i = 0; i < TAB_COUNT; i++)

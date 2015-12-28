@@ -453,48 +453,6 @@ public class HotelMainFragment extends BaseFragment
         hotelListFragment.refreshHotelList(province, isSelectionTop);
     }
 
-    //    private ArrayList<RegionViewItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
-    //    {
-    //        ArrayList<RegionViewItem> arrayList = new ArrayList<RegionViewItem>(provinceList.size());
-    //
-    //        for (Province province : provinceList)
-    //        {
-    //            RegionViewItem item = new RegionViewItem();
-    //
-    //            item.setProvince(province);
-    //            item.setAreaList(new ArrayList<Area>());
-    //
-    //            for (Area area : areaList)
-    //            {
-    //                if (province.getProvinceIndex() == area.getProvinceIndex())
-    //                {
-    //                    ArrayList<Area> areaArrayList = item.getAreaList();
-    //
-    //                    if (areaArrayList.size() == 0)
-    //                    {
-    //                        Area totalArea = new Area();
-    //
-    //                        totalArea.index = -1;
-    //                        totalArea.name = province.name + " 전체";
-    //                        totalArea.setProvince(province);
-    //                        totalArea.sequence = -1;
-    //                        totalArea.tag = totalArea.name;
-    //                        totalArea.setProvinceIndex(province.getProvinceIndex());
-    //
-    //                        areaArrayList.add(totalArea);
-    //                    }
-    //
-    //                    area.setProvince(province);
-    //                    areaArrayList.add(area);
-    //                }
-    //            }
-    //
-    //            arrayList.add(item);
-    //        }
-    //
-    //        return arrayList;
-    //    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -917,11 +875,7 @@ public class HotelMainFragment extends BaseFragment
                 dayList.add(getString(R.string.label_selecteday));
             } else
             {
-                String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("d");
-                String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("d");
-                String checkInOutDate = String.format("%s(%s-%s일)", getString(R.string.label_day), checkInDay, checkOutDay);
-
-                dayList.add(checkInOutDate);
+                dayList.add(mTabLayout.getTabAt(2).getText().toString());
             }
 
             for (int i = 0; i < TAB_COUNT; i++)
