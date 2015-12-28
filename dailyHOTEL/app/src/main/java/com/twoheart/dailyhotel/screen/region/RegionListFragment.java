@@ -528,33 +528,38 @@ public class RegionListFragment extends BaseFragment
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msg_code = response.getInt("msgCode");
 
-                if (msg_code != 0)
+                if (msg_code == 100)
                 {
-                    throw new NullPointerException("response == null");
-                }
+                    JSONObject dataJSONObject = response.getJSONObject("data");
 
-                JSONObject dataJSONObject = response.getJSONObject("data");
+                    String imageUrl = dataJSONObject.getString("imgUrl");
 
-                JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                    ArrayList<Province> provinceList = makeProvinceList(provinceArray, imageUrl);
 
-                JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
-                ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
+                    ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
 
-                if (mAdapter == null)
+                    if (mAdapter == null)
+                    {
+                        mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
+                        mAdapter.setOnChildClickListener(mOnChildClickListener);
+                    }
+
+                    mAdapter.setData(regionViewItemList);
+                    mListView.setAdapter(mAdapter);
+
+                    selectedPreviousArea(mSelectedProvince, regionViewItemList);
+                } else
                 {
-                    mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
-                    mAdapter.setOnChildClickListener(mOnChildClickListener);
+                    String message = response.getString("msg");
+
+                    onInternalError(message);
                 }
-
-                mAdapter.setData(regionViewItemList);
-                mListView.setAdapter(mAdapter);
-
-                selectedPreviousArea(mSelectedProvince, regionViewItemList);
             } catch (Exception e)
             {
                 onError(e);
@@ -578,7 +583,7 @@ public class RegionListFragment extends BaseFragment
 
                     try
                     {
-                        Area area = new Area(jsonObject);
+                        Area area = new Area(jsonObject, "provinceIdx");
 
                         areaList.add(area);
                     } catch (JSONException e)
@@ -594,7 +599,7 @@ public class RegionListFragment extends BaseFragment
             return areaList;
         }
 
-        private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
+        private ArrayList<Province> makeProvinceList(JSONArray jsonArray, String imageUrl)
         {
             ArrayList<Province> provinceList = new ArrayList<Province>();
 
@@ -608,7 +613,7 @@ public class RegionListFragment extends BaseFragment
 
                     try
                     {
-                        Province province = new Province(jsonObject);
+                        Province province = new Province(jsonObject, imageUrl);
 
                         provinceList.add(province);
                     } catch (JSONException e)
@@ -639,33 +644,38 @@ public class RegionListFragment extends BaseFragment
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msg_code = response.getInt("msgCode");
 
-                if (msg_code != 0)
+                if (msg_code == 100)
                 {
-                    throw new NullPointerException("response == null");
-                }
+                    JSONObject dataJSONObject = response.getJSONObject("data");
 
-                JSONObject dataJSONObject = response.getJSONObject("data");
+                    String imageUrl = dataJSONObject.getString("imgUrl");
 
-                JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                    ArrayList<Province> provinceList = makeProvinceList(provinceArray, imageUrl);
 
-                JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
-                ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
+                    ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
 
-                if (mAdapter == null)
+                    if (mAdapter == null)
+                    {
+                        mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
+                        mAdapter.setOnChildClickListener(mOnChildClickListener);
+                    }
+
+                    mAdapter.setData(regionViewItemList);
+                    mListView.setAdapter(mAdapter);
+
+                    selectedPreviousArea(mSelectedProvince, regionViewItemList);
+                } else
                 {
-                    mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
-                    mAdapter.setOnChildClickListener(mOnChildClickListener);
+                    String message = response.getString("msg");
+
+                    onInternalError(message);
                 }
-
-                mAdapter.setData(regionViewItemList);
-                mListView.setAdapter(mAdapter);
-
-                selectedPreviousArea(mSelectedProvince, regionViewItemList);
             } catch (Exception e)
             {
                 onError(e);
@@ -689,7 +699,7 @@ public class RegionListFragment extends BaseFragment
 
                     try
                     {
-                        Area area = new Area(jsonObject);
+                        Area area = new Area(jsonObject, "fnbRegionProvinceIdx");
 
                         areaList.add(area);
                     } catch (JSONException e)
@@ -705,7 +715,7 @@ public class RegionListFragment extends BaseFragment
             return areaList;
         }
 
-        private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
+        private ArrayList<Province> makeProvinceList(JSONArray jsonArray, String imageUrl)
         {
             ArrayList<Province> provinceList = new ArrayList<Province>();
 
@@ -719,7 +729,7 @@ public class RegionListFragment extends BaseFragment
 
                     try
                     {
-                        Province province = new Province(jsonObject);
+                        Province province = new Province(jsonObject, imageUrl);
 
                         provinceList.add(province);
                     } catch (JSONException e)

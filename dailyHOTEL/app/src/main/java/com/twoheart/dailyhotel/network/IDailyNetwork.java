@@ -431,8 +431,9 @@ interface IDailyNetwork
      * 호텔 이벤트 배너 리스트를 얻어온다
      *
      * @param tag
+     * @param params
      * @param listener
      * @param errorListener
      */
-    void requestEventBannerList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventBannerList(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 }

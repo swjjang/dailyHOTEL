@@ -22,11 +22,11 @@ public class Area extends Province
         readFromParcel(in);
     }
 
-    public Area(JSONObject jsonObject) throws JSONException
+    public Area(JSONObject jsonObject, final String provinceKey) throws JSONException
     {
-        super(jsonObject);
+        super(jsonObject, null);
 
-        provinceIndex = jsonObject.getInt("province_idx");
+        provinceIndex = jsonObject.getInt(provinceKey);
         tag = jsonObject.getString("tag");
     }
 

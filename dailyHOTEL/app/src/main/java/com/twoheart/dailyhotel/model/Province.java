@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.Util;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,10 +29,15 @@ public class Province implements Parcelable
         readFromParcel(in);
     }
 
-    public Province(JSONObject jsonObject) throws JSONException
+    public Province(JSONObject jsonObject, String url) throws JSONException
     {
         index = jsonObject.getInt("idx");
         name = jsonObject.getString("name");
+
+        if (jsonObject.has("nameEng") == true)
+        {
+            englishName = jsonObject.getString("nameEng");
+        }
 
         if (jsonObject.has("seq") == true)
         {
@@ -50,7 +57,10 @@ public class Province implements Parcelable
             isOverseas = false;
         }
 
-        imageUrl = "http://www.telegraph.co.uk/travel/destination/article125984.ece/ALTERNATES/w620/bostonwaterfront.jpg";
+        if (Util.isTextEmpty(url) == false)
+        {
+            imageUrl = url + jsonObject.getString("imagePath");
+        }
     }
 
     public int getProvinceIndex()
