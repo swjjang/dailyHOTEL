@@ -9,8 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -129,7 +127,7 @@ public class HotelMainFragment extends BaseFragment
 
         setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
 
-        initHide();
+        setMenuEnabled(false);
 
         return view;
     }
@@ -141,7 +139,7 @@ public class HotelMainFragment extends BaseFragment
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        baseActivity.initToolbarRegion(mToolbar, getString(R.string.label_dailyhotel), new View.OnClickListener()
+        baseActivity.initToolbarRegion(mToolbar, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -149,16 +147,8 @@ public class HotelMainFragment extends BaseFragment
                 mOnUserActionListener.onClickActionBarArea();
             }
         });
-    }
 
-    private void initHide()
-    {
-        setMenuEnabled(false);
-    }
-
-    private void initShow()
-    {
-        setMenuEnabled(true);
+        baseActivity.initToolbarRegionMenu(mToolbar, mToolbarOptionsItemSelected);
     }
 
     @Override
@@ -188,48 +178,41 @@ public class HotelMainFragment extends BaseFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (baseActivity == null || baseActivity.isFinishing() == true)
         {
             return;
         }
-
-        MenuInflater inflater = baseActivity.getMenuInflater();
-
-        menu.clear();
 
         if (mMenuEnabled == true)
         {
             switch (mHotelViewType)
             {
                 case LIST:
-                    inflater.inflate(R.menu.actionbar_icon_map, menu);
-
-                    MenuItem menuItem = menu.getItem(0);
 
                     HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
                     switch (currentFragment.getSortType())
                     {
                         case DEFAULT:
-                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_01);
+                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_01);
                             break;
 
                         case DISTANCE:
-                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_02);
+                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_02);
                             break;
 
                         case LOW_PRICE:
-                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_03);
+                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_03);
                             break;
 
                         case HIGH_PRICE:
-                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_04);
+                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_04);
                             break;
                     }
                     break;
 
                 case MAP:
-                    inflater.inflate(R.menu.actionbar_icon_list, menu);
+                    baseActivity.setToolbarRegionMenu(mToolbar, R.drawable.navibar_ic_list, -1);
                     break;
             }
         }
@@ -237,14 +220,9 @@ public class HotelMainFragment extends BaseFragment
 
     public void setMenuEnabled(boolean enabled)
     {
-        if (mMenuEnabled == enabled || (enabled == true && mMapEnabled == false))
-        {
-            return;
-        }
-
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (baseActivity == null || (enabled == true && mMapEnabled == false) || mMenuEnabled == enabled)
         {
             return;
         }
@@ -252,63 +230,6 @@ public class HotelMainFragment extends BaseFragment
         mMenuEnabled = enabled;
 
         baseActivity.invalidateOptionsMenu();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return false;
-        }
-
-        switch (item.getItemId())
-        {
-            case R.id.action_list:
-            {
-                boolean isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
-
-                if (isInstalledGooglePlayServices == true)
-                {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.toggleViewType();
-                    }
-
-                    baseActivity.invalidateOptionsMenu();
-                }
-                return true;
-            }
-
-            case R.id.action_map:
-            {
-                boolean isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
-
-                if (isInstalledGooglePlayServices == true)
-                {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.toggleViewType();
-                    }
-
-                    baseActivity.invalidateOptionsMenu();
-                }
-                return true;
-            }
-
-            case R.id.action_sort:
-            {
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-                currentFragment.showSortDialogView();
-
-                return true;
-            }
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -322,8 +243,6 @@ public class HotelMainFragment extends BaseFragment
         }
 
         unLockUI();
-        releaseUiComponent();
-        baseActivity.releaseUiComponent();
 
         switch (requestCode)
         {
@@ -352,20 +271,14 @@ public class HotelMainFragment extends BaseFragment
 
                             setNavigationItemSelected(province);
 
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.refreshAll(true);
-                            }
+                            mOnUserActionListener.refreshAll(true);
                         } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
                         {
                             Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
                             setNavigationItemSelected(province);
 
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.refreshAll(true);
-                            }
+                            mOnUserActionListener.refreshAll(true);
                         }
                     }
                 }
@@ -413,6 +326,7 @@ public class HotelMainFragment extends BaseFragment
         mSelectedProvince = province;
 
         baseActivity.setToolbarRegionText(mToolbar, province.name);
+        baseActivity.setToolbarRegionMenuVisibility(mToolbar, true);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);
@@ -455,11 +369,73 @@ public class HotelMainFragment extends BaseFragment
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private View.OnClickListener mToolbarOptionsItemSelected = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
+            Integer tag = (Integer) v.getTag();
+
+            if (tag == null)
+            {
+                return;
+            }
+
+            switch (tag)
+            {
+                case R.drawable.navibar_ic_list:
+                {
+                    boolean isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
+
+                    if (isInstalledGooglePlayServices == true)
+                    {
+                        mOnUserActionListener.toggleViewType();
+
+                        baseActivity.invalidateOptionsMenu();
+                    }
+                    break;
+                }
+
+                case R.drawable.navibar_ic_map:
+                {
+                    boolean isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
+
+                    if (isInstalledGooglePlayServices == true)
+                    {
+                        mOnUserActionListener.toggleViewType();
+
+                        baseActivity.invalidateOptionsMenu();
+                    }
+                    break;
+                }
+
+                case R.drawable.navibar_ic_sorting_01:
+                case R.drawable.navibar_ic_sorting_02:
+                case R.drawable.navibar_ic_sorting_03:
+                case R.drawable.navibar_ic_sorting_04:
+                {
+                    HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    currentFragment.showSortDialogView();
+                    break;
+                }
+            }
+        }
+    };
+
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
+            mTabLayout.setOnTabSelectedListener(null);
+
             if (mViewPager != null)
             {
                 mViewPager.setCurrentItem(tab.getPosition());
@@ -470,10 +446,9 @@ public class HotelMainFragment extends BaseFragment
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
 
-            if (mOnUserActionListener != null)
-            {
-                mOnUserActionListener.refreshAll(true);
-            }
+            mOnUserActionListener.refreshAll(true);
+
+            mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
             // Google Analytics
             HashMap<String, String> params = new HashMap<String, String>();
@@ -493,7 +468,17 @@ public class HotelMainFragment extends BaseFragment
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
+            mAppBarLayout.setExpanded(true);
 
+            HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
+            fragment.onPageSelected(true);
+
+            // Google Analytics
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put(Label.PROVINCE, mSelectedProvince.name);
+            params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
         }
     };
 
@@ -631,7 +616,7 @@ public class HotelMainFragment extends BaseFragment
             String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("d");
 
             // 선택탭의 이름을 수정한다.
-            mTabLayout.getTabAt(2).setText(String.format("%s(%s-%s일)", getString(R.string.label_day), checkInDay, checkOutDay));
+            mTabLayout.getTabAt(2).setText(getString(R.string.label_format_hotel_selectedday, getString(R.string.label_day), checkInDay, checkOutDay));
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
             refreshHotelList(mSelectedProvince, isListSelectionTop);
@@ -909,8 +894,8 @@ public class HotelMainFragment extends BaseFragment
             // 임시로 여기서 날짜를 넣는다.
             ArrayList<String> dayList = new ArrayList<String>();
 
-            dayList.add(String.format("%s(%s일)", getString(R.string.label_today), tabSaleTime[0].getDailyDay()));
-            dayList.add(String.format("%s(%s일)", getString(R.string.label_tomorrow), tabSaleTime[1].getDailyDay()));
+            dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_today), tabSaleTime[0].getDailyDay()));
+            dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_tomorrow), tabSaleTime[1].getDailyDay()));
 
             String text = (String) mTabLayout.getTabAt(2).getTag();
 

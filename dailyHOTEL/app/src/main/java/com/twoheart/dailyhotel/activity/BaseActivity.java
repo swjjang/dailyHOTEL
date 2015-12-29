@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,7 +46,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     private boolean mActionBarRegionEnabled;
     protected String mNetworkTag;
 
-
     /**
      * UI Component의 잠금 상태인지 확인하는 변수..
      */
@@ -60,13 +60,13 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         handler = new Handler();
         mNetworkTag = getClass().getName();
 
-        //        if (Util.isOverAPI21() == true)
-        //        {
-        //            Window window = getWindow();
-        //            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        //            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //            window.setStatusBarColor(getResources().getColor(R.color.dh_theme_color));
-        //        }
+        if (Util.isOverAPI21() == true)
+        {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.tab_text));
+        }
     }
 
     @Override
@@ -125,31 +125,92 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         return mNetworkTag;
     }
 
-    public void initToolbarRegion(Toolbar toolbar, String title, View.OnClickListener listener)
+    public void initToolbarRegion(Toolbar toolbar, View.OnClickListener listener)
     {
         if (toolbar.getTag() != null)
         {
             return;
         }
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View spinnerView = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
-
-        View imageView = spinnerView.findViewById(R.id.spinnerImageView);
-        imageView.setVisibility(View.INVISIBLE);
-
-        TextView textView = (TextView) spinnerView.findViewById(R.id.titleTextView);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        textView.setMaxLines(1);
-        textView.setSingleLine();
-        textView.setEllipsize(TextUtils.TruncateAt.END);
-        textView.setText(title);
+        final TextView textView = (TextView) toolbar.findViewById(R.id.titleTextView);
+        textView.setText(null);
+        textView.setCompoundDrawables(null, null, null, null);
         textView.setOnClickListener(listener);
 
-        toolbar.addView(spinnerView);
-        toolbar.setTag(toolbar.getId(), textView);
+        final View view = toolbar.findViewById(R.id.biImageView);
 
+        view.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                textView.setMaxWidth(view.getLeft() - textView.getLeft() - Util.dpToPx(BaseActivity.this, 5));
+            }
+        });
+
+        toolbar.setTag(toolbar.getId(), textView);
         setSupportActionBar(toolbar);
+    }
+
+    public void initToolbarRegionMenu(Toolbar toolbar, View.OnClickListener listener)
+    {
+        ImageView menu1 = (ImageView) toolbar.findViewById(R.id.menu1View);
+        ImageView menu2 = (ImageView) toolbar.findViewById(R.id.menu2View);
+
+        setToolbarRegionMenu(toolbar, R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_01);
+
+        menu1.setOnClickListener(listener);
+        menu2.setOnClickListener(listener);
+
+        setToolbarRegionMenuVisibility(toolbar, false);
+    }
+
+    public void setToolbarRegionMenuVisibility(Toolbar toolbar, boolean isVisibility)
+    {
+        View menu1 = toolbar.findViewById(R.id.menu1View);
+        View menu2 = toolbar.findViewById(R.id.menu2View);
+
+        if(isVisibility == true)
+        {
+            menu1.setVisibility(View.VISIBLE);
+            menu2.setVisibility(View.VISIBLE);
+        } else
+        {
+            menu1.setVisibility(View.INVISIBLE);
+            menu2.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void setToolbarRegionMenu(Toolbar toolbar, int menu1ResId, int menu2ResId)
+    {
+        ImageView menu1 = (ImageView) toolbar.findViewById(R.id.menu1View);
+        ImageView menu2 = (ImageView) toolbar.findViewById(R.id.menu2View);
+
+        if(menu1ResId > 0)
+        {
+            menu1.setVisibility(View.VISIBLE);
+            menu1.setImageResource(menu1ResId);
+            menu1.setTag(menu1ResId);
+        } else if(menu1ResId < 0)
+        {
+            menu1.setVisibility(View.GONE);
+        } else
+        {
+            menu1.setVisibility(View.VISIBLE);
+        }
+
+        if(menu2ResId > 0)
+        {
+            menu2.setVisibility(View.VISIBLE);
+            menu2.setImageResource(menu2ResId);
+            menu2.setTag(menu2ResId);
+        } else if(menu2ResId < 0)
+        {
+            menu2.setVisibility(View.GONE);
+        } else
+        {
+            menu2.setVisibility(View.VISIBLE);
+        }
     }
 
     public void initToolbar(Toolbar toolbar, String title)
@@ -178,7 +239,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         if (isBackPressed == true)
         {
-            toolbar.setNavigationIcon(R.drawable.back);
+            toolbar.setNavigationIcon(R.drawable.navibar_ic_back);
             toolbar.setNavigationOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -200,10 +261,8 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         // 인덱스 번호는 나중에 바뀜
         View view = toolbar.getChildAt(0);
 
-        View imageView = view.findViewById(R.id.spinnerImageView);
-        imageView.setVisibility(View.VISIBLE);
-
         TextView textView = (TextView) view.findViewById(R.id.titleTextView);
+        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_region_v, 0);
         textView.setText(title);
     }
 

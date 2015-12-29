@@ -3,7 +3,7 @@
     <color name="dh_theme_color">#900034</color>
 
     <color name="actionbar_border">#7f7f7f</color>
-    <color name="actionbar_title">#181818</color>
+
     <color name="actionbar_underline">#b4b4b4</color>
     <color name="actionbar_background">#ffffff</color>
     <color name="actionbar_hamburger">#900034</color>
@@ -59,9 +59,9 @@
     <color name="black_a80">#cc000000</color>
     <color name="black_a40">#66000000</color>
 
-    <color name="tab_text">#1c1c1c</color>
-    <color name="tab_subtext_selected">#900034</color>
-    <color name="tab_underline">#d6d6d6</color>
+    <color name="tab_text">#323232</color>
+    <color name="tab_selected">#900034</color>
+    <color name="tab_underline">#e7e7e7</color>
 
     <color name="daytab_text">#1c1c1c</color>
     <color name="booking_vline">#c2c2c2</color>
@@ -176,4 +176,17 @@
     <!-- Sort -->
     <color name="sort_by_default">#c5c5c5</color>
     <color name="sort_by_select">#171717</color>
+
+    <!-- Splash -->
+    <color name="splash_background">#efefef</color>
+
+    <!-- Botton Menu -->
+    <color name="menu_text_default">#c1c1c1</color>
+    <color name="menu_text_select">#900034</color>
+
+    <!-- Action Bar -->
+    <color name="actionbar_title">#323232</color>
+
+    <!-- Etc -->
+    <color name="c181818">#181818</color>
 </resources>

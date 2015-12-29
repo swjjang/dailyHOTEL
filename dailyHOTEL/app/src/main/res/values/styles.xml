@@ -73,6 +73,10 @@
         <item name="textSize">16sp</item>
     </style>
 
+    <style name="PlaceTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">12dp</item>
+    </style>
+
     <style name="BookingDetailTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
         <item name="android:textSize">16dp</item>
     </style>

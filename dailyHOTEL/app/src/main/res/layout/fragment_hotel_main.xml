@@ -8,7 +8,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="104dp">
+        android:layout_height="85dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbarLayout"
@@ -20,21 +20,29 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="38dp"
                 android:layout_gravity="bottom"
                 android:background="#ffffff"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:tabGravity="fill"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:tabIndicatorHeight="3dp"
+                app:tabSelectedTextColor="@color/tab_selected"
+                app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
+                app:tabTextColor="@color/tab_text"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
+                android:layout_height="@dimen/toolbar_height_has_tab"
                 android:background="#ffffff"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+                <include layout="@layout/toolbar_region_type"/>
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 

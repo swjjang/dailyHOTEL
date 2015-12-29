@@ -43,6 +43,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
     private Dialog mSettingNetworkDialog;
     private View mSplashLayout;
 
+    private View[] mMenuView;
     private boolean mIsInitialization;
     private Handler mDelayTimeHandler = new Handler()
     {
@@ -87,13 +88,16 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         super.onCreate(savedInstanceState);
 
         // URL 만들때 사용
-//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
 
         VolleyHttpClient.cookieManagerCreate();
         DailyPreference.getInstance(this).removeDeepLink();
+        DailyPreference.getInstance(this).setSettingRegion(TYPE.HOTEL, false);
+        DailyPreference.getInstance(this).setSettingRegion(TYPE.FNB, false);
+        DailyPreference.getInstance(this).setGCMRegistrationId(null);
 
         // 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
         // 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
@@ -133,17 +137,19 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
 
         View bottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
 
-        View hotelView = bottomMenuBarLayout.findViewById(R.id.hotelView);
-        hotelView.setOnClickListener(this);
+        mMenuView = new View[4];
 
-        View gourmetView = bottomMenuBarLayout.findViewById(R.id.gourmetView);
-        gourmetView.setOnClickListener(this);
+        mMenuView[0] = bottomMenuBarLayout.findViewById(R.id.hotelView);
+        mMenuView[0].setOnClickListener(this);
 
-        View bookingView = bottomMenuBarLayout.findViewById(R.id.bookingView);
-        bookingView.setOnClickListener(this);
+        mMenuView[1] = bottomMenuBarLayout.findViewById(R.id.gourmetView);
+        mMenuView[1].setOnClickListener(this);
 
-        View informationView = bottomMenuBarLayout.findViewById(R.id.informationView);
-        informationView.setOnClickListener(this);
+        mMenuView[2] = bottomMenuBarLayout.findViewById(R.id.bookingView);
+        mMenuView[2].setOnClickListener(this);
+
+        mMenuView[3] = bottomMenuBarLayout.findViewById(R.id.informationView);
+        mMenuView[3].setOnClickListener(this);
 
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, mContentLayout);
@@ -184,8 +190,21 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
     }
 
     @Override
+    public void onAttachFragment(Fragment fragment)
+    {
+        super.onAttachFragment(fragment);
+
+        releaseUiComponent();
+    }
+
+    @Override
     public void onClick(View v)
     {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
         switch (v.getId())
         {
             case R.id.hotelView:
@@ -390,6 +409,19 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         client.disconnect();
     }
 
+    protected void setSelectedMenu(int index)
+    {
+        if (mMenuView == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < mMenuView.length; i++)
+        {
+            mMenuView[i].setSelected(i == index ? true : false);
+        }
+    }
+
     private void showDisabledNetworkPopup()
     {
         if (isFinishing() == true)
@@ -502,6 +534,8 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         mSplashLayout.setVisibility(View.GONE);
         mDelayTimeHandler.removeMessages(0);
         mIsInitialization = false;
+
+        mMainPresenter.requestEvent();
     }
 
     private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
@@ -510,6 +544,12 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         public void setNewIconVisible(boolean visible)
         {
             // 아직 어디 화면에 New아이콘을 보여줄지 모른다
+            if(mMenuView == null || mMenuView[3] == null)
+            {
+                return;
+            }
+
+            mMenuView[3].findViewById(R.id.newEventIcon).setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         }
 
         @Override

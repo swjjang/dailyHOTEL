@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.hotellist.HotelListFragment;
 import com.twoheart.dailyhotel.screen.region.RegionListActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
@@ -111,8 +111,6 @@ public class GourmetMainFragment extends PlaceMainFragment
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
-        setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
-
         return view;
     }
 
@@ -123,7 +121,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        baseActivity.initToolbarRegion(mToolbar, getString(R.string.label_dailygourmet), new View.OnClickListener()
+        baseActivity.initToolbarRegion(mToolbar, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -131,6 +129,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                 mOnGourmetUserActionListener.onClickActionBarArea();
             }
         });
+
+        baseActivity.initToolbarRegionMenu(mToolbar, mToolbarOptionsItemSelected);
     }
 
     @Override
@@ -138,102 +138,43 @@ public class GourmetMainFragment extends PlaceMainFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (baseActivity == null || baseActivity.isFinishing() == true)
         {
             return;
         }
-
-        MenuInflater inflater = baseActivity.getMenuInflater();
-
-        menu.clear();
 
         if (mMenuEnabled == true)
         {
             switch (mViewType)
             {
                 case LIST:
-                    inflater.inflate(R.menu.actionbar_icon_map, menu);
 
-                    MenuItem menuItem = menu.getItem(0);
+                    GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-                    GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-                    switch (gourmetListFragment.getSortType())
+                    switch (currentFragment.getSortType())
                     {
                         case DEFAULT:
-                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_01);
+                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_01);
                             break;
 
                         case DISTANCE:
-                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_02);
+                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_02);
                             break;
 
                         case LOW_PRICE:
-                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_03);
+                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_03);
                             break;
 
                         case HIGH_PRICE:
-                            menuItem.setIcon(R.drawable.actionbar_ic_sorting_04);
+                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_04);
                             break;
                     }
                     break;
 
                 case MAP:
-                    inflater.inflate(R.menu.actionbar_icon_list, menu);
-                    break;
-
-                default:
+                    baseActivity.setToolbarRegionMenu(mToolbar, R.drawable.navibar_ic_list, -1);
                     break;
             }
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return false;
-        }
-
-        switch (item.getItemId())
-        {
-            case R.id.action_list:
-            {
-                boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
-
-                if (isInstalledGooglePlayServices == true)
-                {
-                    mOnGourmetUserActionListener.toggleViewType();
-
-                    baseActivity.invalidateOptionsMenu();
-                }
-                return true;
-            }
-
-            case R.id.action_map:
-            {
-                boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
-
-                if (isInstalledGooglePlayServices == true)
-                {
-                    mOnGourmetUserActionListener.toggleViewType();
-
-                    baseActivity.invalidateOptionsMenu();
-                }
-                return true;
-            }
-
-            case R.id.action_sort:
-            {
-                mOnGourmetUserActionListener.showSortDialogView();
-                return true;
-            }
-
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -346,11 +287,74 @@ public class GourmetMainFragment extends PlaceMainFragment
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private View.OnClickListener mToolbarOptionsItemSelected = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
+            Integer tag = (Integer) v.getTag();
+
+            if (tag == null)
+            {
+                return;
+            }
+
+            switch (tag)
+            {
+                case R.drawable.navibar_ic_list:
+                {
+                    boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
+
+                    if (isInstalledGooglePlayServices == true)
+                    {
+                        mOnGourmetUserActionListener.toggleViewType();
+
+                        baseActivity.invalidateOptionsMenu();
+                    }
+                    break;
+                }
+
+                case R.drawable.navibar_ic_map:
+                {
+                    boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
+
+                    if (isInstalledGooglePlayServices == true)
+                    {
+                        mOnGourmetUserActionListener.toggleViewType();
+
+                        baseActivity.invalidateOptionsMenu();
+                    }
+                    break;
+                }
+
+                case R.drawable.navibar_ic_sorting_01:
+                case R.drawable.navibar_ic_sorting_02:
+                case R.drawable.navibar_ic_sorting_03:
+                case R.drawable.navibar_ic_sorting_04:
+                {
+                    GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    currentFragment.showSortDialogView();
+                    break;
+                }
+            }
+        }
+    };
+
+
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
+            mTabLayout.setOnTabSelectedListener(null);
+
             if (mViewPager != null)
             {
                 mViewPager.setCurrentItem(tab.getPosition());
@@ -363,6 +367,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             fragment.onPageSelected(true);
 
             mOnGourmetUserActionListener.refreshAll(true);
+
+            mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(Label.PROVINCE, mSelectedProvince.name);
@@ -381,7 +387,17 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
+            mAppBarLayout.setExpanded(true);
 
+            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+            GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
+            fragment.onPageSelected(true);
+
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put(Label.PROVINCE, mSelectedProvince.name);
+            params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(mViewType.name(), Action.CLICK, Label.DATE_TAB, params);
         }
     };
 
@@ -517,7 +533,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("d");
 
             // 선택탭의 이름을 수정한다.
-            mTabLayout.getTabAt(2).setText(String.format("%s(%s일)", getString(R.string.label_day), checkInDay));
+            mTabLayout.getTabAt(2).setText(getString(R.string.label_format_tabday, getString(R.string.label_day), checkInDay));
+            FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
             refreshList(mSelectedProvince, isListSelectionTop);
 
@@ -814,8 +831,8 @@ public class GourmetMainFragment extends PlaceMainFragment
             // 임시로 여기서 날짜를 넣는다.
             ArrayList<String> dayList = new ArrayList<String>();
 
-            dayList.add(String.format("%s(%s일)", getString(R.string.label_today), tabSaleTime[0].getDailyDay()));
-            dayList.add(String.format("%s(%s일)", getString(R.string.label_tomorrow), tabSaleTime[1].getDailyDay()));
+            dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_today), tabSaleTime[0].getDailyDay()));
+            dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_tomorrow), tabSaleTime[1].getDailyDay()));
 
             String text = (String) mTabLayout.getTabAt(2).getTag();
 
@@ -833,6 +850,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                 String day = dayList.get(i);
                 mTabLayout.getTabAt(i).setText(day);
             }
+
+            FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
         }
 
         private boolean isSelectionTop()

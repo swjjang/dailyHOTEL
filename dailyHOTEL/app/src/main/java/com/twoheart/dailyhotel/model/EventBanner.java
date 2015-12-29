@@ -9,7 +9,7 @@ public class EventBanner
     public int index;
     public long checkInTime;
     public int nights;
-    public boolean mIsHotel;
+    private boolean mIsHotel;
     public String imageUrl;
     public String webLink;
 

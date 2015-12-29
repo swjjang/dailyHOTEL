@@ -17,8 +17,6 @@ public class Province implements Parcelable
     public boolean isOverseas;
     public String imageUrl;
 
-    private int saleWeek = 1; // 1 : 1주일,  2 : 2주일
-
     public Province()
     {
         super();
@@ -37,6 +35,9 @@ public class Province implements Parcelable
         if (jsonObject.has("nameEng") == true)
         {
             englishName = jsonObject.getString("nameEng");
+        } else
+        {
+            englishName = "";
         }
 
         if (jsonObject.has("seq") == true)
@@ -46,8 +47,6 @@ public class Province implements Parcelable
         {
             sequence = 0;
         }
-
-        saleWeek = 1;
 
         if (jsonObject.has("isOverseas") == true)
         {
@@ -60,6 +59,9 @@ public class Province implements Parcelable
         if (Util.isTextEmpty(url) == false)
         {
             imageUrl = url + jsonObject.getString("imagePath");
+        } else
+        {
+            imageUrl = "";
         }
     }
 
@@ -75,7 +77,6 @@ public class Province implements Parcelable
         dest.writeString(name);
         dest.writeString(englishName);
         dest.writeInt(sequence);
-        dest.writeInt(saleWeek);
         dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(imageUrl);
     }
@@ -86,7 +87,6 @@ public class Province implements Parcelable
         name = in.readString();
         englishName = in.readString();
         sequence = in.readInt();
-        saleWeek = in.readInt();
         isOverseas = in.readInt() == 1 ? true : false;
         imageUrl = in.readString();
     }
