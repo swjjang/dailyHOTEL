@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.region;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,17 +19,10 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import java.util.List;
 
 public class RegionListFragment extends BaseFragment
 {
@@ -54,33 +46,18 @@ public class RegionListFragment extends BaseFragment
         return mListView;
     }
 
-    @Override
-    public void onAttach(Context context)
+    public void setRegionViewList(BaseActivity baseActivity, List<RegionViewItem> arrayList)
     {
-        super.onAttach(context);
-
-        onPageSelected();
-    }
-
-    public void onPageSelected()
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null || baseActivity.isFinishing())
+        if (mAdapter == null)
         {
-            return;
+            mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
+            mAdapter.setOnChildClickListener(mOnChildClickListener);
         }
 
-        switch (mType)
-        {
-            case HOTEL:
-                DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
-                break;
+        mAdapter.setData(arrayList);
+        mListView.setAdapter(mAdapter);
 
-            case FNB:
-                DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mGourmetRegionListJsonResponseListener, baseActivity);
-                break;
-        }
+        selectedPreviousArea(mSelectedProvince, arrayList);
     }
 
     public void setInformation(PlaceMainFragment.TYPE type, RegionListActivity.Region region, Province province)
@@ -176,7 +153,7 @@ public class RegionListFragment extends BaseFragment
         }, 100);
     }
 
-    private void selectedPreviousArea(Province province, ArrayList<RegionViewItem> arrayList)
+    private void selectedPreviousArea(Province province, List<RegionViewItem> arrayList)
     {
         if (province == null || arrayList == null)
         {
@@ -446,293 +423,6 @@ public class RegionListFragment extends BaseFragment
                     mOnUserActionListener.onRegionClick(area);
                 }
             }
-        }
-    };
-
-    private ArrayList<RegionViewItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
-    {
-        ArrayList<RegionViewItem> arrayList = new ArrayList<RegionViewItem>(provinceList.size());
-
-        for (Province province : provinceList)
-        {
-            RegionViewItem item = new RegionViewItem();
-
-            item.setProvince(province);
-
-            int i = 0;
-            Area[] areas = null;
-            ArrayList<Area[]> areaArrayList = new ArrayList<>();
-
-            for (Area area : areaList)
-            {
-                if (province.getProvinceIndex() == area.getProvinceIndex())
-                {
-                    if (areas == null)
-                    {
-                        areas = new Area[CHILD_GRID_COLUMN];
-                    }
-
-                    if (areaArrayList.size() == 0)
-                    {
-                        Area totalArea = new Area();
-
-                        totalArea.index = -1;
-                        totalArea.name = province.name + " 전체";
-                        totalArea.setProvince(province);
-                        totalArea.sequence = -1;
-                        totalArea.tag = totalArea.name;
-                        totalArea.setProvinceIndex(province.getProvinceIndex());
-
-                        areas[i++] = totalArea;
-                    }
-
-                    area.setProvince(province);
-
-                    if (i != 0 && i % CHILD_GRID_COLUMN == 1)
-                    {
-                        areas[i++] = area;
-                        areaArrayList.add(areas);
-
-                        i = 0;
-                        areas = null;
-                    } else
-                    {
-                        areas[i++] = area;
-                    }
-                }
-            }
-
-            if (areas != null)
-            {
-                areaArrayList.add(areas);
-            }
-
-            item.setAreaList(areaArrayList);
-            arrayList.add(item);
-        }
-
-        return arrayList;
-    }
-
-    private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || baseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                JSONObject dataJSONObject = response.getJSONObject("data");
-
-                JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                ArrayList<Province> provinceList = makeProvinceList(provinceArray);
-
-                JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                ArrayList<Area> areaList = makeAreaList(areaJSONArray);
-
-                ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
-
-                if (mAdapter == null)
-                {
-                    mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
-                    mAdapter.setOnChildClickListener(mOnChildClickListener);
-                }
-
-                mAdapter.setData(regionViewItemList);
-                mListView.setAdapter(mAdapter);
-
-                selectedPreviousArea(mSelectedProvince, regionViewItemList);
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-
-        private ArrayList<Area> makeAreaList(JSONArray jsonArray)
-        {
-            ArrayList<Area> areaList = new ArrayList<Area>();
-
-            try
-            {
-                int length = jsonArray.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    try
-                    {
-                        Area area = new Area(jsonObject);
-
-                        areaList.add(area);
-                    } catch (JSONException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            return areaList;
-        }
-
-        private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
-        {
-            ArrayList<Province> provinceList = new ArrayList<Province>();
-
-            try
-            {
-                int length = jsonArray.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    try
-                    {
-                        Province province = new Province(jsonObject);
-
-                        provinceList.add(province);
-                    } catch (JSONException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            return provinceList;
-        }
-    };
-
-    private DailyHotelJsonResponseListener mGourmetRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || baseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                JSONObject dataJSONObject = response.getJSONObject("data");
-
-                JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                ArrayList<Province> provinceList = makeProvinceList(provinceArray);
-
-                JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                ArrayList<Area> areaList = makeAreaList(areaJSONArray);
-
-                ArrayList<RegionViewItem> regionViewItemList = makeAreaItemList(provinceList, areaList);
-
-                if (mAdapter == null)
-                {
-                    mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
-                    mAdapter.setOnChildClickListener(mOnChildClickListener);
-                }
-
-                mAdapter.setData(regionViewItemList);
-                mListView.setAdapter(mAdapter);
-
-                selectedPreviousArea(mSelectedProvince, regionViewItemList);
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-
-        private ArrayList<Area> makeAreaList(JSONArray jsonArray)
-        {
-            ArrayList<Area> areaList = new ArrayList<Area>();
-
-            try
-            {
-                int length = jsonArray.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    try
-                    {
-                        Area area = new Area(jsonObject);
-
-                        areaList.add(area);
-                    } catch (JSONException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            return areaList;
-        }
-
-        private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
-        {
-            ArrayList<Province> provinceList = new ArrayList<Province>();
-
-            try
-            {
-                int length = jsonArray.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    try
-                    {
-                        Province province = new Province(jsonObject);
-
-                        provinceList.add(province);
-                    } catch (JSONException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            return provinceList;
         }
     };
 }

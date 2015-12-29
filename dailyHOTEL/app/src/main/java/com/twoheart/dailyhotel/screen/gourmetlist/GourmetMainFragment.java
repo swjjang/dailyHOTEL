@@ -695,94 +695,97 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msg_code = response.getInt("msgCode");
 
-                if (msg_code != 0)
+                if (msg_code == 100)
                 {
-                    throw new NullPointerException("response == null");
-                }
+                    JSONObject dataJSONObject = response.getJSONObject("data");
 
-                JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                    ArrayList<Province> provinceList = makeProvinceList(provinceArray);
 
-                JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
-                JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+                    Province selectedProvince = null;
+                    String regionName = null;
 
-                Province selectedProvince = null;
-                String regionName = null;
+                    if (mSelectedProvince != null)
+                    {
+                        selectedProvince = mSelectedProvince;
+                        regionName = mSelectedProvince.name;
+                    } else
+                    {
+                        // 마지막으로 선택한 지역을 가져온다.
+                        regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
 
-                if (mSelectedProvince != null)
-                {
-                    selectedProvince = mSelectedProvince;
-                    regionName = mSelectedProvince.name;
-                } else
-                {
-                    // 마지막으로 선택한 지역을 가져온다.
-                    regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
+                        if (Util.isTextEmpty(regionName) == true)
+                        {
+                            selectedProvince = provinceList.get(0);
+                            regionName = selectedProvince.name;
+                        }
 
-                    if (Util.isTextEmpty(regionName) == true)
+                        if (selectedProvince == null)
+                        {
+                            for (Province province : provinceList)
+                            {
+                                if (province.name.equals(regionName) == true)
+                                {
+                                    selectedProvince = province;
+                                    break;
+                                }
+                            }
+
+                            if (selectedProvince == null)
+                            {
+                                for (Area area : areaList)
+                                {
+                                    if (area.name.equals(regionName) == true)
+                                    {
+                                        selectedProvince = area;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
+                    if (selectedProvince == null)
                     {
                         selectedProvince = provinceList.get(0);
                         regionName = selectedProvince.name;
                     }
 
-                    if (selectedProvince == null)
+                    boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(TYPE.FNB);
+                    DailyPreference.getInstance(baseActivity).setSettingRegion(TYPE.FNB, true);
+
+                    // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
+                    if (mIsProvinceSetting == false && selectedProvince instanceof Area)
                     {
+                        int provinceIndex = ((Area) selectedProvince).getProvinceIndex();
+
                         for (Province province : provinceList)
                         {
-                            if (province.name.equals(regionName) == true)
+                            if (province.getProvinceIndex() == provinceIndex)
                             {
                                 selectedProvince = province;
                                 break;
                             }
                         }
-
-                        if (selectedProvince == null)
-                        {
-                            for (Area area : areaList)
-                            {
-                                if (area.name.equals(regionName) == true)
-                                {
-                                    selectedProvince = area;
-                                    break;
-                                }
-                            }
-                        }
                     }
-                }
 
-                // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
-                if (selectedProvince == null)
+                    //탭에 들어갈 날짜를 만든다.
+                    makeTabDate();
+
+                    boolean isSelectionTop = isSelectionTop();
+                    onNavigationItemSelected(selectedProvince, isSelectionTop);
+                } else
                 {
-                    selectedProvince = provinceList.get(0);
-                    regionName = selectedProvince.name;
+                    String message = response.getString("msg");
+
+                    onInternalError(message);
                 }
-
-                boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(TYPE.FNB);
-                DailyPreference.getInstance(baseActivity).setSettingRegion(TYPE.FNB, true);
-
-                // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
-                if (mIsProvinceSetting == false && selectedProvince instanceof Area)
-                {
-                    int provinceIndex = ((Area) selectedProvince).getProvinceIndex();
-
-                    for (Province province : provinceList)
-                    {
-                        if (province.getProvinceIndex() == provinceIndex)
-                        {
-                            selectedProvince = province;
-                            break;
-                        }
-                    }
-                }
-
-                //탭에 들어갈 날짜를 만든다.
-                makeTabDate();
-
-                boolean isSelectionTop = isSelectionTop();
-                onNavigationItemSelected(selectedProvince, isSelectionTop);
             } catch (Exception e)
             {
                 onError(e);
@@ -856,31 +859,25 @@ public class GourmetMainFragment extends PlaceMainFragment
             return isSelectionTop;
         }
 
-        private ArrayList<Area> makeAreaList(JSONArray jsonArray)
+        private ArrayList<Area> makeAreaList(JSONArray jsonArray) throws JSONException
         {
             ArrayList<Area> areaList = new ArrayList<Area>();
 
-            try
-            {
-                int length = jsonArray.length();
+            int length = jsonArray.length();
 
-                for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
+            {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                try
                 {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Area area = new Area(jsonObject);
 
-                    try
-                    {
-                        Area area = new Area(jsonObject);
-
-                        areaList.add(area);
-                    } catch (JSONException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
+                    areaList.add(area);
+                } catch (JSONException e)
+                {
+                    ExLog.d(e.toString());
                 }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
             }
 
             return areaList;
@@ -900,7 +897,7 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                     try
                     {
-                        Province province = new Province(jsonObject);
+                        Province province = new Province(jsonObject, null);
 
                         provinceList.add(province);
                     } catch (JSONException e)

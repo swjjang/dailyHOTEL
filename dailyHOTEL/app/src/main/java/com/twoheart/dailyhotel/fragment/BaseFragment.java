@@ -2,12 +2,15 @@ package com.twoheart.dailyhotel.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.OnLoadListener;
 
 public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener
@@ -80,6 +83,26 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
         }
 
         baseActivity.onErrorResponse(error);
+    }
+
+    protected void onInternalError(String message)
+    {
+        unLockUI();
+
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        if(Util.isTextEmpty(message) == true)
+        {
+            baseActivity.onInternalError();
+        } else
+        {
+            baseActivity.onInternalError(message);
+        }
     }
 
     public void lockUI()

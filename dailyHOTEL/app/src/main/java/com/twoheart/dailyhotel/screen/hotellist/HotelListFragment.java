@@ -61,7 +61,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HotelListFragment extends BaseFragment implements Constants
 {
@@ -334,7 +336,10 @@ public class HotelListFragment extends BaseFragment implements Constants
         mSelectedProvince = province;
         mIsSelectionTop = isSelectionTop;
 
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        Map<String, String> params = new HashMap<>();
+        params.put("type", "hotel");
+
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, params, mEventBannerListJsonResponseListener, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)
@@ -835,7 +840,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
                 if (msgCode == 100)
                 {
@@ -1088,37 +1093,37 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                     if (mSortType == SortType.DEFAULT)
                     {
-                        ArrayList<EventBanner> arrayList = new ArrayList<>();
-                        EventBanner eventBanner01 = new EventBanner();
-                        eventBanner01.index = 1490;
-                        eventBanner01.nights = 1;
-                        eventBanner01.mIsHotel = true;
-                        eventBanner01.checkInTime = 1451314800000L - 3600 * 9 * 1000;
-                        eventBanner01.imageUrl = "http://mediamails.com/wp-content/uploads/events_banner.jpg";
-                        arrayList.add(eventBanner01);
-
-                        EventBanner eventBanner02 = new EventBanner();
-                        eventBanner02.index = 50168;
-                        eventBanner02.nights = 1;
-                        eventBanner02.checkInTime = 1451314800000L - 3600 * 9 * 1000;
-                        eventBanner02.mIsHotel = false;
-                        eventBanner02.imageUrl = "http://redtix.airasia.com/Events/F1/images/event_banner_F1.jpg";
-                        arrayList.add(eventBanner02);
-
-                        EventBanner eventBanner03 = new EventBanner();
-                        eventBanner03.webLink = "http://web.dailyhotel.co.kr/eventinapp/event/notice_9.php?number=lglg";
-                        eventBanner03.imageUrl = "http://redtix.airasia.com/events/SundownMusicFestivalAsia2013/images/event-banner-sundown.jpg";
-                        arrayList.add(eventBanner03);
-
-                        if (mEventBannerList == null)
-                        {
-                            mEventBannerList = new ArrayList<>();
-                        }
-
-                        mEventBannerList.clear();
-                        mEventBannerList.add(eventBanner01);
-                        mEventBannerList.add(eventBanner02);
-                        mEventBannerList.add(eventBanner03);
+//                        ArrayList<EventBanner> arrayList = new ArrayList<>();
+//                        EventBanner eventBanner01 = new EventBanner();
+//                        eventBanner01.index = 1490;
+//                        eventBanner01.nights = 1;
+//                        eventBanner01.mIsHotel = true;
+//                        eventBanner01.checkInTime = 1451314800000L - 3600 * 9 * 1000;
+//                        eventBanner01.imageUrl = "http://mediamails.com/wp-content/uploads/events_banner.jpg";
+//                        arrayList.add(eventBanner01);
+//
+//                        EventBanner eventBanner02 = new EventBanner();
+//                        eventBanner02.index = 50168;
+//                        eventBanner02.nights = 1;
+//                        eventBanner02.checkInTime = 1451314800000L - 3600 * 9 * 1000;
+//                        eventBanner02.mIsHotel = false;
+//                        eventBanner02.imageUrl = "http://redtix.airasia.com/Events/F1/images/event_banner_F1.jpg";
+//                        arrayList.add(eventBanner02);
+//
+//                        EventBanner eventBanner03 = new EventBanner();
+//                        eventBanner03.webLink = "http://web.dailyhotel.co.kr/eventinapp/event/notice_9.php?number=lglg";
+//                        eventBanner03.imageUrl = "http://redtix.airasia.com/events/SundownMusicFestivalAsia2013/images/event-banner-sundown.jpg";
+//                        arrayList.add(eventBanner03);
+//
+//                        if (mEventBannerList == null)
+//                        {
+//                            mEventBannerList = new ArrayList<>();
+//                        }
+//
+//                        mEventBannerList.clear();
+//                        mEventBannerList.add(eventBanner01);
+//                        mEventBannerList.add(eventBanner02);
+//                        mEventBannerList.add(eventBanner03);
 
                         if (mEventBannerList != null && mEventBannerList.size() > 0)
                         {
