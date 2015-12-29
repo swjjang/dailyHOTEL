@@ -12,9 +12,11 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RegionListActivity extends BaseActivity
 {
@@ -28,6 +30,7 @@ public class RegionListActivity extends BaseActivity
 
     private PlaceMainFragment.TYPE mType;
     private Province mSelectedProvince;
+    private RegionListPresenter mRegionListPresenter;
 
     public interface OnUserActionListener
     {
@@ -38,6 +41,15 @@ public class RegionListActivity extends BaseActivity
     {
         DOMESTIC,
         GLOBAL
+    }
+
+    public interface OnResponsePresenterListener
+    {
+        void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList);
+
+        void onInternalError();
+
+        void onInternalError(String message);
     }
 
     public static Intent newInstance(Context context, PlaceMainFragment.TYPE type, Province province)
@@ -62,6 +74,8 @@ public class RegionListActivity extends BaseActivity
             return;
         }
 
+        mRegionListPresenter = new RegionListPresenter(this, mOnResponsePresenterListener);
+
         // 호텔 인지 고메인지
         mType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
@@ -79,11 +93,9 @@ public class RegionListActivity extends BaseActivity
         initToolbar();
 
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
-
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        switch (type)
+        switch (mType)
         {
             case HOTEL:
             {
@@ -93,12 +105,12 @@ public class RegionListActivity extends BaseActivity
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(HOTEL_TAB_COUNT);
 
                 RegionListFragment regionListFragment01 = new RegionListFragment();
-                regionListFragment01.setInformation(mType, Region.DOMESTIC, province.isOverseas ? null : province);
+                regionListFragment01.setInformation(mType, Region.DOMESTIC, mSelectedProvince.isOverseas ? null : mSelectedProvince);
                 regionListFragment01.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment01);
 
                 RegionListFragment regionListFragment02 = new RegionListFragment();
-                regionListFragment02.setInformation(mType, Region.GLOBAL, province.isOverseas ? province : null);
+                regionListFragment02.setInformation(mType, Region.GLOBAL, mSelectedProvince.isOverseas ? mSelectedProvince : null);
                 regionListFragment02.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment02);
 
@@ -109,8 +121,7 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.setOffscreenPageLimit(HOTEL_TAB_COUNT);
                 mViewPager.setAdapter(mFragmentPagerAdapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-
-                mViewPager.setCurrentItem(province.isOverseas ? 1 : 0);
+                mViewPager.setCurrentItem(mSelectedProvince.isOverseas ? 1 : 0);
                 break;
             }
 
@@ -121,7 +132,7 @@ public class RegionListActivity extends BaseActivity
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(GOURMET_TAB_COUNT);
 
                 RegionListFragment regionListFragment01 = new RegionListFragment();
-                regionListFragment01.setInformation(mType, Region.DOMESTIC, province.isOverseas ? null : province);
+                regionListFragment01.setInformation(mType, Region.DOMESTIC, mSelectedProvince.isOverseas ? null : mSelectedProvince);
                 regionListFragment01.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment01);
 
@@ -130,11 +141,11 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.setOffscreenPageLimit(GOURMET_TAB_COUNT);
                 mViewPager.setAdapter(mFragmentPagerAdapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-
-                regionListFragment01.onPageSelected();
                 break;
             }
         }
+
+        FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
     }
 
     private void initToolbar()
@@ -142,6 +153,25 @@ public class RegionListActivity extends BaseActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         initToolbar(mToolbar, getString(R.string.label_selectarea_area));
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        lockUI();
+
+        switch (mType)
+        {
+            case HOTEL:
+                mRegionListPresenter.requestHotelRegionList();
+                break;
+
+            case FNB:
+                mRegionListPresenter.requestGourmetRegionList();
+                break;
+        }
     }
 
     @Override
@@ -188,9 +218,6 @@ public class RegionListActivity extends BaseActivity
             {
                 mViewPager.setCurrentItem(tab.getPosition());
             }
-
-            RegionListFragment fragment = (RegionListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected();
         }
 
         @Override
@@ -203,6 +230,47 @@ public class RegionListActivity extends BaseActivity
         public void onTabReselected(TabLayout.Tab tab)
         {
 
+        }
+    };
+
+    private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
+    {
+        @Override
+        public void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList)
+        {
+            ArrayList<RegionListFragment> arrayList = mFragmentPagerAdapter.getFragmentList();
+
+            switch (mType)
+            {
+                case HOTEL:
+                {
+                    arrayList.get(0).setRegionViewList(RegionListActivity.this, domesticList);
+                    arrayList.get(1).setRegionViewList(RegionListActivity.this, globalList);
+                    break;
+                }
+
+                case FNB:
+                {
+                    arrayList.get(0).setRegionViewList(RegionListActivity.this, domesticList);
+                    break;
+                }
+            }
+
+            unLockUI();
+        }
+
+        @Override
+        public void onInternalError()
+        {
+            unLockUI();
+            RegionListActivity.this.onInternalError();
+        }
+
+        @Override
+        public void onInternalError(String message)
+        {
+            unLockUI();
+            RegionListActivity.this.onInternalError(message);
         }
     };
 }

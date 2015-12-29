@@ -859,31 +859,25 @@ public class GourmetMainFragment extends PlaceMainFragment
             return isSelectionTop;
         }
 
-        private ArrayList<Area> makeAreaList(JSONArray jsonArray)
+        private ArrayList<Area> makeAreaList(JSONArray jsonArray) throws JSONException
         {
             ArrayList<Area> areaList = new ArrayList<Area>();
 
-            try
-            {
-                int length = jsonArray.length();
+            int length = jsonArray.length();
 
-                for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
+            {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                try
                 {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Area area = new Area(jsonObject);
 
-                    try
-                    {
-                        Area area = new Area(jsonObject, "fnbRegionProvinceIdx");
-
-                        areaList.add(area);
-                    } catch (JSONException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
+                    areaList.add(area);
+                } catch (JSONException e)
+                {
+                    ExLog.d(e.toString());
                 }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
             }
 
             return areaList;

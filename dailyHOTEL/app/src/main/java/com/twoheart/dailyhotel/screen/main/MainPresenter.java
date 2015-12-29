@@ -24,9 +24,9 @@ public class MainPresenter implements Response.ErrorListener
 
     public MainPresenter(BaseActivity baseActivity, MainActivity.OnResponsePresenterListener listener)
     {
-        if (listener == null)
+        if (baseActivity == null || listener == null)
         {
-            throw new NullPointerException("listener == null");
+            throw new NullPointerException("baseActivity == null || listener == null");
         }
 
         mBaseActivity = baseActivity;

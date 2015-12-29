@@ -3,11 +3,15 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.Constants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Area extends Province
 {
+    private static String PROVINCE_INDEXKEY = "provinceIdx";
+
     public Province province;
     public String tag;
     private int provinceIndex;
@@ -22,11 +26,11 @@ public class Area extends Province
         readFromParcel(in);
     }
 
-    public Area(JSONObject jsonObject, final String provinceKey) throws JSONException
+    public Area(JSONObject jsonObject) throws JSONException
     {
         super(jsonObject, null);
 
-        provinceIndex = jsonObject.getInt(provinceKey);
+        provinceIndex = jsonObject.getInt(PROVINCE_INDEXKEY);
         tag = jsonObject.getString("tag");
     }
 

@@ -49,9 +49,9 @@ public class Province implements Parcelable
 
         saleWeek = 1;
 
-        if (jsonObject.has("is_overseas") == true)
+        if (jsonObject.has("isOverseas") == true)
         {
-            isOverseas = jsonObject.getBoolean("is_overseas");
+            isOverseas = jsonObject.getInt("isOverseas") == 1;
         } else
         {
             isOverseas = false;
