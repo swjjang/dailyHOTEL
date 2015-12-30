@@ -132,6 +132,16 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             areaSubTextView2.setText(null);
         }
 
+        View underLineView = convertView.findViewById(R.id.underLineView);
+
+        if (isLastChild == true)
+        {
+            underLineView.setVisibility(View.INVISIBLE);
+        } else
+        {
+            underLineView.setVisibility(View.VISIBLE);
+        }
+
         return convertView;
     }
 
@@ -159,38 +169,35 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         return groupPosition;
     }
 
+    private String getInsertSpaceName(String name)
+    {
+        char[] nameChars = name.toCharArray();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (char nameChar : nameChars)
+        {
+            stringBuilder.append(nameChar);
+            stringBuilder.append(' ');
+        }
+
+        return stringBuilder.toString();
+    }
+
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
     {
         Province province = getGroup(groupPosition);
 
-        if (province == null)
+        if (convertView == null)
         {
-            convertView = mInflater.inflate(R.layout.list_row_region_footer, parent, false);
-            convertView.setTag(null);
-            convertView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-
-                }
-            });
-
-            return convertView;
+            convertView = mInflater.inflate(R.layout.list_row_province, parent, false);
         } else
         {
-            if (convertView == null)
+            Integer resourceId = (Integer) convertView.getTag(parent.getId());
+
+            if (resourceId == null || resourceId.intValue() != R.layout.list_row_province)
             {
                 convertView = mInflater.inflate(R.layout.list_row_province, parent, false);
-            } else
-            {
-                Integer resourceId = (Integer) convertView.getTag(parent.getId());
-
-                if (resourceId == null || resourceId.intValue() != R.layout.list_row_province)
-                {
-                    convertView = mInflater.inflate(R.layout.list_row_province, parent, false);
-                }
             }
         }
 
@@ -200,10 +207,12 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         ImageView provinceImageView = (ImageView) convertView.findViewById(R.id.provinceImageView);
         ImageView arrowImageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
+        TextView englishTextView = (TextView) convertView.findViewById(R.id.provinceEnglishTextView);
 
         Glide.with(mContext).load(province.imageUrl).crossFade().into(provinceImageView);
 
-        textView.setText(province.name);
+        textView.setText(getInsertSpaceName(province.name));
+        englishTextView.setText(getInsertSpaceName(province.englishName));
 
         boolean hasChildren = getRealChildrenCount(groupPosition) > 0;
         boolean isSelected = false;
@@ -217,16 +226,16 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             arrowImageView.setVisibility(View.GONE);
         }
 
-        if (hasChildren == true)
-        {
-            if (getAreaItem(groupPosition).isExpandGroup == true)
-            {
-                arrowImageView.setImageResource(R.drawable.ic_details_menu_on);
-            } else
-            {
-                arrowImageView.setImageResource(R.drawable.ic_details_menu_off);
-            }
-        }
+        //        if (hasChildren == true)
+        //        {
+        //            if (getAreaItem(groupPosition).isExpandGroup == true)
+        //            {
+        //                arrowImageView.setImageResource(R.drawable.ic_details_menu_on);
+        //            } else
+        //            {
+        //                arrowImageView.setImageResource(R.drawable.ic_details_menu_off);
+        //            }
+        //        }
 
         return convertView;
     }

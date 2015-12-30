@@ -3,8 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Constants;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,9 +10,10 @@ public class Area extends Province
 {
     private static String PROVINCE_INDEXKEY = "provinceIdx";
 
-    public Province province;
     public String tag;
-    private int provinceIndex;
+
+    private int mProvinceIndex;
+    private Province mProvince;
 
     public Area()
     {
@@ -30,29 +29,29 @@ public class Area extends Province
     {
         super(jsonObject, null);
 
-        provinceIndex = jsonObject.getInt(PROVINCE_INDEXKEY);
+        mProvinceIndex = jsonObject.getInt(PROVINCE_INDEXKEY);
         tag = jsonObject.getString("tag");
     }
 
     public Province getProvince()
     {
-        return province;
+        return mProvince;
     }
 
     public void setProvince(Province province)
     {
-        this.province = province;
+        mProvince = province;
     }
 
     @Override
     public int getProvinceIndex()
     {
-        return provinceIndex;
+        return mProvinceIndex;
     }
 
     public void setProvinceIndex(int provinceIndex)
     {
-        this.provinceIndex = provinceIndex;
+        mProvinceIndex = provinceIndex;
     }
 
     @Override
@@ -60,20 +59,20 @@ public class Area extends Province
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeInt(provinceIndex);
+        dest.writeInt(mProvinceIndex);
         dest.writeString(tag);
 
-        province.writeToParcel(dest, flags);
+        mProvince.writeToParcel(dest, flags);
     }
 
     protected void readFromParcel(Parcel in)
     {
         super.readFromParcel(in);
 
-        provinceIndex = in.readInt();
+        mProvinceIndex = in.readInt();
         tag = in.readString();
 
-        province = new Province(in);
+        mProvince = new Province(in);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
