@@ -16,6 +16,8 @@ public class DailyCountryCodeTextView extends AppCompatTextView
     public DailyCountryCodeTextView(Context context)
     {
         super(context);
+
+        setFontStyle(context, null);
     }
 
     public DailyCountryCodeTextView(Context context, AttributeSet attrs)

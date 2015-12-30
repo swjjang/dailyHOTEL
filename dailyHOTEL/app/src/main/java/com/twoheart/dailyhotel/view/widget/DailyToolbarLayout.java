@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.view.widget;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -61,6 +60,40 @@ public class DailyToolbarLayout
         setToolbarRegionMenuVisibility(false);
     }
 
+    public void initToolbar(String title)
+    {
+        initToolbar(title, false);
+    }
+
+    public void initToolbar(String title, boolean isTransparent)
+    {
+        initToolbar(title, true, isTransparent);
+    }
+
+    public void initToolbar(String title, boolean isBackPressed, boolean isTransparent)
+    {
+        mAppCompatActivity.setSupportActionBar(mToolbar);
+        setToolbarTransparent(isTransparent);
+
+        FontManager.apply(mToolbar, FontManager.getInstance(mAppCompatActivity).getRegularTypeface());
+
+        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+        textView.setText(title);
+
+        if (isBackPressed == true)
+        {
+            View backView = mToolbar.findViewById(R.id.backImageView);
+            backView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mAppCompatActivity.finish();
+                }
+            });
+        }
+    }
+
     public void setToolbarRegionMenuVisibility(boolean isVisibility)
     {
         View menu1 = mToolbar.findViewById(R.id.menu1View);
@@ -109,39 +142,6 @@ public class DailyToolbarLayout
         }
     }
 
-    public void initToolbar(String title)
-    {
-        initToolbar(title, false);
-    }
-
-    public void initToolbar(String title, boolean isTransparent)
-    {
-        initToolbar(title, true, isTransparent);
-    }
-
-    public void initToolbar(String title, boolean isBackPressed, boolean isTransparent)
-    {
-        mAppCompatActivity.setSupportActionBar(mToolbar);
-        setToolbarTransparent(isTransparent);
-
-        FontManager.apply(mToolbar, FontManager.getInstance(mAppCompatActivity).getRegularTypeface());
-
-        mAppCompatActivity.getSupportActionBar().setTitle(title);
-
-        if (isBackPressed == true)
-        {
-            mToolbar.setNavigationIcon(R.drawable.navibar_ic_back);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    mAppCompatActivity.finish();
-                }
-            });
-        }
-    }
-
     public void setToolbarRegionText(String title)
     {
         // 인덱스 번호는 나중에 바뀜
@@ -152,14 +152,8 @@ public class DailyToolbarLayout
 
     public void setToolbarText(String title)
     {
-        ActionBar actionBar = mAppCompatActivity.getSupportActionBar();
-
-        if (actionBar == null)
-        {
-            return;
-        }
-
-        actionBar.setTitle(title);
+        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+        textView.setText(title);
     }
 
     public void setToolbarTransparent(boolean isTransparent)

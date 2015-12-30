@@ -37,7 +37,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/setting_facebook"/>
+                android:src="@drawable/more_sns_01"/>
 
             <ImageView
                 android:id="@+id/instagramLinkView"
@@ -48,7 +48,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/setting_instagram"/>
+                android:src="@drawable/more_sns_02"/>
 
             <ImageView
                 android:id="@+id/naverLinkView"
@@ -57,7 +57,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/setting_blog"/>
+                android:src="@drawable/more_sns_03"/>
         </LinearLayout>
 
         <LinearLayout

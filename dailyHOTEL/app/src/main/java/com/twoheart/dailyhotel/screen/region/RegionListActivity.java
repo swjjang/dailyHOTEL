@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.util.ArrayList;
@@ -23,10 +24,10 @@ public class RegionListActivity extends BaseActivity
     private static final int HOTEL_TAB_COUNT = 2;
     private static final int GOURMET_TAB_COUNT = 1;
 
-    private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private RegionFragmentPagerAdapter mFragmentPagerAdapter;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     private PlaceMainFragment.TYPE mType;
     private Province mSelectedProvince;
@@ -150,9 +151,10 @@ public class RegionListActivity extends BaseActivity
 
     private void initToolbar()
     {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        initToolbar(mToolbar, getString(R.string.label_selectarea_area));
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
     }
 
     @Override

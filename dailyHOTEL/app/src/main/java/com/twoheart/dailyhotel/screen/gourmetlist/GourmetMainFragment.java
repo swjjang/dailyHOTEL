@@ -718,21 +718,18 @@ public class GourmetMainFragment extends PlaceMainFragment
                     ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                     Province selectedProvince = null;
-                    String regionName = null;
 
                     if (mSelectedProvince != null)
                     {
                         selectedProvince = mSelectedProvince;
-                        regionName = mSelectedProvince.name;
                     } else
                     {
                         // 마지막으로 선택한 지역을 가져온다.
-                        regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
+                        String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
 
                         if (Util.isTextEmpty(regionName) == true)
                         {
                             selectedProvince = provinceList.get(0);
-                            regionName = selectedProvince.name;
                         }
 
                         if (selectedProvince == null)
@@ -752,6 +749,15 @@ public class GourmetMainFragment extends PlaceMainFragment
                                 {
                                     if (area.name.equals(regionName) == true)
                                     {
+                                        for (Province province : provinceList)
+                                        {
+                                            if (area.getProvinceIndex() == province.index)
+                                            {
+                                                area.setProvince(province);
+                                                break;
+                                            }
+                                        }
+
                                         selectedProvince = area;
                                         break;
                                     }
@@ -764,7 +770,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                     if (selectedProvince == null)
                     {
                         selectedProvince = provinceList.get(0);
-                        regionName = selectedProvince.name;
                     }
 
                     boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(TYPE.FNB);

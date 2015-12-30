@@ -772,21 +772,18 @@ public class HotelMainFragment extends BaseFragment
                     ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                     Province selectedProvince = null;
-                    String regionName = null;
 
                     if (mSelectedProvince != null)
                     {
                         selectedProvince = mSelectedProvince;
-                        regionName = mSelectedProvince.name;
                     } else
                     {
                         // 마지막으로 선택한 지역을 가져온다.
-                        regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);
+                        String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);
 
                         if (Util.isTextEmpty(regionName) == true)
                         {
                             selectedProvince = provinceList.get(0);
-                            regionName = selectedProvince.name;
                         }
 
                         if (selectedProvince == null)
@@ -806,7 +803,17 @@ public class HotelMainFragment extends BaseFragment
                                 {
                                     if (area.name.equals(regionName) == true)
                                     {
+                                        for (Province province : provinceList)
+                                        {
+                                            if (area.getProvinceIndex() == province.index)
+                                            {
+                                                area.setProvince(province);
+                                                break;
+                                            }
+                                        }
+
                                         selectedProvince = area;
+
                                         break;
                                     }
                                 }
@@ -818,7 +825,6 @@ public class HotelMainFragment extends BaseFragment
                     if (selectedProvince == null)
                     {
                         selectedProvince = provinceList.get(0);
-                        regionName = selectedProvince.name;
                     }
 
                     // 처음 시작시에는 지역이 Area로 저장된 경우 Province로 변경하기 위한 저장값.

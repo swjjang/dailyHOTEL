@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -21,15 +22,20 @@
                 android:id="@+id/areaTextView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@drawable/selector_textview_selectarea_childcolor"
-                android:textSize="16dp"/>
+                android:textColor="@drawable/selector_selectarea_titlecolor"
+                android:textSize="15dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/areaSubTextView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@drawable/selector_textview_selectarea_childcolor"
-                android:textSize="10dp"/>
+                android:layout_marginTop="1dp"
+                android:textColor="@drawable/selector_selectarea_subtitlecolor"
+                android:textSize="9dp"
+                dailyFont:style="DemiLight"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:ellipsize="end"/>
         </LinearLayout>
 
         <View
@@ -50,19 +56,25 @@
                 android:id="@+id/areaTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@drawable/selector_textview_selectarea_childcolor"
-                android:textSize="16dp"/>
+                android:textColor="@drawable/selector_selectarea_titlecolor"
+                android:textSize="15dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/areaSubTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@drawable/selector_textview_selectarea_childcolor"
-                android:textSize="10dp"/>
+                android:layout_marginTop="1dp"
+                android:textColor="@drawable/selector_selectarea_subtitlecolor"
+                android:textSize="9dp"
+                dailyFont:style="DemiLight"
+                android:ellipsize="end"
+                android:minLines="1"
+                android:singleLine="true"/>
         </LinearLayout>
     </LinearLayout>
 
     <View
+        android:id="@+id/underLineView"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_alignParentBottom="true"
