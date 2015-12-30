@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
 
-public class MainActivity extends BaseActivity implements Constants, View.OnClickListener
+public class MainActivity extends BaseActivity implements Constants
 {
     private ViewGroup mContentLayout;
 
@@ -40,10 +40,10 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
 
     private MainPresenter mMainPresenter;
     private MainFragmentManager mMainFragmentManager;
+    private MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
     private View mSplashLayout;
 
-    private View[] mMenuView;
     private boolean mIsInitialization;
     private Handler mDelayTimeHandler = new Handler()
     {
@@ -133,26 +133,13 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         setContentView(R.layout.activity_main);
 
         mSplashLayout = findViewById(R.id.splashLayout);
-        mSplashLayout.setVisibility(View.VISIBLE);
 
-        View bottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
-
-        mMenuView = new View[4];
-
-        mMenuView[0] = bottomMenuBarLayout.findViewById(R.id.hotelView);
-        mMenuView[0].setOnClickListener(this);
-
-        mMenuView[1] = bottomMenuBarLayout.findViewById(R.id.gourmetView);
-        mMenuView[1].setOnClickListener(this);
-
-        mMenuView[2] = bottomMenuBarLayout.findViewById(R.id.bookingView);
-        mMenuView[2].setOnClickListener(this);
-
-        mMenuView[3] = bottomMenuBarLayout.findViewById(R.id.informationView);
-        mMenuView[3].setOnClickListener(this);
+        ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
+        mMenuBarLayout = new MenuBarLayout(bottomMenuBarLayout, onMenuBarSelectedListener);
+        mMenuBarLayout.setVisibility(false);
 
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
-        mMainFragmentManager = new MainFragmentManager(this, mContentLayout);
+        mMainFragmentManager = new MainFragmentManager(this, mContentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
         mBackButtonHandler = new CloseOnBackPressed(this);
     }
 
@@ -195,34 +182,6 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         super.onAttachFragment(fragment);
 
         releaseUiComponent();
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        if (lockUiComponentAndIsLockUiComponent() == true)
-        {
-            return;
-        }
-
-        switch (v.getId())
-        {
-            case R.id.hotelView:
-                mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
-                break;
-
-            case R.id.gourmetView:
-                mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
-                break;
-
-            case R.id.bookingView:
-                mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
-                break;
-
-            case R.id.informationView:
-                mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
-                break;
-        }
     }
 
     @Override
@@ -409,19 +368,6 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         client.disconnect();
     }
 
-    protected void setSelectedMenu(int index)
-    {
-        if (mMenuView == null)
-        {
-            return;
-        }
-
-        for (int i = 0; i < mMenuView.length; i++)
-        {
-            mMenuView[i].setSelected(i == index ? true : false);
-        }
-    }
-
     private void showDisabledNetworkPopup()
     {
         if (isFinishing() == true)
@@ -531,12 +477,50 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         //
         //        mSplashLayout.startAnimation(animation);
 
-        mSplashLayout.setVisibility(View.GONE);
+        mMenuBarLayout.setVisibility(true);
         mDelayTimeHandler.removeMessages(0);
         mIsInitialization = false;
 
         mMainPresenter.requestEvent();
     }
+
+    private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
+    {
+        @Override
+        public void onMenuSelected(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    break;
+
+                case 1:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                    break;
+
+                case 2:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                    break;
+
+                case 3:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                    break;
+            }
+        }
+
+        @Override
+        public void onMenuUnselected(int index)
+        {
+
+        }
+
+        @Override
+        public void onMenuReselected(int intdex)
+        {
+
+        }
+    };
 
     private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
     {
@@ -544,12 +528,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         public void setNewIconVisible(boolean visible)
         {
             // 아직 어디 화면에 New아이콘을 보여줄지 모른다
-            if(mMenuView == null || mMenuView[3] == null)
-            {
-                return;
-            }
-
-            mMenuView[3].findViewById(R.id.newEventIcon).setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+            mMenuBarLayout.setNewIconVisible(visible);
         }
 
         @Override

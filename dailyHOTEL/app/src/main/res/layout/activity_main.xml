@@ -2,14 +2,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <include layout="@layout/view_menubar"/>
-
-    <FrameLayout
-        android:id="@+id/contentLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottomMenuBarLayout"/>
-
     <FrameLayout
         android:id="@+id/splashLayout"
         android:layout_width="match_parent"
@@ -28,12 +20,20 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/bottomMenuBarLayout"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="56dp"
+            android:layout_marginBottom="@dimen/menubar_height"
             android:layout_marginTop="85dp"
             android:background="@color/splash_background"
             android:scaleType="center"
             android:src="@drawable/splash_logo"/>
     </FrameLayout>
+
+    <include layout="@layout/view_menubar"/>
+
+    <FrameLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomMenuBarLayout"/>
 
     <View
         android:layout_width="match_parent"

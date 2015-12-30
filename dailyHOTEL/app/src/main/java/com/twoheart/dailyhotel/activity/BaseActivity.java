@@ -42,8 +42,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     private Dialog mDialog;
     private LoadingDialog mLockUI;
     private Handler handler;
-    private int mSpinnderIndex = -1;
-    private boolean mActionBarRegionEnabled;
     protected String mNetworkTag;
 
     /**
@@ -125,94 +123,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         return mNetworkTag;
     }
 
-    public void initToolbarRegion(Toolbar toolbar, View.OnClickListener listener)
-    {
-        if (toolbar.getTag() != null)
-        {
-            return;
-        }
-
-        final TextView textView = (TextView) toolbar.findViewById(R.id.titleTextView);
-        textView.setText(null);
-        textView.setCompoundDrawables(null, null, null, null);
-        textView.setOnClickListener(listener);
-
-        final View view = toolbar.findViewById(R.id.biImageView);
-
-        view.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                textView.setMaxWidth(view.getLeft() - textView.getLeft() - Util.dpToPx(BaseActivity.this, 5));
-            }
-        });
-
-        toolbar.setTag(toolbar.getId(), textView);
-        setSupportActionBar(toolbar);
-    }
-
-    public void initToolbarRegionMenu(Toolbar toolbar, View.OnClickListener listener)
-    {
-        ImageView menu1 = (ImageView) toolbar.findViewById(R.id.menu1View);
-        ImageView menu2 = (ImageView) toolbar.findViewById(R.id.menu2View);
-
-        setToolbarRegionMenu(toolbar, R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_01);
-
-        menu1.setOnClickListener(listener);
-        menu2.setOnClickListener(listener);
-
-        setToolbarRegionMenuVisibility(toolbar, false);
-    }
-
-    public void setToolbarRegionMenuVisibility(Toolbar toolbar, boolean isVisibility)
-    {
-        View menu1 = toolbar.findViewById(R.id.menu1View);
-        View menu2 = toolbar.findViewById(R.id.menu2View);
-
-        if(isVisibility == true)
-        {
-            menu1.setVisibility(View.VISIBLE);
-            menu2.setVisibility(View.VISIBLE);
-        } else
-        {
-            menu1.setVisibility(View.INVISIBLE);
-            menu2.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    public void setToolbarRegionMenu(Toolbar toolbar, int menu1ResId, int menu2ResId)
-    {
-        ImageView menu1 = (ImageView) toolbar.findViewById(R.id.menu1View);
-        ImageView menu2 = (ImageView) toolbar.findViewById(R.id.menu2View);
-
-        if(menu1ResId > 0)
-        {
-            menu1.setVisibility(View.VISIBLE);
-            menu1.setImageResource(menu1ResId);
-            menu1.setTag(menu1ResId);
-        } else if(menu1ResId < 0)
-        {
-            menu1.setVisibility(View.GONE);
-        } else
-        {
-            menu1.setVisibility(View.VISIBLE);
-        }
-
-        if(menu2ResId > 0)
-        {
-            menu2.setVisibility(View.VISIBLE);
-            menu2.setImageResource(menu2ResId);
-            menu2.setTag(menu2ResId);
-        } else if(menu2ResId < 0)
-        {
-            menu2.setVisibility(View.GONE);
-        } else
-        {
-            menu2.setVisibility(View.VISIBLE);
-        }
-    }
-
     public void initToolbar(Toolbar toolbar, String title)
     {
         initToolbar(toolbar, title, false);
@@ -249,21 +159,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 }
             });
         }
-    }
-
-    public void setToolbarRegionText(Toolbar toolbar, String title)
-    {
-        if (toolbar == null)
-        {
-            return;
-        }
-
-        // 인덱스 번호는 나중에 바뀜
-        View view = toolbar.getChildAt(0);
-
-        TextView textView = (TextView) view.findViewById(R.id.titleTextView);
-        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_region_v, 0);
-        textView.setText(title);
     }
 
     public void setToolbarText(String title)

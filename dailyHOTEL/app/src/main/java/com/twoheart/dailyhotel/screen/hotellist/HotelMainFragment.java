@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONArray;
@@ -52,10 +53,10 @@ public class HotelMainFragment extends BaseFragment
     private static final int TAB_COUNT = 3;
 
     private AppBarLayout mAppBarLayout;
-    private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private HotelFragmentPagerAdapter mFragmentPagerAdapter;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     private SaleTime mTodaySaleTime;
     private Province mSelectedProvince;
@@ -137,9 +138,10 @@ public class HotelMainFragment extends BaseFragment
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        baseActivity.initToolbarRegion(mToolbar, new View.OnClickListener()
+        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        mDailyToolbarLayout.initToolbarRegion(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -148,7 +150,7 @@ public class HotelMainFragment extends BaseFragment
             }
         });
 
-        baseActivity.initToolbarRegionMenu(mToolbar, mToolbarOptionsItemSelected);
+        mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
     }
 
     @Override
@@ -176,13 +178,6 @@ public class HotelMainFragment extends BaseFragment
     @Override
     public void onPrepareOptionsMenu(Menu menu)
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null || baseActivity.isFinishing() == true)
-        {
-            return;
-        }
-
         if (mMenuEnabled == true)
         {
             switch (mHotelViewType)
@@ -194,25 +189,25 @@ public class HotelMainFragment extends BaseFragment
                     switch (currentFragment.getSortType())
                     {
                         case DEFAULT:
-                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_01);
+                            mDailyToolbarLayout.setToolbarRegionMenu(0, R.drawable.navibar_ic_sorting_01);
                             break;
 
                         case DISTANCE:
-                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_02);
+                            mDailyToolbarLayout.setToolbarRegionMenu(0, R.drawable.navibar_ic_sorting_02);
                             break;
 
                         case LOW_PRICE:
-                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_03);
+                            mDailyToolbarLayout.setToolbarRegionMenu(0, R.drawable.navibar_ic_sorting_03);
                             break;
 
                         case HIGH_PRICE:
-                            baseActivity.setToolbarRegionMenu(mToolbar, 0, R.drawable.navibar_ic_sorting_04);
+                            mDailyToolbarLayout.setToolbarRegionMenu(0, R.drawable.navibar_ic_sorting_04);
                             break;
                     }
                     break;
 
                 case MAP:
-                    baseActivity.setToolbarRegionMenu(mToolbar, R.drawable.navibar_ic_list, -1);
+                    mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_list, -1);
                     break;
             }
         }
@@ -325,8 +320,8 @@ public class HotelMainFragment extends BaseFragment
 
         mSelectedProvince = province;
 
-        baseActivity.setToolbarRegionText(mToolbar, province.name);
-        baseActivity.setToolbarRegionMenuVisibility(mToolbar, true);
+        mDailyToolbarLayout.setToolbarRegionText(province.name);
+        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);

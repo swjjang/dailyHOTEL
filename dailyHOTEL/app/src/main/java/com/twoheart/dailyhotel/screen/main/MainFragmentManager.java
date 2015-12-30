@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.ErrorFragment;
 import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
@@ -28,18 +29,20 @@ public class MainFragmentManager
     private int mIndexLastFragment;
     private int mIndexMainLastFragment; // 호텔, 고메
 
-    private MainActivity mMainActivity;
+    private BaseActivity mBaseActivity;
+    private MenuBarLayout.MenuBarLayoutOnPageChangeListener mMenuBarLayoutOnPageChangeListener;
 
-    public MainFragmentManager(MainActivity activity, ViewGroup viewGroup)
+    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
     {
         if (activity == null || viewGroup == null)
         {
             throw new NullPointerException("activity == null || viewGroup == null");
         }
 
-        mMainActivity = activity;
+        mBaseActivity = activity;
         mFragmentManager = activity.getSupportFragmentManager();
         mContentLayout = viewGroup;
+        mMenuBarLayoutOnPageChangeListener = listener;
     }
 
     public int getLastIndexFragment()
@@ -102,7 +105,7 @@ public class MainFragmentManager
         } catch (Exception e)
         {
             // 에러가 나는 경우 앱을 재부팅 시킨다.
-            Util.restartApp(mMainActivity);
+            Util.restartApp(mBaseActivity);
         }
     }
 
@@ -126,28 +129,28 @@ public class MainFragmentManager
                 mIndexLastFragment = INDEX_HOTEL_FRAGMENT;
                 mIndexMainLastFragment = INDEX_HOTEL_FRAGMENT;
 
-                DailyPreference.getInstance(mMainActivity).setLastMenu(mMainActivity.getString(R.string.label_dailyhotel));
-                AnalyticsManager.getInstance(mMainActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mMainActivity.getString(R.string.actionbar_title_hotel_list_frag), (long) index);
+                DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailyhotel));
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_hotel_list_frag), (long) index);
                 break;
 
             case INDEX_GOURMET_FRAGMENT:
                 mIndexLastFragment = INDEX_GOURMET_FRAGMENT;
                 mIndexMainLastFragment = INDEX_GOURMET_FRAGMENT;
 
-                DailyPreference.getInstance(mMainActivity).setLastMenu(mMainActivity.getString(R.string.label_dailygourmet));
-                AnalyticsManager.getInstance(mMainActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mMainActivity.getString(R.string.actionbar_title_gourmet_list_frag), (long) index);
+                DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailygourmet));
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_gourmet_list_frag), (long) index);
                 break;
 
             case INDEX_BOOKING_FRAGMENT:
                 mIndexLastFragment = INDEX_BOOKING_FRAGMENT;
 
-                AnalyticsManager.getInstance(mMainActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mMainActivity.getString(R.string.actionbar_title_booking_list_frag), (long) index);
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_booking_list_frag), (long) index);
                 break;
 
             case INDEX_INFORMATION_FRAGMENT:
                 mIndexLastFragment = INDEX_INFORMATION_FRAGMENT;
 
-                AnalyticsManager.getInstance(mMainActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mMainActivity.getString(R.string.actionbar_title_setting_frag), (long) index);
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_setting_frag), (long) index);
                 break;
 
             case INDEX_ERROR_FRAGMENT:
@@ -156,6 +159,10 @@ public class MainFragmentManager
         }
 
         replaceFragment(getFragment(mIndexLastFragment), String.valueOf(mIndexLastFragment));
-        mMainActivity.setSelectedMenu(mIndexLastFragment);
+
+        if (mMenuBarLayoutOnPageChangeListener != null)
+        {
+            mMenuBarLayoutOnPageChangeListener.onPageChangeListener(mIndexLastFragment);
+        }
     }
 }
