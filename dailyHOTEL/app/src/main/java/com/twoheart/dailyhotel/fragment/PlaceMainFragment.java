@@ -64,6 +64,8 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
 
+        setMenuEnabled(false);
+
         return view;
     }
 
@@ -93,12 +95,7 @@ public abstract class PlaceMainFragment extends BaseFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null || (enabled == true && mMapEnabled == false))
-        {
-            return;
-        }
-
-        if (mMenuEnabled == enabled)
+        if (baseActivity == null || (enabled == true && mMapEnabled == false) || mMenuEnabled == enabled)
         {
             return;
         }
@@ -160,51 +157,6 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    //    protected ArrayList<RegionViewItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
-    //    {
-    //        ArrayList<RegionViewItem> arrayList = new ArrayList<RegionViewItem>(provinceList.size());
-    //
-    //        for (Province province : provinceList)
-    //        {
-    //            RegionViewItem item = new RegionViewItem();
-    //
-    //            item.setProvince(province);
-    //            item.setAreaList(new ArrayList<Area>());
-    //
-    //            if (areaList != null)
-    //            {
-    //                for (Area area : areaList)
-    //                {
-    //                    if (province.getProvinceIndex() == area.getProvinceIndex())
-    //                    {
-    //                        ArrayList<Area> areaArrayList = item.getAreaList();
-    //
-    //                        if (areaArrayList.size() == 0)
-    //                        {
-    //                            Area totalArea = new Area();
-    //
-    //                            totalArea.index = -1;
-    //                            totalArea.name = province.name + " 전체";
-    //                            totalArea.setProvince(province);
-    //                            totalArea.sequence = -1;
-    //                            totalArea.tag = totalArea.name;
-    //                            totalArea.setProvinceIndex(province.getProvinceIndex());
-    //
-    //                            areaArrayList.add(totalArea);
-    //                        }
-    //
-    //                        area.setProvince(province);
-    //                        areaArrayList.add(area);
-    //                    }
-    //                }
-    //            }
-    //
-    //            arrayList.add(item);
-    //        }
-    //
-    //        return arrayList;
-    //    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NetworkActionListener

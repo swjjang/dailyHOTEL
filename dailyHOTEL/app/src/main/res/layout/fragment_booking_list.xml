@@ -5,6 +5,11 @@
              android:layout_height="match_parent"
              android:background="@drawable/gradient_window_background">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/navibar_gradation"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

@@ -30,8 +30,9 @@ public class MainFragmentManager
     private int mIndexMainLastFragment; // 호텔, 고메
 
     private BaseActivity mBaseActivity;
+    private MenuBarLayout.MenuBarLayoutOnPageChangeListener mMenuBarLayoutOnPageChangeListener;
 
-    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup)
+    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
     {
         if (activity == null || viewGroup == null)
         {
@@ -41,6 +42,7 @@ public class MainFragmentManager
         mBaseActivity = activity;
         mFragmentManager = activity.getSupportFragmentManager();
         mContentLayout = viewGroup;
+        mMenuBarLayoutOnPageChangeListener = listener;
     }
 
     public int getLastIndexFragment()
@@ -105,8 +107,6 @@ public class MainFragmentManager
             // 에러가 나는 경우 앱을 재부팅 시킨다.
             Util.restartApp(mBaseActivity);
         }
-
-        // 액션바 위치를 다시 잡아준다.
     }
 
     /**
@@ -159,5 +159,10 @@ public class MainFragmentManager
         }
 
         replaceFragment(getFragment(mIndexLastFragment), String.valueOf(mIndexLastFragment));
+
+        if (mMenuBarLayoutOnPageChangeListener != null)
+        {
+            mMenuBarLayoutOnPageChangeListener.onPageChangeListener(mIndexLastFragment);
+        }
     }
 }

@@ -41,6 +41,8 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
             return null;
         }
 
+        baseActivity.unLockUI();
+
         View view = inflater.inflate(R.layout.fragment_error, container, false);
 
         initToolbar(baseActivity, view, getString(R.string.actionbar_title_error_frag));

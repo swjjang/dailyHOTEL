@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,10 +42,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     private Dialog mDialog;
     private LoadingDialog mLockUI;
     private Handler handler;
-    private int mSpinnderIndex = -1;
-    private boolean mActionBarRegionEnabled;
     protected String mNetworkTag;
-
 
     /**
      * UI Component의 잠금 상태인지 확인하는 변수..
@@ -60,13 +58,13 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         handler = new Handler();
         mNetworkTag = getClass().getName();
 
-        //        if (Util.isOverAPI21() == true)
-        //        {
-        //            Window window = getWindow();
-        //            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        //            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //            window.setStatusBarColor(getResources().getColor(R.color.dh_theme_color));
-        //        }
+        if (Util.isOverAPI21() == true)
+        {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.tab_text));
+        }
     }
 
     @Override
@@ -125,33 +123,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         return mNetworkTag;
     }
 
-    public void initToolbarRegion(Toolbar toolbar, String title, View.OnClickListener listener)
-    {
-        if (toolbar.getTag() != null)
-        {
-            return;
-        }
-
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View spinnerView = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
-
-        View imageView = spinnerView.findViewById(R.id.spinnerImageView);
-        imageView.setVisibility(View.INVISIBLE);
-
-        TextView textView = (TextView) spinnerView.findViewById(R.id.titleTextView);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        textView.setMaxLines(1);
-        textView.setSingleLine();
-        textView.setEllipsize(TextUtils.TruncateAt.END);
-        textView.setText(title);
-        textView.setOnClickListener(listener);
-
-        toolbar.addView(spinnerView);
-        toolbar.setTag(toolbar.getId(), textView);
-
-        setSupportActionBar(toolbar);
-    }
-
     public void initToolbar(Toolbar toolbar, String title)
     {
         initToolbar(toolbar, title, false);
@@ -178,7 +149,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         if (isBackPressed == true)
         {
-            toolbar.setNavigationIcon(R.drawable.back);
+            toolbar.setNavigationIcon(R.drawable.navibar_ic_back);
             toolbar.setNavigationOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -188,23 +159,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 }
             });
         }
-    }
-
-    public void setToolbarRegionText(Toolbar toolbar, String title)
-    {
-        if (toolbar == null)
-        {
-            return;
-        }
-
-        // 인덱스 번호는 나중에 바뀜
-        View view = toolbar.getChildAt(0);
-
-        View imageView = view.findViewById(R.id.spinnerImageView);
-        imageView.setVisibility(View.VISIBLE);
-
-        TextView textView = (TextView) view.findViewById(R.id.titleTextView);
-        textView.setText(title);
     }
 
     public void setToolbarText(String title)

@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
 
-public class MainActivity extends BaseActivity implements Constants, View.OnClickListener
+public class MainActivity extends BaseActivity implements Constants
 {
     private ViewGroup mContentLayout;
 
@@ -40,6 +40,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
 
     private MainPresenter mMainPresenter;
     private MainFragmentManager mMainFragmentManager;
+    private MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
     private View mSplashLayout;
 
@@ -87,13 +88,16 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         super.onCreate(savedInstanceState);
 
         // URL 만들때 사용
-//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
 
         VolleyHttpClient.cookieManagerCreate();
         DailyPreference.getInstance(this).removeDeepLink();
+        DailyPreference.getInstance(this).setSettingRegion(TYPE.HOTEL, false);
+        DailyPreference.getInstance(this).setSettingRegion(TYPE.FNB, false);
+        DailyPreference.getInstance(this).setGCMRegistrationId(null);
 
         // 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
         // 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
@@ -129,24 +133,13 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         setContentView(R.layout.activity_main);
 
         mSplashLayout = findViewById(R.id.splashLayout);
-        mSplashLayout.setVisibility(View.VISIBLE);
 
-        View bottomMenuBarLayout = findViewById(R.id.bottomMenuBarLayout);
-
-        View hotelView = bottomMenuBarLayout.findViewById(R.id.hotelView);
-        hotelView.setOnClickListener(this);
-
-        View gourmetView = bottomMenuBarLayout.findViewById(R.id.gourmetView);
-        gourmetView.setOnClickListener(this);
-
-        View bookingView = bottomMenuBarLayout.findViewById(R.id.bookingView);
-        bookingView.setOnClickListener(this);
-
-        View informationView = bottomMenuBarLayout.findViewById(R.id.informationView);
-        informationView.setOnClickListener(this);
+        ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
+        mMenuBarLayout = new MenuBarLayout(bottomMenuBarLayout, onMenuBarSelectedListener);
+        mMenuBarLayout.setVisibility(false);
 
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
-        mMainFragmentManager = new MainFragmentManager(this, mContentLayout);
+        mMainFragmentManager = new MainFragmentManager(this, mContentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
         mBackButtonHandler = new CloseOnBackPressed(this);
     }
 
@@ -184,26 +177,11 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
     }
 
     @Override
-    public void onClick(View v)
+    public void onAttachFragment(Fragment fragment)
     {
-        switch (v.getId())
-        {
-            case R.id.hotelView:
-                mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
-                break;
+        super.onAttachFragment(fragment);
 
-            case R.id.gourmetView:
-                mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
-                break;
-
-            case R.id.bookingView:
-                mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
-                break;
-
-            case R.id.informationView:
-                mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
-                break;
-        }
+        releaseUiComponent();
     }
 
     @Override
@@ -499,10 +477,50 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         //
         //        mSplashLayout.startAnimation(animation);
 
-        mSplashLayout.setVisibility(View.GONE);
+        mMenuBarLayout.setVisibility(true);
         mDelayTimeHandler.removeMessages(0);
         mIsInitialization = false;
+
+        mMainPresenter.requestEvent();
     }
+
+    private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
+    {
+        @Override
+        public void onMenuSelected(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    break;
+
+                case 1:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                    break;
+
+                case 2:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                    break;
+
+                case 3:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                    break;
+            }
+        }
+
+        @Override
+        public void onMenuUnselected(int index)
+        {
+
+        }
+
+        @Override
+        public void onMenuReselected(int intdex)
+        {
+
+        }
+    };
 
     private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
     {
@@ -510,6 +528,7 @@ public class MainActivity extends BaseActivity implements Constants, View.OnClic
         public void setNewIconVisible(boolean visible)
         {
             // 아직 어디 화면에 New아이콘을 보여줄지 모른다
+            mMenuBarLayout.setNewIconVisible(visible);
         }
 
         @Override

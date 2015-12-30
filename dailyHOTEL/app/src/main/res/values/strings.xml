@@ -220,15 +220,11 @@
     <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n아침 %1$d시 ~ 익일 새벽 %2$d시입니다.</string>
 
     <!-- Main Drawer Menu Titles -->
-    <string name="drawer_menu_pin_title_resrvation">예약</string>
-    <string name="drawer_menu_item_title_todays_hotel">데일리호텔</string>
-    <string name="drawer_menu_item_title_todays_fnb">데일리고메</string>
-    <string name="drawer_menu_item_title_chk_reservation">예약 내역</string>
-    <string name="drawer_menu_pin_title_account">계정</string>
-    <string name="drawer_menu_item_title_credit">적립금</string>
-    <string name="drawer_menu_item_title_reg_credit_card">신용카드등록</string>
-    <string name="drawer_menu_item_title_event">이벤트</string>
-    <string name="drawer_menu_item_title_setting">설정</string>
+    <string name="menu_item_title_hotel">데일리호텔</string>
+    <string name="menu_item_title_fnb">데일리고메</string>
+    <string name="menu_item_title_bookings">예약내역</string>
+    <string name="menu_item_title_information">더보기</string>
+
 
     <!-- Mail Text -->
     <string name="mail_text_dialog_title">이메일 어플리케이션 선택</string>
@@ -541,10 +537,9 @@
     <string name="label_today">오늘</string>
     <string name="label_tomorrow">내일</string>
     <string name="label_day">날짜</string>
-    <string name="label_selecteday">날짜 선택</string>
-    <string name="label_format_tabday">%1$s일(%2$s)</string>
-    <string name="label_format_tabmonth">%1$s월%2$s일</string>
-    <string name="label_format_gourmet_tabmonth">%1$s월 %2$s일(%3$s)</string>
+    <string name="label_selecteday">날짜선택</string>
+    <string name="label_format_tabday">%1$s (%2$s일)</string>
+    <string name="label_format_hotel_selectedday">%1$s(%2$s-%3$s일)</string>
 
     <!-- Banner -->
     <string name="label_event_title">이벤트 참여하기</string>
