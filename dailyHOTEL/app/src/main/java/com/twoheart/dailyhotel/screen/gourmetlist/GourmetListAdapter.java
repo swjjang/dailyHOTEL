@@ -11,14 +11,13 @@ import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.adapter.PlaceAdapter;
+import com.twoheart.dailyhotel.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -35,7 +34,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycleView.PinnedSectionListAdapter
+public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectionRecycleView.PinnedSectionListAdapter
 {
     private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
@@ -56,7 +55,7 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
         }
     };
 
-    public GourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
+    public GourmetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
         super(context, arrayList);
 
@@ -226,8 +225,8 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
             address = address.replace(" l ", "ㅣ");
         }
 
-        holder.hotelAddressView.setText(address);
-        holder.hotelNameView.setText(gourmet.name);
+        holder.addressView.setText(address);
+        holder.nameView.setText(gourmet.name);
 
         // 인원
         if (gourmet.persons > 1)
@@ -243,14 +242,14 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
 
         if (price <= 0)
         {
-            holder.hotelPriceView.setVisibility(View.INVISIBLE);
-            holder.hotelPriceView.setText(null);
+            holder.priceView.setVisibility(View.INVISIBLE);
+            holder.priceView.setText(null);
         } else
         {
-            holder.hotelPriceView.setVisibility(View.VISIBLE);
+            holder.priceView.setVisibility(View.VISIBLE);
 
-            holder.hotelPriceView.setText(strPrice + currency);
-            holder.hotelPriceView.setPaintFlags(holder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.priceView.setText(strPrice + currency);
+            holder.priceView.setPaintFlags(holder.priceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         // 만족도
@@ -263,28 +262,28 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        holder.hotelDiscountView.setText(strDiscount + currency);
-        holder.hotelNameView.setSelected(true); // Android TextView marquee bug
+        holder.discountView.setText(strDiscount + currency);
+        holder.nameView.setSelected(true); // Android TextView marquee bug
 
         if (Util.isOverAPI16() == true)
         {
-            holder.hotelLayout.setBackground(mPaintDrawable);
+            holder.gradientView.setBackground(mPaintDrawable);
         } else
         {
-            holder.hotelLayout.setBackgroundDrawable(mPaintDrawable);
+            holder.gradientView.setBackgroundDrawable(mPaintDrawable);
         }
 
         // grade
         if (Util.isTextEmpty(gourmet.category) == true)
         {
-            holder.hotelGradeView.setVisibility(View.GONE);
+            holder.gradeView.setVisibility(View.GONE);
         } else
         {
-            holder.hotelGradeView.setVisibility(View.VISIBLE);
-            holder.hotelGradeView.setText(gourmet.category);
+            holder.gradeView.setVisibility(View.VISIBLE);
+            holder.gradeView.setText(gourmet.category);
         }
 
-        final ImageView placeImageView = holder.hotelImageView;
+        final ImageView placeImageView = holder.gourmetImageView;
 
         if (Util.getLCDWidth(mContext) < 720)
         {
@@ -313,10 +312,10 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
         // SOLD OUT 표시
         if (gourmet.isSoldOut)
         {
-            holder.hotelSoldOutView.setVisibility(View.VISIBLE);
+            holder.soldOutView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.hotelSoldOutView.setVisibility(View.GONE);
+            holder.soldOutView.setVisibility(View.GONE);
         }
 
         if (mSortType == Constants.SortType.DISTANCE)
@@ -331,14 +330,14 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
 
     private class GourmetViewHolder extends RecyclerView.ViewHolder
     {
-        RelativeLayout hotelLayout;
-        ImageView hotelImageView;
-        TextView hotelNameView;
-        TextView hotelPriceView;
-        TextView hotelDiscountView;
-        TextView hotelSoldOutView;
-        TextView hotelAddressView;
-        TextView hotelGradeView;
+        View gradientView;
+        ImageView gourmetImageView;
+        TextView nameView;
+        TextView priceView;
+        TextView discountView;
+        TextView soldOutView;
+        TextView addressView;
+        TextView gradeView;
         TextView satisfactionView;
         TextView personsTextView;
         TextView distanceView;
@@ -347,15 +346,15 @@ public class GourmetAdapter extends PlaceAdapter implements PinnedSectionRecycle
         {
             super(itemView);
 
-            hotelLayout = (RelativeLayout) itemView.findViewById(R.id.ll_hotel_row_content);
-            hotelImageView = (ImageView) itemView.findViewById(R.id.iv_hotel_row_img);
-            hotelNameView = (TextView) itemView.findViewById(R.id.tv_hotel_row_name);
-            hotelPriceView = (TextView) itemView.findViewById(R.id.tv_hotel_row_price);
+            gradientView = itemView.findViewById(R.id.gradientView);
+            gourmetImageView = (ImageView) itemView.findViewById(R.id.imageView);
+            nameView = (TextView) itemView.findViewById(R.id.nameTextView);
+            priceView = (TextView) itemView.findViewById(R.id.priceTextView);
             satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);
-            hotelDiscountView = (TextView) itemView.findViewById(R.id.tv_hotel_row_discount);
-            hotelSoldOutView = (TextView) itemView.findViewById(R.id.tv_hotel_row_soldout);
-            hotelAddressView = (TextView) itemView.findViewById(R.id.tv_hotel_row_address);
-            hotelGradeView = (TextView) itemView.findViewById(R.id.hv_hotel_grade);
+            discountView = (TextView) itemView.findViewById(R.id.discountPriceTextView);
+            soldOutView = (TextView) itemView.findViewById(R.id.soldoutTextView);
+            addressView = (TextView) itemView.findViewById(R.id.addressTextView);
+            gradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             personsTextView = (TextView) itemView.findViewById(R.id.personsTextView);
             distanceView = (TextView) itemView.findViewById(R.id.distanceTextView);
 

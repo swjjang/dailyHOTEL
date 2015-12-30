@@ -68,7 +68,7 @@ import java.util.Map;
 public class HotelListFragment extends BaseFragment implements Constants
 {
     protected PinnedSectionRecycleView mHotelRecycleView;
-    protected HotelAdapter mHotelAdapter;
+    protected HotelListAdapter mHotelAdapter;
     protected SaleTime mSaleTime;
     protected Province mSelectedProvince;
 
@@ -96,7 +96,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         mHotelRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mHotelRecycleView.setTag("HotelListFragment");
 
-        mHotelAdapter = new HotelAdapter(getContext(), new ArrayList<PlaceViewItem>(), getOnItemClickListener(), mOnEventBannerItemClickListener);
+        mHotelAdapter = new HotelListAdapter(getContext(), new ArrayList<PlaceViewItem>(), getOnItemClickListener(), mOnEventBannerItemClickListener);
         mHotelRecycleView.setAdapter(mHotelAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);

@@ -10,74 +10,119 @@
         android:layout_height="@dimen/menubar_height"
         android:layout_alignParentBottom="true">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/hotelView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawablePadding="3dp"
-            android:drawableTop="@drawable/selector_menu_hotel"
-            android:gravity="center_horizontal"
-            android:paddingTop="4dp"
-            android:text="@string/menu_item_title_hotel"
-            android:textColor="@drawable/selector_menu_textcolor"
-            android:textSize="9dp"
-            dailyFont:style="DemiLight"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/gourmetView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawablePadding="3dp"
-            android:drawableTop="@drawable/selector_menu_gourmet"
-            android:gravity="center_horizontal"
-            android:paddingTop="4dp"
-            android:text="@string/menu_item_title_fnb"
-            android:textColor="@drawable/selector_menu_textcolor"
-            android:textSize="9dp"
-            dailyFont:style="DemiLight"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/bookingView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawablePadding="3dp"
-            android:drawableTop="@drawable/selector_menu_bookings"
-            android:duplicateParentState="true"
-            android:gravity="center_horizontal"
-            android:paddingTop="4dp"
-            android:text="@string/menu_item_title_bookings"
-            android:textColor="@drawable/selector_menu_textcolor"
-            android:textSize="9dp"
-            dailyFont:style="DemiLight"/>
-
         <RelativeLayout
-            android:id="@+id/informationView"
+            android:id="@+id/hotelLayout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/hotelView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
+                android:gravity="center_horizontal"
+                android:text="@string/menu_item_title_hotel"
+                android:textColor="@drawable/selector_menu_textcolor"
+                android:textSize="9dp"
+                dailyFont:style="DemiLight"/>
+
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawablePadding="3dp"
-                android:drawableTop="@drawable/selector_menu_information"
-                android:duplicateParentState="true"
+                android:layout_above="@+id/hotelView"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_menu_hotel"
+                android:paddingTop="2dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/gourmetLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/gourmetView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
                 android:gravity="center_horizontal"
-                android:paddingTop="4dp"
+                android:text="@string/menu_item_title_fnb"
+                android:textColor="@drawable/selector_menu_textcolor"
+                android:textSize="9dp"
+                dailyFont:style="DemiLight"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/gourmetView"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_menu_gourmet"
+                android:paddingTop="2dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bookingLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/bookingView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
+                android:gravity="center_horizontal"
+                android:text="@string/menu_item_title_bookings"
+                android:textColor="@drawable/selector_menu_textcolor"
+                android:textSize="9dp"
+                dailyFont:style="DemiLight"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/bookingView"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_menu_bookings"
+                android:paddingTop="2dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/informationLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/informationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
+                android:gravity="center_horizontal"
                 android:text="@string/menu_item_title_information"
                 android:textColor="@drawable/selector_menu_textcolor"
                 android:textSize="9dp"
                 dailyFont:style="DemiLight"/>
 
             <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/informationView"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_menu_information"
+                android:paddingTop="2dp"/>
+
+            <ImageView
                 android:id="@+id/newEventIcon"
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="6dp"
                 android:paddingLeft="28dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/tapbar_ic_n"
