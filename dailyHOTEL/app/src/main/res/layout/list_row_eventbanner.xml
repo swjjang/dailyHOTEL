@@ -17,4 +17,10 @@
         android:layout_alignBottom="@+id/loopViewPager"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"/>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/white_a16"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

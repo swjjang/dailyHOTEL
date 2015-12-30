@@ -57,16 +57,16 @@ public class MenuBarLayout implements View.OnClickListener
 
         mMenuView = new View[MENU_COUNT];
 
-        mMenuView[MENU_HOTEL_INDEX] = viewGroup.findViewById(R.id.hotelView);
+        mMenuView[MENU_HOTEL_INDEX] = viewGroup.findViewById(R.id.hotelLayout);
         mMenuView[MENU_HOTEL_INDEX].setOnClickListener(this);
 
-        mMenuView[MENU_GOURMET_INDEX] = viewGroup.findViewById(R.id.gourmetView);
+        mMenuView[MENU_GOURMET_INDEX] = viewGroup.findViewById(R.id.gourmetLayout);
         mMenuView[MENU_GOURMET_INDEX].setOnClickListener(this);
 
-        mMenuView[MENU_BOOKINGL_INDEX] = viewGroup.findViewById(R.id.bookingView);
+        mMenuView[MENU_BOOKINGL_INDEX] = viewGroup.findViewById(R.id.bookingLayout);
         mMenuView[MENU_BOOKINGL_INDEX].setOnClickListener(this);
 
-        mMenuView[MENU_INFORMATIONL_INDEX] = viewGroup.findViewById(R.id.informationView);
+        mMenuView[MENU_INFORMATIONL_INDEX] = viewGroup.findViewById(R.id.informationLayout);
         mMenuView[MENU_INFORMATIONL_INDEX].setOnClickListener(this);
     }
 
@@ -75,19 +75,19 @@ public class MenuBarLayout implements View.OnClickListener
     {
         switch (v.getId())
         {
-            case R.id.hotelView:
+            case R.id.hotelLayout:
                 selectedMenu(MENU_HOTEL_INDEX);
                 break;
 
-            case R.id.gourmetView:
+            case R.id.gourmetLayout:
                 selectedMenu(MENU_GOURMET_INDEX);
                 break;
 
-            case R.id.bookingView:
+            case R.id.bookingLayout:
                 selectedMenu(MENU_BOOKINGL_INDEX);
                 break;
 
-            case R.id.informationView:
+            case R.id.informationLayout:
                 selectedMenu(MENU_INFORMATIONL_INDEX);
                 break;
         }

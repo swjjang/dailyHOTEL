@@ -56,7 +56,7 @@ import java.util.Map;
 public class GourmetListFragment extends BaseFragment implements Constants
 {
     protected PinnedSectionRecycleView mGourmetRecycleView;
-    protected GourmetAdapter mGourmetAdapter;
+    protected GourmetListAdapter mGourmetAdapter;
     protected SaleTime mSaleTime;
     private Province mSelectedProvince;
 
@@ -85,7 +85,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mGourmetRecycleView.setTag("GourmetListFragment");
 
-        mGourmetAdapter = new GourmetAdapter(getContext(), new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
+        mGourmetAdapter = new GourmetListAdapter(getContext(), new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
         mGourmetRecycleView.setAdapter(mGourmetAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);

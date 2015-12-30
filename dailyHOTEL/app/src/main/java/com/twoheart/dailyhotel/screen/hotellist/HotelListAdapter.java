@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.adapter.PlaceAdapter;
+import com.twoheart.dailyhotel.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -34,7 +34,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class HotelAdapter extends PlaceAdapter implements PinnedSectionRecycleView.PinnedSectionListAdapter
+public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionRecycleView.PinnedSectionListAdapter
 {
     private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
@@ -55,7 +55,7 @@ public class HotelAdapter extends PlaceAdapter implements PinnedSectionRecycleVi
         }
     };
 
-    public HotelAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
+    public HotelListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
         super(context, arrayList);
 
@@ -265,10 +265,10 @@ public class HotelAdapter extends PlaceAdapter implements PinnedSectionRecycleVi
 
         if (Util.isOverAPI16() == true)
         {
-            holder.hotelLayout.setBackground(mPaintDrawable);
+            holder.gradientView.setBackground(mPaintDrawable);
         } else
         {
-            holder.hotelLayout.setBackgroundDrawable(mPaintDrawable);
+            holder.gradientView.setBackgroundDrawable(mPaintDrawable);
         }
 
         // grade
@@ -332,7 +332,7 @@ public class HotelAdapter extends PlaceAdapter implements PinnedSectionRecycleVi
 
     private class HoltelViewHolder extends RecyclerView.ViewHolder
     {
-        RelativeLayout hotelLayout;
+        View gradientView;
         ImageView hotelImageView;
         TextView hotelNameView;
         TextView hotelPriceView;
@@ -349,15 +349,15 @@ public class HotelAdapter extends PlaceAdapter implements PinnedSectionRecycleVi
         {
             super(itemView);
 
-            hotelLayout = (RelativeLayout) itemView.findViewById(R.id.ll_hotel_row_content);
-            hotelImageView = (ImageView) itemView.findViewById(R.id.iv_hotel_row_img);
-            hotelNameView = (TextView) itemView.findViewById(R.id.tv_hotel_row_name);
-            hotelPriceView = (TextView) itemView.findViewById(R.id.tv_hotel_row_price);
+            gradientView = itemView.findViewById(R.id.gradientView);
+            hotelImageView = (ImageView) itemView.findViewById(R.id.imagView);
+            hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);
+            hotelPriceView = (TextView) itemView.findViewById(R.id.priceTextView);
             satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);
-            hotelDiscountView = (TextView) itemView.findViewById(R.id.tv_hotel_row_discount);
-            hotelSoldOutView = (TextView) itemView.findViewById(R.id.tv_hotel_row_soldout);
-            hotelAddressView = (TextView) itemView.findViewById(R.id.tv_hotel_row_address);
-            hotelGradeView = (TextView) itemView.findViewById(R.id.hv_hotel_grade);
+            hotelDiscountView = (TextView) itemView.findViewById(R.id.discountPriceTextView);
+            hotelSoldOutView = (TextView) itemView.findViewById(R.id.soldoutTextView);
+            hotelAddressView = (TextView) itemView.findViewById(R.id.addressTextView);
+            hotelGradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             dBenefitView = itemView.findViewById(R.id.dBenefitImageView);
             averageView = itemView.findViewById(R.id.averageTextView);
             distanceView = (TextView) itemView.findViewById(R.id.distanceTextView);

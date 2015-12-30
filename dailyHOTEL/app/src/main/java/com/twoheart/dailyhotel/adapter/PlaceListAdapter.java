@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecycleView.PinnedSectionListAdapter
+public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecycleView.PinnedSectionListAdapter
 {
     protected Context mContext;
     protected LayoutInflater mInflater;
     protected List<PlaceViewItem> mPlaceViewItemList;
     protected PaintDrawable mPaintDrawable;
 
-    public PlaceAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
+    public PlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
         mContext = context;
 
