@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
@@ -55,6 +56,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     private View mEditProfileLayout, mInformationProfileLayout;
     private TextView mEditButtonView;
 
+    private DailyToolbarLayout mDailyToolbarLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -64,12 +67,18 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
         setContentView(R.layout.activity_profile);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_profile_activity));
+        initToolbar();
 
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         initLayout();
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_profile_activity));
     }
 
     private void initLayout()

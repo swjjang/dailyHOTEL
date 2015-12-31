@@ -19,10 +19,12 @@ import android.support.v7.widget.Toolbar;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.CountryCodeNumber;
 import com.twoheart.dailyhotel.view.CountryCodeListLayout;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class CountryCodeListActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_COUNTRY_CODE = "countryCode";
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     public interface OnUserActionListener
     {
@@ -61,13 +63,19 @@ public class CountryCodeListActivity extends BaseActivity
         CountryCodeListLayout countryCodeListLayout = new CountryCodeListLayout(this);
         setContentView(countryCodeListLayout.createView());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.label_select_country));
+        initToolbar();
 
         countryCodeListLayout.setOnUserActionListener(mOnUserActionListener);
 
         CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
         countryCodeListLayout.setData(countryCodeNumber.getCountryValue(), countryCode);
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.label_select_country));
     }
 
     @Override

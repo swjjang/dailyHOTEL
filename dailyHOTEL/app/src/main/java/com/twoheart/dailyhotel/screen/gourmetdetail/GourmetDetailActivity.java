@@ -4,12 +4,14 @@
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
-package com.twoheart.dailyhotel.activity;
+package com.twoheart.dailyhotel.screen.gourmetdetail;
 
 import android.content.Intent;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.activity.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -19,8 +21,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.GourmetDetailLayout;
-import com.twoheart.dailyhotel.view.PlaceDetailLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONObject;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
     @Override
-    protected PlaceDetailLayout getLayout(BaseActivity activity, String imageUrl)
+    protected GourmetDetailLayout getLayout(BaseActivity activity, String imageUrl)
     {
         return new GourmetDetailLayout(activity, imageUrl);
     }
@@ -69,7 +69,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime)
     {
-        // 호텔 정보를 가져온다.
         String params = String.format("?restaurant_idx=%d&sday=%s", placeDetail.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 
         if (DEBUG == true)
@@ -131,7 +130,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 if (mIsStartByShare == true)
                 {
                     mIsStartByShare = false;
-                    initLayout(mPlaceDetail.name, null);
+                    mDailyToolbarLayout.setToolbarText(mPlaceDetail.name);
                 }
 
                 if (mPlaceDetailLayout != null)

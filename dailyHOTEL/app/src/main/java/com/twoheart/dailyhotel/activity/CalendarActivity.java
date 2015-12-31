@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,6 +40,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
     private Day mCheckOutDay;
 
     private View[] mDailyTextViews;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     public static Intent newInstance(Context context, PlaceMainFragment.TYPE type, SaleTime dailyTime)
     {
@@ -131,8 +133,8 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
     private void initToolbar(String title)
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        initToolbar(toolbar, title);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(title);
     }
 
     private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
@@ -288,7 +290,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                 finish();
             } else
             {
-                setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
+                mDailyToolbarLayout.setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
 
                 for (View textview : mDailyTextViews)
                 {
@@ -316,7 +318,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
                 view.setSelected(false);
                 dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
 
-                setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
+                mDailyToolbarLayout.setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
 
                 for (View dailTextView : mDailyTextViews)
                 {

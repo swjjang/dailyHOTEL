@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +49,8 @@ public class PaymentWaitActivity extends BaseActivity
     private TextView tvGuide2;
     private String mCSoperatingTimeMessage;
 
+    private DailyToolbarLayout mDailyToolbarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -63,8 +66,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         setContentView(R.layout.activity_payment_wait);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_payment_wait_activity));
+        initToolbar();
 
         TextView tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
         tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
@@ -94,6 +96,13 @@ public class PaymentWaitActivity extends BaseActivity
                 break;
             }
         }
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_payment_wait_activity));
     }
 
     @Override

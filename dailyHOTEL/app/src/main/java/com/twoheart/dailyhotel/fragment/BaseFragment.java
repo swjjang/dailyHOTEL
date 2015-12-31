@@ -2,11 +2,9 @@ package com.twoheart.dailyhotel.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.util.Constants;
@@ -96,7 +94,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
             return;
         }
 
-        if(Util.isTextEmpty(message) == true)
+        if (Util.isTextEmpty(message) == true)
         {
             baseActivity.onInternalError();
         } else

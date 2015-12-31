@@ -19,10 +19,12 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class EventWebActivity extends WebViewActivity implements Constants
 {
     private WebView mWebView;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     public static Intent newInstance(Context context, String url)
     {
@@ -55,8 +57,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         setContentView(R.layout.activity_event_web);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_event_list_frag));
+        initToolbar();
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
@@ -78,6 +79,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         setWebView(url);
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag));
     }
 
     @Override

@@ -10,30 +10,36 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:background="#ffffff"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <include layout="@layout/toolbar_default_underline_menu"/>
+
+    </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/white"
+        android:layout_height="38dp"
+        android:background="#ffffff"
         app:tabGravity="fill"
-        app:tabSelectedTextColor="@color/dh_theme_color"
+        app:tabIndicatorHeight="3dp"
+        app:tabSelectedTextColor="@color/tab_selected"
+        app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
         app:tabTextColor="@color/tab_text"
-        app:tabTextAppearance="@style/BookingDetailTabLayoutTextAppearance"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@+id/toolbar"/>
 
     <View
-        android:id="@+id/underLine"
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@id/tabLayout"
-        android:background="@color/tab_underline"/>
+        android:layout_height="6px"
+        android:layout_below="@+id/tabLayout"
+        android:background="@drawable/navibar_gradation"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/underLine"/>
+        android:layout_below="@id/tabLayout"/>
 
 </RelativeLayout>

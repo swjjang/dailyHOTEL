@@ -26,10 +26,12 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class ErrorFragment extends BaseFragment implements OnClickListener
 {
     private MainFragmentManager mMainFragmentManager;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -61,8 +63,8 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
     private void initToolbar(BaseActivity baseActivity, View view, String title)
     {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
-        baseActivity.initToolbar(toolbar, title);
+        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_error_frag));
     }
 
     @Override

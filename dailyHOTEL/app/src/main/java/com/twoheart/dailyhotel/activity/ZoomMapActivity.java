@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LocationFactory;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class ZoomMapActivity extends BaseActivity
 {
@@ -32,6 +33,8 @@ public class ZoomMapActivity extends BaseActivity
     private MarkerOptions mMyLocationMarkerOptions;
     private Marker mMyLocationMarker;
     private Handler mHandler = new Handler();
+
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -71,8 +74,7 @@ public class ZoomMapActivity extends BaseActivity
             return;
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, placeName);
+        initToolbar(placeName);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
 
@@ -97,6 +99,13 @@ public class ZoomMapActivity extends BaseActivity
                 addMarker(mGoogleMap, latitude, longitude, placeName);
             }
         });
+    }
+
+    private void initToolbar(String title)
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(title);
     }
 
     @Override

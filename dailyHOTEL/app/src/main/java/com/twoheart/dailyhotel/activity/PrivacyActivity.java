@@ -5,9 +5,12 @@ import android.support.v7.widget.Toolbar;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class PrivacyActivity extends WebViewActivity
 {
+    private DailyToolbarLayout mDailyToolbarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -15,8 +18,14 @@ public class PrivacyActivity extends WebViewActivity
 
         setContentView(R.layout.activity_term);
 
+        initToolbar();
+    }
+
+    private void initToolbar()
+    {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_privacy_activity));
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_privacy_activity));
     }
 
     @Override

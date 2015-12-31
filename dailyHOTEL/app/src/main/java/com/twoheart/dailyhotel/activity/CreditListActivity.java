@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import java.util.List;
 
@@ -34,16 +35,12 @@ public class CreditListActivity extends BaseActivity
 {
     public static final String KEY_BUNDLE_ARGUMENTS_CREDITLIST = "credit_list";
     private List<Credit> mCreditList;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_credit_list);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.act_credit_history));
 
         Intent intent = getIntent();
 
@@ -56,7 +53,17 @@ public class CreditListActivity extends BaseActivity
             return;
         }
 
+        setContentView(R.layout.activity_credit_list);
+
+        initToolbar();
         initLayout();
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.act_credit_history));
     }
 
     private void initLayout()

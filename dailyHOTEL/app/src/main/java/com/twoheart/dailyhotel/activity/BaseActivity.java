@@ -7,10 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -123,73 +120,73 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         return mNetworkTag;
     }
 
-    public void initToolbar(Toolbar toolbar, String title)
-    {
-        initToolbar(toolbar, title, false);
-    }
-
-    public void initToolbar(Toolbar toolbar, String title, boolean isTransparent)
-    {
-        initToolbar(toolbar, title, true, isTransparent);
-    }
-
-    public void initToolbar(Toolbar toolbar, String title, boolean isBackPressed, boolean isTransparent)
-    {
-        if (toolbar == null)
-        {
-            return;
-        }
-
-        setSupportActionBar(toolbar);
-        setToolbarTransparent(toolbar, isTransparent);
-
-        FontManager.apply(toolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
-
-        getSupportActionBar().setTitle(title);
-
-        if (isBackPressed == true)
-        {
-            toolbar.setNavigationIcon(R.drawable.navibar_ic_back);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    finish();
-                }
-            });
-        }
-    }
-
-    public void setToolbarText(String title)
-    {
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar == null)
-        {
-            return;
-        }
-
-        actionBar.setTitle(title);
-    }
-
-    public void setToolbarTransparent(Toolbar toolbar, boolean isTransparent)
-    {
-        if (toolbar == null)
-        {
-            return;
-        }
-
-        if (isTransparent == true)
-        {
-            toolbar.setTitleTextColor(getResources().getColor(android.R.color.transparent));
-            toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        } else
-        {
-            toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.white));
-        }
-    }
+    //    public void initToolbar(Toolbar toolbar, String title)
+    //    {
+    //        initToolbar(toolbar, title, false);
+    //    }
+    //
+    //    public void initToolbar(Toolbar toolbar, String title, boolean isTransparent)
+    //    {
+    //        initToolbar(toolbar, title, true, isTransparent);
+    //    }
+    //
+    //    public void initToolbar(Toolbar toolbar, String title, boolean isBackPressed, boolean isTransparent)
+    //    {
+    //        if (toolbar == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        setSupportActionBar(toolbar);
+    //        setToolbarTransparent(toolbar, isTransparent);
+    //
+    //        FontManager.apply(toolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
+    //
+    //        getSupportActionBar().setTitle(title);
+    //
+    //        if (isBackPressed == true)
+    //        {
+    //            toolbar.setNavigationIcon(R.drawable.navibar_ic_back);
+    //            toolbar.setNavigationOnClickListener(new View.OnClickListener()
+    //            {
+    //                @Override
+    //                public void onClick(View v)
+    //                {
+    //                    finish();
+    //                }
+    //            });
+    //        }
+    //    }
+    //
+    //    public void setToolbarText(String title)
+    //    {
+    //        ActionBar actionBar = getSupportActionBar();
+    //
+    //        if (actionBar == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        actionBar.setTitle(title);
+    //    }
+    //
+    //    public void setToolbarTransparent(Toolbar toolbar, boolean isTransparent)
+    //    {
+    //        if (toolbar == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        if (isTransparent == true)
+    //        {
+    //            toolbar.setTitleTextColor(getResources().getColor(android.R.color.transparent));
+    //            toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+    //        } else
+    //        {
+    //            toolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+    //            toolbar.setBackgroundColor(getResources().getColor(R.color.white));
+    //        }
+    //    }
 
     public void restartApp()
     {

@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -79,15 +78,15 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 
     private void makeLayout(View view, final Hotel hotel)
     {
-        RelativeLayout llHotelRowContent = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
-        final ImageView hotelImageView = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
-        TextView name = (TextView) view.findViewById(R.id.tv_hotel_row_name);
-        TextView priceTextView = (TextView) view.findViewById(R.id.tv_hotel_row_price);
+        View gradientView = view.findViewById(R.id.gradientView);
+        ImageView hotelImageView = (ImageView) view.findViewById(R.id.imagView);
+        TextView name = (TextView) view.findViewById(R.id.nameTextView);
+        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
-        TextView discountTextView = (TextView) view.findViewById(R.id.tv_hotel_row_discount);
-        TextView sold_out = (TextView) view.findViewById(R.id.tv_hotel_row_soldout);
-        TextView addressTextView = (TextView) view.findViewById(R.id.tv_hotel_row_address);
-        TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
+        View averageTextView = view.findViewById(R.id.averageTextView);
+        TextView discountTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
+        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
+        TextView grade = (TextView) view.findViewById(R.id.gradeTextView);
         View closeView = view.findViewById(R.id.closeImageVIew);
         View dBenefitImageView = view.findViewById(R.id.dBenefitImageView);
 
@@ -142,8 +141,6 @@ public class HotelListViewPagerAdapter extends PagerAdapter
             satisfactionView.setVisibility(View.GONE);
         }
 
-        View averageTextView = view.findViewById(R.id.averageTextView);
-
         if (hotel.nights > 1)
         {
             averageTextView.setVisibility(View.VISIBLE);
@@ -159,10 +156,10 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
         final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
 
-        PaintDrawable p = new PaintDrawable();
-        p.setShape(new RectShape());
+        PaintDrawable paintDrawable = new PaintDrawable();
+        paintDrawable.setShape(new RectShape());
 
-        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
         {
             @Override
             public Shader resize(int width, int height)
@@ -171,8 +168,8 @@ public class HotelListViewPagerAdapter extends PagerAdapter
             }
         };
 
-        p.setShaderFactory(sf);
-        llHotelRowContent.setBackgroundDrawable(p);
+        paintDrawable.setShaderFactory(shaderFactory);
+        gradientView.setBackgroundDrawable(paintDrawable);
 
         // grade
         grade.setText(hotel.getCategory().getName(mContext));
@@ -205,15 +202,6 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         // 객실이 1~2 개일때 label 표시
         int avail_cnt = hotel.getAvailableRoom();
 
-        // SOLD OUT 표시
-        if (avail_cnt == 0)
-        {
-            sold_out.setVisibility(View.VISIBLE);
-        } else
-        {
-            sold_out.setVisibility(View.GONE);
-        }
-
         closeView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -226,7 +214,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
             }
         });
 
-        llHotelRowContent.setOnClickListener(new View.OnClickListener()
+        hotelImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

@@ -14,6 +14,8 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 
 import com.android.volley.VolleyError;
@@ -136,7 +138,6 @@ public class MainActivity extends BaseActivity implements Constants
 
         ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
         mMenuBarLayout = new MenuBarLayout(bottomMenuBarLayout, onMenuBarSelectedListener);
-        mMenuBarLayout.setVisibility(false);
 
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, mContentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
@@ -452,35 +453,34 @@ public class MainActivity extends BaseActivity implements Constants
 
     private void finishSplash()
     {
-        //        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-        //        animation.setDuration(300);
-        //        animation.setAnimationListener(new Animation.AnimationListener()
-        //        {
-        //            @Override
-        //            public void onAnimationStart(Animation animation)
-        //            {
-        //
-        //            }
-        //
-        //            @Override
-        //            public void onAnimationEnd(Animation animation)
-        //            {
-        //                mSplashLayout.setVisibility(View.GONE);
-        //            }
-        //
-        //            @Override
-        //            public void onAnimationRepeat(Animation animation)
-        //            {
-        //
-        //            }
-        //        });
-        //
-        //        mSplashLayout.startAnimation(animation);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+        animation.setDuration(400);
+        animation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
 
-        mMenuBarLayout.setVisibility(true);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+                mSplashLayout.setVisibility(View.GONE);
+                mSplashLayout.setAnimation(null);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+
+            }
+        });
+
+        mSplashLayout.startAnimation(animation);
+
         mDelayTimeHandler.removeMessages(0);
         mIsInitialization = false;
-
         mMainPresenter.requestEvent();
     }
 

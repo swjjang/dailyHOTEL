@@ -4,7 +4,7 @@
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
-package com.twoheart.dailyhotel.activity;
+package com.twoheart.dailyhotel.screen.hoteldetail;
 
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -14,11 +14,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.activity.BookingActivity;
+import com.twoheart.dailyhotel.activity.ImageDetailListActivity;
+import com.twoheart.dailyhotel.activity.SignupActivity;
+import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
@@ -34,8 +38,8 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.HotelDetailLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +54,6 @@ public class HotelDetailActivity extends BaseActivity
 {
     private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 
-    private Toolbar mToolbar;
     private HotelDetail mHotelDetail;
     private SaleTime mCheckInSaleTime;
 
@@ -60,6 +63,8 @@ public class HotelDetailActivity extends BaseActivity
     private String mDefaultImageUrl;
 
     private HotelDetailLayout mHotelDetailLayout;
+    private DailyToolbarLayout mDailyToolbarLayout;
+    private View mToolbarUnderline;
 
     public interface OnUserActionListener
     {
@@ -176,7 +181,7 @@ public class HotelDetailActivity extends BaseActivity
 
     private void initLayout(String hotelName, String imageUrl)
     {
-        setContentView(R.layout.layout_hoteldetail);
+        setContentView(R.layout.activity_hoteldetail);
 
         if (mHotelDetailLayout == null)
         {
@@ -184,13 +189,21 @@ public class HotelDetailActivity extends BaseActivity
             mHotelDetailLayout.setUserActionListener(mOnUserActionListener);
         }
 
-        if (hotelName != null)
-        {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
-            initToolbar(mToolbar, hotelName, true);
-        }
+        initToolbar(hotelName);
 
         mOnUserActionListener.hideActionBar();
+    }
+
+    private void initToolbar(String title)
+    {
+        mToolbarUnderline = findViewById(R.id.toolbarUnderline);
+        mToolbarUnderline.setVisibility(View.INVISIBLE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(title, true);
+        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_share, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelected);
     }
 
     @Override
@@ -266,59 +279,6 @@ public class HotelDetailActivity extends BaseActivity
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.share_actions, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_share:
-                if (mDefaultImageUrl == null && mHotelDetail.getImageInformationList() != null && mHotelDetail.getImageInformationList().size() > 0)
-                {
-                    mDefaultImageUrl = mHotelDetail.getImageInformationList().get(0).url;
-                }
-
-                String name = DailyPreference.getInstance(HotelDetailActivity.this).getUserName();
-
-                if (Util.isTextEmpty(name) == true)
-                {
-                    name = getString(R.string.label_friend) + "가";
-                } else
-                {
-                    name += "님이";
-                }
-
-                KakaoLinkManager.newInstance(this).shareHotel(name, mHotelDetail.hotelName, mHotelDetail.address//
-                    , mHotelDetail.hotelIndex//
-                    , mDefaultImageUrl//
-                    , mCheckInSaleTime.getDailyTime()//
-                    , mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
-
-                // 호텔 공유하기 로그 추가
-                SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Label.HOTEL_NAME, mHotelDetail.hotelName);
-                params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-                params.put(Label.CHECK_OUT, checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-
-                SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
-
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void moveToBooking(SaleRoomInformation saleRoomInformation)
     {
         if (saleRoomInformation == null)
@@ -364,18 +324,62 @@ public class HotelDetailActivity extends BaseActivity
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    private View.OnClickListener mToolbarOptionsItemSelected = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            if (mDefaultImageUrl == null && mHotelDetail.getImageInformationList() != null && mHotelDetail.getImageInformationList().size() > 0)
+            {
+                mDefaultImageUrl = mHotelDetail.getImageInformationList().get(0).url;
+            }
+
+            String name = DailyPreference.getInstance(HotelDetailActivity.this).getUserName();
+
+            if (Util.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            KakaoLinkManager.newInstance(HotelDetailActivity.this).shareHotel(name, mHotelDetail.hotelName, mHotelDetail.address//
+                , mHotelDetail.hotelIndex//
+                , mDefaultImageUrl//
+                , mCheckInSaleTime.getDailyTime()//
+                , mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
+
+            // 호텔 공유하기 로그 추가
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
+
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put(Label.HOTEL_NAME, mHotelDetail.hotelName);
+            params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+            params.put(Label.CHECK_OUT, checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+            params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
+        }
+    };
+
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override
         public void showActionBar()
         {
-            setToolbarTransparent(mToolbar, false);
+            mDailyToolbarLayout.setToolbarTransparent(false);
+            mToolbarUnderline.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void hideActionBar()
         {
-            setToolbarTransparent(mToolbar, true);
+            mDailyToolbarLayout.setToolbarTransparent(true);
+            mToolbarUnderline.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -540,7 +544,6 @@ public class HotelDetailActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mHotelDetailInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -562,7 +565,7 @@ public class HotelDetailActivity extends BaseActivity
                         if (mIsStartByShare == true)
                         {
                             mIsStartByShare = false;
-                            initLayout(mHotelDetail.hotelName, null);
+                            mDailyToolbarLayout.setToolbarText(mHotelDetail.hotelName);
                         }
 
                         if (mHotelDetailLayout != null)

@@ -28,5 +28,12 @@
             android:textColor="@color/actionbar_title"
             android:textSize="18dp"
             android:layout_toRightOf="@+id/backImageView"/>
+
+        <View
+            android:id="@+id/underLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/tab_underline"/>
     </RelativeLayout>
 </merge>

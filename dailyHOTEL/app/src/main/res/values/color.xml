@@ -49,12 +49,15 @@
     <color name="grade_not_yet">#aca69c</color>
 
     <color name="white">#ffffff</color>
-    <color name="white_a70">#B3ffffff</color>
-    <color name="white_a50">#80ffffff</color>
-    <color name="white_a55">#8cffffff</color>
-    <color name="white_a30">#4dffffff</color>
     <color name="white_a80">#ccffffff</color>
+    <color name="white_a70">#B3ffffff</color>
+    <color name="white_a55">#8cffffff</color>
+    <color name="white_a50">#80ffffff</color>
+    <color name="white_a30">#4dffffff</color>
+    <color name="white_a20">#33ffffff</color>
     <color name="white_a16">#29ffffff</color>
+    <color name="white_a8">#14ffffff</color>
+
     <color name="black">#000000</color>
     <color name="black_a25">#40000000</color>
     <color name="black_a80">#cc000000</color>

@@ -4,7 +4,7 @@
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
-package com.twoheart.dailyhotel.activity;
+package com.twoheart.dailyhotel.screen.gourmetdetail;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.activity.ImageDetailListActivity;
+import com.twoheart.dailyhotel.activity.SignupActivity;
+import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -26,15 +29,15 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailLayout;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.HotelDetailLayout;
-import com.twoheart.dailyhotel.view.PlaceDetailLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
@@ -48,14 +51,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
 {
     private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 
-    protected Toolbar mToolbar;
-    protected PlaceDetailLayout mPlaceDetailLayout;
+    protected GourmetDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;
     protected int mCurrentImage;
     protected boolean mIsStartByShare;
     private SaleTime mCheckInSaleTime;
     private TicketInformation mSelectedTicketInformation;
     private String mDefaultImageUrl;
+    protected DailyToolbarLayout mDailyToolbarLayout;
+    private View mToolbarUnderline;
 
     public interface OnUserActionListener
     {
@@ -119,7 +123,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
     };
 
-    protected abstract PlaceDetailLayout getLayout(BaseActivity activity, String imageUrl);
+    protected abstract GourmetDetailLayout getLayout(BaseActivity activity, String imageUrl);
 
     protected abstract void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime);
 
@@ -186,22 +190,30 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected void initLayout(String placeName, String imageUrl)
     {
+        setContentView(R.layout.activity_placedetail);
+
         if (mPlaceDetailLayout == null)
         {
             mPlaceDetailLayout = getLayout(this, imageUrl);
             mPlaceDetailLayout.setUserActionListener(mOnUserActionListener);
             mPlaceDetailLayout.setImageActionListener(mOnImageActionListener);
-
-            setContentView(mPlaceDetailLayout.getLayout());
         }
 
-        if (placeName != null)
-        {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
-            initToolbar(mToolbar, placeName, true);
-        }
+        initToolbar(placeName);
 
         mOnUserActionListener.hideActionBar();
+    }
+
+    private void initToolbar(String title)
+    {
+        mToolbarUnderline = findViewById(R.id.toolbarUnderline);
+        mToolbarUnderline.setVisibility(View.INVISIBLE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(title, true);
+        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_share, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelected);
     }
 
     @Override
@@ -277,45 +289,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.share_actions, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_share:
-                if (mDefaultImageUrl == null)
-                {
-                    if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)
-                    {
-                        mDefaultImageUrl = mPlaceDetail.getImageInformationList().get(0).url;
-                    }
-                }
-
-                shareKakao(mPlaceDetail, mDefaultImageUrl, mCheckInSaleTime, null);
-
-                // 호텔 공유하기 로그 추가
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Label.HOTEL_NAME, mPlaceDetail.name);
-                params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-
-                SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
-
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void moveToUserInfoUpdate(Customer user, int recommender, boolean isDailyUser)
     {
         Intent intent = new Intent(PlaceDetailActivity.this, SignupActivity.class);
@@ -346,18 +319,47 @@ public abstract class PlaceDetailActivity extends BaseActivity
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private View.OnClickListener mToolbarOptionsItemSelected = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            if (mDefaultImageUrl == null)
+            {
+                if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)
+                {
+                    mDefaultImageUrl = mPlaceDetail.getImageInformationList().get(0).url;
+                }
+            }
+
+            shareKakao(mPlaceDetail, mDefaultImageUrl, mCheckInSaleTime, null);
+
+            // 호텔 공유하기 로그 추가
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put(Label.HOTEL_NAME, mPlaceDetail.name);
+            params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+            params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
+        }
+    };
+
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override
         public void showActionBar()
         {
-            setToolbarTransparent(mToolbar, false);
+            mDailyToolbarLayout.setToolbarTransparent(false);
+            mToolbarUnderline.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void hideActionBar()
         {
-            setToolbarTransparent(mToolbar, true);
+            mDailyToolbarLayout.setToolbarTransparent(true);
+            mToolbarUnderline.setVisibility(View.INVISIBLE);
         }
 
         @Override

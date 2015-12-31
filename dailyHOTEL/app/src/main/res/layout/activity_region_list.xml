@@ -13,7 +13,7 @@
         app:contentInsetStart="0dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <include layout="@layout/toolbar_default"/>
+        <include layout="@layout/toolbar_default_underline"/>
 
     </android.support.v7.widget.Toolbar>
 

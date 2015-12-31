@@ -65,6 +65,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONException;
@@ -94,6 +95,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     // 카카오톡
     private com.kakao.usermgmt.LoginButton mKakaoLoginView;
     private SessionCallback mKakaoSessionCallback;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -106,8 +108,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         setContentView(R.layout.activity_login);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_login_activity));
+        initToolbar();
 
         mIdEditText = (EditText) findViewById(R.id.et_login_id);
         mPasswordEditText = (EditText) findViewById(R.id.et_login_pwd);
@@ -181,6 +182,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
             }
         }
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
     }
 
     @Override

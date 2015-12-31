@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CreditCardLayout;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +36,7 @@ public class CreditCardListActivity extends BaseActivity
     private CreditCardLayout mCreditCardLayout;
     private boolean mIsPickMode;
     private CreditCard mSelectedCreditCard;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     public interface OnUserActionListener
     {
@@ -68,11 +70,17 @@ public class CreditCardListActivity extends BaseActivity
 
     private void initLayout(boolean isPickMode)
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_creditcard_activity));
+        initToolbar();
 
         mCreditCardLayout = (CreditCardLayout) findViewById(R.id.creditCardLayout);
         mCreditCardLayout.setUserActionListener(mOnUserActionListener);
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_creditcard_activity));
     }
 
     @Override

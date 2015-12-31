@@ -461,7 +461,7 @@ public class PinnedSectionRecycleView extends RecyclerView
         } catch (Exception e)
         {
             String tag = (String) getTag();
-            throw new NullPointerException(tag + e.toString());
+            //            throw new NullPointerException(tag + e.toString());
         }
     }
 

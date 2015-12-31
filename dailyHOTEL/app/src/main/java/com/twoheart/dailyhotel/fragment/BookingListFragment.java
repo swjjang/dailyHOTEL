@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
 
 import org.json.JSONArray;
@@ -65,6 +66,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private PinnedSectionListView mListView;
     private View btnLogin;
     private long mCurrentTime;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     public interface OnUserActionListener
     {
@@ -78,9 +80,21 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        baseActivity.initToolbar(toolbar, getString(R.string.actionbar_title_booking_list_frag), false, false);
+        initToolbar(baseActivity, view);
+        initLayout(view);
 
+        return view;
+    }
+
+    private void initToolbar(BaseActivity baseActivity, View view)
+    {
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_booking_list_frag), false, false);
+    }
+
+    private void initLayout(View view)
+    {
         mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
         mListView.setShadowVisible(false);
         mListView.setTag("BookingListFragment");
@@ -89,9 +103,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         btnLogin = view.findViewById(R.id.btn_booking_empty_login);
 
         btnLogin.setOnClickListener(this);
-
-
-        return view;
     }
 
     @Override
@@ -601,6 +612,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             }
         }
     };
+
     private DailyHotelJsonResponseListener mReservationHiddenJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 

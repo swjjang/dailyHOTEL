@@ -13,7 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
+import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -76,23 +76,29 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected void onOptionsItemSelected(View view)
     {
-        if (mGourmetBookingDetail == null)
+        PopupMenu popupMenu = new PopupMenu(this, view);
+
+        if (Util.isTextEmpty(mGourmetBookingDetail.gourmetPhone) == false)
         {
-            menu.clear();
+            popupMenu.getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call, popupMenu.getMenu());
         } else
         {
-            if (Util.isTextEmpty(mGourmetBookingDetail.gourmetPhone) == false)
-            {
-                getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call, menu);
-            } else
-            {
-                getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call2, menu);
-            }
+            popupMenu.getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call2, popupMenu.getMenu());
         }
 
-        return true;
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem item)
+            {
+                onOptionsItemSelected(item);
+                return false;
+            }
+        });
+
+        popupMenu.show();
     }
 
     @Override

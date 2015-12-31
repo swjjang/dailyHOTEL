@@ -28,5 +28,33 @@
             android:textColor="@color/actionbar_title"
             android:textSize="18dp"
             android:layout_toRightOf="@+id/backImageView"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="9dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/menu2View"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="3dp"/>
+
+            <ImageView
+                android:id="@+id/menu1View"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/underLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/tab_underline"/>
     </RelativeLayout>
 </merge>

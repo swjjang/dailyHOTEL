@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
@@ -25,7 +26,8 @@ public class IssuingReceiptActivity extends BaseActivity
 {
     private int mBookingIdx;
     private boolean mIsFullscreen;
-
+    private DailyToolbarLayout mDailyToolbarLayout;
+    private View mToolbarUnderline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,8 +35,7 @@ public class IssuingReceiptActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_issuingreceipt);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.frag_issuing_receipt));
+        initToolbar();
 
         Intent intent = getIntent();
 
@@ -52,6 +53,16 @@ public class IssuingReceiptActivity extends BaseActivity
         }
 
         mIsFullscreen = false;
+    }
+
+    private void initToolbar()
+    {
+        mToolbarUnderline = findViewById(R.id.toolbarUnderline);
+        mToolbarUnderline.setVisibility(View.VISIBLE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.frag_issuing_receipt));
     }
 
     @Override
@@ -218,17 +229,17 @@ public class IssuingReceiptActivity extends BaseActivity
 
     private void updateFullscreenStatus(boolean bUseFullscreen)
     {
-        View actionBar = findViewById(R.id.toolbar);
-
         if (bUseFullscreen)
         {
-            actionBar.setVisibility(View.INVISIBLE);
+            mDailyToolbarLayout.setToolbarVisibility(false);
+            mToolbarUnderline.setVisibility(View.INVISIBLE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         } else
         {
-            actionBar.setVisibility(View.VISIBLE);
+            mDailyToolbarLayout.setToolbarVisibility(true);
+            mToolbarUnderline.setVisibility(View.VISIBLE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

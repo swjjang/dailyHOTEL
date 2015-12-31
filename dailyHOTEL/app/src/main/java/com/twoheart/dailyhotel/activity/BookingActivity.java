@@ -37,8 +37,6 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -80,6 +78,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.FinalCheckLayout;
 import com.twoheart.dailyhotel.view.widget.DailySignatureView;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -133,6 +132,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private String mWarningDialogMessage;
     private String mCSoperatingTimeMessage;
 
+    private DailyToolbarLayout mDailyToolbarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -159,9 +160,33 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         mDoReload = true;
         mWarningDialogMessage = null;
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, mPay.getSaleRoomInformation().hotelName);
+        initToolbar(mPay.getSaleRoomInformation().hotelName);
+        initLayout();
+    }
 
+    private void initToolbar(String title)
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(title);
+        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                showCallDialog();
+            }
+        });
+    }
+
+    private void initLayout()
+    {
         mCheckinDayTextView = (TextView) findViewById(R.id.checkinDayTextView);
         mCheckinTimeTextView = (TextView) findViewById(R.id.checkinTimeTextView);
         mCheckoutDayTextView = (TextView) findViewById(R.id.checkoutDayTextView);
@@ -1136,42 +1161,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         AnalyticsManager.getInstance(this).recordScreen(Screen.BOOKING);
         super.onStart();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_call:
-            {
-                if (isFinishing() == true)
-                {
-                    return super.onOptionsItemSelected(item);
-                }
-
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return super.onOptionsItemSelected(item);
-                }
-
-                showCallDialog();
-
-                return true;
-            }
-
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
     }
 
     @Override

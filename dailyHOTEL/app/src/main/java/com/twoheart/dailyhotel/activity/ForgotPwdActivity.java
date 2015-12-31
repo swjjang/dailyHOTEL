@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,11 +27,10 @@ import java.util.Map;
 
 public class ForgotPwdActivity extends BaseActivity implements Constants, OnClickListener
 {
-
     private TextView btnForgot;
     private EditText etForgot;
-
     private String mEmail;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,8 +39,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
         setContentView(R.layout.activity_forgot_pwd);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_forgot_pwd_activity));
+        initToolbar();
 
         etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
         btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
@@ -61,6 +60,13 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
                 return false;
             }
         });
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_forgot_pwd_activity));
     }
 
     // Jason | Fix send email api

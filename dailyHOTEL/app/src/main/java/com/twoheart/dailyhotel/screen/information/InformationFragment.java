@@ -48,7 +48,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private View mProfileLayout, mCreditcardLayout;
     private String mCSoperatingTimeMessage;
     private DailyToolbarLayout mDailyToolbarLayout;
-    private boolean mIsSignin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
