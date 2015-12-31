@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -122,6 +123,8 @@ public class GourmetDetailLayout
         mImageViewBlur.setVisibility(View.INVISIBLE);
 
         mImageHeight = Util.getLCDWidth(activity);
+        ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
+        layoutParams.height = mImageHeight;
 
         mTicketInformationLayout = activity.findViewById(R.id.ticketInformationLayout);
         mTicketInformationLayout.setVisibility(View.INVISIBLE);

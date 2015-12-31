@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -111,6 +112,8 @@ public class HotelDetailLayout
         mImageViewBlur.setVisibility(View.INVISIBLE);
 
         mImageHeight = Util.getLCDWidth(activity);
+        ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
+        layoutParams.height = mImageHeight;
 
         mRoomTypeLayout = activity.findViewById(R.id.roomTypeLayout);
         mRoomTypeLayout.setVisibility(View.INVISIBLE);
