@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -27,6 +28,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONObject;
 
@@ -78,7 +80,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     @Override
     protected void onOptionsItemSelected(View view)
     {
-        PopupMenu popupMenu = new PopupMenu(this, view);
+        final PopupMenu popupMenu = new PopupMenu(this, view);
 
         if (Util.isTextEmpty(mGourmetBookingDetail.gourmetPhone) == false)
         {
@@ -99,6 +101,16 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         });
 
         popupMenu.show();
+
+        view.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                FontManager.apply(((ViewGroup) getWindow().getDecorView())//
+                    , FontManager.getInstance(GourmetBookingDetailTabActivity.this).getRegularTypeface());
+            }
+        });
     }
 
     @Override
