@@ -118,7 +118,7 @@ public class AnalyticsManager
         public static final String CREDIT = "Credit Screen";
         public static final String EVENT = "Event Screen";
         public static final String CREDIT_LIST = "CreditList Screen";
-        public static final String SETTING = "Setting Screen";
+        public static final String INFORMATION = "Information Screen";
         public static final String ABOUT = "About Screen";
         public static final String NOTICE = "Notice Screen";
         public static final String PROFILE = "Profile Screen";
@@ -191,6 +191,7 @@ public class AnalyticsManager
         public static final String PLACE_NAME = "placeName";
         public static final String PLACE_TICKET_NAME = "placeTicketName";
         public static final String PLACE_TICKET_INDEX = "placeTicketIndex";
+        public static final String BOUNS = "bonus";
 
     }
 }

@@ -33,6 +33,7 @@
     <string name="label_global">해외</string>
     <string name="label_on">ON</string>
     <string name="label_off">OFF</string>
+    <string name="label_version">Version %1$s</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
@@ -269,10 +270,8 @@
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>
-    <string name="frag_about_business_license01">(주)데일리</string>
-    <string name="frag_about_business_license02">대표 : %1$s | 사업자등록번호 : %2$s</string>
-    <string name="frag_about_business_license03">통신판매업 신고번호 : %1$s</string>
-    <string name="frag_about_business_license04">대표연락처 : %1$s</string>
+    <string name="frag_about_business_license01">(주)데일리 ㅣ 대표 %1$s ㅣ 사업자등록번호 : %2$s</string>
+    <string name="frag_about_business_license02">통신판매업 신고번호 : %1$s ㅣ 대표연락처 : %2$s</string>
 
     <!-- Version Activity -->
     <string name="act_current_version">현재 버전: </string>
@@ -538,8 +537,7 @@
     <string name="label_tomorrow">내일</string>
     <string name="label_day">날짜</string>
     <string name="label_selecteday">날짜선택</string>
-    <string name="label_format_tabday">%1$s (%2$s일)</string>
-    <string name="label_format_hotel_selectedday">%1$s(%2$s-%3$s일)</string>
+    <string name="label_format_tabday">%1$s(%2$s일)</string>
 
     <!-- Banner -->
     <string name="label_event_title">이벤트 참여하기</string>

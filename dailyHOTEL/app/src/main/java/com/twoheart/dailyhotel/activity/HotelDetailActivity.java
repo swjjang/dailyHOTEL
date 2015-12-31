@@ -176,12 +176,12 @@ public class HotelDetailActivity extends BaseActivity
 
     private void initLayout(String hotelName, String imageUrl)
     {
+        setContentView(R.layout.layout_hoteldetail);
+
         if (mHotelDetailLayout == null)
         {
             mHotelDetailLayout = new HotelDetailLayout(this, imageUrl);
             mHotelDetailLayout.setUserActionListener(mOnUserActionListener);
-
-            setContentView(mHotelDetailLayout.getView());
         }
 
         if (hotelName != null)

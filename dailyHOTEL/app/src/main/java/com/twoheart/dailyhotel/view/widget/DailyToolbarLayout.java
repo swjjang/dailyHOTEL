@@ -80,9 +80,11 @@ public class DailyToolbarLayout
         TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
         textView.setText(title);
 
+        View backView = mToolbar.findViewById(R.id.backImageView);
+
         if (isBackPressed == true)
         {
-            View backView = mToolbar.findViewById(R.id.backImageView);
+            backView.setVisibility(View.VISIBLE);
             backView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -91,6 +93,9 @@ public class DailyToolbarLayout
                     mAppCompatActivity.finish();
                 }
             });
+        } else
+        {
+            backView.setVisibility(View.GONE);
         }
     }
 

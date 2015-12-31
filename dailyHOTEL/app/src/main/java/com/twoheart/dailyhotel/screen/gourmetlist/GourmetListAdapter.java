@@ -335,7 +335,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         TextView nameView;
         TextView priceView;
         TextView discountView;
-        TextView soldOutView;
+        View soldOutView;
         TextView addressView;
         TextView gradeView;
         TextView satisfactionView;
@@ -352,7 +352,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             priceView = (TextView) itemView.findViewById(R.id.priceTextView);
             satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);
             discountView = (TextView) itemView.findViewById(R.id.discountPriceTextView);
-            soldOutView = (TextView) itemView.findViewById(R.id.soldoutTextView);
+            soldOutView = itemView.findViewById(R.id.soldoutView);
             addressView = (TextView) itemView.findViewById(R.id.addressTextView);
             gradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             personsTextView = (TextView) itemView.findViewById(R.id.personsTextView);

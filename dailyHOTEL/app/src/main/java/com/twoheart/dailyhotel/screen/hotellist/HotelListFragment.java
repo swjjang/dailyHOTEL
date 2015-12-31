@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +74,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected Province mSelectedProvince;
 
     private View mEmptyView;
-    private FrameLayout mMapLayout;
+    private ViewGroup mMapLayout;
     private HotelMapFragment mHotelMapFragment;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Location mMyLocation;
@@ -119,7 +120,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         mEmptyView = view.findViewById(R.id.emptyView);
 
-        mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
+        mMapLayout = (ViewGroup) view.findViewById(R.id.hotelMapLayout);
 
         mHotelViewType = HotelMainFragment.HOTEL_VIEW_TYPE.LIST;
 

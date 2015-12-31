@@ -79,7 +79,6 @@ public class HotelDetailLayout
 
     private HotelDetail mHotelDetail;
     private BaseActivity mActivity;
-    private View mViewRoot;
     private LoopViewPager mViewPager;
     private DailyViewPagerIndicator mDailyViewPagerIndicator;
     private View mHotelTitleLaout;
@@ -120,21 +119,18 @@ public class HotelDetailLayout
         initLayout(activity, defaultImageUrl);
     }
 
-    private void initLayout(Activity activity, String defaultImageUrl)
+    private void initLayout(BaseActivity activity, String defaultImageUrl)
     {
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mViewRoot = inflater.inflate(R.layout.layout_hoteldetail, null, false);
-
-        mActionBarTextView = (TextView) mViewRoot.findViewById(R.id.actionBarTextView);
+        mActionBarTextView = (TextView) activity.findViewById(R.id.actionBarTextView);
         mActionBarTextView.setVisibility(View.INVISIBLE);
 
-        mListView = (HotelDetailListView) mViewRoot.findViewById(R.id.hotelListView);
+        mListView = (HotelDetailListView) activity.findViewById(R.id.hotelListView);
         mListView.setOnScrollListener(mOnScrollListener);
 
         // 이미지 ViewPage 넣기.
-        mDailyViewPagerIndicator = (DailyViewPagerIndicator) mViewRoot.findViewById(R.id.viewpagerIndicator);
+        mDailyViewPagerIndicator = (DailyViewPagerIndicator) activity.findViewById(R.id.viewpagerIndicator);
 
-        mViewPager = (LoopViewPager) mViewRoot.findViewById(R.id.defaultHotelImageView);
+        mViewPager = (LoopViewPager) activity.findViewById(R.id.defaultHotelImageView);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
         if (defaultImageUrl != null)
@@ -151,21 +147,21 @@ public class HotelDetailLayout
             mViewPager.setAdapter(mImageAdapter);
         }
 
-        mImageViewBlur = mViewRoot.findViewById(R.id.imageViewBlur);
+        mImageViewBlur = activity.findViewById(R.id.imageViewBlur);
         mImageViewBlur.setVisibility(View.INVISIBLE);
 
         mImageHeight = Util.getLCDWidth(activity);
         LayoutParams layoutParams = (LayoutParams) mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
-        mRoomTypeLayout = mViewRoot.findViewById(R.id.roomTypeLayout);
+        mRoomTypeLayout = activity.findViewById(R.id.roomTypeLayout);
         mRoomTypeLayout.setVisibility(View.INVISIBLE);
 
         mRoomTypeView = new View[MAX_OF_ROOMTYPE];
 
-        mBottomLayout = mViewRoot.findViewById(R.id.bottomLayout);
+        mBottomLayout = activity.findViewById(R.id.bottomLayout);
 
-        mRoomTypeBackgroundView = mViewRoot.findViewById(R.id.roomTypeBackgroundView);
+        mRoomTypeBackgroundView = activity.findViewById(R.id.roomTypeBackgroundView);
 
         mRoomTypeBackgroundView.setOnClickListener(new OnClickListener()
         {
@@ -178,11 +174,6 @@ public class HotelDetailLayout
 
         setBookingStatus(STATUS_NONE);
         hideRoomType();
-    }
-
-    public View getView()
-    {
-        return mViewRoot;
     }
 
     public void setHotelDetail(HotelDetail hotelDetail, int imagePosition)
@@ -233,8 +224,8 @@ public class HotelDetailLayout
         hideRoomType();
 
         // 호텔 sold out시
-        View bookingView = mViewRoot.findViewById(R.id.bookingTextView);
-        View soldoutView = mViewRoot.findViewById(R.id.soldoutTextView);
+        View bookingView = mActivity.findViewById(R.id.bookingTextView);
+        View soldoutView = mActivity.findViewById(R.id.soldoutTextView);
 
         // SOLD OUT 판단 조건.
         ArrayList<SaleRoomInformation> saleRoomList = hotelDetail.getSaleRoomList();
@@ -293,9 +284,9 @@ public class HotelDetailLayout
         }
 
         // 객실 타입 세팅
-        mRoomTypeView[0] = mViewRoot.findViewById(R.id.roomType01View);
-        mRoomTypeView[1] = mViewRoot.findViewById(R.id.roomType02View);
-        mRoomTypeView[2] = mViewRoot.findViewById(R.id.roomType03View);
+        mRoomTypeView[0] = mActivity.findViewById(R.id.roomType01View);
+        mRoomTypeView[1] = mActivity.findViewById(R.id.roomType02View);
+        mRoomTypeView[2] = mActivity.findViewById(R.id.roomType03View);
 
         int size = saleRoomList.size();
 
@@ -394,8 +385,8 @@ public class HotelDetailLayout
     {
         mBookingStatus = status;
 
-        TextView bookingView = (TextView) mViewRoot.findViewById(R.id.bookingTextView);
-        View soldoutView = mViewRoot.findViewById(R.id.soldoutTextView);
+        TextView bookingView = (TextView) mActivity.findViewById(R.id.bookingTextView);
+        View soldoutView = mActivity.findViewById(R.id.soldoutTextView);
 
         if (bookingView == null || soldoutView == null)
         {
@@ -700,45 +691,6 @@ public class HotelDetailLayout
             hideRoomType();
 
             setBookingStatus(STATUS_SEARCH_ROOM);
-
-            //			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, mRoomTypeLayout.getHeight());
-            //			translateAnimation.setDuration(300);
-            //			translateAnimation.setFillBefore(true);
-            //			translateAnimation.setFillAfter(true);
-            //			translateAnimation.setInterpolator(mActivity, android.R.anim.decelerate_interpolator);
-            //
-            //			translateAnimation.setAnimationListener(new AnimationListener()
-            //			{
-            //				@Override
-            //				public void onAnimationStart(Animation animation)
-            //				{
-            //					mAnimationState = ANIMATION_STATE.START;
-            //					mAnimationStatus = ANIMATION_STATUS.HIDE;
-            //
-            //					setRoomTypeLayoutEnabled(false);
-            //				}
-            //
-            //				@Override
-            //				public void onAnimationRepeat(Animation animation)
-            //				{
-            //				}
-            //
-            //				@Override
-            //				public void onAnimationEnd(Animation animation)
-            //				{
-            //					mAnimationStatus = ANIMATION_STATUS.HIDE_END;
-            //					mAnimationState = ANIMATION_STATE.END;
-            //
-            //					hideRoomType();
-            //
-            //					setBookingStatus(STATUS_SEARCH_ROOM);
-            //				}
-            //			});
-            //
-            //			if (mRoomTypeLayout != null)
-            //			{
-            //				mRoomTypeLayout.startAnimation(translateAnimation);
-            //			}
         }
     }
 

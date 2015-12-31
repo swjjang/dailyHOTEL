@@ -11,7 +11,6 @@ import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -337,7 +336,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         TextView hotelNameView;
         TextView hotelPriceView;
         TextView hotelDiscountView;
-        TextView hotelSoldOutView;
+        View hotelSoldOutView;
         TextView hotelAddressView;
         TextView hotelGradeView;
         TextView satisfactionView;
@@ -355,7 +354,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             hotelPriceView = (TextView) itemView.findViewById(R.id.priceTextView);
             satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);
             hotelDiscountView = (TextView) itemView.findViewById(R.id.discountPriceTextView);
-            hotelSoldOutView = (TextView) itemView.findViewById(R.id.soldoutTextView);
+            hotelSoldOutView = itemView.findViewById(R.id.soldoutView);
             hotelAddressView = (TextView) itemView.findViewById(R.id.addressTextView);
             hotelGradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             dBenefitView = itemView.findViewById(R.id.dBenefitImageView);
