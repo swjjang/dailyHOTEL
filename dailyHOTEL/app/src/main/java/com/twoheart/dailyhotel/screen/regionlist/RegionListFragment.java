@@ -1,16 +1,12 @@
-package com.twoheart.dailyhotel.screen.region;
+package com.twoheart.dailyhotel.screen.regionlist;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.RotateAnimation;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
@@ -19,7 +15,6 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
 
 import java.util.List;

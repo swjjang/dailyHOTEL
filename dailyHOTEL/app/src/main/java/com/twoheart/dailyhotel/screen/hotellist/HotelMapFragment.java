@@ -163,9 +163,10 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 132));
         layoutParams.gravity = Gravity.BOTTOM;
 
-        container.addView(mViewPager, layoutParams);
-
+        mViewPager.setLayoutParams(layoutParams);
         mViewPager.setVisibility(View.INVISIBLE);
+
+        container.addView(mViewPager);
 
         return view;
     }

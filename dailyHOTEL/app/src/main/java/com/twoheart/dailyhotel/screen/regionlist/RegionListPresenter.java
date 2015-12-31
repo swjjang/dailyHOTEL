@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.region;
+package com.twoheart.dailyhotel.screen.regionlist;
 
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Area;
@@ -6,7 +6,6 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;

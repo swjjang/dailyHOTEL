@@ -2,7 +2,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/splashLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,18 +18,16 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottomMenuBarLayout"
-            android:layout_centerInParent="true"
             android:layout_marginBottom="@dimen/menubar_height"
             android:layout_marginTop="85dp"
             android:background="@color/splash_background"
             android:scaleType="center"
             android:src="@drawable/splash_logo"/>
-    </FrameLayout>
+    </RelativeLayout>
 
     <include layout="@layout/view_menubar"/>
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="6px"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/tapbar_gradation"
-        android:layout_marginBottom="@dimen/menubar_height"/>
+        android:layout_marginBottom="@dimen/menubar_height"
+        android:background="@drawable/tapbar_gradation"/>
 
 </RelativeLayout>

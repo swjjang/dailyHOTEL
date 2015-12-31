@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.information;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,23 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.AboutActivity;
+import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.activity.BonusActivity;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
-import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
-import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
+import com.twoheart.dailyhotel.screen.eventlist.EventListActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
@@ -35,8 +33,8 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.widget.DailySwitchCompat;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
@@ -47,77 +45,69 @@ import java.util.TimeZone;
 
 public class InformationFragment extends BaseFragment implements Constants, OnClickListener
 {
-    private MainActivity mHostActivity;
-
-    private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall, tvAbout;
-    private TextView mSettingCardTextView;
-    private View mSettingCardLayout;
-    private LinearLayout llLogin;
+    private View mProfileLayout, mCreditcardLayout;
     private String mCSoperatingTimeMessage;
-
+    private DailyToolbarLayout mDailyToolbarLayout;
+    private boolean mIsSignin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        View view = inflater.inflate(R.layout.fragment_information, container, false);
 
-        // ActionBar Setting
-        mHostActivity = (MainActivity) getActivity();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mHostActivity.initToolbar(toolbar, getString(R.string.actionbar_title_setting_frag), false, false);
+        initToolbar(baseActivity, view);
 
-        tvNotice = (TextView) view.findViewById(R.id.tv_setting_notice);
-        TextView tvVersion = (TextView) view.findViewById(R.id.tv_setting_version);
-        LinearLayout llVersion = (LinearLayout) view.findViewById(R.id.ll_setting_version);
-        tvHelp = (TextView) view.findViewById(R.id.tv_setting_help);
-        tvMail = (TextView) view.findViewById(R.id.tv_setting_mail);
-        llLogin = (LinearLayout) view.findViewById(R.id.ll_setting_login);
-        tvLogin = (TextView) view.findViewById(R.id.tv_setting_login);
-        tvEmail = (TextView) view.findViewById(R.id.tv_setting_email);
-        tvCall = (TextView) view.findViewById(R.id.tv_setting_call);
-        tvAbout = (TextView) view.findViewById(R.id.tv_setting_introduction);
-        DailySwitchCompat switchCompat = (DailySwitchCompat) view.findViewById(R.id.pushSwitch);
+        mProfileLayout = view.findViewById(R.id.profileLayout);
+        mCreditcardLayout = view.findViewById(R.id.creditcardLayout);
+        View bonusLayout = view.findViewById(R.id.bonusLayout);
+        View eventLayout = view.findViewById(R.id.eventLayout);
+        View callLayout = view.findViewById(R.id.callLayout);
+        View mailLayout = view.findViewById(R.id.mailLayout);
+        View aboutLayout = view.findViewById(R.id.aboutLayout);
 
-        mSettingCardLayout = view.findViewById(R.id.settingCardLayout);
-        mSettingCardTextView = (TextView) view.findViewById(R.id.settingCardTextView);
+        mProfileLayout.setOnClickListener(this);
+        mCreditcardLayout.setOnClickListener(this);
+        bonusLayout.setOnClickListener(this);
+        eventLayout.setOnClickListener(this);
+        callLayout.setOnClickListener(this);
+        mailLayout.setOnClickListener(this);
+        aboutLayout.setOnClickListener(this);
 
-        tvNotice.setOnClickListener(this);
-        //        llVersion.setOnClickListener(this);
-        tvHelp.setOnClickListener(this);
-        tvMail.setOnClickListener(this);
-        llLogin.setOnClickListener(this);
-        tvCall.setOnClickListener(this);
-        tvAbout.setOnClickListener(this);
-        mSettingCardTextView.setOnClickListener(this);
+        // 프로필
+        setSigninLayout(false);
 
-        switchCompat.setChecked(DailyPreference.getInstance(mHostActivity).isAllowPush());
-        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        TextView pushTextView = (TextView) view.findViewById(R.id.pushTextView);
+
+        if (DailyPreference.getInstance(baseActivity).isAllowPush() == true)
         {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if (isLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                lockUiComponent();
-                DailyPreference.getInstance(mHostActivity).setAllowPush(isChecked);
-                releaseUiComponent();
-            }
-        });
-
-        try
+            pushTextView.setText(R.string.label_on);
+        } else
         {
-            String currentVersion = mHostActivity.getPackageManager().getPackageInfo(mHostActivity.getPackageName(), 0).versionName;
-
-            tvVersion.setText(currentVersion);
-        } catch (NameNotFoundException e)
-        {
-            onError(e);
+            pushTextView.setText(R.string.label_off);
         }
 
+        pushTextView.setOnClickListener(this);
+
+        initSnsLayout(view);
+        initBusinessLayout(baseActivity, view);
+
+        TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
+        versionTextView.setText(getString(R.string.label_version, DailyHotel.VERSION));
+
+        return view;
+    }
+
+    private void initToolbar(BaseActivity baseActivity, View view)
+    {
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), false, false);
+    }
+
+    private void initSnsLayout(View view)
+    {
         View viewFacebook = view.findViewById(R.id.facebookLinkView);
         View viewInstagram = view.findViewById(R.id.instagramLinkView);
         View viewNaver = view.findViewById(R.id.naverLinkView);
@@ -170,41 +160,42 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 startActivity(intent);
             }
         });
+    }
 
-        TextView companyTextView = (TextView) view.findViewById(R.id.companyTextView);
-        TextView ceoTextView = (TextView) view.findViewById(R.id.ceoTextView);
-        TextView itcRegTextView = (TextView) view.findViewById(R.id.itcRegTextView);
-        TextView companyPhoneTextView = (TextView) view.findViewById(R.id.companyPhoneTextView);
+    private void initBusinessLayout(BaseActivity baseActivity, View view)
+    {
+        TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
+        TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
 
-        companyTextView.setText(DailyPreference.getInstance(mHostActivity).getCompanyName());
+        business1TextView.setText(getString(R.string.frag_about_business_license01//
+            , DailyPreference.getInstance(baseActivity).getCompanyCEO()//
+            , DailyPreference.getInstance(baseActivity).getCompanyBizRegNumber()));
+        business2TextView.setText(getString(R.string.frag_about_business_license02//
+            , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber()//
+            , DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber()));
+    }
 
-        ceoTextView.setText(getString(R.string.frag_about_business_license02//
-            , DailyPreference.getInstance(mHostActivity).getCompanyCEO()//
-            , DailyPreference.getInstance(mHostActivity).getCompanyBizRegNumber()));
+    private void setSigninLayout(boolean isSignin)
+    {
+        TextView profileTextView = (TextView) mProfileLayout.findViewById(R.id.profileTextView);
 
-        itcRegTextView.setText(getString(R.string.frag_about_business_license03//
-            , DailyPreference.getInstance(mHostActivity).getCompanyItcRegNumber()));
+        mProfileLayout.setTag(isSignin);
 
-        companyPhoneTextView.setText(getString(R.string.frag_about_business_license04//
-            , DailyPreference.getInstance(mHostActivity).getCompanyPhoneNumber()));
-
-        //
-        //        viewFacebook.setOnClickListener(new OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                startActivity(com.twoheart.dailyhotel.activity.SatisfactionActivity.newInstance(getContext(), "인터컨티넨탈 서울 코엑스", 404880, 1446822000000L, 1446897600000L));
-        //            }
-        //        });
-
-        return view;
+        if (isSignin == true)
+        {
+            profileTextView.setText(R.string.frag_profile);
+            mCreditcardLayout.setVisibility(View.VISIBLE);
+        } else
+        {
+            profileTextView.setText(R.string.frag_login);
+            mCreditcardLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onStart()
     {
-        AnalyticsManager.getInstance(mHostActivity).recordScreen(Screen.SETTING);
+        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.INFORMATION);
         super.onStart();
     }
 
@@ -214,7 +205,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         super.onResume();
 
         lockUI();
-        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, mHostActivity);
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
     }
 
     @Override
@@ -227,100 +219,110 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         lockUiComponent();
 
-        int id = v.getId();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (id == tvNotice.getId())
+        switch (v.getId())
         {
-            Intent i = new Intent(mHostActivity, NoticeActivity.class);
-            startActivity(i);
-            mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.NOTICE, 0L);
-        } else if (id == tvHelp.getId())
-        {
-            Intent i = new Intent(mHostActivity, FAQActivity.class);
-            startActivity(i);
-            mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.FAQ, 0L);
-        } else if (id == tvMail.getId())
-        {
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
-            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
-
-            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.MAIL_CS, 0L);
-        } else if (id == llLogin.getId())
-        {
-            if (tvLogin.getText().equals(getString(R.string.frag_profile)))
+            case R.id.profileLayout:
             {
-                // 로그인 되어 있는 상태
-                Intent i = new Intent(mHostActivity, ProfileActivity.class);
-                startActivity(i);
-                mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                Boolean isSignin = (Boolean) mProfileLayout.getTag();
 
-                AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.PROFILE, 0L);
-            } else
-            {
-                // 로그아웃 상태
-                Intent i = new Intent(mHostActivity, LoginActivity.class);
-                mHostActivity.startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
-                mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                if (isSignin == null || isSignin == false)
+                {
+                    baseActivity.startActivityForResult(new Intent(baseActivity, LoginActivity.class), CODE_REQUEST_ACTIVITY_LOGIN);
+                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.LOGIN, 0L);
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.LOGIN, 0L);
+                } else
+                {
+                    startActivity(new Intent(baseActivity, ProfileActivity.class));
+                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
+                }
+                break;
             }
 
-        } else if (id == tvCall.getId())
-        {
-            showCallDialog();
+            case R.id.creditcardLayout:
+            {
+                startActivity(new Intent(baseActivity, CreditCardListActivity.class));
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.CALL_CS, 0L);
-        } else if (id == tvAbout.getId())
-        {
-            Intent i = new Intent(mHostActivity, AboutActivity.class);
-            startActivity(i);
-            mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.CREDITCARD, 0L);
+                break;
+            }
 
-            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.ABOUT, 0L);
-        } else if (id == mSettingCardTextView.getId())
-        {
-            Intent i = new Intent(mHostActivity, CreditCardListActivity.class);
-            startActivity(i);
-            mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            case R.id.bonusLayout:
+            {
+                startActivity(new Intent(baseActivity, BonusActivity.class));
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.CREDITCARD, 0L);
-        } else
-        {
-            releaseUiComponent();
+                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.BOUNS, 0L);
+                break;
+            }
+
+            case R.id.eventLayout:
+            {
+                startActivity(new Intent(baseActivity, EventListActivity.class));
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.EVENT, 0L);
+                break;
+            }
+
+            case R.id.callLayout:
+            {
+                showCallDialog(baseActivity);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.CALL_CS, 0L);
+                break;
+            }
+
+            case R.id.mailLayout:
+            {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
+                break;
+            }
+
+            case R.id.aboutLayout:
+            {
+                startActivity(new Intent(baseActivity, AboutActivity.class));
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
+                break;
+            }
+
+            case R.id.pushTextView:
+            {
+                if (DailyPreference.getInstance(baseActivity).isAllowPush() == true)
+                {
+                    DailyPreference.getInstance(baseActivity).setAllowPush(false);
+                    ((TextView) v).setText(R.string.label_off);
+                } else
+                {
+                    DailyPreference.getInstance(baseActivity).setAllowPush(true);
+                    ((TextView) v).setText(R.string.label_on);
+                }
+                releaseUiComponent();
+                break;
+            }
+
+            default:
+                releaseUiComponent();
+                break;
         }
     }
 
-    private void invalidateLoginButton(boolean login, String email)
+    private void showCallDialog(final BaseActivity baseActivity)
     {
-        tvEmail.setText(email);
-
-        if (login)
-        {
-            tvLogin.setText(R.string.frag_profile);
-            tvEmail.setVisibility(View.VISIBLE);
-        } else
-        {
-            tvLogin.setText(R.string.frag_login);
-            tvEmail.setVisibility(View.GONE);
-        }
-
-    }
-
-    private void showCallDialog()
-    {
-        if (mHostActivity.isFinishing() == true)
-        {
-            return;
-        }
-
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
             @Override
@@ -328,18 +330,18 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             {
                 releaseUiComponent();
 
-                if (Util.isTelephonyEnabled(mHostActivity) == true)
+                if (Util.isTelephonyEnabled(baseActivity) == true)
                 {
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
                     } catch (ActivityNotFoundException e)
                     {
-                        DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
                     }
                 } else
                 {
-                    DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
                 }
             }
         };
@@ -349,7 +351,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
         }
 
-        mHostActivity.showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
+        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
@@ -363,51 +365,12 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (getActivity() == null)
-            {
-                return;
-            }
-
-            try
-            {
-                String userEmail = response.getString("email");
-
-                if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null")))
-                {
-                    invalidateLoginButton(true, userEmail);
-                } else
-                {
-                    invalidateLoginButton(true, "");
-                }
-
-                mSettingCardLayout.setVisibility(View.VISIBLE);
-            } catch (Exception e)
-            {
-                onError(e);
-                invalidateLoginButton(true, "");
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
 
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
         @Override
         public void onResponse(String url, String response)
         {
-            if (getActivity() == null)
-            {
-                return;
-            }
-
             String result = null;
 
             if (Util.isTextEmpty(response) == false)
@@ -417,17 +380,14 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
             if ("alive".equalsIgnoreCase(result) == true)
             {
-                // session alive
-                // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, mHostActivity);
+                setSigninLayout(true);
             } else
             {
-                mSettingCardLayout.setVisibility(View.GONE);
-
-                invalidateLoginButton(false, "");
+                setSigninLayout(false);
             }
 
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, mHostActivity);
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
     };
 
@@ -436,11 +396,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            if (getActivity() == null)
-            {
-                return;
-            }
-
             try
             {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);

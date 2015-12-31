@@ -26,7 +26,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.region.RegionListActivity;
+import com.twoheart.dailyhotel.screen.regionlist.RegionListActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
@@ -189,19 +189,19 @@ public class HotelMainFragment extends BaseFragment
                     switch (currentFragment.getSortType())
                     {
                         case DEFAULT:
-                            mDailyToolbarLayout.setToolbarRegionMenu(0, R.drawable.navibar_ic_sorting_01);
+                            mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_01);
                             break;
 
                         case DISTANCE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(0, R.drawable.navibar_ic_sorting_02);
+                            mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_02);
                             break;
 
                         case LOW_PRICE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(0, R.drawable.navibar_ic_sorting_03);
+                            mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_03);
                             break;
 
                         case HIGH_PRICE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(0, R.drawable.navibar_ic_sorting_04);
+                            mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_04);
                             break;
                     }
                     break;
@@ -607,11 +607,11 @@ public class HotelMainFragment extends BaseFragment
 
             lockUiComponent();
 
-            String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("d");
-            String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("d");
+            String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+            String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("M월d일");
 
             // 선택탭의 이름을 수정한다.
-            mTabLayout.getTabAt(2).setText(getString(R.string.label_format_hotel_selectedday, getString(R.string.label_day), checkInDay, checkOutDay));
+            mTabLayout.getTabAt(2).setText(String.format("%s-%s", checkInDay, checkOutDay));
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
             refreshHotelList(mSelectedProvince, isListSelectionTop);

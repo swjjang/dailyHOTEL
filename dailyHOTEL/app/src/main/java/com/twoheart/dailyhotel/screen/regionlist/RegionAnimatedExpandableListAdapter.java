@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.region;
+package com.twoheart.dailyhotel.screen.regionlist;
 
 import android.content.Context;
 import android.view.LayoutInflater;
