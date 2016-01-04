@@ -57,8 +57,14 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
 
                 if (file.isFile() == true && file.exists() == true)
                 {
-                    imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
-                    isExist = true;
+                    try
+                    {
+                        imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                        isExist = true;
+                    } catch (OutOfMemoryError e)
+                    {
+                        isExist = false;
+                    }
                 }
             }
 
