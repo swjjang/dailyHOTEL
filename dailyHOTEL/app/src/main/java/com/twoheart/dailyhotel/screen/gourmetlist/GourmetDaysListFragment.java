@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * HotelListFragment (호텔 목록 화면)
- * <p>
+ * <p/>
  * 어플리케이션의 가장 주가 되는 화면으로서 호텔들의 목록을 보여주는 화면이다.
  * 호텔 리스트는 따로 커스텀되어 구성되어 있으며, 액션바의 네비게이션을 이용
  * 하여 큰 지역을 분리하고 리스트뷰 헤더를 이용하여 세부 지역을 나누어 표시
@@ -17,6 +17,7 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.View;
 
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
@@ -71,6 +72,15 @@ public class GourmetDaysListFragment extends GourmetListFragment
                     if (mOnUserActionListener != null)
                     {
                         mOnUserActionListener.selectDay(mSelectedSaleTime, true);
+                    }
+                } else
+                {
+                    if (mGourmetRecycleView.getVisibility() == View.VISIBLE && mGourmetRecycleView.getAdapter() != null)
+                    {
+                        if (mGourmetRecycleView.getAdapter().getItemCount() == 0)
+                        {
+                            fetchList();
+                        }
                     }
                 }
                 break;
