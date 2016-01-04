@@ -16,12 +16,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/navibar_gradation"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -70,4 +64,9 @@
             android:textSize="17dp"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>

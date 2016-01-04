@@ -18,12 +18,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/navibar_gradation"/>
-
     <fragment
         android:id="@+id/frag_full_map"
         class="com.google.android.gms.maps.SupportMapFragment"
@@ -31,4 +25,9 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>

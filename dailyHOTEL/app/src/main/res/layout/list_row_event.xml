@@ -4,11 +4,15 @@
              android:layout_height="240dp">
 
     <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:src="@drawable/img_placeholder"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
         android:id="@+id/eventImageView"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:adjustViewBounds="true"
-        android:background="@drawable/img_placeholder"
         android:scaleType="centerCrop"/>
 
 </FrameLayout>
