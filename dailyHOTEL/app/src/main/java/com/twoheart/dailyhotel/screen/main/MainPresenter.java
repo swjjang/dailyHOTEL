@@ -274,13 +274,10 @@ public class MainPresenter implements Response.ErrorListener
 
                         long currentDateTime = DailyPreference.getInstance(mBaseActivity).getLookUpEventTime();
                         DailyPreference.getInstance(mBaseActivity).setNewEventTime(currentDateTime);
-
-                        mListener.setNewIconVisible(true);
                     }
-                } else
-                {
-
                 }
+
+                mListener.updateNewEvent();
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

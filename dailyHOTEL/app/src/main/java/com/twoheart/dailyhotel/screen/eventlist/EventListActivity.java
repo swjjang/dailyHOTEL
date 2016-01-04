@@ -63,6 +63,8 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         mEventListPresenter = new EventListPresenter(this, mOnResponsePresenterListener);
 
+        DailyPreference.getInstance(this).setNewEvent(false);
+
         initToolbar();
         initLayout();
     }
