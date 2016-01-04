@@ -603,6 +603,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
             @Override
             public void onFailed()
             {
+                unLockUI();
+
                 mSortType = mPrevSortType;
 
                 if (Util.isOverAPI23() == true)
@@ -805,7 +807,13 @@ public class GourmetListFragment extends BaseFragment implements Constants
             }
         }
 
+        if (mOnUserActionListener != null)
+        {
+            mOnUserActionListener.expandedAppBar(true);
+        }
+
         mGourmetAdapter.setSortType(mSortType);
+        mGourmetRecycleView.scrollToPosition(0);
         mGourmetAdapter.notifyDataSetChanged();
         unLockUI();
     }
@@ -1137,6 +1145,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                     if (mOnUserActionListener != null)
                     {
+                        mOnUserActionListener.expandedAppBar(true);
                         mOnUserActionListener.setMapViewVisible(true);
                     }
                 }

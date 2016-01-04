@@ -594,6 +594,8 @@ public class HotelListFragment extends BaseFragment implements Constants
             @Override
             public void onFailed()
             {
+                unLockUI();
+
                 mSortType = mPrevSortType;
 
                 if (Util.isOverAPI23() == true)
@@ -796,7 +798,13 @@ public class HotelListFragment extends BaseFragment implements Constants
             }
         }
 
+        if (mOnUserActionListener != null)
+        {
+            mOnUserActionListener.expandedAppBar(true);
+        }
+
         mHotelAdapter.setSortType(mSortType);
+        mHotelRecycleView.scrollToPosition(0);
         mHotelAdapter.notifyDataSetChanged();
         unLockUI();
     }
@@ -1146,6 +1154,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                     if (mOnUserActionListener != null)
                     {
+                        mOnUserActionListener.expandedAppBar(true);
                         mOnUserActionListener.setMapViewVisible(true);
                     }
                 }

@@ -92,7 +92,7 @@ public class HotelMainFragment extends BaseFragment
 
         void refreshAll(boolean isShowProgress);
 
-        void expandedAppBar(boolean isExpanded);
+        void expandedAppBar(boolean expanded);
     }
 
     public interface UserAnalyticsActionListener
@@ -253,6 +253,8 @@ public class HotelMainFragment extends BaseFragment
 
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.onActivityResult(requestCode, resultCode, data);
+
+                mAppBarLayout.setExpanded(true, false);
                 break;
             }
 
@@ -282,6 +284,8 @@ public class HotelMainFragment extends BaseFragment
                         }
                     }
                 }
+
+                mAppBarLayout.setExpanded(true, false);
                 break;
             }
         }

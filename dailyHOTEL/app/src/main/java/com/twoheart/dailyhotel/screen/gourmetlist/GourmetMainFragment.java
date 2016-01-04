@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmetlist;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -255,8 +256,17 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    public void activityResult(int requestCode, int resultCode, Intent data)
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        unLockUI();
+
         switch (requestCode)
         {
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
@@ -266,9 +276,44 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                 GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.onActivityResult(requestCode, resultCode, data);
+
+                mAppBarLayout.setExpanded(true, false);
+                break;
+            }
+
+            // 지역을 선택한 후에 되돌아 온경우.
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
+            {
+                mDontReloadAtOnResume = true;
+
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    if (data != null)
+                    {
+                        if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
+                        {
+                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+
+                            setNavigationItemSelected(province);
+
+                            refreshAll();
+                        } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
+                        {
+                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
+
+                            setNavigationItemSelected(province);
+
+                            refreshAll();
+                        }
+                    }
+                }
+
+                mAppBarLayout.setExpanded(true, false);
                 break;
             }
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
