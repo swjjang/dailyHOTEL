@@ -22,7 +22,7 @@
     <color name="textView_textColor_disabled">#c6c6c6</color>
     <color name="textView_textColor_reg_date">#c6c6c6</color>
     <color name="textView_textColor_shadow">#7F000000</color>
-    <color name="textView_textColor_shadow_soldout">#CC000000</color>
+    <color name="textView_textColor_shadow_soldout">#99000000</color>
     <color name="drawer_entry_title">#737373</color>
 
     <color name="kakaotalk_textcolkr">#3c1e1e</color>
