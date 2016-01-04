@@ -16,7 +16,6 @@ public class DailyPreference
     /////////////////////////////////////////////////////////////////////////////////////////
 
     private static final String KEY_OPENING_ALARM = "1"; // 알람
-    private static final String KEY_NEW_EVENT_TODAY_FNB = "2"; // 앱 처음 실행시 FNB에  New 아이콘 넣기
     private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     private static final String KEY_ALLOW_PUSH = "5";
@@ -26,6 +25,8 @@ public class DailyPreference
 
     private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
     private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
+
+    private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
 
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
@@ -228,14 +229,14 @@ public class DailyPreference
         setV1Value(KEY_OPENING_ALARM, value);
     }
 
-    public boolean isNewTodayFnB()
+    public boolean hasNewEvent()
     {
-        return getV1Value(KEY_NEW_EVENT_TODAY_FNB, false);
+        return getV1Value(KEY_NEW_EVENT, false);
     }
 
-    public void setNewTodayFnB(boolean value)
+    public void setNewEvent(boolean value)
     {
-        setV1Value(KEY_NEW_EVENT_TODAY_FNB, value);
+        setV1Value(KEY_NEW_EVENT, value);
     }
 
     public String getLastMenu()
@@ -486,16 +487,6 @@ public class DailyPreference
     public void setGCMRegistrationId(String value)
     {
         setValue(KEY_PREFERENCE_GCM_ID, value);
-    }
-
-    public boolean hasNewEvent()
-    {
-        return getValue(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
-    }
-
-    public void setNewEvent(boolean value)
-    {
-        setValue(RESULT_ACTIVITY_SPLASH_NEW_EVENT, value);
     }
 
     public long getLookUpEventTime()

@@ -116,6 +116,12 @@ public class LoopViewPager extends ViewPager
         init(context);
     }
 
+    public void setSlideTime(int scrollFactor)
+    {
+        postInitViewPager();
+        setScrollDurationFactor(scrollFactor);
+    }
+
     /**
      * helper function which may be used when implementing FragmentPagerAdapter
      *
@@ -220,8 +226,6 @@ public class LoopViewPager extends ViewPager
         {
             layoutParams.height = Util.getLCDWidth(context);
         }
-
-        //        postInitViewPager();
     }
 
     public View findViewWidthPosition(int position)
@@ -261,7 +265,7 @@ public class LoopViewPager extends ViewPager
         }
     }
 
-    private void setScrollDurationFactor(double scrollFactor)
+    public void setScrollDurationFactor(double scrollFactor)
     {
         if (mScroller != null)
         {

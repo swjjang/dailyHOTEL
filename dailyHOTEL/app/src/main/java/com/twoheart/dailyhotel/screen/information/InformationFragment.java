@@ -45,7 +45,8 @@ import java.util.TimeZone;
 
 public class InformationFragment extends BaseFragment implements Constants, OnClickListener
 {
-    private View mProfileLayout, mCreditcardLayout;
+    private View mProfileLayout, mCreditcardLayout, mEventLayout;
+    private View mNewEventIconView;
     private String mCSoperatingTimeMessage;
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -61,7 +62,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         mProfileLayout = view.findViewById(R.id.profileLayout);
         mCreditcardLayout = view.findViewById(R.id.creditcardLayout);
         View bonusLayout = view.findViewById(R.id.bonusLayout);
-        View eventLayout = view.findViewById(R.id.eventLayout);
+        mEventLayout = view.findViewById(R.id.eventLayout);
         View callLayout = view.findViewById(R.id.callLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
@@ -69,13 +70,15 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         mProfileLayout.setOnClickListener(this);
         mCreditcardLayout.setOnClickListener(this);
         bonusLayout.setOnClickListener(this);
-        eventLayout.setOnClickListener(this);
+        mEventLayout.setOnClickListener(this);
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
 
         // 프로필
         setSigninLayout(false);
+
+        mNewEventIconView = mEventLayout.findViewById(R.id.newIconView);
 
         TextView pushTextView = (TextView) view.findViewById(R.id.pushTextView);
 
@@ -206,6 +209,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         lockUI();
         BaseActivity baseActivity = (BaseActivity) getActivity();
         DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
+
+        updateNewIconView(baseActivity);
     }
 
     @Override
@@ -320,6 +325,17 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         }
     }
 
+    private void updateNewIconView(BaseActivity baseActivity)
+    {
+        if(DailyPreference.getInstance(baseActivity).hasNewEvent() == true)
+        {
+            mNewEventIconView.setVisibility(View.VISIBLE);
+        } else
+        {
+            mNewEventIconView.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void showCallDialog(final BaseActivity baseActivity)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
@@ -403,6 +419,23 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
                     , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
                     , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                String deepLink = DailyPreference.getInstance(baseActivity).getDeepLink();
+
+                if (Util.isTextEmpty(deepLink) == false)
+                {
+                    DailyPreference.getInstance(baseActivity).removeDeepLink();
+
+                    String value = Util.getValueForLinkUrl(deepLink, "view");
+
+                    if("event".equalsIgnoreCase(value) == true)
+                    {
+                        unLockUI();
+                        mEventLayout.performClick();
+                    }
+                }
             } catch (Exception e)
             {
                 onError(e);
