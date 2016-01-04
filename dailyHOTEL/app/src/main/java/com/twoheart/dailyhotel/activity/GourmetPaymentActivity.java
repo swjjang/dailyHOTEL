@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.view.GourmetBookingLayout;
 import com.twoheart.dailyhotel.view.GourmetBookingLayout.UserInformationType;
 import com.twoheart.dailyhotel.view.widget.DailySignatureView;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,6 +59,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
     private GourmetBookingLayout mGourmetBookingLayout;
     private boolean mIsChangedTime;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     public interface OnUserActionListener
     {
@@ -106,8 +108,28 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         mIsChangedPrice = false;
         mDoReload = true;
 
+        initToolbar(mTicketPayment.getTicketInformation().placeName);
+    }
+
+    private void initToolbar(String title)
+    {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, mTicketPayment.getTicketInformation().placeName);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(title);
+        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                showCallDialog();
+            }
+        });
     }
 
     @Override

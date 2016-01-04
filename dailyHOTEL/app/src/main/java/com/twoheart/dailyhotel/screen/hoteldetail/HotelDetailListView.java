@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.view;
+package com.twoheart.dailyhotel.screen.hoteldetail;
 
 import android.content.Context;
 import android.util.AttributeSet;

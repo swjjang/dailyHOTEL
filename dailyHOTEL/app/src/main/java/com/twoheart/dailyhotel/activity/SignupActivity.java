@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
@@ -80,6 +81,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private HashMap<String, String> regPushParams;
 
     private boolean mFirstMobileNumberFocus;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -105,8 +107,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             mRecommender = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, -1);
             mIsDailyUser = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, true);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            initToolbar(toolbar, getString(R.string.actionbar_title_userinfo_update_activity));
+            initToolbar(getString(R.string.actionbar_title_userinfo_update_activity));
 
             if (user == null)
             {
@@ -171,11 +172,17 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
             phoneNumber = Util.getLine1Number(this);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            initToolbar(toolbar, getString(R.string.actionbar_title_signup_activity));
+            initToolbar(getString(R.string.actionbar_title_signup_activity));
         }
 
         initLayout(user, phoneNumber, isVisibleRecommender);
+    }
+
+    private void initToolbar(String title)
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(title);
     }
 
     private void initLayout(Customer user, final String mobileNumber, boolean isVisibleRecommender)

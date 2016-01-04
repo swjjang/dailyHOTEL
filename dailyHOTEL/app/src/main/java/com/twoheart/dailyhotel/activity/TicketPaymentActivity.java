@@ -18,8 +18,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
@@ -466,42 +464,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
     {
         AnalyticsManager.getInstance(this).recordScreen(Screen.BOOKING);
         super.onStart();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_call:
-            {
-                if (isFinishing() == true)
-                {
-                    return super.onOptionsItemSelected(item);
-                }
-
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return super.onOptionsItemSelected(item);
-                }
-
-                showCallDialog();
-
-                return true;
-            }
-
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
     }
 
     @Override

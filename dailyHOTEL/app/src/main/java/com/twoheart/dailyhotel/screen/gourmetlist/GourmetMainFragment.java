@@ -15,8 +15,6 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
-import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
-import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
@@ -26,6 +24,8 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.gourmetdetail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.regionlist.RegionListActivity;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
@@ -79,6 +79,8 @@ public class GourmetMainFragment extends PlaceMainFragment
         void setMapViewVisible(boolean isVisible);
 
         void refreshAll(boolean isShowProgress);
+
+        void expandedAppBar(boolean expanded);
     }
 
     private interface OnUserAnalyticsActionListener
@@ -141,33 +143,38 @@ public class GourmetMainFragment extends PlaceMainFragment
             switch (mViewType)
             {
                 case LIST:
+                {
 
                     GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
                     switch (currentFragment.getSortType())
                     {
                         case DEFAULT:
-                            mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_01);
+                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_01);
                             break;
 
                         case DISTANCE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_02);
+                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_02);
                             break;
 
                         case LOW_PRICE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_03);
+                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_03);
                             break;
 
                         case HIGH_PRICE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_04);
+                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_04);
                             break;
                     }
                     break;
+                }
 
                 case MAP:
-                    mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_list, -1);
+                    mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_list : -1, -1);
                     break;
             }
+        } else
+        {
+            mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
         }
     }
 
@@ -274,6 +281,49 @@ public class GourmetMainFragment extends PlaceMainFragment
     public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights)
     {
         mOnGourmetUserActionListener.selectPlace(index, dailyTime, dailyDayOfDays, nights);
+    }
+
+    @Override
+    public void makeTabLayout()
+    {
+        SaleTime[] tabSaleTime = null;
+
+        tabSaleTime = new SaleTime[TAB_COUNT];
+
+        for (int i = 0; i < TAB_COUNT; i++)
+        {
+            GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(i);
+
+            SaleTime saleTime = mTodaySaleTime.getClone(i);
+            tabSaleTime[i] = saleTime;
+
+            gourmetListFragment.setSaleTime(saleTime);
+        }
+
+        // 임시로 여기서 날짜를 넣는다.
+        ArrayList<String> dayList = new ArrayList<String>();
+
+        dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_today), tabSaleTime[0].getDailyDay()));
+        dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_tomorrow), tabSaleTime[1].getDailyDay()));
+
+        String text = (String) mTabLayout.getTabAt(2).getTag();
+
+        if (Util.isTextEmpty(text) == true)
+        {
+            mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
+            dayList.add(getString(R.string.label_selecteday));
+        } else
+        {
+            dayList.add(mTabLayout.getTabAt(2).getText().toString());
+        }
+
+        for (int i = 0; i < TAB_COUNT; i++)
+        {
+            String day = dayList.get(i);
+            mTabLayout.getTabAt(i).setText(day);
+        }
+
+        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -685,6 +735,12 @@ public class GourmetMainFragment extends PlaceMainFragment
             lockUI(isShowProgress);
             DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
+
+        @Override
+        public void expandedAppBar(boolean expanded)
+        {
+            mAppBarLayout.setExpanded(expanded);
+        }
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -790,9 +846,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                         }
                     }
 
-                    //탭에 들어갈 날짜를 만든다.
-                    makeTabDate();
-
                     boolean isSelectionTop = isSelectionTop();
                     onNavigationItemSelected(selectedProvince, isSelectionTop);
                 } else
@@ -808,48 +861,6 @@ public class GourmetMainFragment extends PlaceMainFragment
             {
                 unLockUI();
             }
-        }
-
-        private void makeTabDate()
-        {
-            SaleTime[] tabSaleTime = null;
-
-            tabSaleTime = new SaleTime[TAB_COUNT];
-
-            for (int i = 0; i < TAB_COUNT; i++)
-            {
-                GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(i);
-
-                SaleTime saleTime = mTodaySaleTime.getClone(i);
-                tabSaleTime[i] = saleTime;
-
-                gourmetListFragment.setSaleTime(saleTime);
-            }
-
-            // 임시로 여기서 날짜를 넣는다.
-            ArrayList<String> dayList = new ArrayList<String>();
-
-            dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_today), tabSaleTime[0].getDailyDay()));
-            dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_tomorrow), tabSaleTime[1].getDailyDay()));
-
-            String text = (String) mTabLayout.getTabAt(2).getTag();
-
-            if (Util.isTextEmpty(text) == true)
-            {
-                mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
-                dayList.add(getString(R.string.label_selecteday));
-            } else
-            {
-                dayList.add(mTabLayout.getTabAt(2).getText().toString());
-            }
-
-            for (int i = 0; i < TAB_COUNT; i++)
-            {
-                String day = dayList.get(i);
-                mTabLayout.getTabAt(i).setText(day);
-            }
-
-            FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
         }
 
         private boolean isSelectionTop()

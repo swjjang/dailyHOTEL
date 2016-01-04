@@ -49,13 +49,9 @@ public class DailyToolbarLayout
 
     public void initToolbarRegionMenu(View.OnClickListener listener)
     {
-        ImageView menu1 = (ImageView) mToolbar.findViewById(R.id.menu1View);
-        ImageView menu2 = (ImageView) mToolbar.findViewById(R.id.menu2View);
-
         setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_01);
 
-        menu1.setOnClickListener(listener);
-        menu2.setOnClickListener(listener);
+        setToolbarMenuClickListener(listener);
 
         setToolbarRegionMenuVisibility(false);
     }
@@ -96,6 +92,22 @@ public class DailyToolbarLayout
         } else
         {
             backView.setVisibility(View.GONE);
+        }
+    }
+
+    public void setToolbarMenuClickListener(View.OnClickListener listener)
+    {
+        View menu1 = mToolbar.findViewById(R.id.menu1View);
+        View menu2 = mToolbar.findViewById(R.id.menu2View);
+
+        if (menu1 != null)
+        {
+            menu1.setOnClickListener(listener);
+        }
+
+        if (menu2 != null)
+        {
+            menu2.setOnClickListener(listener);
         }
     }
 
@@ -163,14 +175,21 @@ public class DailyToolbarLayout
 
     public void setToolbarTransparent(boolean isTransparent)
     {
+        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+
         if (isTransparent == true)
         {
-            mToolbar.setTitleTextColor(mAppCompatActivity.getResources().getColor(android.R.color.transparent));
+            textView.setTextColor(mAppCompatActivity.getResources().getColor(android.R.color.transparent));
             mToolbar.setBackgroundColor(mAppCompatActivity.getResources().getColor(android.R.color.transparent));
         } else
         {
-            mToolbar.setTitleTextColor(mAppCompatActivity.getResources().getColor(R.color.actionbar_title));
+            textView.setTextColor(mAppCompatActivity.getResources().getColor(R.color.actionbar_title));
             mToolbar.setBackgroundColor(mAppCompatActivity.getResources().getColor(R.color.white));
         }
+    }
+
+    public void setToolbarVisibility(boolean visible)
+    {
+        mToolbar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 }

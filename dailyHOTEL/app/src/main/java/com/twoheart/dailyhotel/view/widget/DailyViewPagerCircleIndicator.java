@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 public class DailyViewPagerCircleIndicator extends View
 {
@@ -17,7 +19,6 @@ public class DailyViewPagerCircleIndicator extends View
     private Paint mPaint;
     private int mPosition;
     private float mRadius;
-    private ViewPager mViewPager;
 
     public DailyViewPagerCircleIndicator(Context context)
     {
@@ -40,16 +41,9 @@ public class DailyViewPagerCircleIndicator extends View
         initLayout();
     }
 
-    public DailyViewPagerCircleIndicator(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-    {
-        super(context, attrs, defStyleAttr, defStyleRes);
-
-        initLayout();
-    }
-
     private void initLayout()
     {
-        mRadius = 4f;
+        mRadius = Util.dpToPx(getContext(), 1.5);
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -70,10 +64,12 @@ public class DailyViewPagerCircleIndicator extends View
 
             if (i == mPosition)
             {
+                mPaint.setColor(getResources().getColor(R.color.white_a80));
                 canvas.drawCircle(x, y, mRadius * SELECTED_FACTOR, mPaint);
             } else
             {
-                canvas.drawCircle(x, y, mRadius, mPaint);
+                mPaint.setColor(getResources().getColor(R.color.white_a20));
+                canvas.drawCircle(x, y, mRadius * SELECTED_FACTOR, mPaint);
             }
         }
     }

@@ -29,8 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -212,6 +212,38 @@ public class HotelListFragment extends BaseFragment implements Constants
     public void onRefreshComplete()
     {
         mSwipeRefreshLayout.setRefreshing(false);
+
+        Object objectTag = mSwipeRefreshLayout.getTag();
+
+        if (objectTag == null)
+        {
+            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
+
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+            animation.setDuration(300);
+            animation.setAnimationListener(new Animation.AnimationListener()
+            {
+                @Override
+                public void onAnimationStart(Animation animation)
+                {
+                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    mSwipeRefreshLayout.setAnimation(null);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation)
+                {
+
+                }
+            });
+
+            mSwipeRefreshLayout.startAnimation(animation);
+        }
     }
 
     /**
@@ -1042,11 +1074,13 @@ public class HotelListFragment extends BaseFragment implements Constants
                 if (length == 0)
                 {
                     mHotelAdapter.clear();
+                    mHotelAdapter.notifyDataSetChanged();
 
                     setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.GONE);
 
                     if (mOnUserActionListener != null)
                     {
+                        mOnUserActionListener.expandedAppBar(true);
                         mOnUserActionListener.setMapViewVisible(false);
                     }
                 } else
@@ -1094,38 +1128,6 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                     if (mSortType == SortType.DEFAULT)
                     {
-//                        ArrayList<EventBanner> arrayList = new ArrayList<>();
-//                        EventBanner eventBanner01 = new EventBanner();
-//                        eventBanner01.index = 1490;
-//                        eventBanner01.nights = 1;
-//                        eventBanner01.mIsHotel = true;
-//                        eventBanner01.checkInTime = 1451314800000L - 3600 * 9 * 1000;
-//                        eventBanner01.imageUrl = "http://mediamails.com/wp-content/uploads/events_banner.jpg";
-//                        arrayList.add(eventBanner01);
-//
-//                        EventBanner eventBanner02 = new EventBanner();
-//                        eventBanner02.index = 50168;
-//                        eventBanner02.nights = 1;
-//                        eventBanner02.checkInTime = 1451314800000L - 3600 * 9 * 1000;
-//                        eventBanner02.mIsHotel = false;
-//                        eventBanner02.imageUrl = "http://redtix.airasia.com/Events/F1/images/event_banner_F1.jpg";
-//                        arrayList.add(eventBanner02);
-//
-//                        EventBanner eventBanner03 = new EventBanner();
-//                        eventBanner03.webLink = "http://web.dailyhotel.co.kr/eventinapp/event/notice_9.php?number=lglg";
-//                        eventBanner03.imageUrl = "http://redtix.airasia.com/events/SundownMusicFestivalAsia2013/images/event-banner-sundown.jpg";
-//                        arrayList.add(eventBanner03);
-//
-//                        if (mEventBannerList == null)
-//                        {
-//                            mEventBannerList = new ArrayList<>();
-//                        }
-//
-//                        mEventBannerList.clear();
-//                        mEventBannerList.add(eventBanner01);
-//                        mEventBannerList.add(eventBanner02);
-//                        mEventBannerList.add(eventBanner03);
-
                         if (mEventBannerList != null && mEventBannerList.size() > 0)
                         {
                             PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);

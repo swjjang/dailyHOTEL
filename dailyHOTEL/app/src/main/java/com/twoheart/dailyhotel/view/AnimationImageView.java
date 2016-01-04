@@ -12,8 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.ImageView;
 
-import com.twoheart.dailyhotel.activity.HotelDetailActivity;
-import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
+import com.twoheart.dailyhotel.screen.gourmetdetail.PlaceDetailActivity;
+import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailActivity;
 
 public class AnimationImageView extends ImageView
 {

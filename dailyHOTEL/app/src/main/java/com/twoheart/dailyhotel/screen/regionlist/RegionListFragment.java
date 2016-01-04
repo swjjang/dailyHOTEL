@@ -197,57 +197,57 @@ public class RegionListFragment extends BaseFragment
         regionViewItem.isExpandGroup = true;
 
 
-//        if (Util.isOverAPI11() == true)
-//        {
-//            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
-//
-//            RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//            animation.setFillBefore(true);
-//            animation.setFillAfter(true);
-//            animation.setDuration(250);
-//
-//            if (imageView != null)
-//            {
-//                animation.setAnimationListener(new AnimationListener()
-//                {
-//                    @Override
-//                    public void onAnimationStart(Animation animation)
-//                    {
-//                        // TODO Auto-generated method stub
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation)
-//                    {
-//                        // TODO Auto-generated method stub
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation)
-//                    {
-//                        releaseUiComponent();
-//                        imageView.setAnimation(null);
-//                        imageView.setImageResource(R.drawable.ic_details_menu_on);
-//
-//                        regionViewItem.isExpandGroup = true;
-//                    }
-//                });
-//
-//                imageView.startAnimation(animation);
-//            } else
-//            {
-//                releaseUiComponent();
-//
-//                regionViewItem.isExpandGroup = true;
-//            }
-//        } else
-//        {
-//            releaseUiComponent();
-//
-//            regionViewItem.isExpandGroup = true;
-//        }
+        //        if (Util.isOverAPI11() == true)
+        //        {
+        //            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+        //
+        //            RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        //            animation.setFillBefore(true);
+        //            animation.setFillAfter(true);
+        //            animation.setDuration(250);
+        //
+        //            if (imageView != null)
+        //            {
+        //                animation.setAnimationListener(new AnimationListener()
+        //                {
+        //                    @Override
+        //                    public void onAnimationStart(Animation animation)
+        //                    {
+        //                        // TODO Auto-generated method stub
+        //
+        //                    }
+        //
+        //                    @Override
+        //                    public void onAnimationRepeat(Animation animation)
+        //                    {
+        //                        // TODO Auto-generated method stub
+        //
+        //                    }
+        //
+        //                    @Override
+        //                    public void onAnimationEnd(Animation animation)
+        //                    {
+        //                        releaseUiComponent();
+        //                        imageView.setAnimation(null);
+        //                        imageView.setImageResource(R.drawable.ic_details_menu_on);
+        //
+        //                        regionViewItem.isExpandGroup = true;
+        //                    }
+        //                });
+        //
+        //                imageView.startAnimation(animation);
+        //            } else
+        //            {
+        //                releaseUiComponent();
+        //
+        //                regionViewItem.isExpandGroup = true;
+        //            }
+        //        } else
+        //        {
+        //            releaseUiComponent();
+        //
+        //            regionViewItem.isExpandGroup = true;
+        //        }
     }
 
     public void onGroupCollapse(View view, final RegionViewItem regionViewItem)
@@ -263,58 +263,58 @@ public class RegionListFragment extends BaseFragment
         releaseUiComponent();
         regionViewItem.isExpandGroup = false;
 
-//        if (Util.isOverAPI11() == true)
-//        {
-//            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
-//
-//            RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//            animation.setFillBefore(true);
-//            animation.setFillAfter(true);
-//            animation.setDuration(250);
-//
-//            if (imageView != null)
-//            {
-//                animation.setAnimationListener(new AnimationListener()
-//                {
-//                    @Override
-//                    public void onAnimationStart(Animation animation)
-//                    {
-//                        // TODO Auto-generated method stub
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation)
-//                    {
-//                        // TODO Auto-generated method stub
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation)
-//                    {
-//                        releaseUiComponent();
-//
-//                        imageView.setAnimation(null);
-//                        imageView.setImageResource(R.drawable.ic_details_menu_off);
-//
-//                        regionViewItem.isExpandGroup = false;
-//                    }
-//                });
-//
-//                imageView.startAnimation(animation);
-//            } else
-//            {
-//                releaseUiComponent();
-//
-//                regionViewItem.isExpandGroup = false;
-//            }
-//        } else
-//        {
-//            releaseUiComponent();
-//
-//            regionViewItem.isExpandGroup = false;
-//        }
+        //        if (Util.isOverAPI11() == true)
+        //        {
+        //            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+        //
+        //            RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        //            animation.setFillBefore(true);
+        //            animation.setFillAfter(true);
+        //            animation.setDuration(250);
+        //
+        //            if (imageView != null)
+        //            {
+        //                animation.setAnimationListener(new AnimationListener()
+        //                {
+        //                    @Override
+        //                    public void onAnimationStart(Animation animation)
+        //                    {
+        //                        // TODO Auto-generated method stub
+        //
+        //                    }
+        //
+        //                    @Override
+        //                    public void onAnimationRepeat(Animation animation)
+        //                    {
+        //                        // TODO Auto-generated method stub
+        //
+        //                    }
+        //
+        //                    @Override
+        //                    public void onAnimationEnd(Animation animation)
+        //                    {
+        //                        releaseUiComponent();
+        //
+        //                        imageView.setAnimation(null);
+        //                        imageView.setImageResource(R.drawable.ic_details_menu_off);
+        //
+        //                        regionViewItem.isExpandGroup = false;
+        //                    }
+        //                });
+        //
+        //                imageView.startAnimation(animation);
+        //            } else
+        //            {
+        //                releaseUiComponent();
+        //
+        //                regionViewItem.isExpandGroup = false;
+        //            }
+        //        } else
+        //        {
+        //            releaseUiComponent();
+        //
+        //            regionViewItem.isExpandGroup = false;
+        //        }
     }
 
     private OnGroupClickListener mOnGroupClickListener = new OnGroupClickListener()

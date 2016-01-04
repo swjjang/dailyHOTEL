@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/tools"
                 android:background="@color/white">
 
     <android.support.v7.widget.Toolbar
@@ -11,7 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:background="#ffffff"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <include layout="@layout/toolbar_default"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -178,8 +190,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.7"
                         android:gravity="right|center_vertical"
-                        android:textColor="@drawable/selector_textview_textcolor"
                         android:hint="@string/act_profile_input_contact"
+                        android:textColor="@drawable/selector_textview_textcolor"
                         android:textColorHint="@color/textView_textColor_main"
                         android:textSize="15dp"/>
                 </LinearLayout>

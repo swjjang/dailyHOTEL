@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 @SuppressLint("NewApi")
 public class RegisterCreditCardActivity extends BaseActivity implements Constants
@@ -47,6 +48,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
     public int m_nStat = PROGRESS_STAT_NOT_START;
 
     private WebView webView;
+    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,8 +57,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
         setContentView(R.layout.activity_regcreditcard);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, getString(R.string.actionbar_title_reg_creditcard));
+        initToolbar();
 
         webView = (WebView) findViewById(R.id.webView);
 
@@ -92,6 +93,13 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         String url = DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER) + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_REGISTER_CREDIT_CARD);
 
         webView.postUrl(url, null);
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_reg_creditcard));
     }
 
     @Override

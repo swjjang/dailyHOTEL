@@ -53,6 +53,8 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     public abstract void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
 
+    public abstract void makeTabLayout();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -230,11 +232,17 @@ public abstract class PlaceMainFragment extends BaseFragment
                     {
                         ExLog.d(e.toString());
 
+                        //탭에 들어갈 날짜를 만든다.
+                        makeTabLayout();
+
                         // 지역 리스트를 가져온다
                         requestRegionList(baseActivity);
                     }
                 } else
                 {
+                    //탭에 들어갈 날짜를 만든다.
+                    makeTabLayout();
+
                     // 지역 리스트를 가져온다
                     requestRegionList(baseActivity);
                 }

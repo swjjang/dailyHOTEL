@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
@@ -20,6 +21,7 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
@@ -30,9 +32,13 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     private ViewPager mViewPager;
     protected Booking mBooking;
 
+    private DailyToolbarLayout mDailyToolbarLayout;
+
     protected abstract void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail);
 
     protected abstract void requestPlaceBookingDetail(int reservationIndex);
+
+    protected abstract void onOptionsItemSelected(View view);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,8 +65,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     {
         setContentView(R.layout.activity_booking_tab);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(toolbar, mBooking.placeName);
+        initToolbar(mBooking.placeName);
 
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.frag_booking_tab_title), true);
@@ -72,6 +77,22 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setOffscreenPageLimit(TAB_COUNT);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+    }
+
+    private void initToolbar(String title)
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(title);
+        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onOptionsItemSelected(v);
+            }
+        });
     }
 
     public ViewPager getViewPager()

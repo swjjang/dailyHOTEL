@@ -115,11 +115,11 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.HotelDetailActivity"
+            android:name=".screen.hoteldetail.HotelDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.GourmetDetailActivity"
+            android:name=".screen.gourmetdetail.GourmetDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

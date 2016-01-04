@@ -93,10 +93,10 @@ public class MenuBarLayout implements View.OnClickListener
         }
     }
 
-    public void setVisibility(boolean isVisible)
-    {
-        mMenuBarLayout.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-    }
+    //    public void setVisibility(boolean isVisible)
+    //    {
+    //        mMenuBarLayout.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    //    }
 
     void selectedMenu(int index)
     {

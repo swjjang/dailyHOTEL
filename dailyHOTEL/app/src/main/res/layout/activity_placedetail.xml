@@ -32,7 +32,7 @@
         android:background="@drawable/blur"
         android:visibility="invisible"/>
 
-    <com.twoheart.dailyhotel.view.HotelDetailListView
+    <com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailListView
         android:id="@+id/hotelListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,28 +44,25 @@
         android:fadingEdgeLength="0dp"
         android:overScrollMode="never"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
-        android:id="@+id/actionBarTextView"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/white"
-        android:ellipsize="end"
-        android:freezesText="true"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:paddingLeft="55dp"
-        android:paddingRight="40dp"
-        android:singleLine="true"
-        android:textColor="@android:color/black"
-        android:textSize="20dp"
-        android:visibility="invisible"/>
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:background="#ffffff"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <include layout="@layout/toolbar_default_menu"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
 
     <View
         android:id="@+id/roomTypeBackgroundView"
