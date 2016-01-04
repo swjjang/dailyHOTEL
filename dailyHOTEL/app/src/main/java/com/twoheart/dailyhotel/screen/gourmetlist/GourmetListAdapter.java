@@ -385,6 +385,8 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
             loopViewPager = (LoopViewPager) itemView.findViewById(R.id.loopViewPager);
             viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
+
+            loopViewPager.setSlideTime(4);
         }
     }
 }
