@@ -327,7 +327,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
     private void updateNewIconView(BaseActivity baseActivity)
     {
-        if(DailyPreference.getInstance(baseActivity).hasNewEvent() == true)
+        if (DailyPreference.getInstance(baseActivity).hasNewEvent() == true)
         {
             mNewEventIconView.setVisibility(View.VISIBLE);
         } else
@@ -430,7 +430,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
                     String value = Util.getValueForLinkUrl(deepLink, "view");
 
-                    if("event".equalsIgnoreCase(value) == true)
+                    if ("event".equalsIgnoreCase(value) == true)
                     {
                         unLockUI();
                         mEventLayout.performClick();

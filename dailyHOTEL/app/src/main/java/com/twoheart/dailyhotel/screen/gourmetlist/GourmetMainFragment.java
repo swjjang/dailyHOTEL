@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -405,8 +404,20 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         if (Util.isTextEmpty(text) == true)
         {
-            mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
-            dayList.add(getString(R.string.label_selecteday));
+            String days = getString(R.string.label_selecteday);
+
+            SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currentFragment instanceof GourmetDaysListFragment)
+            {
+                days = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+
+                mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
+            }
+
+            dayList.add(days);
         } else
         {
             dayList.add(mTabLayout.getTabAt(2).getText().toString());

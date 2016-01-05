@@ -951,7 +951,7 @@ public class GourmetDetailLayout
                 ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
                 if (Float.compare(xFactor, 0.0f) >= 0)
                 {
-                    layoutParams.width =  (int)(firstWidth - (widthNameMax * (1.0f - xFactor)));
+                    layoutParams.width = (int) (firstWidth - (widthNameMax * (1.0f - xFactor)));
                 } else
                 {
                     layoutParams.width = firstWidth;

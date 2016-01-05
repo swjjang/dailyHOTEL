@@ -528,7 +528,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void updateNewEvent()
         {
-            if(DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
+            if (DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
             {
                 mMenuBarLayout.setNewIconVisible(true);
             } else
@@ -701,7 +701,7 @@ public class MainActivity extends BaseActivity implements Constants
                     } else if ("bookings".equalsIgnoreCase(value) == true)
                     {
                         mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
-                    } else if("event".equalsIgnoreCase(value) == true)
+                    } else if ("event".equalsIgnoreCase(value) == true)
                     {
                         mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                     } else

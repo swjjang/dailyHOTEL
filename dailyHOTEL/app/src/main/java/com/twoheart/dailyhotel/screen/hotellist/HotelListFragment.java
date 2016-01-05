@@ -818,7 +818,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     public void resetScrollDistance(boolean isUpDistance)
     {
-        if(isUpDistance == true)
+        if (isUpDistance == true)
         {
             mUpDistance = 0;
         } else
@@ -838,11 +838,11 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             super.onScrolled(recyclerView, dx, dy);
 
-            if(dy < 0)
+            if (dy < 0)
             {
                 ExLog.d("mDownDistance : " + mDownDistance);
 
-                if(mDownDistance == -1)
+                if (mDownDistance == -1)
                 {
                     return;
                 }
@@ -851,20 +851,20 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if(Math.abs(mDownDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if (Math.abs(mDownDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
-                    if(mOnUserActionListener != null)
+                    if (mOnUserActionListener != null)
                     {
                         mUpDistance = 0;
                         mDownDistance = -1;
                         mOnUserActionListener.showAppBarLayout();
                     }
                 }
-            } else if(dy > 0)
+            } else if (dy > 0)
             {
                 ExLog.d("mUpDistance : " + mUpDistance);
 
-                if(mUpDistance == -1)
+                if (mUpDistance == -1)
                 {
                     return;
                 }
@@ -873,9 +873,9 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if(Math.abs(mUpDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if (Math.abs(mUpDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
-                    if(mOnUserActionListener != null)
+                    if (mOnUserActionListener != null)
                     {
                         mDownDistance = 0;
                         mUpDistance = -1;

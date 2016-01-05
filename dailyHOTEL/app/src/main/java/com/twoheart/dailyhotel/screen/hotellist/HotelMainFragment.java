@@ -387,16 +387,31 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         String text = (String) mTabLayout.getTabAt(2).getTag();
 
-        SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
-        SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
-
         if (Util.isTextEmpty(text) == true)
         {
+            String days = getString(R.string.label_selecteday);
+
+            SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
+            SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
+
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currentFragment instanceof HotelDaysListFragment)
+            {
+                String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+                String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+
+                // 선택탭의 이름을 수정한다.
+                days = String.format("%s-%s", checkInDay, checkOutDay);
+                FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+
+                mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
+            }
+
             HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(2);
             fragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
 
-            mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
-            dayList.add(getString(R.string.label_selecteday));
+            dayList.add(days);
         } else
         {
             dayList.add(mTabLayout.getTabAt(2).getText().toString());
@@ -729,6 +744,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("M월d일");
 
             // 선택탭의 이름을 수정한다.
+            mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
             mTabLayout.getTabAt(2).setText(String.format("%s-%s", checkInDay, checkOutDay));
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 

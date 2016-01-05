@@ -1,13 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
@@ -106,23 +100,23 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
 
         name.setSelected(true); // Android TextView marquee bug
 
-//        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-//        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
-//
-//        PaintDrawable paintDrawable = new PaintDrawable();
-//        paintDrawable.setShape(new RectShape());
-//
-//        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
-//        {
-//            @Override
-//            public Shader resize(int width, int height)
-//            {
-//                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-//            }
-//        };
-//
-//        paintDrawable.setShaderFactory(shaderFactory);
-//        gradientView.setBackgroundDrawable(paintDrawable);
+        //        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
+        //        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
+        //
+        //        PaintDrawable paintDrawable = new PaintDrawable();
+        //        paintDrawable.setShape(new RectShape());
+        //
+        //        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
+        //        {
+        //            @Override
+        //            public Shader resize(int width, int height)
+        //            {
+        //                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+        //            }
+        //        };
+        //
+        //        paintDrawable.setShaderFactory(shaderFactory);
+        //        gradientView.setBackgroundDrawable(paintDrawable);
 
         // grade
         if (Util.isTextEmpty(gourmet.category) == true)

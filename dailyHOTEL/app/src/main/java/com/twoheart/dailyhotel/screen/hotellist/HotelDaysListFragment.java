@@ -61,7 +61,7 @@ public class HotelDaysListFragment extends HotelListFragment
                     }
                 } else
                 {
-                    if(mHotelRecycleView.getVisibility() == View.VISIBLE && mHotelRecycleView.getAdapter() != null)
+                    if (mHotelRecycleView.getVisibility() == View.VISIBLE && mHotelRecycleView.getAdapter() != null)
                     {
                         if (mHotelRecycleView.getAdapter().getItemCount() == 0)
                         {
