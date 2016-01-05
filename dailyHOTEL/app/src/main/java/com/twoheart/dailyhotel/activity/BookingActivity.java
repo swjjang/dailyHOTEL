@@ -193,7 +193,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         mCheckoutTimeTextView = (TextView) findViewById(R.id.checkoutTimeTextView);
 
         tvOriginalPrice = (TextView) findViewById(R.id.tv_hotel_payment_original_price);
-        tvCredit = (TextView) findViewById(R.id.tv_hotel_payment_credit);
+        tvCredit = (TextView) findViewById(R.id.tv_hotel_payment_credit);ㅠㅠ
         tvOriginalPriceValue = (TextView) findViewById(R.id.tv_hotel_payment_original_price_value);
         tvCreditValue = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
         tvPrice = (TextView) findViewById(R.id.tv_hotel_payment_price);
@@ -2276,7 +2276,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         DecimalFormat comma = new DecimalFormat("###,##0");
 
                         tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
-                        tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
+
+                        // 적림금 on/off에 따라서 가격이 다를수 있어 나중에 보이도록 수정
+//                        tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
                         mPay.setOriginalPrice(originalPrice);
 
