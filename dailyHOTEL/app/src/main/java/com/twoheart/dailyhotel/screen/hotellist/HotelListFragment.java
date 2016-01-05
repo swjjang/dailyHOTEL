@@ -840,8 +840,6 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             if (dy < 0)
             {
-                ExLog.d("mDownDistance : " + mDownDistance);
-
                 if (mDownDistance == -1)
                 {
                     return;
@@ -862,8 +860,6 @@ public class HotelListFragment extends BaseFragment implements Constants
                 }
             } else if (dy > 0)
             {
-                ExLog.d("mUpDistance : " + mUpDistance);
-
                 if (mUpDistance == -1)
                 {
                     return;

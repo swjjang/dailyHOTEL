@@ -892,8 +892,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             if (params != null &&//
                 params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
             {
-                ExLog.d("showAppBarLayout");
-
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
                 mCollapsingToolbarLayout.setLayoutParams(params);
             }
@@ -907,8 +905,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             if (params != null &&//
                 params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
             {
-                ExLog.d("hideAppBarLayout");
-
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
                 mCollapsingToolbarLayout.setLayoutParams(params);
             }
@@ -922,8 +918,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             if (params != null &&//
                 params.getScrollFlags() != 0)
             {
-                ExLog.d("pinAppBarLayout");
-
                 params.setScrollFlags(0);
                 mCollapsingToolbarLayout.setLayoutParams(params);
             }
