@@ -1189,7 +1189,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                     if (mOnUserActionListener != null)
                     {
-                        mOnUserActionListener.expandedAppBar(true);
                         mOnUserActionListener.setMapViewVisible(true);
                     }
                 }
