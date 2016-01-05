@@ -406,6 +406,10 @@ public class HotelDetailListAdapter extends BaseAdapter
         mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
         mHotelNameTextView.setText(hotelDetail.hotelName);
 
+        int width = Util.getLCDWidth(mFragmentActivity) - Util.dpToPx(mFragmentActivity, 60) - Util.dpToPx(mFragmentActivity, 48);
+        mHotelNameTextView.setTag(mHotelNameTextView.getId(), width);
+        mHotelNameTextView.setSelected(true);
+
         if (mHotelNameTextView.getTag() == null)
         {
             mHotelNameTextView.post(new Runnable()

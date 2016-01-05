@@ -12,28 +12,15 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/navibar_ic_back"
-            android:layout_marginLeft="15dp"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@color/actionbar_title"
-            android:textSize="18dp"
-            android:layout_toRightOf="@+id/backImageView"/>
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"/>
 
         <LinearLayout
+            android:id="@+id/menuLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="9dp"
+            android:layout_marginRight="15dp"
             android:gravity="center_vertical">
 
             <ImageView
@@ -41,14 +28,30 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="3dp"/>
+                />
 
             <ImageView
                 android:id="@+id/menu1View"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"/>
         </LinearLayout>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/actionbar_title"
+            android:textSize="18dp"
+            android:layout_toRightOf="@+id/backImageView"
+            android:layout_toLeftOf="@+id/menuLayout"/>
 
         <View
             android:id="@+id/underLine"

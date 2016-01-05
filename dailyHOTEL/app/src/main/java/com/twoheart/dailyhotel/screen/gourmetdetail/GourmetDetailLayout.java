@@ -897,6 +897,7 @@ public class GourmetDetailLayout
             View nameTextView = mListAdapter.getNameTextView();
 
             Rect firstRect = (Rect) nameTextView.getTag();
+            Integer firstWidth = (Integer) nameTextView.getTag(nameTextView.getId());
 
             if (firstRect != null)
             {
@@ -944,6 +945,19 @@ public class GourmetDetailLayout
                         mLastFactor = -nameMax;
                     }
                 }
+
+                float widthNameMax = firstRect.width() - firstWidth;
+
+                ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
+                if (Float.compare(xFactor, 0.0f) >= 0)
+                {
+                    layoutParams.width =  (int)(firstWidth - (widthNameMax * (1.0f - xFactor)));
+                } else
+                {
+                    layoutParams.width = firstWidth;
+                }
+
+                nameTextView.setLayoutParams(layoutParams);
             }
         }
     };

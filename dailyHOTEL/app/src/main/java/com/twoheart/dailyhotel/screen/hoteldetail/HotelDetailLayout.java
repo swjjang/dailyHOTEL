@@ -907,8 +907,9 @@ public class HotelDetailLayout
             View hotelNameTextView = mListAdapter.getHotelNameTextView();
 
             Rect firstRect = (Rect) hotelNameTextView.getTag();
+            Integer firstWidth = (Integer) hotelNameTextView.getTag(hotelNameTextView.getId());
 
-            if (firstRect != null)
+            if (firstRect != null && firstWidth != null)
             {
                 final int TOOLBAR_TEXT_X = Util.dpToPx(mActivity, 60);
                 float gradeMax = ((float) mImageHeight - TOOLBAR_HEIGHT) / 3;
@@ -954,6 +955,19 @@ public class HotelDetailLayout
                         mLastFactor = -nameMax;
                     }
                 }
+
+                float widthNameMax = firstRect.width() - firstWidth;
+
+                ViewGroup.LayoutParams layoutParams = hotelNameTextView.getLayoutParams();
+                if (Float.compare(xFactor, 0.0f) >= 0)
+                {
+                    layoutParams.width =  (int)(firstWidth - (widthNameMax * (1.0f - xFactor)));
+                } else
+                {
+                    layoutParams.width = firstWidth;
+                }
+
+                hotelNameTextView.setLayoutParams(layoutParams);
             }
         }
     };

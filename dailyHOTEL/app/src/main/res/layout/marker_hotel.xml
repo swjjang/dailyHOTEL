@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
-        android:textSize="14dp"/>
+        android:textSize="12dp"/>
 
 </FrameLayout>

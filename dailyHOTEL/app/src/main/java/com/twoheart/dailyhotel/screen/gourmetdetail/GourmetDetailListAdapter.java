@@ -315,9 +315,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
         mNameTextView.setText(gourmetDetail.name);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(Util.dpToPx(mFragmentActivity, 15), 0, Util.dpToPx(mFragmentActivity, 40), 0);
-        mNameTextView.setLayoutParams(layoutParams);
+        int width = Util.getLCDWidth(mFragmentActivity) - Util.dpToPx(mFragmentActivity, 60) - Util.dpToPx(mFragmentActivity, 48);
+        mNameTextView.setTag(mNameTextView.getId(), width);
+        mNameTextView.setSelected(true);
 
         if (mNameTextView.getTag() == null)
         {
