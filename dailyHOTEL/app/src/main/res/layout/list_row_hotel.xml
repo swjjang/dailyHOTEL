@@ -127,8 +127,8 @@
         android:textSize="12dp"
         dailyFont:style="DemiLight"
         android:singleLine="true"
-        android:maxLength="1"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/dBenefitImageView"

@@ -418,7 +418,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/textView45"
-                    android:lineSpacingExtra="8dp"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp"/>
 
