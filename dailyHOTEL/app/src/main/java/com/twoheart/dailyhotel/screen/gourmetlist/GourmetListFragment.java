@@ -200,6 +200,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         mSwipeRefreshLayout.setRefreshing(false);
 
+        if (mViewType == VIEW_TYPE.MAP)
+        {
+            return;
+        }
+
         Object objectTag = mSwipeRefreshLayout.getTag();
 
         if (objectTag == null)
