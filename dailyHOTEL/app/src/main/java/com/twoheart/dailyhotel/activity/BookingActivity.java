@@ -193,7 +193,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         mCheckoutTimeTextView = (TextView) findViewById(R.id.checkoutTimeTextView);
 
         tvOriginalPrice = (TextView) findViewById(R.id.tv_hotel_payment_original_price);
-        tvCredit = (TextView) findViewById(R.id.tv_hotel_payment_credit);ㅠㅠ
+        tvCredit = (TextView) findViewById(R.id.tv_hotel_payment_credit);
         tvOriginalPriceValue = (TextView) findViewById(R.id.tv_hotel_payment_original_price_value);
         tvCreditValue = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
         tvPrice = (TextView) findViewById(R.id.tv_hotel_payment_price);
