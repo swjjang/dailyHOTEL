@@ -125,7 +125,10 @@
         android:layout_toLeftOf="@+id/discountPriceLayout"
         android:textColor="@color/white"
         android:textSize="12dp"
-        dailyFont:style="DemiLight"/>
+        dailyFont:style="DemiLight"
+        android:singleLine="true"
+        android:maxLength="1"
+        android:ellipsize="end"/>
 
     <ImageView
         android:id="@+id/dBenefitImageView"
