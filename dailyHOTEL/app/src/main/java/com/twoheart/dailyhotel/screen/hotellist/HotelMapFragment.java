@@ -160,7 +160,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 132));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 100));
         layoutParams.gravity = Gravity.BOTTOM;
 
         mViewPager.setLayoutParams(layoutParams);

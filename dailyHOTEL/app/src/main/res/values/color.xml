@@ -59,9 +59,10 @@
     <color name="white_a8">#14ffffff</color>
 
     <color name="black">#000000</color>
-    <color name="black_a25">#40000000</color>
     <color name="black_a80">#cc000000</color>
     <color name="black_a40">#66000000</color>
+    <color name="black_a25">#40000000</color>
+    <color name="black_a14">#24000000</color>
 
     <color name="tab_text">#323232</color>
     <color name="tab_selected">#900034</color>

@@ -1,11 +1,11 @@
 package com.twoheart.dailyhotel.model;
 
-import android.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import java.text.DecimalFormat;
@@ -20,7 +20,7 @@ public class HotelRenderer
     {
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        mPrice = "₩" + comma.format(hotel.averageDiscount);
+        mPrice = comma.format(hotel.averageDiscount) + context.getString(R.string.currency);
 
         mMarkerResId = hotel.getCategory().getMarkerResId();
 
