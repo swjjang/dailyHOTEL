@@ -30,7 +30,7 @@ import com.twoheart.dailyhotel.R;
 
 public class HotelIconGenerator
 {
-    private static final float TEXT_SIZE_DP = 14.0f;
+    private static final float TEXT_SIZE_DP = 12.0f;
     private static final float SELECTED_TEXT_SIZE_DP = 16.0f;
 
     private ViewGroup mContainer;

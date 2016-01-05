@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
@@ -15,6 +18,7 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
 
 import java.util.List;
@@ -70,6 +74,7 @@ public class RegionListFragment extends BaseFragment
     private View getGroupView(int groupPosition)
     {
         int count = mListView.getChildCount();
+
         for (int i = 0; i < count; i++)
         {
             View childView = mListView.getChildAt(i);
@@ -193,61 +198,57 @@ public class RegionListFragment extends BaseFragment
             return;
         }
 
-        releaseUiComponent();
-        regionViewItem.isExpandGroup = true;
+        if (Util.isOverAPI11() == true)
+        {
+            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
 
+            RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            animation.setFillBefore(true);
+            animation.setFillAfter(true);
+            animation.setDuration(250);
 
-        //        if (Util.isOverAPI11() == true)
-        //        {
-        //            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
-        //
-        //            RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        //            animation.setFillBefore(true);
-        //            animation.setFillAfter(true);
-        //            animation.setDuration(250);
-        //
-        //            if (imageView != null)
-        //            {
-        //                animation.setAnimationListener(new AnimationListener()
-        //                {
-        //                    @Override
-        //                    public void onAnimationStart(Animation animation)
-        //                    {
-        //                        // TODO Auto-generated method stub
-        //
-        //                    }
-        //
-        //                    @Override
-        //                    public void onAnimationRepeat(Animation animation)
-        //                    {
-        //                        // TODO Auto-generated method stub
-        //
-        //                    }
-        //
-        //                    @Override
-        //                    public void onAnimationEnd(Animation animation)
-        //                    {
-        //                        releaseUiComponent();
-        //                        imageView.setAnimation(null);
-        //                        imageView.setImageResource(R.drawable.ic_details_menu_on);
-        //
-        //                        regionViewItem.isExpandGroup = true;
-        //                    }
-        //                });
-        //
-        //                imageView.startAnimation(animation);
-        //            } else
-        //            {
-        //                releaseUiComponent();
-        //
-        //                regionViewItem.isExpandGroup = true;
-        //            }
-        //        } else
-        //        {
-        //            releaseUiComponent();
-        //
-        //            regionViewItem.isExpandGroup = true;
-        //        }
+            if (imageView != null)
+            {
+                animation.setAnimationListener(new Animation.AnimationListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animation animation)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        releaseUiComponent();
+                        imageView.setAnimation(null);
+                        imageView.setImageResource(R.drawable.region_ic_sub_v_top);
+
+                        regionViewItem.isExpandGroup = true;
+                    }
+                });
+
+                imageView.startAnimation(animation);
+            } else
+            {
+                releaseUiComponent();
+
+                regionViewItem.isExpandGroup = true;
+            }
+        } else
+        {
+            releaseUiComponent();
+
+            regionViewItem.isExpandGroup = true;
+        }
     }
 
     public void onGroupCollapse(View view, final RegionViewItem regionViewItem)
@@ -260,61 +261,58 @@ public class RegionListFragment extends BaseFragment
             return;
         }
 
-        releaseUiComponent();
-        regionViewItem.isExpandGroup = false;
+        if (Util.isOverAPI11() == true)
+        {
+            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
 
-        //        if (Util.isOverAPI11() == true)
-        //        {
-        //            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
-        //
-        //            RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        //            animation.setFillBefore(true);
-        //            animation.setFillAfter(true);
-        //            animation.setDuration(250);
-        //
-        //            if (imageView != null)
-        //            {
-        //                animation.setAnimationListener(new AnimationListener()
-        //                {
-        //                    @Override
-        //                    public void onAnimationStart(Animation animation)
-        //                    {
-        //                        // TODO Auto-generated method stub
-        //
-        //                    }
-        //
-        //                    @Override
-        //                    public void onAnimationRepeat(Animation animation)
-        //                    {
-        //                        // TODO Auto-generated method stub
-        //
-        //                    }
-        //
-        //                    @Override
-        //                    public void onAnimationEnd(Animation animation)
-        //                    {
-        //                        releaseUiComponent();
-        //
-        //                        imageView.setAnimation(null);
-        //                        imageView.setImageResource(R.drawable.ic_details_menu_off);
-        //
-        //                        regionViewItem.isExpandGroup = false;
-        //                    }
-        //                });
-        //
-        //                imageView.startAnimation(animation);
-        //            } else
-        //            {
-        //                releaseUiComponent();
-        //
-        //                regionViewItem.isExpandGroup = false;
-        //            }
-        //        } else
-        //        {
-        //            releaseUiComponent();
-        //
-        //            regionViewItem.isExpandGroup = false;
-        //        }
+            RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            animation.setFillBefore(true);
+            animation.setFillAfter(true);
+            animation.setDuration(250);
+
+            if (imageView != null)
+            {
+                animation.setAnimationListener(new Animation.AnimationListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animation animation)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        releaseUiComponent();
+
+                        imageView.setAnimation(null);
+                        imageView.setImageResource(R.drawable.region_ic_sub_v);
+
+                        regionViewItem.isExpandGroup = false;
+                    }
+                });
+
+                imageView.startAnimation(animation);
+            } else
+            {
+                releaseUiComponent();
+
+                regionViewItem.isExpandGroup = false;
+            }
+        } else
+        {
+            releaseUiComponent();
+
+            regionViewItem.isExpandGroup = false;
+        }
     }
 
     private OnGroupClickListener mOnGroupClickListener = new OnGroupClickListener()

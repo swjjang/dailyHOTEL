@@ -20,7 +20,7 @@ public class PlaceRenderer
     {
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        mPrice = "₩" + comma.format(price);
+        mPrice = comma.format(price) + context.getString(com.twoheart.dailyhotel.R.string.currency);
 
         mMarkerResId = markerResId;
 

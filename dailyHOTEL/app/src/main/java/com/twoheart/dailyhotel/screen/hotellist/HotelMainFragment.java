@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -48,15 +49,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-public class HotelMainFragment extends BaseFragment
+public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
 {
     private static final int TAB_COUNT = 3;
+    private int TOOLBAR_HEIGHT;
 
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private HotelFragmentPagerAdapter mFragmentPagerAdapter;
     private DailyToolbarLayout mDailyToolbarLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     private SaleTime mTodaySaleTime;
     private Province mSelectedProvince;
@@ -64,6 +67,8 @@ public class HotelMainFragment extends BaseFragment
     private boolean mMenuEnabled;
     private boolean mMapEnabled;
     private boolean mDontReloadAtOnResume;
+    private boolean mIsHideAppBarlayout;
+    private boolean mIsPinAppBarlayout;
 
     private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -92,7 +97,13 @@ public class HotelMainFragment extends BaseFragment
 
         void refreshAll(boolean isShowProgress);
 
-        void expandedAppBar(boolean isExpanded);
+        void expandedAppBar(boolean expanded, boolean animate);
+
+        void showAppBarLayout();
+
+        void hideAppBarLayout();
+
+        void pinAppBarLayout();
     }
 
     public interface UserAnalyticsActionListener
@@ -139,8 +150,13 @@ public class HotelMainFragment extends BaseFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
+        TOOLBAR_HEIGHT = Util.dpToPx(baseActivity, 85);
+
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbarLayout);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        mAppBarLayout.addOnOffsetChangedListener(this);
 
         mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
         mDailyToolbarLayout.initToolbarRegion(new View.OnClickListener()
@@ -153,6 +169,31 @@ public class HotelMainFragment extends BaseFragment
         });
 
         mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+    {
+        if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
+        {
+            mOnUserActionListener.hideAppBarLayout();
+            mIsHideAppBarlayout = true;
+
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.resetScrollDistance(false);
+
+        } else if (verticalOffset == 0 && mIsHideAppBarlayout == false)
+        {
+            mOnUserActionListener.pinAppBarLayout();
+            mIsHideAppBarlayout = true;
+
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.resetScrollDistance(true);
+
+        } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
+        {
+            mIsHideAppBarlayout = false;
+        }
     }
 
     @Override
@@ -175,6 +216,14 @@ public class HotelMainFragment extends BaseFragment
         }
 
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        mAppBarLayout.removeOnOffsetChangedListener(this);
+
+        super.onDestroy();
     }
 
     @Override
@@ -253,6 +302,8 @@ public class HotelMainFragment extends BaseFragment
 
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.onActivityResult(requestCode, resultCode, data);
+
+                mOnUserActionListener.expandedAppBar(true, false);
                 break;
             }
 
@@ -282,6 +333,8 @@ public class HotelMainFragment extends BaseFragment
                         }
                     }
                 }
+
+                mOnUserActionListener.expandedAppBar(true, false);
                 break;
             }
         }
@@ -334,16 +387,31 @@ public class HotelMainFragment extends BaseFragment
 
         String text = (String) mTabLayout.getTabAt(2).getTag();
 
-        SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
-        SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
-
         if (Util.isTextEmpty(text) == true)
         {
+            String days = getString(R.string.label_selecteday);
+
+            SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
+            SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
+
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currentFragment instanceof HotelDaysListFragment)
+            {
+                String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+                String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+
+                // 선택탭의 이름을 수정한다.
+                days = String.format("%s-%s", checkInDay, checkOutDay);
+                FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+
+                mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
+            }
+
             HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(2);
             fragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
 
-            mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
-            dayList.add(getString(R.string.label_selecteday));
+            dayList.add(days);
         } else
         {
             dayList.add(mTabLayout.getTabAt(2).getText().toString());
@@ -425,7 +493,7 @@ public class HotelMainFragment extends BaseFragment
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private View.OnClickListener mToolbarOptionsItemSelected = new View.OnClickListener()
     {
@@ -484,6 +552,8 @@ public class HotelMainFragment extends BaseFragment
                     break;
                 }
             }
+
+            mOnUserActionListener.expandedAppBar(true, true);
         }
     };
 
@@ -499,7 +569,7 @@ public class HotelMainFragment extends BaseFragment
                 mViewPager.setCurrentItem(tab.getPosition());
             }
 
-            mAppBarLayout.setExpanded(true);
+            mOnUserActionListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
@@ -526,7 +596,7 @@ public class HotelMainFragment extends BaseFragment
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
-            mAppBarLayout.setExpanded(true);
+            mOnUserActionListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
@@ -674,6 +744,7 @@ public class HotelMainFragment extends BaseFragment
             String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("M월d일");
 
             // 선택탭의 이름을 수정한다.
+            mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
             mTabLayout.getTabAt(2).setText(String.format("%s-%s", checkInDay, checkOutDay));
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
@@ -808,9 +879,48 @@ public class HotelMainFragment extends BaseFragment
         }
 
         @Override
-        public void expandedAppBar(boolean expanded)
+        public void expandedAppBar(boolean expanded, boolean animate)
         {
-            mAppBarLayout.setExpanded(expanded);
+            mAppBarLayout.setExpanded(expanded, animate);
+        }
+
+        @Override
+        public void showAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
+            {
+                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void hideAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
+            {
+                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void pinAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != 0)
+            {
+                params.setScrollFlags(0);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
         }
     };
 

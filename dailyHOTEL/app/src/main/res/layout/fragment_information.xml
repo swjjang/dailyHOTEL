@@ -18,12 +18,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20px"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/navibar_gradation"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,14 +34,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/information_background"/>
+                android:background="@drawable/navibar_gradation"/>
 
             <RelativeLayout
                 android:id="@+id/profileLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
-                android:layout_marginLeft="15dp"
-                >
+                android:layout_marginLeft="15dp">
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:id="@+id/profileTextView"
@@ -177,7 +170,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="18dp"
                     android:layout_toLeftOf="@+id/rightArrowIconView"
-                    android:src="@drawable/tapbar_ic_n"/>
+                    android:src="@drawable/tapbar_ic_n"
+                    android:visibility="invisible"/>
             </RelativeLayout>
 
             <View
@@ -375,7 +369,7 @@
                     android:background="@drawable/more_version_bg"
                     android:gravity="center"
                     android:text="Version 1.0.0"
-                    android:textColor="@color/information_background"
+                    android:textColor="@color/setting_business_license"
                     android:textSize="8dp"
                     dailyFont:style="Medium"/>
             </LinearLayout>

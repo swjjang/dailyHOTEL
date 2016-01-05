@@ -273,7 +273,7 @@ public class Hotel implements Parcelable
 
     public enum HotelGrade
     {
-        special(R.string.grade_special, R.color.grade_special, R.drawable.bg_hotel_price_stars_5),
+        special(R.string.grade_special, R.color.grade_special, R.drawable.bg_hotel_price_special1),
         special1(R.string.grade_special1, R.color.grade_special1, R.drawable.bg_hotel_price_special1),
         special2(R.string.grade_special2, R.color.grade_special2, R.drawable.bg_hotel_price_special2),
         //

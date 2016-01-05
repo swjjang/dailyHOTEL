@@ -84,10 +84,10 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         if (Util.isTextEmpty(mHotelBookingDetail.hotelPhone) == false)
         {
-            popupMenu.getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call, popupMenu.getMenu());
+            popupMenu.getMenuInflater().inflate(R.menu.actionbar_hotel_booking_call, popupMenu.getMenu());
         } else
         {
-            popupMenu.getMenuInflater().inflate(R.menu.actionbar_gourmet_booking_call2, popupMenu.getMenu());
+            popupMenu.getMenuInflater().inflate(R.menu.actionbar_hotel_booking_call2, popupMenu.getMenu());
         }
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()

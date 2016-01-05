@@ -160,7 +160,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 132));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 100));
         layoutParams.gravity = Gravity.BOTTOM;
 
         mViewPager.setLayoutParams(layoutParams);
@@ -806,15 +806,17 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             @Override
             public void onFailed()
             {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                baseActivity.unLockUI();
+
                 if (Util.isOverAPI23() == true)
                 {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null || baseActivity.isFinishing() == true)
-                    {
-                        return;
-                    }
-
                     baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                         , getString(R.string.dialog_msg_used_gps_android6)//
                         , getString(R.string.dialog_btn_text_dosetting)//

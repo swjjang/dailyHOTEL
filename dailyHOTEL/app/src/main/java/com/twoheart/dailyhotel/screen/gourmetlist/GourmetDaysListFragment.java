@@ -17,6 +17,7 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.View;
 
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
@@ -71,6 +72,15 @@ public class GourmetDaysListFragment extends GourmetListFragment
                     if (mOnUserActionListener != null)
                     {
                         mOnUserActionListener.selectDay(mSelectedSaleTime, true);
+                    }
+                } else
+                {
+                    if (mGourmetRecycleView.getVisibility() == View.VISIBLE && mGourmetRecycleView.getAdapter() != null)
+                    {
+                        if (mGourmetRecycleView.getAdapter().getItemCount() == 0)
+                        {
+                            fetchList();
+                        }
                     }
                 }
                 break;

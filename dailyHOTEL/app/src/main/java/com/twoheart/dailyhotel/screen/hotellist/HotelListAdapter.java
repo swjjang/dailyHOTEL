@@ -388,6 +388,8 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
             loopViewPager = (LoopViewPager) itemView.findViewById(R.id.loopViewPager);
             viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
+
+            loopViewPager.setSlideTime(4);
         }
     }
 }

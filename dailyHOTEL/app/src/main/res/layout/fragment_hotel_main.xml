@@ -14,8 +14,7 @@
             android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"
-            app:layout_scrollFlags="scroll|enterAlways">
+            android:background="#ffffff">
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
@@ -23,7 +22,6 @@
                 android:layout_height="38dp"
                 android:layout_gravity="bottom"
                 android:background="#ffffff"
-                app:layout_scrollFlags="scroll|enterAlways"
                 app:tabGravity="fill"
                 app:tabIndicatorHeight="3dp"
                 app:tabSelectedTextColor="@color/tab_selected"
@@ -37,8 +35,7 @@
                 android:background="#ffffff"
                 app:contentInsetLeft="0dp"
                 app:contentInsetStart="0dp"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|enterAlways"
+                app:layout_collapseMode="parallax"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
                 <include layout="@layout/toolbar_region"/>

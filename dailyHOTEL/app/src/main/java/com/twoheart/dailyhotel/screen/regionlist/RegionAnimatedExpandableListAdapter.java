@@ -226,16 +226,16 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             arrowImageView.setVisibility(View.GONE);
         }
 
-        //        if (hasChildren == true)
-        //        {
-        //            if (getAreaItem(groupPosition).isExpandGroup == true)
-        //            {
-        //                arrowImageView.setImageResource(R.drawable.ic_details_menu_on);
-        //            } else
-        //            {
-        //                arrowImageView.setImageResource(R.drawable.ic_details_menu_off);
-        //            }
-        //        }
+        if (hasChildren == true)
+        {
+            if (getAreaItem(groupPosition).isExpandGroup == true)
+            {
+                arrowImageView.setImageResource(R.drawable.region_ic_sub_v_top);
+            } else
+            {
+                arrowImageView.setImageResource(R.drawable.region_ic_sub_v);
+            }
+        }
 
         return convertView;
     }

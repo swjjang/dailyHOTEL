@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.screen.gourmetlist;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -49,9 +51,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-public class GourmetMainFragment extends PlaceMainFragment
+public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayout.OnOffsetChangedListener
 {
     private static final int TAB_COUNT = 3;
+    private int TOOLBAR_HEIGHT;
 
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
@@ -59,6 +62,9 @@ public class GourmetMainFragment extends PlaceMainFragment
     private GourmetFragmentPagerAdapter mFragmentPagerAdapter;
     private Province mSelectedProvince;
     private DailyToolbarLayout mDailyToolbarLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private boolean mIsHideAppBarlayout;
+
 
     public interface OnUserActionListener
     {
@@ -80,7 +86,13 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         void refreshAll(boolean isShowProgress);
 
-        void expandedAppBar(boolean expanded);
+        void expandedAppBar(boolean expanded, boolean animate);
+
+        void showAppBarLayout();
+
+        void hideAppBarLayout();
+
+        void pinAppBarLayout();
     }
 
     private interface OnUserAnalyticsActionListener
@@ -119,8 +131,13 @@ public class GourmetMainFragment extends PlaceMainFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
+        TOOLBAR_HEIGHT = Util.dpToPx(baseActivity, 85);
+
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbarLayout);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        mAppBarLayout.addOnOffsetChangedListener(this);
 
         mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
         mDailyToolbarLayout.initToolbarRegion(new View.OnClickListener()
@@ -133,6 +150,39 @@ public class GourmetMainFragment extends PlaceMainFragment
         });
 
         mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+    {
+        if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
+        {
+            mOnGourmetUserActionListener.hideAppBarLayout();
+            mIsHideAppBarlayout = true;
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.resetScrollDistance(false);
+
+        } else if (verticalOffset == 0 && mIsHideAppBarlayout == false)
+        {
+            mOnGourmetUserActionListener.pinAppBarLayout();
+            mIsHideAppBarlayout = true;
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.resetScrollDistance(true);
+
+        } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
+        {
+            mIsHideAppBarlayout = false;
+        }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        mAppBarLayout.removeOnOffsetChangedListener(this);
+
+        super.onDestroy();
     }
 
     @Override
@@ -255,8 +305,17 @@ public class GourmetMainFragment extends PlaceMainFragment
     }
 
     @Override
-    public void activityResult(int requestCode, int resultCode, Intent data)
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        unLockUI();
+
         switch (requestCode)
         {
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
@@ -266,9 +325,44 @@ public class GourmetMainFragment extends PlaceMainFragment
 
                 GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.onActivityResult(requestCode, resultCode, data);
+
+                mOnGourmetUserActionListener.expandedAppBar(true, false);
+                break;
+            }
+
+            // 지역을 선택한 후에 되돌아 온경우.
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
+            {
+                mDontReloadAtOnResume = true;
+
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    if (data != null)
+                    {
+                        if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
+                        {
+                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+
+                            setNavigationItemSelected(province);
+
+                            refreshAll();
+                        } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
+                        {
+                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
+
+                            setNavigationItemSelected(province);
+
+                            refreshAll();
+                        }
+                    }
+                }
+
+                mOnGourmetUserActionListener.expandedAppBar(true, false);
                 break;
             }
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -310,8 +404,20 @@ public class GourmetMainFragment extends PlaceMainFragment
 
         if (Util.isTextEmpty(text) == true)
         {
-            mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
-            dayList.add(getString(R.string.label_selecteday));
+            String days = getString(R.string.label_selecteday);
+
+            SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currentFragment instanceof GourmetDaysListFragment)
+            {
+                days = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+
+                mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
+            }
+
+            dayList.add(days);
         } else
         {
             dayList.add(mTabLayout.getTabAt(2).getText().toString());
@@ -387,6 +493,8 @@ public class GourmetMainFragment extends PlaceMainFragment
                     break;
                 }
             }
+
+            mOnGourmetUserActionListener.expandedAppBar(true, true);
         }
     };
 
@@ -403,7 +511,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                 mViewPager.setCurrentItem(tab.getPosition());
             }
 
-            mAppBarLayout.setExpanded(true);
+            mOnGourmetUserActionListener.expandedAppBar(true, true);
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
@@ -430,7 +538,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
-            mAppBarLayout.setExpanded(true);
+            mOnGourmetUserActionListener.expandedAppBar(true, true);
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
@@ -737,9 +845,48 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void expandedAppBar(boolean expanded)
+        public void expandedAppBar(boolean expanded, boolean animate)
         {
-            mAppBarLayout.setExpanded(expanded);
+            mAppBarLayout.setExpanded(expanded, animate);
+        }
+
+        @Override
+        public void showAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
+            {
+                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void hideAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
+            {
+                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void pinAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != 0)
+            {
+                params.setScrollFlags(0);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
         }
     };
 

@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity implements Constants
 
     public interface OnResponsePresenterListener
     {
-        void setNewIconVisible(boolean visible);
+        void updateNewEvent();
 
         void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime);
 
@@ -204,6 +204,7 @@ public class MainActivity extends BaseActivity implements Constants
                 break;
 
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
@@ -525,10 +526,15 @@ public class MainActivity extends BaseActivity implements Constants
     private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
     {
         @Override
-        public void setNewIconVisible(boolean visible)
+        public void updateNewEvent()
         {
-            // 아직 어디 화면에 New아이콘을 보여줄지 모른다
-            mMenuBarLayout.setNewIconVisible(visible);
+            if (DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
+            {
+                mMenuBarLayout.setNewIconVisible(true);
+            } else
+            {
+                mMenuBarLayout.setNewIconVisible(false);
+            }
         }
 
         @Override
@@ -695,6 +701,9 @@ public class MainActivity extends BaseActivity implements Constants
                     } else if ("bookings".equalsIgnoreCase(value) == true)
                     {
                         mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                    } else if ("event".equalsIgnoreCase(value) == true)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                     } else
                     {
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);

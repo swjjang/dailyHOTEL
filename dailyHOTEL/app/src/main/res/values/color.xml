@@ -22,7 +22,7 @@
     <color name="textView_textColor_disabled">#c6c6c6</color>
     <color name="textView_textColor_reg_date">#c6c6c6</color>
     <color name="textView_textColor_shadow">#7F000000</color>
-    <color name="textView_textColor_shadow_soldout">#CC000000</color>
+    <color name="textView_textColor_shadow_soldout">#99000000</color>
     <color name="drawer_entry_title">#737373</color>
 
     <color name="kakaotalk_textcolkr">#3c1e1e</color>
@@ -59,9 +59,10 @@
     <color name="white_a8">#14ffffff</color>
 
     <color name="black">#000000</color>
-    <color name="black_a25">#40000000</color>
     <color name="black_a80">#cc000000</color>
     <color name="black_a40">#66000000</color>
+    <color name="black_a25">#40000000</color>
+    <color name="black_a14">#24000000</color>
 
     <color name="tab_text">#323232</color>
     <color name="tab_selected">#900034</color>

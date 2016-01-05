@@ -61,8 +61,7 @@ public class Area extends Province
 
         dest.writeInt(mProvinceIndex);
         dest.writeString(tag);
-
-        mProvince.writeToParcel(dest, flags);
+        dest.writeParcelable(mProvince, flags);
     }
 
     protected void readFromParcel(Parcel in)
@@ -71,8 +70,7 @@ public class Area extends Province
 
         mProvinceIndex = in.readInt();
         tag = in.readString();
-
-        mProvince = new Province(in);
+        mProvince = in.readParcelable(Province.class.getClassLoader());
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

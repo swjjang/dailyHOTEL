@@ -25,6 +25,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,8 @@ import java.util.Map;
 
 public class HotelListFragment extends BaseFragment implements Constants
 {
+    private static final int APPBARLAYOUT_DRAG_DISTANCE = 200;
+
     protected PinnedSectionRecycleView mHotelRecycleView;
     protected HotelListAdapter mHotelAdapter;
     protected SaleTime mSaleTime;
@@ -88,6 +91,9 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected Constants.SortType mPrevSortType;
     protected Constants.SortType mSortType = Constants.SortType.DEFAULT;
 
+    private int mDownDistance;
+    private int mUpDistance;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -99,6 +105,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         mHotelAdapter = new HotelListAdapter(getContext(), new ArrayList<PlaceViewItem>(), getOnItemClickListener(), mOnEventBannerItemClickListener);
         mHotelRecycleView.setAdapter(mHotelAdapter);
+        mHotelRecycleView.setOnScrollListener(mOnScrollListener);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
@@ -594,6 +601,8 @@ public class HotelListFragment extends BaseFragment implements Constants
             @Override
             public void onFailed()
             {
+                unLockUI();
+
                 mSortType = mPrevSortType;
 
                 if (Util.isOverAPI23() == true)
@@ -796,15 +805,83 @@ public class HotelListFragment extends BaseFragment implements Constants
             }
         }
 
+        if (mOnUserActionListener != null)
+        {
+            mOnUserActionListener.expandedAppBar(true, true);
+        }
+
         mHotelAdapter.setSortType(mSortType);
+        mHotelRecycleView.scrollToPosition(0);
         mHotelAdapter.notifyDataSetChanged();
         unLockUI();
     }
 
+    public void resetScrollDistance(boolean isUpDistance)
+    {
+        if (isUpDistance == true)
+        {
+            mUpDistance = 0;
+        } else
+        {
+            mDownDistance = 0;
+        }
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener()
+    {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+            super.onScrolled(recyclerView, dx, dy);
+
+            if (dy < 0)
+            {
+                if (mDownDistance == -1)
+                {
+                    return;
+                }
+
+                mDownDistance += dy;
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (Math.abs(mDownDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mUpDistance = 0;
+                        mDownDistance = -1;
+                        mOnUserActionListener.showAppBarLayout();
+                    }
+                }
+            } else if (dy > 0)
+            {
+                if (mUpDistance == -1)
+                {
+                    return;
+                }
+
+                mUpDistance += dy;
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (Math.abs(mUpDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mDownDistance = 0;
+                        mUpDistance = -1;
+                        mOnUserActionListener.showAppBarLayout();
+                        mOnUserActionListener.expandedAppBar(false, true);
+                    }
+                }
+            }
+        }
+    };
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
     {
@@ -1080,7 +1157,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                     if (mOnUserActionListener != null)
                     {
-                        mOnUserActionListener.expandedAppBar(true);
+                        mOnUserActionListener.expandedAppBar(true, true);
                         mOnUserActionListener.setMapViewVisible(false);
                     }
                 } else

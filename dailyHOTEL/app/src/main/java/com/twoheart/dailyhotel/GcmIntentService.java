@@ -362,48 +362,59 @@ public class GcmIntentService extends IntentService implements Constants
         {
             if (Util.isOverAPI16() == true)
             {
-                Notification.Builder builder = new Notification.Builder(GcmIntentService.this)//
-                    .setContentTitle(mTitle).setContentText(mMessage).setSound(mUri) //
-                    .setTicker(mTitle) //
-                    .setAutoCancel(true) //
-                    .setSmallIcon(R.drawable.icon_noti_small)//
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big));
-
-                if (Util.isOverAPI21() == true)
+                try
                 {
-                    builder.setColor(getResources().getColor(R.color.dh_theme_color));
-                }
+                    Notification.Builder builder = new Notification.Builder(GcmIntentService.this)//
+                        .setContentTitle(mTitle).setContentText(mMessage).setSound(mUri) //
+                        .setTicker(mTitle) //
+                        .setAutoCancel(true) //
+                        .setSmallIcon(R.drawable.icon_noti_small)//
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big));
 
-                if (bitmap != null)
+                    if (Util.isOverAPI21() == true)
+                    {
+                        builder.setColor(getResources().getColor(R.color.dh_theme_color));
+                    }
+
+                    if (bitmap != null)
+                    {
+                        builder.setStyle(new Notification.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
+                    }
+
+                    builder.setContentIntent(mPendingIntent);
+                    builder.setPriority(Notification.PRIORITY_MAX);
+                    mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+                } catch (Exception e)
                 {
-                    builder.setStyle(new Notification.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
+                    notifyCompatBuilder(bitmap);
                 }
-
-                builder.setContentIntent(mPendingIntent);
-                builder.setPriority(Notification.PRIORITY_MAX);
-                mNotificationManager.notify(NOTIFICATION_ID, builder.build());
             } else
             {
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(GcmIntentService.this);
-
-                builder.setContentTitle(mTitle) //
-                    .setContentText(mMessage) //
-                    .setTicker(mTitle) //
-                    .setSound(mUri) //
-                    .setAutoCancel(true) //
-                    .setSmallIcon(R.drawable.icon_noti_small) //
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
-                    .setColor(getResources().getColor(R.color.dh_theme_color));
-
-                if (bitmap != null)
-                {
-                    builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
-                }
-
-                builder.setContentIntent(mPendingIntent);
-                builder.setPriority(NotificationCompat.PRIORITY_MAX);
-                mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+                notifyCompatBuilder(bitmap);
             }
+        }
+
+        private void notifyCompatBuilder(Bitmap bitmap)
+        {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(GcmIntentService.this);
+
+            builder.setContentTitle(mTitle) //
+                .setContentText(mMessage) //
+                .setTicker(mTitle) //
+                .setSound(mUri) //
+                .setAutoCancel(true) //
+                .setSmallIcon(R.drawable.icon_noti_small) //
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
+                .setColor(getResources().getColor(R.color.dh_theme_color));
+
+            if (bitmap != null)
+            {
+                builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
+            }
+
+            builder.setContentIntent(mPendingIntent);
+            builder.setPriority(NotificationCompat.PRIORITY_MAX);
+            mNotificationManager.notify(NOTIFICATION_ID, builder.build());
         }
     }
 }

@@ -3,16 +3,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/navibar_gradation"/>
-
     <FrameLayout
         android:id="@+id/hotelMapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="85dp"
         android:visibility="gone"/>
 
     <include
@@ -20,7 +14,6 @@
         layout="@layout/view_empty_hotel_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="85dp"
         android:visibility="gone"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -37,4 +30,9 @@
             android:scrollbars="vertical"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>

@@ -89,9 +89,12 @@ public class DailyToolbarLayout
                     mAppCompatActivity.finish();
                 }
             });
+
+            textView.setPadding(0, 0, 0, 0);
         } else
         {
             backView.setVisibility(View.GONE);
+            textView.setPadding(Util.dpToPx(mAppCompatActivity, 15), 0, 0, 0);
         }
     }
 

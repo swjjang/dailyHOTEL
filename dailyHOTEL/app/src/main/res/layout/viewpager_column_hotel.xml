@@ -2,17 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="133dp"
+                android:layout_height="100dp"
                 android:background="@drawable/img_placeholder_map">
 
     <ImageView
         android:id="@+id/imagView"
         android:layout_width="match_parent"
-        android:layout_height="133dp"
+        android:layout_height="100dp"
         android:scaleType="centerCrop"/>
 
     <View
         android:id="@+id/gradientView"
+        android:background="@color/black_a14"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -87,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="11dp"
+        android:layout_marginBottom="7dp"
         android:layout_marginRight="11dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -118,7 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="11dp"
+        android:layout_marginBottom="7dp"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/discountPriceLayout"
@@ -128,12 +129,13 @@
 
     <ImageView
         android:id="@+id/dBenefitImageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_d_benefit"
-        android:visibility="gone"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:src="@drawable/map_d_benefit"
+        android:visibility="gone"
+        android:layout_above="@+id/gradeTextView"
+        android:layout_marginBottom="8dp"/>
 
     <View
         android:layout_width="match_parent"
@@ -146,6 +148,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:padding="12dp"
+        android:padding="10dp"
         android:src="@drawable/ic_delete"/>
 </RelativeLayout>
