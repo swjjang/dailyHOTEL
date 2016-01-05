@@ -2302,8 +2302,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             String overseasEmail = DailyPreference.getInstance(BookingActivity.this).getOverseasEmail();
 
                             guest.name = overseasName;
-                            guest.phone = overseasPhone;
-                            guest.email = overseasEmail;
+
+                            if (Util.isTextEmpty(overseasPhone) == false)
+                            {
+                                guest.phone = overseasPhone;
+                            }
+
+                            if (Util.isTextEmpty(overseasEmail) == false)
+                            {
+                                guest.email = overseasEmail;
+                            }
 
                             if (mIsEditMode == false)
                             {
@@ -2335,8 +2343,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                     etReserverName.setText(overseasName);
                                 }
 
-                                etReserverNumber.setText(Util.addHippenMobileNumber(BookingActivity.this, overseasPhone));
-                                etReserverEmail.setText(overseasEmail);
+                                etReserverNumber.setText(Util.addHippenMobileNumber(BookingActivity.this, guest.phone));
+                                etReserverEmail.setText(guest.email);
                             }
                         } else
                         {
