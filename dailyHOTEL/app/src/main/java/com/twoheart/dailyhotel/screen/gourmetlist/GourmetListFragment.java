@@ -10,6 +10,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,8 @@ import java.util.Map;
 
 public class GourmetListFragment extends BaseFragment implements Constants
 {
+    private static final int APPBARLAYOUT_DRAG_DISTANCE = 200;
+
     protected PinnedSectionRecycleView mGourmetRecycleView;
     protected GourmetListAdapter mGourmetAdapter;
     protected SaleTime mSaleTime;
@@ -89,6 +92,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         mGourmetAdapter = new GourmetListAdapter(getContext(), new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
         mGourmetRecycleView.setAdapter(mGourmetAdapter);
+        mGourmetRecycleView.setOnScrollListener(mOnScrollListener);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
@@ -821,6 +825,46 @@ public class GourmetListFragment extends BaseFragment implements Constants
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener()
+    {
+        private int mDistance;
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+            super.onScrollStateChanged(recyclerView, newState);
+
+            if(newState == RecyclerView.SCROLL_STATE_IDLE)
+            {
+                mDistance = 0;
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+            super.onScrolled(recyclerView, dx, dy);
+
+            if(dy < 0)
+            {
+                mDistance += dy;
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if(Math.abs(mDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                {
+                    if(mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.showAppBarLayout();
+                    }
+                }
+            } else
+            {
+                mDistance = 0;
+            }
+        }
+    };
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
     {

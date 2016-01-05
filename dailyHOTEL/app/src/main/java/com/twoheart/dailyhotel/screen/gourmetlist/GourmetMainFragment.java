@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -50,9 +51,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-public class GourmetMainFragment extends PlaceMainFragment
+public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayout.OnOffsetChangedListener
 {
     private static final int TAB_COUNT = 3;
+    private int TOOLBAR_HEIGHT;
 
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
@@ -60,6 +62,9 @@ public class GourmetMainFragment extends PlaceMainFragment
     private GourmetFragmentPagerAdapter mFragmentPagerAdapter;
     private Province mSelectedProvince;
     private DailyToolbarLayout mDailyToolbarLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private boolean mIsHideAppBarlayout;
+
 
     public interface OnUserActionListener
     {
@@ -82,6 +87,10 @@ public class GourmetMainFragment extends PlaceMainFragment
         void refreshAll(boolean isShowProgress);
 
         void expandedAppBar(boolean expanded);
+
+        void showAppBarLayout();
+
+        void hideAppBarLayout();
     }
 
     private interface OnUserAnalyticsActionListener
@@ -120,8 +129,13 @@ public class GourmetMainFragment extends PlaceMainFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
+        TOOLBAR_HEIGHT = Util.dpToPx(baseActivity, 85);
+
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbarLayout);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        mAppBarLayout.addOnOffsetChangedListener(this);
 
         mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
         mDailyToolbarLayout.initToolbarRegion(new View.OnClickListener()
@@ -134,6 +148,19 @@ public class GourmetMainFragment extends PlaceMainFragment
         });
 
         mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+    {
+        if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
+        {
+            mOnGourmetUserActionListener.hideAppBarLayout();
+            mIsHideAppBarlayout = true;
+        } else if (verticalOffset > -TOOLBAR_HEIGHT)
+        {
+            mIsHideAppBarlayout = false;
+        }
     }
 
     @Override
@@ -785,6 +812,32 @@ public class GourmetMainFragment extends PlaceMainFragment
         public void expandedAppBar(boolean expanded)
         {
             mAppBarLayout.setExpanded(expanded);
+        }
+
+        @Override
+        public void showAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
+            {
+                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void hideAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
+            {
+                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
         }
     };
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -48,15 +49,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-public class HotelMainFragment extends BaseFragment
+public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
 {
     private static final int TAB_COUNT = 3;
+    private int TOOLBAR_HEIGHT;
 
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private HotelFragmentPagerAdapter mFragmentPagerAdapter;
     private DailyToolbarLayout mDailyToolbarLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     private SaleTime mTodaySaleTime;
     private Province mSelectedProvince;
@@ -64,6 +67,7 @@ public class HotelMainFragment extends BaseFragment
     private boolean mMenuEnabled;
     private boolean mMapEnabled;
     private boolean mDontReloadAtOnResume;
+    private boolean mIsHideAppBarlayout;
 
     private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -93,6 +97,10 @@ public class HotelMainFragment extends BaseFragment
         void refreshAll(boolean isShowProgress);
 
         void expandedAppBar(boolean expanded);
+
+        void showAppBarLayout();
+
+        void hideAppBarLayout();
     }
 
     public interface UserAnalyticsActionListener
@@ -139,8 +147,13 @@ public class HotelMainFragment extends BaseFragment
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
+        TOOLBAR_HEIGHT = Util.dpToPx(baseActivity, 85);
+
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbarLayout);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        mAppBarLayout.addOnOffsetChangedListener(this);
 
         mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
         mDailyToolbarLayout.initToolbarRegion(new View.OnClickListener()
@@ -153,6 +166,19 @@ public class HotelMainFragment extends BaseFragment
         });
 
         mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+    {
+        if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
+        {
+            mOnUserActionListener.hideAppBarLayout();
+            mIsHideAppBarlayout = true;
+        } else if (verticalOffset > -TOOLBAR_HEIGHT)
+        {
+            mIsHideAppBarlayout = false;
+        }
     }
 
     @Override
@@ -175,6 +201,14 @@ public class HotelMainFragment extends BaseFragment
         }
 
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        mAppBarLayout.removeOnOffsetChangedListener(this);
+
+        super.onDestroy();
     }
 
     @Override
@@ -429,7 +463,7 @@ public class HotelMainFragment extends BaseFragment
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private View.OnClickListener mToolbarOptionsItemSelected = new View.OnClickListener()
     {
@@ -815,6 +849,32 @@ public class HotelMainFragment extends BaseFragment
         public void expandedAppBar(boolean expanded)
         {
             mAppBarLayout.setExpanded(expanded);
+        }
+
+        @Override
+        public void showAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
+            {
+                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void hideAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
+            {
+                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
         }
     };
 
