@@ -14,8 +14,7 @@
             android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"
-            app:layout_scrollFlags="scroll|enterAlways">
+            android:background="#ffffff">
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"

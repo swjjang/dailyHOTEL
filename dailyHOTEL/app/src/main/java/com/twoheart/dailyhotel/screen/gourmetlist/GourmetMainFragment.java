@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -86,11 +87,13 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         void refreshAll(boolean isShowProgress);
 
-        void expandedAppBar(boolean expanded);
+        void expandedAppBar(boolean expanded, boolean animate);
 
         void showAppBarLayout();
 
         void hideAppBarLayout();
+
+        void pinAppBarLayout();
     }
 
     private interface OnUserAnalyticsActionListener
@@ -157,10 +160,30 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         {
             mOnGourmetUserActionListener.hideAppBarLayout();
             mIsHideAppBarlayout = true;
-        } else if (verticalOffset > -TOOLBAR_HEIGHT)
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.resetScrollDistance(false);
+
+        } else if (verticalOffset == 0 && mIsHideAppBarlayout == false)
+        {
+            mOnGourmetUserActionListener.pinAppBarLayout();
+            mIsHideAppBarlayout = true;
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.resetScrollDistance(true);
+
+        } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
         {
             mIsHideAppBarlayout = false;
         }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        mAppBarLayout.removeOnOffsetChangedListener(this);
+
+        super.onDestroy();
     }
 
     @Override
@@ -304,7 +327,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.onActivityResult(requestCode, resultCode, data);
 
-                mAppBarLayout.setExpanded(true, false);
+                mOnGourmetUserActionListener.expandedAppBar(true, false);
                 break;
             }
 
@@ -335,7 +358,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                     }
                 }
 
-                mAppBarLayout.setExpanded(true, false);
+                mOnGourmetUserActionListener.expandedAppBar(true, false);
                 break;
             }
         }
@@ -459,6 +482,8 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                     break;
                 }
             }
+
+            mOnGourmetUserActionListener.expandedAppBar(true, true);
         }
     };
 
@@ -475,7 +500,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 mViewPager.setCurrentItem(tab.getPosition());
             }
 
-            mAppBarLayout.setExpanded(true);
+            mOnGourmetUserActionListener.expandedAppBar(true, true);
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
@@ -502,7 +527,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
-            mAppBarLayout.setExpanded(true);
+            mOnGourmetUserActionListener.expandedAppBar(true, true);
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
@@ -809,9 +834,9 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         }
 
         @Override
-        public void expandedAppBar(boolean expanded)
+        public void expandedAppBar(boolean expanded, boolean animate)
         {
-            mAppBarLayout.setExpanded(expanded);
+            mAppBarLayout.setExpanded(expanded, animate);
         }
 
         @Override
@@ -836,6 +861,19 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
             {
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void pinAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != 0)
+            {
+                params.setScrollFlags(0);
                 mCollapsingToolbarLayout.setLayoutParams(params);
             }
         }

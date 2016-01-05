@@ -80,6 +80,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
     protected Constants.SortType mPrevSortType;
     protected Constants.SortType mSortType = Constants.SortType.DEFAULT;
 
+    private int mDownDistance;
+    private int mUpDistance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -813,7 +815,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         if (mOnUserActionListener != null)
         {
-            mOnUserActionListener.expandedAppBar(true);
+            mOnUserActionListener.expandedAppBar(true, true);
         }
 
         mGourmetAdapter.setSortType(mSortType);
@@ -822,25 +824,23 @@ public class GourmetListFragment extends BaseFragment implements Constants
         unLockUI();
     }
 
+    public void resetScrollDistance(boolean isUpDistance)
+    {
+        if(isUpDistance == true)
+        {
+            mUpDistance = 0;
+        } else
+        {
+            mDownDistance = 0;
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener()
     {
-        private int mDistance;
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-        {
-            super.onScrollStateChanged(recyclerView, newState);
-
-            if(newState == RecyclerView.SCROLL_STATE_IDLE)
-            {
-                mDistance = 0;
-            }
-        }
-
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
@@ -848,20 +848,49 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             if(dy < 0)
             {
-                mDistance += dy;
+                ExLog.d("mDownDistance : " + mDownDistance);
+
+                if(mDownDistance == -1)
+                {
+                    return;
+                }
+
+                mDownDistance += dy;
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if(Math.abs(mDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if(Math.abs(mDownDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
                     if(mOnUserActionListener != null)
                     {
+                        mUpDistance = 0;
+                        mDownDistance = -1;
                         mOnUserActionListener.showAppBarLayout();
                     }
                 }
-            } else
+            } else if(dy > 0)
             {
-                mDistance = 0;
+                ExLog.d("mUpDistance : " + mUpDistance);
+
+                if(mUpDistance == -1)
+                {
+                    return;
+                }
+
+                mUpDistance += dy;
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if(Math.abs(mUpDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                {
+                    if(mOnUserActionListener != null)
+                    {
+                        mDownDistance = 0;
+                        mUpDistance = -1;
+                        mOnUserActionListener.showAppBarLayout();
+                        mOnUserActionListener.expandedAppBar(false, true);
+                    }
+                }
             }
         }
     };
@@ -1139,7 +1168,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                     if (mOnUserActionListener != null)
                     {
-                        mOnUserActionListener.expandedAppBar(true);
+                        mOnUserActionListener.expandedAppBar(true, true);
                         mOnUserActionListener.setMapViewVisible(false);
                     }
                 } else

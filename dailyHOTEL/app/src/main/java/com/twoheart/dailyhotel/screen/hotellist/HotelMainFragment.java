@@ -68,6 +68,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private boolean mMapEnabled;
     private boolean mDontReloadAtOnResume;
     private boolean mIsHideAppBarlayout;
+    private boolean mIsPinAppBarlayout;
 
     private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -96,11 +97,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         void refreshAll(boolean isShowProgress);
 
-        void expandedAppBar(boolean expanded);
+        void expandedAppBar(boolean expanded, boolean animate);
 
         void showAppBarLayout();
 
         void hideAppBarLayout();
+
+        void pinAppBarLayout();
     }
 
     public interface UserAnalyticsActionListener
@@ -175,7 +178,19 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             mOnUserActionListener.hideAppBarLayout();
             mIsHideAppBarlayout = true;
-        } else if (verticalOffset > -TOOLBAR_HEIGHT)
+
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.resetScrollDistance(false);
+
+        } else if (verticalOffset == 0 && mIsHideAppBarlayout == false)
+        {
+            mOnUserActionListener.pinAppBarLayout();
+            mIsHideAppBarlayout = true;
+
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.resetScrollDistance(true);
+
+        } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
         {
             mIsHideAppBarlayout = false;
         }
@@ -288,7 +303,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.onActivityResult(requestCode, resultCode, data);
 
-                mAppBarLayout.setExpanded(true, false);
+                mOnUserActionListener.expandedAppBar(true, false);
                 break;
             }
 
@@ -319,7 +334,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     }
                 }
 
-                mAppBarLayout.setExpanded(true, false);
+                mOnUserActionListener.expandedAppBar(true, false);
                 break;
             }
         }
@@ -522,6 +537,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     break;
                 }
             }
+
+            mOnUserActionListener.expandedAppBar(true, true);
         }
     };
 
@@ -537,7 +554,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mViewPager.setCurrentItem(tab.getPosition());
             }
 
-            mAppBarLayout.setExpanded(true);
+            mOnUserActionListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
@@ -564,7 +581,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
-            mAppBarLayout.setExpanded(true);
+            mOnUserActionListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
@@ -846,9 +863,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         @Override
-        public void expandedAppBar(boolean expanded)
+        public void expandedAppBar(boolean expanded, boolean animate)
         {
-            mAppBarLayout.setExpanded(expanded);
+            mAppBarLayout.setExpanded(expanded, animate);
         }
 
         @Override
@@ -859,6 +876,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             if (params != null &&//
                 params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
             {
+                ExLog.d("showAppBarLayout");
+
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
                 mCollapsingToolbarLayout.setLayoutParams(params);
             }
@@ -872,7 +891,24 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             if (params != null &&//
                 params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
             {
+                ExLog.d("hideAppBarLayout");
+
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+                mCollapsingToolbarLayout.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void pinAppBarLayout()
+        {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+
+            if (params != null &&//
+                params.getScrollFlags() != 0)
+            {
+                ExLog.d("pinAppBarLayout");
+
+                params.setScrollFlags(0);
                 mCollapsingToolbarLayout.setLayoutParams(params);
             }
         }
