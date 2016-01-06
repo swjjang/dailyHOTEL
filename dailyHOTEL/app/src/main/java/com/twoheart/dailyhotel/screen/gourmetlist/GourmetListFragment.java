@@ -247,6 +247,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         if (province == null || checkInSaleTime == null)
         {
+            unLockUI();
             return;
         }
 
@@ -254,6 +255,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         if (baseActivity == null)
         {
+            unLockUI();
             return;
         }
 
@@ -838,12 +840,12 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         if (isUpDistance == true)
         {
+            mDownDistance = 1;
             mUpDistance = 0;
-            mDownDistance = -1;
         } else
         {
-            mDownDistance = 0;
             mUpDistance = -1;
+            mDownDistance = 0;
         }
     }
 
@@ -860,7 +862,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             if (dy < 0)
             {
-                if (mDownDistance == -1)
+                if (mDownDistance == 1)
                 {
                     return;
                 }
@@ -874,7 +876,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     if (mOnUserActionListener != null)
                     {
                         mUpDistance = 0;
-                        mDownDistance = -1;
+                        mDownDistance = 1;
                         mOnUserActionListener.showAppBarLayout();
                     }
                 }

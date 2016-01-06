@@ -194,7 +194,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             {
                 case LIST:
                 {
-
                     GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
                     switch (currentFragment.getSortType())
@@ -220,6 +219,10 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
                 case MAP:
                     mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_list : -1, -1);
+                    break;
+
+                default:
+                    mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
                     break;
             }
         } else
@@ -264,6 +267,8 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         }
 
         mSelectedProvince = province;
+
+        setNavigationItemSelected(mSelectedProvince);
 
         mDailyToolbarLayout.setToolbarRegionText(province.name);
 
@@ -509,6 +514,8 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
+            lockUI();
+
             mTabLayout.setOnTabSelectedListener(null);
 
             if (mViewPager != null)
@@ -526,11 +533,14 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.PROVINCE, mSelectedProvince.name);
-            params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
+            if(mSelectedProvince != null)
+            {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(Label.PROVINCE, mSelectedProvince.name);
+                params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
 
-            AnalyticsManager.getInstance(getActivity()).recordEvent(mViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+                AnalyticsManager.getInstance(getActivity()).recordEvent(mViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+            }
         }
 
         @Override
@@ -543,17 +553,25 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
             mOnGourmetUserActionListener.expandedAppBar(true, true);
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
 
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.PROVINCE, mSelectedProvince.name);
-            params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
+            if(mSelectedProvince != null)
+            {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(Label.PROVINCE, mSelectedProvince.name);
+                params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
 
-            AnalyticsManager.getInstance(getActivity()).recordEvent(mViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+                AnalyticsManager.getInstance(getActivity()).recordEvent(mViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+            }
         }
     };
 
@@ -833,11 +851,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         @Override
         public void refreshAll(boolean isShowProgress)
         {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
             if (baseActivity == null)
