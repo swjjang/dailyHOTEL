@@ -834,9 +834,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
         if (isUpDistance == true)
         {
             mUpDistance = 0;
+            mDownDistance = -1;
         } else
         {
             mDownDistance = 0;
+            mUpDistance = -1;
         }
     }
 
