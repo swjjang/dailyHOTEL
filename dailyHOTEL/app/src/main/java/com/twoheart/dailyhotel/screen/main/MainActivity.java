@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -513,7 +514,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onMenuUnselected(int index)
         {
-
+            Glide.get(MainActivity.this).clearMemory();
         }
 
         @Override
