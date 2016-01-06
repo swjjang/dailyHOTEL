@@ -220,6 +220,11 @@ public class HotelListFragment extends BaseFragment implements Constants
     {
         mSwipeRefreshLayout.setRefreshing(false);
 
+        if(mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
+        {
+            return;
+        }
+
         Object objectTag = mSwipeRefreshLayout.getTag();
 
         if (objectTag == null)
@@ -404,7 +409,7 @@ public class HotelListFragment extends BaseFragment implements Constants
      */
     protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (checkInSaleTime == null)
+        if (province == null || checkInSaleTime == null)
         {
             return;
         }
@@ -459,6 +464,11 @@ public class HotelListFragment extends BaseFragment implements Constants
     public Province getProvince()
     {
         return mSelectedProvince;
+    }
+
+    public void setProvince(Province province)
+    {
+        mSelectedProvince = province;
     }
 
     protected void showSortDialogView()
@@ -821,9 +831,11 @@ public class HotelListFragment extends BaseFragment implements Constants
         if (isUpDistance == true)
         {
             mUpDistance = 0;
+            mDownDistance = -1;
         } else
         {
             mDownDistance = 0;
+            mUpDistance = -1;
         }
     }
 

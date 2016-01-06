@@ -47,7 +47,7 @@ public class HotelDetailLayout
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
 
-    private static final int MAX_OF_ROOMTYPE = 3;
+    private static final int MAX_OF_ROOMTYPE = 4;
 
     private HotelDetail mHotelDetail;
     private BaseActivity mActivity;
@@ -227,6 +227,7 @@ public class HotelDetailLayout
         mRoomTypeView[0] = mActivity.findViewById(R.id.roomType01View);
         mRoomTypeView[1] = mActivity.findViewById(R.id.roomType02View);
         mRoomTypeView[2] = mActivity.findViewById(R.id.roomType03View);
+        mRoomTypeView[3] = mActivity.findViewById(R.id.roomType04View);
 
         int size = saleRoomList.size();
 
@@ -458,7 +459,7 @@ public class HotelDetailLayout
         if (isUsedAnimatorApi() == true)
         {
             mRoomTypeLayout.setVisibility(View.INVISIBLE);
-            mRoomTypeLayout.setTranslationY(Util.dpToPx(mActivity, 276));
+            mRoomTypeLayout.setTranslationY(Util.dpToPx(mActivity, MAX_OF_ROOMTYPE * 92));
         } else
         {
             mRoomTypeLayout.setVisibility(View.GONE);
@@ -1056,7 +1057,10 @@ public class HotelDetailLayout
 
                     if (mMoveState == 0)
                     {
-                        if (Math.abs(x - mPrevX) >= Math.abs(y - mPrevY))
+                        if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
+                        {
+
+                        } else if (Math.abs(x - mPrevX) > Math.abs(y - mPrevY))
                         {
                             // x 축으로 이동한 경우.
                             mMoveState = 100;

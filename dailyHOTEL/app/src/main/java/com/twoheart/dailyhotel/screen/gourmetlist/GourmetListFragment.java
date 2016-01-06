@@ -200,6 +200,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         mSwipeRefreshLayout.setRefreshing(false);
 
+        if (mViewType == VIEW_TYPE.MAP)
+        {
+            return;
+        }
+
         Object objectTag = mSwipeRefreshLayout.getTag();
 
         if (objectTag == null)
@@ -240,7 +245,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (checkInSaleTime == null)
+        if (province == null || checkInSaleTime == null)
         {
             return;
         }
@@ -550,6 +555,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
         return mSelectedProvince;
     }
 
+    public void setProvince(Province province)
+    {
+        mSelectedProvince = province;
+    }
+
     public void setSortType(SortType sortType)
     {
         mSortType = sortType;
@@ -829,9 +839,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
         if (isUpDistance == true)
         {
             mUpDistance = 0;
+            mDownDistance = -1;
         } else
         {
             mDownDistance = 0;
+            mUpDistance = -1;
         }
     }
 

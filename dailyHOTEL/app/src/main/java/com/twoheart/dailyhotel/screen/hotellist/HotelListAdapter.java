@@ -349,7 +349,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             super(itemView);
 
             gradientView = itemView.findViewById(R.id.gradientView);
-            hotelImageView = (ImageView) itemView.findViewById(R.id.imagView);
+            hotelImageView = (ImageView) itemView.findViewById(R.id.imageView);
             hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);
             hotelPriceView = (TextView) itemView.findViewById(R.id.priceTextView);
             satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);

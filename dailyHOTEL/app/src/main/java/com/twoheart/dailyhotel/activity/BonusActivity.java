@@ -50,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -65,7 +66,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     private TextView tvBonus, tvRecommenderCode;
     private TextView tvCredit;
     private String mRecommendCode;
-    private ArrayList<Credit> mCreditList;
+    private List<Credit> mCreditList;
     private String mUserName;
     private String idx;
 
@@ -170,7 +171,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
         } else if (v.getId() == tvCredit.getId())
         {
             Intent i = new Intent(this, CreditListActivity.class);
-            i.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, mCreditList);
+            i.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList)mCreditList);
             startActivity(i);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 

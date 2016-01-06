@@ -34,7 +34,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         final Gourmet gourmet = (Gourmet) place;
 
         View gradientView = view.findViewById(R.id.gradientView);
-        ImageView placeImageView = (ImageView) view.findViewById(R.id.imagView);
+        ImageView placeImageView = (ImageView) view.findViewById(R.id.imageView);
         TextView name = (TextView) view.findViewById(R.id.nameTextView);
         TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);

@@ -8,6 +8,7 @@
         android:id="@+id/bottomMenuBarLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/menubar_height"
+        android:background="@color/white"
         android:layout_alignParentBottom="true">
 
         <RelativeLayout

@@ -2276,7 +2276,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         DecimalFormat comma = new DecimalFormat("###,##0");
 
                         tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
-                        tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
+
+                        // 적림금 on/off에 따라서 가격이 다를수 있어 나중에 보이도록 수정
+//                        tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
                         mPay.setOriginalPrice(originalPrice);
 
@@ -2302,8 +2304,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             String overseasEmail = DailyPreference.getInstance(BookingActivity.this).getOverseasEmail();
 
                             guest.name = overseasName;
-                            guest.phone = overseasPhone;
-                            guest.email = overseasEmail;
+
+                            if (Util.isTextEmpty(overseasPhone) == false)
+                            {
+                                guest.phone = overseasPhone;
+                            }
+
+                            if (Util.isTextEmpty(overseasEmail) == false)
+                            {
+                                guest.email = overseasEmail;
+                            }
 
                             if (mIsEditMode == false)
                             {
@@ -2335,8 +2345,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                     etReserverName.setText(overseasName);
                                 }
 
-                                etReserverNumber.setText(Util.addHippenMobileNumber(BookingActivity.this, overseasPhone));
-                                etReserverEmail.setText(overseasEmail);
+                                etReserverNumber.setText(Util.addHippenMobileNumber(BookingActivity.this, guest.phone));
+                                etReserverEmail.setText(guest.email);
                             }
                         } else
                         {

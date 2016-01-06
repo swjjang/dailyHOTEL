@@ -12,14 +12,15 @@ import com.twoheart.dailyhotel.model.Board;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoardListAdapter extends BaseExpandableListAdapter
 {
-    private ArrayList<Board> list = null;
+    private List<Board> list = null;
     private LayoutInflater inflater = null;
     private Boolean groupClickState[];
 
-    public BoardListAdapter(Context context, ArrayList<Board> list)
+    public BoardListAdapter(Context context, List<Board> list)
     {
         super();
         this.inflater = LayoutInflater.from(context);

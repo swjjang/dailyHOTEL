@@ -6,7 +6,7 @@
                 android:background="@drawable/img_placeholder_map">
 
     <ImageView
-        android:id="@+id/imagView"
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:scaleType="centerCrop"/>

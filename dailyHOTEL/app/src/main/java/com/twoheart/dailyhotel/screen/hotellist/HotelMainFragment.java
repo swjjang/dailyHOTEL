@@ -433,6 +433,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private void setNavigationItemSelected(Province province)
     {
         mSelectedProvince = province;
+
+        for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
+        {
+            hotelListFragment.setProvince(mSelectedProvince);
+        }
     }
 
     private void onNavigationItemSelected(Province province, boolean isSelectionTop)

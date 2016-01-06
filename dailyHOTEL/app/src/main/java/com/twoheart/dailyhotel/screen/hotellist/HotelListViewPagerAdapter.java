@@ -73,7 +73,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
     private void makeLayout(View view, final Hotel hotel)
     {
         View gradientView = view.findViewById(R.id.gradientView);
-        ImageView hotelImageView = (ImageView) view.findViewById(R.id.imagView);
+        ImageView hotelImageView = (ImageView) view.findViewById(R.id.imageView);
         TextView name = (TextView) view.findViewById(R.id.nameTextView);
         TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);

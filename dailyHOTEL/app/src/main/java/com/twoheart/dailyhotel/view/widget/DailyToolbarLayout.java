@@ -122,11 +122,19 @@ public class DailyToolbarLayout
         if (isVisibility == true)
         {
             menu1.setVisibility(View.VISIBLE);
-            menu2.setVisibility(View.VISIBLE);
+
+            if (menu2.getTag() != null)
+            {
+                menu2.setVisibility(View.VISIBLE);
+            }
         } else
         {
             menu1.setVisibility(View.INVISIBLE);
-            menu2.setVisibility(View.INVISIBLE);
+
+            if (menu2.getTag() != null)
+            {
+                menu2.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -156,6 +164,8 @@ public class DailyToolbarLayout
         } else if (menu2ResId < 0)
         {
             menu2.setVisibility(View.GONE);
+            menu2.setTag(null);
+            menu2.setImageResource(0);
         } else
         {
             menu2.setVisibility(View.VISIBLE);

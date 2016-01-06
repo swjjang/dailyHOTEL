@@ -72,16 +72,21 @@ public class HotelBookingDetail extends PlaceBookingDetail
         // Check Out
         checkOutDay = format.format(new Date(checkout));
 
+        // phone1은 프론트
         String phone1 = jsonObject.getString("phone1");
+
+        // phone2는 예약실
         String phone2 = jsonObject.getString("phone2");
+
+        // phone3은 사용하지 않음
         String phone3 = jsonObject.getString("phone3");
 
-        if (Util.isTextEmpty(phone1) == false)
-        {
-            hotelPhone = phone1;
-        } else if (Util.isTextEmpty(phone2) == false)
+        if (Util.isTextEmpty(phone2) == false)
         {
             hotelPhone = phone2;
+        } else if (Util.isTextEmpty(phone1) == false)
+        {
+            hotelPhone = phone1;
         } else if (Util.isTextEmpty(phone3) == false)
         {
             hotelPhone = phone3;

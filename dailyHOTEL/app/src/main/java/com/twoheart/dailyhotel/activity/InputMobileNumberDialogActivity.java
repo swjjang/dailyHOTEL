@@ -1,14 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * CreditListFragment (적립금 내역 화면)
- * <p>
- * 적립금 내역 리스트를 보여주는 화면이다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.activity;
 
 import android.app.Dialog;
@@ -133,7 +122,14 @@ public class InputMobileNumberDialogActivity extends BaseActivity
         } else
         {
             mCountryCode = countryMobile[0];
-            mMobileNumber = countryMobile[1];
+
+            if (countryMobile.length > 1)
+            {
+                mMobileNumber = countryMobile[1];
+            } else
+            {
+                mMobileNumber = null;
+            }
         }
     }
 
