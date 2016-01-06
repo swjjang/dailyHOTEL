@@ -726,31 +726,37 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
-        super.onActivityResult(requestCode, resultCode, intent);
-        unLockUI();
-
-        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+        try
         {
-            if (resultCode == RESULT_OK && intent != null)
-            {
-                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+            super.onActivityResult(requestCode, resultCode, intent);
+            unLockUI();
 
-                etReserverNumber.setText(mobileNumber);
+            if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+            {
+                if (resultCode == RESULT_OK && intent != null)
+                {
+                    String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+
+                    etReserverNumber.setText(mobileNumber);
+                }
+
+                return;
             }
 
-            return;
+            mReqCode = requestCode;
+            mResCode = resultCode;
+            mResIntent = intent;
+
+            mAliveCallSource = "ACTIVITY_RESULT";
+
+            lockUI();
+
+            // 1. 세션이 연결되어있는지 검사.
+            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
+        } catch (NullPointerException e)
+        {
+            Util.restartApp(this);
         }
-
-        mReqCode = requestCode;
-        mResCode = resultCode;
-        mResIntent = intent;
-
-        mAliveCallSource = "ACTIVITY_RESULT";
-
-        lockUI();
-
-        // 1. 세션이 연결되어있는지 검사.
-        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     private void activityResulted(int requestCode, int resultCode, Intent intent)
@@ -1159,8 +1165,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.BOOKING);
-        super.onStart();
+        try
+        {
+            super.onStart();
+
+            AnalyticsManager.getInstance(this).recordScreen(Screen.BOOKING);
+        } catch (NullPointerException e)
+        {
+            Util.restartApp(this);
+        }
     }
 
     @Override
@@ -2278,7 +2291,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
                         // 적림금 on/off에 따라서 가격이 다를수 있어 나중에 보이도록 수정
-//                        tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
+                        //                        tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
                         mPay.setOriginalPrice(originalPrice);
 

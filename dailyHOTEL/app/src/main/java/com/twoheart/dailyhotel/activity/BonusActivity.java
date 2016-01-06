@@ -171,7 +171,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
         } else if (v.getId() == tvCredit.getId())
         {
             Intent i = new Intent(this, CreditListActivity.class);
-            i.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList)mCreditList);
+            i.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
             startActivity(i);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 

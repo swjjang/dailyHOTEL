@@ -189,28 +189,34 @@ public class MainActivity extends BaseActivity implements Constants
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode)
+        try
         {
-            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
-                mMainPresenter.requestGourmetIsExistRating();
-                break;
+            super.onActivityResult(requestCode, resultCode, data);
 
-            case CODE_REQUEST_ACTIVITY_LOGIN:
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
-                }
-                break;
+            switch (requestCode)
+            {
+                case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+                    mMainPresenter.requestGourmetIsExistRating();
+                    break;
 
-            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
-                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
-                {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
-                }
-                break;
+                case CODE_REQUEST_ACTIVITY_LOGIN:
+                    if (resultCode == Activity.RESULT_OK)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    }
+                    break;
+
+                case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+                case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+                    if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                    }
+                    break;
+            }
+        } catch (NullPointerException e)
+        {
+            Util.restartApp(this);
         }
     }
 
@@ -336,7 +342,13 @@ public class MainActivity extends BaseActivity implements Constants
     @Override
     public void onStart()
     {
-        super.onStart();
+        try
+        {
+            super.onStart();
+        } catch (NullPointerException e)
+        {
+            Util.restartApp(this);
+        }
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.

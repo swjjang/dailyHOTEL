@@ -56,12 +56,22 @@ public class PaymentWaitActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
 
-        Booking booking = new Booking();
+        Booking booking = null;
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null)
         {
             booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+        } else
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        if (booking == null)
+        {
+            Util.restartApp(this);
+            return;
         }
 
         setContentView(R.layout.activity_payment_wait);

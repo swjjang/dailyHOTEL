@@ -129,7 +129,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
         FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
-        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
@@ -137,9 +136,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         mViewPager.setOffscreenPageLimit(TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.setCurrentItem(0);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
-        setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
+        setHasOptionsMenu(true);
 
         setMenuEnabled(false);
 
@@ -592,7 +592,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
             // Google Analytics
-            if(mSelectedProvince != null)
+            if (mSelectedProvince != null)
             {
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Label.PROVINCE, mSelectedProvince.name);
@@ -623,7 +623,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             fragment.onPageSelected(true);
 
             // Google Analytics
-            if(mSelectedProvince != null)
+            if (mSelectedProvince != null)
             {
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Label.PROVINCE, mSelectedProvince.name);
@@ -1057,6 +1057,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 onError(e);
             } finally
             {
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
                 unLockUI();
             }
         }

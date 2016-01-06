@@ -462,8 +462,15 @@ public abstract class TicketPaymentActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.BOOKING);
-        super.onStart();
+        try
+        {
+            super.onStart();
+
+            AnalyticsManager.getInstance(this).recordScreen(Screen.GOURMET_PAYMENT);
+        } catch (NullPointerException e)
+        {
+            Util.restartApp(this);
+        }
     }
 
     @Override

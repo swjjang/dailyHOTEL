@@ -220,7 +220,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     {
         mSwipeRefreshLayout.setRefreshing(false);
 
-        if(mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
+        if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
         {
             return;
         }
@@ -863,7 +863,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if (Math.abs(mDownDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if (-mDownDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
                     if (mOnUserActionListener != null)
                     {
@@ -883,7 +883,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if (Math.abs(mUpDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if (mUpDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
                     if (mOnUserActionListener != null)
                     {
