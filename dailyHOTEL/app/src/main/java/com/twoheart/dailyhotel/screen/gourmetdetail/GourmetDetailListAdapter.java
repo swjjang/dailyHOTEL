@@ -490,11 +490,35 @@ public class GourmetDetailListAdapter extends BaseAdapter
                     mMapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
                 } catch (Exception e)
                 {
-                    ExLog.d(e.toString());
+                    ExLog.e(e.toString());
+
+                    googleMapLayout.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.showMap();
+                            }
+                        }
+                    });
                     return;
                 } catch (Error e)
                 {
-                    ExLog.d(e.toString());
+                    ExLog.e(e.toString());
+
+                    googleMapLayout.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.showMap();
+                            }
+                        }
+                    });
                     return;
                 }
 

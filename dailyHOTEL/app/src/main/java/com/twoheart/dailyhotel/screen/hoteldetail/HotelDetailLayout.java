@@ -1056,7 +1056,10 @@ public class HotelDetailLayout
 
                     if (mMoveState == 0)
                     {
-                        if (Math.abs(x - mPrevX) >= Math.abs(y - mPrevY))
+                        if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
+                        {
+
+                        } else if (Math.abs(x - mPrevX) > Math.abs(y - mPrevY))
                         {
                             // x 축으로 이동한 경우.
                             mMoveState = 100;
