@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 
 public class MenuBarLayout implements View.OnClickListener
 {
@@ -18,6 +19,7 @@ public class MenuBarLayout implements View.OnClickListener
     private View[] mMenuView;
     private int mSelectedMenuIndex;
     private OnMenuBarSelectedListener mOnMenuBarSelectedListener;
+    private BaseActivity mBaseActivity;
 
     public static class MenuBarLayoutOnPageChangeListener
     {
@@ -43,8 +45,9 @@ public class MenuBarLayout implements View.OnClickListener
         public void onMenuReselected(int intdex);
     }
 
-    public MenuBarLayout(ViewGroup viewGroup, OnMenuBarSelectedListener listener)
+    public MenuBarLayout(BaseActivity baseActivity, ViewGroup viewGroup, OnMenuBarSelectedListener listener)
     {
+        mBaseActivity = baseActivity;
         mMenuBarLayout = viewGroup;
         mOnMenuBarSelectedListener = listener;
 
@@ -73,6 +76,11 @@ public class MenuBarLayout implements View.OnClickListener
     @Override
     public void onClick(View v)
     {
+        if(mBaseActivity.isLockUiComponent() == true)
+        {
+            return;
+        }
+
         switch (v.getId())
         {
             case R.id.hotelLayout:
