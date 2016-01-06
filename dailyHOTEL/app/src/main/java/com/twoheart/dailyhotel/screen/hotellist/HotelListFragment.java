@@ -409,7 +409,7 @@ public class HotelListFragment extends BaseFragment implements Constants
      */
     protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (checkInSaleTime == null)
+        if (province == null || checkInSaleTime == null)
         {
             return;
         }
@@ -464,6 +464,11 @@ public class HotelListFragment extends BaseFragment implements Constants
     public Province getProvince()
     {
         return mSelectedProvince;
+    }
+
+    public void setProvince(Province province)
+    {
+        mSelectedProvince = province;
     }
 
     protected void showSortDialogView()

@@ -245,7 +245,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (checkInSaleTime == null)
+        if (province == null || checkInSaleTime == null)
         {
             return;
         }
@@ -553,6 +553,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
     public Province getProvince()
     {
         return mSelectedProvince;
+    }
+
+    public void setProvince(Province province)
+    {
+        mSelectedProvince = province;
     }
 
     public void setSortType(SortType sortType)
