@@ -180,16 +180,14 @@
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/facebookLoginButton"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:visibility="invisible"
+        android:layout_width="0px"
+        android:layout_height="0px"
         android:layout_alignParentBottom="true"/>
 
     <com.kakao.usermgmt.LoginButton
         android:id="@+id/kakaoLoginButton"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:visibility="invisible"
+        android:layout_width="0px"
+        android:layout_height="0px"
         android:layout_alignParentBottom="true"/>
 
     <View
