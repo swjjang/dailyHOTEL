@@ -23,4 +23,6 @@
     <dimen name="toolbar_height">50dp</dimen>
 
     <dimen name="menubar_height">50dp</dimen>
+
+    <dimen name="tabbar_text">12dp</dimen>
 </resources>

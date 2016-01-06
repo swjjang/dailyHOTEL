@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity implements Constants
         mSplashLayout = findViewById(R.id.splashLayout);
 
         ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
-        mMenuBarLayout = new MenuBarLayout(bottomMenuBarLayout, onMenuBarSelectedListener);
+        mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
 
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, mContentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
@@ -677,6 +677,8 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onConfigurationResponse()
         {
+            lockUI();
+
             finishSplash();
 
             String deepLink = DailyPreference.getInstance(MainActivity.this).getDeepLink();

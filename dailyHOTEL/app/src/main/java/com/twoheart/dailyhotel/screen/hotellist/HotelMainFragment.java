@@ -260,6 +260,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 case MAP:
                     mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_list : -1, -1);
                     break;
+
+                default:
+                    mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
+                    break;
             }
         } else
         {
@@ -456,6 +460,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         mSelectedProvince = province;
 
+        setNavigationItemSelected(mSelectedProvince);
+
         mDailyToolbarLayout.setToolbarRegionText(province.name);
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
@@ -567,6 +573,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
+            lockUI();
+
             mTabLayout.setOnTabSelectedListener(null);
 
             if (mViewPager != null)
@@ -584,11 +592,14 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
             // Google Analytics
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.PROVINCE, mSelectedProvince.name);
-            params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
+            if(mSelectedProvince != null)
+            {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(Label.PROVINCE, mSelectedProvince.name);
+                params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
 
-            AnalyticsManager.getInstance(getActivity()).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+                AnalyticsManager.getInstance(getActivity()).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+            }
         }
 
         @Override
@@ -601,17 +612,25 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void onTabReselected(TabLayout.Tab tab)
         {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
             mOnUserActionListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
 
             // Google Analytics
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.PROVINCE, mSelectedProvince.name);
-            params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
+            if(mSelectedProvince != null)
+            {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(Label.PROVINCE, mSelectedProvince.name);
+                params.put(Label.DATE_TAB, Integer.toString(tab.getPosition()));
 
-            AnalyticsManager.getInstance(getActivity()).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+                AnalyticsManager.getInstance(getActivity()).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+            }
         }
     };
 
@@ -867,11 +886,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void refreshAll(boolean isShowProgress)
         {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
             if (baseActivity == null)
