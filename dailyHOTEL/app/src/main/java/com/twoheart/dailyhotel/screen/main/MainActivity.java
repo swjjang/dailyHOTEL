@@ -216,6 +216,8 @@ public class MainActivity extends BaseActivity implements Constants
             }
         } catch (NullPointerException e)
         {
+            ExLog.e(e.toString());
+
             Util.restartApp(this);
         }
     }
@@ -347,6 +349,8 @@ public class MainActivity extends BaseActivity implements Constants
             super.onStart();
         } catch (NullPointerException e)
         {
+            ExLog.e(e.toString());
+
             Util.restartApp(this);
         }
 

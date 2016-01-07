@@ -469,6 +469,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
             AnalyticsManager.getInstance(this).recordScreen(Screen.GOURMET_PAYMENT);
         } catch (NullPointerException e)
         {
+            ExLog.e(e.toString());
+
             Util.restartApp(this);
         }
     }

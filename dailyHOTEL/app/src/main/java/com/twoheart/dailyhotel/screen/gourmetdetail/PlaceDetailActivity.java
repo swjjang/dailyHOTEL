@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
@@ -229,6 +230,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
             AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.GOURMET_DETAIL);
         } catch (NullPointerException e)
         {
+            ExLog.e(e.toString());
+
             Util.restartApp(this);
         }
     }
@@ -293,6 +296,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
             super.onActivityResult(requestCode, resultCode, data);
         } catch (NullPointerException e)
         {
+            ExLog.e(e.toString());
+
             Util.restartApp(this);
         }
     }

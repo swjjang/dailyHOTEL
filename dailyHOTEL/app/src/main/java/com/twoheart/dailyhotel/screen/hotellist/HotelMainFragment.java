@@ -68,7 +68,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private boolean mMapEnabled;
     private boolean mDontReloadAtOnResume;
     private boolean mIsHideAppBarlayout;
-    private boolean mIsPinAppBarlayout;
 
     private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 

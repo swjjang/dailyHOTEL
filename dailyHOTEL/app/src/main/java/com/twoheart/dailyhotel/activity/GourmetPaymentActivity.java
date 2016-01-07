@@ -156,6 +156,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             super.onActivityResult(requestCode, resultCode, intent);
         } catch (NullPointerException e)
         {
+            ExLog.e(e.toString());
+
             Util.restartApp(this);
         }
     }

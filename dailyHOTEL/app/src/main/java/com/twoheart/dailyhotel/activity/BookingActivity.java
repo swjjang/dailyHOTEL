@@ -755,6 +755,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
         } catch (NullPointerException e)
         {
+            ExLog.e(e.toString());
+
             Util.restartApp(this);
         }
     }
@@ -1172,6 +1174,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             AnalyticsManager.getInstance(this).recordScreen(Screen.BOOKING);
         } catch (NullPointerException e)
         {
+            ExLog.e(e.toString());
+
             Util.restartApp(this);
         }
     }
