@@ -170,23 +170,23 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             }
         } else if (v.getId() == tvCredit.getId())
         {
-            Intent i = new Intent(this, CreditListActivity.class);
-            i.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
-            startActivity(i);
+            Intent intent = new Intent(this, CreditListActivity.class);
+            intent.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
+            startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(this).recordEvent(Screen.CREDIT, Action.CLICK, Label.VIEW_CREDIT_HISTORY, 0L);
         } else if (v.getId() == btnLogin.getId())
         {
-            Intent i = new Intent(this, LoginActivity.class);
-            startActivity(i);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(this).recordEvent(Screen.CREDIT, Action.CLICK, Label.LOGIN, 0L);
         } else if (v.getId() == btnSignup.getId())
         {
-            Intent i = new Intent(this, SignupActivity.class);
-            startActivity(i);
+            Intent intent = new Intent(this, SignupActivity.class);
+            startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(this).recordEvent(Screen.CREDIT, Action.CLICK, Label.SIGNUP, 0L);

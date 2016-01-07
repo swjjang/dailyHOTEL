@@ -112,8 +112,6 @@
                     android:src="@drawable/payment_ic_time_tab"/>
 
             </LinearLayout>
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -157,9 +155,6 @@
                     android:src="@drawable/selector_payment_plus_button"/>
 
             </LinearLayout>
-
-
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

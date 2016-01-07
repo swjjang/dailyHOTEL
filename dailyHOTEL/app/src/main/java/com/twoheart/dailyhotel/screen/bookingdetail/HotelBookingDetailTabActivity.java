@@ -67,17 +67,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     }
 
     @Override
-    protected void onDestroy()
-    {
-        for (Fragment fragment : mFragmentPagerAdapter.getFragmentList())
-        {
-            getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
-        }
-
-        super.onDestroy();
-    }
-
-    @Override
     protected void onOptionsItemSelected(View view)
     {
         PopupMenu popupMenu = new PopupMenu(this, view);

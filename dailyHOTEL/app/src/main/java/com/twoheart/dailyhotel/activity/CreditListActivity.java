@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class CreditListActivity extends BaseActivity
             mCreditList = intent.getParcelableArrayListExtra(KEY_BUNDLE_ARGUMENTS_CREDITLIST);
         } else
         {
-            finish();
+            Util.restartApp(this);
             return;
         }
 
@@ -71,7 +72,7 @@ public class CreditListActivity extends BaseActivity
         ListView listView = (ListView) findViewById(R.id.listview_credit);
         listView.setEmptyView((TextView) findViewById(R.id.empty_listview_credit));
 
-        if (mCreditList.size() != 0)
+        if (mCreditList != null && mCreditList.size() != 0)
         {
             CreditListAdapter adapter = new CreditListAdapter(CreditListActivity.this, R.layout.list_row_credit, mCreditList);
             listView.setAdapter(adapter);
