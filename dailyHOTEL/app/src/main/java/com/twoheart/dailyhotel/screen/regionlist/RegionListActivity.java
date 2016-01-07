@@ -122,7 +122,7 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.setOffscreenPageLimit(HOTEL_TAB_COUNT);
                 mViewPager.setAdapter(mFragmentPagerAdapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-                mViewPager.setCurrentItem(mSelectedProvince.isOverseas ? 1 : 0);
+                mViewPager.setCurrentItem(province.isOverseas ? 1 : 0);
                 break;
             }
 

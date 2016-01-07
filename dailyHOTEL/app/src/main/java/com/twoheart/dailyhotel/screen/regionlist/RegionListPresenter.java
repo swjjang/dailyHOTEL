@@ -114,11 +114,13 @@ public class RegionListPresenter
                         totalArea.setProvince(province);
                         totalArea.sequence = -1;
                         totalArea.tag = totalArea.name;
+                        totalArea.isOverseas = province.isOverseas;
                         totalArea.setProvinceIndex(province.getProvinceIndex());
 
                         areas[i++] = totalArea;
                     }
 
+                    area.isOverseas = province.isOverseas;
                     area.setProvince(province);
 
                     if (i != 0 && i % CHILD_GRID_COLUMN == 1)
