@@ -103,6 +103,12 @@ public class DailyToolbarLayout
         View menu1 = mToolbar.findViewById(R.id.menu1View);
         View menu2 = mToolbar.findViewById(R.id.menu2View);
 
+        if(menu1 == null || menu2 == null)
+        {
+            Util.restartApp(mAppCompatActivity);
+            return;
+        }
+
         if (menu1 != null)
         {
             menu1.setOnClickListener(listener);
@@ -118,6 +124,12 @@ public class DailyToolbarLayout
     {
         View menu1 = mToolbar.findViewById(R.id.menu1View);
         View menu2 = mToolbar.findViewById(R.id.menu2View);
+
+        if(menu1 == null || menu2 == null)
+        {
+            Util.restartApp(mAppCompatActivity);
+            return;
+        }
 
         if (isVisibility == true)
         {
@@ -143,6 +155,12 @@ public class DailyToolbarLayout
         ImageView menu1 = (ImageView) mToolbar.findViewById(R.id.menu1View);
         ImageView menu2 = (ImageView) mToolbar.findViewById(R.id.menu2View);
 
+        if(menu1 == null || menu2 == null)
+        {
+            Util.restartApp(mAppCompatActivity);
+            return;
+        }
+
         if (menu1ResId > 0)
         {
             menu1.setVisibility(View.VISIBLE);
@@ -151,6 +169,8 @@ public class DailyToolbarLayout
         } else if (menu1ResId < 0)
         {
             menu1.setVisibility(View.GONE);
+            menu1.setTag(null);
+            menu1.setImageResource(0);
         } else
         {
             menu1.setVisibility(View.VISIBLE);

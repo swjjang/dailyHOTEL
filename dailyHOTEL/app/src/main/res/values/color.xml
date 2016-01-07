@@ -189,7 +189,7 @@
     <color name="splash_background">#efefef</color>
 
     <!-- Botton Menu -->
-    <color name="menu_text_default">#c1c1c1</color>
+    <color name="menu_text_default">#929292</color>
     <color name="menu_text_select">#900034</color>
 
     <!-- Action Bar -->
@@ -203,4 +203,7 @@
     <!-- Etc -->
     <color name="c181818">#181818</color>
     <color name="cd3d3d3">#d3d3d3</color>
+
+    <!-- progress bar -->
+    <color name="probressbar_default">#d3d3d3</color>
 </resources>

@@ -189,6 +189,12 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     /**
      * LoadingDialog를 띄워 로딩 중임을 나타내어 사용자가 UI를 사용할 수 없도록 한다.
      */
+
+    public boolean isVisibleLockUI()
+    {
+        return mLockUI.isVisible();
+    }
+
     public void lockUI()
     {
         lockUI(true);
@@ -208,6 +214,15 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             mLockUI.show(isShowProgress);
         }
     }
+
+    public void showLockUIProgress()
+    {
+        if (mLockUI != null)
+        {
+            mLockUI.showProgress();
+        }
+    }
+
 
     /**
      * 로딩이 완료되어 LoadingDialog를 제거하고 전역 폰트를 설정한다.

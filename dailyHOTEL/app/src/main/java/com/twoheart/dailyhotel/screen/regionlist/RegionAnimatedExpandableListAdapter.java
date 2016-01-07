@@ -148,16 +148,6 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             areaSubTextView2.setText(null);
         }
 
-        View underLineView = convertView.findViewById(R.id.underLineView);
-
-        if (isLastChild == true)
-        {
-            underLineView.setVisibility(View.INVISIBLE);
-        } else
-        {
-            underLineView.setVisibility(View.VISIBLE);
-        }
-
         return convertView;
     }
 

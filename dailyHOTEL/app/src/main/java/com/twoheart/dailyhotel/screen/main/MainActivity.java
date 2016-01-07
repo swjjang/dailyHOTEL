@@ -53,9 +53,21 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void handleMessage(Message msg)
         {
-            if (mIsInitialization == true)
+            switch (msg.what)
             {
-                lockUI();
+                case 0:
+                    if (mIsInitialization == true)
+                    {
+                        lockUI();
+                    }
+                    break;
+
+                case 1:
+                    if (isVisibleLockUI() == true)
+                    {
+                        showLockUIProgress();
+                    }
+                    break;
             }
         }
     };
@@ -498,6 +510,7 @@ public class MainActivity extends BaseActivity implements Constants
         mSplashLayout.startAnimation(animation);
 
         mDelayTimeHandler.removeMessages(0);
+        mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
         mIsInitialization = false;
         mMainPresenter.requestEvent();
     }
@@ -693,7 +706,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onConfigurationResponse()
         {
-            lockUI();
+            lockUI(false);
 
             finishSplash();
 

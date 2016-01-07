@@ -97,7 +97,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecycleView.setOnScrollListener(mOnScrollListener);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -245,17 +244,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (province == null || checkInSaleTime == null)
-        {
-            unLockUI();
-            return;
-        }
-
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (province == null || checkInSaleTime == null)
         {
-            unLockUI();
+            Util.restartApp(baseActivity);
             return;
         }
 
