@@ -16,7 +16,6 @@ package com.twoheart.dailyhotel.view;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
@@ -118,6 +117,20 @@ public class LoadingDialog
             }
         }
     }
+
+    public void showProgress()
+    {
+        if (mActivity == null || mActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (mDialog != null && mDialog.isShowing() == true)
+        {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     public void hide()
     {

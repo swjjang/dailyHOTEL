@@ -169,6 +169,8 @@ public class DailyToolbarLayout
         } else if (menu1ResId < 0)
         {
             menu1.setVisibility(View.GONE);
+            menu1.setTag(null);
+            menu1.setImageResource(0);
         } else
         {
             menu1.setVisibility(View.VISIBLE);
