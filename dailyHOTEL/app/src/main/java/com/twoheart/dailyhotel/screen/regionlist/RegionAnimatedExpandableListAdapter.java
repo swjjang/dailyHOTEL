@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -110,8 +111,15 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         } else
         {
             areaTextView1.setText(area[0].name);
-            areaSubTextView1.setVisibility(View.VISIBLE);
             areaSubTextView1.setText(area[0].tag);
+
+            if(Util.isTextEmpty(area[0].tag) == false)
+            {
+                areaSubTextView1.setVisibility(View.VISIBLE);
+            } else
+            {
+                areaSubTextView1.setVisibility(View.GONE);
+            }
         }
 
         if (area[1] != null)
@@ -122,6 +130,14 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
 
             areaTextView2.setText(area[1].name);
             areaSubTextView2.setText(area[1].tag);
+
+            if(Util.isTextEmpty(area[1].tag) == false)
+            {
+                areaSubTextView2.setVisibility(View.VISIBLE);
+            } else
+            {
+                areaSubTextView2.setVisibility(View.GONE);
+            }
         } else
         {
             areaLayout2.setTag(null);
