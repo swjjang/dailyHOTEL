@@ -34,7 +34,6 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
     private static final int HOTEL_ENABLE_DAYCOUNT_OF_MAX = 60;
     private static final int GOURMET_ENABLE_DAYCOUNT_OF_MAX = 14;
 
-
     private PlaceMainFragment.TYPE mPlaceType;
     private Day mCheckInDay;
     private Day mCheckOutDay;

@@ -108,7 +108,6 @@ public class HotelListFragment extends BaseFragment implements Constants
         mHotelRecycleView.setOnScrollListener(mOnScrollListener);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setProgressViewEndTarget(true, Util.dpToPx(getContext(), 70));
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -220,7 +219,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     {
         mSwipeRefreshLayout.setRefreshing(false);
 
-        if(mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
+        if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
         {
             return;
         }
@@ -409,17 +408,11 @@ public class HotelListFragment extends BaseFragment implements Constants
      */
     protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (province == null || checkInSaleTime == null)
-        {
-            unLockUI();
-            return;
-        }
-
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (province == null || checkInSaleTime == null)
         {
-            unLockUI();
+            Util.restartApp(baseActivity);
             return;
         }
 
@@ -863,7 +856,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if (Math.abs(mDownDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if (-mDownDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
                     if (mOnUserActionListener != null)
                     {
@@ -883,7 +876,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if (Math.abs(mUpDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if (mUpDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
                     if (mOnUserActionListener != null)
                     {

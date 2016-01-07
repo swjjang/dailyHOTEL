@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
@@ -222,8 +223,17 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.HOTEL_DETAIL);
-        super.onStart();
+        try
+        {
+            super.onStart();
+
+            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.GOURMET_DETAIL);
+        } catch (NullPointerException e)
+        {
+            ExLog.e(e.toString());
+
+            Util.restartApp(this);
+        }
     }
 
     @Override
@@ -255,33 +265,41 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        releaseUiComponent();
-
-        switch (requestCode)
+        try
         {
-            case CODE_REQUEST_ACTIVITY_BOOKING:
-            {
-                setResult(resultCode);
+            releaseUiComponent();
 
-                if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+            switch (requestCode)
+            {
+                case CODE_REQUEST_ACTIVITY_BOOKING:
                 {
-                    finish();
+                    setResult(resultCode);
+
+                    if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                    {
+                        finish();
+                    }
+                    break;
                 }
-                break;
+
+                case CODE_REQUEST_ACTIVITY_LOGIN:
+                case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
+                {
+                    if (resultCode == RESULT_OK)
+                    {
+                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
+                    }
+                    break;
+                }
             }
 
-            case CODE_REQUEST_ACTIVITY_LOGIN:
-            case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
-            {
-                if (resultCode == RESULT_OK)
-                {
-                    DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
-                }
-                break;
-            }
+            super.onActivityResult(requestCode, resultCode, data);
+        } catch (NullPointerException e)
+        {
+            ExLog.e(e.toString());
+
+            Util.restartApp(this);
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

@@ -114,7 +114,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
         FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
-        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
@@ -122,6 +121,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         mViewPager.setOffscreenPageLimit(TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.setCurrentItem(0);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
         return view;
@@ -533,7 +533,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-            if(mSelectedProvince != null)
+            if (mSelectedProvince != null)
             {
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Label.PROVINCE, mSelectedProvince.name);
@@ -564,7 +564,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
 
-            if(mSelectedProvince != null)
+            if (mSelectedProvince != null)
             {
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Label.PROVINCE, mSelectedProvince.name);
@@ -1024,6 +1024,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 onError(e);
             } finally
             {
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
                 unLockUI();
             }
         }

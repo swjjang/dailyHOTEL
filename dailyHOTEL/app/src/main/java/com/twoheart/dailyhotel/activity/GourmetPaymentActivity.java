@@ -135,23 +135,31 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
-        unLockUI();
-
-        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+        try
         {
-            if (resultCode == RESULT_OK && intent != null)
+            unLockUI();
+
+            if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
             {
-                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+                if (resultCode == RESULT_OK && intent != null)
+                {
+                    String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
 
-                mTicketPayment.getGuest().phone = mobileNumber;
+                    mTicketPayment.getGuest().phone = mobileNumber;
 
-                mGourmetBookingLayout.updateUserInformationLayout(mobileNumber);
+                    mGourmetBookingLayout.updateUserInformationLayout(mobileNumber);
+                }
+
+                return;
             }
 
-            return;
-        }
+            super.onActivityResult(requestCode, resultCode, intent);
+        } catch (NullPointerException e)
+        {
+            ExLog.e(e.toString());
 
-        super.onActivityResult(requestCode, resultCode, intent);
+            Util.restartApp(this);
+        }
     }
 
     @Override

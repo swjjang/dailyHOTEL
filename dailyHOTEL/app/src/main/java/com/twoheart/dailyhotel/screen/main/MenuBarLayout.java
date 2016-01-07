@@ -76,7 +76,7 @@ public class MenuBarLayout implements View.OnClickListener
     @Override
     public void onClick(View v)
     {
-        if(mBaseActivity.isLockUiComponent() == true)
+        if (mBaseActivity.isLockUiComponent() == true)
         {
             return;
         }

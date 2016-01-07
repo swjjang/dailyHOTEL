@@ -112,6 +112,7 @@ public class AnalyticsManager
         public static final String HOTEL_DETAIL = "HotelDetail Screen";
         public static final String GOURMET_LIST = "GourmetList Screen";
         public static final String GOURMET_DETAIL = "GourmetDetail Screen";
+        public static final String GOURMET_PAYMENT = "GourmetPayment Screen";
         public static final String BOOKING = "Booking Screen";
         public static final String BOOLKING_LIST = "BookingList Screen";
         public static final String BOOKING_DETAIL = "BookingDetail Screen";

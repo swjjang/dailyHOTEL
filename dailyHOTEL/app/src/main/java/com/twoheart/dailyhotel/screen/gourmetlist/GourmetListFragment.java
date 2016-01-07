@@ -871,7 +871,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if (Math.abs(mDownDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if (-mDownDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
                     if (mOnUserActionListener != null)
                     {
@@ -891,7 +891,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                if (Math.abs(mUpDistance) >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
+                if (mUpDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
                     if (mOnUserActionListener != null)
                     {

@@ -11,7 +11,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Board;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BoardListAdapter extends BaseExpandableListAdapter
