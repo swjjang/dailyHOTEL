@@ -254,8 +254,14 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             }
         });
 
-        mDialog.setContentView(view);
-        mDialog.show();
+        try
+        {
+            mDialog.setContentView(view);
+            mDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
 
@@ -536,8 +542,14 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             }
         });
 
-        mDialog.setContentView(view);
-        mDialog.show();
+        try
+        {
+            mDialog.setContentView(view);
+            mDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void updateSatifactionRating(PlaceMainFragment.TYPE type, int index, String result)

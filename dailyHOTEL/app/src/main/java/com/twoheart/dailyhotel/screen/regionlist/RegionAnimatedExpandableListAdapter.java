@@ -113,7 +113,7 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             areaTextView1.setText(area[0].name);
             areaSubTextView1.setText(area[0].tag);
 
-            if(Util.isTextEmpty(area[0].tag) == false)
+            if (Util.isTextEmpty(area[0].tag) == false)
             {
                 areaSubTextView1.setVisibility(View.VISIBLE);
             } else
@@ -131,7 +131,7 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             areaTextView2.setText(area[1].name);
             areaSubTextView2.setText(area[1].tag);
 
-            if(Util.isTextEmpty(area[1].tag) == false)
+            if (Util.isTextEmpty(area[1].tag) == false)
             {
                 areaSubTextView2.setVisibility(View.VISIBLE);
             } else

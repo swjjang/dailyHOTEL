@@ -110,11 +110,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.SplashActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".screen.hoteldetail.HotelDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

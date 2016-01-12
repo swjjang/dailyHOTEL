@@ -11,7 +11,6 @@ package com.twoheart.dailyhotel.screen.bookingdetail;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
@@ -26,6 +25,7 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -89,7 +89,13 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             }
         });
 
-        popupMenu.show();
+        try
+        {
+            popupMenu.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
         view.post(new Runnable()
         {
