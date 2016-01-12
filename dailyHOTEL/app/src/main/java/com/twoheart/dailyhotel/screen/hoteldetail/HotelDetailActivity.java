@@ -369,8 +369,7 @@ public class HotelDetailActivity extends BaseActivity
             KakaoLinkManager.newInstance(HotelDetailActivity.this).shareHotel(name, mHotelDetail.hotelName, mHotelDetail.address//
                 , mHotelDetail.hotelIndex//
                 , mDefaultImageUrl//
-                , mCheckInSaleTime.getDailyTime()//
-                , mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
+                , mCheckInSaleTime, mHotelDetail.nights);
 
             // 호텔 공유하기 로그 추가
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);

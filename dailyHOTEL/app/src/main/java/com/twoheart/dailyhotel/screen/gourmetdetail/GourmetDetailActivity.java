@@ -62,8 +62,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         KakaoLinkManager.newInstance(this).shareGourmet(name, placeDetail.name, placeDetail.address//
             , placeDetail.index //
             , imageUrl //
-            , checkInSaleTime.getDailyTime() //
-            , checkInSaleTime.getOffsetDailyDay());
+            , checkInSaleTime);
     }
 
     @Override
