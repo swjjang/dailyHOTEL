@@ -13,8 +13,15 @@ public class DailyGlideModule implements GlideModule
     @Override
     public void applyOptions(Context context, GlideBuilder builder)
     {
-        builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
-        builder.setDiskCache(new InternalCacheDiskCacheFactory(context, 1024 * 1024 * 10));
+        if (Util.isOverAPI11() == true && Util.getLCDWidth(context) > 800)
+        {
+            builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
+            builder.setDiskCache(new InternalCacheDiskCacheFactory(context, 1024 * 1024 * 10));
+        } else
+        {
+            builder.setDecodeFormat(DecodeFormat.PREFER_RGB_565);
+            builder.setDiskCache(new InternalCacheDiskCacheFactory(context, 1024 * 1024 * 5));
+        }
     }
 
     @Override
