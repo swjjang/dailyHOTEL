@@ -41,8 +41,6 @@ public class DailySignatureView extends View
         initLayout(context);
     }
 
-    ;
-
     public DailySignatureView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
