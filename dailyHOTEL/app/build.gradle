@@ -30,6 +30,9 @@ android {
         targetSdkVersion 22
         versionCode 78
         versionName "1.7.8"
+
+        resConfigs "ko"
+        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
     }
     buildTypes {
         release {
@@ -52,6 +55,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:+'
     compile 'com.google.android.gms:play-services-location:+'
     compile 'com.google.android.gms:play-services-gcm:+'
+    compile 'com.google.android.gms:play-services-ads:+'
     compile 'com.squareup.okhttp:okhttp:2.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.+'
     compile 'com.squareup.okio:okio:1.+'
