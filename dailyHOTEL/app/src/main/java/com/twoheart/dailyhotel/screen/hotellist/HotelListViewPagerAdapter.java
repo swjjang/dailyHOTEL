@@ -147,31 +147,13 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 
         name.setSelected(true); // Android TextView marquee bug
 
-        //        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        //        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
-        //
-        //        PaintDrawable paintDrawable = new PaintDrawable();
-        //        paintDrawable.setShape(new RectShape());
-        //
-        //        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
-        //        {
-        //            @Override
-        //            public Shader resize(int width, int height)
-        //            {
-        //                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-        //            }
-        //        };
-        //
-        //        paintDrawable.setShaderFactory(shaderFactory);
-        //        gradientView.setBackgroundDrawable(paintDrawable);
-
         // grade
         grade.setText(hotel.getCategory().getName(mContext));
         grade.setBackgroundResource(hotel.getCategory().getColorResId());
 
         if (Util.getLCDWidth(mContext) < 720)
         {
-            Glide.with(mContext).load(hotel.imageUrl).into(hotelImageView);
+            Glide.with(mContext).load(hotel.imageUrl).override(360, 240).into(hotelImageView);
             Glide.with(mContext).load(hotel.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
             {
                 @Override

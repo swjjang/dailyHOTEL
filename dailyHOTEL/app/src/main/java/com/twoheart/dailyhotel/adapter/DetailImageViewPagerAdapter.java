@@ -3,12 +3,16 @@ package com.twoheart.dailyhotel.adapter;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
@@ -34,19 +38,19 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
-        if (mImageInformationList == null)
+        if (mImageInformationList == null || position < 0)
         {
             return null;
         }
 
-        int width = Util.getLCDWidth(mContext);
-
+        final int width = Util.getLCDWidth(mContext);
         final ImageView imageView = new ImageView(mContext);
-        imageView.setScaleType(ScaleType.CENTER_CROP);
-        imageView.setTag(imageView.getId(), position);
 
-        if (mImageInformationList.size() > position)
+        if(position < mImageInformationList.size())
         {
+            imageView.setScaleType(ScaleType.CENTER_CROP);
+            imageView.setTag(imageView.getId(), position);
+
             String url = mImageInformationList.get(position).url;
             String imageFilePath = FileLruCache.getInstance().get(url);
             boolean isExist = false;
@@ -78,10 +82,13 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
                     Glide.with(mContext).load(url).crossFade().into(imageView);
                 }
             }
-        }
 
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
-        container.addView(imageView, layoutParams);
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
+            container.addView(imageView, layoutParams);
+        } else
+        {
+            Util.restartApp(mContext);
+        }
 
         return imageView;
     }

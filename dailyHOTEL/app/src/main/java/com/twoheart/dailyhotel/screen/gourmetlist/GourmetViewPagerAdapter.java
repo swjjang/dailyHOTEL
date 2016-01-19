@@ -130,7 +130,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
 
         if (Util.getLCDWidth(mContext) < 720)
         {
-            Glide.with(mContext).load(gourmet.imageUrl).into(placeImageView);
+            Glide.with(mContext).load(gourmet.imageUrl).override(360, 240).into(placeImageView);
             Glide.with(mContext).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
             {
                 @Override

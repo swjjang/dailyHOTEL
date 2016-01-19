@@ -278,7 +278,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
         if (Util.getLCDWidth(mContext) < 720)
         {
-            Glide.with(mContext).load(hotel.imageUrl).crossFade().into(placeImageView);
+            Glide.with(mContext).load(hotel.imageUrl).crossFade().override(360, 240).into(placeImageView);
             Glide.with(mContext).load(hotel.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
             {
                 @Override
