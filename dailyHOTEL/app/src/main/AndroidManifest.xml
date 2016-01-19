@@ -319,7 +319,7 @@
          installation campaign reporting
         -->
         <receiver
-            android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver"
+            android:name="com.twoheart.dailyhotel.ReferrerBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER"/>
@@ -355,27 +355,8 @@
             android:name="com.twoheart.dailyhotel.util.DailyGlideModule"
             android:value="GlideModule"/>
 
-        <receiver
-            android:name="io.branch.referral.InstallListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
-            </intent-filter>
-        </receiver>
-
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt"/>
-
-        <!-- Google adwords -->
-
-        <receiver
-            android:name="com.google.ads.conversiontracking.InstallReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
-            </intent-filter>
-        </receiver>
     </application>
-
 </manifest>
