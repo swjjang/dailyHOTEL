@@ -55,6 +55,11 @@ public class DailyViewPagerCircleIndicator extends View
     @Override
     protected void onDraw(Canvas canvas)
     {
+        if(mTotalCount == 1)
+        {
+            return;
+        }
+
         float x, y;
 
         for (int i = 0; i < mTotalCount; i++)
