@@ -113,35 +113,18 @@ public class PaymentWaitActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_payment_wait_activity));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
+        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
-            case R.id.action_call:
-                if (isFinishing() == true)
-                {
-                    return super.onOptionsItemSelected(item);
-                }
-
+            @Override
+            public void onClick(View v)
+            {
                 showCallDialog();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+            }
+        });
     }
 
-    protected void showCallDialog()
+    private void showCallDialog()
     {
         if (isFinishing() == true)
         {
