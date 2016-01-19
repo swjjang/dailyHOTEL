@@ -127,7 +127,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     startActivity(intent);
                 } catch (Exception e)
                 {
-                    intent.setData(Uri.parse("https://www.facebook.com/dailyhotel"));
+                    intent.setData(Uri.parse("http://www.facebook.com/dailyhotel"));
                     startActivity(intent);
                 }
             }
@@ -146,7 +146,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     startActivity(intent);
                 } catch (Exception e)
                 {
-                    intent.setData(Uri.parse("https://www.instagram.com/dailyhotel"));
+                    intent.setData(Uri.parse("http://www.instagram.com/dailyhotel"));
                     startActivity(intent);
                 }
             }
