@@ -19,8 +19,6 @@ import android.webkit.CookieSyncManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.OkUrlFactory;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -37,6 +35,10 @@ import java.util.List;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
+import okhttp3.OkUrlFactory;
 
 public class VolleyHttpClient implements Constants
 {
@@ -221,19 +223,15 @@ public class VolleyHttpClient implements Constants
                 throw new AssertionError(); // 시스템이 TLS를 지원하지 않습니다
             }
 
-            mOkHttpClient.setSslSocketFactory(sslContext.getSocketFactory());
-
             java.net.CookieManager cookieManager = new java.net.CookieManager(new PersistentCookieStore(sContext.getApplicationContext()), CookiePolicy.ACCEPT_ALL);
 
+            mOkHttpClient = mOkHttpClient.newBuilder()//
+                .sslSocketFactory(sslContext.getSocketFactory())//
+                .cookieJar(new JavaNetCookieJar(cookieManager)).build();
+
             mCookieStore = cookieManager.getCookieStore();
-            mOkHttpClient.setCookieHandler(cookieManager);
 
             setOkUrlFactory(new OkUrlFactory(mOkHttpClient));
-        }
-
-        public OkHttpClient getOkHttpClient()
-        {
-            return mOkHttpClient;
         }
 
         public CookieStore getCookieStore()

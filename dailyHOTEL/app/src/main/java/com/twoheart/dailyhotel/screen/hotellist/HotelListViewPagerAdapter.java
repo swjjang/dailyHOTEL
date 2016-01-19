@@ -2,25 +2,20 @@ package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +68,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
     private void makeLayout(View view, final Hotel hotel)
     {
         View gradientView = view.findViewById(R.id.gradientView);
-        ImageView hotelImageView = (ImageView) view.findViewById(R.id.imageView);
+        com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
         TextView name = (TextView) view.findViewById(R.id.nameTextView);
         TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
@@ -151,29 +146,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         grade.setText(hotel.getCategory().getName(mContext));
         grade.setBackgroundResource(hotel.getCategory().getColorResId());
 
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            Glide.with(mContext).load(hotel.imageUrl).override(360, 240).into(hotelImageView);
-            Glide.with(mContext).load(hotel.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
-            {
-                @Override
-                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
-                {
-                    FileLruCache.getInstance().put(hotel.imageUrl, resource.getAbsolutePath());
-                }
-            });
-        } else
-        {
-            Glide.with(mContext).load(hotel.imageUrl).into(hotelImageView);
-            Glide.with(mContext).load(hotel.imageUrl).downloadOnly(new SimpleTarget<File>()
-            {
-                @Override
-                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
-                {
-                    FileLruCache.getInstance().put(hotel.imageUrl, resource.getAbsolutePath());
-                }
-            });
-        }
+        Util.requestImageResize(mContext, hotelImageView, Uri.parse(hotel.imageUrl));
 
         // 객실이 1~2 개일때 label 표시
         int avail_cnt = hotel.getAvailableRoom();

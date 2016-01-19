@@ -1,23 +1,21 @@
 package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.model.ImageInformation;
-import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.io.File;
 import java.util.List;
 
 public class DetailImageViewPagerAdapter extends PagerAdapter
@@ -44,47 +42,45 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
         }
 
         final int width = Util.getLCDWidth(mContext);
-        final ImageView imageView = new ImageView(mContext);
+        final com.facebook.drawee.view.SimpleDraweeView imageView = new com.facebook.drawee.view.SimpleDraweeView(mContext);
 
-        if(position < mImageInformationList.size())
+        if (position < mImageInformationList.size())
         {
-            imageView.setScaleType(ScaleType.CENTER_CROP);
-            imageView.setTag(imageView.getId(), position);
-
-            String url = mImageInformationList.get(position).url;
-            String imageFilePath = FileLruCache.getInstance().get(url);
-            boolean isExist = false;
-
-            if (Util.isTextEmpty(imageFilePath) == false)
+            if (mImageInformationList.size() == 1)
             {
-                File file = new File(imageFilePath);
+                final int height = Util.dpToPx(mContext, 202);
 
-                if (file.isFile() == true && file.exists() == true)
+                DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
                 {
-                    try
+                    @Override
+                    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
                     {
-                        imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
-                        isExist = true;
-                    } catch (OutOfMemoryError e)
-                    {
-                        isExist = false;
+                        if (imageInfo == null)
+                        {
+                            return;
+                        }
+
+                        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+                        layoutParams.height = width;
+                        imageView.setLayoutParams(layoutParams);
                     }
-                }
-            }
+                }).setUri(Uri.parse(mImageInformationList.get(position).url)).build();
 
-            if (isExist == false)
+                imageView.setController(controller);
+                imageView.setTag(imageView.getId(), position);
+
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewPager.LayoutParams.MATCH_PARENT, height);
+                container.addView(imageView, 0, layoutParams);
+            } else
             {
-                if (Util.getLCDWidth(mContext) < 720)
-                {
-                    Glide.with(mContext).load(url).override(360, 240).crossFade().into(imageView);
-                } else
-                {
-                    Glide.with(mContext).load(url).crossFade().into(imageView);
-                }
-            }
+                imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+                imageView.setTag(imageView.getId(), position);
 
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
-            container.addView(imageView, layoutParams);
+                Util.requestImageResize(mContext, imageView, Uri.parse(mImageInformationList.get(position).url));
+
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
+                container.addView(imageView, 0, layoutParams);
+            }
         } else
         {
             Util.restartApp(mContext);

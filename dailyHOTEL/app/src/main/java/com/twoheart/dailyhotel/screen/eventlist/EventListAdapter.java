@@ -1,13 +1,12 @@
 package com.twoheart.dailyhotel.screen.eventlist;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.util.Util;
@@ -92,16 +91,10 @@ public class EventListAdapter extends ArrayAdapter<Event>
             view = convertView;
         }
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.eventImageView);
+        com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.eventImageView);
         Event event = getItem(position);
 
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            Glide.with(mContext).load(event.imageUrl).crossFade().override(360, 240).into(imageView);
-        } else
-        {
-            Glide.with(mContext).load(event.imageUrl).crossFade().into(imageView);
-        }
+        Util.requestImageResize(mContext, imageView, Uri.parse(event.imageUrl));
 
         return view;
     }

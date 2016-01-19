@@ -32,6 +32,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -39,6 +45,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.network.DailyOkHttpImagePipelineConfigFactory;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
@@ -50,8 +57,49 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import okhttp3.OkHttpClient;
+
 public class Util implements Constants
 {
+    public static void initializeFresco(Context context)
+    {
+        ImagePipelineConfig imagePipelineConfig;
+
+        if (Util.isOverAPI11() == true && Util.getLCDWidth(context) > 720)
+        {
+            imagePipelineConfig = DailyOkHttpImagePipelineConfigFactory//
+                .newBuilder(context, new OkHttpClient()).build();
+        } else
+        {
+            imagePipelineConfig = DailyOkHttpImagePipelineConfigFactory//
+                .newBuilder(context, new OkHttpClient())//
+                .setBitmapsConfig(Config.RGB_565).build();
+        }
+
+        Fresco.initialize(context, imagePipelineConfig);
+    }
+
+    public static void requestImageResize(Context context, com.facebook.drawee.view.SimpleDraweeView simpleDraweeView, Uri uri)
+    {
+        if (Util.getLCDWidth(context) >= 720)
+        {
+            simpleDraweeView.setImageURI(uri);
+        } else
+        {
+            final int resizeWidth = 360, resizeHeight = 240;
+
+            ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)//
+                .setResizeOptions(new ResizeOptions(resizeWidth, resizeHeight))//
+                .build();
+
+            DraweeController controller = Fresco.newDraweeControllerBuilder()//
+                .setOldController(simpleDraweeView.getController())//
+                .setImageRequest(imageRequest)//
+                .build();
+
+            simpleDraweeView.setController(controller);
+        }
+    }
 
     public static int dpToPx(Context context, double dp)
     {

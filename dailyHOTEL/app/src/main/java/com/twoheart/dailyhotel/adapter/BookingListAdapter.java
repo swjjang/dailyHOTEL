@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.adapter;
 import android.content.Context;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.model.Booking;
@@ -174,15 +174,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         }
 
         // 호텔 이미지
-        ImageView hotelImageView = (ImageView) view.findViewById(R.id.hotelImage);
-
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            Glide.with(mContext).load(booking.hotelImageUrl).crossFade().override(360, 240).into(hotelImageView);
-        } else
-        {
-            Glide.with(mContext).load(booking.hotelImageUrl).crossFade().into(hotelImageView);
-        }
+        com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.hotelImage);
+        Util.requestImageResize(mContext, hotelImageView, Uri.parse(booking.hotelImageUrl));
 
         TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);
         ImageView bookingIconImageView = (ImageView) view.findViewById(R.id.bookingIconImageView);

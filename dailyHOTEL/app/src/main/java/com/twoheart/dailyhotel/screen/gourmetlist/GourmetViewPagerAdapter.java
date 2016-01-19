@@ -2,23 +2,18 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.PlaceViewPagerAdapter;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.io.File;
 import java.text.DecimalFormat;
 
 public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
@@ -34,7 +29,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         final Gourmet gourmet = (Gourmet) place;
 
         View gradientView = view.findViewById(R.id.gradientView);
-        ImageView placeImageView = (ImageView) view.findViewById(R.id.imageView);
+        com.facebook.drawee.view.SimpleDraweeView placeImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
         TextView name = (TextView) view.findViewById(R.id.nameTextView);
         TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
@@ -100,24 +95,6 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
 
         name.setSelected(true); // Android TextView marquee bug
 
-        //        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        //        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
-        //
-        //        PaintDrawable paintDrawable = new PaintDrawable();
-        //        paintDrawable.setShape(new RectShape());
-        //
-        //        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
-        //        {
-        //            @Override
-        //            public Shader resize(int width, int height)
-        //            {
-        //                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-        //            }
-        //        };
-        //
-        //        paintDrawable.setShaderFactory(shaderFactory);
-        //        gradientView.setBackgroundDrawable(paintDrawable);
-
         // grade
         if (Util.isTextEmpty(gourmet.category) == true)
         {
@@ -128,29 +105,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
             grade.setText(gourmet.category);
         }
 
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            Glide.with(mContext).load(gourmet.imageUrl).override(360, 240).into(placeImageView);
-            Glide.with(mContext).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
-            {
-                @Override
-                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
-                {
-                    FileLruCache.getInstance().put(gourmet.imageUrl, resource.getAbsolutePath());
-                }
-            });
-        } else
-        {
-            Glide.with(mContext).load(gourmet.imageUrl).into(placeImageView);
-            Glide.with(mContext).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>()
-            {
-                @Override
-                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
-                {
-                    FileLruCache.getInstance().put(gourmet.imageUrl, resource.getAbsolutePath());
-                }
-            });
-        }
+        Util.requestImageResize(mContext, placeImageView, Uri.parse(gourmet.imageUrl));
 
         closeView.setOnClickListener(new View.OnClickListener()
         {
