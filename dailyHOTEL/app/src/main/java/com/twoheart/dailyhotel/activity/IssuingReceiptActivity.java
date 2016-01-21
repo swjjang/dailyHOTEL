@@ -316,6 +316,7 @@ public class IssuingReceiptActivity extends BaseActivity
             }
         }
     };
+
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
 

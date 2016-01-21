@@ -87,6 +87,9 @@
 
 -keep public class com.twoheart.dailyhotel.network.SerializableHttpCookie { *; }
 
+-keep public class com.mobileapptracker.** { public *; }
+-keep public class com.google.android.gms.ads.identifier.** { *; }
+
 -dontwarn okhttp3.**
 -dontwarn okio.**
 -dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**, org.jboss.netty.**

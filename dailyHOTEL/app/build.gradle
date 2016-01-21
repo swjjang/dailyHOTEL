@@ -30,6 +30,7 @@ android {
         targetSdkVersion 22
         versionCode 78
         versionName "1.7.8"
+        multiDexEnabled true
 
         ndk {
             abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a'
@@ -46,10 +47,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-fresco.pro'
         }
     }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries false
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:23.+'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:gridlayout-v7:23.+'
@@ -60,14 +66,17 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:+'
     compile 'com.google.android.gms:play-services-gcm:+'
     compile 'com.google.android.gms:play-services-appindexing:+'
+    compile 'com.google.android.gms:play-services-ads:+'
+    compile 'com.google.android.gms:play-services-analytics:+'
     compile 'com.squareup.okhttp3:okhttp:3+'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.+'
     compile 'com.squareup.okio:okio:1.+'
     compile 'com.kakao.sdk:kakaolink:1.+'
     compile 'com.kakao.sdk:kakaotalk:1.+'
     compile 'com.facebook.fresco:fresco:0.+'
-    compile "com.facebook.fresco:imagepipeline-okhttp:0.+"
+    compile 'com.facebook.fresco:imagepipeline-okhttp:0.+'
     compile 'io.branch.sdk.android:library:+'
+    compile 'com.android.support:multidex:1.0.0'
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
