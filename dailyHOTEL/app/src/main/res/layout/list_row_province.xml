@@ -9,7 +9,7 @@
         android:id="@+id/provinceImageView"
         android:layout_width="match_parent"
         android:layout_height="101dp"
-        fresco:actualImageScaleType="centerCrop"/>
+        fresco:actualImageScaleType="centerCrop"
         android:background="@color/cd3d3d3"/>
 
     <LinearLayout
@@ -44,4 +44,10 @@
             android:src="@drawable/region_ic_sub_v"
             android:layout_marginTop="7dp"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/selectarea_underline"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

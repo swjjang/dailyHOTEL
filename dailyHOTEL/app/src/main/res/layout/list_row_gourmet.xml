@@ -144,21 +144,6 @@
         android:src="@drawable/ic_d_benefit"
         android:visibility="gone"/>
 
-    <ImageView
-        android:id="@+id/soldoutView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/textView_textColor_shadow_soldout"
-        android:src="@drawable/soldout"
-        android:scaleType="centerInside"
-        android:visibility="gone"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:background="@color/hotel_list_item_underline"/>
-
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/distanceTextView"
         android:layout_width="wrap_content"
@@ -175,4 +160,18 @@
         android:textSize="13dp"
         android:visibility="gone"/>
 
+    <ImageView
+        android:id="@+id/soldoutView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/textView_textColor_shadow_soldout"
+        android:src="@drawable/soldout"
+        android:scaleType="centerInside"
+        android:visibility="gone"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/hotel_list_item_underline"/>
 </RelativeLayout>
