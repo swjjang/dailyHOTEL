@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SatisfactionActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -189,6 +190,8 @@ public class MainActivity extends BaseActivity implements Constants
                 mMainPresenter.requestEvent();
             }
         }
+
+        AnalyticsManager.getInstance(this).onResume(this);
     }
 
     @Override

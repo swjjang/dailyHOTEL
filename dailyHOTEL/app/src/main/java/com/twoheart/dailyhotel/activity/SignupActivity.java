@@ -819,6 +819,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             {
                 String userIndex = String.valueOf(response.getInt("idx"));
 
+                AnalyticsManager.getInstance(SignupActivity.this).recordRegistration(userIndex, mSignupParams.get("email")//
+                    , mSignupParams.get("name"), mSignupParams.get("phone"), "normal");
+
                 regGcmId(userIndex);
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);

@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
     <!-- 혀용하지 않는 퍼미션 -->
     <!-- CONTACTS -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -320,28 +322,38 @@
         -->
         <receiver
             android:name="com.twoheart.dailyhotel.ReferrerBroadcastReceiver"
-            android:exported="true">
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INSTALL_PACKAGES">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER"/>
             </intent-filter>
         </receiver>
 
-        <service android:name="com.google.analytics.tracking.android.CampaignTrackingService"/>
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
 
         <receiver
             android:name=".AlarmBroadcastReceiver"
             android:process=":remote"/>
+
+
         <receiver
-            android:name=".GcmBroadcastReceiver"
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-
-                <category android:name="com.twoheart.dailyhotel"/>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.twoheart.dailyhotel" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".GcmIntentService"/>
+        <service
+            android:name=".gcm.GcmIntentService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="io.fabric.ApiKey"

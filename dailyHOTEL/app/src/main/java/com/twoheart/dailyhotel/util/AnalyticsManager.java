@@ -1,11 +1,18 @@
 package com.twoheart.dailyhotel.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.net.wifi.WifiManager;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.mobileapptracker.MATEvent;
+import com.mobileapptracker.MobileAppTracker;
 
 import java.util.Map;
 
@@ -14,6 +21,9 @@ public class AnalyticsManager
     private static AnalyticsManager mInstance = null;
     private GoogleAnalytics mGoogleAnalytics;
     private Tracker mTracker;
+
+    // Tune
+    private MobileAppTracker mMobileAppTracker;
 
     private AnalyticsManager(Context context)
     {
@@ -29,26 +39,66 @@ public class AnalyticsManager
         return mInstance;
     }
 
-    private void initAnalytics(final Context context)
+    private void initAnalytics(Context context)
     {
         mGoogleAnalytics = GoogleAnalytics.getInstance(context);
-        mTracker = mGoogleAnalytics.getTracker(Constants.GA_PROPERTY_ID);
+        mGoogleAnalytics.setLocalDispatchPeriod(60);
 
-        // Enable Display Features.
-        //        mTracker.enableAdvertisingIdCollection(true);
+        mTracker = mGoogleAnalytics.newTracker(Constants.GA_PROPERTY_ID);
+        mTracker.enableAdvertisingIdCollection(true);
+
+        initTune(context);
+    }
+
+    private void initTune(Context context)
+    {
+        mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), "your_advertiser_ID", "your_conversion_key");
+
+        // 기존 사용자와 구분하기 위한 값
+        if (Util.isTextEmpty(DailyPreference.getInstance(context).getCompanyName()) == false)
+        {
+            mMobileAppTracker.setExistingUser(true);
+        }
+
+        mMobileAppTracker.setAndroidId(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
+
+        String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        mMobileAppTracker.setDeviceId(deviceId);
+
+        try
+        {
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            mMobileAppTracker.setMacAddress(wifiManager.getConnectionInfo().getMacAddress());
+        } catch (NullPointerException e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    public void onResume(Activity activity)
+    {
+        mMobileAppTracker.setReferralSources(activity);
+        mMobileAppTracker.measureSession();
+    }
+
+    public void recordRegistration(String userIndex, String email, String name, String phoneNumber, String userType)
+    {
+        // Tune
+        mMobileAppTracker.setUserId(userIndex);
+        mMobileAppTracker.setUserEmail(email);
+        mMobileAppTracker.setUserName(name);
+        mMobileAppTracker.setPhoneNumber(phoneNumber);
+        mMobileAppTracker.setCurrencyCode("KRW");
+        mMobileAppTracker.measureEvent(MATEvent.REGISTRATION);
     }
 
     public void recordScreen(String screenName)
     {
         try
         {
-            MapBuilder mapBuilder = MapBuilder.createAppView();
-
-            // Set screen name.
-            mapBuilder.set(Fields.SCREEN_NAME, screenName);
-
             // Send a screen view.
-            mTracker.send(mapBuilder.build());
+            mTracker.setScreenName(screenName);
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -59,9 +109,9 @@ public class AnalyticsManager
     {
         try
         {
-            MapBuilder mapBuilder = MapBuilder.createEvent(category, action, label, value);
-
-            mTracker.send(mapBuilder.build());
+            mTracker.send(new HitBuilders.EventBuilder()//
+                .setCategory(category).setAction(action)//
+                .setLabel(label).setValue(value).build());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -72,10 +122,9 @@ public class AnalyticsManager
     {
         try
         {
-            MapBuilder mapBuilder = MapBuilder.createEvent(category, action, label, 0L);
-            mapBuilder.setAll(params);
-
-            mTracker.send(mapBuilder.build());
+            mTracker.send(new HitBuilders.EventBuilder()//
+                .setCategory(category).setAction(action)//
+                .setLabel(label).setAll(params).build());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -86,19 +135,36 @@ public class AnalyticsManager
      * 구매 완료 하였으면 구글 애널래틱스 Ecommerce Tracking 을 위하여 필히 호출한다. 실제 우리 앱의 매출을 자동으로
      * 집계하여 알기위함.
      *
-     * @param trasId    userId+YYMMDDhhmmss
-     * @param pName     호텔명
-     * @param pCategory 호텔 카테고리
-     * @param pPrice    호텔 판매가(적립금을 사용 하는 경우 적립금을 까고 결제하는 금액)
+     * @param transId
+     * @param userIndex
+     * @param roomIndex
+     * @param hotelName
+     * @param category
+     * @param checkInTime
+     * @param checkOutTime
+     * @param payType
+     * @param currentTime
+     * @param price
      */
-
     public void purchaseComplete(String transId, String userIndex, String roomIndex, String hotelName, String category, String checkInTime, String checkOutTime, String payType, String currentTime, double price)
     {
         try
         {
-            mTracker.send(MapBuilder.createTransaction(transId, "DailyHOTEL", price, 0d, 0d, "KRW").set("payType", payType).build());
-            mTracker.send(MapBuilder.createItem(transId, hotelName, "1", category, price, 1L, "KRW").set("roomIndex", roomIndex).set("checkInTime", checkInTime).set("checkOutTime", checkOutTime).set("currentTime", currentTime).build());
-            mTracker.send(MapBuilder.createEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L).build());
+            Product product = new Product().setId(roomIndex).setName(hotelName)//
+                .setCategory(category).setBrand("DAILYHOTEL").setPrice(price).setQuantity(1);
+
+            ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
+                .setTransactionId(transId);
+
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+
+            mTracker.send(screenViewBuilder.build());
+
+
+            //            mTracker.send(MapBuilder.createTransaction(transId, "DailyHOTEL", price, 0d, 0d, "KRW").set("payType", payType).build());
+            //            mTracker.send(MapBuilder.createItem(transId, hotelName, "1", category, price, 1L, "KRW").set("roomIndex", roomIndex).set("checkInTime", checkInTime).set("checkOutTime", checkOutTime).set("currentTime", currentTime).build());
+
+            recordEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

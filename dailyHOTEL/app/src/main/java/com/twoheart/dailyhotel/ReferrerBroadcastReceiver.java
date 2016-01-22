@@ -10,7 +10,7 @@ public class ReferrerBroadcastReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         (new com.google.ads.conversiontracking.InstallReceiver()).onReceive(context, intent);
-        (new com.google.analytics.tracking.android.CampaignTrackingReceiver()).onReceive(context, intent);
+        (new com.google.android.gms.analytics.CampaignTrackingReceiver()).onReceive(context, intent);
         (new io.branch.referral.InstallListener()).onReceive(context, intent);
     }
 }
