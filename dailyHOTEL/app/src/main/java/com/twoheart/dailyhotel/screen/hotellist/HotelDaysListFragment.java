@@ -50,8 +50,6 @@ public class HotelDaysListFragment extends HotelListFragment
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    mSortType = SortType.DEFAULT;
-
                     mSelectedCheckInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
                     mSelectedCheckOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
 

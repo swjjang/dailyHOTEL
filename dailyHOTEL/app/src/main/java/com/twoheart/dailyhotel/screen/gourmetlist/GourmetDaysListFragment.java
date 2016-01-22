@@ -65,8 +65,6 @@ public class GourmetDaysListFragment extends GourmetListFragment
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    mSortType = GourmetListFragment.SortType.DEFAULT;
-
                     mSelectedSaleTime = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECKINDATE);
 
                     if (mOnUserActionListener != null)

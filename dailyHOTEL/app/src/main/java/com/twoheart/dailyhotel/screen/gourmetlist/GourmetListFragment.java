@@ -74,6 +74,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     private VIEW_TYPE mViewType;
     protected boolean mIsSelectionTop;
+    protected boolean mIsSelectionTopBySort;
     protected GourmetMainFragment.OnUserActionListener mOnUserActionListener;
 
     // Sort
@@ -185,14 +186,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
             return;
         }
 
-        mSortType = SortType.DEFAULT;
-
         baseActivity.invalidateOptionsMenu();
     }
 
     public void onPageUnSelected()
     {
-        mSortType = SortType.DEFAULT;
     }
 
     public void onRefreshComplete()
@@ -403,7 +401,15 @@ public class GourmetListFragment extends BaseFragment implements Constants
     public void refreshList(Province province, boolean isSelectionTop)
     {
         mSelectedProvince = province;
-        mIsSelectionTop = isSelectionTop;
+
+        if (mIsSelectionTopBySort == true)
+        {
+            mIsSelectionTop = true;
+            mIsSelectionTopBySort = false;
+        } else
+        {
+            mIsSelectionTop = isSelectionTop;
+        }
 
         Map<String, String> params = new HashMap<>();
         params.put("type", "gourmet");
@@ -483,6 +489,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mPrevSortType = mSortType;
                 mSortType = (SortType) v.getTag();
 
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.selectSortType(mSortType);
+                }
+
                 switch (mSortType)
                 {
                     case DEFAULT:
@@ -557,6 +568,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public void setSortType(SortType sortType)
     {
+        mIsSelectionTopBySort = mSortType != sortType;
         mSortType = sortType;
     }
 
@@ -618,6 +630,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                 mSortType = mPrevSortType;
 
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.selectSortType(mSortType);
+                }
+
                 if (Util.isOverAPI23() == true)
                 {
                     BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -644,6 +661,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
                         public void onClick(View v)
                         {
                             mSortType = mPrevSortType;
+
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.selectSortType(mSortType);
+                            }
                         }
                     }, true);
                 }
@@ -696,6 +718,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     public void onClick(View v)
                     {
                         mSortType = mPrevSortType;
+
+                        if (mOnUserActionListener != null)
+                        {
+                            mOnUserActionListener.selectSortType(mSortType);
+                        }
                     }
                 }, true);
             }

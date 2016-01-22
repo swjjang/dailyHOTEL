@@ -85,6 +85,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     private HotelMainFragment.HOTEL_VIEW_TYPE mHotelViewType;
     protected boolean mIsSelectionTop;
+    protected boolean mIsSelectionTopBySort;
     protected HotelMainFragment.OnUserActionListener mOnUserActionListener;
 
     // Sort
@@ -205,14 +206,11 @@ public class HotelListFragment extends BaseFragment implements Constants
             return;
         }
 
-        mSortType = SortType.DEFAULT;
-
         baseActivity.invalidateOptionsMenu();
     }
 
     public void onPageUnSelected()
     {
-        mSortType = SortType.DEFAULT;
     }
 
     public void onRefreshComplete()
@@ -378,7 +376,15 @@ public class HotelListFragment extends BaseFragment implements Constants
     public void refreshHotelList(Province province, boolean isSelectionTop)
     {
         mSelectedProvince = province;
-        mIsSelectionTop = isSelectionTop;
+
+        if (mIsSelectionTopBySort == true)
+        {
+            mIsSelectionTop = true;
+            mIsSelectionTopBySort = false;
+        } else
+        {
+            mIsSelectionTop = isSelectionTop;
+        }
 
         Map<String, String> params = new HashMap<>();
         params.put("type", "hotel");
@@ -516,6 +522,11 @@ public class HotelListFragment extends BaseFragment implements Constants
                 mPrevSortType = mSortType;
                 mSortType = (SortType) v.getTag();
 
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.selectSortType(mSortType);
+                }
+
                 switch (mSortType)
                 {
                     case DEFAULT:
@@ -571,6 +582,9 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     public void setSortType(SortType sortType)
     {
+        // 기존 타입과 sortType이 다르면
+        mIsSelectionTopBySort = mSortType != sortType;
+
         mSortType = sortType;
     }
 
@@ -610,6 +624,11 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 mSortType = mPrevSortType;
 
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.selectSortType(mSortType);
+                }
+
                 if (Util.isOverAPI23() == true)
                 {
                     BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -636,6 +655,11 @@ public class HotelListFragment extends BaseFragment implements Constants
                         public void onClick(View v)
                         {
                             mSortType = mPrevSortType;
+
+                            if (mOnUserActionListener != null)
+                            {
+                                mOnUserActionListener.selectSortType(mSortType);
+                            }
                         }
                     }, true);
                 }
@@ -688,6 +712,11 @@ public class HotelListFragment extends BaseFragment implements Constants
                     public void onClick(View v)
                     {
                         mSortType = mPrevSortType;
+
+                        if (mOnUserActionListener != null)
+                        {
+                            mOnUserActionListener.selectSortType(mSortType);
+                        }
                     }
                 }, false);
             }
@@ -1190,6 +1219,11 @@ public class HotelListFragment extends BaseFragment implements Constants
                     if (mMyLocation == null && mSortType == SortType.DISTANCE)
                     {
                         mSortType = SortType.DEFAULT;
+
+                        if (mOnUserActionListener != null)
+                        {
+                            mOnUserActionListener.selectSortType(mSortType);
+                        }
                     }
 
                     ArrayList<PlaceViewItem> hotelListViewItemList = makeSortHotelList(hotelList, mSortType);

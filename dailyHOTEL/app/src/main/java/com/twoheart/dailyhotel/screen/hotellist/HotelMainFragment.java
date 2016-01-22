@@ -90,6 +90,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         void toggleViewType();
 
+        void selectSortType(SortType sortType);
+
         void onClickActionBarArea();
 
         void setMapViewVisible(boolean isVisible);
@@ -315,25 +317,24 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 mDontReloadAtOnResume = true;
 
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data != null)
+                    mOnUserActionListener.selectSortType(SortType.DEFAULT);
+
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
                     {
-                        if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
-                        {
-                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-                            setNavigationItemSelected(province);
+                        setNavigationItemSelected(province);
 
-                            mOnUserActionListener.refreshAll(true);
-                        } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
-                        {
-                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
+                        mOnUserActionListener.refreshAll(true);
+                    } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
+                    {
+                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
-                            setNavigationItemSelected(province);
+                        setNavigationItemSelected(province);
 
-                            mOnUserActionListener.refreshAll(true);
-                        }
+                        mOnUserActionListener.refreshAll(true);
                     }
                 }
 
@@ -492,8 +493,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (isSelectionTop == true)
         {
-            hotelListFragment.setSortType(HotelListFragment.SortType.DEFAULT);
-
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.invalidateOptionsMenu();
         }
@@ -859,6 +858,15 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             unLockUI();
+        }
+
+        @Override
+        public void selectSortType(SortType sortType)
+        {
+            for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
+            {
+                hotelListFragment.setSortType(sortType);
+            }
         }
 
         @Override

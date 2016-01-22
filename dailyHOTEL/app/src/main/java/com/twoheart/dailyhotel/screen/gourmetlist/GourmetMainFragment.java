@@ -78,7 +78,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         void toggleViewType();
 
-        void showSortDialogView();
+        void selectSortType(SortType sortType);
 
         void onClickActionBarArea();
 
@@ -305,8 +305,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         if (isSelectionTop == true)
         {
-            gourmetListFragment.setSortType(GourmetListFragment.SortType.DEFAULT);
-
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.invalidateOptionsMenu();
         }
@@ -345,25 +343,24 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             {
                 mDontReloadAtOnResume = true;
 
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data != null)
+                    mOnGourmetUserActionListener.selectSortType(SortType.DEFAULT);
+
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
                     {
-                        if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
-                        {
-                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-                            setNavigationItemSelected(province);
+                        setNavigationItemSelected(province);
 
-                            refreshAll();
-                        } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
-                        {
-                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
+                        refreshAll();
+                    } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
+                    {
+                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
-                            setNavigationItemSelected(province);
+                        setNavigationItemSelected(province);
 
-                            refreshAll();
-                        }
+                        refreshAll();
                     }
                 }
 
@@ -819,10 +816,12 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         }
 
         @Override
-        public void showSortDialogView()
+        public void selectSortType(SortType sortType)
         {
-            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-            currentFragment.showSortDialogView();
+            for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
+            {
+                placeListFragment.setSortType(sortType);
+            }
         }
 
         @Override
