@@ -42,9 +42,9 @@ public class AnalyticsManager
     private void initAnalytics(Context context)
     {
         mGoogleAnalytics = GoogleAnalytics.getInstance(context);
-        mTracker = mGoogleAnalytics.newTracker(Constants.GA_PROPERTY_ID);
+        mGoogleAnalytics.setLocalDispatchPeriod(60);
 
-        // Enable Display Features.
+        mTracker = mGoogleAnalytics.newTracker(Constants.GA_PROPERTY_ID);
         mTracker.enableAdvertisingIdCollection(true);
 
         initTune(context);
@@ -55,7 +55,7 @@ public class AnalyticsManager
         mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), "your_advertiser_ID", "your_conversion_key");
 
         // 기존 사용자와 구분하기 위한 값
-        if(Util.isTextEmpty(DailyPreference.getInstance(context).getCompanyName()) == false)
+        if (Util.isTextEmpty(DailyPreference.getInstance(context).getCompanyName()) == false)
         {
             mMobileAppTracker.setExistingUser(true);
         }
@@ -81,9 +81,10 @@ public class AnalyticsManager
         mMobileAppTracker.measureSession();
     }
 
-    public void recordRegistration(String email, String name, String phoneNumber, String userType)
+    public void recordRegistration(String userIndex, String email, String name, String phoneNumber, String userType)
     {
         // Tune
+        mMobileAppTracker.setUserId(userIndex);
         mMobileAppTracker.setUserEmail(email);
         mMobileAppTracker.setUserName(name);
         mMobileAppTracker.setPhoneNumber(phoneNumber);
@@ -158,7 +159,6 @@ public class AnalyticsManager
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
 
             mTracker.send(screenViewBuilder.build());
-
 
 
             //            mTracker.send(MapBuilder.createTransaction(transId, "DailyHOTEL", price, 0d, 0d, "KRW").set("payType", payType).build());

@@ -819,6 +819,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             {
                 String userIndex = String.valueOf(response.getInt("idx"));
 
+                AnalyticsManager.getInstance(SignupActivity.this).recordRegistration(userIndex, mSignupParams.get("email")//
+                    , mSignupParams.get("name"), mSignupParams.get("phone"), "normal");
+
                 regGcmId(userIndex);
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
@@ -908,9 +911,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         params.put("social_id", "0");
                         params.put("user_type", "normal");
                         params.put("is_auto", "true");
-
-                        AnalyticsManager.getInstance(SignupActivity.this).recordRegistration(mSignupParams.get("email")//
-                            , mSignupParams.get("name"), mSignupParams.get("phone"),"normal");
 
                         DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, SignupActivity.this);
                         return;

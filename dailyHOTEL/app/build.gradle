@@ -1,5 +1,9 @@
+apply plugin: 'com.android.application'
+
+
 buildscript {
     repositories {
+        jcenter()
         maven { url 'https://maven.fabric.io/public' }
     }
 
@@ -7,13 +11,12 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
-apply plugin: 'com.android.application'
+
 apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
-
 
 android {
     compileSdkVersion 23
@@ -33,7 +36,7 @@ android {
         multiDexEnabled true
 
         resConfigs "ko"
-        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
+//        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
     }
     buildTypes {
         release {
@@ -51,19 +54,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:23.+'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:gridlayout-v7:23.+'
     compile 'com.android.support:design:23.+'
-    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
-    compile 'com.google.android.gms:play-services-base:+'
-    compile 'com.google.android.gms:play-services-maps:+'
-    compile 'com.google.android.gms:play-services-location:+'
-    compile 'com.google.android.gms:play-services-gcm:+'
-    compile 'com.google.android.gms:play-services-appindexing:+'
-    compile 'com.google.android.gms:play-services-ads:+'
-    compile 'com.google.android.gms:play-services-analytics:+'
     compile 'com.squareup.okhttp3:okhttp:3+'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.+'
     compile 'com.squareup.okio:okio:1.+'
@@ -79,4 +74,15 @@ dependencies {
         transitive = true;
     }
     compile files('libs/MobileAppTracker.jar')
+
+    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
+    compile 'com.google.android.gms:play-services-base:8.4.0'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.android.gms:play-services-analytics:8.4.0'
 }
+
+apply plugin: 'com.google.gms.google-services'

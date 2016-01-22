@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.gcm;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -21,6 +21,8 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.twoheart.dailyhotel.LauncherActivity;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
 import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.model.Pay;
