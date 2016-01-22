@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
     <!-- 혀용하지 않는 퍼미션 -->
     <!-- CONTACTS -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -320,13 +322,15 @@
         -->
         <receiver
             android:name="com.twoheart.dailyhotel.ReferrerBroadcastReceiver"
-            android:exported="true">
+            android:enabled="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER"/>
             </intent-filter>
         </receiver>
 
-        <service android:name="com.google.analytics.tracking.android.CampaignTrackingService"/>
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService"
+                 android:enabled="true"
+                 android:exported="false"/>
 
         <receiver
             android:name=".AlarmBroadcastReceiver"

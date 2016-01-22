@@ -909,6 +909,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         params.put("user_type", "normal");
                         params.put("is_auto", "true");
 
+                        AnalyticsManager.getInstance(SignupActivity.this).recordRegistration(mSignupParams.get("email")//
+                            , mSignupParams.get("name"), mSignupParams.get("phone"),"normal");
+
                         DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, SignupActivity.this);
                         return;
                     }
