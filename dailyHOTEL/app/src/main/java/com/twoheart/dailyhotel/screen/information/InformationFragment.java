@@ -226,8 +226,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         lockUI();
         BaseActivity baseActivity = (BaseActivity) getActivity();
         DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
-
-        updateNewIconView(baseActivity);
     }
 
     @Override
@@ -453,6 +451,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                         mEventLayout.performClick();
                     }
                 }
+
+                updateNewIconView(baseActivity);
             } catch (Exception e)
             {
                 onError(e);
