@@ -103,7 +103,7 @@ public class DailyToolbarLayout
         View menu1 = mToolbar.findViewById(R.id.menu1View);
         View menu2 = mToolbar.findViewById(R.id.menu2View);
 
-        if(menu1 == null || menu2 == null)
+        if (menu1 == null || menu2 == null)
         {
             Util.restartApp(mAppCompatActivity);
             return;
@@ -125,7 +125,7 @@ public class DailyToolbarLayout
         View menu1 = mToolbar.findViewById(R.id.menu1View);
         View menu2 = mToolbar.findViewById(R.id.menu2View);
 
-        if(menu1 == null || menu2 == null)
+        if (menu1 == null || menu2 == null)
         {
             Util.restartApp(mAppCompatActivity);
             return;
@@ -155,7 +155,7 @@ public class DailyToolbarLayout
         ImageView menu1 = (ImageView) mToolbar.findViewById(R.id.menu1View);
         ImageView menu2 = (ImageView) mToolbar.findViewById(R.id.menu2View);
 
-        if(menu1 == null || menu2 == null)
+        if (menu1 == null || menu2 == null)
         {
             Util.restartApp(mAppCompatActivity);
             return;

@@ -1,7 +1,8 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.util.Constants;
@@ -82,7 +85,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         {
             View view;
 
-            final String url = getItem(position).url;
+            String url = getItem(position).url;
             String description = getItem(position).description;
 
             if (convertView == null)
@@ -95,7 +98,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             }
 
             TextView textView = (TextView) view.findViewById(R.id.descriptionTextView);
-            final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+            final com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
 
             if (Util.isTextEmpty(description) == false)
             {
@@ -106,59 +109,41 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 textView.setVisibility(View.INVISIBLE);
             }
 
-            imageView.setImageBitmap(null);
-
-            if (Util.getLCDWidth(ImageDetailListActivity.this) < 720)
+            DraweeController controller;
+            BaseControllerListener baseControllerListener = new BaseControllerListener<ImageInfo>()
             {
-                Glide.with(ImageDetailListActivity.this).load(url).asBitmap().override(360, 240).listener(new RequestListener<String, Bitmap>()
+                @Override
+                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
                 {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource)
+                    if (imageInfo == null)
                     {
-                        imageView.setImageBitmap(null);
-                        return false;
+                        return;
                     }
 
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource)
-                    {
-                        return false;
-                    }
-                }).into(new SimpleTarget<Bitmap>()
-                {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation)
-                    {
-                        setImageViewHeight(imageView, resource.getWidth(), resource.getHeight());
-                        imageView.setImageBitmap(resource);
-                    }
-                });
+                    setImageViewHeight(imageView, imageInfo.getWidth(), imageInfo.getHeight());
+                }
+            };
+
+            if (Util.getLCDWidth(getContext()) >= 720)
+            {
+                controller = Fresco.newDraweeControllerBuilder()//
+                    .setControllerListener(baseControllerListener)//
+                    .setUri(Uri.parse(url)).build();
             } else
             {
-                Glide.with(ImageDetailListActivity.this).load(url).asBitmap().listener(new RequestListener<String, Bitmap>()
-                {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource)
-                    {
-                        imageView.setImageBitmap(null);
-                        return false;
-                    }
+                final int resizeWidth = 360, resizeHeight = 240;
 
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource)
-                    {
-                        return false;
-                    }
-                }).into(new SimpleTarget<Bitmap>()
-                {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation)
-                    {
-                        setImageViewHeight(imageView, resource.getWidth(), resource.getHeight());
-                        imageView.setImageBitmap(resource);
-                    }
-                });
+                ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))//
+                    .setResizeOptions(new ResizeOptions(resizeWidth, resizeHeight))//
+                    .build();
+
+                controller = Fresco.newDraweeControllerBuilder()//
+                    .setOldController(imageView.getController())//
+                    .setImageRequest(imageRequest)//
+                    .setControllerListener(baseControllerListener).build();
             }
+
+            imageView.setController(controller);
 
             return view;
         }

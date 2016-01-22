@@ -195,7 +195,7 @@ public class GcmIntentService extends IntentService implements Constants
                 ComponentName topActivity = am.getRunningTasks(1).get(0).topActivity;
                 String className = topActivity.getClassName();
 
-                if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity") && !mIsBadge)
+                if (className.contains("dailyhotel") && !className.contains("PushLockDialogActivity") && !mIsBadge)
                 {
                     Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -347,7 +347,10 @@ public class GcmIntentService extends IntentService implements Constants
                 connection.setDoInput(true);
                 connection.connect();
                 inputStream = connection.getInputStream();
-                return BitmapFactory.decodeStream(inputStream);
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                return BitmapFactory.decodeStream(inputStream, null, options);
 
             } catch (Exception e)
             {
@@ -364,26 +367,7 @@ public class GcmIntentService extends IntentService implements Constants
             {
                 try
                 {
-                    Notification.Builder builder = new Notification.Builder(GcmIntentService.this)//
-                        .setContentTitle(mTitle).setContentText(mMessage).setSound(mUri) //
-                        .setTicker(mTitle) //
-                        .setAutoCancel(true) //
-                        .setSmallIcon(R.drawable.icon_noti_small)//
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big));
-
-                    if (Util.isOverAPI21() == true)
-                    {
-                        builder.setColor(getResources().getColor(R.color.dh_theme_color));
-                    }
-
-                    if (bitmap != null)
-                    {
-                        builder.setStyle(new Notification.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
-                    }
-
-                    builder.setContentIntent(mPendingIntent);
-                    builder.setPriority(Notification.PRIORITY_MAX);
-                    mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+                    notificationBuilder(bitmap);
                 } catch (Exception e)
                 {
                     notifyCompatBuilder(bitmap);
@@ -394,9 +378,39 @@ public class GcmIntentService extends IntentService implements Constants
             }
         }
 
+        private void notificationBuilder(Bitmap bitmap)
+        {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+            Notification.Builder builder = new Notification.Builder(GcmIntentService.this)//
+                .setContentTitle(mTitle).setContentText(mMessage).setSound(mUri) //
+                .setTicker(mTitle) //
+                .setAutoCancel(true) //
+                .setSmallIcon(R.drawable.icon_noti_small)//
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big, options));
+
+            if (Util.isOverAPI21() == true)
+            {
+                builder.setColor(getResources().getColor(R.color.dh_theme_color));
+            }
+
+            if (bitmap != null)
+            {
+                builder.setStyle(new Notification.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
+            }
+
+            builder.setContentIntent(mPendingIntent);
+            builder.setPriority(Notification.PRIORITY_MAX);
+            mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+        }
+
         private void notifyCompatBuilder(Bitmap bitmap)
         {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(GcmIntentService.this);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
 
             builder.setContentTitle(mTitle) //
                 .setContentText(mMessage) //
@@ -404,7 +418,7 @@ public class GcmIntentService extends IntentService implements Constants
                 .setSound(mUri) //
                 .setAutoCancel(true) //
                 .setSmallIcon(R.drawable.icon_noti_small) //
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)) //
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big, options)) //
                 .setColor(getResources().getColor(R.color.dh_theme_color));
 
             if (bitmap != null)
@@ -414,6 +428,7 @@ public class GcmIntentService extends IntentService implements Constants
 
             builder.setContentIntent(mPendingIntent);
             builder.setPriority(NotificationCompat.PRIORITY_MAX);
+
             mNotificationManager.notify(NOTIFICATION_ID, builder.build());
         }
     }

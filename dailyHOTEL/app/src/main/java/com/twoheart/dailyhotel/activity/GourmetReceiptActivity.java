@@ -44,11 +44,11 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
         registerationTextView.setText(reservationIndex);
 
-        // 호텔명
+        // 이름
         TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
         hotelNameTextView.setText(placeName);
 
-        // 호텔주소
+        // 주소
         TextView hotelAddressTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView5);
         hotelAddressTextView.setText(placeAddress);
 

@@ -36,7 +36,26 @@ public class DailyCountryCodeTextView extends AppCompatTextView
 
     private void setFontStyle(Context context, AttributeSet attrs)
     {
-        int fontStyle = context.obtainStyledAttributes(attrs, R.styleable.dailyFont).getInt(R.styleable.dailyFont_style, -1);
+        int fontStyle = 3;
+
+        Typeface typeface = getTypeface();
+        boolean isBold = false;
+
+        if (typeface != null)
+        {
+            isBold = getTypeface().isBold();
+
+            if (isBold == true)
+            {
+                fontStyle = 0;
+            } else
+            {
+                if (attrs != null)
+                {
+                    fontStyle = context.obtainStyledAttributes(attrs, R.styleable.dailyFont).getInt(R.styleable.dailyFont_style, 3);
+                }
+            }
+        }
 
         //		 <attr name="fontStyle" >
         //	        <enum name="Black" value="0" />

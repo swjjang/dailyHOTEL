@@ -110,11 +110,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.SplashActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".screen.hoteldetail.HotelDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
@@ -324,7 +319,7 @@
          installation campaign reporting
         -->
         <receiver
-            android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver"
+            android:name="com.twoheart.dailyhotel.ReferrerBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER"/>
@@ -353,34 +348,7 @@
             android:value="bd223ac8e751f29e89aacd6487b47df88384f04e"/>
 
         <meta-data
-            android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
-            android:value="GlideModule"/>
-
-        <meta-data
-            android:name="com.twoheart.dailyhotel.util.DailyGlideModule"
-            android:value="GlideModule"/>
-
-        <receiver
-            android:name="io.branch.referral.InstallListener"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
-            </intent-filter>
-        </receiver>
-
-        <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt"/>
-
-        <!-- Google adwords -->
-
-        <receiver
-            android:name="com.google.ads.conversiontracking.InstallReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
-            </intent-filter>
-        </receiver>
     </application>
-
 </manifest>

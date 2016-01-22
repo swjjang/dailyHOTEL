@@ -82,21 +82,15 @@
 -keep class com.google.android.** { *; }
 -keep interface com.google.android.** { *; }
 
--keep class com.squareup.okhttp.** { *; }
--keep interface com.squareup.okhttp.** { *; }
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
 
 -keep public class com.twoheart.dailyhotel.network.SerializableHttpCookie { *; }
 
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-    **[] $VALUES;
-    public *;
-}
+-keep public class com.mobileapptracker.** { public *; }
+-keep public class com.google.android.gms.ads.identifier.** { *; }
 
--keep class com.bumptech.glide.integration.okhttp.OkHttpGlideModule
-
-
--dontwarn com.squareup.**
+-dontwarn okhttp3.**
 -dontwarn okio.**
 -dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**, org.jboss.netty.**
 -dontwarn org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**, com.crashlytics.**

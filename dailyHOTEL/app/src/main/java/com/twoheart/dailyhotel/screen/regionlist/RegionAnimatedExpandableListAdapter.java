@@ -1,13 +1,13 @@
 package com.twoheart.dailyhotel.screen.regionlist;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -113,7 +113,7 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             areaTextView1.setText(area[0].name);
             areaSubTextView1.setText(area[0].tag);
 
-            if(Util.isTextEmpty(area[0].tag) == false)
+            if (Util.isTextEmpty(area[0].tag) == false)
             {
                 areaSubTextView1.setVisibility(View.VISIBLE);
             } else
@@ -131,7 +131,7 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
             areaTextView2.setText(area[1].name);
             areaSubTextView2.setText(area[1].tag);
 
-            if(Util.isTextEmpty(area[1].tag) == false)
+            if (Util.isTextEmpty(area[1].tag) == false)
             {
                 areaSubTextView2.setVisibility(View.VISIBLE);
             } else
@@ -210,12 +210,12 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         convertView.setTag(parent.getId(), R.layout.list_row_province);
         convertView.setTag(groupPosition);
 
-        ImageView provinceImageView = (ImageView) convertView.findViewById(R.id.provinceImageView);
+        com.facebook.drawee.view.SimpleDraweeView provinceImageView = (com.facebook.drawee.view.SimpleDraweeView) convertView.findViewById(R.id.provinceImageView);
         ImageView arrowImageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
         TextView englishTextView = (TextView) convertView.findViewById(R.id.provinceEnglishTextView);
 
-        Glide.with(mContext).load(province.imageUrl).crossFade().into(provinceImageView);
+        provinceImageView.setImageURI(Uri.parse(province.imageUrl));
 
         textView.setText(getInsertSpaceName(province.name));
         englishTextView.setText(getInsertSpaceName(province.englishName));

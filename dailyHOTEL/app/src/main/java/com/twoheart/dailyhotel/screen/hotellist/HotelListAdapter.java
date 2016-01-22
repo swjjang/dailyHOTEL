@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -10,25 +11,19 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -274,31 +269,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         holder.hotelGradeView.setText(hotel.getCategory().getName(mContext));
         holder.hotelGradeView.setBackgroundResource(hotel.getCategory().getColorResId());
 
-        final ImageView placeImageView = holder.hotelImageView;
-
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            Glide.with(mContext).load(hotel.imageUrl).crossFade().into(placeImageView);
-            Glide.with(mContext).load(hotel.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
-            {
-                @Override
-                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
-                {
-                    FileLruCache.getInstance().put(hotel.imageUrl, resource.getAbsolutePath());
-                }
-            });
-        } else
-        {
-            Glide.with(mContext).load(hotel.imageUrl).crossFade().into(placeImageView);
-            Glide.with(mContext).load(hotel.imageUrl).downloadOnly(new SimpleTarget<File>()
-            {
-                @Override
-                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
-                {
-                    FileLruCache.getInstance().put(hotel.imageUrl, resource.getAbsolutePath());
-                }
-            });
-        }
+        Util.requestImageResize(mContext, holder.hotelImageView, Uri.parse(hotel.imageUrl));
 
         int availableRoomCount = hotel.getAvailableRoom();
 
@@ -332,7 +303,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
     private class HoltelViewHolder extends RecyclerView.ViewHolder
     {
         View gradientView;
-        ImageView hotelImageView;
+        com.facebook.drawee.view.SimpleDraweeView hotelImageView;
         TextView hotelNameView;
         TextView hotelPriceView;
         TextView hotelDiscountView;
@@ -349,7 +320,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             super(itemView);
 
             gradientView = itemView.findViewById(R.id.gradientView);
-            hotelImageView = (ImageView) itemView.findViewById(R.id.imageView);
+            hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);
             hotelPriceView = (TextView) itemView.findViewById(R.id.priceTextView);
             satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);

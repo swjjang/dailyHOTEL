@@ -34,7 +34,7 @@ import java.util.Locale;
 
 import io.branch.referral.Branch;
 
-public class DailyHotel extends Application implements Constants
+public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
     private static volatile DailyHotel mInstance = null;
     private static volatile Activity mCurrentActivity = null;
@@ -45,7 +45,7 @@ public class DailyHotel extends Application implements Constants
     {
         super.onCreate();
 
-        io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
+//        io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
 
         if (Util.isOverAPI14() == true)
         {

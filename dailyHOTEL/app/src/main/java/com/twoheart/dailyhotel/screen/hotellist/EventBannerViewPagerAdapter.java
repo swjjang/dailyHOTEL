@@ -1,13 +1,12 @@
 package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.model.EventBanner;
 
 import java.util.ArrayList;
@@ -40,14 +39,14 @@ public class EventBannerViewPagerAdapter extends PagerAdapter
             return null;
         }
 
-        final ImageView imageView = new ImageView(mContext);
-        imageView.setScaleType(ScaleType.CENTER_CROP);
+        com.facebook.drawee.view.SimpleDraweeView imageView = new com.facebook.drawee.view.SimpleDraweeView(mContext);
+        imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
         imageView.setTag(imageView.getId(), position);
 
         if (mEventBannerList.size() > position)
         {
             String url = mEventBannerList.get(position).imageUrl;
-            Glide.with(mContext).load(url).crossFade().into(imageView);
+            imageView.setImageURI(Uri.parse(url));
         }
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

@@ -17,7 +17,6 @@ import java.util.TimeZone;
 
 public class KakaoLinkManager implements Constants
 {
-    private static final String TAG = "KakaloLinkManager";
     private KakaoLink kkLink;
     private KakaoTalkLinkMessageBuilder kkMsgBuilder;
     private Context mContext;
@@ -54,19 +53,20 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareHotel(String name, String hotelName, String address, int hotelIndex, String imageUrl, long dailyTime, int dailyDayOfDays, int nights)
+    public void shareHotel(String name, String hotelName, String address, int hotelIndex, String imageUrl, SaleTime checkInSaleTime, int nights)
     {
         try
         {
-            String schemeParams = String.format("hotelIndex=%d&dailyTime=%d&dailyDayOfDays=%d&nights=%d", hotelIndex, dailyTime, dailyDayOfDays, nights);
+            String date = checkInSaleTime.getDailyDateFormat("yyyyMMdd");
+            String schemeParams = String.format("view=hotel&idx=%d&date=%s&nights=%d", hotelIndex, date, nights);
 
             kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-            Date checkInDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * dailyDayOfDays);
-            Date chekcOutDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * (dailyDayOfDays + nights));
+            Date checkInDate = checkInSaleTime.getDayOfDaysHotelDate();
+            Date chekcOutDate = new Date(checkInSaleTime.getDayOfDaysHotelDate().getTime() + SaleTime.MILLISECOND_IN_A_DAY * nights);
 
             String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
                 , simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate)//
@@ -86,18 +86,19 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareGourmet(String name, String planceName, String address, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
+    public void shareGourmet(String name, String planceName, String address, int index, String imageUrl, SaleTime saleTime)
     {
         try
         {
-            String schemeParams = String.format("fnbIndex=%d&dailyTime=%d&dailyDayOfDays=%d&nights=%d", index, dailyTime, dailyDayOfDays, 0);
+            String date = saleTime.getDailyDateFormat("yyyyMMdd");
+            String schemeParams = String.format("view=gourmet&idx=%d&date=%s&nights=1", index, date);
 
             kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-            Date checkInDate = new Date(dailyTime + SaleTime.MILLISECOND_IN_A_DAY * dailyDayOfDays);
+            Date checkInDate = saleTime.getDayOfDaysHotelDate();
 
             String text = mContext.getString(R.string.kakao_btn_share_fnb, name, planceName//
                 , simpleDateFormat.format(checkInDate), address);

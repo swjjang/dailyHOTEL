@@ -530,11 +530,17 @@ public abstract class TicketPaymentActivity extends BaseActivity
     {
         hidePorgressDialog();
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.dialog_msg_processing_payment));
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
+        try
+        {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.dialog_msg_processing_payment));
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     protected void hidePorgressDialog()

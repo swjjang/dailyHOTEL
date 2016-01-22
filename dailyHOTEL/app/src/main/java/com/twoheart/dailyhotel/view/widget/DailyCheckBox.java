@@ -35,16 +35,22 @@ public class DailyCheckBox extends AppCompatCheckBox
     {
         int fontStyle = 3;
 
-        boolean isBold = getTypeface().isBold();
+        Typeface typeface = getTypeface();
+        boolean isBold = false;
 
-        if (isBold == true)
+        if (typeface != null)
         {
-            fontStyle = 0;
-        } else
-        {
-            if (attrs != null)
+            isBold = getTypeface().isBold();
+
+            if (isBold == true)
             {
-                fontStyle = context.obtainStyledAttributes(attrs, R.styleable.dailyFont).getInt(R.styleable.dailyFont_style, 3);
+                fontStyle = 0;
+            } else
+            {
+                if (attrs != null)
+                {
+                    fontStyle = context.obtainStyledAttributes(attrs, R.styleable.dailyFont).getInt(R.styleable.dailyFont_style, 3);
+                }
             }
         }
 

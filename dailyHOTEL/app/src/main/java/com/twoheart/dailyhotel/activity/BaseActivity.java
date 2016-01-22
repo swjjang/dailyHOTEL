@@ -305,12 +305,16 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             mDialog = null;
         }
 
-        try
+        // MainActivity에서 종료시 이슈가 있어 MainActivity에서는 작동하지 않도록 수정
+        if (this instanceof MainActivity == false)
         {
-            recursiveRecycle(getWindow().getDecorView());
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
+            try
+            {
+                recursiveRecycle(getWindow().getDecorView());
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         super.onDestroy();

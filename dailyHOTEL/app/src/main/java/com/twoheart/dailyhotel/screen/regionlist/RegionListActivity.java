@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
@@ -81,6 +82,12 @@ public class RegionListActivity extends BaseActivity
         mType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
+        if (mType == null || mSelectedProvince == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         // 국내로 시작하는지 헤외로 시작하는지
         // 고메인 경우에는 해외 지역이 없기 때문에 기존과 동일하게?
 
@@ -89,6 +96,11 @@ public class RegionListActivity extends BaseActivity
 
     private void initLayout(PlaceMainFragment.TYPE type, Province province)
     {
+        if (mType == null || mSelectedProvince == null)
+        {
+            return;
+        }
+
         setContentView(R.layout.activity_region_list);
 
         initToolbar();
@@ -96,7 +108,7 @@ public class RegionListActivity extends BaseActivity
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        switch (mType)
+        switch (type)
         {
             case HOTEL:
             {
@@ -106,12 +118,12 @@ public class RegionListActivity extends BaseActivity
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(HOTEL_TAB_COUNT);
 
                 RegionListFragment regionListFragment01 = new RegionListFragment();
-                regionListFragment01.setInformation(mType, Region.DOMESTIC, mSelectedProvince.isOverseas ? null : mSelectedProvince);
+                regionListFragment01.setInformation(type, Region.DOMESTIC, province.isOverseas ? null : province);
                 regionListFragment01.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment01);
 
                 RegionListFragment regionListFragment02 = new RegionListFragment();
-                regionListFragment02.setInformation(mType, Region.GLOBAL, mSelectedProvince.isOverseas ? mSelectedProvince : null);
+                regionListFragment02.setInformation(type, Region.GLOBAL, province.isOverseas ? province : null);
                 regionListFragment02.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment02);
 
@@ -133,7 +145,7 @@ public class RegionListActivity extends BaseActivity
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(GOURMET_TAB_COUNT);
 
                 RegionListFragment regionListFragment01 = new RegionListFragment();
-                regionListFragment01.setInformation(mType, Region.DOMESTIC, mSelectedProvince.isOverseas ? null : mSelectedProvince);
+                regionListFragment01.setInformation(type, Region.DOMESTIC, province.isOverseas ? null : province);
                 regionListFragment01.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment01);
 

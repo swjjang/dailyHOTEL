@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="202dp">
 
@@ -10,12 +11,12 @@
         android:src="@drawable/img_placeholder"
         android:scaleType="centerCrop"/>
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="202dp"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"/>
+        fresco:actualImageScaleType="centerCrop"/>
 
     <View
         android:id="@+id/gradientView"
@@ -145,21 +146,6 @@
         android:src="@drawable/ic_d_benefit"
         android:visibility="gone"/>
 
-    <ImageView
-        android:id="@+id/soldoutView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/textView_textColor_shadow_soldout"
-        android:src="@drawable/soldout"
-        android:scaleType="centerInside"
-        android:visibility="gone"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:background="@color/hotel_list_item_underline"/>
-
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/distanceTextView"
         android:layout_width="wrap_content"
@@ -176,4 +162,18 @@
         android:textSize="13dp"
         android:visibility="gone"/>
 
+    <ImageView
+        android:id="@+id/soldoutView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/textView_textColor_shadow_soldout"
+        android:src="@drawable/soldout"
+        android:scaleType="centerInside"
+        android:visibility="gone"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/hotel_list_item_underline"/>
 </RelativeLayout>

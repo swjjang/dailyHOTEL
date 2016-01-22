@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -10,12 +11,8 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.model.EventBanner;
@@ -23,13 +20,11 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.screen.hotellist.EventBannerViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.FileLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -283,31 +278,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             holder.gradeView.setText(gourmet.category);
         }
 
-        final ImageView placeImageView = holder.gourmetImageView;
-
-        if (Util.getLCDWidth(mContext) < 720)
-        {
-            Glide.with(mContext).load(gourmet.imageUrl).crossFade().into(placeImageView);
-            Glide.with(mContext).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>(360, 240)
-            {
-                @Override
-                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
-                {
-                    FileLruCache.getInstance().put(gourmet.imageUrl, resource.getAbsolutePath());
-                }
-            });
-        } else
-        {
-            Glide.with(mContext).load(gourmet.imageUrl).crossFade().into(placeImageView);
-            Glide.with(mContext).load(gourmet.imageUrl).downloadOnly(new SimpleTarget<File>()
-            {
-                @Override
-                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation)
-                {
-                    FileLruCache.getInstance().put(gourmet.imageUrl, resource.getAbsolutePath());
-                }
-            });
-        }
+        Util.requestImageResize(mContext, holder.gourmetImageView, Uri.parse(gourmet.imageUrl));
 
         // SOLD OUT 표시
         if (gourmet.isSoldOut)
@@ -331,7 +302,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
     private class GourmetViewHolder extends RecyclerView.ViewHolder
     {
         View gradientView;
-        ImageView gourmetImageView;
+        com.facebook.drawee.view.SimpleDraweeView gourmetImageView;
         TextView nameView;
         TextView priceView;
         TextView discountView;
@@ -347,7 +318,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             super(itemView);
 
             gradientView = itemView.findViewById(R.id.gradientView);
-            gourmetImageView = (ImageView) itemView.findViewById(R.id.imageView);
+            gourmetImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             nameView = (TextView) itemView.findViewById(R.id.nameTextView);
             priceView = (TextView) itemView.findViewById(R.id.priceTextView);
             satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);
