@@ -269,7 +269,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         holder.hotelGradeView.setText(hotel.getCategory().getName(mContext));
         holder.hotelGradeView.setBackgroundResource(hotel.getCategory().getColorResId());
 
-        Util.requestImageResize(mContext, holder.hotelImageView, Uri.parse(hotel.imageUrl));
+        Util.requestImageResize(mContext, holder.hotelImageView, hotel.imageUrl);
 
         int availableRoomCount = hotel.getAvailableRoom();
 

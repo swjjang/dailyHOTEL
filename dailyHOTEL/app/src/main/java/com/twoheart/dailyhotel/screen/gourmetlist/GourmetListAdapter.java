@@ -278,7 +278,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             holder.gradeView.setText(gourmet.category);
         }
 
-        Util.requestImageResize(mContext, holder.gourmetImageView, Uri.parse(gourmet.imageUrl));
+        Util.requestImageResize(mContext, holder.gourmetImageView, gourmet.imageUrl);
 
         // SOLD OUT 표시
         if (gourmet.isSoldOut)

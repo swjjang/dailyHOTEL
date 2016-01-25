@@ -146,7 +146,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         grade.setText(hotel.getCategory().getName(mContext));
         grade.setBackgroundResource(hotel.getCategory().getColorResId());
 
-        Util.requestImageResize(mContext, hotelImageView, Uri.parse(hotel.imageUrl));
+        Util.requestImageResize(mContext, hotelImageView, hotel.imageUrl);
 
         // 객실이 1~2 개일때 label 표시
         int avail_cnt = hotel.getAvailableRoom();

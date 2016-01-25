@@ -105,7 +105,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
             grade.setText(gourmet.category);
         }
 
-        Util.requestImageResize(mContext, placeImageView, Uri.parse(gourmet.imageUrl));
+        Util.requestImageResize(mContext, placeImageView, gourmet.imageUrl);
 
         closeView.setOnClickListener(new View.OnClickListener()
         {
