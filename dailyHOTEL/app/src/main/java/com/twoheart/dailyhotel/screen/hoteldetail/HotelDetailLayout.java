@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,7 +34,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -47,8 +48,6 @@ public class HotelDetailLayout
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
 
-    private static final int MAX_OF_ROOMTYPE = 4;
-
     private HotelDetail mHotelDetail;
     private BaseActivity mActivity;
     private LoopViewPager mViewPager;
@@ -58,10 +57,10 @@ public class HotelDetailLayout
     private HotelDetailListAdapter mListAdapter;
     private SaleRoomInformation mSelectedSaleRoomInformation;
 
-    private View mRoomTypeLayout;
+    private RecyclerView mRoomTypeRecyclerView;
+    private HotelDetailRoomTypeListAdapter mRoomTypeListAdapter;
     private View mBottomLayout;
     private View mRoomTypeBackgroundView;
-    private View[] mRoomTypeView;
     private View mImageViewBlur;
 
     private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -115,10 +114,9 @@ public class HotelDetailLayout
         ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
-        mRoomTypeLayout = activity.findViewById(R.id.roomTypeLayout);
-        mRoomTypeLayout.setVisibility(View.INVISIBLE);
-
-        mRoomTypeView = new View[MAX_OF_ROOMTYPE];
+        mRoomTypeRecyclerView = (RecyclerView) activity.findViewById(R.id.roomTypeRecyclerView);
+        mRoomTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRoomTypeRecyclerView.setVisibility(View.INVISIBLE);
 
         mBottomLayout = activity.findViewById(R.id.bottomLayout);
 
@@ -218,103 +216,48 @@ public class HotelDetailLayout
 
     private void initRoomTypeLayout(int nights, ArrayList<SaleRoomInformation> saleRoomList)
     {
-        if (saleRoomList == null || saleRoomList.size() == 0)
+        if (saleRoomList == null || saleRoomList.size() == 0 || nights < 0)
         {
             return;
         }
 
         // 객실 타입 세팅
-        mRoomTypeView[0] = mActivity.findViewById(R.id.roomType01View);
-        mRoomTypeView[1] = mActivity.findViewById(R.id.roomType02View);
-        mRoomTypeView[2] = mActivity.findViewById(R.id.roomType03View);
-        mRoomTypeView[3] = mActivity.findViewById(R.id.roomType04View);
-
-        int size = saleRoomList.size();
-
-        for (int i = 0; i < MAX_OF_ROOMTYPE; i++)
+        if(mRoomTypeListAdapter == null)
         {
-            if (i < size)
-            {
-                mRoomTypeView[i].setVisibility(View.VISIBLE);
-                mRoomTypeView[i].setTag(saleRoomList.get(i));
-                makeRoomTypeLayout(mRoomTypeView[i], saleRoomList.get(i), nights);
-            } else
-            {
-                mRoomTypeView[i].setVisibility(View.GONE);
-                mRoomTypeView[i].setTag(null);
-            }
-
-            mRoomTypeView[i].setOnClickListener(new View.OnClickListener()
+            mRoomTypeListAdapter = new HotelDetailRoomTypeListAdapter(mActivity, saleRoomList, new OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    selectRoomType(v, (SaleRoomInformation) v.getTag());
+                    int position = mRoomTypeRecyclerView.getChildAdapterPosition(v);
+
+                    if(position < 0)
+                    {
+                        return;
+                    }
+
+                    mSelectedSaleRoomInformation = mRoomTypeListAdapter.getItem(position);
+                    mRoomTypeListAdapter.setSelected(position);
+                    mRoomTypeListAdapter.notifyDataSetChanged();
                 }
             });
         }
 
-        selectRoomType(mRoomTypeView[0], saleRoomList.get(0));
-    }
+        int size = saleRoomList.size();
+        int height = Util.dpToPx(mActivity, 92) * size;
+        final int maxHeight = Util.dpToPx(mActivity, 420);
+        ViewGroup.LayoutParams layoutParams = mRoomTypeRecyclerView.getLayoutParams();
 
-    private void makeRoomTypeLayout(View view, SaleRoomInformation information, int nights)
-    {
-        if (view == null || information == null || nights <= 0)
+        if(height > maxHeight)
         {
-            return;
-        }
-
-        TextView roomTypeTextView = (TextView) view.findViewById(R.id.roomTypeTextView);
-        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
-        TextView optionTextView = (TextView) view.findViewById(R.id.optionTextView);
-        TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
-
-        roomTypeTextView.setText(information.roomName);
-
-        DecimalFormat comma = new DecimalFormat("###,##0");
-        String currency = mActivity.getString(R.string.currency);
-        String price = comma.format(information.averageDiscount);
-
-        priceTextView.setText(price + currency);
-
-        if (Util.isTextEmpty(information.option) == true)
-        {
-            optionTextView.setVisibility(View.GONE);
+            layoutParams.height = maxHeight;
         } else
         {
-            optionTextView.setVisibility(View.VISIBLE);
-            optionTextView.setText(information.option);
+            layoutParams.height = height;
         }
 
-        if (Util.isTextEmpty(information.roomBenefit) == true)
-        {
-            benefitTextView.setVisibility(View.GONE);
-        } else
-        {
-            benefitTextView.setVisibility(View.VISIBLE);
-            benefitTextView.setText(information.roomBenefit);
-        }
-    }
-
-    private void selectRoomType(View view, SaleRoomInformation saleRoomInformation)
-    {
-        if (view == null || saleRoomInformation == null)
-        {
-            return;
-        }
-
-        for (View roomView : mRoomTypeView)
-        {
-            if (roomView == view)
-            {
-                mSelectedSaleRoomInformation = saleRoomInformation;
-
-                roomView.setSelected(true);
-            } else
-            {
-                roomView.setSelected(false);
-            }
-        }
+        mRoomTypeRecyclerView.setLayoutParams(layoutParams);
+        mRoomTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
     }
 
     public int getBookingStatus()
@@ -420,21 +363,7 @@ public class HotelDetailLayout
 
     private void setRoomTypeLayoutEnabled(boolean enabled)
     {
-        if (mRoomTypeLayout == null || mRoomTypeView == null)
-        {
-            return;
-        }
-
-        for (View view : mRoomTypeView)
-        {
-            if (view == null)
-            {
-                break;
-            }
-
-            view.setEnabled(enabled);
-        }
-
+        mRoomTypeRecyclerView.setEnabled(enabled);
         mRoomTypeBackgroundView.setEnabled(enabled);
     }
 
@@ -452,17 +381,17 @@ public class HotelDetailLayout
         }
 
         mRoomTypeBackgroundView.setAnimation(null);
-        mRoomTypeLayout.setAnimation(null);
+        mRoomTypeRecyclerView.setAnimation(null);
 
         mRoomTypeBackgroundView.setVisibility(View.GONE);
 
         if (isUsedAnimatorApi() == true)
         {
-            mRoomTypeLayout.setVisibility(View.INVISIBLE);
-            mRoomTypeLayout.setTranslationY(Util.dpToPx(mActivity, MAX_OF_ROOMTYPE * 92));
+            mRoomTypeRecyclerView.setVisibility(View.INVISIBLE);
+            mRoomTypeRecyclerView.setTranslationY(Util.dpToPx(mActivity, mRoomTypeRecyclerView.getHeight()));
         } else
         {
-            mRoomTypeLayout.setVisibility(View.GONE);
+            mRoomTypeRecyclerView.setVisibility(View.GONE);
         }
 
         mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -492,7 +421,9 @@ public class HotelDetailLayout
                 mObjectAnimator = null;
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mRoomTypeLayout, "y", y, mBottomLayout.getTop() - mRoomTypeLayout.getHeight());
+            mRoomTypeRecyclerView.setTranslationY(Util.dpToPx(mActivity, mRoomTypeRecyclerView.getHeight()));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mRoomTypeRecyclerView, "y", y, mBottomLayout.getTop() - mRoomTypeRecyclerView.getHeight());
             mObjectAnimator.setDuration(300);
 
             mObjectAnimator.addListener(new AnimatorListener()
@@ -500,9 +431,9 @@ public class HotelDetailLayout
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    if (mRoomTypeLayout.getVisibility() != View.VISIBLE)
+                    if (mRoomTypeRecyclerView.getVisibility() != View.VISIBLE)
                     {
-                        mRoomTypeLayout.setVisibility(View.VISIBLE);
+                        mRoomTypeRecyclerView.setVisibility(View.VISIBLE);
                     }
 
                     mAnimationState = ANIMATION_STATE.START;
@@ -539,9 +470,9 @@ public class HotelDetailLayout
             mObjectAnimator.start();
         } else
         {
-            if (mRoomTypeLayout != null && mRoomTypeLayout.getVisibility() != View.VISIBLE)
+            if (mRoomTypeRecyclerView != null && mRoomTypeRecyclerView.getVisibility() != View.VISIBLE)
             {
-                mRoomTypeLayout.setVisibility(View.VISIBLE);
+                mRoomTypeRecyclerView.setVisibility(View.VISIBLE);
 
                 mAnimationStatus = ANIMATION_STATUS.SHOW_END;
                 mAnimationState = ANIMATION_STATE.END;
@@ -566,7 +497,7 @@ public class HotelDetailLayout
 
         if (isUsedAnimatorApi() == true)
         {
-            final float y = mRoomTypeLayout.getY();
+            final float y = mRoomTypeRecyclerView.getY();
 
             if (mObjectAnimator != null)
             {
@@ -579,7 +510,7 @@ public class HotelDetailLayout
                 mObjectAnimator = null;
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mRoomTypeLayout, "y", y, mBottomLayout.getTop());
+            mObjectAnimator = ObjectAnimator.ofFloat(mRoomTypeRecyclerView, "y", y, mBottomLayout.getTop());
             mObjectAnimator.setDuration(300);
 
             mObjectAnimator.addListener(new AnimatorListener()

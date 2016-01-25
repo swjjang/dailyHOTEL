@@ -64,40 +64,15 @@
         android:background="@color/textView_textColor_shadow_soldout"
         android:visibility="gone"/>
 
-    <LinearLayout
-        android:id="@+id/ticketInformationLayout"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ticketTypeRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="55dp"
         android:background="@color/white"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <include
-            android:id="@+id/ticketType01View"
-            layout="@layout/list_row_detail_roomtype"
-            android:layout_width="match_parent"
-            android:layout_height="92dp"/>
-
-        <include
-            android:id="@+id/ticketType02View"
-            layout="@layout/list_row_detail_roomtype"
-            android:layout_width="match_parent"
-            android:layout_height="92dp"/>
-
-        <include
-            android:id="@+id/ticketType03View"
-            layout="@layout/list_row_detail_roomtype"
-            android:layout_width="match_parent"
-            android:layout_height="92dp"/>
-
-        <include
-            android:id="@+id/ticketType04View"
-            layout="@layout/list_row_detail_roomtype"
-            android:layout_width="match_parent"
-            android:layout_height="92dp"/>
-    </LinearLayout>
+        android:scrollbars="vertical"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/bottomLayout"
