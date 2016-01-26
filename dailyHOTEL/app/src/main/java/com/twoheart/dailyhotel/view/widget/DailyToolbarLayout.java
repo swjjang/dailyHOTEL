@@ -206,6 +206,11 @@ public class DailyToolbarLayout
         textView.setText(title);
     }
 
+    public Toolbar getToolbar()
+    {
+        return mToolbar;
+    }
+
     public void setToolbarTransparent(boolean isTransparent)
     {
         TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);

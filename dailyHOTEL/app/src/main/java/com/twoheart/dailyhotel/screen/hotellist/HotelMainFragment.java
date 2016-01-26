@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -56,10 +55,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
+    private TabLayout mCategoryTabLayout;
     private ViewPager mViewPager;
     private HotelFragmentPagerAdapter mFragmentPagerAdapter;
     private DailyToolbarLayout mDailyToolbarLayout;
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     private SaleTime mTodaySaleTime;
     private Province mSelectedProvince;
@@ -125,20 +124,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         mTodaySaleTime = new SaleTime();
 
-        mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_today), true);
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
-        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
-
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-
-        mFragmentPagerAdapter = new HotelFragmentPagerAdapter(getChildFragmentManager(), TAB_COUNT, mOnUserActionListener);
-
-        mViewPager.setOffscreenPageLimit(TAB_COUNT);
-        mViewPager.setAdapter(mFragmentPagerAdapter);
-        mViewPager.setCurrentItem(0);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        initTabLayout(view);
 
         setHasOptionsMenu(true);
 
@@ -151,10 +137,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        TOOLBAR_HEIGHT = Util.dpToPx(baseActivity, 85);
+        TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height_has_tab);
 
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbarLayout);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         mAppBarLayout.addOnOffsetChangedListener(this);
@@ -170,6 +155,26 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         });
 
         mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
+    }
+
+    private void initTabLayout(View view)
+    {
+        mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_today), true);
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
+        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+
+        mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
+
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+
+        mFragmentPagerAdapter = new HotelFragmentPagerAdapter(getChildFragmentManager(), TAB_COUNT, mOnUserActionListener);
+
+        mViewPager.setOffscreenPageLimit(TAB_COUNT);
+        mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.setCurrentItem(0);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
     }
 
     @Override
@@ -430,6 +435,38 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
     }
 
+    private void makeCategoryTabLayout(JSONArray jsonArray)
+    {
+//        if(jsonArray == null)
+//        {
+//            mCategoryTabLayout.setVisibility(View.GONE);
+//            return;
+//        }
+//
+//        int length = jsonArray.length();
+//
+//        if(length == 0)
+//        {
+//            mCategoryTabLayout.setVisibility(View.GONE);
+//            return;
+//        }
+
+
+        mCategoryTabLayout.removeAllTabs();
+
+        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("전체"));
+        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("호텔"));
+        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("부띠끄"));
+        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("펜션"));
+        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("디자인"));
+        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("풀빌라"));
+        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("모텔"));
+
+        mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
+
+        FontManager.apply(mCategoryTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -629,6 +666,30 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 AnalyticsManager.getInstance(getActivity()).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
             }
+        }
+    };
+
+    private TabLayout.OnTabSelectedListener mOnCategoryTabSelectedListener = new TabLayout.OnTabSelectedListener()
+    {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab)
+        {
+            mCategoryTabLayout.setOnTabSelectedListener(null);
+
+
+
+
+            mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab)
+        {
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab)
+        {
         }
     };
 
@@ -913,39 +974,75 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void showAppBarLayout()
         {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+            if (mDailyToolbarLayout == null)
+            {
+                return;
+            }
+
+            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+
+            if (toolbar == null)
+            {
+                return;
+            }
+
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 
             if (params != null &&//
                 params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
             {
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-                mCollapsingToolbarLayout.setLayoutParams(params);
+                toolbar.setLayoutParams(params);
             }
         }
 
         @Override
         public void hideAppBarLayout()
         {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+            if (mDailyToolbarLayout == null)
+            {
+                return;
+            }
+
+            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+
+            if (toolbar == null)
+            {
+                return;
+            }
+
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 
             if (params != null &&//
                 params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
             {
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
-                mCollapsingToolbarLayout.setLayoutParams(params);
+                toolbar.setLayoutParams(params);
             }
         }
 
         @Override
         public void pinAppBarLayout()
         {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+            if (mDailyToolbarLayout == null)
+            {
+                return;
+            }
+
+            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+
+            if (toolbar == null)
+            {
+                return;
+            }
+
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 
             if (params != null &&//
                 params.getScrollFlags() != 0)
             {
                 params.setScrollFlags(0);
-                mCollapsingToolbarLayout.setLayoutParams(params);
+                toolbar.setLayoutParams(params);
             }
         }
     };
@@ -1059,6 +1156,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     onInternalError(message);
                 }
+
+
+                makeCategoryTabLayout(null);
             } catch (Exception e)
             {
                 onError(e);

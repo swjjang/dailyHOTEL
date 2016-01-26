@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -62,7 +61,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
     private GourmetFragmentPagerAdapter mFragmentPagerAdapter;
     private Province mSelectedProvince;
     private DailyToolbarLayout mDailyToolbarLayout;
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private boolean mIsHideAppBarlayout;
 
 
@@ -131,10 +129,9 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        TOOLBAR_HEIGHT = Util.dpToPx(baseActivity, 85);
+        TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height_has_tab);
 
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbarLayout);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         mAppBarLayout.addOnOffsetChangedListener(this);
@@ -870,39 +867,75 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         @Override
         public void showAppBarLayout()
         {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+            if (mDailyToolbarLayout == null)
+            {
+                return;
+            }
+
+            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+
+            if (toolbar == null)
+            {
+                return;
+            }
+
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 
             if (params != null &&//
                 params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
             {
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-                mCollapsingToolbarLayout.setLayoutParams(params);
+                toolbar.setLayoutParams(params);
             }
         }
 
         @Override
         public void hideAppBarLayout()
         {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+            if (mDailyToolbarLayout == null)
+            {
+                return;
+            }
+
+            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+
+            if (toolbar == null)
+            {
+                return;
+            }
+
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 
             if (params != null &&//
                 params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
             {
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
-                mCollapsingToolbarLayout.setLayoutParams(params);
+                toolbar.setLayoutParams(params);
             }
         }
 
         @Override
         public void pinAppBarLayout()
         {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mCollapsingToolbarLayout.getLayoutParams();
+            if (mDailyToolbarLayout == null)
+            {
+                return;
+            }
+
+            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+
+            if (toolbar == null)
+            {
+                return;
+            }
+
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 
             if (params != null &&//
                 params.getScrollFlags() != 0)
             {
                 params.setScrollFlags(0);
-                mCollapsingToolbarLayout.setLayoutParams(params);
+                toolbar.setLayoutParams(params);
             }
         }
     };
