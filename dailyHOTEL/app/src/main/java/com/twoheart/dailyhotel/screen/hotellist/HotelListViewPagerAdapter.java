@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.Spanned;

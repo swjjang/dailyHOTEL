@@ -64,15 +64,28 @@
         android:background="@color/textView_textColor_shadow_soldout"
         android:visibility="gone"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/roomTypeRecyclerView"
+    <LinearLayout
+        android:id="@+id/roomTypeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="55dp"
-        android:background="@color/white"
-        android:scrollbars="vertical"
-        android:visibility="gone"/>
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/card_btn_x_off"
+            android:layout_gravity="right"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/roomTypeRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="55dp"
+            android:background="@color/white"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/bottomLayout"

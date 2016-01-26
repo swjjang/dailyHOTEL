@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;

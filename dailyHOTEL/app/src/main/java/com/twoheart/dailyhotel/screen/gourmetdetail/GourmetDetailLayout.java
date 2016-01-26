@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class GourmetDetailLayout
@@ -58,13 +57,14 @@ public class GourmetDetailLayout
     protected DetailImageViewPagerAdapter mImageAdapter;
 
     private TicketInformation mSelectedTicketInformation;
-    private GourmetDetailRoomTypeListAdapter mTicketTypeListAdapter;
     protected int mImageHeight;
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
     protected PlaceDetailActivity.OnUserActionListener mOnUserActionListener;
     protected PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
     private RecyclerView mTicketTypeRecyclerView;
+    private GourmetDetailRoomTypeListAdapter mTicketTypeListAdapter;
+    private View mTicketTypeLayout;
     private View mBottomLayout;
     private View mTicketTypeBackgroundView;
     private View mImageViewBlur;
@@ -129,9 +129,10 @@ public class GourmetDetailLayout
         ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
-        mTicketTypeRecyclerView = (RecyclerView) activity.findViewById(R.id.ticketTypeRecyclerView);
+        mTicketTypeLayout = activity.findViewById(R.id.ticketTypeLayout);
+        mTicketTypeRecyclerView = (RecyclerView) mTicketTypeLayout.findViewById(R.id.ticketTypeRecyclerView);
         mTicketTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        mTicketTypeRecyclerView.setVisibility(View.INVISIBLE);
+        mTicketTypeLayout.setVisibility(View.INVISIBLE);
 
         mBottomLayout = activity.findViewById(R.id.bottomLayout);
 
@@ -237,8 +238,10 @@ public class GourmetDetailLayout
         }
 
         // 객실 타입 세팅
-        if(mTicketTypeListAdapter == null)
+        if (mTicketTypeListAdapter == null)
         {
+            mSelectedTicketInformation = ticketInformationList.get(0);
+
             mTicketTypeListAdapter = new GourmetDetailRoomTypeListAdapter(mActivity, ticketInformationList, new OnClickListener()
             {
                 @Override
@@ -246,7 +249,7 @@ public class GourmetDetailLayout
                 {
                     int position = mTicketTypeRecyclerView.getChildAdapterPosition(v);
 
-                    if(position < 0)
+                    if (position < 0)
                     {
                         return;
                     }
@@ -260,10 +263,10 @@ public class GourmetDetailLayout
 
         int size = ticketInformationList.size();
         int height = Util.dpToPx(mActivity, 92) * size;
-        final int maxHeight = Util.dpToPx(mActivity, 420);
+        final int maxHeight = Util.dpToPx(mActivity, 300);
         ViewGroup.LayoutParams layoutParams = mTicketTypeRecyclerView.getLayoutParams();
 
-        if(height > maxHeight)
+        if (height > maxHeight)
         {
             layoutParams.height = maxHeight;
         } else
@@ -374,6 +377,7 @@ public class GourmetDetailLayout
 
     private void setTicketInformationLayoutEnabled(boolean enabled)
     {
+        mTicketTypeLayout.setEnabled(enabled);
         mTicketTypeRecyclerView.setEnabled(enabled);
         mTicketTypeBackgroundView.setEnabled(enabled);
     }
@@ -392,17 +396,17 @@ public class GourmetDetailLayout
         }
 
         mTicketTypeBackgroundView.setAnimation(null);
-        mTicketTypeRecyclerView.setAnimation(null);
+        mTicketTypeLayout.setAnimation(null);
 
         mTicketTypeBackgroundView.setVisibility(View.GONE);
 
         if (Util.isOverAPI12() == true)
         {
-            mTicketTypeRecyclerView.setVisibility(View.INVISIBLE);
-            mTicketTypeRecyclerView.setTranslationY(Util.dpToPx(mActivity, MAX_OF_TICKETTYPE * 92));
+            mTicketTypeLayout.setVisibility(View.INVISIBLE);
+            mTicketTypeLayout.setTranslationY(Util.dpToPx(mActivity, MAX_OF_TICKETTYPE * 92));
         } else
         {
-            mTicketTypeRecyclerView.setVisibility(View.GONE);
+            mTicketTypeLayout.setVisibility(View.GONE);
         }
 
         mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -432,9 +436,12 @@ public class GourmetDetailLayout
                 mObjectAnimator = null;
             }
 
-            mTicketTypeRecyclerView.setTranslationY(Util.dpToPx(mActivity, mTicketTypeRecyclerView.getHeight()));
+            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+            int height = mTicketTypeRecyclerView.getHeight() + Util.dpToPx(mActivity, 34);
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mTicketTypeRecyclerView, "y", y, mBottomLayout.getTop() - mTicketTypeRecyclerView.getHeight());
+            mTicketTypeLayout.setTranslationY(Util.dpToPx(mActivity, height));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mTicketTypeLayout, "y", y, mBottomLayout.getTop() - height);
             mObjectAnimator.setDuration(300);
 
             mObjectAnimator.addListener(new AnimatorListener()
@@ -442,9 +449,9 @@ public class GourmetDetailLayout
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    if (mTicketTypeRecyclerView.getVisibility() != View.VISIBLE)
+                    if (mTicketTypeLayout.getVisibility() != View.VISIBLE)
                     {
-                        mTicketTypeRecyclerView.setVisibility(View.VISIBLE);
+                        mTicketTypeLayout.setVisibility(View.VISIBLE);
                     }
 
                     mAnimationState = ANIMATION_STATE.START;
@@ -481,9 +488,9 @@ public class GourmetDetailLayout
             mObjectAnimator.start();
         } else
         {
-            if (mTicketTypeRecyclerView != null && mTicketTypeRecyclerView.getVisibility() != View.VISIBLE)
+            if (mTicketTypeLayout != null && mTicketTypeLayout.getVisibility() != View.VISIBLE)
             {
-                mTicketTypeRecyclerView.setVisibility(View.VISIBLE);
+                mTicketTypeLayout.setVisibility(View.VISIBLE);
 
                 mAnimationStatus = ANIMATION_STATUS.SHOW_END;
                 mAnimationState = ANIMATION_STATE.END;
@@ -508,7 +515,7 @@ public class GourmetDetailLayout
 
         if (Util.isOverAPI12() == true)
         {
-            final float y = mTicketTypeRecyclerView.getY();
+            final float y = mTicketTypeLayout.getY();
 
             if (mObjectAnimator != null)
             {
@@ -521,7 +528,7 @@ public class GourmetDetailLayout
                 mObjectAnimator = null;
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mTicketTypeRecyclerView, "y", y, mBottomLayout.getTop());
+            mObjectAnimator = ObjectAnimator.ofFloat(mTicketTypeLayout, "y", y, mBottomLayout.getTop());
             mObjectAnimator.setDuration(300);
 
             mObjectAnimator.addListener(new AnimatorListener()

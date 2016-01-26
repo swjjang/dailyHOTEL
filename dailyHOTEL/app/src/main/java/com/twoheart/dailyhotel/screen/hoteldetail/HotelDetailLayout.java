@@ -59,6 +59,7 @@ public class HotelDetailLayout
 
     private RecyclerView mRoomTypeRecyclerView;
     private HotelDetailRoomTypeListAdapter mRoomTypeListAdapter;
+    private View mRoomTypeLayout;
     private View mBottomLayout;
     private View mRoomTypeBackgroundView;
     private View mImageViewBlur;
@@ -114,9 +115,10 @@ public class HotelDetailLayout
         ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
-        mRoomTypeRecyclerView = (RecyclerView) activity.findViewById(R.id.roomTypeRecyclerView);
+        mRoomTypeLayout = activity.findViewById(R.id.roomTypeLayout);
+        mRoomTypeRecyclerView = (RecyclerView) mRoomTypeLayout.findViewById(R.id.roomTypeRecyclerView);
         mRoomTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        mRoomTypeRecyclerView.setVisibility(View.INVISIBLE);
+        mRoomTypeLayout.setVisibility(View.INVISIBLE);
 
         mBottomLayout = activity.findViewById(R.id.bottomLayout);
 
@@ -222,8 +224,10 @@ public class HotelDetailLayout
         }
 
         // 객실 타입 세팅
-        if(mRoomTypeListAdapter == null)
+        if (mRoomTypeListAdapter == null)
         {
+            mSelectedSaleRoomInformation = saleRoomList.get(0);
+
             mRoomTypeListAdapter = new HotelDetailRoomTypeListAdapter(mActivity, saleRoomList, new OnClickListener()
             {
                 @Override
@@ -231,7 +235,7 @@ public class HotelDetailLayout
                 {
                     int position = mRoomTypeRecyclerView.getChildAdapterPosition(v);
 
-                    if(position < 0)
+                    if (position < 0)
                     {
                         return;
                     }
@@ -245,10 +249,10 @@ public class HotelDetailLayout
 
         int size = saleRoomList.size();
         int height = Util.dpToPx(mActivity, 92) * size;
-        final int maxHeight = Util.dpToPx(mActivity, 420);
+        final int maxHeight = Util.dpToPx(mActivity, 300);
         ViewGroup.LayoutParams layoutParams = mRoomTypeRecyclerView.getLayoutParams();
 
-        if(height > maxHeight)
+        if (height > maxHeight)
         {
             layoutParams.height = maxHeight;
         } else
@@ -363,6 +367,7 @@ public class HotelDetailLayout
 
     private void setRoomTypeLayoutEnabled(boolean enabled)
     {
+        mRoomTypeLayout.setEnabled(enabled);
         mRoomTypeRecyclerView.setEnabled(enabled);
         mRoomTypeBackgroundView.setEnabled(enabled);
     }
@@ -381,17 +386,17 @@ public class HotelDetailLayout
         }
 
         mRoomTypeBackgroundView.setAnimation(null);
-        mRoomTypeRecyclerView.setAnimation(null);
+        mRoomTypeLayout.setAnimation(null);
 
         mRoomTypeBackgroundView.setVisibility(View.GONE);
 
         if (isUsedAnimatorApi() == true)
         {
-            mRoomTypeRecyclerView.setVisibility(View.INVISIBLE);
-            mRoomTypeRecyclerView.setTranslationY(Util.dpToPx(mActivity, mRoomTypeRecyclerView.getHeight()));
+            mRoomTypeLayout.setVisibility(View.INVISIBLE);
+            mRoomTypeLayout.setTranslationY(Util.dpToPx(mActivity, mRoomTypeLayout.getHeight()));
         } else
         {
-            mRoomTypeRecyclerView.setVisibility(View.GONE);
+            mRoomTypeLayout.setVisibility(View.GONE);
         }
 
         mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -421,9 +426,12 @@ public class HotelDetailLayout
                 mObjectAnimator = null;
             }
 
-            mRoomTypeRecyclerView.setTranslationY(Util.dpToPx(mActivity, mRoomTypeRecyclerView.getHeight()));
+            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+            int height = mRoomTypeRecyclerView.getHeight() + Util.dpToPx(mActivity, 34);
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mRoomTypeRecyclerView, "y", y, mBottomLayout.getTop() - mRoomTypeRecyclerView.getHeight());
+            mRoomTypeLayout.setTranslationY(Util.dpToPx(mActivity, height));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mRoomTypeLayout, "y", y, mBottomLayout.getTop() - height);
             mObjectAnimator.setDuration(300);
 
             mObjectAnimator.addListener(new AnimatorListener()
@@ -431,9 +439,9 @@ public class HotelDetailLayout
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    if (mRoomTypeRecyclerView.getVisibility() != View.VISIBLE)
+                    if (mRoomTypeLayout.getVisibility() != View.VISIBLE)
                     {
-                        mRoomTypeRecyclerView.setVisibility(View.VISIBLE);
+                        mRoomTypeLayout.setVisibility(View.VISIBLE);
                     }
 
                     mAnimationState = ANIMATION_STATE.START;
@@ -470,9 +478,9 @@ public class HotelDetailLayout
             mObjectAnimator.start();
         } else
         {
-            if (mRoomTypeRecyclerView != null && mRoomTypeRecyclerView.getVisibility() != View.VISIBLE)
+            if (mRoomTypeLayout != null && mRoomTypeLayout.getVisibility() != View.VISIBLE)
             {
-                mRoomTypeRecyclerView.setVisibility(View.VISIBLE);
+                mRoomTypeLayout.setVisibility(View.VISIBLE);
 
                 mAnimationStatus = ANIMATION_STATUS.SHOW_END;
                 mAnimationState = ANIMATION_STATE.END;
@@ -497,7 +505,7 @@ public class HotelDetailLayout
 
         if (isUsedAnimatorApi() == true)
         {
-            final float y = mRoomTypeRecyclerView.getY();
+            final float y = mRoomTypeLayout.getY();
 
             if (mObjectAnimator != null)
             {
@@ -510,7 +518,7 @@ public class HotelDetailLayout
                 mObjectAnimator = null;
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mRoomTypeRecyclerView, "y", y, mBottomLayout.getTop());
+            mObjectAnimator = ObjectAnimator.ofFloat(mRoomTypeLayout, "y", y, mBottomLayout.getTop());
             mObjectAnimator.setDuration(300);
 
             mObjectAnimator.addListener(new AnimatorListener()
