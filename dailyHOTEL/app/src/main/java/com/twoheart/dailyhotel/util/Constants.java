@@ -143,6 +143,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
     public static final String NAME_INTENT_EXTRA_DATA_REGION = "region";
     public static final String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIdx";
+    public static final String NAME_INTENT_EXTRA_DATA_HOTELGRADE = "hotelGrade";
     public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
     public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIdx";
     public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";

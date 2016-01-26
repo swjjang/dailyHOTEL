@@ -263,6 +263,5 @@ public class AnalyticsManager
         public static final String PLACE_TICKET_NAME = "placeTicketName";
         public static final String PLACE_TICKET_INDEX = "placeTicketIndex";
         public static final String BOUNS = "bonus";
-
     }
 }

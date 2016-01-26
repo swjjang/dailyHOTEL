@@ -304,10 +304,7 @@ public class HotelDetailActivity extends BaseActivity
             return;
         }
 
-        Intent intent = new Intent(HotelDetailActivity.this, BookingActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION, saleRoomInformation);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelDetail.hotelIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
+        Intent intent = BookingActivity.newInstance(HotelDetailActivity.this, saleRoomInformation, mCheckInSaleTime, mHotelDetail.grade);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
