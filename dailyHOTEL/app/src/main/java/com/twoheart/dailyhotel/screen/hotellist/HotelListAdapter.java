@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -269,7 +268,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         holder.hotelGradeView.setText(hotel.getCategory().getName(mContext));
         holder.hotelGradeView.setBackgroundResource(hotel.getCategory().getColorResId());
 
-        Util.requestImageResize(mContext, holder.hotelImageView, Uri.parse(hotel.imageUrl));
+        Util.requestImageResize(mContext, holder.hotelImageView, hotel.imageUrl);
 
         int availableRoomCount = hotel.getAvailableRoom();
 

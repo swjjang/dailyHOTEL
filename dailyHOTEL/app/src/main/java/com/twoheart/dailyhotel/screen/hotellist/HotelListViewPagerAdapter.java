@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.Spanned;
@@ -146,7 +145,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         grade.setText(hotel.getCategory().getName(mContext));
         grade.setBackgroundResource(hotel.getCategory().getColorResId());
 
-        Util.requestImageResize(mContext, hotelImageView, Uri.parse(hotel.imageUrl));
+        Util.requestImageResize(mContext, hotelImageView, hotel.imageUrl);
 
         // 객실이 1~2 개일때 label 표시
         int avail_cnt = hotel.getAvailableRoom();

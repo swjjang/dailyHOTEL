@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -278,7 +277,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             holder.gradeView.setText(gourmet.category);
         }
 
-        Util.requestImageResize(mContext, holder.gourmetImageView, Uri.parse(gourmet.imageUrl));
+        Util.requestImageResize(mContext, holder.gourmetImageView, gourmet.imageUrl);
 
         // SOLD OUT 표시
         if (gourmet.isSoldOut)

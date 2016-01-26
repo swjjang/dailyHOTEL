@@ -46,6 +46,8 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
 
         if (position < mImageInformationList.size())
         {
+            Uri imageUri = Util.isTextEmpty(mImageInformationList.get(position).url) == true ? null : Uri.parse(mImageInformationList.get(position).url);
+
             if (mImageInformationList.size() == 1)
             {
                 final int height = Util.dpToPx(mContext, 202);
@@ -64,7 +66,17 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
                         layoutParams.height = width;
                         imageView.setLayoutParams(layoutParams);
                     }
-                }).setUri(Uri.parse(mImageInformationList.get(position).url)).build();
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable)
+                    {
+                        super.onFailure(id, throwable);
+
+                        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+                        layoutParams.height = width;
+                        imageView.setLayoutParams(layoutParams);
+                    }
+                }).setUri(imageUri).build();
 
                 imageView.setController(controller);
                 imageView.setTag(imageView.getId(), position);
@@ -76,7 +88,7 @@ public class DetailImageViewPagerAdapter extends PagerAdapter
                 imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
                 imageView.setTag(imageView.getId(), position);
 
-                Util.requestImageResize(mContext, imageView, Uri.parse(mImageInformationList.get(position).url));
+                Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).url);
 
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
                 container.addView(imageView, 0, layoutParams);

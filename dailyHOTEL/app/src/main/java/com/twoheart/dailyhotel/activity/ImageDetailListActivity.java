@@ -85,7 +85,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         {
             View view;
 
-            String url = getItem(position).url;
+            Uri imageUri = Util.isTextEmpty(getItem(position).url) == true ? null : Uri.parse(getItem(position).url);
             String description = getItem(position).description;
 
             if (convertView == null)
@@ -128,12 +128,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             {
                 controller = Fresco.newDraweeControllerBuilder()//
                     .setControllerListener(baseControllerListener)//
-                    .setUri(Uri.parse(url)).build();
+                    .setUri(imageUri).build();
             } else
             {
                 final int resizeWidth = 360, resizeHeight = 240;
 
-                ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))//
+                ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(imageUri)//
                     .setResizeOptions(new ResizeOptions(resizeWidth, resizeHeight))//
                     .build();
 

@@ -79,16 +79,22 @@ public class Util implements Constants
         Fresco.initialize(context, imagePipelineConfig);
     }
 
-    public static void requestImageResize(Context context, com.facebook.drawee.view.SimpleDraweeView simpleDraweeView, Uri uri)
+    public static void requestImageResize(Context context, com.facebook.drawee.view.SimpleDraweeView simpleDraweeView, String imageUrl)
     {
+        if (Util.isTextEmpty(imageUrl) == true)
+        {
+            simpleDraweeView.setImageURI(null);
+            return;
+        }
+
         if (Util.getLCDWidth(context) >= 720)
         {
-            simpleDraweeView.setImageURI(uri);
+            simpleDraweeView.setImageURI(Uri.parse(imageUrl));
         } else
         {
             final int resizeWidth = 360, resizeHeight = 240;
 
-            ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)//
+            ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(imageUrl))//
                 .setResizeOptions(new ResizeOptions(resizeWidth, resizeHeight))//
                 .build();
 

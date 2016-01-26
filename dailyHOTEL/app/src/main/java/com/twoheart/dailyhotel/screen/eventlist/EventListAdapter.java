@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.eventlist;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +93,7 @@ public class EventListAdapter extends ArrayAdapter<Event>
         com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.eventImageView);
         Event event = getItem(position);
 
-        Util.requestImageResize(mContext, imageView, Uri.parse(event.imageUrl));
+        Util.requestImageResize(mContext, imageView, event.imageUrl);
 
         return view;
     }

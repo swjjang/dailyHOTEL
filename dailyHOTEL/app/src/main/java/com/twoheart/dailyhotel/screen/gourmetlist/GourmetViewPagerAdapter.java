@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
@@ -105,7 +104,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
             grade.setText(gourmet.category);
         }
 
-        Util.requestImageResize(mContext, placeImageView, Uri.parse(gourmet.imageUrl));
+        Util.requestImageResize(mContext, placeImageView, gourmet.imageUrl);
 
         closeView.setOnClickListener(new View.OnClickListener()
         {

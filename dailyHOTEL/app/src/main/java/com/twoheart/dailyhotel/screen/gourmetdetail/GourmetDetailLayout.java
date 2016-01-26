@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,12 +30,12 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.screen.gourmetlist.GourmetDetailRoomTypeListAdapter;
 import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailListView;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class GourmetDetailLayout
@@ -54,16 +56,17 @@ public class GourmetDetailLayout
     private GourmetDetailListAdapter mListAdapter;
     protected DetailImageViewPagerAdapter mImageAdapter;
 
-    protected TicketInformation mSelectedTicketInformation;
+    private TicketInformation mSelectedTicketInformation;
     protected int mImageHeight;
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
     protected PlaceDetailActivity.OnUserActionListener mOnUserActionListener;
     protected PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
-    private View mTicketInformationLayout;
+    private RecyclerView mTicketTypeRecyclerView;
+    private GourmetDetailRoomTypeListAdapter mTicketTypeListAdapter;
+    private View mTicketTypeLayout;
     private View mBottomLayout;
     private View mTicketTypeBackgroundView;
-    private View[] mTicketInformationViews;
     private View mImageViewBlur;
     private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
     private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
@@ -126,10 +129,10 @@ public class GourmetDetailLayout
         ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
-        mTicketInformationLayout = activity.findViewById(R.id.ticketInformationLayout);
-        mTicketInformationLayout.setVisibility(View.INVISIBLE);
-
-        mTicketInformationViews = new View[MAX_OF_TICKETTYPE];
+        mTicketTypeLayout = activity.findViewById(R.id.ticketTypeLayout);
+        mTicketTypeRecyclerView = (RecyclerView) mTicketTypeLayout.findViewById(R.id.ticketTypeRecyclerView);
+        mTicketTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mTicketTypeLayout.setVisibility(View.INVISIBLE);
 
         mBottomLayout = activity.findViewById(R.id.bottomLayout);
 
@@ -234,97 +237,45 @@ public class GourmetDetailLayout
             return;
         }
 
-        mTicketInformationViews[0] = mActivity.findViewById(R.id.ticketType01View);
-        mTicketInformationViews[1] = mActivity.findViewById(R.id.ticketType02View);
-        mTicketInformationViews[2] = mActivity.findViewById(R.id.ticketType03View);
-        mTicketInformationViews[3] = mActivity.findViewById(R.id.ticketType04View);
-
-        int size = ticketInformationList.size();
-
-        for (int i = 0; i < MAX_OF_TICKETTYPE; i++)
+        // 객실 타입 세팅
+        if (mTicketTypeListAdapter == null)
         {
-            if (i < size)
-            {
-                mTicketInformationViews[i].setVisibility(View.VISIBLE);
-                mTicketInformationViews[i].setTag(ticketInformationList.get(i));
-                makeTicketInformationLayout(mTicketInformationViews[i], ticketInformationList.get(i), nights);
-            } else
-            {
-                mTicketInformationViews[i].setVisibility(View.GONE);
-                mTicketInformationViews[i].setTag(null);
-            }
+            mSelectedTicketInformation = ticketInformationList.get(0);
 
-            mTicketInformationViews[i].setOnClickListener(new View.OnClickListener()
+            mTicketTypeListAdapter = new GourmetDetailRoomTypeListAdapter(mActivity, ticketInformationList, new OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    selectTicket(v, (TicketInformation) v.getTag());
+                    int position = mTicketTypeRecyclerView.getChildAdapterPosition(v);
+
+                    if (position < 0)
+                    {
+                        return;
+                    }
+
+                    mSelectedTicketInformation = mTicketTypeListAdapter.getItem(position);
+                    mTicketTypeListAdapter.setSelected(position);
+                    mTicketTypeListAdapter.notifyDataSetChanged();
                 }
             });
         }
 
-        selectTicket(mTicketInformationViews[0], ticketInformationList.get(0));
-    }
+        int size = ticketInformationList.size();
+        int height = Util.dpToPx(mActivity, 92) * size;
+        final int maxHeight = Util.dpToPx(mActivity, 300);
+        ViewGroup.LayoutParams layoutParams = mTicketTypeRecyclerView.getLayoutParams();
 
-    private void makeTicketInformationLayout(View view, TicketInformation information, int nights)
-    {
-        if (view == null || information == null || nights < 0)
+        if (height > maxHeight)
         {
-            return;
-        }
-
-        TextView nameTextView = (TextView) view.findViewById(R.id.roomTypeTextView);
-        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
-        TextView optionTextView = (TextView) view.findViewById(R.id.optionTextView);
-        TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
-
-        nameTextView.setText(information.name);
-
-        DecimalFormat comma = new DecimalFormat("###,##0");
-        String currency = mActivity.getString(R.string.currency);
-        String price = comma.format(information.discountPrice);
-
-        priceTextView.setText(price + currency);
-
-        if (Util.isTextEmpty(information.option) == true)
-        {
-            optionTextView.setVisibility(View.GONE);
+            layoutParams.height = maxHeight;
         } else
         {
-            optionTextView.setVisibility(View.VISIBLE);
-            optionTextView.setText(information.option);
+            layoutParams.height = height;
         }
 
-        if (Util.isTextEmpty(information.benefit) == true)
-        {
-            benefitTextView.setVisibility(View.GONE);
-        } else
-        {
-            benefitTextView.setVisibility(View.VISIBLE);
-            benefitTextView.setText(information.benefit);
-        }
-    }
-
-    private void selectTicket(View view, TicketInformation ticketInformation)
-    {
-        if (view == null || ticketInformation == null)
-        {
-            return;
-        }
-
-        for (View ticketInformationView : mTicketInformationViews)
-        {
-            if (ticketInformationView == view)
-            {
-                mSelectedTicketInformation = ticketInformation;
-
-                ticketInformationView.setSelected(true);
-            } else
-            {
-                ticketInformationView.setSelected(false);
-            }
-        }
+        mTicketTypeRecyclerView.setLayoutParams(layoutParams);
+        mTicketTypeRecyclerView.setAdapter(mTicketTypeListAdapter);
     }
 
     public int getBookingStatus()
@@ -426,21 +377,8 @@ public class GourmetDetailLayout
 
     private void setTicketInformationLayoutEnabled(boolean enabled)
     {
-        if (mTicketInformationLayout == null || mTicketInformationViews == null)
-        {
-            return;
-        }
-
-        for (View view : mTicketInformationViews)
-        {
-            if (view == null)
-            {
-                break;
-            }
-
-            view.setEnabled(enabled);
-        }
-
+        mTicketTypeLayout.setEnabled(enabled);
+        mTicketTypeRecyclerView.setEnabled(enabled);
         mTicketTypeBackgroundView.setEnabled(enabled);
     }
 
@@ -458,17 +396,17 @@ public class GourmetDetailLayout
         }
 
         mTicketTypeBackgroundView.setAnimation(null);
-        mTicketInformationLayout.setAnimation(null);
+        mTicketTypeLayout.setAnimation(null);
 
         mTicketTypeBackgroundView.setVisibility(View.GONE);
 
         if (Util.isOverAPI12() == true)
         {
-            mTicketInformationLayout.setVisibility(View.INVISIBLE);
-            mTicketInformationLayout.setTranslationY(Util.dpToPx(mActivity, MAX_OF_TICKETTYPE * 92));
+            mTicketTypeLayout.setVisibility(View.INVISIBLE);
+            mTicketTypeLayout.setTranslationY(Util.dpToPx(mActivity, MAX_OF_TICKETTYPE * 92));
         } else
         {
-            mTicketInformationLayout.setVisibility(View.GONE);
+            mTicketTypeLayout.setVisibility(View.GONE);
         }
 
         mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -498,7 +436,12 @@ public class GourmetDetailLayout
                 mObjectAnimator = null;
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mTicketInformationLayout, "y", y, mBottomLayout.getTop() - mTicketInformationLayout.getHeight());
+            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+            int height = mTicketTypeRecyclerView.getHeight() + Util.dpToPx(mActivity, 34);
+
+            mTicketTypeLayout.setTranslationY(Util.dpToPx(mActivity, height));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mTicketTypeLayout, "y", y, mBottomLayout.getTop() - height);
             mObjectAnimator.setDuration(300);
 
             mObjectAnimator.addListener(new AnimatorListener()
@@ -506,9 +449,9 @@ public class GourmetDetailLayout
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    if (mTicketInformationLayout.getVisibility() != View.VISIBLE)
+                    if (mTicketTypeLayout.getVisibility() != View.VISIBLE)
                     {
-                        mTicketInformationLayout.setVisibility(View.VISIBLE);
+                        mTicketTypeLayout.setVisibility(View.VISIBLE);
                     }
 
                     mAnimationState = ANIMATION_STATE.START;
@@ -545,9 +488,9 @@ public class GourmetDetailLayout
             mObjectAnimator.start();
         } else
         {
-            if (mTicketInformationLayout != null && mTicketInformationLayout.getVisibility() != View.VISIBLE)
+            if (mTicketTypeLayout != null && mTicketTypeLayout.getVisibility() != View.VISIBLE)
             {
-                mTicketInformationLayout.setVisibility(View.VISIBLE);
+                mTicketTypeLayout.setVisibility(View.VISIBLE);
 
                 mAnimationStatus = ANIMATION_STATUS.SHOW_END;
                 mAnimationState = ANIMATION_STATE.END;
@@ -572,7 +515,7 @@ public class GourmetDetailLayout
 
         if (Util.isOverAPI12() == true)
         {
-            final float y = mTicketInformationLayout.getY();
+            final float y = mTicketTypeLayout.getY();
 
             if (mObjectAnimator != null)
             {
@@ -585,7 +528,7 @@ public class GourmetDetailLayout
                 mObjectAnimator = null;
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mTicketInformationLayout, "y", y, mBottomLayout.getTop());
+            mObjectAnimator = ObjectAnimator.ofFloat(mTicketTypeLayout, "y", y, mBottomLayout.getTop());
             mObjectAnimator.setDuration(300);
 
             mObjectAnimator.addListener(new AnimatorListener()
