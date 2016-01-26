@@ -33,7 +33,8 @@
         android:gravity="center_vertical"
         android:textColor="@color/white"
         android:textSize="12dp"
-        dailyFont:style="DemiLight"/>
+        dailyFont:style="DemiLight"
+        android:layout_marginBottom="3dp"/>
 
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/gradeTextView"
@@ -41,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/nameTextView"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="12dp"
         android:background="@drawable/shape_rect_whitecolor"
         android:gravity="center"
@@ -66,7 +67,7 @@
         android:textSize="12dp"
         android:visibility="gone"
         dailyFont:style="DemiLight"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="5dp"/>
 
     <LinearLayout
         android:id="@+id/discountPriceLayout"
@@ -74,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/addressTextView"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="7dp"
         android:layout_marginRight="11dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -95,7 +96,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="7dp"
             android:textColor="@color/white"
-            android:textSize="16dp"
+            android:textSize="17dp"
             dailyFont:style="Medium"/>
     </LinearLayout>
 
@@ -115,7 +116,7 @@
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textColor="@android:color/white"
-        android:textSize="16dp"
+        android:textSize="17dp"
         dailyFont:style="Medium"
         android:layout_toLeftOf="@+id/discountPriceLayout"/>
 

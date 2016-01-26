@@ -970,6 +970,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                 EventBanner eventBanner = mEventBannerList.get(index.intValue());
 
                 mOnUserActionListener.selectEventBanner(eventBanner);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent("event banner", "hotel", eventBanner.name, 0L);
             }
         }
     };
