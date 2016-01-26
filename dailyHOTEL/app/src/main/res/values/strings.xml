@@ -44,6 +44,7 @@
     <string name="grade_3">3급</string>
     <string name="grade_hostel">호스텔</string>
     <string name="grade_boutique">부띠끄</string>
+    <string name="grade_design">디자인</string>
     <string name="grade_residence">레지던스</string>
     <string name="grade_biz">비지니스</string>
     <string name="grade_resort">리조트</string>
@@ -152,7 +153,7 @@
     <string name="dialog_msg_please_update_new_version">DAILYHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message01">예약 취소, 변경 및 환불 불가 상품이에요!</string>
+    <string name="dialog_msg_hotel_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품이에요!</string>
     <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'은 2인 기준의 더블 또는 트윈 객실로 랜덤 배정 해드려요.</string>
     <string name="dialog_msg_hotel_payment_message03">미성년자는 보호자 동반시 투숙 가능합니다.</string>
     <string name="dialog_msg_hotel_payment_message04">휴대폰 결제는 월 30만원이 한도입니다.</string>
@@ -160,6 +161,9 @@
     <string name="dialog_msg_hotel_payment_message06">취소 불가 등 위 내용에 동의하시면\n버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_hotel_payment_message07">취소 불가 등 위 내용에 동의하시면\n서명 후 결제완료 버튼을 눌러주세요.</string>
     <string name="dialog_msg_hotel_payment_message08">간편결제 시 일시불만 가능하므로 할부를 원하실 경우 일반결제를 선택해주세요.</string>
+    <string name="dialog_msg_hotel_payment_message09">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 30분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
+    <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 15분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
+    <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
 
     <string name="dialog_msg_gourmet_payment_message01">예약 취소, 변경 및 환불 불가 상품이에요!</string>
     <string name="dialog_msg_gourmet_payment_message02">특정 좌석과 뷰를 보장해드리기 어려운 점 양해 부탁드려요.</string>

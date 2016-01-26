@@ -46,17 +46,22 @@ public class FinalCheckLayout extends FrameLayout
 
             String message = context.getString(textResIds[i]);
 
-            if (i == 0)
+            int startIndex = message.indexOf("<b>");
+
+            if (startIndex >= 0)
             {
+                message = message.replaceAll("<b>", "");
+
+                int endIndex = message.indexOf("</b>");
+
+                message = message.replaceAll("</b>", "");
+
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
 
-                int boldStartIndex = message.indexOf("예약");
-                int boldLength = "예약 취소, 변경 및 환불이 불가".length();
-
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dialog_title_text)), //
-                    boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                    boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 messageTextView.setText(spannableStringBuilder);
             } else
