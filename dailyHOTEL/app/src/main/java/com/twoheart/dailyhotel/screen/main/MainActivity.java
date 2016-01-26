@@ -19,8 +19,6 @@ import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 
 import com.android.volley.VolleyError;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
@@ -91,12 +89,6 @@ public class MainActivity extends BaseActivity implements Constants
         void onErrorResponse(VolleyError volleyError);
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -137,10 +129,6 @@ public class MainActivity extends BaseActivity implements Constants
 
         // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
         mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void initLayout()
@@ -369,38 +357,6 @@ public class MainActivity extends BaseActivity implements Constants
 
             Util.restartApp(this);
         }
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        com.google.android.gms.appindexing.Action viewAction = com.google.android.gms.appindexing.Action.newAction(com.google.android.gms.appindexing.Action.TYPE_VIEW, // TODO: choose an action type.
-            "데일리호텔", // TODO: Define a title for the content shown.
-            // TODO: If you have web page content that matches this app activity's content,
-            // make sure this auto-generated web page URL is correct.
-            // Otherwise, set the URL to null.
-            Uri.parse("http://dailyhotel.co.kr"),
-            // TODO: Make sure this auto-generated app deep link URI is correct.
-            Uri.parse("android-app://com.twoheart.dailyhotel/dailyhotel/dailyhotel.co.kr?view=hotel"));
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        com.google.android.gms.appindexing.Action viewAction = com.google.android.gms.appindexing.Action.newAction(com.google.android.gms.appindexing.Action.TYPE_VIEW, // TODO: choose an action type.
-            "데일리호텔", // TODO: Define a title for the content shown.
-            // TODO: If you have web page content that matches this app activity's content,
-            // make sure this auto-generated web page URL is correct.
-            // Otherwise, set the URL to null.
-            Uri.parse("http://dailyhotel.co.kr"),
-            // TODO: Make sure this auto-generated app deep link URI is correct.
-            Uri.parse("android-app://com.twoheart.dailyhotel/dailyhotel/dailyhotel.co.kr?view=hotel"));
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 
     private void showDisabledNetworkPopup()

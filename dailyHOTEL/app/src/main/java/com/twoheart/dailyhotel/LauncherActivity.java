@@ -7,12 +7,6 @@ import android.os.Bundle;
 
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
-import com.twoheart.dailyhotel.util.Util;
-
-import org.json.JSONObject;
-
-import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
 
 public class LauncherActivity extends Activity
 {
@@ -54,23 +48,5 @@ public class LauncherActivity extends Activity
         startActivity(newIntent);
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
         finish();
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        if (Util.isOverAPI14() == true)
-        {
-            Branch branch = Branch.getInstance();
-            branch.initSession(new Branch.BranchReferralInitListener()
-            {
-                @Override
-                public void onInitFinished(JSONObject referringParams, BranchError error)
-                {
-                }
-            }, this.getIntent().getData(), this);
-        }
     }
 }

@@ -52,7 +52,7 @@ public class AnalyticsManager
 
     private void initTune(Context context)
     {
-        mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), "your_advertiser_ID", "your_conversion_key");
+        mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), "190723", "93aa9a40026991386dd92922cb14f58f");
 
         // 기존 사용자와 구분하기 위한 값
         if (Util.isTextEmpty(DailyPreference.getInstance(context).getCompanyName()) == false)
@@ -151,18 +151,20 @@ public class AnalyticsManager
         try
         {
             Product product = new Product().setId(roomIndex).setName(hotelName)//
-                .setCategory(category).setBrand("DAILYHOTEL").setPrice(price).setQuantity(1);
+                .setCategory(category).setBrand("DAILYHOTEL").setPrice(price).setQuantity(1);//
+            //                .setCustomDimension(1, "User Index : " + userIndex)//
+            //                .setCustomDimension(2, "Check-In : " + checkInTime)//
+            //                .setCustomDimension(3, "Check-Out : " + checkOutTime)//
+            //                .setCustomDimension(4, "Pay Type" + payType)//
+            //                .setCustomDimension(5, "Current Time : " + currentTime);
 
             ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
                 .setTransactionId(transId);
 
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
 
+            mTracker.set("currency", "KRW");
             mTracker.send(screenViewBuilder.build());
-
-
-            //            mTracker.send(MapBuilder.createTransaction(transId, "DailyHOTEL", price, 0d, 0d, "KRW").set("payType", payType).build());
-            //            mTracker.send(MapBuilder.createItem(transId, hotelName, "1", category, price, 1L, "KRW").set("roomIndex", roomIndex).set("checkInTime", checkInTime).set("checkOutTime", checkOutTime).set("currentTime", currentTime).build());
 
             recordEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L);
         } catch (Exception e)
@@ -212,6 +214,8 @@ public class AnalyticsManager
 
     public static class Label
     {
+        public static final String HOTEL = "hotel";
+        public static final String GOURMET = "gourmet";
         public static final String LOGIN = "login";
         public static final String SIGNUP = "singup";
         public static final String DATE_TAB = "dateTab";

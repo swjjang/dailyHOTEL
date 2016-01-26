@@ -30,7 +30,7 @@ android {
     defaultConfig {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 10
-        targetSdkVersion 22
+        targetSdkVersion 10
         versionCode 78
         versionName "1.7.8"
         multiDexEnabled true
@@ -38,6 +38,7 @@ android {
         resConfigs "ko"
 //        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -61,13 +62,10 @@ dependencies {
     compile 'com.android.support:design:23.+'
     compile 'com.squareup.okhttp3:okhttp:3+'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.+'
-    compile 'com.squareup.okio:okio:1.+'
     compile 'com.kakao.sdk:kakaolink:1.+'
     compile 'com.kakao.sdk:kakaotalk:1.+'
     compile 'com.facebook.fresco:fresco:0.+'
     compile 'com.facebook.fresco:imagepipeline-okhttp:0.+'
-    compile 'io.branch.sdk.android:library:+'
-    compile 'com.android.support:multidex:1.0.0'
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
@@ -80,8 +78,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.android.gms:play-services-analytics:8.4.0'
 }
 

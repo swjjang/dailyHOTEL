@@ -32,9 +32,7 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.util.Locale;
 
-import io.branch.referral.Branch;
-
-public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
+public class DailyHotel extends Application implements Constants
 {
     private static volatile DailyHotel mInstance = null;
     private static volatile Activity mCurrentActivity = null;
@@ -45,12 +43,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
     {
         super.onCreate();
 
-//        io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
-
-        if (Util.isOverAPI14() == true)
-        {
-            Branch.getAutoInstance(this);
-        }
+        //        io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
 
         mInstance = this;
 
