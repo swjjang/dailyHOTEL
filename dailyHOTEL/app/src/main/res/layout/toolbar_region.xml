@@ -52,12 +52,5 @@
                 android:src="@drawable/navibar_ic_map"
                 android:layout_marginLeft="3dp"/>
         </LinearLayout>
-
-        <View
-            android:id="@+id/underLine"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_alignParentBottom="true"
-            android:background="@color/tab_underline"/>
     </RelativeLayout>
 </merge>

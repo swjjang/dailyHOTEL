@@ -249,7 +249,7 @@ public class HotelDetailLayout
 
         int size = saleRoomList.size();
         int height = Util.dpToPx(mActivity, 92) * size;
-        final int maxHeight = Util.dpToPx(mActivity, 300);
+        final int maxHeight = Util.dpToPx(mActivity, 322);
         ViewGroup.LayoutParams layoutParams = mRoomTypeRecyclerView.getLayoutParams();
 
         if (height > maxHeight)
