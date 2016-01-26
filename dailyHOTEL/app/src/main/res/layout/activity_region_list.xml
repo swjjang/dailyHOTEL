@@ -13,14 +13,14 @@
         app:contentInsetStart="0dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <include layout="@layout/toolbar_default_underline"/>
+        <include layout="@layout/toolbar_default"/>
 
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
+        android:layout_height="36dp"
         android:background="#ffffff"
         app:tabGravity="fill"
         app:tabIndicatorHeight="3dp"
