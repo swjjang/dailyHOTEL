@@ -130,7 +130,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private boolean mIsEditMode;
 
     // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
-    // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약
+    // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
     private int mPensionPopupMessageType;
 
     private View mClickView;
@@ -570,7 +570,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         switch (mPensionPopupMessageType)
         {
             case 1:
-            case 4:
+            case 10:
                 messages = new int[currentMessages.length + 1];
                 messages[0] = currentMessages[0];
                 messages[1] = R.string.dialog_msg_hotel_payment_message09;
@@ -585,13 +585,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 break;
 
             case 3:
+            case 12:
                 messages = new int[currentMessages.length + 1];
                 messages[0] = currentMessages[0];
                 messages[1] = R.string.dialog_msg_hotel_payment_message11;
                 System.arraycopy(currentMessages, 1, messages, 2, currentMessages.length - 1);
                 break;
 
-            case 5:
+            case 11:
                 messages = new int[currentMessages.length + 1];
                 messages[0] = currentMessages[0];
                 messages[1] = R.string.dialog_msg_hotel_payment_message12;
@@ -2546,15 +2547,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 int closeHour = Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime"))));
                 int currentHour = Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("currentDateTime"))));
 
-                // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
-                // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약
                 // 당일인지 아닌지
                 if (mCheckInSaleTime.getOffsetDailyDay() == 0)
                 {
                     if (currentHour >= openHour && currentHour < 18)
                     {
                         mPensionPopupMessageType = 1;
-                    } else if (currentHour >= 18 && currentHour < closeHour)
+                    } else if (currentHour >= 18 || currentHour < closeHour)
                     {
                         mPensionPopupMessageType = 2;
                     } else
@@ -2566,9 +2565,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     if (currentHour >= openHour && currentHour < 22)
                     {
                         mPensionPopupMessageType = 10;
-                    } else
+                    } else if(currentHour >= 22)
                     {
                         mPensionPopupMessageType = 11;
+                    } else
+                    {
+                        mPensionPopupMessageType = 12;
                     }
                 }
 

@@ -163,7 +163,7 @@
     <string name="dialog_msg_hotel_payment_message08">간편결제 시 일시불만 가능하므로 할부를 원하실 경우 일반결제를 선택해주세요.</string>
     <string name="dialog_msg_hotel_payment_message09">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 30분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 15분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 오늘 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
+    <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
 
     <string name="dialog_msg_gourmet_payment_message01">예약 취소, 변경 및 환불 불가 상품이에요!</string>
