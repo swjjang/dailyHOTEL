@@ -976,6 +976,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 EventBanner eventBanner = mEventBannerList.get(index.intValue());
 
                 mOnUserActionListener.selectEventBanner(eventBanner);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent("event banner", "gourmet", eventBanner.name, 0L);
             }
         }
     };
