@@ -97,14 +97,14 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
     {
         if (v.getId() == mPositiveView.getId())
         {
+            Intent intent = new Intent(this, LauncherActivity.class);
+
             if (Util.isTextEmpty(mLink) == false)
             {
-                Intent intent = new Intent(this, LauncherActivity.class);
                 intent.setData(Uri.parse(mLink));
-
-                startActivity(intent);
             }
 
+            startActivity(intent);
             finish();
         } else if (v.getId() == mNegativeView.getId())
         {

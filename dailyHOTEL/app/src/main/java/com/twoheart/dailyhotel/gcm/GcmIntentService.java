@@ -182,8 +182,6 @@ public class GcmIntentService extends IntentService implements Constants
                 ExLog.e(e.toString());
             }
         }
-
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
     public void sendPush(String messageType, int type, String title, String msg, String imageUrl, String link)
@@ -220,6 +218,12 @@ public class GcmIntentService extends IntentService implements Constants
                 }
             } else if (!isScreenOn(this) && !mIsBadge)
             {
+                // 스크린이 꺼져있으면 팝업을 띄우지 않는다
+                if (type != PUSH_TYPE_ACCOUNT_COMPLETE)
+                {
+                    return;
+                }
+
                 // 스크린 꺼져있는경우
                 WakeLock.acquireWakeLock(this, PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP); // PushDialogActivity에서 release 해줌.
                 KeyguardManager manager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
@@ -258,7 +262,7 @@ public class GcmIntentService extends IntentService implements Constants
 
     private void sendNotification(int type, String title, String msg, String imageUrl, String link)
     {
-        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent intent = new Intent(this, LauncherActivity.class);
         if (type == PUSH_TYPE_ACCOUNT_COMPLETE)

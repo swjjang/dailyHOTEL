@@ -764,7 +764,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             strDate = dateFormat2.format(date);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, Integer.toString(ticketInformation.index), //
-                ticketInformation.placeName, Label.PAYMENT, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.paymentType.name(), strDate, price);
+                ticketInformation.placeName, Label.GOURMET, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.paymentType.name(), strDate, price);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
