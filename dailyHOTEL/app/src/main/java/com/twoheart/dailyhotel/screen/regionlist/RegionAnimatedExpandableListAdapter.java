@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.cache.disk.DiskStorageCache;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -215,7 +218,15 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
         TextView englishTextView = (TextView) convertView.findViewById(R.id.provinceEnglishTextView);
 
-        provinceImageView.setImageURI(Uri.parse(province.imageUrl));
+        Uri uri = Util.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
+        provinceImageView.setImageURI(uri);
+
+        if (uri != null)
+        {
+            DiskStorageCache diskCache = Fresco.getImagePipelineFactory().getMainDiskStorageCache();
+            SimpleCacheKey cacheKey = new SimpleCacheKey(uri.toString());
+            diskCache.probe(cacheKey);
+        }
 
         textView.setText(getInsertSpaceName(province.name));
         englishTextView.setText(getInsertSpaceName(province.englishName));

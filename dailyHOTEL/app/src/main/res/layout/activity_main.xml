@@ -29,14 +29,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="6px"
-            android:layout_marginTop="85dp"
+            android:layout_marginTop="121dp"
             android:background="@drawable/navibar_gradation"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/menubar_height"
-            android:layout_marginTop="85dp"
+            android:layout_marginTop="121dp"
             android:background="@color/splash_background"
             android:scaleType="center"
             android:src="@drawable/splash_logo"/>

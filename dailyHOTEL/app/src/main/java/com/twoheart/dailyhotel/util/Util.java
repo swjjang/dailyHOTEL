@@ -77,6 +77,7 @@ public class Util implements Constants
         }
 
         Fresco.initialize(context, imagePipelineConfig);
+        Fresco.getImagePipelineFactory().getMainDiskStorageCache().clearAll();
 
         System.loadLibrary("webp");
     }

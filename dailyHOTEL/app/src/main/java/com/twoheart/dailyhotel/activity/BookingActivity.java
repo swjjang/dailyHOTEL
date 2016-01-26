@@ -585,10 +585,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 break;
 
             case 3:
-            case 5:
                 messages = new int[currentMessages.length + 1];
                 messages[0] = currentMessages[0];
                 messages[1] = R.string.dialog_msg_hotel_payment_message11;
+                System.arraycopy(currentMessages, 1, messages, 2, currentMessages.length - 1);
+                break;
+
+            case 5:
+                messages = new int[currentMessages.length + 1];
+                messages[0] = currentMessages[0];
+                messages[1] = R.string.dialog_msg_hotel_payment_message12;
                 System.arraycopy(currentMessages, 1, messages, 2, currentMessages.length - 1);
                 break;
 
@@ -2548,7 +2554,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     if (currentHour >= openHour && currentHour < 18)
                     {
                         mPensionPopupMessageType = 1;
-                    } else if (openHour >= 18 && currentHour < closeHour)
+                    } else if (currentHour >= 18 && currentHour < closeHour)
                     {
                         mPensionPopupMessageType = 2;
                     } else

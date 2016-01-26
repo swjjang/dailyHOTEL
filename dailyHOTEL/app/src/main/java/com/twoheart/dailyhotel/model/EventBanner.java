@@ -12,6 +12,7 @@ public class EventBanner
     private boolean mIsHotel;
     public String imageUrl;
     public String webLink;
+    public String name;
 
     public EventBanner()
     {
@@ -20,6 +21,8 @@ public class EventBanner
 
     public EventBanner(JSONObject jsonObject, String url) throws Exception
     {
+        name = jsonObject.getString("name");
+
         if (jsonObject.isNull("linkUrl") == false)
         {
             // 웹링크인 경우
