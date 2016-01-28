@@ -7,6 +7,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -351,6 +352,8 @@ public class MainPresenter implements Response.ErrorListener
             try
             {
                 final String userIndex = response.getString("idx");
+
+                AnalyticsManager.getInstance(mBaseActivity).setUserIndex(userIndex);
 
                 if (Util.isTextEmpty(DailyPreference.getInstance(mBaseActivity).getGCMRegistrationId()) == true)
                 {

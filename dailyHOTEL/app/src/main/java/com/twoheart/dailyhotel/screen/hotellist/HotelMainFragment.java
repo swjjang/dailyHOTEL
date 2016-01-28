@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TimeZone;
 
 public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
@@ -62,6 +65,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private SaleTime mTodaySaleTime;
     private Province mSelectedProvince;
+    private Category mSelectedCategory;
 
     private boolean mMenuEnabled;
     private boolean mMapEnabled;
@@ -90,6 +94,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         void toggleViewType();
 
         void selectSortType(SortType sortType);
+
+        void setLocation(Location location);
 
         void onClickActionBarArea();
 
@@ -435,36 +441,121 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
     }
 
-    private void makeCategoryTabLayout(JSONArray jsonArray)
+    private void fixCategoryTabLayout(int size)
     {
-//        if(jsonArray == null)
-//        {
-//            mCategoryTabLayout.setVisibility(View.GONE);
-//            return;
-//        }
-//
-//        int length = jsonArray.length();
-//
-//        if(length == 0)
-//        {
-//            mCategoryTabLayout.setVisibility(View.GONE);
-//            return;
-//        }
+        int tabCount = mCategoryTabLayout.getTabCount();
+        if (tabCount > 0)
+        {
+            if (size > tabCount)
+            {
+                int count = size - tabCount;
+                for (int i = 0; i < count; i++)
+                {
+                    mCategoryTabLayout.addTab(mCategoryTabLayout.newTab());
+                }
+            } else if (size < tabCount)
+            {
+                for (int i = tabCount - 1; i <= size - 1; i--)
+                {
+                    mCategoryTabLayout.removeTabAt(i);
+                }
+            }
+        } else
+        {
+            for (int i = 0; i < size; i++)
+            {
+                mCategoryTabLayout.addTab(mCategoryTabLayout.newTab());
+            }
+        }
+    }
 
 
-        mCategoryTabLayout.removeAllTabs();
+    private void makeCategoryTabLayout(List<Category> list)
+    {
+        if (list == null)
+        {
+            setSelectCategory(Category.ALL);
+            mCategoryTabLayout.setVisibility(View.GONE);
+            return;
+        }
 
-        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("전체"));
-        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("호텔"));
-        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("부띠끄"));
-        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("펜션"));
-        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("디자인"));
-        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("풀빌라"));
-        mCategoryTabLayout.addTab(mCategoryTabLayout.newTab().setText("모텔"));
+        int size = list.size();
+
+        if (size < 2)
+        {
+            setSelectCategory(Category.ALL);
+            mCategoryTabLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        fixCategoryTabLayout(size);
+
+        // 선택된 카테고리가 없는 경우 2번째가 항상 선택된다
+        if (mSelectedCategory == null)
+        {
+            setSelectCategory(list.get(1));
+        }
+
+        TabLayout.Tab selectedTab = null;
+
+        final float TAB_COUNT = 4.5f;
+        final int TAB_WIDTH = (int) (Util.getLCDWidth(getContext()) / TAB_COUNT);
+
+        for (int i = 0; i < size; i++)
+        {
+            Category category = list.get(i);
+
+            TabLayout.Tab tab = mCategoryTabLayout.getTabAt(i);
+            tab.setText(category.name);
+            tab.setTag(category);
+
+            ViewGroup tabStrip = (ViewGroup) mCategoryTabLayout.getChildAt(0);
+            View tabView = tabStrip.getChildAt(i);
+
+            ViewGroup.LayoutParams layoutParams = tabView.getLayoutParams();
+            layoutParams.width = TAB_WIDTH;
+            tabView.setLayoutParams(layoutParams);
+
+            if (mSelectedCategory.code.equalsIgnoreCase(category.code) == true)
+            {
+                selectedTab = tab;
+            }
+        }
+
+        if (selectedTab != null)
+        {
+            selectedTab.select();
+        }
+
+        mCategoryTabLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int selectedIndex = mCategoryTabLayout.getSelectedTabPosition();
+
+                mCategoryTabLayout.setScrollPosition(selectedIndex, 0f, false);
+            }
+        });
 
         mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
 
         FontManager.apply(mCategoryTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+    }
+
+    private void setSelectCategory(Category category)
+    {
+        if (category == null)
+        {
+            category = Category.ALL;
+        }
+
+        mSelectedCategory = category;
+
+        for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
+        {
+            hotelListFragment.setSelectedCategory(mSelectedCategory);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -676,8 +767,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             mCategoryTabLayout.setOnTabSelectedListener(null);
 
+            Category category = (Category) tab.getTag();
+            setSelectCategory(category);
 
-
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.requestFilteringCategory();
 
             mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
         }
@@ -924,9 +1018,27 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void selectSortType(SortType sortType)
         {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
             for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
             {
                 hotelListFragment.setSortType(sortType);
+            }
+
+            baseActivity.invalidateOptionsMenu();
+        }
+
+        @Override
+        public void setLocation(Location location)
+        {
+            for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
+            {
+                hotelListFragment.setLocation(location);
             }
         }
 
@@ -1148,6 +1260,19 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         }
                     }
 
+                    {
+                        List<Category> list = new ArrayList<>();
+                        list.add(new Category("전체", "all"));
+                        list.add(new Category("특급", "special"));
+                        list.add(new Category("부띠끄", "boutique"));
+                        list.add(new Category("펜션", "pension"));
+                        list.add(new Category("디자인", "design"));
+                        list.add(new Category("풀빌라", "fullvilla"));
+                        list.add(new Category("모텔", "motel"));
+
+                        makeCategoryTabLayout(list);
+                    }
+
                     boolean isSelectionTop = isSelectionTop();
                     onNavigationItemSelected(selectedProvince, isSelectionTop);
                 } else
@@ -1156,9 +1281,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     onInternalError(message);
                 }
-
-
-                makeCategoryTabLayout(null);
             } catch (Exception e)
             {
                 onError(e);

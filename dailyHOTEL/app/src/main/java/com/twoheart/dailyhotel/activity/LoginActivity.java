@@ -118,7 +118,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mLoginView = (TextView) findViewById(R.id.btn_login);
 
         mFacebookLoginView = (com.facebook.login.widget.LoginButton) findViewById(R.id.facebookLoginButton);
-        mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile, email"));
+        mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
 
         View facebookLoginView = findViewById(R.id.facebookLoginView);
         facebookLoginView.setOnClickListener(new View.OnClickListener()
@@ -242,7 +242,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     }
 
 
-    private void registerFacebookUser(String id, String name, String email)
+    private void registerFacebookUser(String id, String name, String email, String gender)
     {
         TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -278,6 +278,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         if (Util.isTextEmpty(name) == false)
         {
             mStoreParams.put("name", name);
+        }
+
+        if (Util.isTextEmpty(gender) == false)
+        {
+            mStoreParams.put("gender", gender);
         }
 
         if (deviceId != null)
@@ -619,9 +624,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             name = jsonObject.getString("name");
                         }
 
+                        String gender = null;
+
+                        if (jsonObject.has("gender") == true)
+                        {
+                            gender = jsonObject.getString("gender");
+                        }
+
                         String id = jsonObject.getString("id");
 
-                        registerFacebookUser(id, name, email);
+                        registerFacebookUser(id, name, email, gender);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -630,7 +642,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             });
 
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "name, email");
+            parameters.putString("fields", "name, email, gender");
             request.setParameters(parameters);
             request.executeAsync();
         }
@@ -646,7 +658,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mSocialUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -695,6 +707,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         }
 
                         mAutoLoginSwitch.setChecked(true);
+
+                        mStoreParams.put("new_user", "1");
 
                         DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
                         return;
@@ -780,6 +794,25 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     params.put(Label.TYPE, "Social");
 
                     AnalyticsManager.getInstance(LoginActivity.this).recordEvent(Screen.LOGIN, Action.NETWORK, Label.SIGNUP, params);
+
+                    if(mStoreParams.containsKey("new_user") == true)
+                    {
+                        // user_type : kakao_talk. facebook
+                        String userType = mStoreParams.get("user_type");
+
+                        if("kakao_talk".equalsIgnoreCase(userType) == true)
+                        {
+                            userType = AnalyticsManager.UserType.KAKAO;
+                        } else if("facebook".equalsIgnoreCase(userType) == true)
+                        {
+                            userType = AnalyticsManager.UserType.FACEBOOK;
+                        }
+
+                        AnalyticsManager.getInstance(LoginActivity.this).recordSocialRegistration(//
+                            userIndex//
+                            , mStoreParams.get("email"), mStoreParams.get("name")//
+                            , mStoreParams.get("gender"), null, userType);
+                    }
                 }
             } catch (Exception e)
             {
@@ -858,7 +891,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 } else
                 {
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-                    DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mStoreParams, mUserSignupJsonResponseListener, LoginActivity.this);
+                    DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupJsonResponseListener, LoginActivity.this);
                 }
 
                 //                {

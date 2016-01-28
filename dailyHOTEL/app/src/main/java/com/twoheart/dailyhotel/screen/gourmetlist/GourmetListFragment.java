@@ -84,6 +84,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
     private int mDownDistance;
     private int mUpDistance;
 
+    private boolean mIsAttach;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -132,6 +134,14 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.GOURMET_LIST);
         super.onStart();
+    }
+
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+
+        mIsAttach = true;
     }
 
     @Override
@@ -443,7 +453,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         final BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null || baseActivity.isFinishing() == true)
+        if (baseActivity == null || baseActivity.isFinishing() == true || mIsAttach == false)
         {
             return;
         }
@@ -603,7 +613,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (baseActivity == null || this.isDetached())
         {
             return;
         }
