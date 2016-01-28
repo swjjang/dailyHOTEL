@@ -187,9 +187,17 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestUserRegisterNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "user/notification/register" : "MjkkMzAkMjAkMyQzMiQ=$MkUSwQkZDOUNGMDg5RTMwAQUEwODEwNDJOzIzQjI0NjNEODNCMEQ4MUVGNUMwNzlBMjY2OEJFMUVCMjdGN0ZCNUMzNg==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "notificatioin/v1/register" : "NzEkNjEkNDEkMTEkNTMk$RjI0OTE3QkMR5MjRBMTUzQzU3ODhCMDg0NTZDMzc0RIEIyN0Y3NzkQxQTNFODg1NBEI2QjQxNEJMDNTFGNDJDMUU0Mw==$";
 
-        mQueue.add(new DailyHotelJsonRequest(Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
+        mQueue.add(new DailyHotelJsonRequest(Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
+    }
+
+    @Override
+    public void requestUserUpdateNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "notificatioin/v1/update" : "MzEkMzEkMzIkODkkNTQk$NENBNkMzNjk3NzhFQTAwRjc0MkU3RjcOBS2ODU5MDU0MUUxRERFMDZQGQkY2MTRENjYzNDU0OURBMTMyQkExQ0U2RQO==$";
+
+        mQueue.add(new DailyHotelJsonRequest(Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
     }
 
     @Override

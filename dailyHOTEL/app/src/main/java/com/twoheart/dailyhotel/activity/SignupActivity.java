@@ -78,7 +78,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private boolean mIsDailyUser;
 
     private Map<String, String> mSignupParams;
-    private HashMap<String, String> regPushParams;
 
     private boolean mFirstMobileNumberFocus;
     private DailyToolbarLayout mDailyToolbarLayout;
@@ -608,13 +607,35 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                     return;
                 }
 
-                // 이 값을 서버에 등록하기.
-                regPushParams = new HashMap<String, String>();
-                regPushParams.put("user_idx", idx);
-                regPushParams.put("notification_id", regId);
-                regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
+                Map<String, String> paramHashMap = new HashMap<>();
+                paramHashMap.put("registrationId", regId);
 
-                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, regPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
+                DailyPreference.getInstance(SignupActivity.this).setGCMRegistrationId(regId);
+                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, paramHashMap, new DailyHotelJsonResponseListener()
+                {
+                    @Override
+                    public void onResponse(String url, JSONObject response)
+                    {
+                        try
+                        {
+                            int msg_code = response.getInt("msgCode");
+
+                            if (msg_code == 0 && response.has("data") == true)
+                            {
+                                JSONObject jsonObject = response.getJSONObject("data");
+
+                                int uid = jsonObject.getInt("uid");
+                                DailyPreference.getInstance(SignupActivity.this).setNotificationUid(uid);
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        } finally
+                        {
+                            signUpAndFinish();
+                        }
+                    }
+                }, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
@@ -776,36 +797,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             } catch (Exception e)
             {
                 onError(e);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            unLockUI();
-
-            // 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
-            try
-            {
-                String result = null;
-
-                if (null != response)
-                {
-                    result = response.getString("result");
-                }
-
-                if (true == "true".equalsIgnoreCase(result))
-                {
-                    DailyPreference.getInstance(SignupActivity.this).setGCMRegistrationId(regPushParams.get("notification_id"));
-                }
-            } catch (Exception e)
-            {
-            } finally
-            {
-                signUpAndFinish();
             }
         }
     };

@@ -68,7 +68,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -489,6 +488,77 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
+    private void registerNotificationId(String registrationId, String userIndex)
+    {
+        DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    int msg_code = response.getInt("msgCode");
+
+                    if (msg_code == 0 && response.has("data") == true)
+                    {
+                        JSONObject jsonObject = response.getJSONObject("data");
+
+                        int uid = jsonObject.getInt("uid");
+                        DailyPreference.getInstance(LoginActivity.this).setNotificationUid(uid);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                } finally
+                {
+                    DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            }
+        };
+
+        ErrorListener errorListener = new ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError arg0)
+            {
+                unLockUI();
+
+                DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+                setResult(RESULT_OK);
+                finish();
+            }
+        };
+
+        int uid = DailyPreference.getInstance(LoginActivity.this).getNotificationUid();
+        if (uid < 0)
+        {
+            Map<String, String> paramHashMap = new HashMap<>();
+            paramHashMap.put("registrationId", registrationId);
+
+            DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
+            DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
+        } else
+        {
+            if (registrationId.equalsIgnoreCase(DailyPreference.getInstance(LoginActivity.this).getGCMRegistrationId()) == false)
+            {
+                Map<String, String> paramHashMap = new HashMap<>();
+
+                if (Util.isTextEmpty(userIndex) == false)
+                {
+                    paramHashMap.put("userIdx", userIndex);
+                }
+
+                paramHashMap.put("changedRegistrationId", registrationId);
+                paramHashMap.put("uid", Integer.toString(uid));
+
+                DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
+                DailyNetworkAPI.getInstance().requestUserUpdateNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
+            }
+        }
+    }
+
     private void regGcmId(final String userIndex)
     {
         if (Util.isGooglePlayServicesAvailable(this) == false)
@@ -532,23 +602,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     return;
                 }
 
-                mRegPushParams = new HashMap<String, String>();
-                mRegPushParams.put("user_idx", userIndex);
-                mRegPushParams.put("notification_id", regId);
-                mRegPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
-
-                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, mRegPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError arg0)
-                    {
-                        unLockUI();
-
-                        DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                });
+                registerNotificationId(regId, userIndex);
             }
         }.execute();
     }
@@ -735,34 +789,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            // 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
-            try
-            {
-                ExLog.e("MSG : " + response.toString());
-
-                if (response.getString("result").equals("true") == true)
-                {
-                    DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(mRegPushParams.get("notification_id"));
-                }
-
-                DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-                setResult(RESULT_OK);
-                finish();
-            } catch (JSONException e)
-            {
-                ExLog.e(e.toString());
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-
     private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -795,15 +821,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     AnalyticsManager.getInstance(LoginActivity.this).recordEvent(Screen.LOGIN, Action.NETWORK, Label.SIGNUP, params);
 
-                    if(mStoreParams.containsKey("new_user") == true)
+                    if (mStoreParams.containsKey("new_user") == true)
                     {
                         // user_type : kakao_talk. facebook
                         String userType = mStoreParams.get("user_type");
 
-                        if("kakao_talk".equalsIgnoreCase(userType) == true)
+                        if ("kakao_talk".equalsIgnoreCase(userType) == true)
                         {
                             userType = AnalyticsManager.UserType.KAKAO;
-                        } else if("facebook".equalsIgnoreCase(userType) == true)
+                        } else if ("facebook".equalsIgnoreCase(userType) == true)
                         {
                             userType = AnalyticsManager.UserType.FACEBOOK;
                         }

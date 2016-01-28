@@ -2565,7 +2565,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     if (currentHour >= openHour && currentHour < 22)
                     {
                         mPensionPopupMessageType = 10;
-                    } else if(currentHour >= 22)
+                    } else if (currentHour >= 22)
                     {
                         mPensionPopupMessageType = 11;
                     } else

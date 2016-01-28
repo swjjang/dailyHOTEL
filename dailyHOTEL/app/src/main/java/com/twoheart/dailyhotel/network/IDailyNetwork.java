@@ -110,6 +110,13 @@ interface IDailyNetwork
      */
     void requestUserRegisterNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
+    /**
+     * @param tag
+     * @param params
+     * @param listener
+     * @param errorListener
+     */
+    void requestUserUpdateNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/user/information/omission;
