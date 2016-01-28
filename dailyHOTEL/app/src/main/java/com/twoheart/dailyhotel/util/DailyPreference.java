@@ -28,6 +28,8 @@ public class DailyPreference
 
     private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
 
+    private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
+
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
     private static final String KEY_COMPANY_BIZREGNUMBER = "102";
@@ -35,6 +37,7 @@ public class DailyPreference
     private static final String KEY_COMPANY_ADDRESS = "104";
     private static final String KEY_COMPANY_PHONENUMBER = "105";
     private static final String KEY_COMPANY_FAX = "106";
+
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
@@ -237,6 +240,16 @@ public class DailyPreference
     public void setNewEvent(boolean value)
     {
         setV1Value(KEY_NEW_EVENT, value);
+    }
+
+    public int getNotificationUid()
+    {
+        return getV1Value(KEY_NOTIFICATION_UID, -1);
+    }
+
+    public void setNotificationUid(int value)
+    {
+        setV1Value(KEY_NOTIFICATION_UID, value);
     }
 
     public String getLastMenu()

@@ -112,6 +112,60 @@ public class MainPresenter implements Response.ErrorListener
         DailyNetworkAPI.getInstance().requestGourmetIsExistRating(mBaseActivity.getNetworkTag(), mGourmetSatisfactionRatingExistJsonResponseListener, null);
     }
 
+    private void registerNotificationId(String registrationId, String userIndex)
+    {
+        DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    int msg_code = response.getInt("msgCode");
+
+                    if (msg_code == 0 && response.has("data") == true)
+                    {
+                        JSONObject jsonObject = response.getJSONObject("data");
+
+                        int uid = jsonObject.getInt("uid");
+                        DailyPreference.getInstance(mBaseActivity).setNotificationUid(uid);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+        };
+
+        int uid = DailyPreference.getInstance(mBaseActivity).getNotificationUid();
+        if (uid < 0)
+        {
+            Map<String, String> paramHashMap = new HashMap<>();
+            paramHashMap.put("registrationId", registrationId);
+
+            DailyPreference.getInstance(mBaseActivity).setGCMRegistrationId(registrationId);
+            DailyNetworkAPI.getInstance().requestUserRegisterNotification(mBaseActivity.getNetworkTag(), paramHashMap, dailyHotelJsonResponseListener, null);
+        } else
+        {
+            if (registrationId.equalsIgnoreCase(DailyPreference.getInstance(mBaseActivity).getGCMRegistrationId()) == false)
+            {
+                Map<String, String> paramHashMap = new HashMap<>();
+
+                if (Util.isTextEmpty(userIndex) == false)
+                {
+                    paramHashMap.put("userIdx", userIndex);
+                }
+
+                paramHashMap.put("changedRegistrationId", registrationId);
+                paramHashMap.put("uid", Integer.toString(uid));
+
+                DailyPreference.getInstance(mBaseActivity).setGCMRegistrationId(registrationId);
+                DailyNetworkAPI.getInstance().requestUserUpdateNotification(mBaseActivity.getNetworkTag(), paramHashMap, dailyHotelJsonResponseListener, null);
+            }
+        }
+    }
+
+
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -367,14 +421,7 @@ public class MainPresenter implements Response.ErrorListener
                                 return;
                             }
 
-                            Map<String, String> paramHashMap = new HashMap<>();
-                            paramHashMap.put("user_idx", userIndex);
-                            paramHashMap.put("notification_id", registrationId);
-                            paramHashMap.put("device_type", Constants.GCM_DEVICE_TYPE_ANDROID);
-
-                            DailyPreference.getInstance(mBaseActivity).setGCMRegistrationId(registrationId);
-
-                            DailyNetworkAPI.getInstance().requestUserRegisterNotification(mBaseActivity.getNetworkTag(), paramHashMap, null, null);
+                            registerNotificationId(registrationId, userIndex);
                         }
                     });
                 }
@@ -419,14 +466,7 @@ public class MainPresenter implements Response.ErrorListener
                                 return;
                             }
 
-                            Map<String, String> paramHashMap = new HashMap<>();
-                            paramHashMap.put("user_idx", "-1");
-                            paramHashMap.put("notification_id", registrationId);
-                            paramHashMap.put("device_type", Constants.GCM_DEVICE_TYPE_ANDROID);
-
-                            DailyPreference.getInstance(mBaseActivity).setGCMRegistrationId(registrationId);
-
-                            DailyNetworkAPI.getInstance().requestUserRegisterNotification(mBaseActivity.getNetworkTag(), paramHashMap, null, null);
+                            registerNotificationId(registrationId, null);
                         }
                     });
                 }

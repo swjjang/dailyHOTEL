@@ -1062,27 +1062,42 @@ public class HotelListFragment extends BaseFragment implements Constants
             }
         }
 
-        if (sortType == SortType.DEFAULT)
-        {
-            if (mEventBannerList != null && mEventBannerList.size() > 0)
-            {
-                PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
-                hotelListViewItemList.add(0, placeViewItem);
-            }
-        }
-
         mHotelAdapter.clear();
-        mHotelAdapter.addAll(hotelListViewItemList, sortType);
-        mHotelAdapter.notifyDataSetChanged();
 
-        if (mIsSelectionTop == true)
+        if (hotelListViewItemList.size() == 0)
         {
-            mHotelRecycleView.scrollToPosition(0);
-        }
+            mHotelAdapter.notifyDataSetChanged();
 
-        if (mOnUserActionListener != null)
+            setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.GONE);
+
+            if (mOnUserActionListener != null)
+            {
+                mOnUserActionListener.expandedAppBar(true, true);
+                mOnUserActionListener.setMapViewVisible(false);
+            }
+        } else
         {
-            mOnUserActionListener.setMapViewVisible(true);
+            if (sortType == SortType.DEFAULT)
+            {
+                if (mEventBannerList != null && mEventBannerList.size() > 0)
+                {
+                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
+                    hotelListViewItemList.add(0, placeViewItem);
+                }
+            }
+
+            mHotelAdapter.addAll(hotelListViewItemList, sortType);
+            mHotelAdapter.notifyDataSetChanged();
+
+            if (mIsSelectionTop == true)
+            {
+                mHotelRecycleView.scrollToPosition(0);
+            }
+
+            if (mOnUserActionListener != null)
+            {
+                mOnUserActionListener.setMapViewVisible(true);
+            }
         }
     }
 
