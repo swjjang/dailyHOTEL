@@ -12,6 +12,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.mobileapptracker.MATEvent;
+import com.mobileapptracker.MATGender;
 import com.mobileapptracker.MobileAppTracker;
 
 import java.util.Map;
@@ -41,13 +42,17 @@ public class AnalyticsManager
 
     private void initAnalytics(Context context)
     {
+        initGoogleAnalytics(context);
+        initTune(context);
+    }
+
+    private void initGoogleAnalytics(Context context)
+    {
         mGoogleAnalytics = GoogleAnalytics.getInstance(context);
         mGoogleAnalytics.setLocalDispatchPeriod(60);
 
         mTracker = mGoogleAnalytics.newTracker(Constants.GA_PROPERTY_ID);
         mTracker.enableAdvertisingIdCollection(true);
-
-        initTune(context);
     }
 
     private void initTune(Context context)
@@ -75,10 +80,55 @@ public class AnalyticsManager
         }
     }
 
+    public void setUserIndex(String index)
+    {
+        mTracker.set("userId", index);
+        mMobileAppTracker.setUserId(index);
+    }
+
     public void onResume(Activity activity)
     {
         mMobileAppTracker.setReferralSources(activity);
         mMobileAppTracker.measureSession();
+    }
+
+    public void recordSocialRegistration(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    {
+        // Tune
+        mMobileAppTracker.setUserId(userIndex);
+
+        if (Util.isTextEmpty(email) == false)
+        {
+            mMobileAppTracker.setUserEmail(email);
+        }
+
+        if (Util.isTextEmpty(name) == false)
+        {
+            mMobileAppTracker.setUserName(name);
+        }
+
+        if (Util.isTextEmpty(gender) == false)
+        {
+            if ("male".equalsIgnoreCase(gender) == true)
+            {
+                mMobileAppTracker.setGender(MATGender.MALE);
+            } else if ("female".equalsIgnoreCase(gender) == true)
+            {
+                mMobileAppTracker.setGender(MATGender.FEMALE);
+            }
+        }
+
+        if (Util.isTextEmpty(phoneNumber) == false)
+        {
+            mMobileAppTracker.setPhoneNumber(phoneNumber);
+        }
+
+        mMobileAppTracker.setCurrencyCode("KRW");
+
+        MATEvent matEvent = new MATEvent(MATEvent.REGISTRATION)//
+            .withAttribute1(userType);
+
+        mMobileAppTracker.measureEvent(matEvent);
     }
 
     public void recordRegistration(String userIndex, String email, String name, String phoneNumber, String userType)
@@ -89,7 +139,11 @@ public class AnalyticsManager
         mMobileAppTracker.setUserName(name);
         mMobileAppTracker.setPhoneNumber(phoneNumber);
         mMobileAppTracker.setCurrencyCode("KRW");
-        mMobileAppTracker.measureEvent(MATEvent.REGISTRATION);
+
+        MATEvent matEvent = new MATEvent(MATEvent.REGISTRATION)//
+            .withAttribute1(userType);
+
+        mMobileAppTracker.measureEvent(matEvent);
     }
 
     public void recordScreen(String screenName)
@@ -163,7 +217,7 @@ public class AnalyticsManager
 
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
 
-            mTracker.set("currency", "KRW");
+            mTracker.set("&cu", "KRW");
             mTracker.send(screenViewBuilder.build());
 
             recordEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L);
@@ -263,5 +317,12 @@ public class AnalyticsManager
         public static final String PLACE_TICKET_NAME = "placeTicketName";
         public static final String PLACE_TICKET_INDEX = "placeTicketIndex";
         public static final String BOUNS = "bonus";
+    }
+
+    public static class UserType
+    {
+        public static final String KAKAO = "kakao";
+        public static final String FACEBOOK = "facebook";
+        public static final String EMAIL = "email";
     }
 }

@@ -820,7 +820,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 String userIndex = String.valueOf(response.getInt("idx"));
 
                 AnalyticsManager.getInstance(SignupActivity.this).recordRegistration(userIndex, mSignupParams.get("email")//
-                    , mSignupParams.get("name"), mSignupParams.get("phone"), "normal");
+                    , mSignupParams.get("name"), mSignupParams.get("phone"), AnalyticsManager.UserType.EMAIL);
 
                 regGcmId(userIndex);
 
