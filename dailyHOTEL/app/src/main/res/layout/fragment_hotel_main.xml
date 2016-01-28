@@ -51,7 +51,7 @@
             app:tabMinWidth="80dp"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/tab_selected"
-            app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
+            app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
             app:tabTextColor="@color/tab_text"/>
     </android.support.design.widget.AppBarLayout>
 

@@ -77,4 +77,8 @@
         <item name="android:textSize">@dimen/tabbar_text</item>
     </style>
 
+    <style name="CategoryTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">12dp</item>
+    </style>
+
 </resources>

@@ -186,7 +186,6 @@ interface IDailyNetwork
      */
     void requestHotelRegionList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
-
     /**
      * api/hotel/v1/payment/detail
      * 호텔 결제 정보 내역을 요청한다
