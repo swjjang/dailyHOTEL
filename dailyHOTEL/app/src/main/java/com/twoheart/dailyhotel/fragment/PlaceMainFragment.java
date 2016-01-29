@@ -112,7 +112,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             // 신규 타입의 화면이동
             int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             long dailyTime = mTodaySaleTime.getDailyTime();
-            int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+            int nights = 1;
 
             String date = DailyDeepLink.getInstance().getDate();
             SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");

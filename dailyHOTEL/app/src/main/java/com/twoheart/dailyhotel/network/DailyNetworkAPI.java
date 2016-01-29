@@ -187,17 +187,17 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestUserRegisterNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "notificatioin/v1/register" : "NzEkNjEkNDEkMTEkNTMk$RjI0OTE3QkMR5MjRBMTUzQzU3ODhCMDg0NTZDMzc0RIEIyN0Y3NzkQxQTNFODg1NBEI2QjQxNEJMDNTFGNDJDMUU0Mw==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "notification/v1/register" : "MTkkNTckMiQ0OSQxMCQ=$MTBEyNUM1QNUY2OEFDOUZYBRTA2Mjg4NDc1RjkwRDMwQ0Q5MUEAyRjU2NTcwTMkZEMjgxMTc1NDlBMEY0MTlDNzI5QQ==$";
 
-        mQueue.add(new DailyHotelJsonRequest(Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
+        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
     }
 
     @Override
     public void requestUserUpdateNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "notificatioin/v1/update" : "MzEkMzEkMzIkODkkNTQk$NENBNkMzNjk3NzhFQTAwRjc0MkU3RjcOBS2ODU5MDU0MUUxRERFMDZQGQkY2MTRENjYzNDU0OURBMTMyQkExQ0U2RQO==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "notification/v1/update" : "NjUkOCQxMSQ2NCQzNSQ=$NUI4QTUzARTZk2Q0NBQjJCM0I4MEY4MzE5OLTJGQkMzRUI1MUI0RUFFNzE3NkI5MkQU2RXTBGQjM5NTIyMDE2ODIxQg==$";
 
-        mQueue.add(new DailyHotelJsonRequest(Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
+        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
     }
 
     @Override
