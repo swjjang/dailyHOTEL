@@ -5,8 +5,13 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Province implements Parcelable
 {
@@ -16,6 +21,7 @@ public class Province implements Parcelable
     public int sequence;
     public boolean isOverseas;
     public String imageUrl;
+    private List<Category> mCategoryList;
 
     public Province()
     {
@@ -63,11 +69,41 @@ public class Province implements Parcelable
         {
             imageUrl = "";
         }
+
+        mCategoryList = new ArrayList<>();
+
+        if (jsonObject.has("categories") == true)
+        {
+            JSONArray jsonArray = jsonObject.getJSONArray("categories");
+
+            int length = jsonArray.length();
+            for (int i = 0; i < length; i++)
+            {
+                JSONObject categoryJSONObject = jsonArray.getJSONObject(i);
+
+                Iterator<String> iterator = categoryJSONObject.keys();
+                if (iterator.hasNext() == true)
+                {
+                    String code = iterator.next();
+                    String name = categoryJSONObject.getString(code);
+
+                    mCategoryList.add(new Category(name, code));
+                }
+            }
+        } else
+        {
+            mCategoryList.add(Category.ALL);
+        }
     }
 
     public int getProvinceIndex()
     {
         return index;
+    }
+
+    public List<Category> getCategoryList()
+    {
+        return mCategoryList;
     }
 
     @Override
@@ -79,6 +115,7 @@ public class Province implements Parcelable
         dest.writeInt(sequence);
         dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(imageUrl);
+        dest.writeList(mCategoryList);
     }
 
     protected void readFromParcel(Parcel in)
@@ -89,6 +126,7 @@ public class Province implements Parcelable
         sequence = in.readInt();
         isOverseas = in.readInt() == 1 ? true : false;
         imageUrl = in.readString();
+        mCategoryList = in.readArrayList(Category.class.getClassLoader());
     }
 
     @Override

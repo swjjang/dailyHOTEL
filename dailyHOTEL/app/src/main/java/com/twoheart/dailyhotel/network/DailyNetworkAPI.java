@@ -267,7 +267,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelRegionList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "hotel/region/v1/list" : "ODUkNzgkNCQ4NCQ2MCQ=$N0RDJQkE3RTZBOENERjg0QTM0MUNBOTc2QzRCNTQwNjgxMUY5NEM3OUY4MTEGzMENBQ0IyODhCN0Q1RDVU2RDPNFMEw==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "hotel/region/v2/list" : "NzQkODIkMjkkMTckMzAk$MEU3Qjk1MjNBNzQ1QCTVGMTUwOUZCRVTUM5RTM1MjZBQzhGOEY2OEMyMDNBMjM2QjczMjM0QjY1RjUg1QTlFRWjZCMQ==$";
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), null, listener, errorListener));
     }

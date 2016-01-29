@@ -96,7 +96,7 @@ public class RegionListActivity extends BaseActivity
 
     private void initLayout(PlaceMainFragment.TYPE type, Province province)
     {
-        if (mType == null || mSelectedProvince == null)
+        if (mType == null || province == null)
         {
             return;
         }

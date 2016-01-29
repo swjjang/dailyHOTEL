@@ -27,6 +27,7 @@ public class DailyPreference
     private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
 
     private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
+    private static final String KEY_CATEGORY_CODE = "15"; // 마지막으로 본 카테고리 코드
 
     private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
 
@@ -43,7 +44,6 @@ public class DailyPreference
     // "GOOD_NIGHT" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final String KEY_PREFERENCE_BY_SHARE = "BY_SHARE";
     private static final String KEY_PREFERENCE_GCM_ID = "PUSH_ID";
 
     // Event
@@ -250,6 +250,16 @@ public class DailyPreference
     public void setNotificationUid(int value)
     {
         setV1Value(KEY_NOTIFICATION_UID, value);
+    }
+
+    public String getSelectedCategoryCode()
+    {
+        return getV1Value(KEY_CATEGORY_CODE, null);
+    }
+
+    public void setSelectedCategoryCode(String value)
+    {
+        setV1Value(KEY_CATEGORY_CODE, value);
     }
 
     public String getLastMenu()
@@ -475,21 +485,6 @@ public class DailyPreference
             mOldEditor.remove(key);
             mOldEditor.apply();
         }
-    }
-
-    public void removeDeepLink()
-    {
-        removeValue(KEY_PREFERENCE_BY_SHARE);
-    }
-
-    public String getDeepLink()
-    {
-        return getValue(KEY_PREFERENCE_BY_SHARE, null);
-    }
-
-    public void setDeepLink(String value)
-    {
-        setValue(KEY_PREFERENCE_BY_SHARE, value);
     }
 
     public String getGCMRegistrationId()
