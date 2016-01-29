@@ -177,7 +177,7 @@ public class PaymentActivity extends BaseActivity implements Constants
             ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("room_idx", "payment_type", "checkin_date", "nights", "bonus", "guest_name", "guest_phone", "guest_email"));
             ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(saleRoomInformation.roomIndex), //
                 mPay.getType().name(), //
-                mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), //
+                mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), //
                 String.valueOf(saleRoomInformation.nights), //
                 String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone.replace("-", "").replace("+", "%2B"), guest.email));
 

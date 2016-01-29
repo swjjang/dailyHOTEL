@@ -68,7 +68,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime)
     {
-        String params = String.format("?restaurant_idx=%d&sday=%s", placeDetail.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+        String params = String.format("?restaurant_idx=%d&sday=%s", placeDetail.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
 
         if (DEBUG == true)
         {

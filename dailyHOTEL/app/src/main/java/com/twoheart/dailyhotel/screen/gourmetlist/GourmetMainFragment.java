@@ -416,7 +416,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
             if (currentFragment instanceof GourmetDaysListFragment)
             {
-                days = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+                days = checkInSaleTime.getDayOfDaysDateFormat("M월d일");
 
                 mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
             }
@@ -649,7 +649,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
-                    mOnUserAnalyticsActionListener.selectPlace(gourmet.name, gourmet.index, checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+                    mOnUserAnalyticsActionListener.selectPlace(gourmet.name, gourmet.index, checkSaleTime.getDayOfDaysDateFormat("yyMMdd"));
                     break;
                 }
 
@@ -698,7 +698,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
             lockUiComponent();
 
-            String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+            String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M월d일");
 
             // 선택탭의 이름을 수정한다.
             mTabLayout.getTabAt(2).setText(checkInDay);
@@ -731,7 +731,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
                     SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
                     Date schemeDate = format.parse(format.format(calendar.getTime()));
-                    Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+                    Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
                     int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 

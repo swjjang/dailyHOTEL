@@ -265,8 +265,8 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         }
 
         // grade
-        holder.hotelGradeView.setText(hotel.getCategory().getName(mContext));
-        holder.hotelGradeView.setBackgroundResource(hotel.getCategory().getColorResId());
+        holder.hotelGradeView.setText(hotel.getGrade().getName(mContext));
+        holder.hotelGradeView.setBackgroundResource(hotel.getGrade().getColorResId());
 
         Util.requestImageResize(mContext, holder.hotelImageView, hotel.imageUrl);
 

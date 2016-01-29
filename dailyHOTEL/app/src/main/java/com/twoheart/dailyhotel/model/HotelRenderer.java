@@ -22,7 +22,7 @@ public class HotelRenderer
 
         mPrice = comma.format(hotel.averageDiscount) + context.getString(R.string.currency);
 
-        mMarkerResId = hotel.getCategory().getMarkerResId();
+        mMarkerResId = hotel.getGrade().getMarkerResId();
 
         mIconGenerator = new HotelIconGenerator(context);
         mIconGenerator.setTextColor(context.getResources().getColor(R.color.white));

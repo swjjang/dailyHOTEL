@@ -444,9 +444,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             {
                 mClickView = v;
 
-                String gcmId = DailyPreference.getInstance(BookingActivity.this).getGCMRegistrationId();
-
-                if (mPay.getType() == Pay.Type.VBANK && Util.isTextEmpty(gcmId) == true)
+                if (mPay.getType() == Pay.Type.VBANK && DailyPreference.getInstance(BookingActivity.this).getNotificationUid() < 0)
                 {
                     // 가상계좌 결제시 푸쉬를 받지 못하는 경우
                     String title = getString(R.string.dialog_notice2);
@@ -781,7 +779,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
             params.put("room_idx", String.valueOf(saleRoomInformation.roomIndex));
-            params.put("checkin_date", mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+            params.put("checkin_date", mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
             params.put("nights", String.valueOf(saleRoomInformation.nights));
             params.put("billkey", mSelectedCreditCard.billingkey);
             params.put("bonus", bonus);
@@ -1640,7 +1638,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 mDoReload = true;
 
                 // 호텔 디테일 정보 재 요청
-                String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
+                String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
                 DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag, params, mHotelPaymentDetailJsonResponseListener, BookingActivity.this);
             }
         }, null, false);
@@ -2346,7 +2344,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         }
 
                         // 2. 마지막 가격 및 기타 이상이 없는지 검사
-                        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
+                        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
                         DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag, params, mFinalCheckPayJsonResponseListener, BookingActivity.this);
                     } else
                     {
@@ -2471,7 +2469,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             }
                         }
 
-                        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
+                        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
 
                         if (DEBUG == true)
                         {

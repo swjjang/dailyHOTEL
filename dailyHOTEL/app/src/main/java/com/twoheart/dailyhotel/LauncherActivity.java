@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 public class LauncherActivity extends Activity
 {
@@ -27,18 +28,17 @@ public class LauncherActivity extends Activity
         AdWordsConversionReporter.reportWithConversionId(getApplicationContext(),//
             "972698918", "FtZiCNvClGIQpurozwM", "0.00", false);
 
+        DailyDeepLink.getInstance().clear();
+
         Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
 
         Uri uri = getIntent().getData();
 
         if (uri != null)
         {
-            final String KAKAOLINK = "kakaolink";
-            final String DAILYHOTEL = "dailyhotel";
+            DailyDeepLink.getInstance().setDeepLink(uri);
 
-            String link = uri.toString();
-
-            if (link.indexOf(KAKAOLINK) >= 0 || link.indexOf(DAILYHOTEL) >= 0)
+            if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
                 newIntent.setData(uri);
                 newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

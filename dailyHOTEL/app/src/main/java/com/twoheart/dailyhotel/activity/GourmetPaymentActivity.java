@@ -172,7 +172,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         }
 
         String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d&arrival_time=%s", //
-            ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), ticketPayment.ticketCount, String.valueOf(ticketPayment.ticketTime));
+            ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), ticketPayment.ticketCount, String.valueOf(ticketPayment.ticketTime));
 
         DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag, params, mTicketSellCheckJsonResponseListener, this);
     }
@@ -719,9 +719,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 mTicketPayment.setGuest(guest);
             }
 
-            String gcmId = DailyPreference.getInstance(GourmetPaymentActivity.this).getGCMRegistrationId();
-
-            if (mTicketPayment.paymentType == TicketPayment.PaymentType.VBANK && Util.isTextEmpty(gcmId) == true)
+            if (mTicketPayment.paymentType == TicketPayment.PaymentType.VBANK && DailyPreference.getInstance(GourmetPaymentActivity.this).getNotificationUid() < 0)
             {
                 // 가상계좌 결제시 푸쉬를 받지 못하는 경우
                 String title = getString(R.string.dialog_notice2);

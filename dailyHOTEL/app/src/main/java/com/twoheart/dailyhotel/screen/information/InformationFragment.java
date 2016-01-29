@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -45,7 +46,7 @@ import java.util.TimeZone;
 
 public class InformationFragment extends BaseFragment implements Constants, OnClickListener
 {
-    private View mProfileLayout, mCreditcardLayout, mEventLayout;
+    private View mProfileLayout, mCreditcardLayout;
     private View mNewEventIconView;
     private String mCSoperatingTimeMessage;
     private DailyToolbarLayout mDailyToolbarLayout;
@@ -62,7 +63,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         mProfileLayout = view.findViewById(R.id.profileLayout);
         mCreditcardLayout = view.findViewById(R.id.creditcardLayout);
         View bonusLayout = view.findViewById(R.id.bonusLayout);
-        mEventLayout = view.findViewById(R.id.eventLayout);
+        View eventLayout = view.findViewById(R.id.eventLayout);
         View callLayout = view.findViewById(R.id.callLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
@@ -70,7 +71,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         mProfileLayout.setOnClickListener(this);
         mCreditcardLayout.setOnClickListener(this);
         bonusLayout.setOnClickListener(this);
-        mEventLayout.setOnClickListener(this);
+        eventLayout.setOnClickListener(this);
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
@@ -78,7 +79,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         // 프로필
         setSigninLayout(false);
 
-        mNewEventIconView = mEventLayout.findViewById(R.id.newIconView);
+        mNewEventIconView = eventLayout.findViewById(R.id.newIconView);
 
         TextView pushTextView = (TextView) view.findViewById(R.id.pushTextView);
 
@@ -215,7 +216,21 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     public void onStart()
     {
         AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.INFORMATION);
+
         super.onStart();
+
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        {
+            DailyDeepLink.getInstance().clear();
+
+            if (DailyDeepLink.getInstance().isEventView() == true)
+            {
+                startActivity(new Intent(getActivity(), EventListActivity.class));
+            } else if (DailyDeepLink.getInstance().isBonusView() == true)
+            {
+                startActivity(new Intent(getActivity(), BonusActivity.class));
+            }
+        }
     }
 
     @Override
@@ -436,21 +451,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                String deepLink = DailyPreference.getInstance(baseActivity).getDeepLink();
-
-                if (Util.isTextEmpty(deepLink) == false)
-                {
-                    DailyPreference.getInstance(baseActivity).removeDeepLink();
-
-                    String value = Util.getValueForLinkUrl(deepLink, "view");
-
-                    if ("event".equalsIgnoreCase(value) == true)
-                    {
-                        unLockUI();
-                        mEventLayout.performClick();
-                    }
-                }
 
                 updateNewIconView(baseActivity);
             } catch (Exception e)

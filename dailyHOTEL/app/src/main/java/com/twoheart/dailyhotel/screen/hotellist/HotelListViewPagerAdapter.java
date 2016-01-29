@@ -142,8 +142,8 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         name.setSelected(true); // Android TextView marquee bug
 
         // grade
-        grade.setText(hotel.getCategory().getName(mContext));
-        grade.setBackgroundResource(hotel.getCategory().getColorResId());
+        grade.setText(hotel.getGrade().getName(mContext));
+        grade.setBackgroundResource(hotel.getGrade().getColorResId());
 
         Util.requestImageResize(mContext, hotelImageView, hotel.imageUrl);
 
