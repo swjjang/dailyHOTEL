@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -413,8 +414,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             if (currentFragment instanceof HotelDaysListFragment)
             {
-                String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
-                String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+                String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M월d일");
+                String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M월d일");
 
                 // 선택탭의 이름을 수정한다.
                 days = String.format("%s-%s", checkInDay, checkOutDay);
@@ -481,20 +482,68 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         int size = list.size();
 
-        if (size < 2)
+        if (size <= 2)
         {
-            setSelectCategory(Category.ALL);
+            if (size == 2)
+            {
+                setSelectCategory(list.get(1));
+            } else
+            {
+                setSelectCategory(Category.ALL);
+            }
+
             mCategoryTabLayout.setVisibility(View.GONE);
             return;
         }
+
+        mCategoryTabLayout.setVisibility(View.VISIBLE);
 
         fixCategoryTabLayout(size);
 
         // 선택된 카테고리가 없는 경우 2번째가 항상 선택된다
         if (mSelectedCategory == null)
         {
-            setSelectCategory(list.get(1));
+            String selectedCategoryCode = DailyPreference.getInstance(getContext()).getSelectedCategoryCode();
+
+            if (Util.isTextEmpty(selectedCategoryCode) == true)
+            {
+                setSelectCategory(list.get(1));
+            } else
+            {
+                for (Category category : list)
+                {
+                    if (category.code.equalsIgnoreCase(selectedCategoryCode) == true)
+                    {
+                        setSelectCategory(category);
+                        break;
+                    }
+                }
+
+                if (mSelectedCategory == null)
+                {
+                    setSelectCategory(list.get(1));
+                }
+            }
+        } else
+        {
+            // 기존 카테고리에 존재하는지
+            boolean isExist = false;
+            for (Category category : list)
+            {
+                if (category.code.equalsIgnoreCase(mSelectedCategory.code) == true)
+                {
+                    isExist = true;
+                    setSelectCategory(category);
+                    break;
+                }
+            }
+
+            if (isExist == false)
+            {
+                setSelectCategory(list.get(1));
+            }
         }
+
 
         TabLayout.Tab selectedTab = null;
 
@@ -551,6 +600,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         mSelectedCategory = category;
+
+        DailyPreference.getInstance(getContext()).setSelectedCategoryCode(category.code);
 
         for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
         {
@@ -610,6 +661,217 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         refreshHotelList(province, isSelectionTop);
     }
+
+    private void deepLinkDetail(BaseActivity baseActivity)
+    {
+        try
+        {
+            // 신규 타입의 화면이동
+            int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            long dailyTime = mTodaySaleTime.getDailyTime();
+            int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+
+            String date = DailyDeepLink.getInstance().getDate();
+            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+            Date schemeDate = format.parse(date);
+            Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+            if (nights <= 0 || dailyDayOfDays < 0)
+            {
+                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+            }
+
+            if (mOnUserActionListener != null)
+            {
+                mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+            }
+
+            DailyDeepLink.getInstance().clear();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+
+            DailyDeepLink.getInstance().clear();
+
+            //탭에 들어갈 날짜를 만든다.
+            makeTabLayout();
+
+            // 지역 리스트를 가져온다
+            DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
+        }
+    }
+
+    private void deepLinkEventBannerWeb(BaseActivity baseActivity)
+    {
+        String url = DailyDeepLink.getInstance().getUrl();
+        DailyDeepLink.getInstance().clear();
+
+        if (Util.isTextEmpty(url) == false)
+        {
+            Intent intent = EventWebActivity.newInstance(baseActivity, url);
+            startActivity(intent);
+        } else
+        {
+            //탭에 들어갈 날짜를 만든다.
+            makeTabLayout();
+
+            // 지역 리스트를 가져온다
+            DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
+        }
+    }
+
+    private Province searchDeeLinkRegion(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    {
+        Province selectedProvince = null;
+
+        try
+        {
+            int provinceIndex = Integer.parseInt(DailyDeepLink.getInstance().getProvinceIndex());
+            int areaIndex = -1;
+
+            try
+            {
+                areaIndex = Integer.parseInt(DailyDeepLink.getInstance().getAreaIndex());
+            } catch (Exception e)
+            {
+            }
+
+            boolean isOverseas = DailyDeepLink.getInstance().getIsOverseas();
+
+            if (areaIndex == -1)
+            {
+                // 전체 지역으로 이동
+                for (Province province : provinceList)
+                {
+                    if (province.index == provinceIndex)
+                    {
+                        selectedProvince = province;
+                        break;
+                    }
+                }
+            } else
+            {
+                // 소지역으로 이동
+                for (Area area : areaList)
+                {
+                    if (area.index == areaIndex)
+                    {
+                        for (Province province : provinceList)
+                        {
+                            if (area.getProvinceIndex() == province.index)
+                            {
+                                area.setProvince(province);
+                                break;
+                            }
+                        }
+
+                        selectedProvince = area;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return selectedProvince;
+    }
+
+    private void deepLinkRegionList(BaseActivity baseActivity, ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    {
+        Province selectedProvince = searchDeeLinkRegion(provinceList, areaList);
+
+        if (selectedProvince == null)
+        {
+            Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.HOTEL, provinceList.get(0));
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+            DailyDeepLink.getInstance().clear();
+        } else
+        {
+            Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.HOTEL, selectedProvince);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+            DailyDeepLink.getInstance().clear();
+        }
+    }
+
+    private void deepLinkHotelList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    {
+        String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
+        String date = DailyDeepLink.getInstance().getDate();
+        int night = 1;
+
+        try
+        {
+            night = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+        } catch (Exception e)
+        {
+
+        }
+
+        // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
+        Province selectedProvince = searchDeeLinkRegion(provinceList, areaList);
+
+        if (selectedProvince != null)
+        {
+            mSelectedProvince = selectedProvince;
+        }
+
+        setNavigationItemSelected(mSelectedProvince);
+
+        // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
+        if (Util.isTextEmpty(categoryCode) == false)
+        {
+            for (Category category : mSelectedProvince.getCategoryList())
+            {
+                if (category.code.equalsIgnoreCase(categoryCode) == true)
+                {
+                    setSelectCategory(category);
+                    break;
+                }
+            }
+        }
+
+        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
+        if (Util.isTextEmpty(date) == false)
+        {
+            try
+            {
+                mViewPager.setCurrentItem(2);
+
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date schemeDate = format.parse(date);
+                Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                if (dailyDayOfDays >= 0)
+                {
+                    SaleTime checkInSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
+                    SaleTime checkOutSaleTime = mTodaySaleTime.getClone(dailyDayOfDays + night);
+
+                    HotelDaysListFragment hotelListFragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    hotelListFragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
+                    mOnUserActionListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
+                }
+            } catch (Exception e)
+            {
+                mViewPager.setCurrentItem(0);
+
+                onNavigationItemSelected(mSelectedProvince, true);
+            }
+        } else
+        {
+            onNavigationItemSelected(mSelectedProvince, true);
+        }
+
+        DailyDeepLink.getInstance().clear();
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NetworkActionListener
@@ -870,7 +1132,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
-                    mUserAnalyticsActionListener.selectHotel(hotel.getName(), hotel.getIdx(), checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), hotel.nights);
+                    mUserAnalyticsActionListener.selectHotel(hotel.getName(), hotel.getIdx(), checkSaleTime.getDayOfDaysDateFormat("yyMMdd"), hotel.nights);
                     break;
                 }
 
@@ -917,8 +1179,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             lockUiComponent();
 
-            String checkInDay = checkInSaleTime.getDayOfDaysHotelDateFormat("M월d일");
-            String checkOutDay = checkOutSaleTime.getDayOfDaysHotelDateFormat("M월d일");
+            String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M월d일");
+            String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M월d일");
 
             // 선택탭의 이름을 수정한다.
             mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
@@ -951,7 +1213,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
                     Date schemeDate = format.parse(format.format(calendar.getTime()));
-                    Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
+                    Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
                     int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
@@ -1161,6 +1423,72 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        private Province searchLastRegion(BaseActivity baseActivity, ArrayList<Province> provinceList, ArrayList<Area> areaList)
+        {
+            Province selectedProvince = null;
+
+            // 마지막으로 선택한 지역을 가져온다.
+            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);
+
+            if (Util.isTextEmpty(regionName) == true)
+            {
+                selectedProvince = provinceList.get(0);
+            }
+
+            if (selectedProvince == null)
+            {
+                for (Province province : provinceList)
+                {
+                    if (province.name.equals(regionName) == true)
+                    {
+                        selectedProvince = province;
+                        break;
+                    }
+                }
+
+                if (selectedProvince == null)
+                {
+                    for (Area area : areaList)
+                    {
+                        if (area.name.equals(regionName) == true)
+                        {
+                            for (Province province : provinceList)
+                            {
+                                if (area.getProvinceIndex() == province.index)
+                                {
+                                    area.setProvince(province);
+                                    break;
+                                }
+                            }
+
+                            selectedProvince = area;
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return selectedProvince;
+        }
+
+        private boolean processDeepLink(BaseActivity baseActivity, ArrayList<Province> provinceList, ArrayList<Area> areaList)
+        {
+            if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
+            {
+                unLockUI();
+                deepLinkRegionList(baseActivity, provinceList, areaList);
+                return true;
+            } else if (DailyDeepLink.getInstance().isHotelListView() == true)
+            {
+                unLockUI();
+                deepLinkHotelList(provinceList, areaList);
+                return true;
+            }
+
+            return false;
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1192,47 +1520,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         selectedProvince = mSelectedProvince;
                     } else
                     {
-                        // 마지막으로 선택한 지역을 가져온다.
-                        String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);
-
-                        if (Util.isTextEmpty(regionName) == true)
-                        {
-                            selectedProvince = provinceList.get(0);
-                        }
-
-                        if (selectedProvince == null)
-                        {
-                            for (Province province : provinceList)
-                            {
-                                if (province.name.equals(regionName) == true)
-                                {
-                                    selectedProvince = province;
-                                    break;
-                                }
-                            }
-
-                            if (selectedProvince == null)
-                            {
-                                for (Area area : areaList)
-                                {
-                                    if (area.name.equals(regionName) == true)
-                                    {
-                                        for (Province province : provinceList)
-                                        {
-                                            if (area.getProvinceIndex() == province.index)
-                                            {
-                                                area.setProvince(province);
-                                                break;
-                                            }
-                                        }
-
-                                        selectedProvince = area;
-
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                        selectedProvince = searchLastRegion(baseActivity, provinceList, areaList);
                     }
 
                     // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
@@ -1260,21 +1548,18 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         }
                     }
 
+                    mSelectedProvince = selectedProvince;
+
+                    if (DailyDeepLink.getInstance().isValidateLink() == true//
+                        && processDeepLink(baseActivity, provinceList, areaList) == true)
                     {
-                        List<Category> list = new ArrayList<>();
-                        list.add(new Category("전체", "all"));
-                        list.add(new Category("특급", "special"));
-                        list.add(new Category("부띠끄", "boutique"));
-                        list.add(new Category("펜션", "pension"));
-                        list.add(new Category("디자인", "design"));
-                        list.add(new Category("풀빌라", "fullvilla"));
-                        list.add(new Category("모텔", "motel"));
-
-                        makeCategoryTabLayout(list);
+                        makeCategoryTabLayout(mSelectedProvince.getCategoryList());
+                    } else
+                    {
+                        makeCategoryTabLayout(mSelectedProvince.getCategoryList());
+                        boolean isSelectionTop = isSelectionTop();
+                        onNavigationItemSelected(selectedProvince, isSelectionTop);
                     }
-
-                    boolean isSelectionTop = isSelectionTop();
-                    onNavigationItemSelected(selectedProvince, isSelectionTop);
                 } else
                 {
                     String message = response.getString("msg");
@@ -1372,6 +1657,31 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        private boolean processDeepLink(BaseActivity baseActivity)
+        {
+            if (DailyDeepLink.getInstance().isHotelDetailView() == true)
+            {
+                unLockUI();
+                deepLinkDetail(baseActivity);
+                return true;
+            } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
+            {
+                unLockUI();
+                deepLinkEventBannerWeb(baseActivity);
+                return true;
+            } else
+            {
+                // 더이상 진입은 없다.
+                if (DailyDeepLink.getInstance().isHotelListView() == false//
+                    && DailyDeepLink.getInstance().isHotelRegionListView() == false)
+                {
+                    DailyDeepLink.getInstance().clear();
+                }
+            }
+
+            return false;
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1387,69 +1697,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
                 mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-                String deepLink = DailyPreference.getInstance(baseActivity).getDeepLink();
-
-                if (Util.isTextEmpty(deepLink) == false)
+                if (DailyDeepLink.getInstance().isValidateLink() == true //
+                    && processDeepLink(baseActivity) == true)
                 {
-                    DailyPreference.getInstance(baseActivity).removeDeepLink();
 
-                    unLockUI();
-
-                    try
-                    {
-                        String previousType = Util.getValueForLinkUrl(deepLink, "hotelIndex");
-
-                        if (Util.isTextEmpty(previousType) == false)
-                        {
-                            // 이전 타입의 화면 이동
-                            int hotelIndex = Integer.parseInt(previousType);
-                            long dailyTime = Long.parseLong(Util.getValueForLinkUrl(deepLink, "dailyTime"));
-                            int dailyDayOfDays = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "dailyDayOfDays"));
-                            int nights = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "nights"));
-
-                            if (nights <= 0 || dailyDayOfDays < 0)
-                            {
-                                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
-                            }
-
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
-                            }
-                        } else
-                        {
-                            // 신규 타입의 화면이동
-                            int hotelIndex = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "idx"));
-                            long dailyTime = mTodaySaleTime.getDailyTime();
-                            int nights = Integer.parseInt(Util.getValueForLinkUrl(deepLink, "nights"));
-
-                            String date = Util.getValueForLinkUrl(deepLink, "date");
-                            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-                            Date schemeDate = format.parse(date);
-                            Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"));
-
-                            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-                            if (nights <= 0 || dailyDayOfDays < 0)
-                            {
-                                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
-                            }
-
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
-                            }
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-
-                        //탭에 들어갈 날짜를 만든다.
-                        makeTabLayout();
-
-                        // 지역 리스트를 가져온다
-                        DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mHotelRegionListJsonResponseListener, baseActivity);
-                    }
                 } else
                 {
                     //탭에 들어갈 날짜를 만든다.

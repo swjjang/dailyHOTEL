@@ -27,7 +27,7 @@ public class Hotel implements Parcelable
     private String name;
     private int price;
     private String address;
-    private HotelGrade category;
+    private HotelGrade grade;
     private int idx;
     private int availableRoom;
     private int sequence;
@@ -35,6 +35,7 @@ public class Hotel implements Parcelable
     private String detailRegion;
     public int satisfaction;
     public float distance; // 정렬시에 보여주는 내용
+    public String categoryCode;
 
     public Hotel()
     {
@@ -54,7 +55,7 @@ public class Hotel implements Parcelable
         dest.writeInt(price);
         dest.writeInt(averageDiscount);
         dest.writeString(address);
-        dest.writeSerializable(category);
+        dest.writeSerializable(grade);
         dest.writeInt(idx);
         dest.writeInt(availableRoom);
         dest.writeInt(sequence);
@@ -65,6 +66,7 @@ public class Hotel implements Parcelable
         dest.writeInt(saleIndex);
         dest.writeInt(isDBenefit ? 1 : 0);
         dest.writeInt(satisfaction);
+        dest.writeString(categoryCode);
     }
 
     private void readFromParcel(Parcel in)
@@ -74,7 +76,7 @@ public class Hotel implements Parcelable
         price = in.readInt();
         averageDiscount = in.readInt();
         address = in.readString();
-        category = (HotelGrade) in.readSerializable();
+        grade = (HotelGrade) in.readSerializable();
         idx = in.readInt();
         availableRoom = in.readInt();
         sequence = in.readInt();
@@ -85,16 +87,12 @@ public class Hotel implements Parcelable
         saleIndex = in.readInt();
         isDBenefit = in.readInt() == 1 ? true : false;
         satisfaction = in.readInt();
+        categoryCode = in.readString();
     }
 
-    public HotelGrade getCategory()
+    public HotelGrade getGrade()
     {
-        return category;
-    }
-
-    public void setCategory(String category)
-    {
-        this.category = HotelGrade.valueOf(category);
+        return grade;
     }
 
     public String getName()
@@ -196,16 +194,17 @@ public class Hotel implements Parcelable
 
             try
             {
-                category = HotelGrade.valueOf(jsonObject.getString("cat"));
+                grade = HotelGrade.valueOf(jsonObject.getString("cat"));
             } catch (Exception e)
             {
-                category = HotelGrade.etc;
+                grade = HotelGrade.etc;
             }
 
             idx = jsonObject.getInt("idx");
             availableRoom = jsonObject.getInt("avail_room_count");
             sequence = jsonObject.getInt("seq");
             detailRegion = jsonObject.getString("district_name");
+            categoryCode = jsonObject.getString("category");
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");
 

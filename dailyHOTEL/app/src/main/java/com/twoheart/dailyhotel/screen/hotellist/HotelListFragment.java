@@ -467,10 +467,10 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             Area area = (Area) province;
 
-            params = String.format("?province_idx=%d&area_idx=%d&checkin_date=%s&length_stay=%d", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
+            params = String.format("?province_idx=%d&area_idx=%d&checkin_date=%s&length_stay=%d", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
         } else
         {
-            params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
+            params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
         }
 
         if (DEBUG == true && this instanceof HotelDaysListFragment)
@@ -1026,7 +1026,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         for (Hotel hotel : list)
         {
-            if (hotel.getCategory().name().equalsIgnoreCase(category.code) == true)
+            if (category.code.equalsIgnoreCase(hotel.categoryCode) == true)
             {
                 filteredCategoryList.add(hotel);
             }
