@@ -163,7 +163,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
         // Add Hotel Info ViewPager
-        if(mViewPager != null)
+        if (mViewPager != null)
         {
             return;
         }

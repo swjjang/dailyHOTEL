@@ -157,7 +157,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
         // Add Hotel Info ViewPager
-        if(mViewPager != null)
+        if (mViewPager != null)
         {
             return;
         }

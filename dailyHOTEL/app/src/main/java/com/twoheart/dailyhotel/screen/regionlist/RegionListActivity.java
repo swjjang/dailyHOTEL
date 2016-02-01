@@ -121,9 +121,9 @@ public class RegionListActivity extends BaseActivity
 
                 boolean isOverseas = false;
 
-                if(province instanceof Area)
+                if (province instanceof Area)
                 {
-                    isOverseas = ((Area)province).getProvince().isOverseas;
+                    isOverseas = ((Area) province).getProvince().isOverseas;
                 } else
                 {
                     isOverseas = province.isOverseas;

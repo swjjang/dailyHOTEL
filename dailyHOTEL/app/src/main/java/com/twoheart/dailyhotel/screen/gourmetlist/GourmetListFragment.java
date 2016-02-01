@@ -380,7 +380,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
-                if(mOnUserActionListener != null)
+                if (mOnUserActionListener != null)
                 {
                     mOnUserActionListener.showAppBarLayout();
                 }

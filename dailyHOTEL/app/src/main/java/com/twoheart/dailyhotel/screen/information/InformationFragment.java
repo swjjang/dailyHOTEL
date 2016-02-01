@@ -221,8 +221,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
-            DailyDeepLink.getInstance().clear();
-
             if (DailyDeepLink.getInstance().isEventView() == true)
             {
                 startActivity(new Intent(getActivity(), EventListActivity.class));
@@ -230,6 +228,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             {
                 startActivity(new Intent(getActivity(), BonusActivity.class));
             }
+
+            DailyDeepLink.getInstance().clear();
         }
     }
 
