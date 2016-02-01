@@ -541,20 +541,17 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
         } else
         {
-            if (registrationId.equalsIgnoreCase(DailyPreference.getInstance(LoginActivity.this).getGCMRegistrationId()) == false)
+            Map<String, String> paramHashMap = new HashMap<>();
+
+            if (Util.isTextEmpty(userIndex) == false)
             {
-                Map<String, String> paramHashMap = new HashMap<>();
-
-                if (Util.isTextEmpty(userIndex) == false)
-                {
-                    paramHashMap.put("userIdx", userIndex);
-                }
-
-                paramHashMap.put("changedRegistrationId", registrationId);
-                paramHashMap.put("uid", Integer.toString(uid));
-
-                DailyNetworkAPI.getInstance().requestUserUpdateNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
+                paramHashMap.put("userIdx", userIndex);
             }
+
+            paramHashMap.put("changedRegistrationId", registrationId);
+            paramHashMap.put("uid", Integer.toString(uid));
+
+            DailyNetworkAPI.getInstance().requestUserUpdateNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
         }
     }
 
