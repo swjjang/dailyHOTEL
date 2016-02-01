@@ -584,33 +584,32 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             protected String doInBackground(Void... params)
             {
                 GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(SignupActivity.this);
-                String regId = "";
+                String registrationId = "";
 
                 try
                 {
-                    regId = instance.register(GCM_PROJECT_NUMBER);
+                    registrationId = instance.register(GCM_PROJECT_NUMBER);
                 } catch (IOException e)
                 {
                     ExLog.e(e.toString());
                 }
 
-                return regId;
+                return registrationId;
             }
 
             @Override
-            protected void onPostExecute(String regId)
+            protected void onPostExecute(final String registrationId)
             {
                 // gcm id가 없을 경우 스킵.
-                if (Util.isTextEmpty(regId) == true)
+                if (Util.isTextEmpty(registrationId) == true)
                 {
                     signUpAndFinish();
                     return;
                 }
 
                 Map<String, String> paramHashMap = new HashMap<>();
-                paramHashMap.put("registrationId", regId);
+                paramHashMap.put("registrationId", registrationId);
 
-                DailyPreference.getInstance(SignupActivity.this).setGCMRegistrationId(regId);
                 DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, paramHashMap, new DailyHotelJsonResponseListener()
                 {
                     @Override
@@ -626,6 +625,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                                 int uid = jsonObject.getInt("uid");
                                 DailyPreference.getInstance(SignupActivity.this).setNotificationUid(uid);
+                                DailyPreference.getInstance(SignupActivity.this).setGCMRegistrationId(registrationId);
                             }
                         } catch (Exception e)
                         {

@@ -112,7 +112,7 @@ public class MainPresenter implements Response.ErrorListener
         DailyNetworkAPI.getInstance().requestGourmetIsExistRating(mBaseActivity.getNetworkTag(), mGourmetSatisfactionRatingExistJsonResponseListener, null);
     }
 
-    private void registerNotificationId(String registrationId, String userIndex)
+    private void registerNotificationId(final String registrationId, String userIndex)
     {
         DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
         {
@@ -123,12 +123,13 @@ public class MainPresenter implements Response.ErrorListener
                 {
                     int msg_code = response.getInt("msgCode");
 
-                    if (msg_code == 0 && response.has("data") == true)
+                    if (msg_code == 100 && response.has("data") == true)
                     {
                         JSONObject jsonObject = response.getJSONObject("data");
 
                         int uid = jsonObject.getInt("uid");
                         DailyPreference.getInstance(mBaseActivity).setNotificationUid(uid);
+                        DailyPreference.getInstance(mBaseActivity).setGCMRegistrationId(registrationId);
                     }
                 } catch (Exception e)
                 {
@@ -143,7 +144,6 @@ public class MainPresenter implements Response.ErrorListener
             Map<String, String> paramHashMap = new HashMap<>();
             paramHashMap.put("registrationId", registrationId);
 
-            DailyPreference.getInstance(mBaseActivity).setGCMRegistrationId(registrationId);
             DailyNetworkAPI.getInstance().requestUserRegisterNotification(mBaseActivity.getNetworkTag(), paramHashMap, dailyHotelJsonResponseListener, null);
         } else
         {
@@ -159,7 +159,6 @@ public class MainPresenter implements Response.ErrorListener
                 paramHashMap.put("changedRegistrationId", registrationId);
                 paramHashMap.put("uid", Integer.toString(uid));
 
-                DailyPreference.getInstance(mBaseActivity).setGCMRegistrationId(registrationId);
                 DailyNetworkAPI.getInstance().requestUserUpdateNotification(mBaseActivity.getNetworkTag(), paramHashMap, dailyHotelJsonResponseListener, null);
             }
         }
@@ -409,22 +408,19 @@ public class MainPresenter implements Response.ErrorListener
 
                 AnalyticsManager.getInstance(mBaseActivity).setUserIndex(userIndex);
 
-                if (DailyPreference.getInstance(mBaseActivity).getNotificationUid() < 0)
+                Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
                 {
-                    Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
+                    @Override
+                    public void onResult(String registrationId)
                     {
-                        @Override
-                        public void onResult(String registrationId)
+                        if (Util.isTextEmpty(registrationId) == true)
                         {
-                            if (Util.isTextEmpty(registrationId) == true)
-                            {
-                                return;
-                            }
-
-                            registerNotificationId(registrationId, userIndex);
+                            return;
                         }
-                    });
-                }
+
+                        registerNotificationId(registrationId, userIndex);
+                    }
+                });
 
                 // 호텔 평가요청
                 DailyNetworkAPI.getInstance().requestHotelIsExistRating(mBaseActivity.getNetworkTag(), mHotelSatisfactionRatingExistJsonResponseListener, null);
@@ -454,22 +450,19 @@ public class MainPresenter implements Response.ErrorListener
                 DailyNetworkAPI.getInstance().requestUserInformation(mBaseActivity.getNetworkTag(), mUserInfomationJsonResponseListener, MainPresenter.this);
             } else
             {
-                if (DailyPreference.getInstance(mBaseActivity).getNotificationUid() < 0)
+                Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
                 {
-                    Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
+                    @Override
+                    public void onResult(String registrationId)
                     {
-                        @Override
-                        public void onResult(String registrationId)
+                        if (Util.isTextEmpty(registrationId) == true)
                         {
-                            if (Util.isTextEmpty(registrationId) == true)
-                            {
-                                return;
-                            }
-
-                            registerNotificationId(registrationId, null);
+                            return;
                         }
-                    });
-                }
+
+                        registerNotificationId(registrationId, null);
+                    }
+                });
             }
         }
     };

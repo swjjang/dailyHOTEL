@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * <p>
+ * <p/>
+ * <p/>
  * LoginActivity (로그인화면)
- * <p>
+ * <p/>
  * 사용자 계정 로그인을 담당하는 화면이다. 사용자로부터 아이디와 패스워드를
  * 입력받으며, 이를 로그인을 하는 웹서버 API를 이용한다.
  *
@@ -488,36 +488,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
-    private void registerNotificationId(String registrationId, String userIndex)
+    private void registerNotificationId(final String registrationId, String userIndex)
     {
-        DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
-        {
-            @Override
-            public void onResponse(String url, JSONObject response)
-            {
-                try
-                {
-                    int msg_code = response.getInt("msgCode");
-
-                    if (msg_code == 0 && response.has("data") == true)
-                    {
-                        JSONObject jsonObject = response.getJSONObject("data");
-
-                        int uid = jsonObject.getInt("uid");
-                        DailyPreference.getInstance(LoginActivity.this).setNotificationUid(uid);
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-                    setResult(RESULT_OK);
-                    finish();
-                }
-            }
-        };
-
         ErrorListener errorListener = new ErrorListener()
         {
             @Override
@@ -531,13 +503,41 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             }
         };
 
+        DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    int msg_code = response.getInt("msgCode");
+
+                    if (msg_code == 100 && response.has("data") == true)
+                    {
+                        JSONObject jsonObject = response.getJSONObject("data");
+
+                        int uid = jsonObject.getInt("uid");
+                        DailyPreference.getInstance(LoginActivity.this).setNotificationUid(uid);
+                        DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                } finally
+                {
+                    DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            }
+        };
+
         int uid = DailyPreference.getInstance(LoginActivity.this).getNotificationUid();
         if (uid < 0)
         {
             Map<String, String> paramHashMap = new HashMap<>();
             paramHashMap.put("registrationId", registrationId);
 
-            DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
             DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
         } else
         {
@@ -553,7 +553,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 paramHashMap.put("changedRegistrationId", registrationId);
                 paramHashMap.put("uid", Integer.toString(uid));
 
-                DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
                 DailyNetworkAPI.getInstance().requestUserUpdateNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
             }
         }
