@@ -841,7 +841,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 long todayDailyTime = response.getLong("dailyDateTime");
                 saleTime.setDailyTime(todayDailyTime);
 
-                long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
+                long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));

@@ -370,8 +370,8 @@ public class HotelDetailActivity extends BaseActivity
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(Label.HOTEL_NAME, mHotelDetail.hotelName);
-            params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-            params.put(Label.CHECK_OUT, checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+            params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            params.put(Label.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
 
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
@@ -545,7 +545,7 @@ public class HotelDetailActivity extends BaseActivity
 
             // 호텔 공유하기 로그 추가
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
-            String label = String.format("%s (%s-%s)", mHotelDetail.hotelName, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+            String label = String.format("%s (%s-%s)", mHotelDetail.hotelName, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mHotelDetail.hotelIndex);
         }
@@ -779,7 +779,7 @@ public class HotelDetailActivity extends BaseActivity
                 {
                     mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
 
-                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
+                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
                     long todayDailyTime = response.getLong("dailyDateTime");
 
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
@@ -797,7 +797,7 @@ public class HotelDetailActivity extends BaseActivity
                     }
 
                     // 호텔 정보를 가져온다.
-                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mHotelDetail.nights);
+                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights);
 
                     if (DEBUG == true)
                     {
@@ -813,7 +813,7 @@ public class HotelDetailActivity extends BaseActivity
                     saleTime.setDailyTime(response.getLong("dailyDateTime"));
 
                     // 호텔 정보를 가져온다.
-                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mHotelDetail.nights);
+                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights);
 
                     if (DEBUG == true)
                     {

@@ -118,12 +118,23 @@ public class RegionListActivity extends BaseActivity
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(HOTEL_TAB_COUNT);
 
                 RegionListFragment regionListFragment01 = new RegionListFragment();
-                regionListFragment01.setInformation(type, Region.DOMESTIC, province.isOverseas ? null : province);
+
+                boolean isOverseas = false;
+
+                if(province instanceof Area)
+                {
+                    isOverseas = ((Area)province).getProvince().isOverseas;
+                } else
+                {
+                    isOverseas = province.isOverseas;
+                }
+
+                regionListFragment01.setInformation(type, Region.DOMESTIC, isOverseas ? null : province);
                 regionListFragment01.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment01);
 
                 RegionListFragment regionListFragment02 = new RegionListFragment();
-                regionListFragment02.setInformation(type, Region.GLOBAL, province.isOverseas ? province : null);
+                regionListFragment02.setInformation(type, Region.GLOBAL, isOverseas ? province : null);
                 regionListFragment02.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment02);
 
@@ -134,7 +145,7 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.setOffscreenPageLimit(HOTEL_TAB_COUNT);
                 mViewPager.setAdapter(mFragmentPagerAdapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-                mViewPager.setCurrentItem(province.isOverseas ? 1 : 0);
+                mViewPager.setCurrentItem(isOverseas ? 1 : 0);
                 break;
             }
 
@@ -145,7 +156,7 @@ public class RegionListActivity extends BaseActivity
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(GOURMET_TAB_COUNT);
 
                 RegionListFragment regionListFragment01 = new RegionListFragment();
-                regionListFragment01.setInformation(type, Region.DOMESTIC, province.isOverseas ? null : province);
+                regionListFragment01.setInformation(type, Region.DOMESTIC, false ? null : province);
                 regionListFragment01.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment01);
 

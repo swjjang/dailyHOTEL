@@ -409,7 +409,7 @@ public class MainPresenter implements Response.ErrorListener
 
                 AnalyticsManager.getInstance(mBaseActivity).setUserIndex(userIndex);
 
-                if (Util.isTextEmpty(DailyPreference.getInstance(mBaseActivity).getGCMRegistrationId()) == true)
+                if (DailyPreference.getInstance(mBaseActivity).getNotificationUid() < 0)
                 {
                     Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
                     {
@@ -454,7 +454,7 @@ public class MainPresenter implements Response.ErrorListener
                 DailyNetworkAPI.getInstance().requestUserInformation(mBaseActivity.getNetworkTag(), mUserInfomationJsonResponseListener, MainPresenter.this);
             } else
             {
-                if (Util.isTextEmpty(DailyPreference.getInstance(mBaseActivity).getGCMRegistrationId()) == true)
+                if (DailyPreference.getInstance(mBaseActivity).getNotificationUid() < 0)
                 {
                     Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
                     {

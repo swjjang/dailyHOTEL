@@ -355,7 +355,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             // 호텔 공유하기 로그 추가
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(Label.HOTEL_NAME, mPlaceDetail.name);
-            params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+            params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
 
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
@@ -505,7 +505,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             // 호텔 공유하기 로그 추가
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay());
-            String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+            String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
         }
@@ -704,7 +704,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 {
                     mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
 
-                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
+                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
                     long todayDailyTime = response.getLong("dailyDateTime");
 
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
@@ -732,7 +732,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     long todayDailyTime = response.getLong("dailyDateTime");
                     saleTime.setDailyTime(todayDailyTime);
 
-                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
+                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysDate().getTime();
 
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));

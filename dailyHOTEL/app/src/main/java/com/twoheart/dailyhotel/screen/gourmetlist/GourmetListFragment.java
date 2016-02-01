@@ -286,10 +286,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
         {
             Area area = (Area) province;
 
-            params = String.format("?province_idx=%d&area_idx=%d&sday=%s", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+            params = String.format("?province_idx=%d&area_idx=%d&sday=%s", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
         } else
         {
-            params = String.format("?province_idx=%d&sday=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+            params = String.format("?province_idx=%d&sday=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
         }
 
         if (DEBUG == true && this instanceof GourmetDaysListFragment)

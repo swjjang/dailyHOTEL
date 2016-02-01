@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.activity.SatisfactionActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -101,7 +102,7 @@ public class MainActivity extends BaseActivity implements Constants
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
 
         VolleyHttpClient.cookieManagerCreate();
-        DailyPreference.getInstance(this).removeDeepLink();
+        //        DailyPreference.getInstance(this).removeDeepLink();
         DailyPreference.getInstance(this).setSettingRegion(TYPE.HOTEL, false);
         DailyPreference.getInstance(this).setSettingRegion(TYPE.FNB, false);
 
@@ -118,9 +119,6 @@ public class MainActivity extends BaseActivity implements Constants
         {
             ExLog.d(e.toString());
         }
-
-        Uri uri = getIntent().getData();
-        checkDeepLink(uri);
 
         initLayout();
 
@@ -144,19 +142,6 @@ public class MainActivity extends BaseActivity implements Constants
         mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, mContentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
         mBackButtonHandler = new CloseOnBackPressed(this);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent)
-    {
-        super.onNewIntent(intent);
-
-        DailyPreference.getInstance(this).removeDeepLink();
-
-        Uri intentData = intent.getData();
-        checkDeepLink(intentData);
-
-        mOnResponsePresenterListener.onConfigurationResponse();
     }
 
     @Override
@@ -244,44 +229,6 @@ public class MainActivity extends BaseActivity implements Constants
                 }
                 break;
         }
-    }
-
-    private void checkDeepLink(Uri uri)
-    {
-        if (uri == null)
-        {
-            return;
-        }
-
-        final String KAKAOLINK = "kakaolink";
-        final String DAILYHOTEL = "dailyhotel";
-
-        String link = uri.toString();
-
-        if (link.indexOf(KAKAOLINK) >= 0 || link.indexOf(DAILYHOTEL) >= 0)
-        {
-            String params = writeDeepLinkPreference(link);
-        }
-    }
-
-    private String writeDeepLinkPreference(String link)
-    {
-        if (Util.isTextEmpty(link) == true)
-        {
-            return null;
-        }
-
-        int startIndex = link.indexOf('?') + 1;
-
-        if (startIndex <= 0)
-        {
-            return null;
-        }
-
-        String param = link.substring(startIndex);
-        DailyPreference.getInstance(this).setDeepLink(param);
-
-        return param;
     }
 
     @Override
@@ -668,36 +615,24 @@ public class MainActivity extends BaseActivity implements Constants
 
             finishSplash();
 
-            String deepLink = DailyPreference.getInstance(MainActivity.this).getDeepLink();
-
-            if (Util.isTextEmpty(deepLink) == false)
+            if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
-                if (deepLink.contains("hotelIndex") == true)
+                if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
-                } else if (deepLink.contains("fnbIndex"))
+                } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                } else if (DailyDeepLink.getInstance().isBookingView() == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                } else if (DailyDeepLink.getInstance().isEventView() == true//
+                    || DailyDeepLink.getInstance().isBonusView() == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                 } else
                 {
-                    String value = Util.getValueForLinkUrl(deepLink, "view");
-
-                    if ("hotel".equalsIgnoreCase(value) == true)
-                    {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
-                    } else if ("gourmet".equalsIgnoreCase(value) == true)
-                    {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
-                    } else if ("bookings".equalsIgnoreCase(value) == true)
-                    {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
-                    } else if ("event".equalsIgnoreCase(value) == true)
-                    {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
-                    } else
-                    {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
-                    }
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
                 }
             } else
             {

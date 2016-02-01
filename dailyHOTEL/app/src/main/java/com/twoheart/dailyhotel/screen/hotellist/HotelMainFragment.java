@@ -60,6 +60,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
     private TabLayout mCategoryTabLayout;
+    private View mUnderLine;
     private ViewPager mViewPager;
     private HotelFragmentPagerAdapter mFragmentPagerAdapter;
     private DailyToolbarLayout mDailyToolbarLayout;
@@ -173,6 +174,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
         mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
+        mUnderLine = view.findViewById(R.id.underLine);
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
@@ -348,6 +350,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                         mOnUserActionListener.refreshAll(true);
                     }
+                } else
+                {
+                    mOnUserActionListener.refreshAll(true);
                 }
 
                 mOnUserActionListener.expandedAppBar(true, false);
@@ -477,6 +482,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             setSelectCategory(Category.ALL);
             mCategoryTabLayout.setVisibility(View.GONE);
+            mUnderLine.setVisibility(View.GONE);
             return;
         }
 
@@ -493,10 +499,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             mCategoryTabLayout.setVisibility(View.GONE);
+            mUnderLine.setVisibility(View.GONE);
             return;
         }
 
         mCategoryTabLayout.setVisibility(View.VISIBLE);
+        mUnderLine.setVisibility(View.VISIBLE);
 
         fixCategoryTabLayout(size);
 
@@ -745,7 +753,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 // 전체 지역으로 이동
                 for (Province province : provinceList)
                 {
-                    if (province.index == provinceIndex)
+                    if (province.isOverseas == isOverseas && province.index == provinceIndex)
                     {
                         selectedProvince = province;
                         break;
@@ -786,17 +794,18 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (selectedProvince == null)
         {
-            Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.HOTEL, provinceList.get(0));
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-            DailyDeepLink.getInstance().clear();
-        } else
-        {
-            Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.HOTEL, selectedProvince);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-            DailyDeepLink.getInstance().clear();
+            selectedProvince = mSelectedProvince;
         }
+
+        setNavigationItemSelected(selectedProvince);
+
+        mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
+        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+
+        Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.HOTEL, selectedProvince);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+        DailyDeepLink.getInstance().clear();
     }
 
     private void deepLinkHotelList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
@@ -823,6 +832,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         setNavigationItemSelected(mSelectedProvince);
 
+        mDailyToolbarLayout.setToolbarRegionText(mSelectedProvince.name);
+        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+
         // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
         if (Util.isTextEmpty(categoryCode) == false)
         {
@@ -841,7 +853,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             try
             {
+                mTabLayout.setOnTabSelectedListener(null);
+                mTabLayout.setScrollPosition(2, 0f, true);
                 mViewPager.setCurrentItem(2);
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
@@ -860,7 +875,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 }
             } catch (Exception e)
             {
+                mTabLayout.setOnTabSelectedListener(null);
+                mTabLayout.setScrollPosition(0, 0f, true);
                 mViewPager.setCurrentItem(0);
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
                 onNavigationItemSelected(mSelectedProvince, true);
             }
@@ -1484,6 +1502,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 unLockUI();
                 deepLinkHotelList(provinceList, areaList);
                 return true;
+            } else
+            {
+                DailyDeepLink.getInstance().clear();
             }
 
             return false;

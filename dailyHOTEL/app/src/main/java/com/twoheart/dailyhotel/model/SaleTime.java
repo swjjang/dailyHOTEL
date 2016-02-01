@@ -57,27 +57,27 @@ public class SaleTime implements Constants, Parcelable
 
     public String getDailyDayOftheWeek()
     {
-        return getTimezonedDateFormat("EEE").format(getDayOfDaysHotelDate());
+        return getTimezonedDateFormat("EEE").format(getDayOfDaysDate());
     }
 
     public String getDailyDay()
     {
-        return getTimezonedDateFormat("d").format(getDayOfDaysHotelDate());
+        return getTimezonedDateFormat("d").format(getDayOfDaysDate());
     }
 
     public String getDailyDateFormat(String format)
     {
-        return getTimezonedDateFormat(format).format(getDayOfDaysHotelDate());
+        return getTimezonedDateFormat(format).format(getDayOfDaysDate());
     }
 
-    public Date getDayOfDaysHotelDate()
+    public Date getDayOfDaysDate()
     {
         return new Date(mDailyTime.getTime() + MILLISECOND_IN_A_DAY * mDayOfDays);
     }
 
-    public String getDayOfDaysHotelDateFormat(String format)
+    public String getDayOfDaysDateFormat(String format)
     {
-        return getTimezonedDateFormat(format).format(getDayOfDaysHotelDate());
+        return getTimezonedDateFormat(format).format(getDayOfDaysDate());
     }
 
     public SaleTime getClone(int nextDay)
