@@ -125,8 +125,8 @@ public class AnalyticsManager
 
         mMobileAppTracker.setCurrencyCode("KRW");
 
-        MATEvent matEvent = new MATEvent(MATEvent.REGISTRATION)//
-            .withAttribute1(userType);
+        MATEvent matEvent = new MATEvent(TuneEventId.REGISTRATION);
+        matEvent.withAttribute1(userType);
 
         mMobileAppTracker.measureEvent(matEvent);
     }
@@ -140,8 +140,8 @@ public class AnalyticsManager
         mMobileAppTracker.setPhoneNumber(phoneNumber);
         mMobileAppTracker.setCurrencyCode("KRW");
 
-        MATEvent matEvent = new MATEvent(MATEvent.REGISTRATION)//
-            .withAttribute1(userType);
+        MATEvent matEvent = new MATEvent(TuneEventId.REGISTRATION);
+        matEvent.withAttribute1(userType);
 
         mMobileAppTracker.measureEvent(matEvent);
     }
@@ -325,4 +325,10 @@ public class AnalyticsManager
         public static final String FACEBOOK = "facebook";
         public static final String EMAIL = "email";
     }
+
+    public static class TuneEventId
+    {
+        public static final int REGISTRATION = 1132821069;
+    }
+
 }
