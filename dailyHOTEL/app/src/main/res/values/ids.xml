@@ -2,5 +2,6 @@
 <resources>
 
     <item name="spinnerImageView" type="id"/>
+    <item name="bottomMenuBarLayout" type="id"/>
 
 </resources>

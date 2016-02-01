@@ -341,6 +341,11 @@ public class HotelListFragment extends BaseFragment implements Constants
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
+                if(mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.showAppBarLayout();
+                }
+
                 if (isCurrentPage == true && mHotelMapFragment == null)
                 {
                     mHotelMapFragment = new HotelMapFragment();

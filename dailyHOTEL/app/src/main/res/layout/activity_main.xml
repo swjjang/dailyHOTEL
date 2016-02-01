@@ -3,14 +3,17 @@
                 android:layout_height="match_parent"
                 android:background="@color/information_background">
 
-    <include layout="@layout/view_menubar"/>
-
     <RelativeLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/information_background"
-        android:layout_above="@+id/bottomMenuBarLayout"/>
+        android:layout_above="@+id/bottomMenuBarLayout"
+        android:background="@color/information_background"/>
+
+    <include
+        layout="@layout/view_menubar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/menubar_height"/>
 
     <View
         android:layout_width="match_parent"

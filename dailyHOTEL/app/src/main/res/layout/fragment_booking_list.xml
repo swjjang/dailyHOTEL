@@ -37,8 +37,7 @@
         <RelativeLayout
             android:id="@+id/backgroundLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/empty_background_bookings">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/open_stanby_bg_fnb"

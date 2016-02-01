@@ -87,7 +87,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
     protected abstract PlaceViewPagerAdapter createPlaceViewPagerAdapter(BaseActivity baseActivity);
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState)
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
@@ -145,23 +145,35 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
 
                 mIsCreateView = true;
 
+                addViewPager(baseActivity, container);
+
                 makeMarker(true);
             }
         });
 
+        return view;
+    }
+
+    private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
+    {
         // Add Hotel Info ViewPager
-        mViewPager = new LoopViewPager(view.getContext());
+        if(mViewPager != null)
+        {
+            return;
+        }
+
+        mViewPager = new LoopViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 100));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(baseActivity, 100));
         layoutParams.gravity = Gravity.BOTTOM;
+        layoutParams.bottomMargin = Util.dpToPx(baseActivity, 47);
 
-        container.addView(mViewPager, layoutParams);
-
+        mViewPager.setLayoutParams(layoutParams);
         mViewPager.setVisibility(View.INVISIBLE);
 
-        return view;
+        viewGroup.addView(mViewPager);
     }
 
     @Override
