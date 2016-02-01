@@ -58,6 +58,7 @@ public class GcmIntentService extends IntentService implements Constants
     private NotificationManager mNotificationManager;
     private boolean mIsBadge;
     private boolean mIsSound;
+    private ImageLoaderNotification mImageLoaderNotification;
 
     public GcmIntentService()
     {
@@ -320,7 +321,26 @@ public class GcmIntentService extends IntentService implements Constants
             mNotificationManager.notify(NOTIFICATION_ID, builder.build());
         } else
         {
-            new ImageLoaderNotification(contentIntent, uri, title, msg).execute(imageUrl);
+            if (mImageLoaderNotification == null)
+            {
+                mImageLoaderNotification = new ImageLoaderNotification(contentIntent, uri, title, msg);
+            }
+
+            switch (mImageLoaderNotification.getStatus())
+            {
+                case PENDING:
+                    mImageLoaderNotification.execute(imageUrl);
+                    break;
+
+                case RUNNING:
+                    break;
+
+                case FINISHED:
+                    mImageLoaderNotification.cancel(true);
+                    mImageLoaderNotification = new ImageLoaderNotification(contentIntent, uri, title, msg);
+                    mImageLoaderNotification.execute(imageUrl);
+                    break;
+            }
         }
     }
 
