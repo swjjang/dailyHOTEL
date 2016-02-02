@@ -824,7 +824,18 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     }
                 };
 
-                Collections.sort(arrayList, comparator);
+                if (arrayList.size() == 1)
+                {
+                    PlaceViewItem placeViewItem = arrayList.get(0);
+                    Place place1 = placeViewItem.<Gourmet>getItem();
+
+                    float[] results1 = new float[3];
+                    Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), place1.latitude, place1.longitude, results1);
+                    ((Gourmet) place1).distance = results1[0];
+                } else
+                {
+                    Collections.sort(arrayList, comparator);
+                }
                 break;
             }
 
@@ -1136,7 +1147,17 @@ public class GourmetListFragment extends BaseFragment implements Constants
                         }
                     };
 
-                    Collections.sort(gourmetList, comparator);
+                    if (gourmetList.size() == 1)
+                    {
+                        Gourmet gourmet = gourmetList.get(0);
+
+                        float[] results1 = new float[3];
+                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), gourmet.latitude, gourmet.longitude, results1);
+                        gourmet.distance = results1[0];
+                    } else
+                    {
+                        Collections.sort(gourmetList, comparator);
+                    }
                     break;
                 }
 

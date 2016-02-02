@@ -827,7 +827,18 @@ public class HotelListFragment extends BaseFragment implements Constants
                     }
                 };
 
-                Collections.sort(arrayList, comparator);
+                if (arrayList.size() == 1)
+                {
+                    PlaceViewItem placeViewItem = arrayList.get(0);
+                    Hotel hotel1 = placeViewItem.<Hotel>getItem();
+
+                    float[] results1 = new float[3];
+                    Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
+                    hotel1.distance = results1[0];
+                } else
+                {
+                    Collections.sort(arrayList, comparator);
+                }
                 break;
             }
 
@@ -912,7 +923,17 @@ public class HotelListFragment extends BaseFragment implements Constants
                     }
                 };
 
-                Collections.sort(hotelList, comparator);
+                if (hotelList.size() == 1)
+                {
+                    Hotel hotel = hotelList.get(0);
+
+                    float[] results1 = new float[3];
+                    Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel.latitude, hotel.longitude, results1);
+                    hotel.distance = results1[0];
+                } else
+                {
+                    Collections.sort(hotelList, comparator);
+                }
                 break;
             }
 
@@ -1037,6 +1058,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     public void requestFilteringCategory()
     {
+        mIsSelectionTop = true;
         requestFilteringCategory(mHotelList, mSelectedCategory, mSortType);
     }
 
