@@ -582,6 +582,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mSortType = sortType;
     }
 
+    public void setLocation(Location location)
+    {
+        mMyLocation = location;
+    }
+
     public SortType getSortType()
     {
         return mSortType;
@@ -755,6 +760,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 if (SortType.DISTANCE == mSortType)
                 {
                     requestSortList(mSortType);
+
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.setLocation(location);
+                    }
 
                     baseActivity.invalidateOptionsMenu();
                 }
