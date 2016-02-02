@@ -783,6 +783,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
@@ -938,6 +939,9 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 default:
                     break;
             }
+
+            showAppBarLayout();
+            pinAppBarLayout();
 
             for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
             {

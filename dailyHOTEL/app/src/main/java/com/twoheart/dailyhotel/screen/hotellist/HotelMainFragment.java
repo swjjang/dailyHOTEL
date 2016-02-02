@@ -1282,6 +1282,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     break;
             }
 
+            showAppBarLayout();
+            pinAppBarLayout();
+
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 

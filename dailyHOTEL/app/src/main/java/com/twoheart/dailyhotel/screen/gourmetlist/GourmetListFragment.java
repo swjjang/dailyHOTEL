@@ -380,11 +380,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.showAppBarLayout();
-                }
-
                 // 맵과 리스트에서 당일상품 탭 안보이도록 수정
                 if (isCurrentPage == true && mPlaceMapFragment == null)
                 {
