@@ -36,7 +36,6 @@ public class CreditListActivity extends BaseActivity
 {
     public static final String KEY_BUNDLE_ARGUMENTS_CREDITLIST = "credit_list";
     private List<Credit> mCreditList;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -63,8 +62,8 @@ public class CreditListActivity extends BaseActivity
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.act_credit_history));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.act_credit_history));
     }
 
     private void initLayout()

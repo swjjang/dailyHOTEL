@@ -43,7 +43,6 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
 
     private HotelBookingDetail mBookingDetail;
-    private SupportMapFragment mMapFragment;
     private GoogleMap mGoogleMap;
     private FrameLayout mMapLayout;
     private View mGoogleMapLayout;
@@ -225,6 +224,8 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     return;
                 }
 
+                SupportMapFragment mapFragment = null;
+
                 try
                 {
                     if (mGoogleMapLayout == null)
@@ -235,7 +236,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
 
                     googleMapLayout.addView(mGoogleMapLayout);
 
-                    mMapFragment = (SupportMapFragment) baseActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
+                    mapFragment = (SupportMapFragment) baseActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -266,19 +267,22 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
 
                 googleMapLayout.setOnClickListener(null);
 
-                mMapFragment.getMapAsync(new OnMapReadyCallback()
+                if (mapFragment != null)
                 {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap)
+                    mapFragment.getMapAsync(new OnMapReadyCallback()
                     {
-                        mGoogleMap = googleMap;
-                        mGoogleMap.setOnMapClickListener(HotelBookingDetailTabMapFragment.this);
-                        mGoogleMap.setMyLocationEnabled(false);
-                        mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+                        @Override
+                        public void onMapReady(GoogleMap googleMap)
+                        {
+                            mGoogleMap = googleMap;
+                            mGoogleMap.setOnMapClickListener(HotelBookingDetailTabMapFragment.this);
+                            mGoogleMap.setMyLocationEnabled(false);
+                            mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                        addMarker(mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.placeName);
-                    }
-                });
+                            addMarker(mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.placeName);
+                        }
+                    });
+                }
             }
         }, 500);
     }

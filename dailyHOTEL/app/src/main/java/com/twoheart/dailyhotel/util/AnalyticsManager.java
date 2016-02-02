@@ -20,7 +20,6 @@ import java.util.Map;
 public class AnalyticsManager
 {
     private static AnalyticsManager mInstance = null;
-    private GoogleAnalytics mGoogleAnalytics;
     private Tracker mTracker;
 
     // Tune
@@ -48,10 +47,10 @@ public class AnalyticsManager
 
     private void initGoogleAnalytics(Context context)
     {
-        mGoogleAnalytics = GoogleAnalytics.getInstance(context);
-        mGoogleAnalytics.setLocalDispatchPeriod(60);
+        GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
+        googleAnalytics.setLocalDispatchPeriod(60);
 
-        mTracker = mGoogleAnalytics.newTracker(Constants.GA_PROPERTY_ID);
+        mTracker = googleAnalytics.newTracker(Constants.GA_PROPERTY_ID);
         mTracker.enableAdvertisingIdCollection(true);
     }
 

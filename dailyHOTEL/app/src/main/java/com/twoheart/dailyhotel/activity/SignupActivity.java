@@ -80,7 +80,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private Map<String, String> mSignupParams;
 
     private boolean mFirstMobileNumberFocus;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -180,8 +179,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private void initToolbar(String title)
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(title);
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(title);
     }
 
     private void initLayout(Customer user, final String mobileNumber, boolean isVisibleRecommender)

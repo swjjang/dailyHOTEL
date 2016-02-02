@@ -34,8 +34,6 @@ public class ZoomMapActivity extends BaseActivity
     private Marker mMyLocationMarker;
     private Handler mHandler = new Handler();
 
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -104,8 +102,8 @@ public class ZoomMapActivity extends BaseActivity
     private void initToolbar(String title)
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(title);
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(title);
     }
 
     @Override

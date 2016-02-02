@@ -28,7 +28,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
     protected static final int TAB_COUNT = 3;
 
-    private TabLayout mTabLayout;
     private ViewPager mViewPager;
     protected Booking mBooking;
 
@@ -67,16 +66,16 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         initToolbar(mBooking.placeName);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.frag_booking_tab_title), true);
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.frag_tab_info_title));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.frag_tab_map_title));
-        FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
-        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_booking_tab_title), true);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_info_title));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.frag_tab_map_title));
+        FontManager.apply(tabLayout, FontManager.getInstance(this).getRegularTypeface());
+        tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setOffscreenPageLimit(TAB_COUNT);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
     private void initToolbar(String title)

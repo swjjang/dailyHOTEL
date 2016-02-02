@@ -49,7 +49,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private View mProfileLayout, mCreditcardLayout;
     private View mNewEventIconView;
     private String mCSoperatingTimeMessage;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -105,8 +104,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private void initToolbar(BaseActivity baseActivity, View view)
     {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), false, false);
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), false, false);
     }
 
     private void initSnsLayout(View view)

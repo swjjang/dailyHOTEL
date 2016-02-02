@@ -48,7 +48,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
     public int m_nStat = PROGRESS_STAT_NOT_START;
 
     private WebView webView;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,8 +97,8 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_reg_creditcard));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_reg_creditcard));
     }
 
     @Override

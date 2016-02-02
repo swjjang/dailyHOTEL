@@ -66,7 +66,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private PinnedSectionListView mListView;
     private View btnLogin;
     private long mCurrentTime;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     public interface OnUserActionListener
     {
@@ -89,8 +88,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private void initToolbar(BaseActivity baseActivity, View view)
     {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_booking_list_frag), false, false);
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_booking_list_frag), false, false);
     }
 
     private void initLayout(View view)

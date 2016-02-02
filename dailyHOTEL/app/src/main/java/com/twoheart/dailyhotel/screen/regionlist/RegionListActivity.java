@@ -25,13 +25,10 @@ public class RegionListActivity extends BaseActivity
     private static final int HOTEL_TAB_COUNT = 2;
     private static final int GOURMET_TAB_COUNT = 1;
 
-    private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private RegionFragmentPagerAdapter mFragmentPagerAdapter;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     private PlaceMainFragment.TYPE mType;
-    private Province mSelectedProvince;
     private RegionListPresenter mRegionListPresenter;
 
     public interface OnUserActionListener
@@ -80,9 +77,9 @@ public class RegionListActivity extends BaseActivity
 
         // 호텔 인지 고메인지
         mType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
-        mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+        Province selectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-        if (mType == null || mSelectedProvince == null)
+        if (mType == null || selectedProvince == null)
         {
             Util.restartApp(this);
             return;
@@ -91,7 +88,7 @@ public class RegionListActivity extends BaseActivity
         // 국내로 시작하는지 헤외로 시작하는지
         // 고메인 경우에는 해외 지역이 없기 때문에 기존과 동일하게?
 
-        initLayout(mType, mSelectedProvince);
+        initLayout(mType, selectedProvince);
     }
 
     private void initLayout(PlaceMainFragment.TYPE type, Province province)
@@ -105,15 +102,15 @@ public class RegionListActivity extends BaseActivity
 
         initToolbar();
 
-        mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
         switch (type)
         {
             case HOTEL:
             {
-                mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_domestic));
-                mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_global));
+                tabLayout.addTab(tabLayout.newTab().setText(R.string.label_domestic));
+                tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
 
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(HOTEL_TAB_COUNT);
 
@@ -138,20 +135,20 @@ public class RegionListActivity extends BaseActivity
                 regionListFragment02.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment02);
 
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+                tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
                 mFragmentPagerAdapter = new RegionFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
 
                 mViewPager.setOffscreenPageLimit(HOTEL_TAB_COUNT);
                 mViewPager.setAdapter(mFragmentPagerAdapter);
-                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                 mViewPager.setCurrentItem(isOverseas ? 1 : 0);
                 break;
             }
 
             case FNB:
             {
-                mTabLayout.setVisibility(ViewPager.GONE);
+                tabLayout.setVisibility(ViewPager.GONE);
 
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(GOURMET_TAB_COUNT);
 
@@ -164,20 +161,20 @@ public class RegionListActivity extends BaseActivity
 
                 mViewPager.setOffscreenPageLimit(GOURMET_TAB_COUNT);
                 mViewPager.setAdapter(mFragmentPagerAdapter);
-                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                 break;
             }
         }
 
-        FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
+        FontManager.apply(tabLayout, FontManager.getInstance(this).getRegularTypeface());
     }
 
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
     }
 
     @Override

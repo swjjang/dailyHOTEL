@@ -24,7 +24,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 public class CountryCodeListActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_COUNTRY_CODE = "countryCode";
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     public interface OnUserActionListener
     {
@@ -74,8 +73,8 @@ public class CountryCodeListActivity extends BaseActivity
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.label_select_country));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.label_select_country));
     }
 
     @Override

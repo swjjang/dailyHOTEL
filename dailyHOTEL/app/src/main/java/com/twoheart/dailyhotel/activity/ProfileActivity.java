@@ -56,8 +56,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     private View mEditProfileLayout, mInformationProfileLayout;
     private TextView mEditButtonView;
 
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -77,8 +75,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_profile_activity));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_profile_activity));
     }
 
     private void initLayout()

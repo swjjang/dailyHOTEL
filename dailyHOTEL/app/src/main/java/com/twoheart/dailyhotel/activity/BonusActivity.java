@@ -70,9 +70,6 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     private String mUserName;
     private String idx;
 
-    private DailyToolbarLayout mDailyToolbarLayout;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -88,8 +85,8 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_credit_frag));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_credit_frag));
     }
 
     private void initLayout()

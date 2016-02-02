@@ -94,7 +94,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     // 카카오톡
     private com.kakao.usermgmt.LoginButton mKakaoLoginView;
     private SessionCallback mKakaoSessionCallback;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -186,8 +185,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
     }
 
     @Override

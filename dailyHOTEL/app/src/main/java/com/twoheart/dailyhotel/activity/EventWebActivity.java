@@ -24,7 +24,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 public class EventWebActivity extends WebViewActivity implements Constants
 {
     private WebView mWebView;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     public static Intent newInstance(Context context, String url)
     {
@@ -84,8 +83,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag));
     }
 
     @Override
