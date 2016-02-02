@@ -171,6 +171,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_TICKETINFORMATION = "ticketInformation";
     public static final String NAME_INTENT_EXTRA_DATA_SALEINDEX = "saleIndex";
     public static final String NAME_INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
+    public static final String NAME_INTENT_EXTRA_DATA_CATEGORY = "category";
     public static final String NAME_INTENT_EXTRA_DATA_NIGHTS = "nights";
     public static final String NAME_INTENT_EXTRA_DATA_DAILYTIME = "dailyTime";
     public static final String NAME_INTENT_EXTRA_DATA_DAYOFDAYS = "dayOfDays";

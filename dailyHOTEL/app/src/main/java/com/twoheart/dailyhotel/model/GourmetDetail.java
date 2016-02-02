@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.model;
 
+import com.twoheart.dailyhotel.util.Util;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +22,12 @@ public class GourmetDetail extends PlaceDetail
     public void setData(JSONObject jsonObject) throws Exception
     {
         grade = Place.Grade.gourmet;
-        category = jsonObject.getString("category");
+
+        if (Util.isTextEmpty(category) == true)
+        {
+            category = jsonObject.getString("category");
+        }
+
         name = jsonObject.getString("restaurant_name");
         address = jsonObject.getString("address");
 

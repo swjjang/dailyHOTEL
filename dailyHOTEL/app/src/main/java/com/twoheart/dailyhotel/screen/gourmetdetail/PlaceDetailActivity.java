@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.activity.ImageDetailListActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.Customer;
+import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
@@ -177,7 +178,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
             String imageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
+            String category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
             mDefaultImageUrl = imageUrl;
+
+            if (mPlaceDetail instanceof GourmetDetail && Util.isTextEmpty(category) == false)
+            {
+                ((GourmetDetail) mPlaceDetail).category = category;
+            }
 
             if (mCheckInSaleTime == null || mPlaceDetail == null || placeName == null)
             {
