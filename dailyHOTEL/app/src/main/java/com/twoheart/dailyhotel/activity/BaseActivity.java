@@ -60,7 +60,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(getResources().getColor(R.color.tab_text));
+            window.setStatusBarColor(getResources().getColor(R.color.statusbar_background));
         }
     }
 
