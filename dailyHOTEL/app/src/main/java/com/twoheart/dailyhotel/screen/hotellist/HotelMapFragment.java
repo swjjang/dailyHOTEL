@@ -995,7 +995,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            if (baseActivity == null)
+            if (baseActivity == null || mGoogleMap == null)
             {
                 return;
             }

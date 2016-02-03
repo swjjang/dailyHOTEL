@@ -988,7 +988,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            if (baseActivity == null)
+            if (baseActivity == null || mGoogleMap == null)
             {
                 return;
             }

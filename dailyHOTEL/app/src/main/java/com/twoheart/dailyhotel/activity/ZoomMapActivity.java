@@ -269,8 +269,12 @@ public class ZoomMapActivity extends BaseActivity
         @Override
         public void onClick(View v)
         {
+            if (mGoogleMap == null)
+            {
+                return;
+            }
+
             searchMyLocation(ZoomMapActivity.this);
         }
     };
-
 }

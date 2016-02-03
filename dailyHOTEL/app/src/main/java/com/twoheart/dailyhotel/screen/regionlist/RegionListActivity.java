@@ -118,7 +118,7 @@ public class RegionListActivity extends BaseActivity
 
                 boolean isOverseas = false;
 
-                if(province != null)
+                if (province != null)
                 {
                     if (province instanceof Area)
                     {

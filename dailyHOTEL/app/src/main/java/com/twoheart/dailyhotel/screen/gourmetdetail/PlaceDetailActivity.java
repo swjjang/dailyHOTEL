@@ -243,12 +243,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onResume()
     {
-        if(mPlaceDetailLayout != null)
+        if (mPlaceDetailLayout != null)
         {
             mPlaceDetailLayout.hideTicketInformationLayout();
             mPlaceDetailLayout.setBookingStatus(GourmetDetailLayout.STATUS_SEARCH_TICKET);
         }
-        
+
         lockUI();
         DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
 

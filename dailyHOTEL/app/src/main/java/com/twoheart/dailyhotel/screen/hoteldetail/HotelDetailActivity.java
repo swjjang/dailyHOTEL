@@ -226,7 +226,7 @@ public class HotelDetailActivity extends BaseActivity
     @Override
     protected void onResume()
     {
-        if(mHotelDetailLayout != null)
+        if (mHotelDetailLayout != null)
         {
             mHotelDetailLayout.hideRoomType();
             mHotelDetailLayout.setBookingStatus(HotelDetailLayout.STATUS_SEARCH_ROOM);
