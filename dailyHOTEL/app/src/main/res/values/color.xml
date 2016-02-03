@@ -65,7 +65,8 @@
     <color name="black_a25">#40000000</color>
     <color name="black_a14">#24000000</color>
 
-    <color name="tab_text">#323232</color>
+    <color name="statusbar_background">#323232</color>
+    <color name="tab_text">#929292</color>
     <color name="tab_selected">#900034</color>
     <color name="tab_underline">#e7e7e7</color>
 
