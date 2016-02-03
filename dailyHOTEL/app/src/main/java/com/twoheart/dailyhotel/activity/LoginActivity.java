@@ -94,7 +94,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     // 카카오톡
     private com.kakao.usermgmt.LoginButton mKakaoLoginView;
     private SessionCallback mKakaoSessionCallback;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -186,8 +185,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
     }
 
     @Override
@@ -488,36 +487,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
-    private void registerNotificationId(String registrationId, String userIndex)
+    private void registerNotificationId(final String registrationId, String userIndex)
     {
-        DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
-        {
-            @Override
-            public void onResponse(String url, JSONObject response)
-            {
-                try
-                {
-                    int msg_code = response.getInt("msgCode");
-
-                    if (msg_code == 0 && response.has("data") == true)
-                    {
-                        JSONObject jsonObject = response.getJSONObject("data");
-
-                        int uid = jsonObject.getInt("uid");
-                        DailyPreference.getInstance(LoginActivity.this).setNotificationUid(uid);
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-                    setResult(RESULT_OK);
-                    finish();
-                }
-            }
-        };
-
         ErrorListener errorListener = new ErrorListener()
         {
             @Override
@@ -531,31 +502,55 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             }
         };
 
+        DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    int msg_code = response.getInt("msgCode");
+
+                    if (msg_code == 100 && response.has("data") == true)
+                    {
+                        JSONObject jsonObject = response.getJSONObject("data");
+
+                        int uid = jsonObject.getInt("uid");
+                        DailyPreference.getInstance(LoginActivity.this).setNotificationUid(uid);
+                        DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                } finally
+                {
+                    DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            }
+        };
+
         int uid = DailyPreference.getInstance(LoginActivity.this).getNotificationUid();
         if (uid < 0)
         {
             Map<String, String> paramHashMap = new HashMap<>();
             paramHashMap.put("registrationId", registrationId);
 
-            DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
             DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
         } else
         {
-            if (registrationId.equalsIgnoreCase(DailyPreference.getInstance(LoginActivity.this).getGCMRegistrationId()) == false)
+            Map<String, String> paramHashMap = new HashMap<>();
+
+            if (Util.isTextEmpty(userIndex) == false)
             {
-                Map<String, String> paramHashMap = new HashMap<>();
-
-                if (Util.isTextEmpty(userIndex) == false)
-                {
-                    paramHashMap.put("userIdx", userIndex);
-                }
-
-                paramHashMap.put("changedRegistrationId", registrationId);
-                paramHashMap.put("uid", Integer.toString(uid));
-
-                DailyPreference.getInstance(LoginActivity.this).setGCMRegistrationId(registrationId);
-                DailyNetworkAPI.getInstance().requestUserUpdateNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
+                paramHashMap.put("userIdx", userIndex);
             }
+
+            paramHashMap.put("changedRegistrationId", registrationId);
+            paramHashMap.put("uid", Integer.toString(uid));
+
+            DailyNetworkAPI.getInstance().requestUserUpdateNotification(mNetworkTag, paramHashMap, dailyHotelJsonResponseListener, errorListener);
         }
     }
 

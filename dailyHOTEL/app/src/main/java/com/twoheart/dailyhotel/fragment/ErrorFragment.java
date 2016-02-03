@@ -31,7 +31,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 public class ErrorFragment extends BaseFragment implements OnClickListener
 {
     private MainFragmentManager mMainFragmentManager;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -63,8 +62,8 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
     private void initToolbar(BaseActivity baseActivity, View view, String title)
     {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_error_frag));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_error_frag));
     }
 
     @Override

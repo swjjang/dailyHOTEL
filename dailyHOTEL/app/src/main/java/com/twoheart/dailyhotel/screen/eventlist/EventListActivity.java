@@ -29,7 +29,6 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     private View mEmptyView;
     private ListView mListView;
     private Event mSelectedEvent;
-    private DailyToolbarLayout mDailyToolbarLayout;
     private EventListAdapter mEventListAdapter;
     private EventListPresenter mEventListPresenter;
 
@@ -73,8 +72,8 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag));
     }
 
     private void initLayout()

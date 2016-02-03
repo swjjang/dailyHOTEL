@@ -26,6 +26,7 @@
         android:cacheColorHint="@android:color/transparent"
         android:divider="@color/hotel_list_item_underline"
         android:dividerHeight="1px"
+        android:fadingEdge="none"
         android:visibility="gone"/>
 
     <RelativeLayout

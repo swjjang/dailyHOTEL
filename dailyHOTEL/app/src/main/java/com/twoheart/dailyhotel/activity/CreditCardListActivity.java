@@ -36,7 +36,6 @@ public class CreditCardListActivity extends BaseActivity
     private CreditCardLayout mCreditCardLayout;
     private boolean mIsPickMode;
     private CreditCard mSelectedCreditCard;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     public interface OnUserActionListener
     {
@@ -79,8 +78,8 @@ public class CreditCardListActivity extends BaseActivity
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_creditcard_activity));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_creditcard_activity));
     }
 
     @Override

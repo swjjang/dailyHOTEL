@@ -269,7 +269,7 @@ public class HotelDetailLayout
         return mBookingStatus;
     }
 
-    private void setBookingStatus(int status)
+    protected void setBookingStatus(int status)
     {
         mBookingStatus = status;
 
@@ -372,7 +372,7 @@ public class HotelDetailLayout
         mRoomTypeBackgroundView.setEnabled(enabled);
     }
 
-    private void hideRoomType()
+    protected void hideRoomType()
     {
         if (mObjectAnimator != null)
         {

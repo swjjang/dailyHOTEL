@@ -30,7 +30,6 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
     private TextView btnForgot;
     private EditText etForgot;
     private String mEmail;
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,8 +64,8 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_forgot_pwd_activity));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_forgot_pwd_activity));
     }
 
     // Jason | Fix send email api

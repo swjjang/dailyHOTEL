@@ -138,8 +138,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private String mWarningDialogMessage;
     private String mCSoperatingTimeMessage;
 
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation, SaleTime checkInSaleTime, Hotel.HotelGrade hotelGrade)
     {
         Intent intent = new Intent(context, BookingActivity.class);
@@ -185,10 +183,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private void initToolbar(String title)
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(title);
-        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new OnClickListener()
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(title);
+        dailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        dailyToolbarLayout.setToolbarMenuClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)

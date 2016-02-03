@@ -23,7 +23,6 @@ import java.util.List;
 
 public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListAdapter
 {
-    private Context mContext;
     private LayoutInflater mInflater;
     private Province mSelectedProvince;
     private List<RegionViewItem> items;
@@ -31,7 +30,6 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
 
     public RegionAnimatedExpandableListAdapter(Context context)
     {
-        mContext = context;
         mInflater = LayoutInflater.from(context);
     }
 

@@ -35,8 +35,6 @@ import com.twoheart.dailyhotel.view.CloseOnBackPressed;
 
 public class MainActivity extends BaseActivity implements Constants
 {
-    private ViewGroup mContentLayout;
-
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed mBackButtonHandler;
 
@@ -96,7 +94,7 @@ public class MainActivity extends BaseActivity implements Constants
         super.onCreate(savedInstanceState);
 
         // URL 만들때 사용
-//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
@@ -139,8 +137,8 @@ public class MainActivity extends BaseActivity implements Constants
         ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
         mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
 
-        mContentLayout = (ViewGroup) findViewById(R.id.contentLayout);
-        mMainFragmentManager = new MainFragmentManager(this, mContentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
+        ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
+        mMainFragmentManager = new MainFragmentManager(this, contentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
         mBackButtonHandler = new CloseOnBackPressed(this);
     }
 

@@ -419,11 +419,25 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             if (currentFragment instanceof HotelDaysListFragment)
             {
-                String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M월d일");
-                String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M월d일");
+                String dateFormat;
+                String tabDateFormat;
+
+                if (Util.getLCDWidth(getContext()) < 720)
+                {
+                    dateFormat = "M.d";
+                    tabDateFormat = "%s - %s";
+                } else
+                {
+                    dateFormat = "M월d일";
+                    tabDateFormat = "%s-%s";
+                }
+
+                String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
+                String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
 
                 // 선택탭의 이름을 수정한다.
-                days = String.format("%s-%s", checkInDay, checkOutDay);
+                days = String.format(tabDateFormat, checkInDay, checkOutDay);
+
                 FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
                 mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
@@ -624,11 +638,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private void setNavigationItemSelected(Province province)
     {
         mSelectedProvince = province;
-
-        for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
-        {
-            hotelListFragment.setProvince(mSelectedProvince);
-        }
     }
 
     private void onNavigationItemSelected(Province province, boolean isSelectionTop)
@@ -1197,12 +1206,26 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             lockUiComponent();
 
-            String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M월d일");
-            String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M월d일");
+            String dateFormat;
+            String tabDateFormat;
+
+            if (Util.getLCDWidth(getContext()) < 720)
+            {
+                dateFormat = "M.d";
+                tabDateFormat = "%s - %s";
+            } else
+            {
+                dateFormat = "M월d일";
+                tabDateFormat = "%s-%s";
+            }
+
+            String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
+            String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
 
             // 선택탭의 이름을 수정한다.
             mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
-            mTabLayout.getTabAt(2).setText(String.format("%s-%s", checkInDay, checkOutDay));
+            mTabLayout.getTabAt(2).setText(String.format(tabDateFormat, checkInDay, checkOutDay));
+
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
             refreshHotelList(mSelectedProvince, isListSelectionTop);
@@ -1281,6 +1304,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     mHotelViewType = HOTEL_VIEW_TYPE.LIST;
                     break;
             }
+
+            showAppBarLayout();
+            pinAppBarLayout();
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
@@ -1610,7 +1636,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     Province province = hotelListFragment.getProvince();
 
-                    if (province == null || mSelectedProvince.index != province.index || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
+                    if (province == null || mSelectedProvince.index != province.index//
+                        || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
                     {
                         isSelectionTop = true;
                         break;

@@ -163,7 +163,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
         // Add Hotel Info ViewPager
-        if(mViewPager != null)
+        if (mViewPager != null)
         {
             return;
         }
@@ -174,7 +174,6 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(baseActivity, 100));
         layoutParams.gravity = Gravity.BOTTOM;
-        layoutParams.bottomMargin = Util.dpToPx(baseActivity, 47);
 
         mViewPager.setLayoutParams(layoutParams);
         mViewPager.setVisibility(View.INVISIBLE);
@@ -996,7 +995,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            if (baseActivity == null)
+            if (baseActivity == null || mGoogleMap == null)
             {
                 return;
             }

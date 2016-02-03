@@ -7,11 +7,14 @@
  */
 package com.twoheart.dailyhotel.screen.bookingdetail;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,6 +35,7 @@ import com.twoheart.dailyhotel.adapter.NameInfoWindowAdapter;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 public class HotelBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
@@ -40,8 +44,10 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
 
     private HotelBookingDetail mBookingDetail;
     private GoogleMap mGoogleMap;
-    private View mPlaceholderMapView;
+    private FrameLayout mMapLayout;
+    private View mGoogleMapLayout;
     private Marker mMarker;
+    private Handler mHandler = new Handler();
 
     public static HotelBookingDetailTabMapFragment newInstance(PlaceBookingDetail bookingDetail)
     {
@@ -68,7 +74,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
     {
         View view = inflater.inflate(R.layout.fragment_hotel_tab_map, container, false);
 
-        mPlaceholderMapView = view.findViewById(R.id.placeholderMapView);
+        mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
 
         TextView hotelNameTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
         TextView hotelAddressTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
@@ -109,38 +115,34 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
     {
         super.onActivityCreated(savedInstanceState);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frag_map);
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (Util.isGooglePlayServicesAvailable(getActivity()) == true)
+        if (baseActivity == null)
         {
-            mPlaceholderMapView.setVisibility(View.GONE);
+            return;
+        }
 
-            mapFragment.getMapAsync(new OnMapReadyCallback()
-            {
-                @Override
-                public void onMapReady(GoogleMap googleMap)
-                {
-                    mGoogleMap = googleMap;
-                    mGoogleMap.setOnMapClickListener(HotelBookingDetailTabMapFragment.this);
-                    mGoogleMap.setMyLocationEnabled(false);
-                    mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                    addMarker(mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.placeName);
-                }
-            });
-        } else
+        mMapLayout.setOnClickListener(new View.OnClickListener()
         {
-            mPlaceholderMapView.setVisibility(View.VISIBLE);
-            mPlaceholderMapView.setOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    Util.installGooglePlayService((BaseActivity) getActivity());
-                }
-            });
+                Util.installGooglePlayService(baseActivity);
+            }
+        });
 
-            getChildFragmentManager().beginTransaction().remove(mapFragment).commitAllowingStateLoss();
+        if (Util.isInstallGooglePlayService(baseActivity) == true)
+        {
+            try
+            {
+                googleMapSetting(mMapLayout);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            } catch (Error error)
+            {
+                ExLog.d(error.toString());
+            }
         }
     }
 
@@ -149,7 +151,14 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
     {
         if (mMarker != null)
         {
-            mMarker.showInfoWindow();
+            mHandler.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mMarker.showInfoWindow();
+                }
+            });
         }
 
         super.onResume();
@@ -169,7 +178,6 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         {
             mMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
             mMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
-            mMarker.showInfoWindow();
 
             LatLng address = new LatLng(lat, lng);
             CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
@@ -184,6 +192,98 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     return true;
                 }
             });
+
+            mMarker.hideInfoWindow();
+            mHandler.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mMarker.showInfoWindow();
+                }
+            });
         }
+    }
+
+    private void googleMapSetting(final FrameLayout googleMapLayout)
+    {
+        if (googleMapLayout == null)
+        {
+            return;
+        }
+
+        googleMapLayout.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null)
+                {
+                    return;
+                }
+
+                SupportMapFragment mapFragment = null;
+
+                try
+                {
+                    if (mGoogleMapLayout == null)
+                    {
+                        LayoutInflater inflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+                    }
+
+                    googleMapLayout.addView(mGoogleMapLayout);
+
+                    mapFragment = (SupportMapFragment) baseActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+
+                    googleMapLayout.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            onMapClick(new LatLng(mBookingDetail.latitude, mBookingDetail.longitude));
+                        }
+                    });
+                    return;
+                } catch (Error e)
+                {
+                    ExLog.e(e.toString());
+
+                    googleMapLayout.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            onMapClick(new LatLng(mBookingDetail.latitude, mBookingDetail.longitude));
+                        }
+                    });
+                    return;
+                }
+
+                googleMapLayout.setOnClickListener(null);
+
+                if (mapFragment != null)
+                {
+                    mapFragment.getMapAsync(new OnMapReadyCallback()
+                    {
+                        @Override
+                        public void onMapReady(GoogleMap googleMap)
+                        {
+                            mGoogleMap = googleMap;
+                            mGoogleMap.setOnMapClickListener(HotelBookingDetailTabMapFragment.this);
+                            mGoogleMap.setMyLocationEnabled(false);
+                            mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+
+                            addMarker(mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.placeName);
+                        }
+                    });
+                }
+            }
+        }, 500);
     }
 }

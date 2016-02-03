@@ -37,7 +37,6 @@ import java.util.ArrayList;
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
     public HotelBookingDetail mHotelBookingDetail;
-    private BookingDetailFragmentPagerAdapter mFragmentPagerAdapter;
 
     @Override
     protected void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail)
@@ -62,8 +61,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         BaseFragment baseFragment03 = HotelBookingDetailTabMapFragment.newInstance(placeBookingDetail);
         fragmentList.add(baseFragment03);
 
-        mFragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
-        viewPager.setAdapter(mFragmentPagerAdapter);
+        BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
+        viewPager.setAdapter(fragmentPagerAdapter);
     }
 
     @Override

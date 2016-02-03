@@ -19,8 +19,9 @@ import java.util.Map;
 
 public class AnalyticsManager
 {
+    private static final String GA_PROPERTY_ID = "UA-43721645-6";
+
     private static AnalyticsManager mInstance = null;
-    private GoogleAnalytics mGoogleAnalytics;
     private Tracker mTracker;
 
     // Tune
@@ -48,10 +49,10 @@ public class AnalyticsManager
 
     private void initGoogleAnalytics(Context context)
     {
-        mGoogleAnalytics = GoogleAnalytics.getInstance(context);
-        mGoogleAnalytics.setLocalDispatchPeriod(60);
+        GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
+        googleAnalytics.setLocalDispatchPeriod(60);
 
-        mTracker = mGoogleAnalytics.newTracker(Constants.GA_PROPERTY_ID);
+        mTracker = googleAnalytics.newTracker(GA_PROPERTY_ID);
         mTracker.enableAdvertisingIdCollection(true);
     }
 
@@ -125,8 +126,8 @@ public class AnalyticsManager
 
         mMobileAppTracker.setCurrencyCode("KRW");
 
-        MATEvent matEvent = new MATEvent(MATEvent.REGISTRATION)//
-            .withAttribute1(userType);
+        MATEvent matEvent = new MATEvent(TuneEventId.REGISTRATION);
+        matEvent.withAttribute1(userType);
 
         mMobileAppTracker.measureEvent(matEvent);
     }
@@ -140,8 +141,8 @@ public class AnalyticsManager
         mMobileAppTracker.setPhoneNumber(phoneNumber);
         mMobileAppTracker.setCurrencyCode("KRW");
 
-        MATEvent matEvent = new MATEvent(MATEvent.REGISTRATION)//
-            .withAttribute1(userType);
+        MATEvent matEvent = new MATEvent(TuneEventId.REGISTRATION);
+        matEvent.withAttribute1(userType);
 
         mMobileAppTracker.measureEvent(matEvent);
     }
@@ -325,4 +326,10 @@ public class AnalyticsManager
         public static final String FACEBOOK = "facebook";
         public static final String EMAIL = "email";
     }
+
+    public static class TuneEventId
+    {
+        public static final int REGISTRATION = 1132821069;
+    }
+
 }

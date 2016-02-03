@@ -74,11 +74,11 @@
     </style>
 
     <style name="PlaceTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
-        <item name="android:textSize">@dimen/tabbar_text</item>
+        <item name="android:textSize">13dp</item>
     </style>
 
     <style name="CategoryTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">13dp</item>
     </style>
 
 </resources>

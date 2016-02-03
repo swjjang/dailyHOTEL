@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -78,6 +79,8 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         void toggleViewType();
 
         void selectSortType(SortType sortType);
+
+        void setLocation(Location location);
 
         void onClickActionBarArea();
 
@@ -243,11 +246,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
     public void setNavigationItemSelected(Province province)
     {
         mSelectedProvince = province;
-
-        for (GourmetListFragment gourmetListFragment : mFragmentPagerAdapter.getFragmentList())
-        {
-            gourmetListFragment.setProvince(mSelectedProvince);
-        }
     }
 
     public void onNavigationItemSelected(Province province, boolean isSelectionTop)
@@ -783,6 +781,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
@@ -939,6 +938,9 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                     break;
             }
 
+            showAppBarLayout();
+            pinAppBarLayout();
+
             for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
             {
                 boolean isCurrentFragment = placeListFragment == currentFragment;
@@ -955,6 +957,15 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
             {
                 placeListFragment.setSortType(sortType);
+            }
+        }
+
+        @Override
+        public void setLocation(Location location)
+        {
+            for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
+            {
+                placeListFragment.setLocation(location);
             }
         }
 

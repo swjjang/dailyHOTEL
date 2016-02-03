@@ -11,8 +11,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class AboutActivity extends WebViewActivity
 {
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -25,8 +23,8 @@ public class AboutActivity extends WebViewActivity
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_about_activity));
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_about_activity));
     }
 
     @Override

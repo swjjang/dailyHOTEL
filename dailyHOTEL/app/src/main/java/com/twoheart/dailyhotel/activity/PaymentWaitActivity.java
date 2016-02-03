@@ -47,8 +47,6 @@ public class PaymentWaitActivity extends BaseActivity
     private TextView tvGuide2;
     private String mCSoperatingTimeMessage;
 
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -109,10 +107,10 @@ public class PaymentWaitActivity extends BaseActivity
     private void initToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_payment_wait_activity));
-        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_payment_wait_activity));
+        dailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

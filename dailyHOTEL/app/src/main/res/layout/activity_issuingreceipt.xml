@@ -38,7 +38,8 @@
                 android:background="@drawable/receipt_bg_top"
                 android:paddingLeft="11dp"
                 android:paddingRight="11dp"
-                android:minWidth="165dp">
+                android:minWidth="165dp"
+                android:paddingBottom="10dp">
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:id="@+id/textView1"

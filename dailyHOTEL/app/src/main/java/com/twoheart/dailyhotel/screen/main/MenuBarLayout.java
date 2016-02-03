@@ -15,7 +15,6 @@ public class MenuBarLayout implements View.OnClickListener
 
     private static final int MENU_COUNT = 4;
 
-    private ViewGroup mMenuBarLayout;
     private View[] mMenuView;
     private int mSelectedMenuIndex;
     private OnMenuBarSelectedListener mOnMenuBarSelectedListener;
@@ -48,10 +47,9 @@ public class MenuBarLayout implements View.OnClickListener
     public MenuBarLayout(BaseActivity baseActivity, ViewGroup viewGroup, OnMenuBarSelectedListener listener)
     {
         mBaseActivity = baseActivity;
-        mMenuBarLayout = viewGroup;
         mOnMenuBarSelectedListener = listener;
 
-        initLayout(mMenuBarLayout);
+        initLayout(viewGroup);
     }
 
     private void initLayout(ViewGroup viewGroup)
@@ -100,11 +98,6 @@ public class MenuBarLayout implements View.OnClickListener
                 break;
         }
     }
-
-    //    public void setVisibility(boolean isVisible)
-    //    {
-    //        mMenuBarLayout.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-    //    }
 
     void selectedMenu(int index)
     {

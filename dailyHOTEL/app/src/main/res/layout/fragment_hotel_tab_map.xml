@@ -5,15 +5,10 @@
               android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/mapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.7">
-
-        <fragment
-            android:id="@+id/frag_map"
-            class="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/placeholderMapView"
@@ -23,8 +18,7 @@
             android:gravity="center"
             android:text="@string/label_google_map"
             android:textColor="@color/booking_subtext"
-            android:textSize="20dp"
-            android:visibility="gone"/>
+            android:textSize="20dp"/>
     </FrameLayout>
 
     <RelativeLayout
@@ -100,5 +94,4 @@
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
-
 </LinearLayout>
