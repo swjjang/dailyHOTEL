@@ -19,6 +19,12 @@ import java.util.Random;
 
 public abstract class DailyHotelRequest<T> extends Request<T> implements Constants
 {
+    // uiLock을 띄우고 API를 콜하였는데 제한 시간 안에 리턴을 받지 못한경우. error 발생.
+    private static final int REQUEST_EXPIRE_JUDGE = 60000;
+
+    // Volley의 최대 retry 횟수,  여기서 0은 리퀘스트를 리트라이 하지 않음을 말함.
+    private static final int REQUEST_MAX_RETRY = 0;
+
     private Map<String, String> mParameters;
 
     public DailyHotelRequest(int method, String url, Map<String, String> parameters, ErrorListener errorListener)

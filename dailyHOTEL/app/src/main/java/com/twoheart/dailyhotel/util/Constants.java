@@ -18,7 +18,7 @@ import com.twoheart.dailyhotel.BuildConfig;
 
 public interface Constants
 {
-    // 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다. 테스트 해보고 싶음.
+    // 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다.
     public static final boolean DEBUG = BuildConfig.DEBUG;
     public static final boolean UNENCRYPTED_URL = false;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
@@ -57,12 +57,9 @@ public interface Constants
         FNB, // 절대로 바꾸면 안됨 서버에서 fnb로 내려옴
     }
 
-    // 항상 열리게 셋팅 여부
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
-    public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
 
     // 웹서버 호스트
-    //"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
     public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://lb2.dailyhotel.kr/goodnight/" : "MTE2JDEzJDEwMiQ1OCQxMTEk$MDQzNkMwNTRCOBDgzNjM1MTM4NDY1M0VFMkIwRkM3QzMzQUE0NzU4OEI1MFEEzN0IwNkE3NUExRkM2QjNDNUFBNUE1MzI2RDNDQThGNJEFFQkJFGNzk4QTc0FRkFDMDgzOEQw$";
     public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://api.dailyhotel.kr/goodnight/" : "MCQ4MyQxMjckMzYkMTck$CQTgwMkY4MTZFRTM2BODI4NDAyRDY1NDAzQjMBzMTg4REQ4RjUyNTJBQzNGMkI1RDk1QUE1OTU4N0RCOTREMEGQ0MjJGREQwNzYwNUI4QTM5NTcxNzk4NDJGQTFGNEQxMOEU4$";
     //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
@@ -70,15 +67,6 @@ public interface Constants
 
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
-
-    // uiLock을 띄우고 API를 콜하였는데 제한 시간 안에 리턴을 받지 못한경우. error 발생.
-    public static final int REQUEST_EXPIRE_JUDGE = 60000;
-
-    // 구글플레이 서비스 상태 확인 타임아웃
-    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 15000;
-
-    // Volley의 최대 retry 횟수,  여기서 0은 리퀘스트를 리트라이 하지 않음을 말함.
-    public static final int REQUEST_MAX_RETRY = 0;
 
     //
     public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
@@ -106,36 +94,7 @@ public interface Constants
     public static final String PACKAGE_NAME_KFTC = "com.kftc.bankpay.android";
     public static final String PACKAGE_NAME_MPOCKET = "kr.co.samsungcard.mpocket";
 
-    public static final String KEY_PREFERENCE_RESENT_CNT = "RESENT_CNT";
-    // user info
-
-
-    public static final String KEY_PREFERENCE_OVERSEAS_NAME = "OVERSEAS_NAME";
-    public static final String KEY_PREFERENCE_OVERSEAS_PHONE = "OVERSEAS_PHONE";
-    public static final String KEY_PREFERENCE_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
-    // version
-    public static final String KEY_PREFERENCE_CURRENT_VERSION_NAME = "CURRENT_VERSION_NAME";
-
-    // region
-
-
-    public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
-
-
-    // ga
-
-
-    public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
-
-
-    public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
-    public static final int VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT = 1;
-    public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
-
-
     // Event
-
-
     // Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
     public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
     public static final String NAME_INTENT_EXTRA_DATA_HOTELLIST = "hotellist";
@@ -248,10 +207,4 @@ public interface Constants
     // 퍼미션 관련
     public static final int REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION = 10;
     public static final int REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE = 11;
-
-    // Android Google Analytics 정보들.
-    public static final String GA_PROPERTY_ID = "UA-43721645-6";
-
-    // Key used to store a user's tracking preferences in SharedPreferences.
-    public static final String TRACKING_PREF_KEY = "trackingPreference";
 }

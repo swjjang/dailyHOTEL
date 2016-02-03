@@ -19,6 +19,8 @@ import java.util.Map;
 
 public class AnalyticsManager
 {
+    private static final String GA_PROPERTY_ID = "UA-43721645-6";
+
     private static AnalyticsManager mInstance = null;
     private Tracker mTracker;
 
@@ -50,7 +52,7 @@ public class AnalyticsManager
         GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
         googleAnalytics.setLocalDispatchPeriod(60);
 
-        mTracker = googleAnalytics.newTracker(Constants.GA_PROPERTY_ID);
+        mTracker = googleAnalytics.newTracker(GA_PROPERTY_ID);
         mTracker.enableAdvertisingIdCollection(true);
     }
 
