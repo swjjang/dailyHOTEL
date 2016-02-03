@@ -246,11 +246,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
     public void setNavigationItemSelected(Province province)
     {
         mSelectedProvince = province;
-
-        for (GourmetListFragment gourmetListFragment : mFragmentPagerAdapter.getFragmentList())
-        {
-            gourmetListFragment.setProvince(mSelectedProvince);
-        }
     }
 
     public void onNavigationItemSelected(Province province, boolean isSelectionTop)

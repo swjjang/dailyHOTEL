@@ -79,7 +79,7 @@ public class RegionListActivity extends BaseActivity
         mType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         Province selectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-        if (mType == null || selectedProvince == null)
+        if (mType == null)
         {
             Util.restartApp(this);
             return;
@@ -93,7 +93,7 @@ public class RegionListActivity extends BaseActivity
 
     private void initLayout(PlaceMainFragment.TYPE type, Province province)
     {
-        if (mType == null || province == null)
+        if (mType == null)
         {
             return;
         }
@@ -118,12 +118,15 @@ public class RegionListActivity extends BaseActivity
 
                 boolean isOverseas = false;
 
-                if (province instanceof Area)
+                if(province != null)
                 {
-                    isOverseas = ((Area) province).getProvince().isOverseas;
-                } else
-                {
-                    isOverseas = province.isOverseas;
+                    if (province instanceof Area)
+                    {
+                        isOverseas = ((Area) province).getProvince().isOverseas;
+                    } else
+                    {
+                        isOverseas = province.isOverseas;
+                    }
                 }
 
                 regionListFragment01.setInformation(type, Region.DOMESTIC, isOverseas ? null : province);

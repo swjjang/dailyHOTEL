@@ -624,11 +624,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private void setNavigationItemSelected(Province province)
     {
         mSelectedProvince = province;
-
-        for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
-        {
-            hotelListFragment.setProvince(mSelectedProvince);
-        }
     }
 
     private void onNavigationItemSelected(Province province, boolean isSelectionTop)
@@ -1613,7 +1608,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     Province province = hotelListFragment.getProvince();
 
-                    if (province == null || mSelectedProvince.index != province.index || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
+                    if (province == null || mSelectedProvince.index != province.index//
+                        || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
                     {
                         isSelectionTop = true;
                         break;

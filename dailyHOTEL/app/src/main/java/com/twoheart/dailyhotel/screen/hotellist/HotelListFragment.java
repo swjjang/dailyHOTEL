@@ -486,11 +486,6 @@ public class HotelListFragment extends BaseFragment implements Constants
         return mSelectedProvince;
     }
 
-    public void setProvince(Province province)
-    {
-        mSelectedProvince = province;
-    }
-
     protected void showSortDialogView()
     {
         final BaseActivity baseActivity = (BaseActivity) getActivity();

@@ -571,11 +571,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
         return mSelectedProvince;
     }
 
-    public void setProvince(Province province)
-    {
-        mSelectedProvince = province;
-    }
-
     public void setSortType(SortType sortType)
     {
         mIsSelectionTopBySort = mSortType != sortType;
