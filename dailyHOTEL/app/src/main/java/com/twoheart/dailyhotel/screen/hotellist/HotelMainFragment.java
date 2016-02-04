@@ -504,13 +504,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (size <= 2)
         {
-            if (size == 2)
-            {
-                setSelectCategory(list.get(1));
-            } else
-            {
-                setSelectCategory(Category.ALL);
-            }
+            setSelectCategory(Category.ALL);
 
             mCategoryTabLayout.setVisibility(View.GONE);
             mUnderLine.setVisibility(View.GONE);

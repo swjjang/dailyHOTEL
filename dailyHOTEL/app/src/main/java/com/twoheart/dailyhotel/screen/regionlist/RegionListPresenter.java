@@ -7,6 +7,8 @@ import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.exception.MemoryClearException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -253,13 +255,14 @@ public class RegionListPresenter
 
                     mListener.onInternalError(message);
                 }
+            } catch (MemoryClearException e)
+            {
+                Util.restartApp(mBaseActivity);
             } catch (Exception e)
             {
                 mListener.onInternalError();
             }
         }
-
-
     };
 
     private DailyHotelJsonResponseListener mGourmetRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -296,11 +299,14 @@ public class RegionListPresenter
                 {
                     String message = response.getString("msg");
 
-                    mBaseActivity.onInternalError(message);
+                    mListener.onInternalError(message);
                 }
+            } catch (MemoryClearException e)
+            {
+                Util.restartApp(mBaseActivity);
             } catch (Exception e)
             {
-                mBaseActivity.onInternalError();
+                mListener.onInternalError();
             }
         }
     };

@@ -128,8 +128,6 @@ public class MainActivity extends BaseActivity implements Constants
 
     private void initLayout()
     {
-        Util.initializeFresco(getApplicationContext());
-
         setContentView(R.layout.activity_main);
 
         mSplashLayout = findViewById(R.id.splashLayout);
