@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.exception.MemoryClearException;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
 
 import java.util.List;
@@ -54,8 +55,13 @@ public class RegionListFragment extends BaseFragment
         }
 
         mAdapter.setData(arrayList);
-        mListView.setAdapter(mAdapter);
 
+        if(mListView == null)
+        {
+            throw new MemoryClearException();
+        }
+
+        mListView.setAdapter(mAdapter);
         selectedPreviousArea(mSelectedProvince, arrayList);
     }
 

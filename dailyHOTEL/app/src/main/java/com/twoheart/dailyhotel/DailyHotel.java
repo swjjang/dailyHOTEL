@@ -54,6 +54,7 @@ public class DailyHotel extends Application implements Constants
 
         initializeVolley();
         initializeAnalytics();
+        Util.initializeFresco(getApplicationContext());
 
         KakaoSDK.init(new KakaoSDKAdapter());
 
