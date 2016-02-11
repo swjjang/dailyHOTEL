@@ -31,10 +31,10 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class HotelDetailActivity extends BaseActivity
@@ -303,14 +304,14 @@ public class HotelDetailActivity extends BaseActivity
         finish();
     }
 
-    private void moveToBooking(SaleRoomInformation saleRoomInformation)
+    private void moveToBooking(HotelDetail hotelDetail, SaleRoomInformation saleRoomInformation, SaleTime checkInSaleTime)
     {
         if (saleRoomInformation == null)
         {
             return;
         }
 
-        Intent intent = BookingActivity.newInstance(HotelDetailActivity.this, saleRoomInformation, mCheckInSaleTime, mHotelDetail.grade);
+        Intent intent = BookingActivity.newInstance(HotelDetailActivity.this, saleRoomInformation, checkInSaleTime, hotelDetail.grade, hotelDetail.hotelIndex);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -375,12 +376,15 @@ public class HotelDetailActivity extends BaseActivity
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
 
             HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.HOTEL_NAME, mHotelDetail.hotelName);
-            params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-            params.put(Label.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(mHotelDetail.getSaleRoomList().get(0).averageDiscount));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mHotelDetail.nights));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mHotelDetail.hotelIndex));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-            params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
+            params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
         }
@@ -564,6 +568,41 @@ public class HotelDetailActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mHotelDetailInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        private void recordAnalytics(HotelDetail hotelDetail)
+        {
+            if(hotelDetail == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
+
+                if(mHotelDetail.getSaleRoomList() == null || mHotelDetail.getSaleRoomList().size() == 0)
+                {
+                    params.put(AnalyticsManager.KeyType.PRICE, "0");
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(mHotelDetail.getSaleRoomList().get(0).averageDiscount));
+                }
+
+                params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mHotelDetail.nights));
+                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mHotelDetail.hotelIndex));
+
+                SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + hotelDetail.nights);
+
+                params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+                AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DETAIL, params);
+            }catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -592,6 +631,8 @@ public class HotelDetailActivity extends BaseActivity
                         {
                             mHotelDetailLayout.setHotelDetail(mHotelDetail, mCurrentImage);
                         }
+
+                        recordAnalytics(mHotelDetail);
                         break;
                     }
 
@@ -668,7 +709,7 @@ public class HotelDetailActivity extends BaseActivity
 
                     if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
-                        moveToBooking(mSelectedSaleRoomInformation);
+                        moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
                     } else
                     {
                         // 정보 업데이트 화면으로 이동.

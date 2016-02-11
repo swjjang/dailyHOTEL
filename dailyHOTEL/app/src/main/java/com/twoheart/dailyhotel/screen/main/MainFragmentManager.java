@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.fragment.ErrorFragment;
 import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
 import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -131,13 +131,13 @@ public class MainFragmentManager
             case INDEX_INFORMATION_FRAGMENT:
                 mIndexLastFragment = INDEX_INFORMATION_FRAGMENT;
 
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_setting_frag), (long) index);
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Event.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_setting_frag), (long) index);
                 break;
 
             case INDEX_BOOKING_FRAGMENT:
                 mIndexLastFragment = INDEX_BOOKING_FRAGMENT;
 
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_booking_list_frag), (long) index);
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Event.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_booking_list_frag), (long) index);
                 break;
 
             case INDEX_GOURMET_FRAGMENT:
@@ -145,7 +145,7 @@ public class MainFragmentManager
                 mIndexMainLastFragment = INDEX_GOURMET_FRAGMENT;
 
                 DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailygourmet));
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_gourmet_list_frag), (long) index);
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Event.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_gourmet_list_frag), (long) index);
                 break;
 
             case INDEX_HOTEL_FRAGMENT:
@@ -154,7 +154,7 @@ public class MainFragmentManager
                 mIndexMainLastFragment = INDEX_HOTEL_FRAGMENT;
 
                 DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailyhotel));
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Screen.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_hotel_list_frag), (long) index);
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Event.MENU, AnalyticsManager.Action.CLICK, mBaseActivity.getString(R.string.actionbar_title_hotel_list_frag), (long) index);
                 break;
         }
 

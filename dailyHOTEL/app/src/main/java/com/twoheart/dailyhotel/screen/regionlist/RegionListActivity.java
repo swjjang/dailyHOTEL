@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -122,7 +123,14 @@ public class RegionListActivity extends BaseActivity
                 {
                     if (province instanceof Area)
                     {
-                        isOverseas = ((Area) province).getProvince().isOverseas;
+                        // 어디선가에서 Proince가 누락되는데 찾을수가 없음ㅜㅜ
+                        try
+                        {
+                            isOverseas = ((Area) province).getProvince().isOverseas;
+                        }catch (NullPointerException e)
+                        {
+                            isOverseas = DailyPreference.getInstance(this).isSelectedOverseaRegion(TYPE.HOTEL);
+                        }
                     } else
                     {
                         isOverseas = province.isOverseas;

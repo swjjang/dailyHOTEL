@@ -25,7 +25,7 @@ import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -43,7 +43,7 @@ public class DailyHotel extends Application implements Constants
     {
         super.onCreate();
 
-        io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
+//        io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
 
         mInstance = this;
 

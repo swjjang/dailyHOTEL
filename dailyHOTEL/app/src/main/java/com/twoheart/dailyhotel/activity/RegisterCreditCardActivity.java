@@ -1,17 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * PaymentActivity (결제화면)
- * <p>
- * 웹서버에서 이용하는 KCP 결제 모듈을 이용하는 화면이다. WebView를 이용
- * 해서 KCP 결제를 진행하는 웹서버 API에 POST 방식으로 요청한다. 요청 시
- * 요청 파라미터에 사용자 정보를 담는다. 이는 서버 사이드에서 Facbook 계정
- * 임인지를 확인하기 위해서이다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.activity;
 
 import android.annotation.SuppressLint;
@@ -37,16 +23,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
-@SuppressLint("NewApi")
 public class RegisterCreditCardActivity extends BaseActivity implements Constants
 {
-    public static final int PROGRESS_STAT_NOT_START = 1;
-    public static final int PROGRESS_STAT_IN = 2;
-    public static final int PROGRESS_DONE = 3;
-    public static String CARD_CD = "";
-    public static String QUOTA = "";
-    public int m_nStat = PROGRESS_STAT_NOT_START;
-
     private WebView webView;
 
     @Override
@@ -220,24 +198,8 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         }
     }
 
-    /**
-     * 종종 에러 발생.
-     *
-     * @author jangjunho
-     */
-    @Deprecated
-    private class HtmlObserver
-    {
-        @JavascriptInterface
-        public void showHTML(String html)
-        {
-            ExLog.e("WEB_VIEW : " + html);
-        }
-    }
-
     private class JavaScriptExtention
     {
-
         public JavaScriptExtention()
         {
         }

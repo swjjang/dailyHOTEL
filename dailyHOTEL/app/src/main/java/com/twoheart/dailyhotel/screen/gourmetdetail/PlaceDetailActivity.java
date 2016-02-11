@@ -31,10 +31,10 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailLayout;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -57,7 +57,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected PlaceDetail mPlaceDetail;
     protected int mCurrentImage;
     protected boolean mIsStartByShare;
-    private SaleTime mCheckInSaleTime;
+    protected SaleTime mCheckInSaleTime;
     private TicketInformation mSelectedTicketInformation;
     private String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
@@ -133,7 +133,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
-    protected abstract void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime);
+    protected abstract void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime, int gourmetIndex);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -591,7 +591,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
-                        processBooking(mSelectedTicketInformation, mCheckInSaleTime);
+                        processBooking(mSelectedTicketInformation, mCheckInSaleTime, mPlaceDetail.index);
                     } else
                     {
                         // 정보 업데이트 화면으로 이동.

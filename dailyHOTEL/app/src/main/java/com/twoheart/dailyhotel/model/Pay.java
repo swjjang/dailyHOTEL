@@ -20,8 +20,8 @@ public class Pay implements Parcelable
 
     };
 
-    ;
     public int credit;
+    public int hotelIndex;
     public String checkInTime;
     public String checkOutTime;
     private SaleRoomInformation mSaleRoomInformation;
@@ -30,6 +30,7 @@ public class Pay implements Parcelable
     private boolean isSaleCredit;
     private Type mType;
     private Guest mGuest;
+
 
     public Pay()
     {
@@ -52,6 +53,7 @@ public class Pay implements Parcelable
         dest.writeString(checkOutTime);
         dest.writeSerializable(mType);
         dest.writeValue(mGuest);
+        dest.writeInt(hotelIndex);
     }
 
     private void readFromParcel(Parcel in)
@@ -65,6 +67,7 @@ public class Pay implements Parcelable
         checkOutTime = in.readString();
         mType = (Type) in.readSerializable();
         mGuest = (Guest) in.readValue(Guest.class.getClassLoader());
+        hotelIndex = in.readInt();
     }
 
     public SaleRoomInformation getSaleRoomInformation()
@@ -137,7 +140,7 @@ public class Pay implements Parcelable
     {
         EASY_CARD,
         CARD,
-        PHONE_PAY,
+        PHONE,
         VBANK,
         //		PAYPAL
     }

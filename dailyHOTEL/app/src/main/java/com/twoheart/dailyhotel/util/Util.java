@@ -43,6 +43,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.kakao.usermgmt.UserManagement;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.DailyOkHttpImagePipelineConfigFactory;
@@ -61,6 +62,18 @@ import okhttp3.OkHttpClient;
 
 public class Util implements Constants
 {
+    private static String MEMORY_CLEAR;
+
+    public static void initializeMemory()
+    {
+        MEMORY_CLEAR = "MEMORY";
+    }
+
+    public static boolean isMemoryClear()
+    {
+        return Util.isTextEmpty(MEMORY_CLEAR);
+    }
+
     public static void initializeFresco(Context context)
     {
         ImagePipelineConfig imagePipelineConfig;
@@ -201,15 +214,9 @@ public class Util implements Constants
             return;
         }
 
-        // 메모리 해지 및 기타 바탕화면으로 빠진후에 메모리가 해지 되는 경우가 있어 강제 종료후에 다시 재실행한다.
-        // 에러 후에 알람으로 다시 실행시키기.
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 500, pendingIntent);
-        System.exit(0);
+        Intent intent = new Intent(context, LauncherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     public static void finishOutOfMemory(BaseActivity activity)
@@ -318,6 +325,11 @@ public class Util implements Constants
     public static boolean isOverAPI14()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    }
+
+    public static boolean isOverAPI19()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
     public static boolean isOverAPI23()

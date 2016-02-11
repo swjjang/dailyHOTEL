@@ -42,6 +42,7 @@ public class TicketPayment implements Parcelable
 
     public long startTicketTime;
     public long endTicketTime;
+    public int placeIndex;
 
     public TicketPayment()
     {
@@ -71,6 +72,7 @@ public class TicketPayment implements Parcelable
         dest.writeInt(ticketMaxCount);
         dest.writeLong(ticketTime);
         dest.writeLongArray(ticketTimes);
+        dest.writeInt(placeIndex);
     }
 
     private void readFromParcel(Parcel in)
@@ -87,6 +89,7 @@ public class TicketPayment implements Parcelable
         ticketMaxCount = in.readInt();
         ticketTime = in.readLong();
         ticketTimes = in.createLongArray();
+        placeIndex = in.readInt();
     }
 
     public TicketInformation getTicketInformation()
@@ -172,7 +175,7 @@ public class TicketPayment implements Parcelable
     {
         EASY_CARD,
         CARD,
-        PHONE_PAY,
+        PHONE,
         VBANK,
     }
 }

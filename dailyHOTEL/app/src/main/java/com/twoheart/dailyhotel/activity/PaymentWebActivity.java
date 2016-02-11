@@ -42,8 +42,8 @@ import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -921,7 +921,7 @@ public class PaymentWebActivity extends BaseActivity implements Constants
             {
                 String[] result = msg.split("\\^");
 
-                if (result.length >= 1)
+                if (result.length >= 2)
                 {
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, result[1]);
                 }

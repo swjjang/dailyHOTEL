@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
@@ -19,11 +19,19 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
@@ -63,6 +71,18 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , placeDetail.index //
             , imageUrl //
             , checkInSaleTime);
+
+        // 고메 공유하기 로그 추가
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
+        params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(placeDetail.getTicketInformation().get(0).discountPrice));
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
+        params.put(AnalyticsManager.KeyType.DATE, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
+
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Screen.GOURMET_DETAIL, AnalyticsManager.Action.CLICK, AnalyticsManager.Label.SHARE, params);
     }
 
     @Override
@@ -79,14 +99,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime)
+    protected void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime, int gourmetIndex)
     {
         if (ticketInformation == null)
         {
             return;
         }
 
-        Intent intent = new Intent(this, GourmetPaymentActivity.class);
+        Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, ticketInformation, checkInSaleTime, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
 
@@ -100,6 +120,36 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        private void recordAnalytics(PlaceDetail placeDetail)
+        {
+            if (placeDetail == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
+
+                if (placeDetail.getTicketInformation() == null || placeDetail.getTicketInformation().size() == 0)
+                {
+                    params.put(AnalyticsManager.KeyType.PRICE, "0");
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(placeDetail.getTicketInformation().get(0).discountPrice));
+                }
+
+                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
+                params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, params);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -136,6 +186,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 {
                     mPlaceDetailLayout.setDetail(mPlaceDetail, mCurrentImage);
                 }
+
+                recordAnalytics(mPlaceDetail);
             } catch (Exception e)
             {
                 onError(e);
