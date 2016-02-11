@@ -245,5 +245,6 @@ public class AnalyticsManager
         public static final String PAYMENT_TYPE = "paymentType";
         public static final String RESERVATION_TIME = "reservationTime";
         public static final String CURRENT_TIME = "currentTime";
+        public static final String USER_INDEX = "userIndex";
     }
 }

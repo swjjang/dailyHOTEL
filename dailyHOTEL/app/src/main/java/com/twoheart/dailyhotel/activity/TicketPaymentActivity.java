@@ -35,13 +35,13 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONArray;
@@ -299,13 +299,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT) == true)
                     {
                         TicketPayment ticketPayment = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT);
-
-                        DailyPreference.getInstance(TicketPaymentActivity.this).setVirtuaAccountInformation(//
-                            ticketPayment.getCustomer().getUserIdx()//
-                            , ticketPayment.getTicketInformation().placeName//
-                            , Integer.toString(ticketPayment.getTicketInformation().index)//
-                            , ticketPayment.checkInTime//
-                            , ticketPayment.checkOutTime);
+                        DailyPreference.getInstance(TicketPaymentActivity.this).setVirtuaAccountGourmetInformation(ticketPayment, mCheckInSaleTime);
                     }
 
                     DailyPreference.getInstance(TicketPaymentActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);

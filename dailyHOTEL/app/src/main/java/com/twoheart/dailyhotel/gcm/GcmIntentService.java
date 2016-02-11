@@ -25,14 +25,12 @@ import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
 import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
-import com.twoheart.dailyhotel.model.Pay;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
@@ -42,6 +40,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * GCM 메시지가 올 경우 실제로 처리하는 클래스, 스마트폰이 꺼져있는 경우 잠금을 뚫고 다이얼로그를 띄움. 스마트폰이 켜져있으며 우리 앱을
@@ -132,23 +131,7 @@ public class GcmIntentService extends IntentService implements Constants
 
                         sendPush(messageType, type, title, msg, imageUrl, null);
 
-                        // 로그 남기기 이슈
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-                        Date date = new Date();
-                        String strDate = dateFormat.format(date);
-                        String userIdxStr = DailyPreference.getInstance(this).getVirtualAccountUserIndex();
-                        String roomIdx = DailyPreference.getInstance(this).getVirtualAccountRoomIndex();
-                        String checkInTime = DailyPreference.getInstance(this).getVirtualAccountCheckIn();
-                        String checkOutTime = DailyPreference.getInstance(this).getVirtualAccountCheckOut();
-                        String transId = strDate + userIdxStr; //기타 결제수단은 이걸 transaction ID로 사용하고 계좌이체의 경우 넘겨받는 tid값을 사용함.
-
-                        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                        strDate = dateFormat2.format(date);
-
-                        AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(tid, transId, roomIdx, hotelName, Screen.GCMSERVICE, checkInTime, checkOutTime, strDate, Pay.Type.VBANK.name(), Double.parseDouble(paidPrice));
-
-                        // 가상계좌 내용 정리
-                        DailyPreference.getInstance(this).removeVirtualAccountInformation();
+                        recordAnalytics(this, tid, hotelName, paidPrice);
                         break;
                     }
 
@@ -182,6 +165,36 @@ public class GcmIntentService extends IntentService implements Constants
             {
                 ExLog.e(e.toString());
             }
+        }
+    }
+
+    private void recordAnalytics(Context context, String tid, String name, String price)
+    {
+        try
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
+            Date date = new Date();
+            String strDate = dateFormat.format(date);
+            String userIndex = DailyPreference.getInstance(context).getVBankUserIndex();
+            String transId = strDate + userIndex;
+            String placeType = DailyPreference.getInstance(context).getVBankPlaceType();
+
+            if (AnalyticsManager.Label.HOTEL.equalsIgnoreCase(placeType) == true)
+            {
+                Map<String, String> params = DailyPreference.getInstance(context).getVirtuaAccountHotelInformation();
+                AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteHotel(transId, params);
+
+            } else if (AnalyticsManager.Label.GOURMET.equalsIgnoreCase(placeType) == true)
+            {
+                Map<String, String> params = DailyPreference.getInstance(context).getVirtuaAccountGourmetInformation();
+                AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteGourmet(transId, params);
+            }
+
+            // 가상계좌 내용 정리
+            DailyPreference.getInstance(context).removeVirtualAccountInformation();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 

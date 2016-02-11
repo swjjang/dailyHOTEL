@@ -67,7 +67,7 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp:0.+'
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
     compile files('libs/MobileAppTracker.jar')

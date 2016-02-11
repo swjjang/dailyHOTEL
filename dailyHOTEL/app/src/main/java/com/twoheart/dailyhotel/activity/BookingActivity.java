@@ -947,13 +947,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAY) == true)
                     {
                         Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
-
-                        DailyPreference.getInstance(this).setVirtuaAccountInformation(payData.getCustomer().getUserIdx()//
-                            , mPay.getSaleRoomInformation().hotelName//
-                            , Integer.toString(payData.getSaleRoomInformation().roomIndex)//
-                            , payData.checkInTime//
-                            , payData.checkOutTime//
-                        );
+                        DailyPreference.getInstance(this).setVirtuaAccountHotelInformation(payData, mCheckInSaleTime);
                     }
 
                     DailyPreference.getInstance(BookingActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);

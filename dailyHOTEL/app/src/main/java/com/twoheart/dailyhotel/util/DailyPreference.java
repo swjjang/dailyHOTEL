@@ -4,12 +4,27 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.model.TicketPayment;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
+
 /**
  */
 public class DailyPreference
 {
     public static final String DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT"; // 기존에 존재하던
     public static final String DAILYHOTEL_SHARED_PREFERENCE_V1 = "dailyHOTEL_v1"; // 새로 만든
+    public static final String DAILYHOTEL_VBANK_PREFERENCE_V1 = "DAIYHOTEK_VBANKL_v1"; // 새로 만든
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "dailyHOTEL_v1" Preference
@@ -59,14 +74,6 @@ public class DailyPreference
     private static final String KEY_PREFERENCE_FNB_REGION_SELECT = "FNB_REGION_SELECT";
     //    private static final String KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE = "FNB_REGION_SELECT_BEFORE";
 
-    // Virtual Account
-    private static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
-    private static final String KEY_PREFERENCE_HOTEL_NAME = "HOTEL_NAME";
-    private static final String KEY_PREFERENCE_HOTEL_ROOM_IDX = "HOTEL_RESERVATION_IDX";
-    private static final String KEY_PREFERENCE_HOTEL_CHECKOUT = "HOTEL_CHECKOUT";
-    private static final String KEY_PREFERENCE_HOTEL_CHECKIN = "HOTEL_CHECKIN";
-    private static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
-
     // User Information
     private static final String KEY_PREFERENCE_AUTO_LOGIN = "AUTO_LOGIN";
     private static final String KEY_PREFERENCE_USER_ID = "USER_ID";
@@ -95,11 +102,35 @@ public class DailyPreference
 
     /////////////////////////////////////////////////////////////////////////////////////////
 
+    // Virtual Account
+    private static final String KEY_PREFERENCE_VBANK_USER_INDEX = "VBANK_USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
+    private static final String KEY_PREFERENCE_VBANK_PLACE_NAME = "VBANK_PLACE_NAME";
+    private static final String KEY_PREFERENCE_VBANK_PRICE = "VBANK_PRICE";
+    private static final String KEY_PREFERENCE_VBANK_QUANTITY = "VBANK_QUANTITY";
+    private static final String KEY_PREFERENCE_VBANK_TOTAL_PRICE = "VBANK_TOTAL_PRICE";
+    private static final String KEY_PREFERENCE_VBANK_PLACE_INDEX = "VBANK_PLACE_INDEX";
+    private static final String KEY_PREFERENCE_VBANK_TICKET_NAME = "VBANK_TICKET_NAME";
+    private static final String KEY_PREFERENCE_VBANK_TICKET_INDEX = "VBANK_TICKET_INDEX";
+    private static final String KEY_PREFERENCE_VBANK_CHECKOUT = "VBANK_CHECKOUT";
+    private static final String KEY_PREFERENCE_VBANK_CHECKIN = "VBANK_CHECKIN";
+    private static final String KEY_PREFERENCE_VBANK_DATE = "VBANK_DATE";
+    private static final String KEY_PREFERENCE_VBANK_USED_BONUS = "VBANK_USED_BONUS";
+    private static final String KEY_PREFERENCE_VBANK_PAYMENT_PRICE = "VBANK_PAYMENT_PRICE";
+    private static final String KEY_PREFERENCE_VBANK_PAYMENT_TYPE = "VBANK_PAYMENT_TYPE";
+    private static final String KEY_PREFERENCE_VBANK_RESERVATION_TIME = "VBANK_RESERVATION_TIME";
+    private static final String KEY_PREFERENCE_VBANK_PLACE_TYPE = "VBANK_PLACE_TYPE";
+
+    private static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
     private SharedPreferences mOldPreferences;
+    private SharedPreferences mVBankPreferences;
     private Editor mEditor;
     private Editor mOldEditor;
+    private Editor mVBankEditor;
 
     private DailyPreference(Context context)
     {
@@ -108,6 +139,9 @@ public class DailyPreference
 
         mOldPreferences = context.getSharedPreferences(DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         mOldEditor = mOldPreferences.edit();
+
+        mVBankPreferences = context.getSharedPreferences(DAILYHOTEL_VBANK_PREFERENCE_V1, Context.MODE_PRIVATE);
+        mVBankEditor = mVBankPreferences.edit();
     }
 
     public static synchronized DailyPreference getInstance(Context context)
@@ -143,153 +177,180 @@ public class DailyPreference
             mOldEditor.apply();
         }
 
+        if (mVBankEditor != null)
+        {
+            mVBankEditor.clear();
+            mVBankEditor.apply();
+        }
+
         setCompanyInformation(name, ceo, bizRegNumber, itcRegNumber, address, phoneNumber, fax);
+    }
+
+    private String getValue(SharedPreferences sharedPreferences, String key, String defaultValue)
+    {
+        String result = defaultValue;
+
+        if (sharedPreferences != null)
+        {
+            result = sharedPreferences.getString(key, defaultValue);
+        }
+
+        return result;
+    }
+
+    private void setValue(Editor editor, String key, String value)
+    {
+        if (editor != null)
+        {
+            editor.putString(key, value);
+            editor.apply();
+        }
+    }
+
+    private boolean getValue(SharedPreferences sharedPreferences, String key, boolean defaultValue)
+    {
+        boolean result = defaultValue;
+
+        if (sharedPreferences != null)
+        {
+            result = sharedPreferences.getBoolean(key, defaultValue);
+        }
+
+        return result;
+    }
+
+    private void setValue(Editor editor, String key, boolean value)
+    {
+        if (editor != null)
+        {
+            editor.putBoolean(key, value);
+            editor.apply();
+        }
+    }
+
+    private long getValue(SharedPreferences sharedPreferences, String key, long defaultValue)
+    {
+        long result = defaultValue;
+
+        if (sharedPreferences != null)
+        {
+            result = sharedPreferences.getLong(key, defaultValue);
+        }
+
+        return result;
+    }
+
+    private void setValue(Editor editor, String key, int value)
+    {
+        if (editor != null)
+        {
+            editor.putInt(key, value);
+            editor.apply();
+        }
+    }
+
+    private int getValue(SharedPreferences sharedPreferences, String key, int defaultValue)
+    {
+        int result = defaultValue;
+
+        if (sharedPreferences != null)
+        {
+            result = sharedPreferences.getInt(key, defaultValue);
+        }
+
+        return result;
+    }
+
+    private void setValue(Editor editor, String key, long value)
+    {
+        if (editor != null)
+        {
+            editor.putLong(key, value);
+            editor.apply();
+        }
+    }
+
+    private void removeValue(Editor editor, String key)
+    {
+        if (editor != null)
+        {
+            editor.remove(key);
+            editor.apply();
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "dailyHOTEL_v1" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    private String getV1Value(String key, String defaultValue)
-    {
-        String result = defaultValue;
-
-        if (mPreferences != null)
-        {
-            result = mPreferences.getString(key, defaultValue);
-        }
-
-        return result;
-    }
-
-    private void setV1Value(String key, String value)
-    {
-        if (mEditor != null)
-        {
-            mEditor.putString(key, value);
-            mEditor.apply();
-        }
-    }
-
-    private boolean getV1Value(String key, boolean defaultValue)
-    {
-        boolean result = defaultValue;
-
-        if (mPreferences != null)
-        {
-            result = mPreferences.getBoolean(key, defaultValue);
-        }
-
-        return result;
-    }
-
-    private void setV1Value(String key, boolean value)
-    {
-        if (mEditor != null)
-        {
-            mEditor.putBoolean(key, value);
-            mEditor.apply();
-        }
-    }
-
-    private int getV1Value(String key, int defaultValue)
-    {
-        int result = defaultValue;
-
-        if (mPreferences != null)
-        {
-            result = mPreferences.getInt(key, defaultValue);
-        }
-
-        return result;
-    }
-
-    private void setV1Value(String key, int value)
-    {
-        if (mEditor != null)
-        {
-            mEditor.putInt(key, value);
-            mEditor.apply();
-        }
-    }
-
-    private void removeV1Value(String key)
-    {
-        if (mEditor != null)
-        {
-            mEditor.remove(key);
-            mEditor.apply();
-        }
-    }
-
     public boolean getEnabledOpeningAlarm()
     {
-        return getV1Value(KEY_OPENING_ALARM, false);
+        return getValue(mPreferences, KEY_OPENING_ALARM, false);
     }
 
     public void setEnabledOpeningAlarm(boolean value)
     {
-        setV1Value(KEY_OPENING_ALARM, value);
+        setValue(mEditor, KEY_OPENING_ALARM, value);
     }
 
     public boolean hasNewEvent()
     {
-        return getV1Value(KEY_NEW_EVENT, false);
+        return getValue(mPreferences, KEY_NEW_EVENT, false);
     }
 
     public void setNewEvent(boolean value)
     {
-        setV1Value(KEY_NEW_EVENT, value);
+        setValue(mEditor, KEY_NEW_EVENT, value);
     }
 
     public int getNotificationUid()
     {
-        return getV1Value(KEY_NOTIFICATION_UID, -1);
+        return getValue(mPreferences, KEY_NOTIFICATION_UID, -1);
     }
 
     public void setNotificationUid(int value)
     {
-        setV1Value(KEY_NOTIFICATION_UID, value);
+        setValue(mEditor, KEY_NOTIFICATION_UID, value);
     }
 
     public String getSelectedCategoryCode()
     {
-        return getV1Value(KEY_CATEGORY_CODE, null);
+        return getValue(mPreferences, KEY_CATEGORY_CODE, null);
     }
 
     public void setSelectedCategoryCode(String value)
     {
-        setV1Value(KEY_CATEGORY_CODE, value);
+        setValue(mEditor, KEY_CATEGORY_CODE, value);
     }
 
     public String getLastMenu()
     {
-        return getV1Value(KEY_LAST_MENU, null);
+        return getValue(mPreferences, KEY_LAST_MENU, null);
     }
 
     public void setLastMenu(String value)
     {
-        setV1Value(KEY_LAST_MENU, value);
+        setValue(mEditor, KEY_LAST_MENU, value);
     }
 
     public boolean isShowGuide()
     {
-        return getV1Value(KEY_SHOW_GUIDE, false);
+        return getValue(mPreferences, KEY_SHOW_GUIDE, false);
     }
 
     public void setShowGuide(boolean value)
     {
-        setV1Value(KEY_SHOW_GUIDE, value);
+        setValue(mEditor, KEY_SHOW_GUIDE, value);
     }
 
     public boolean isAllowPush()
     {
-        return getV1Value(KEY_ALLOW_PUSH, true);
+        return getValue(mPreferences, KEY_ALLOW_PUSH, true);
     }
 
     public void setAllowPush(boolean value)
     {
-        setV1Value(KEY_ALLOW_PUSH, value);
+        setValue(mEditor, KEY_ALLOW_PUSH, value);
     }
 
     public void setCompanyInformation(String name, String ceo, String bizRegNumber//
@@ -310,57 +371,57 @@ public class DailyPreference
 
     public String getCompanyName()
     {
-        return getV1Value(KEY_COMPANY_NAME, null);
+        return getValue(mPreferences, KEY_COMPANY_NAME, null);
     }
 
     public String getCompanyCEO()
     {
-        return getV1Value(KEY_COMPANY_CEO, null);
+        return getValue(mPreferences, KEY_COMPANY_CEO, null);
     }
 
     public String getCompanyBizRegNumber()
     {
-        return getV1Value(KEY_COMPANY_BIZREGNUMBER, null);
+        return getValue(mPreferences, KEY_COMPANY_BIZREGNUMBER, null);
     }
 
     public String getCompanyItcRegNumber()
     {
-        return getV1Value(KEY_COMPANY_ITCREGNUMBER, null);
+        return getValue(mPreferences, KEY_COMPANY_ITCREGNUMBER, null);
     }
 
     public String getCompanyAddress()
     {
-        return getV1Value(KEY_COMPANY_ADDRESS, null);
+        return getValue(mPreferences, KEY_COMPANY_ADDRESS, null);
     }
 
     public String getCompanyPhoneNumber()
     {
-        return getV1Value(KEY_COMPANY_PHONENUMBER, null);
+        return getValue(mPreferences, KEY_COMPANY_PHONENUMBER, null);
     }
 
     public String getCompanyFax()
     {
-        return getV1Value(KEY_COMPANY_FAX, null);
+        return getValue(mPreferences, KEY_COMPANY_FAX, null);
     }
 
     public String getCollapsekey()
     {
-        return getV1Value(KEY_COLLAPSEKEY, null);
+        return getValue(mPreferences, KEY_COLLAPSEKEY, null);
     }
 
     public void setCollapsekey(String value)
     {
-        setV1Value(KEY_COLLAPSEKEY, value);
+        setValue(mEditor, KEY_COLLAPSEKEY, value);
     }
 
     public boolean isSocialSignUp()
     {
-        return getV1Value(KEY_SOCIAL_SIGNUP, false);
+        return getValue(mPreferences, KEY_SOCIAL_SIGNUP, false);
     }
 
     public void setSocialSignUp(boolean value)
     {
-        setV1Value(KEY_SOCIAL_SIGNUP, value);
+        setValue(mEditor, KEY_SOCIAL_SIGNUP, value);
     }
 
     public boolean isSelectedOverseaRegion(Constants.TYPE type)
@@ -368,11 +429,11 @@ public class DailyPreference
         switch (type)
         {
             case FNB:
-                return getV1Value(KEY_GOURMET_REGION_ISOVERSEA, false);
+                return getValue(mPreferences, KEY_GOURMET_REGION_ISOVERSEA, false);
 
             case HOTEL:
             default:
-                return getV1Value(KEY_HOTEL_REGION_ISOVERSEA, false);
+                return getValue(mPreferences, KEY_HOTEL_REGION_ISOVERSEA, false);
         }
     }
 
@@ -381,11 +442,11 @@ public class DailyPreference
         switch (type)
         {
             case HOTEL:
-                setV1Value(KEY_HOTEL_REGION_ISOVERSEA, value);
+                setValue(mEditor, KEY_HOTEL_REGION_ISOVERSEA, value);
                 break;
 
             case FNB:
-                setV1Value(KEY_GOURMET_REGION_ISOVERSEA, value);
+                setValue(mEditor, KEY_GOURMET_REGION_ISOVERSEA, value);
                 break;
         }
     }
@@ -394,127 +455,34 @@ public class DailyPreference
     // "GOOD_NIGHT" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    private String getValue(String key, String defaultValue)
-    {
-        String result = defaultValue;
-
-        if (mOldPreferences != null)
-        {
-            result = mOldPreferences.getString(key, defaultValue);
-        }
-
-        return result;
-    }
-
-    private void setValue(String key, String value)
-    {
-        if (mOldEditor != null)
-        {
-            mOldEditor.putString(key, value);
-            mOldEditor.apply();
-        }
-    }
-
-    private boolean getValue(String key, boolean defaultValue)
-    {
-        boolean result = defaultValue;
-
-        if (mOldPreferences != null)
-        {
-            result = mOldPreferences.getBoolean(key, defaultValue);
-        }
-
-        return result;
-    }
-
-    private void setValue(String key, boolean value)
-    {
-        if (mOldEditor != null)
-        {
-            mOldEditor.putBoolean(key, value);
-            mOldEditor.apply();
-        }
-    }
-
-    private long getValue(String key, long defaultValue)
-    {
-        long result = defaultValue;
-
-        if (mOldPreferences != null)
-        {
-            result = mOldPreferences.getLong(key, defaultValue);
-        }
-
-        return result;
-    }
-
-    private void setValue(String key, int value)
-    {
-        if (mOldEditor != null)
-        {
-            mOldEditor.putInt(key, value);
-            mOldEditor.apply();
-        }
-    }
-
-    private int getValue(String key, int defaultValue)
-    {
-        int result = defaultValue;
-
-        if (mOldPreferences != null)
-        {
-            result = mOldPreferences.getInt(key, defaultValue);
-        }
-
-        return result;
-    }
-
-    private void setValue(String key, long value)
-    {
-        if (mOldEditor != null)
-        {
-            mOldEditor.putLong(key, value);
-            mOldEditor.apply();
-        }
-    }
-
-    private void removeValue(String key)
-    {
-        if (mOldEditor != null)
-        {
-            mOldEditor.remove(key);
-            mOldEditor.apply();
-        }
-    }
-
     public String getGCMRegistrationId()
     {
-        return getValue(KEY_PREFERENCE_GCM_ID, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_GCM_ID, null);
     }
 
     public void setGCMRegistrationId(String value)
     {
-        setValue(KEY_PREFERENCE_GCM_ID, value);
+        setValue(mOldEditor, KEY_PREFERENCE_GCM_ID, value);
     }
 
     public long getLookUpEventTime()
     {
-        return getValue(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0L);
+        return getValue(mOldPreferences, KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0L);
     }
 
     public void setLookUpEventTime(long value)
     {
-        setValue(KEY_PREFERENCE_LOOKUP_EVENT_TIME, value);
+        setValue(mOldEditor, KEY_PREFERENCE_LOOKUP_EVENT_TIME, value);
     }
 
     public long getNewEventTime()
     {
-        return getValue(KEY_PREFERENCE_NEW_EVENT_TIME, 0L);
+        return getValue(mOldPreferences, KEY_PREFERENCE_NEW_EVENT_TIME, 0L);
     }
 
     public void setNewEventTime(long value)
     {
-        setValue(KEY_PREFERENCE_NEW_EVENT_TIME, value);
+        setValue(mOldEditor, KEY_PREFERENCE_NEW_EVENT_TIME, value);
     }
 
     public String getSelectedRegion(Constants.TYPE type)
@@ -522,11 +490,11 @@ public class DailyPreference
         switch (type)
         {
             case FNB:
-                return getValue(KEY_PREFERENCE_FNB_REGION_SELECT, null);
+                return getValue(mOldPreferences, KEY_PREFERENCE_FNB_REGION_SELECT, null);
 
             case HOTEL:
             default:
-                return getValue(KEY_PREFERENCE_REGION_SELECT, null);
+                return getValue(mOldPreferences, KEY_PREFERENCE_REGION_SELECT, null);
         }
     }
 
@@ -535,11 +503,11 @@ public class DailyPreference
         switch (type)
         {
             case HOTEL:
-                setValue(KEY_PREFERENCE_REGION_SELECT, value);
+                setValue(mOldEditor, KEY_PREFERENCE_REGION_SELECT, value);
                 break;
 
             case FNB:
-                setValue(KEY_PREFERENCE_FNB_REGION_SELECT, value);
+                setValue(mOldEditor, KEY_PREFERENCE_FNB_REGION_SELECT, value);
                 break;
         }
     }
@@ -549,11 +517,11 @@ public class DailyPreference
         switch (type)
         {
             case FNB:
-                return getValue(KEY_PREFERENCE_FNB_REGION_SETTING, false);
+                return getValue(mOldPreferences, KEY_PREFERENCE_FNB_REGION_SETTING, false);
 
             case HOTEL:
             default:
-                return getValue(KEY_PREFERENCE_REGION_SETTING, false);
+                return getValue(mOldPreferences, KEY_PREFERENCE_REGION_SETTING, false);
         }
     }
 
@@ -562,28 +530,28 @@ public class DailyPreference
         switch (type)
         {
             case HOTEL:
-                setValue(KEY_PREFERENCE_REGION_SETTING, value);
+                setValue(mOldEditor, KEY_PREFERENCE_REGION_SETTING, value);
                 break;
 
             case FNB:
-                setValue(KEY_PREFERENCE_FNB_REGION_SETTING, value);
+                setValue(mOldEditor, KEY_PREFERENCE_FNB_REGION_SETTING, value);
                 break;
         }
     }
 
     public String getOverseasName()
     {
-        return getValue(KEY_PREFERENCE_OVERSEAS_NAME, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_OVERSEAS_NAME, null);
     }
 
     public String getOverseasPhone()
     {
-        return getValue(KEY_PREFERENCE_OVERSEAS_PHONE, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_OVERSEAS_PHONE, null);
     }
 
     public String getOverseasEmail()
     {
-        return getValue(KEY_PREFERENCE_OVERSEAS_EMAIL, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_OVERSEAS_EMAIL, null);
     }
 
     public void setOverseasUserInformation(String name, String phone, String email)
@@ -597,127 +565,64 @@ public class DailyPreference
         }
     }
 
-    public String getVirtualAccountUserIndex()
-    {
-        return getValue(KEY_PREFERENCE_USER_IDX, "0");
-    }
-
-    public String getVirtualAccountHotelName()
-    {
-        return getValue(KEY_PREFERENCE_HOTEL_NAME, "0");
-    }
-
-    public String getVirtualAccountRoomIndex()
-    {
-        return getValue(KEY_PREFERENCE_HOTEL_ROOM_IDX, "0");
-    }
-
-    public String getVirtualAccountCheckIn()
-    {
-        return getValue(KEY_PREFERENCE_HOTEL_CHECKIN, "0");
-    }
-
-    public String getVirtualAccountCheckOut()
-    {
-        return getValue(KEY_PREFERENCE_HOTEL_CHECKOUT, "0");
-    }
-
-    public void setVirtuaAccountInformation(String userIndex, String hotelName, String roomIndex//
-        , String checkIn, String checkOut)
-    {
-        if (mOldEditor != null)
-        {
-            mOldEditor.putString(KEY_PREFERENCE_USER_IDX, userIndex);
-            mOldEditor.putString(KEY_PREFERENCE_HOTEL_NAME, hotelName);
-            mOldEditor.putString(KEY_PREFERENCE_HOTEL_ROOM_IDX, roomIndex);
-            mOldEditor.putString(KEY_PREFERENCE_HOTEL_CHECKIN, checkIn);
-            mOldEditor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, checkOut);
-            mOldEditor.apply();
-        }
-    }
-
-    public void removeVirtualAccountInformation()
-    {
-        if (mOldEditor != null)
-        {
-            mOldEditor.remove(KEY_PREFERENCE_USER_IDX);
-            mOldEditor.remove(KEY_PREFERENCE_HOTEL_NAME);
-            mOldEditor.remove(KEY_PREFERENCE_HOTEL_ROOM_IDX);
-            mOldEditor.remove(KEY_PREFERENCE_HOTEL_CHECKIN);
-            mOldEditor.remove(KEY_PREFERENCE_HOTEL_CHECKOUT);
-            mOldEditor.apply();
-        }
-    }
-
-    public int getVirtualAccountReadyFlag()
-    {
-        return getValue(KEY_PREFERENCE_ACCOUNT_READY_FLAG, -1);
-    }
-
-    public void setVirtualAccountReadyFlag(int value)
-    {
-        setValue(KEY_PREFERENCE_ACCOUNT_READY_FLAG, value);
-    }
-
-
     public boolean isAutoLogin()
     {
-        return getValue(KEY_PREFERENCE_AUTO_LOGIN, false);
+        return getValue(mOldPreferences, KEY_PREFERENCE_AUTO_LOGIN, false);
     }
 
     public void setAutoLogin(boolean value)
     {
-        setValue(KEY_PREFERENCE_AUTO_LOGIN, value);
+        setValue(mOldEditor, KEY_PREFERENCE_AUTO_LOGIN, value);
     }
 
     public String getUserId()
     {
-        return getValue(KEY_PREFERENCE_USER_ID, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_ID, null);
     }
 
     public void setUserId(String value)
     {
-        setValue(KEY_PREFERENCE_USER_ID, value);
+        setValue(mOldEditor, KEY_PREFERENCE_USER_ID, value);
     }
 
     public String getUserAccessToken()
     {
-        return getValue(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
     }
 
     public void setUserAccessToken(String value)
     {
-        setValue(KEY_PREFERENCE_USER_ACCESS_TOKEN, value);
+        setValue(mOldEditor, KEY_PREFERENCE_USER_ACCESS_TOKEN, value);
     }
 
     public String getUserPassword()
     {
-        return getValue(KEY_PREFERENCE_USER_PWD, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_PWD, null);
     }
 
     public void setUserPassword(String value)
     {
-        setValue(KEY_PREFERENCE_USER_PWD, value);
+        setValue(mOldEditor, KEY_PREFERENCE_USER_PWD, value);
     }
 
     public String getUserType()
     {
-        return getValue(KEY_PREFERENCE_USER_TYPE, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_TYPE, null);
     }
 
     public void setUserType(String value)
     {
-        setValue(KEY_PREFERENCE_USER_TYPE, value);
+        setValue(mOldEditor, KEY_PREFERENCE_USER_TYPE, value);
     }
 
     public String getUserName()
     {
-        return getValue(KEY_PREFERENCE_USER_NAME, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_NAME, null);
     }
 
     public void setUserName(String value)
     {
-        setValue(KEY_PREFERENCE_USER_NAME, value);
+        setValue(mOldEditor, KEY_PREFERENCE_USER_NAME, value);
     }
 
     public void setUserInformation(boolean isAutoLogin, String id, String password, String type, String name)
@@ -749,74 +654,229 @@ public class DailyPreference
 
     public String getMaxVersion()
     {
-        return getValue(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0");
+        return getValue(mOldPreferences, KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0");
     }
 
     public void setMaxVersion(String value)
     {
-        setValue(KEY_PREFERENCE_MAX_VERSION_NAME, value);
+        setValue(mOldEditor, KEY_PREFERENCE_MAX_VERSION_NAME, value);
     }
 
     public String getMinVersion()
     {
-        return getValue(KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0");
+        return getValue(mOldPreferences, KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0");
     }
 
     public void setMinVersion(String value)
     {
-        setValue(KEY_PREFERENCE_MIN_VERSION_NAME, value);
+        setValue(mOldEditor, KEY_PREFERENCE_MIN_VERSION_NAME, value);
     }
 
     public String getSkipVersion()
     {
-        return getValue(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0");
+        return getValue(mOldPreferences, KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0");
     }
 
     public void setSkipVersion(String value)
     {
-        setValue(KEY_PREFERENCE_SKIP_MAX_VERSION, value);
+        setValue(mOldEditor, KEY_PREFERENCE_SKIP_MAX_VERSION, value);
     }
 
 
     public String getGASelectedRegion()
     {
-        return getValue(KEY_PREFERENCE_REGION_SELECT_GA, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_REGION_SELECT_GA, null);
     }
 
     public void setGASelectedRegion(String value)
     {
-        setValue(KEY_PREFERENCE_REGION_SELECT_GA, value);
+        setValue(mOldEditor, KEY_PREFERENCE_REGION_SELECT_GA, value);
     }
 
     public String getGAHotelName()
     {
-        return getValue(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_HOTEL_NAME_GA, null);
     }
 
     public void setGAHotelName(String value)
     {
-        setValue(KEY_PREFERENCE_HOTEL_NAME_GA, value);
+        setValue(mOldEditor, KEY_PREFERENCE_HOTEL_NAME_GA, value);
     }
 
     public String getGASelectedPlaceRegion()
     {
-        return getValue(KEY_PREFERENCE_PLACE_REGION_SELECT_GA, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_PLACE_REGION_SELECT_GA, null);
     }
 
     public void setGASelectedPlaceRegion(String value)
     {
-        setValue(KEY_PREFERENCE_PLACE_REGION_SELECT_GA, value);
+        setValue(mOldEditor, KEY_PREFERENCE_PLACE_REGION_SELECT_GA, value);
     }
 
     public String getGASelectedPlaceName()
     {
-        return getValue(KEY_PREFERENCE_PLACE_NAME_GA, null);
+        return getValue(mOldPreferences, KEY_PREFERENCE_PLACE_NAME_GA, null);
     }
 
     public void setGASelectedPlaceName(String value)
     {
-        setValue(KEY_PREFERENCE_PLACE_NAME_GA, value);
+        setValue(mOldEditor, KEY_PREFERENCE_PLACE_NAME_GA, value);
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // "DAIYHOTEK_VBANKL_v1" Preference
+    /////////////////////////////////////////////////////////////////////////////////////////
 
+    public String getVBankPlaceType()
+    {
+        return getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PLACE_TYPE, null);
+    }
+
+    public String getVBankUserIndex()
+    {
+        return getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_USER_INDEX, null);
+    }
+
+    public void setVirtuaAccountHotelInformation(Pay pay, SaleTime checkInSaleTime)
+    {
+        if (mVBankEditor != null)
+        {
+            mVBankEditor.clear();
+
+            SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
+
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_TYPE, AnalyticsManager.Label.HOTEL);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_USER_INDEX, pay.getCustomer().getUserIdx());
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_NAME, saleRoomInformation.hotelName);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PRICE, Integer.toString(saleRoomInformation.averageDiscount));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_QUANTITY, Integer.toString(saleRoomInformation.nights));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_TOTAL_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_INDEX, Integer.toString(pay.hotelIndex));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_NAME, saleRoomInformation.roomName);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
+
+            SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + saleRoomInformation.nights);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKIN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKOUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            if (pay.isSaleCredit() == true)
+            {
+                int payPrice = saleRoomInformation.totalDiscount - pay.credit;
+                int bonus = 0;
+
+                if (payPrice <= 0)
+                {
+                    payPrice = 0;
+                    bonus = saleRoomInformation.totalDiscount;
+                } else
+                {
+                    bonus = pay.credit;
+                }
+
+                mVBankEditor.putString(KEY_PREFERENCE_VBANK_USED_BONUS, Integer.toString(bonus));
+                mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_PRICE, Integer.toString(payPrice));
+            } else
+            {
+                mVBankEditor.putString(KEY_PREFERENCE_VBANK_USED_BONUS, "0");
+                mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
+            }
+
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_TYPE, pay.getType().name());
+            mVBankEditor.apply();
+        }
+    }
+
+    public Map<String, String> getVirtuaAccountHotelInformation()
+    {
+        Map<String, String> params = new HashMap<>();
+
+        params.put(AnalyticsManager.KeyType.USER_INDEX, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_USER_INDEX, null));
+        params.put(AnalyticsManager.KeyType.NAME, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PLACE_NAME, null));
+        params.put(AnalyticsManager.KeyType.PRICE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PRICE, null));
+        params.put(AnalyticsManager.KeyType.QUANTITY, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_QUANTITY, null));
+        params.put(AnalyticsManager.KeyType.TOTAL_PRICE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_TOTAL_PRICE, null));
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PLACE_INDEX, null));
+        params.put(AnalyticsManager.KeyType.TICKET_NAME, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_TICKET_NAME, null));
+        params.put(AnalyticsManager.KeyType.TICKET_INDEX, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_TICKET_INDEX, null));
+        params.put(AnalyticsManager.KeyType.CHECK_IN, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_CHECKIN, null));
+        params.put(AnalyticsManager.KeyType.CHECK_OUT, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_CHECKOUT, null));
+        params.put(AnalyticsManager.KeyType.USED_BOUNS, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_USED_BONUS, null));
+        params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PAYMENT_PRICE, null));
+        params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PAYMENT_TYPE, null));
+
+        return params;
+    }
+
+    public void setVirtuaAccountGourmetInformation(TicketPayment ticketPayment, SaleTime dateSaleTime)
+    {
+        if (mVBankEditor != null)
+        {
+            mVBankEditor.clear();
+
+            TicketInformation ticketInformation = ticketPayment.getTicketInformation();
+
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_TYPE, AnalyticsManager.Label.GOURMET);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_USER_INDEX, ticketPayment.getCustomer().getUserIdx());
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_NAME, ticketInformation.placeName);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PRICE, Integer.toString(ticketInformation.discountPrice));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_QUANTITY, Integer.toString(ticketPayment.ticketCount));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_NAME, ticketInformation.placeName);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_INDEX, Integer.toString(ticketInformation.index));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_DATE, dateSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_USED_BONUS, "0");
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_TYPE, ticketPayment.paymentType.name());
+
+            Calendar calendarTime = DailyCalendar.getInstance();
+            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_RESERVATION_TIME, formatDay.format(ticketPayment.ticketTime));
+            mVBankEditor.apply();
+        }
+    }
+
+    public Map<String, String> getVirtuaAccountGourmetInformation()
+    {
+        Map<String, String> params = new HashMap<>();
+
+        params.put(AnalyticsManager.KeyType.USER_INDEX, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_USER_INDEX, null));
+        params.put(AnalyticsManager.KeyType.NAME, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PLACE_NAME, null));
+        params.put(AnalyticsManager.KeyType.PRICE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PRICE, null));
+        params.put(AnalyticsManager.KeyType.QUANTITY, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_QUANTITY, null));
+        params.put(AnalyticsManager.KeyType.TOTAL_PRICE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_TOTAL_PRICE, null));
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PLACE_INDEX, null));
+        params.put(AnalyticsManager.KeyType.TICKET_NAME, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_TICKET_NAME, null));
+        params.put(AnalyticsManager.KeyType.TICKET_INDEX, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_TICKET_INDEX, null));
+        params.put(AnalyticsManager.KeyType.DATE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_DATE, null));
+        params.put(AnalyticsManager.KeyType.USED_BOUNS, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_USED_BONUS, null));
+        params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PAYMENT_PRICE, null));
+        params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PAYMENT_TYPE, null));
+        params.put(AnalyticsManager.KeyType.RESERVATION_TIME, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_RESERVATION_TIME, null));
+
+        return params;
+    }
+
+    public void removeVirtualAccountInformation()
+    {
+        if (mVBankEditor != null)
+        {
+            mVBankEditor.clear();
+            mVBankEditor.apply();
+        }
+    }
+
+    public int getVirtualAccountReadyFlag()
+    {
+        return getValue(mVBankPreferences, KEY_PREFERENCE_ACCOUNT_READY_FLAG, -1);
+    }
+
+    public void setVirtualAccountReadyFlag(int value)
+    {
+        setValue(mVBankEditor, KEY_PREFERENCE_ACCOUNT_READY_FLAG, value);
+    }
 }

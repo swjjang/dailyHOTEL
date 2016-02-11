@@ -275,6 +275,11 @@ public class TuneManager implements IBaseAnalyticsManager
         list.add(matEventItem);
         matEvent.withEventItems(list);
 
+        if(params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
+        {
+            setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+        }
+
         mMobileAppTracker.measureEvent(matEvent);
     }
 
@@ -303,6 +308,11 @@ public class TuneManager implements IBaseAnalyticsManager
         List<MATEventItem> list = new ArrayList<>();
         list.add(matEventItem);
         matEvent.withEventItems(list);
+
+        if(params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
+        {
+            setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+        }
 
         mMobileAppTracker.measureEvent(matEvent);
     }
