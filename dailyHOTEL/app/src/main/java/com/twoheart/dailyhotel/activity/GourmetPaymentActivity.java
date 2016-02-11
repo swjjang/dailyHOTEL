@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -30,7 +31,7 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -81,6 +82,17 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         void showInputMobileNumberDialog(String mobileNumber);
     }
 
+    public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime, int gourmetIndex)
+    {
+        Intent intent = new Intent(context, GourmetPaymentActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, gourmetIndex);
+
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -96,6 +108,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         {
             mTicketPayment.setTicketInformation((TicketInformation) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
             mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
+            mTicketPayment.placeIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_GOURMETIDX);
         }
 
         if (mTicketPayment.getTicketInformation() == null)
@@ -817,6 +830,30 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
     private DailyHotelJsonResponseListener mTicketPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        private void recordAnalytics(TicketPayment ticketPayment)
+        {
+            if (ticketPayment == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.NAME, ticketPayment.getTicketInformation().placeName);
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketPayment.getTicketInformation().discountPrice));
+                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+                params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketPayment.getTicketInformation().name);
+                params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketPayment.getTicketInformation().index));
+
+                AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, params);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

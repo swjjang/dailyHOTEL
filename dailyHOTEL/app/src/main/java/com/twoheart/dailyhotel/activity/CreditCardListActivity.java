@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.CreditCardLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 신용카드 등록하기.
@@ -36,6 +38,7 @@ public class CreditCardListActivity extends BaseActivity
     private CreditCardLayout mCreditCardLayout;
     private boolean mIsPickMode;
     private CreditCard mSelectedCreditCard;
+    private boolean mIsRegisterCreditCard;
 
     public interface OnUserActionListener
     {
@@ -101,6 +104,7 @@ public class CreditCardListActivity extends BaseActivity
             switch (resultCode)
             {
                 case CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
+                    mIsRegisterCreditCard = true;
                     msg = getString(R.string.message_billing_success);
                     break;
 
@@ -302,10 +306,11 @@ public class CreditCardListActivity extends BaseActivity
                     arrayList = new ArrayList<CreditCard>(length);
 
                     boolean hasCreditCard = false;
+                    JSONObject jsonObject;
 
                     for (int i = 0; i < length; i++)
                     {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        jsonObject = jsonArray.getJSONObject(i);
 
                         // 목록에서는 빌링키가 필요없다.
                         CreditCard creditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
@@ -317,6 +322,13 @@ public class CreditCardListActivity extends BaseActivity
                             hasCreditCard = true;
                             mSelectedCreditCard = creditCard;
                         }
+                    }
+
+                    if(mIsRegisterCreditCard == true)
+                    {
+                        mIsRegisterCreditCard = false;
+
+                        AnalyticsManager.getInstance(CreditCardListActivity.this).eventPaymentCardAdded(arrayList.get(arrayList.size() - 1).cardcd);
                     }
 
                     if (mIsPickMode == true && hasCreditCard == false)

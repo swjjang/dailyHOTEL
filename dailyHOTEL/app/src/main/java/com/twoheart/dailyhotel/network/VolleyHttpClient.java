@@ -21,6 +21,7 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.io.IOException;
 import java.net.CookiePolicy;
@@ -30,15 +31,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.OkUrlFactory;
+import okhttp3.Request;
+import okhttp3.TlsVersion;
 
 public class VolleyHttpClient implements Constants
 {
@@ -209,29 +215,62 @@ public class VolleyHttpClient implements Constants
 
         public OkHttpStack()
         {
-            mOkHttpClient = new OkHttpClient();
-            SSLContext sslContext;
+//            java.net.CookieManager cookieManager = new java.net.CookieManager(new PersistentCookieStore(sContext.getApplicationContext()), CookiePolicy.ACCEPT_ALL);
+//            ConnectionSpec connectionSpec;
+//
+//            if(Util.isOverAPI11() == false)
+//            {
+//                connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+//                    .tlsVersions(TlsVersion.TLS_1_0)
+//                    .cipherSuites(CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA)
+//                    .build();
+//            } else if(Util.isOverAPI19() == false)
+//            {
+//                connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+//                    .tlsVersions(TlsVersion.TLS_1_0)
+//                    .cipherSuites(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA)
+//                    .build();
+//            } else
+//            {
+//                connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+//                    .tlsVersions(TlsVersion.TLS_1_2)
+//                    .cipherSuites(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256)
+//                    .build();
+//            }
+//
+//            mOkHttpClient = new OkHttpClient.Builder()
+//                .connectionSpecs(Collections.singletonList(connectionSpec))
+//                .cookieJar(new JavaNetCookieJar(cookieManager)).build();
+//
+//            mCookieStore = cookieManager.getCookieStore();
+//
+//            setOkUrlFactory(new OkUrlFactory(mOkHttpClient));
 
-            try
             {
-                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
+                mOkHttpClient = new OkHttpClient();
+                SSLContext sslContext;
 
-                sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(null, trustManagers, null);
-            } catch (GeneralSecurityException e)
-            {
-                throw new AssertionError(); // 시스템이 TLS를 지원하지 않습니다
+                try
+                {
+                    TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
+
+                    sslContext = SSLContext.getInstance("TLS");
+//                    sslContext.init(null, trustManagers, null);
+                    sslContext.init(null, null, null);
+                } catch (GeneralSecurityException e)
+                {
+                    throw new AssertionError(); // 시스템이 TLS를 지원하지 않습니다
+                }
+
+                java.net.CookieManager cookieManager = new java.net.CookieManager(new PersistentCookieStore(sContext.getApplicationContext()), CookiePolicy.ACCEPT_ALL);
+
+                mOkHttpClient = mOkHttpClient.newBuilder().sslSocketFactory(sslContext.getSocketFactory())
+                    .cookieJar(new JavaNetCookieJar(cookieManager)).build();
+
+                mCookieStore = cookieManager.getCookieStore();
+
+                setOkUrlFactory(new OkUrlFactory(mOkHttpClient));
             }
-
-            java.net.CookieManager cookieManager = new java.net.CookieManager(new PersistentCookieStore(sContext.getApplicationContext()), CookiePolicy.ACCEPT_ALL);
-
-            mOkHttpClient = mOkHttpClient.newBuilder()//
-                .sslSocketFactory(sslContext.getSocketFactory())//
-                .cookieJar(new JavaNetCookieJar(cookieManager)).build();
-
-            mCookieStore = cookieManager.getCookieStore();
-
-            setOkUrlFactory(new OkUrlFactory(mOkHttpClient));
         }
 
         public CookieStore getCookieStore()

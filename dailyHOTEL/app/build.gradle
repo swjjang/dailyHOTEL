@@ -30,8 +30,8 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 10
         targetSdkVersion 10
-        versionCode 79
-        versionName "1.7.9"
+        versionCode 80
+        versionName "1.8.0"
         multiDexEnabled true
 
         resConfigs "ko"
@@ -67,7 +67,7 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp:0.+'
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
     compile files('libs/MobileAppTracker.jar')

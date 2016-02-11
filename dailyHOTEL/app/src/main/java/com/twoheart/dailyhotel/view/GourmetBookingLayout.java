@@ -423,7 +423,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
             mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.CARD);
         } else if (checkedId == mHpPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.PHONE_PAY);
+            mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.PHONE);
         } else if (checkedId == mAccountPaymentButton.getId())
         {
             mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.VBANK);
@@ -647,7 +647,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
                 mPaymentGroup.check(mCardPaymentButton.getId());
                 break;
 
-            case PHONE_PAY:
+            case PHONE:
                 mPaymentGroup.check(mHpPaymentButton.getId());
                 break;
 

@@ -146,6 +146,17 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     }
 
     @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        if (Util.isMemoryClear() == true)
+        {
+            Util.restartApp(this);
+        }
+    }
+
+    @Override
     protected void onPause()
     {
         try

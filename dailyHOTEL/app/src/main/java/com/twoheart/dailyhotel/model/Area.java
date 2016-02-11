@@ -75,13 +75,13 @@ public class Area extends Province
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public Province createFromParcel(Parcel in)
+        public Area createFromParcel(Parcel in)
         {
             return new Area(in);
         }
 
         @Override
-        public Province[] newArray(int size)
+        public Area[] newArray(int size)
         {
             return new Area[size];
         }

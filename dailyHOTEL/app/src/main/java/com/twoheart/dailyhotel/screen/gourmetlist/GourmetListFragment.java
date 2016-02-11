@@ -37,8 +37,8 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -613,7 +613,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null || this.isDetached())
+        if (baseActivity == null || this.isDetached() || mIsAttach == false)
         {
             return;
         }

@@ -34,22 +34,25 @@ import com.twoheart.dailyhotel.model.TicketPayment.PaymentType;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})
@@ -296,13 +299,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT) == true)
                     {
                         TicketPayment ticketPayment = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT);
-
-                        DailyPreference.getInstance(TicketPaymentActivity.this).setVirtuaAccountInformation(//
-                            ticketPayment.getCustomer().getUserIdx()//
-                            , ticketPayment.getTicketInformation().placeName//
-                            , Integer.toString(ticketPayment.getTicketInformation().index)//
-                            , ticketPayment.checkInTime//
-                            , ticketPayment.checkOutTime);
+                        DailyPreference.getInstance(TicketPaymentActivity.this).setVirtuaAccountGourmetInformation(ticketPayment, mCheckInSaleTime);
                     }
 
                     DailyPreference.getInstance(TicketPaymentActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
@@ -577,7 +574,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
                 break;
 
-            case PHONE_PAY:
+            case PHONE:
                 // 핸드폰을 선택했을 경우
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
                 break;
@@ -754,17 +751,32 @@ public abstract class TicketPaymentActivity extends BaseActivity
             Date date = new Date();
             String strDate = dateFormat.format(date);
             String userIndex = ticketPayment.getCustomer().getUserIdx();
-            String transId = strDate + userIndex;
-
-            double price = ticketPayment.getPaymentToPay();
+            String transId = strDate + '_' + userIndex;
 
             TicketInformation ticketInformation = ticketPayment.getTicketInformation();
 
-            SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-            strDate = dateFormat2.format(date);
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(ticketPayment.ticketCount));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.placeName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
+            params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
+            params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, ticketPayment.paymentType.name());
 
-            AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, Integer.toString(ticketInformation.index), //
-                ticketInformation.placeName, Label.GOURMET, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.paymentType.name(), strDate, price);
+            Calendar calendarTime = DailyCalendar.getInstance();
+            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(ticketPayment.ticketTime));
+
+            AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteGourmet(transId, params);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

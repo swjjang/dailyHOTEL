@@ -62,8 +62,8 @@ public interface Constants
     // 웹서버 호스트
     public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://lb2.dailyhotel.kr/goodnight/" : "MTE2JDEzJDEwMiQ1OCQxMTEk$MDQzNkMwNTRCOBDgzNjM1MTM4NDY1M0VFMkIwRkM3QzMzQUE0NzU4OEI1MFEEzN0IwNkE3NUExRkM2QjNDNUFBNUE1MzI2RDNDQThGNJEFFQkJFGNzk4QTc0FRkFDMDgzOEQw$";
     public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://api.dailyhotel.kr/goodnight/" : "MCQ4MyQxMjckMzYkMTck$CQTgwMkY4MTZFRTM2BODI4NDAyRDY1NDAzQjMBzMTg4REQ4RjUyNTJBQzNGMkI1RDk1QUE1OTU4N0RCOTREMEGQ0MjJGREQwNzYwNUI4QTM5NTcxNzk4NDJGQTFGNEQxMOEU4$";
-    //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
-    //    public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
+//        public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
+//        public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://test-api.dailyhotel.me/goodnight/" : "NjQkMTA0JDkxJDEyNiQyMiQ=$M0VEQThENzgyRUVGM0QzQkJMyQ0I4QzNBOTlBNEUzMTE3OEUwOUZBNkQ2RjE5QUY2MQzU3OUQ5ODAwRTlBNTVCOTRDM0JFBNzBGMzk3NkZNGNzdFQjg5ODAxODZDRDcL1QUI2$";
 
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -101,10 +101,10 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_HOTELDETAIL = "hoteldetail";
     public static final String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
     public static final String NAME_INTENT_EXTRA_DATA_REGION = "region";
-    public static final String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIdx";
+    public static final String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIndex";
     public static final String NAME_INTENT_EXTRA_DATA_HOTELGRADE = "hotelGrade";
     public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
-    public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIdx";
+    public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIndex";
     public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
     public static final String NAME_INTENT_EXTRA_DATA_TICKETPAYMENT = "ticketPayment";
     public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
@@ -147,6 +147,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
     public static final String NAME_INTENT_EXTRA_DATA_ISDAILYUSER = "isDailyUser";
     public static final String NAME_INTENT_EXTRA_DATA_DATE = "date";
+    public static final String NAME_INTENT_EXTRA_DATA_GOURMETIDX = "gourmetIndex";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;
