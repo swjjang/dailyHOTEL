@@ -35,16 +35,16 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -307,7 +307,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(SignupActivity.this).recordScreen(Screen.SIGNUP);
+        if(mMode == MODE_SIGNUP)
+        {
+            AnalyticsManager.getInstance(SignupActivity.this).recordScreen(Screen.SIGNUP);
+        }
+
         super.onStart();
     }
 
@@ -809,7 +813,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             {
                 String userIndex = String.valueOf(response.getInt("idx"));
 
-                AnalyticsManager.getInstance(SignupActivity.this).recordRegistration(userIndex, mSignupParams.get("email")//
+                AnalyticsManager.getInstance(SignupActivity.this).signUpDailyUser(userIndex, mSignupParams.get("email")//
                     , mSignupParams.get("name"), mSignupParams.get("phone"), AnalyticsManager.UserType.EMAIL);
 
                 regGcmId(userIndex);

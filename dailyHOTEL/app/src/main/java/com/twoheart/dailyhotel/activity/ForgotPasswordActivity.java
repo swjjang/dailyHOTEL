@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -25,7 +26,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ForgotPwdActivity extends BaseActivity implements Constants, OnClickListener
+public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener
 {
     private TextView btnForgot;
     private EditText etForgot;
@@ -66,6 +67,14 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_forgot_pwd_activity));
+    }
+
+    @Override
+    protected void onStart()
+    {
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.FORGOTPASSWORD);
+
+        super.onStart();
     }
 
     // Jason | Fix send email api
@@ -174,13 +183,13 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
                 {
                     if (Util.isTextEmpty(mEmail) == true)
                     {
-                        DailyToast.showToast(ForgotPwdActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
+                        DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
                     } else
                     {
                         Map<String, String> params = new HashMap<String, String>();
                         params.put("userEmail", mEmail);
 
-                        DailyNetworkAPI.getInstance().requestUserChangePassword(mNetworkTag, params, mUserChangePwJsonResponseListener, ForgotPwdActivity.this);
+                        DailyNetworkAPI.getInstance().requestUserChangePassword(mNetworkTag, params, mUserChangePwJsonResponseListener, ForgotPasswordActivity.this);
                     }
                 } else
                 {

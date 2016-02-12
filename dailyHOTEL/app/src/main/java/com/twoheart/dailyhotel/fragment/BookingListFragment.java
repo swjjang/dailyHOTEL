@@ -77,10 +77,18 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
+        View view = null;
 
-        initToolbar(baseActivity, view);
-        initLayout(view);
+        try
+        {
+            view = inflater.inflate(R.layout.fragment_booking_list, container, false);
+
+            initToolbar(baseActivity, view);
+            initLayout(view);
+        }catch (OutOfMemoryError e)
+        {
+            Util.finishOutOfMemory(baseActivity);
+        }
 
         return view;
     }
@@ -102,14 +110,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         btnLogin = view.findViewById(R.id.btn_booking_empty_login);
 
         btnLogin.setOnClickListener(this);
-    }
-
-    @Override
-    public void onStart()
-    {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOLKING_LIST);
-
-        super.onStart();
     }
 
     @Override
@@ -144,7 +144,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             startActivity(i);
             baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, Label.LOGIN, 0L);
+            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN, 0L);
         }
     }
 
@@ -216,7 +216,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         params.put(Label.CHECK_OUT, simpleDateFormat.format(item.checkoutTime));
         params.put(Label.RESERVATION_INDEX, String.valueOf(item.reservationIndex));
 
-        AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, item.placeName, params);
+        AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, item.placeName, params);
     }
 
     @Override
@@ -426,6 +426,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 if (length == 0)
                 {
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
+
                     if (mAdapter != null)
                     {
                         mAdapter.clear();
@@ -437,6 +439,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     btnLogin.setVisibility(View.INVISIBLE);
                 } else
                 {
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST);
+
                     // 입금대기, 결제완료, 이용완료
                     ArrayList<Booking> waitBookingList = new ArrayList<Booking>();
                     ArrayList<Booking> paymentBookingList = new ArrayList<Booking>();

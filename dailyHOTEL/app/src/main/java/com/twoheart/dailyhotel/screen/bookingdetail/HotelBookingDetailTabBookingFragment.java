@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONException;
@@ -150,96 +151,14 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
             });
         }
 
-        lockUI();
-        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
         return view;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    @Override
+    public void onResume()
     {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
+        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL);
 
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
-
-                    if (isSignin == true)
-                    {
-                        VolleyHttpClient.createCookie();
-                        return;
-                    }
-                }
-
-                // 로그인 실패
-                // data 초기화
-                DailyPreference.getInstance(baseActivity).removeUserInformation();
-
-                DailyToast.showToast(baseActivity, getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT);
-            } catch (JSONException e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            String result = null;
-
-            if (Util.isTextEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            {
-            } else if ("dead".equalsIgnoreCase(result) == true)
-            { // session dead
-                // 재로그인
-                if (DailyPreference.getInstance(baseActivity).isAutoLogin() == true)
-                {
-                    HashMap<String, String> params = Util.getLoginParams(baseActivity);
-                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, baseActivity);
-                } else
-                {
-                    startActivity(new Intent(baseActivity, LoginActivity.class));
-                }
-            } else
-            {
-                unLockUI();
-            }
-        }
-    };
+        super.onResume();
+    }
 }

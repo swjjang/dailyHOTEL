@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -19,8 +18,8 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class RegisterCreditCardActivity extends BaseActivity implements Constants
@@ -77,6 +76,14 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_reg_creditcard));
+    }
+
+    @Override
+    protected void onStart()
+    {
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.CREDITCARD_ADD);
+
+        super.onStart();
     }
 
     @Override

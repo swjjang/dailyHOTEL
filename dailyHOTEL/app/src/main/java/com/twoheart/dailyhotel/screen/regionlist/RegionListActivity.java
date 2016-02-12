@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
@@ -217,6 +218,33 @@ public class RegionListActivity extends BaseActivity
 
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
+        private void recordEvent(Province province)
+        {
+            String label;
+
+            if(province instanceof Area)
+            {
+                Area area = (Area)province;
+
+                if(area.index == -1)
+                {
+                    label = String.format("%s_%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                        , area.getProvince().name);
+                } else
+                {
+                    label = String.format("%s_%s_%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                        , area.getProvince().name, area.name);
+                }
+            } else
+            {
+                label = String.format("%s_%s", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                    , province.name);
+            }
+
+            AnalyticsManager.getInstance(RegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, label, 0L);
+        }
+
         @Override
         public void onRegionClick(Province province)
         {
@@ -236,6 +264,8 @@ public class RegionListActivity extends BaseActivity
                 }
 
                 setResult(RESULT_OK, intent);
+
+                recordEvent(province);
             }
 
             finish();
@@ -244,6 +274,26 @@ public class RegionListActivity extends BaseActivity
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
+        private void recordAnalytics(int position)
+        {
+            switch(mType)
+            {
+                case HOTEL:
+                    if(position == 0)
+                    {
+                        AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL);
+                    }
+                    break;
+
+                case FNB:
+                    AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC);
+                    break;
+            }
+        }
+
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {

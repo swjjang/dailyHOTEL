@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class GourmetBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
@@ -104,10 +105,9 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             return;
         }
 
-        Intent intent = new Intent(baseActivity, ZoomMapActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, mPlaceBookingDetail.placeName);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mPlaceBookingDetail.latitude);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mPlaceBookingDetail.longitude);
+        Intent intent = ZoomMapActivity.newInstance(baseActivity//
+            , ZoomMapActivity.SourceType.BOOKING, mPlaceBookingDetail.placeName//
+            , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
 
         startActivity(intent);
     }
@@ -162,6 +162,8 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
                 }
             });
         }
+
+        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP);
 
         super.onResume();
     }

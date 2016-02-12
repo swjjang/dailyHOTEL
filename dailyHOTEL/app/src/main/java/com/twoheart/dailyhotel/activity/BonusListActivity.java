@@ -32,7 +32,7 @@ import java.util.List;
  *
  * @author jangjunho
  */
-public class CreditListActivity extends BaseActivity
+public class BonusListActivity extends BaseActivity
 {
     public static final String KEY_BUNDLE_ARGUMENTS_CREDITLIST = "credit_list";
     private List<Credit> mCreditList;
@@ -73,7 +73,7 @@ public class CreditListActivity extends BaseActivity
 
         if (mCreditList != null && mCreditList.size() != 0)
         {
-            CreditListAdapter adapter = new CreditListAdapter(CreditListActivity.this, R.layout.list_row_credit, mCreditList);
+            CreditListAdapter adapter = new CreditListAdapter(BonusListActivity.this, R.layout.list_row_credit, mCreditList);
             listView.setAdapter(adapter);
         }
     }
@@ -81,7 +81,8 @@ public class CreditListActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(CreditListActivity.this).recordScreen(Screen.CREDIT_LIST);
+        AnalyticsManager.getInstance(BonusListActivity.this).recordScreen(Screen.BONUS_LIST);
+
         super.onStart();
     }
 

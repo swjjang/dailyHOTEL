@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.twoheart.dailyhotel.adapter.NameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -33,6 +35,26 @@ public class ZoomMapActivity extends BaseActivity
     private MarkerOptions mMyLocationMarkerOptions;
     private Marker mMyLocationMarker;
     private Handler mHandler = new Handler();
+    private SourceType mSourceType;
+
+    public enum SourceType
+    {
+        HOTEL,
+        GOURMET,
+        BOOKING,
+    }
+
+    public static Intent newInstance(Context context, SourceType sourceType, String name, double latitude, double longitude)
+    {
+        Intent intent = new Intent(context, ZoomMapActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, latitude);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, longitude);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,6 +81,8 @@ public class ZoomMapActivity extends BaseActivity
 
             latitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, 0);
             longitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, 0);
+
+            mSourceType = SourceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
         } else
         {
             latitude = 0;
@@ -66,7 +90,7 @@ public class ZoomMapActivity extends BaseActivity
             placeName = null;
         }
 
-        if (placeName == null || latitude == 0 || longitude == 0)
+        if (placeName == null || latitude == 0 || longitude == 0 || mSourceType == null)
         {
             finish();
             return;
@@ -97,6 +121,27 @@ public class ZoomMapActivity extends BaseActivity
                 addMarker(mGoogleMap, latitude, longitude, placeName);
             }
         });
+    }
+
+    @Override
+    protected void onStart()
+    {
+        switch (mSourceType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DETAIL_MAP);
+                break;
+
+            case GOURMET:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_MAP);
+                break;
+
+            case BOOKING:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP);
+                break;
+        }
+
+        super.onStart();
     }
 
     private void initToolbar(String title)

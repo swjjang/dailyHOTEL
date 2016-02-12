@@ -184,7 +184,8 @@ public class PaymentWebActivity extends BaseActivity implements Constants
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(PaymentWebActivity.this).recordScreen(Screen.PAYMENT);
+        AnalyticsManager.getInstance(PaymentWebActivity.this).recordScreen(Screen.DAILYGOURMET_PAYMENT_PROCESS);
+
         super.onStart();
     }
 

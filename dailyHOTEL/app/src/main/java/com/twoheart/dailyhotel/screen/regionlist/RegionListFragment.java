@@ -19,14 +19,13 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.exception.MemoryClearException;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
 
 import java.util.List;
 
 public class RegionListFragment extends BaseFragment
 {
-    public static final int CHILD_GRID_COLUMN = 2;
     private RegionListActivity.OnUserActionListener mOnUserActionListener;
 
     private DailyAnimatedExpandableListView mListView;
@@ -46,6 +45,40 @@ public class RegionListFragment extends BaseFragment
         return mListView;
     }
 
+    private void recordAnalyticsScreen()
+    {
+        switch (mType)
+        {
+            case HOTEL:
+                switch(mRegion)
+                {
+                    case DOMESTIC:
+                        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+                        break;
+
+                    case GLOBAL:
+                        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL);
+                        break;
+                }
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC);
+                break;
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        if(mAdapter != null)
+        {
+            recordAnalyticsScreen();
+        }
+
+        super.onResume();
+    }
+
     public void setRegionViewList(BaseActivity baseActivity, List<RegionViewItem> arrayList)
     {
         if (mAdapter == null)
@@ -55,12 +88,6 @@ public class RegionListFragment extends BaseFragment
         }
 
         mAdapter.setData(arrayList);
-
-        if(mListView == null)
-        {
-            throw new MemoryClearException();
-        }
-
         mListView.setAdapter(mAdapter);
         selectedPreviousArea(mSelectedProvince, arrayList);
     }

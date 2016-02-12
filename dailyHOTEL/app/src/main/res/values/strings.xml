@@ -3,7 +3,7 @@
 
     <!-- Basic Infos -->
     <string name="app_name">데일리호텔</string>
-    <string name="app_id">268888829950610</string>
+    <string name="facebook_app_id">268888829950610</string>
     <string name="homepage">http://dailyhotel.kr</string>
     <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>

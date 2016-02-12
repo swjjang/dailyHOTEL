@@ -21,11 +21,13 @@ public interface IBaseAnalyticsManager
 
     abstract void onResume(Activity activity);
 
-    abstract void eventPaymentCardAdded(String cardType);
+    abstract void onPause(Activity activity);
 
-    abstract void recordSocialRegistration(String userIndex, String email, String name, String gender, String phoneNumber, String userType);
+    abstract void addCreditCard(String cardType);
 
-    abstract void recordRegistration(String userIndex, String email, String name, String phoneNumber, String userType);
+    abstract void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType);
+
+    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType);
 
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 

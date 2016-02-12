@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
@@ -26,12 +25,11 @@ import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.Locale;
 
 public class DailyHotel extends Application implements Constants
@@ -45,7 +43,7 @@ public class DailyHotel extends Application implements Constants
     {
         super.onCreate();
 
-        if(DEBUG == false)
+        if (DEBUG == false)
         {
             io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
         }

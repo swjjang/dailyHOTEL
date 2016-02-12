@@ -72,17 +72,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , imageUrl //
             , checkInSaleTime);
 
-        // 고메 공유하기 로그 추가
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
-        params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(placeDetail.getTicketInformation().get(0).discountPrice));
-        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
-        params.put(AnalyticsManager.KeyType.DATE, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
-
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Screen.GOURMET_DETAIL, AnalyticsManager.Action.CLICK, AnalyticsManager.Label.SHARE, params);
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+            , AnalyticsManager.Action.SOCIAL_SHARE_CLICKED, placeDetail.name, 0L);
     }
 
     @Override

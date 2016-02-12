@@ -173,9 +173,21 @@ public class TicketPayment implements Parcelable
 
     public enum PaymentType
     {
-        EASY_CARD,
-        CARD,
-        PHONE,
-        VBANK,
+        EASY_CARD("EasyCardPay"),
+        CARD("CardPay"),
+        PHONE("PhoneBillPay"),
+        VBANK("VirtualAccountPay");
+
+        private String mName;
+
+        private PaymentType(String name)
+        {
+            mName = name;
+        }
+
+        public String getName()
+        {
+            return mName;
+        }
     }
 }

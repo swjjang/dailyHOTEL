@@ -424,9 +424,13 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
             if ("alive".equalsIgnoreCase(result) == true)
             {
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN);
+
                 setSigninLayout(true);
             } else
             {
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT);
+
                 setSigninLayout(false);
             }
 

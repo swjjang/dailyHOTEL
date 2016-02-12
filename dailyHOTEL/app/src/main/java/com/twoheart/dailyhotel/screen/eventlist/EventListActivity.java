@@ -87,7 +87,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     public void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.EVENT);
+        AnalyticsManager.getInstance(this).recordScreen(Screen.EVENT_LIST);
 
         super.onStart();
     }
@@ -168,7 +168,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void processEventPage(String eventUrl)
         {
-            Intent intent = EventWebActivity.newInstance(EventListActivity.this, eventUrl);
+            Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, eventUrl);
             startActivity(intent);
         }
 

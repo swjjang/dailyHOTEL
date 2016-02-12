@@ -135,7 +135,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void recordEvent(String eventName, String action, String label, Map<String, String> params)
     {
-        if(AnalyticsManager.Screen.HOTEL_DETAIL.equalsIgnoreCase(eventName) == true)
+        if(AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(eventName) == true)
         {
             if(AnalyticsManager.Label.SHARE.equalsIgnoreCase(label) == true)
             {
@@ -149,7 +149,7 @@ public class TuneManager implements IBaseAnalyticsManager
 
                 mMobileAppTracker.measureEvent(matEvent);
             }
-        } else if(AnalyticsManager.Screen.GOURMET_DETAIL.equalsIgnoreCase(eventName) == true)
+        } else if(AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(eventName) == true)
         {
             if(AnalyticsManager.Label.SHARE.equalsIgnoreCase(label) == true)
             {
@@ -163,7 +163,7 @@ public class TuneManager implements IBaseAnalyticsManager
 
                 mMobileAppTracker.measureEvent(matEvent);
             }
-        } else if(AnalyticsManager.Screen.CREDIT.equalsIgnoreCase(eventName) == true)
+        } else if(AnalyticsManager.Screen.BONUS.equalsIgnoreCase(eventName) == true)
         {
             if(AnalyticsManager.Label.INVITE_KAKAO_FRIEND.equalsIgnoreCase(label) == true)
             {
@@ -191,7 +191,13 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void eventPaymentCardAdded(String cardType)
+    public void onPause(Activity activity)
+    {
+
+    }
+
+    @Override
+    public void addCreditCard(String cardType)
     {
         MATEvent matEvent = new MATEvent(TuneEventId.CARDLIST_ADDED_CARD);
         matEvent.withAttribute1(cardType);
@@ -200,7 +206,7 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordSocialRegistration(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
         mMobileAppTracker.setUserId(userIndex);
 
@@ -239,7 +245,7 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordRegistration(String userIndex, String email, String name, String phoneNumber, String userType)
+    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
         // Tune
         mMobileAppTracker.setUserId(userIndex);
@@ -390,7 +396,7 @@ public class TuneManager implements IBaseAnalyticsManager
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static class TuneEventId
+    protected static final class TuneEventId
     {
         public static final int SIGNUP_REGISTRATION = 1132821069;
 

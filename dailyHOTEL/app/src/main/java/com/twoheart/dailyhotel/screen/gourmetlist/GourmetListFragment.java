@@ -130,13 +130,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
     }
 
     @Override
-    public void onStart()
-    {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.GOURMET_LIST);
-        super.onStart();
-    }
-
-    @Override
     public void onAttach(Context context)
     {
         super.onAttach(context);
@@ -361,6 +354,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
         switch (type)
         {
             case LIST:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST);
+
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
@@ -377,6 +372,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 break;
 
             case MAP:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
+
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
@@ -391,6 +388,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 break;
 
             case GONE:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY);
+
                 mEmptyView.setVisibility(View.VISIBLE);
                 mMapLayout.setVisibility(View.GONE);
 
@@ -508,8 +507,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     case DEFAULT:
                         refreshList(getProvince(), true);
-
-                        baseActivity.invalidateOptionsMenu();
                         break;
 
                     case DISTANCE:
@@ -519,8 +516,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     case LOW_PRICE:
                     case HIGH_PRICE:
                         requestSortList(mSortType);
-
-                        baseActivity.invalidateOptionsMenu();
                         break;
                 }
             }
@@ -760,8 +755,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     {
                         mOnUserActionListener.setLocation(location);
                     }
-
-                    baseActivity.invalidateOptionsMenu();
                 }
             }
         });

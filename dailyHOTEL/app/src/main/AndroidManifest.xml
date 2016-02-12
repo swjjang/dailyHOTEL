@@ -159,7 +159,7 @@
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.ForgotPwdActivity"
+            android:name=".activity.ForgotPasswordActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -198,7 +198,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.CreditListActivity"
+            android:name=".activity.BonusListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -311,7 +311,7 @@
             android:value="@integer/google_play_services_version"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/app_id"/>
+            android:value="@string/facebook_app_id"/>
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key"/>

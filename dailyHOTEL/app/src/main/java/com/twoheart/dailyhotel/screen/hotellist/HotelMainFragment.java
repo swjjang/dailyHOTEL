@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
+import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
@@ -335,6 +337,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     mOnUserActionListener.selectSortType(SortType.DEFAULT);
 
+                    setSelectCategory(Category.ALL);
+
                     if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
                     {
                         Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
@@ -519,27 +523,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         // 선택된 카테고리가 없는 경우 2번째가 항상 선택된다
         if (mSelectedCategory == null)
         {
-            String selectedCategoryCode = DailyPreference.getInstance(getContext()).getSelectedCategoryCode();
-
-            if (Util.isTextEmpty(selectedCategoryCode) == true)
-            {
-                setSelectCategory(list.get(1));
-            } else
-            {
-                for (Category category : list)
-                {
-                    if (category.code.equalsIgnoreCase(selectedCategoryCode) == true)
-                    {
-                        setSelectCategory(category);
-                        break;
-                    }
-                }
-
-                if (mSelectedCategory == null)
-                {
-                    setSelectCategory(list.get(1));
-                }
-            }
+            setSelectCategory(Category.ALL);
         } else
         {
             // 기존 카테고리에 존재하는지
@@ -556,10 +540,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             if (isExist == false)
             {
-                setSelectCategory(list.get(1));
+                setSelectCategory(Category.ALL);
             }
         }
-
 
         TabLayout.Tab selectedTab = null;
 
@@ -616,8 +599,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         mSelectedCategory = category;
-
-        DailyPreference.getInstance(getContext()).setSelectedCategoryCode(category.code);
 
         for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
         {
@@ -721,7 +702,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, url);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url);
             startActivity(intent);
         } else
         {
@@ -1070,44 +1051,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
     };
 
-    private UserAnalyticsActionListener mUserAnalyticsActionListener = new UserAnalyticsActionListener()
-    {
-        @Override
-        public void selectHotel(String hotelName, long hotelIndex, String checkInTime, int nights)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.DATE_TAB, Integer.toString(mTabLayout.getSelectedTabPosition()));
-            params.put(Label.HOTEL_INDEX, String.valueOf(hotelIndex));
-            params.put(Label.CHECK_IN, checkInTime);
-            params.put(Label.NIGHTS, String.valueOf(nights));
-
-            AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mHotelViewType.name(), Action.CLICK, hotelName, params);
-        }
-
-        @Override
-        public void selectRegion(Province province)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.DATE_TAB, Integer.toString(mTabLayout.getSelectedTabPosition()));
-
-            AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mHotelViewType.name(), Action.CLICK, province.name, params);
-        }
-    };
-
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override
@@ -1147,13 +1090,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotel.getIdx());
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, hotel.nights);
-
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotel.getName());
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, hotel.imageUrl);
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
-                    mUserAnalyticsActionListener.selectHotel(hotel.getName(), hotel.getIdx(), checkSaleTime.getDayOfDaysDateFormat("yyMMdd"), hotel.nights);
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , Action.HOTEL_ITEM_CLICKED, hotel.getName(), 0L);
                     break;
                 }
 
@@ -1236,6 +1179,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 return;
             }
 
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.HOTEL_EVENT_BANNER_CLICKED, eventBanner.name, 0L);
+
             if (eventBanner.isDeepLink() == true)
             {
                 try
@@ -1273,7 +1219,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(baseActivity, eventBanner.webLink);
+                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink);
                 startActivity(intent);
             }
         }
@@ -1315,6 +1261,38 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             unLockUI();
         }
 
+        private void recordAnalyticsSortTypeEvent(Context context, SortType sortType)
+        {
+            if(context == null || sortType == null)
+            {
+                return;
+            }
+
+            String label;
+
+            switch(sortType)
+            {
+                case DISTANCE:
+                    label = context.getString(R.string.label_sort_by_distance);
+                    break;
+
+                case LOW_PRICE:
+                    label = context.getString(R.string.label_sort_by_low_price);
+                    break;
+
+                case HIGH_PRICE:
+                    label = context.getString(R.string.label_sort_by_high_price);
+                    break;
+
+                default:
+                    label = context.getString(R.string.label_sort_by_area);
+                    break;
+            }
+
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.SORTING_CLICKED, label, 0L);
+        }
+
         @Override
         public void selectSortType(SortType sortType)
         {
@@ -1331,6 +1309,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             baseActivity.invalidateOptionsMenu();
+
+            //
+            recordAnalyticsSortTypeEvent(baseActivity, sortType);
         }
 
         @Override

@@ -26,7 +26,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 신용카드 등록하기.
@@ -295,6 +294,8 @@ public class CreditCardListActivity extends BaseActivity
 
                 if (length == 0)
                 {
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST_EMPTY);
+
                     arrayList = new ArrayList<CreditCard>();
 
                     if (mIsPickMode == true)
@@ -303,6 +304,8 @@ public class CreditCardListActivity extends BaseActivity
                     }
                 } else
                 {
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST);
+
                     arrayList = new ArrayList<CreditCard>(length);
 
                     boolean hasCreditCard = false;
@@ -324,11 +327,11 @@ public class CreditCardListActivity extends BaseActivity
                         }
                     }
 
-                    if(mIsRegisterCreditCard == true)
+                    if (mIsRegisterCreditCard == true)
                     {
                         mIsRegisterCreditCard = false;
 
-                        AnalyticsManager.getInstance(CreditCardListActivity.this).eventPaymentCardAdded(arrayList.get(arrayList.size() - 1).cardcd);
+                        AnalyticsManager.getInstance(CreditCardListActivity.this).addCreditCard(arrayList.get(arrayList.size() - 1).cardcd);
                     }
 
                     if (mIsPickMode == true && hasCreditCard == false)

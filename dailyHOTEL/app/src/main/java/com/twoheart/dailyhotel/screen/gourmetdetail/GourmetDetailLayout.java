@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.screen.gourmetlist.GourmetDetailRoomTypeListAdapter;
 import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailListView;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
@@ -257,6 +258,9 @@ public class GourmetDetailLayout
                     mSelectedTicketInformation = mTicketTypeListAdapter.getItem(position);
                     mTicketTypeListAdapter.setSelected(position);
                     mTicketTypeListAdapter.notifyDataSetChanged();
+
+                    AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+                        , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, 0L);
                 }
             });
         }

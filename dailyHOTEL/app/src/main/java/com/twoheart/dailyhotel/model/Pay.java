@@ -138,10 +138,21 @@ public class Pay implements Parcelable
 
     public enum Type
     {
-        EASY_CARD,
-        CARD,
-        PHONE,
-        VBANK,
-        //		PAYPAL
+        EASY_CARD("EasyCardPay"),
+        CARD("CardPay"),
+        PHONE("PhoneBillPay"),
+        VBANK("VirtualAccountPay");
+
+        private String mName;
+
+        private Type(String name)
+        {
+            mName = name;
+        }
+
+        public String getName()
+        {
+            return mName;
+        }
     }
 }

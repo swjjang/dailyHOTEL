@@ -42,7 +42,6 @@ public class DailyPreference
     private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
 
     private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
-    private static final String KEY_CATEGORY_CODE = "15"; // 마지막으로 본 카테고리 코드
 
     private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
 
@@ -311,16 +310,6 @@ public class DailyPreference
     public void setNotificationUid(int value)
     {
         setValue(mEditor, KEY_NOTIFICATION_UID, value);
-    }
-
-    public String getSelectedCategoryCode()
-    {
-        return getValue(mPreferences, KEY_CATEGORY_CODE, null);
-    }
-
-    public void setSelectedCategoryCode(String value)
-    {
-        setValue(mEditor, KEY_CATEGORY_CODE, value);
     }
 
     public String getLastMenu()

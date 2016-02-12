@@ -227,11 +227,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onStart()
     {
+        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.DAILYGOURMET_DETAIL);
+
         try
         {
             super.onStart();
-
-            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.GOURMET_DETAIL);
         } catch (NullPointerException e)
         {
             ExLog.e(e.toString());
@@ -373,7 +373,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYGOURMET_DETAIL, Action.CLICK, Label.SHARE, params);
         }
     };
 
@@ -428,12 +428,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             lockUI();
             DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, PlaceDetailActivity.this);
 
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.FNB_TICKET_NAME, ticketInformation.name);
-            params.put(Label.FNB_TICKET_INDEX, String.valueOf(ticketInformation.index));
-            params.put(Label.FNB_INDEX, String.valueOf(mPlaceDetail.index));
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.BOOKING, Action.CLICK, mPlaceDetail.name, params);
+            String label = String.format("%s_%s", mPlaceDetail.name, mSelectedTicketInformation.name);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+                , Action.BOOKING_CLICKED, label, 0L);
         }
 
         @Override
@@ -461,6 +458,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     startActivity(marketLaunch);
                 }
             }
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+                , Action.KAKAO_INQUIRY_CLICKED, mPlaceDetail.name, 0L);
         }
 
         @Override
@@ -479,6 +479,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             releaseUiComponent();
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+                , Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, 0L);
         }
 
         @Override
@@ -497,6 +500,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             releaseUiComponent();
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+                , Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, 0L);
         }
 
         @Override
@@ -509,10 +515,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             lockUiComponent();
 
-            Intent intent = new Intent(PlaceDetailActivity.this, ZoomMapActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, mPlaceDetail.name);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mPlaceDetail.latitude);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mPlaceDetail.longitude);
+            Intent intent = ZoomMapActivity.newInstance(PlaceDetailActivity.this//
+            , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name//
+            , mPlaceDetail.latitude, mPlaceDetail.longitude);
 
             startActivity(intent);
 
@@ -520,7 +525,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay());
             String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYGOURMET_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
         }
 
         @Override

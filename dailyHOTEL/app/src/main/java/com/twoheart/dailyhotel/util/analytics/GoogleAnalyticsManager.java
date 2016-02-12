@@ -9,6 +9,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Map;
 
@@ -29,11 +30,16 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void recordScreen(String screenName, Map<String, String> params)
     {
+        if(params != null)
+        {
+            return;
+        }
+
         try
         {
             // Send a screen view.
             mGoogleAnalyticsTracker.setScreenName(screenName);
-            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().setAll(params).build());
+            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -84,18 +90,24 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void eventPaymentCardAdded(String cardType)
+    public void onPause(Activity activity)
     {
 
     }
 
     @Override
-    public void recordSocialRegistration(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    public void addCreditCard(String cardType)
+    {
+
+    }
+
+    @Override
+    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
     }
 
     @Override
-    public void recordRegistration(String userIndex, String email, String name, String phoneNumber, String userType)
+    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
     }
 

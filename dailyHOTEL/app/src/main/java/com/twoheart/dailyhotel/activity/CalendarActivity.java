@@ -77,7 +77,16 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.CALENDAR);
+        switch (mPlaceType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_CALENDAR);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_CALENDAR);
+                break;
+        }
 
         super.onStart();
     }

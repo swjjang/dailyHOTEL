@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -655,6 +656,9 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
                 mPaymentGroup.check(mAccountPaymentButton.getId());
                 break;
         }
+
+        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+            , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, type.getName(), 0L);
     }
 
     public void scrollTop()

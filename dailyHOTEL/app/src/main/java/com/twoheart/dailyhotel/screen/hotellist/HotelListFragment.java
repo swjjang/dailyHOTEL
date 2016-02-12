@@ -145,13 +145,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     }
 
     @Override
-    public void onStart()
-    {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.HOTEL_LIST);
-        super.onStart();
-    }
-
-    @Override
     public void onAttach(Context context)
     {
         super.onAttach(context);
@@ -321,6 +314,8 @@ public class HotelListFragment extends BaseFragment implements Constants
         switch (type)
         {
             case LIST:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST);
+
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
@@ -338,6 +333,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                 break;
 
             case MAP:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_MAP);
+
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
@@ -353,6 +350,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                 break;
 
             case GONE:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_EMPTY);
+
                 mEmptyView.setVisibility(View.VISIBLE);
                 mMapLayout.setVisibility(View.GONE);
 
@@ -545,8 +544,6 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     case DEFAULT:
                         refreshHotelList(mSelectedProvince, true);
-
-                        baseActivity.invalidateOptionsMenu();
                         break;
 
                     case DISTANCE:
@@ -763,8 +760,6 @@ public class HotelListFragment extends BaseFragment implements Constants
                     {
                         mOnUserActionListener.setLocation(location);
                     }
-
-                    baseActivity.invalidateOptionsMenu();
                 }
             }
         });

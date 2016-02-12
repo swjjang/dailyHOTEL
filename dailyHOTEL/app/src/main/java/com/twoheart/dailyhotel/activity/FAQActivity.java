@@ -49,7 +49,7 @@ public class FAQActivity extends BaseActivity
 
                 mPrevExpandedChildPos = groupPosition;
 
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.FAQ, Action.CLICK, mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
+//                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.FAQ, Action.CLICK, mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
             }
         });
     }
@@ -57,7 +57,7 @@ public class FAQActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(FAQActivity.this).recordScreen(Screen.FAQ);
+//        AnalyticsManager.getInstance(FAQActivity.this).recordScreen(Screen.FAQ);
         super.onStart();
     }
 

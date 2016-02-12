@@ -55,15 +55,15 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -192,7 +192,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.LOGIN);
+        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.SIGNIN);
+
         super.onStart();
     }
 
@@ -347,11 +348,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         if (v.getId() == mFindPasswordView.getId())
         {
             // 비밀번호 찾기
-            Intent i = new Intent(this, ForgotPwdActivity.class);
+            Intent i = new Intent(this, ForgotPasswordActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.FORGOT_PASSWORD, 0L);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNIN, Action.CLICK, Label.FORGOT_PASSWORD, 0L);
         } else if (v.getId() == mSignupView.getId())
         {
             // 회원가입
@@ -359,7 +360,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             startActivityForResult(i, CODE_REQEUST_ACTIVITY_SIGNUP);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.SIGNUP, 0L);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNIN, Action.CLICK, Label.SIGNUP, 0L);
         } else if (v.getId() == mLoginView.getId())
         {
             // 일반 로그인
@@ -392,7 +393,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
             DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN, 0L);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNIN, Action.CLICK, Label.LOGIN, 0L);
         }
     }
 
@@ -814,7 +815,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     params.put(Label.USER_INDEX, userIndex);
                     params.put(Label.TYPE, "Social");
 
-                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(Screen.LOGIN, Action.NETWORK, Label.SIGNUP, params);
+                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(Screen.SIGNIN, Action.NETWORK, Label.SIGNUP, params);
 
                     if (mStoreParams.containsKey("new_user") == true)
                     {
@@ -829,7 +830,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             userType = AnalyticsManager.UserType.FACEBOOK;
                         }
 
-                        AnalyticsManager.getInstance(LoginActivity.this).recordSocialRegistration(//
+                        AnalyticsManager.getInstance(LoginActivity.this).singUpSocialUser(//
                             userIndex//
                             , mStoreParams.get("email"), mStoreParams.get("name")//
                             , mStoreParams.get("gender"), null, userType);

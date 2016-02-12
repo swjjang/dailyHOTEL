@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoadingDialog;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -158,6 +159,14 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart()
+    {
+//        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+
+        super.onStart();
     }
 
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)

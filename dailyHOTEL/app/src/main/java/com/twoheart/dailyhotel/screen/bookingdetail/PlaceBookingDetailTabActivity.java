@@ -108,8 +108,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         // 호텔 정보를 가져온다.
         requestPlaceBookingDetail(mBooking.reservationIndex);
-
-        AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(Screen.BOOKING_DETAIL);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

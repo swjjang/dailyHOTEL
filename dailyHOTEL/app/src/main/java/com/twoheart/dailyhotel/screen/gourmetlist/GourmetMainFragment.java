@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -704,41 +705,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         }
     };
 
-    private OnUserAnalyticsActionListener mOnUserAnalyticsActionListener = new OnUserAnalyticsActionListener()
-    {
-        @Override
-        public void selectPlace(String name, long index, String checkInTime)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.FNB_INDEX, String.valueOf(index));
-            params.put(Label.CHECK_IN, checkInTime);
-
-            AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mViewType.name(), Action.CLICK, name, params);
-        }
-
-        @Override
-        public void selectRegion(Province province)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            HashMap<String, String> params = new HashMap<String, String>();
-
-            AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mViewType.name(), Action.CLICK, province.name, params);
-        }
-    };
-
     private OnUserActionListener mOnGourmetUserActionListener = new OnUserActionListener()
     {
         @Override
@@ -785,7 +751,8 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 
-                    mOnUserAnalyticsActionListener.selectPlace(gourmet.name, gourmet.index, checkSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , Action.GOURMET_ITEM_CLICKED, gourmet.name, 0L);
                     break;
                 }
 
@@ -855,6 +822,9 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 return;
             }
 
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.GOURMET_EVENT_BANNER_CLICKED, eventBanner.name, 0L);
+
             if (eventBanner.isDeepLink() == true)
             {
                 try
@@ -891,7 +861,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(baseActivity, eventBanner.webLink);
+                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink);
                 startActivity(intent);
             }
         }
@@ -951,13 +921,56 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             unLockUI();
         }
 
+        private void recordAnalyticsSortTypeEvent(Context context, SortType sortType)
+        {
+            if(context == null || sortType == null)
+            {
+                return;
+            }
+
+            String label;
+
+            switch(sortType)
+            {
+                case DISTANCE:
+                    label = context.getString(R.string.label_sort_by_distance);
+                    break;
+
+                case LOW_PRICE:
+                    label = context.getString(R.string.label_sort_by_low_price);
+                    break;
+
+                case HIGH_PRICE:
+                    label = context.getString(R.string.label_sort_by_high_price);
+                    break;
+
+                default:
+                    label = context.getString(R.string.label_sort_by_area);
+                    break;
+            }
+
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.SORTING_CLICKED, label, 0L);
+        }
+
         @Override
         public void selectSortType(SortType sortType)
         {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
             for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
             {
                 placeListFragment.setSortType(sortType);
             }
+
+            baseActivity.invalidateOptionsMenu();
+
+            recordAnalyticsSortTypeEvent(baseActivity, sortType);
         }
 
         @Override
