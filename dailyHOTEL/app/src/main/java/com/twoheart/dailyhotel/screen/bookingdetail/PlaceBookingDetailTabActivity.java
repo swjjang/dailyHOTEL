@@ -18,8 +18,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -108,8 +106,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         // 호텔 정보를 가져온다.
         requestPlaceBookingDetail(mBooking.reservationIndex);
-
-        AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(Screen.BOOKING_DETAIL);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

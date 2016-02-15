@@ -37,11 +37,11 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
@@ -127,13 +127,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecycleView.setShadowVisible(false);
 
         return view;
-    }
-
-    @Override
-    public void onStart()
-    {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.GOURMET_LIST);
-        super.onStart();
     }
 
     @Override
@@ -361,6 +354,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
         switch (type)
         {
             case LIST:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST, null);
+
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
@@ -377,6 +372,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 break;
 
             case MAP:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
+
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
@@ -391,6 +388,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 break;
 
             case GONE:
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY, null);
+
                 mEmptyView.setVisibility(View.VISIBLE);
                 mMapLayout.setVisibility(View.GONE);
 
@@ -508,8 +507,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     case DEFAULT:
                         refreshList(getProvince(), true);
-
-                        baseActivity.invalidateOptionsMenu();
                         break;
 
                     case DISTANCE:
@@ -519,8 +516,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     case LOW_PRICE:
                     case HIGH_PRICE:
                         requestSortList(mSortType);
-
-                        baseActivity.invalidateOptionsMenu();
                         break;
                 }
             }
@@ -760,8 +755,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     {
                         mOnUserActionListener.setLocation(location);
                     }
-
-                    baseActivity.invalidateOptionsMenu();
                 }
             }
         });
@@ -1002,8 +995,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 EventBanner eventBanner = mEventBannerList.get(index.intValue());
 
                 mOnUserActionListener.selectEventBanner(eventBanner);
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent("event banner", "gourmet", eventBanner.name, 0L);
             }
         }
     };

@@ -29,14 +29,12 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -151,7 +149,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.PROFILE);
+        AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.PROFILE, null);
+
         super.onStart();
     }
 
@@ -323,7 +322,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     lockUI();
                     DailyNetworkAPI.getInstance().requestUserLogout(mNetworkTag, mUserLogoutStringResponseListener, ProfileActivity.this);
 
-                    AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
+                    //                    AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
                 }
             };
 

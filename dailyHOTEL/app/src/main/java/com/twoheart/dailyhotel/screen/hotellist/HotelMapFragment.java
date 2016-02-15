@@ -160,6 +160,14 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         return view;
     }
 
+    @Override
+    public void onStart()
+    {
+        //        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+
+        super.onStart();
+    }
+
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
         // Add Hotel Info ViewPager

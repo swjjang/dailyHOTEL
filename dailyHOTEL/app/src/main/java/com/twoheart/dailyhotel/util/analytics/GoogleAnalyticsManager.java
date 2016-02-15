@@ -29,25 +29,16 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void recordScreen(String screenName, Map<String, String> params)
     {
+        if (params != null)
+        {
+            return;
+        }
+
         try
         {
             // Send a screen view.
             mGoogleAnalyticsTracker.setScreenName(screenName);
-            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().setAll(params).build());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
-    @Override
-    public void recordEvent(String category, String action, String label, Long value)
-    {
-        try
-        {
-            mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
-                .setCategory(category).setAction(action)//
-                .setLabel(label).setValue(value).build());
+            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -59,9 +50,16 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     {
         try
         {
+            long value = 0L;
+
+            if (params != null)
+            {
+
+            }
+
             mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
                 .setCategory(category).setAction(action)//
-                .setLabel(label).setAll(params).build());
+                .setLabel(label).setValue(value).build());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -84,18 +82,24 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void eventPaymentCardAdded(String cardType)
+    public void onPause(Activity activity)
     {
 
     }
 
     @Override
-    public void recordSocialRegistration(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    public void addCreditCard(String cardType)
+    {
+
+    }
+
+    @Override
+    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
     }
 
     @Override
-    public void recordRegistration(String userIndex, String email, String name, String phoneNumber, String userType)
+    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
     }
 
@@ -124,8 +128,6 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
             mGoogleAnalyticsTracker.set("&cu", "KRW");
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-
-            recordEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -157,8 +159,6 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
             mGoogleAnalyticsTracker.set("&cu", "KRW");
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-
-            recordEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

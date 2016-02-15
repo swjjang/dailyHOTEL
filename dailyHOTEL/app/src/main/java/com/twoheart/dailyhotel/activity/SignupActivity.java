@@ -35,26 +35,23 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -307,7 +304,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(SignupActivity.this).recordScreen(Screen.SIGNUP);
+        if (mMode == MODE_SIGNUP)
+        {
+            AnalyticsManager.getInstance(SignupActivity.this).recordScreen(Screen.SIGNUP, null);
+        }
+
         super.onStart();
     }
 
@@ -434,7 +435,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 mSignupParams.put("user_type", "normal");
 
                 DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mSignupParams, mUserSignupJsonResponseListener, this);
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNUP, Action.CLICK, Label.SIGNUP, 0L);
+                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , Action.REGISTRATION_CLICKED, Label.AGREE_AND_REGISTER, null);
             } else
             {
                 // 회원 정보 업데이트
@@ -809,21 +811,10 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             {
                 String userIndex = String.valueOf(response.getInt("idx"));
 
-                AnalyticsManager.getInstance(SignupActivity.this).recordRegistration(userIndex, mSignupParams.get("email")//
+                AnalyticsManager.getInstance(SignupActivity.this).signUpDailyUser(userIndex, mSignupParams.get("email")//
                     , mSignupParams.get("name"), mSignupParams.get("phone"), AnalyticsManager.UserType.EMAIL);
 
                 regGcmId(userIndex);
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                Date date = new Date();
-                String strDate = dateFormat.format(date);
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Label.CURRENT_TIME, strDate);
-                params.put(Label.USER_INDEX, userIndex);
-                params.put(Label.TYPE, "email");
-
-                AnalyticsManager.getInstance(SignupActivity.this).recordEvent(Screen.SIGNUP, Action.NETWORK, Label.SIGNUP, params);
             } catch (Exception e)
             {
                 unLockUI();

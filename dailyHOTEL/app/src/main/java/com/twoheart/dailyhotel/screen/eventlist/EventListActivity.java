@@ -16,9 +16,9 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     public void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.EVENT);
+        AnalyticsManager.getInstance(this).recordScreen(Screen.EVENT_LIST, null);
 
         super.onStart();
     }
@@ -168,8 +168,11 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void processEventPage(String eventUrl)
         {
-            Intent intent = EventWebActivity.newInstance(EventListActivity.this, eventUrl);
+            Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, eventUrl);
             startActivity(intent);
+
+            AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.EVENT_CLICKED, mSelectedEvent.name, null);
         }
 
         @Override
@@ -234,219 +237,4 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
             EventListActivity.this.onErrorResponse(volleyError);
         }
     };
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //    private DailyHotelJsonResponseListener mDailyEventListJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            unLockUI();
-    //
-    //            try
-    //            {
-    //                int msg_code = response.getInt("msg_code");
-    //
-    //                if (msg_code != 0)
-    //                {
-    //                    if (response.has("msg") == true)
-    //                    {
-    //                        String msg = response.getString("msg");
-    //                        DailyToast.showToast(EventListActivity.this, msg, Toast.LENGTH_SHORT);
-    //                    }
-    //
-    //                    setData(null);
-    //                } else
-    //                {
-    //                    JSONArray eventJSONArray = response.getJSONArray("data");
-    //
-    //                    if (eventJSONArray == null)
-    //                    {
-    //                        setData(null);
-    //                    } else
-    //                    {
-    //                        int length = eventJSONArray.length();
-    //
-    //                        if (length == 0)
-    //                        {
-    //                            setData(null);
-    //                        } else
-    //                        {
-    //                            ArrayList<Event> eventList = new ArrayList<Event>(length);
-    //
-    //                            for (int i = 0; i < length; i++)
-    //                            {
-    //                                eventList.add(new Event(eventJSONArray.getJSONObject(i)));
-    //                            }
-    //
-    //                            setData(eventList);
-    //                        }
-    //                    }
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                ExLog.d(e.toString());
-    //                setData(null);
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                int msg_code = response.getInt("msg_code");
-    //
-    //                if (msg_code == 0)
-    //                {
-    //                    JSONObject jsonObject = response.getJSONObject("data");
-    //
-    //                    boolean isSignin = jsonObject.getBoolean("is_signin");
-    //
-    //                    if (isSignin == true)
-    //                    {
-    //                        VolleyHttpClient.createCookie();
-    //                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, EventListActivity.this);
-    //                        return;
-    //                    }
-    //                }
-    //
-    //                // 로그인 실패
-    //                // data 초기화
-    //                DailyPreference.getInstance(EventListActivity.this).removeUserInformation();
-    //
-    //                unLockUI();
-    //
-    //                // 로그인이 되어있지 않으면 회원 가입으로 이동
-    //                Intent intent = new Intent(EventListActivity.this, LoginActivity.class);
-    //                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
-    //                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-    //            } catch (JSONException e)
-    //            {
-    //                onError(e);
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, String response)
-    //        {
-    //            String result = null;
-    //
-    //            if (false == Util.isTextEmpty(response))
-    //            {
-    //                result = response.trim();
-    //            }
-    //
-    //            if (true == "alive".equalsIgnoreCase(result))
-    //            {
-    //                // session alive
-    //                // 사용자 정보 요청.
-    //                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, EventListActivity.this);
-    //            } else if (true == "dead".equalsIgnoreCase(result))
-    //            {
-    //                // session dead
-    //                // 재로그인
-    //                if (DailyPreference.getInstance(EventListActivity.this).isAutoLogin() == true)
-    //                {
-    //                    HashMap<String, String> params = Util.getLoginParams(EventListActivity.this);
-    //                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, EventListActivity.this);
-    //                } else
-    //                {
-    //                    unLockUI();
-    //
-    //                    // 로그인이 되어있지 않으면 회원 가입으로 이동
-    //                    Intent intent = new Intent(EventListActivity.this, LoginActivity.class);
-    //                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
-    //                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-    //                }
-    //            } else
-    //            {
-    //                onError();
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelJsonResponseListener mDailyEventPageJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            unLockUI();
-    //
-    //            try
-    //            {
-    //                int msg_code = response.getInt("msg_code");
-    //
-    //                if (msg_code != 0)
-    //                {
-    //                    if (response.has("msg") == true)
-    //                    {
-    //                        String message = response.getString("msg");
-    //                        showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null);
-    //                    }
-    //                } else
-    //                {
-    //                    String eventUrl = response.getJSONObject("data").getString("url");
-    //
-    //                    Intent intent = EventWebActivity.newInstance(EventListActivity.this, eventUrl);
-    //                    startActivity(intent);
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                onError(e);
-    //                unLockUI();
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                JSONObject jsonObject = response.getJSONObject("data");
-    //
-    //                Customer user = new Customer();
-    //                user.setEmail(jsonObject.getString("email"));
-    //                user.setName(jsonObject.getString("name"));
-    //                user.setPhone(jsonObject.getString("phone"));
-    //                user.setUserIdx(jsonObject.getString("idx"));
-    //
-    //                // 추천인
-    //                int recommender = jsonObject.getInt("recommender_code");
-    //                boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
-    //
-    //                if (mSelectedEvent == null)
-    //                {
-    //                    DailyNetworkAPI.getInstance().requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, EventListActivity.this);
-    //                } else
-    //                {
-    //                    if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
-    //                    {
-    //                        requestEvent(mSelectedEvent, user.getUserIdx());
-    //                        mSelectedEvent = null;
-    //                    } else
-    //                    {
-    //                        // 정보 업데이트 화면으로 이동.
-    //                        moveToUserInfoUpdate(user, recommender, isDailyUser);
-    //                    }
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                onError(e);
-    //                unLockUI();
-    //            }
-    //        }
-    //    };
 }

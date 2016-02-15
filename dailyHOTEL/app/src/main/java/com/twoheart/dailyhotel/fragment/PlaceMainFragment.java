@@ -148,7 +148,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, url);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url);
             startActivity(intent);
         } else
         {

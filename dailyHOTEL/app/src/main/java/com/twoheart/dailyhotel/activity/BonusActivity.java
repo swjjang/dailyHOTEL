@@ -32,14 +32,14 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
@@ -113,7 +113,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.CREDIT);
+        AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS, null);
 
         super.onStart();
     }
@@ -146,11 +146,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode);
                 KakaoLinkManager.newInstance(this).sendInviteMsgKakaoLink(msg);
 
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("userId", userIdxStr);
-                params.put("datetime", strDate);
-
-                AnalyticsManager.getInstance(this).recordEvent(Screen.CREDIT, Action.CLICK, Label.INVITE_KAKAO_FRIEND, params);
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -167,26 +163,26 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             }
         } else if (v.getId() == tvCredit.getId())
         {
-            Intent intent = new Intent(this, CreditListActivity.class);
-            intent.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
+            Intent intent = new Intent(this, BonusListActivity.class);
+            intent.putParcelableArrayListExtra(BonusListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(this).recordEvent(Screen.CREDIT, Action.CLICK, Label.VIEW_CREDIT_HISTORY, 0L);
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CREDIT_MANAGEMENT_CLICKED, Label.CREDIT_HISTORY_VIEW, null);
         } else if (v.getId() == btnLogin.getId())
         {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(this).recordEvent(Screen.CREDIT, Action.CLICK, Label.LOGIN, 0L);
+            //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN, 0L);
         } else if (v.getId() == btnSignup.getId())
         {
             Intent intent = new Intent(this, SignupActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(this).recordEvent(Screen.CREDIT, Action.CLICK, Label.SIGNUP, 0L);
+            //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.SIGNUP, 0L);
         }
     }
 
@@ -256,7 +252,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             try
             {
                 mRecommendCode = response.getString("rndnum");
-                tvRecommenderCode.setText(response.getString("rndnum"));
+                tvRecommenderCode.setText(mRecommendCode);
                 mUserName = response.getString("name");
 
                 idx = response.getString("idx");

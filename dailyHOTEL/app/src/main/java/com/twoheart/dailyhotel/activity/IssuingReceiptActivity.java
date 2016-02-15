@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
@@ -63,6 +64,14 @@ public class IssuingReceiptActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(getString(R.string.frag_issuing_receipt));
+    }
+
+    @Override
+    protected void onStart()
+    {
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_RECEIPT, null);
+
+        super.onStart();
     }
 
     @Override

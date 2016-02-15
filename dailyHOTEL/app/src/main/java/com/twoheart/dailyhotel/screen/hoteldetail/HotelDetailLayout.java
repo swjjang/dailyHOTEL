@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
@@ -243,6 +244,9 @@ public class HotelDetailLayout
                     mSelectedSaleRoomInformation = mRoomTypeListAdapter.getItem(position);
                     mRoomTypeListAdapter.setSelected(position);
                     mRoomTypeListAdapter.notifyDataSetChanged();
+
+                    AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                        , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedSaleRoomInformation.roomName, null);
                 }
             });
         }

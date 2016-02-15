@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -52,6 +53,14 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         retryTextView.setOnClickListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onStart()
+    {
+        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.NETWORK_ERROR, null);
+
+        super.onStart();
     }
 
     public void setMenuManager(MainFragmentManager mainFragmentManager)

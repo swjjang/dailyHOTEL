@@ -9,23 +9,10 @@ import org.json.JSONObject;
 
 public class Event implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Event createFromParcel(Parcel in)
-        {
-            return new Event(in);
-        }
-
-        @Override
-        public Event[] newArray(int size)
-        {
-            return new Event[size];
-        }
-
-    };
     public int index;
     public boolean isJoin;
     public String imageUrl;
+    public String name;
 
     public Event()
     {
@@ -43,6 +30,7 @@ public class Event implements Parcelable
             index = jsonObject.getInt("idx");
             imageUrl = jsonObject.getString("img_url");
             isJoin = jsonObject.getInt("is_event_join") == 0 ? false : true;
+            name = jsonObject.getString("name");
 
         } catch (Exception e)
         {
@@ -70,4 +58,19 @@ public class Event implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Event createFromParcel(Parcel in)
+        {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size)
+        {
+            return new Event[size];
+        }
+
+    };
 }

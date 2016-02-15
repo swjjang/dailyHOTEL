@@ -31,14 +31,13 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -211,11 +210,11 @@ public class HotelDetailActivity extends BaseActivity
     @Override
     protected void onStart()
     {
+        AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.DAILYHOTEL_DETAIL, null);
+
         try
         {
             super.onStart();
-
-            AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.HOTEL_DETAIL);
         } catch (NullPointerException e)
         {
             ExLog.e(e.toString());
@@ -372,21 +371,18 @@ public class HotelDetailActivity extends BaseActivity
                 , mDefaultImageUrl//
                 , mCheckInSaleTime, mHotelDetail.nights);
 
-            // 호텔 공유하기 로그 추가
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(mHotelDetail.getSaleRoomList().get(0).averageDiscount));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mHotelDetail.nights));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mHotelDetail.hotelIndex));
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
 
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                , Action.SOCIAL_SHARE_CLICKED, mHotelDetail.hotelName, params);
         }
     };
 
@@ -465,12 +461,9 @@ public class HotelDetailActivity extends BaseActivity
             lockUI();
             DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, HotelDetailActivity.this);
 
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.HOTEL_ROOM_NAME, saleRoomInformation.roomName);
-            params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(saleRoomInformation.roomIndex));
-            params.put(Label.HOTEL_INDEX, String.valueOf(mHotelDetail.hotelIndex));
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.BOOKING, Action.CLICK, mHotelDetail.hotelName, params);
+            String label = String.format("%s_%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                , Action.BOOKING_CLICKED, label, null);
         }
 
         @Override
@@ -498,6 +491,9 @@ public class HotelDetailActivity extends BaseActivity
                     startActivity(marketLaunch);
                 }
             }
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                , Action.KAKAO_INQUIRY_CLICKED, mHotelDetail.hotelName, null);
         }
 
         @Override
@@ -516,6 +512,9 @@ public class HotelDetailActivity extends BaseActivity
             }
 
             releaseUiComponent();
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                , Action.ROOM_TYPE_CLICKED, mHotelDetail.hotelName, null);
         }
 
         @Override
@@ -534,6 +533,9 @@ public class HotelDetailActivity extends BaseActivity
             }
 
             releaseUiComponent();
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                , Action.ROOM_TYPE_CANCEL_CLICKED, mHotelDetail.hotelName, null);
         }
 
         @Override
@@ -546,18 +548,16 @@ public class HotelDetailActivity extends BaseActivity
 
             lockUiComponent();
 
-            Intent intent = new Intent(HotelDetailActivity.this, ZoomMapActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, mHotelDetail.hotelName);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mHotelDetail.latitude);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mHotelDetail.longitude);
+            Intent intent = ZoomMapActivity.newInstance(HotelDetailActivity.this//
+                , ZoomMapActivity.SourceType.HOTEL, mHotelDetail.hotelName//
+                , mHotelDetail.latitude, mHotelDetail.longitude);
 
             startActivity(intent);
 
-            // 호텔 공유하기 로그 추가
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
-            String label = String.format("%s (%s-%s)", mHotelDetail.hotelName, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mHotelDetail.hotelIndex);
+            //            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
+            //            String label = String.format("%s (%s-%s)", mHotelDetail.hotelName, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            //
+            //            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYHOTEL_DETAIL, Action.CLICK, label, (long) mHotelDetail.hotelIndex);
         }
     };
 
@@ -570,7 +570,7 @@ public class HotelDetailActivity extends BaseActivity
     {
         private void recordAnalytics(HotelDetail hotelDetail)
         {
-            if(hotelDetail == null)
+            if (hotelDetail == null)
             {
                 return;
             }
@@ -580,7 +580,7 @@ public class HotelDetailActivity extends BaseActivity
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
 
-                if(mHotelDetail.getSaleRoomList() == null || mHotelDetail.getSaleRoomList().size() == 0)
+                if (mHotelDetail.getSaleRoomList() == null || mHotelDetail.getSaleRoomList().size() == 0)
                 {
                     params.put(AnalyticsManager.KeyType.PRICE, "0");
                 } else
@@ -597,7 +597,7 @@ public class HotelDetailActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
                 AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DETAIL, params);
-            }catch (Exception e)
+            } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }
@@ -729,6 +729,7 @@ public class HotelDetailActivity extends BaseActivity
             }
         }
     };
+
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
 

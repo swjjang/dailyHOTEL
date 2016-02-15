@@ -25,12 +25,12 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SatisfactionActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
 
 public class MainActivity extends BaseActivity implements Constants
@@ -158,8 +158,6 @@ public class MainActivity extends BaseActivity implements Constants
                 mMainPresenter.requestEvent();
             }
         }
-
-        AnalyticsManager.getInstance(this).onResume(this);
     }
 
     @Override
@@ -422,22 +420,45 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onMenuSelected(int index)
         {
+            String name = mMenuBarLayout.getName(mMainFragmentManager.getLastIndexFragment());
+
             switch (index)
             {
                 case 0:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+
+                    if (Util.isTextEmpty(name) == false)
+                    {
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, name, null);
+                    }
                     break;
 
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+
+                    if (Util.isTextEmpty(name) == false)
+                    {
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, name, null);
+                    }
                     break;
 
                 case 2:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+
+                    if (Util.isTextEmpty(name) == false)
+                    {
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, name, null);
+                    }
                     break;
 
                 case 3:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.MENU_CLICKED, name, null);
                     break;
             }
         }

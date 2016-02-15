@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -77,7 +77,16 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.CALENDAR);
+        switch (mPlaceType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_CALENDAR, null);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_CALENDAR, null);
+                break;
+        }
 
         super.onStart();
     }

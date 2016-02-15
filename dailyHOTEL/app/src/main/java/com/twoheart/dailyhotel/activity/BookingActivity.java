@@ -67,15 +67,15 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.FinalCheckLayout;
 import com.twoheart.dailyhotel.view.widget.DailySignatureView;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -503,6 +503,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 guest.email = etReserverEmail.getText().toString();
             }
 
+            AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                , Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
+
             Intent intent = new Intent(this, CreditCardListActivity.class);
             intent.setAction(Intent.ACTION_PICK);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
@@ -549,15 +552,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             showAgreeTermDialog(mPay.getType());
         }
 
-        String region = DailyPreference.getInstance(BookingActivity.this).getGASelectedRegion();
-
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
-        params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
-        params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-        params.put(Label.AREA, region);
-
-        AnalyticsManager.getInstance(this).recordEvent(Screen.BOOKING, Action.CLICK, Label.PAYMENT, params);
+        String label = String.format("%s_%s", mPay.getSaleRoomInformation().hotelName, mPay.getSaleRoomInformation().roomName);
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            , Action.PAYMENT_CLICKED, label, null);
     }
 
 
@@ -720,12 +717,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     // 1. 세션이 살아있는지 검사 시작.
                     DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, BookingActivity.this);
 
-                    HashMap<String, String> params = new HashMap<String, String>();
-                    params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
-                    params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
-                    params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-
-                    AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mPay.getType().name(), params);
+                    AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
                 }
             }
         };
@@ -872,6 +865,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         @Override
                         public void onClick(View view)
                         {
+                            String label = String.format("%s_%s", mPay.getSaleRoomInformation().hotelName, mPay.getSaleRoomInformation().roomName);
+                            AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                                , Action.PAYMENT_COMPLETE_POPPEDUP, label, null);
+
                             mDoReload = true;
                             mAliveCallSource = "";
 
@@ -1204,6 +1201,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             {
                 mPay.setType(Pay.Type.VBANK);
             }
+
+            AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                , Action.PAYMENT_TYPE_ITEM_CLICKED, mPay.getType().getName(), null);
         }
     }
 
@@ -1224,7 +1224,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     tvOriginalPriceValue.setEnabled(false);
                     tvCreditValue.setEnabled(false);
 
-                    AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.USED_CREDIT, Action.CLICK, Label.ON, 0L);
+                    AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                        , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPay.credit), null);
                 } else
                 {
                     // 사용함으로 변경
@@ -1233,7 +1234,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     tvOriginalPriceValue.setEnabled(true);
                     tvCreditValue.setEnabled(true);
 
-                    AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.USED_CREDIT, Action.CLICK, Label.OFF, 0L);
+                    AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                        , Action.USING_CREDIT_CLICKED, Integer.toString(mPay.credit), null);
                 }
 
                 mPay.setSaleCredit(isChecked);
@@ -1250,11 +1252,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     @Override
     protected void onStart()
     {
+        AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT, null);
+
         try
         {
             super.onStart();
-
-            AnalyticsManager.getInstance(this).recordScreen(Screen.BOOKING);
         } catch (NullPointerException e)
         {
             ExLog.e(e.toString());
@@ -1336,8 +1338,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 return;
         }
 
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.BOOKING, Action.CLICK, type.name(), 0L);
-
         if (null != mFinalCheckDialog)
         {
             if (isFinishing() == true)
@@ -1366,6 +1366,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 public void onCancel(DialogInterface dialog)
                 {
                     mDoReload = true;
+
+                    AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
                 }
             });
 
@@ -1475,12 +1478,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, BookingActivity.this);
                             mFinalCheckDialog.dismiss();
 
-                            HashMap<String, String> params = new HashMap<String, String>();
-                            params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
-                            params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
-                            params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-
-                            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mPay.getType().name(), params);
+                            AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                                , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
                         }
                     }
                 });
@@ -1509,6 +1508,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             public void onCancel(DialogInterface dialog)
             {
                 mDoReload = true;
+
+                AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
             }
         });
 
@@ -1549,12 +1551,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
                 }
 
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
-                params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
-                params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-
-                AnalyticsManager.getInstance(BookingActivity.this).recordEvent(Screen.BOOKING, Action.CLICK, Label.CALL_CS, params);
+                //                HashMap<String, String> params = new HashMap<String, String>();
+                //                params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+                //                params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
+                //                params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+                //
+                //                AnalyticsManager.getInstance(BookingActivity.this).recordEvent(Screen.DAILYHOTEL_PAYMENT, Action.CLICK, Label.CALL_CS, params);
             }
         };
 
@@ -1675,7 +1677,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 int payPrice = saleRoomInformation.totalDiscount - mPay.credit;
                 int bonus = 0;
 
-                if(payPrice <= 0)
+                if (payPrice <= 0)
                 {
                     payPrice = 0;
                     bonus = saleRoomInformation.totalDiscount;
@@ -1696,6 +1698,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, pay.getType().name());
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteHotel(transId, params);
+            AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_COMPLETE, null);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -2039,7 +2042,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         private void recordAnalytics(Pay pay)
         {
-            if(pay == null)
+            if (pay == null)
             {
                 return;
             }
@@ -2062,7 +2065,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(pay.getSaleRoomInformation().roomIndex));
 
                 AnalyticsManager.getInstance(BookingActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT, params);
-            }catch (Exception e)
+            } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }

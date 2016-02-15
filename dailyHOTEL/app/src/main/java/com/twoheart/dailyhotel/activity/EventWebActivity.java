@@ -15,25 +15,34 @@ import android.webkit.WebView;
 
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class EventWebActivity extends WebViewActivity implements Constants
 {
     private WebView mWebView;
+    private SourceType mSourceType;
 
-    public static Intent newInstance(Context context, String url)
+    public enum SourceType
     {
-        if (Util.isTextEmpty(url) == true)
+        HOTEL_BANNER,
+        GOURMET_BANNER,
+        EVENT,
+    }
+
+    public static Intent newInstance(Context context, SourceType sourceType, String url)
+    {
+        if (sourceType == null || Util.isTextEmpty(url) == true)
         {
             return null;
         }
 
         Intent intent = new Intent(context, EventWebActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, url);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
 
         return intent;
     }
@@ -47,6 +56,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = getIntent();
 
         String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
+        mSourceType = SourceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
 
         if (Util.isTextEmpty(url) == true)
         {
@@ -90,7 +100,21 @@ public class EventWebActivity extends WebViewActivity implements Constants
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_WEB);
+        switch (mSourceType)
+        {
+            case HOTEL_BANNER:
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYHOTEL_BANNER_DETAIL, null);
+                break;
+
+            case GOURMET_BANNER:
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYGOURMET_BANNER_DETAIL, null);
+                break;
+
+            case EVENT:
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_DETAIL, null);
+                break;
+        }
+
         super.onStart();
     }
 

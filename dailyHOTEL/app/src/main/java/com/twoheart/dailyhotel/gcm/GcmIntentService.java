@@ -183,7 +183,6 @@ public class GcmIntentService extends IntentService implements Constants
             {
                 Map<String, String> params = DailyPreference.getInstance(context).getVirtuaAccountHotelInformation();
                 AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteHotel(transId, params);
-
             } else if (AnalyticsManager.Label.GOURMET.equalsIgnoreCase(placeType) == true)
             {
                 Map<String, String> params = DailyPreference.getInstance(context).getVirtuaAccountGourmetInformation();

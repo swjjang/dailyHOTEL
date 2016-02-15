@@ -132,4 +132,25 @@ public class MenuBarLayout implements View.OnClickListener
     {
         mMenuView[MENU_INFORMATIONL_INDEX].findViewById(R.id.newEventIcon).setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
+
+    public String getName(int position)
+    {
+        switch (position)
+        {
+            case MENU_HOTEL_INDEX:
+                return mBaseActivity.getString(R.string.menu_item_title_hotel);
+
+            case MENU_GOURMET_INDEX:
+                return mBaseActivity.getString(R.string.menu_item_title_fnb);
+
+            case MENU_BOOKINGL_INDEX:
+                return mBaseActivity.getString(R.string.menu_item_title_bookings);
+
+            case MENU_INFORMATIONL_INDEX:
+                return mBaseActivity.getString(R.string.menu_item_title_information);
+
+            default:
+                return null;
+        }
+    }
 }
