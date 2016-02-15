@@ -8,12 +8,16 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.Map;
 
 public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 {
+    private static final boolean DEBUG = Constants.DEBUG;
+    private static final String TAG = "[GoogleAnalyticsManager]";
+
     private static final String GA_PROPERTY_ID = "UA-43721645-6";
     private Tracker mGoogleAnalyticsTracker;
 
@@ -39,6 +43,11 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
             // Send a screen view.
             mGoogleAnalyticsTracker.setScreenName(screen);
             mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+            if(DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -60,6 +69,11 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
             mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
                 .setCategory(category).setAction(action)//
                 .setLabel(label).setValue(value).build());
+
+            if(DEBUG == true)
+            {
+                ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());

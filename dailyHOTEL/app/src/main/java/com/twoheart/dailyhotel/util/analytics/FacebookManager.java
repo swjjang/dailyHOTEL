@@ -76,7 +76,7 @@ public class FacebookManager implements IBaseAnalyticsManager
 
                 Bundle parameters = new Bundle();
 
-                String value = String.format("%s_%s", mContext.getString(R.string.label_hotel), params.get(AnalyticsManager.KeyType.NAME));
+                String value = String.format("%s_%s", mContext.getString(R.string.label_hotel), label);
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
@@ -86,7 +86,7 @@ public class FacebookManager implements IBaseAnalyticsManager
 
                 Bundle parameters = new Bundle();
 
-                String value = String.format("%s_%s", mContext.getString(R.string.label_fnb), params.get(AnalyticsManager.KeyType.NAME));
+                String value = String.format("%s_%s", mContext.getString(R.string.label_fnb), label);
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);

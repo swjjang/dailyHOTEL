@@ -375,8 +375,8 @@ public class HotelDetailActivity extends BaseActivity
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));

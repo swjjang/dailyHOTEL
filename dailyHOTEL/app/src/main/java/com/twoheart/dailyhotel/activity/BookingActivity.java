@@ -1215,8 +1215,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 mPay.setType(Pay.Type.VBANK);
             }
 
-            AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                , Action.PAYMENT_TYPE_ITEM_CLICKED, mPay.getType().getName(), null);
+            if(mPay.checkInTime != null)
+            {
+                AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                    , Action.PAYMENT_TYPE_ITEM_CLICKED, mPay.getType().getName(), null);
+            }
         }
     }
 

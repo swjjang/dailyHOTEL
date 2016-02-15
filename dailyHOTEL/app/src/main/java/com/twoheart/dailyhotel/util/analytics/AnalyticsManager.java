@@ -165,9 +165,10 @@ public class AnalyticsManager
         public static final String BOOKING_DETAIL_INFORMATION = "BookingDetail_PlaceInfo";
         public static final String BOOKING_DETAIL_MAP = "BookingDetail_MapView";
         public static final String BOOKING_RECEIPT = "BookingDetail_Receipt";
+        public static final String BOOKING_BEFORE_LOGIN_BOOKING_LIST = "Booking_BeforeLoginBookingList";
         //
-        public static final String INFORMATION_SIGNIN = "Menu_BeforeLogin";
-        public static final String INFORMATION_SIGNOUT = "Menu_AfterLogin";
+        public static final String INFORMATION_SIGNIN = "Menu_AfterLogin";
+        public static final String INFORMATION_SIGNOUT = "Menu_BeforeLogin";
         //
         public static final String SIGNIN = "Menu_Login";
         public static final String SIGNUP = "Menu_Registration";
@@ -201,7 +202,7 @@ public class AnalyticsManager
         public static final String ROOM_TYPE_CLICKED = "RoomTypeClicked";
         public static final String ROOM_TYPE_ITEM_CLICKED = "RoomTypeItemClicked";
         public static final String ROOM_TYPE_CANCEL_CLICKED = "RoomTypeCancelClicked";
-        public static final String BOOKING_CLICKED = "PaymentTypeItemClicked";
+        public static final String BOOKING_CLICKED = "BookingClicked";
         public static final String USING_CREDIT_CLICKED = "UsingCreditClicked";
         public static final String USING_CREDIT_CANCEL_CLICKED = "UsingCreditCancelClicked";
         public static final String PAYMENT_TYPE_ITEM_CLICKED = "PaymentTypeItemClicked";

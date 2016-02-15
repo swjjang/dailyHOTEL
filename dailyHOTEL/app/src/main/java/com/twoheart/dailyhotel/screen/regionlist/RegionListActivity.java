@@ -155,6 +155,11 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.setAdapter(mFragmentPagerAdapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                 mViewPager.setCurrentItem(isOverseas ? 1 : 0);
+
+                if(isOverseas == false)
+                {
+                    AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
+                }
                 break;
             }
 
@@ -174,6 +179,8 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.setOffscreenPageLimit(GOURMET_TAB_COUNT);
                 mViewPager.setAdapter(mFragmentPagerAdapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+                AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
                 break;
             }
         }
@@ -311,6 +318,8 @@ public class RegionListActivity extends BaseActivity
             {
                 mViewPager.setCurrentItem(tab.getPosition());
             }
+
+            recordAnalytics(tab.getPosition());
         }
 
         @Override

@@ -74,7 +74,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
-        params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+        params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
         params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));

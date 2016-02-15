@@ -68,5 +68,4 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
             return Response.error(new ParseError(je));
         }
     }
-
 }
