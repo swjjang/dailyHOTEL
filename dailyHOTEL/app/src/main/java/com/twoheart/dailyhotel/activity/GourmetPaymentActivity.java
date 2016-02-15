@@ -1069,7 +1069,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                         {
                             mDoReload = true;
 
-                            setResult(RESULT_OK);
+                            setResult(RESULT_OK, mTicketPayment);
                             finish();
                         }
                     }, null, false);

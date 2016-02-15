@@ -54,11 +54,11 @@ public class AnalyticsManager
         mFacebookManager.onPause(activity);
     }
 
-    public void recordScreen(String screenName, Map<String, String> params)
+    public void recordScreen(String screen, Map<String, String> params)
     {
-        mGoogleAnalyticsManager.recordScreen(screenName, params);
-        mTuneManager.recordScreen(screenName, params);
-        mFacebookManager.recordScreen(screenName, params);
+        mGoogleAnalyticsManager.recordScreen(screen, params);
+        mTuneManager.recordScreen(screen, params);
+        mFacebookManager.recordScreen(screen, params);
     }
 
     public void recordEvent(String category, String action, String label, Map<String, String> params)
@@ -105,6 +105,20 @@ public class AnalyticsManager
         mGoogleAnalyticsManager.purchaseCompleteGourmet(transId, params);
         mTuneManager.purchaseCompleteGourmet(transId, params);
         mFacebookManager.purchaseCompleteGourmet(transId, params);
+    }
+
+    public void initiatedCheckoutHotel(Map<String, String> params)
+    {
+        mGoogleAnalyticsManager.initiatedCheckoutHotel(params);
+        mTuneManager.initiatedCheckoutHotel(params);
+        mFacebookManager.initiatedCheckoutHotel(params);
+    }
+
+    public void initiatedCheckoutGourmet(Map<String, String> params)
+    {
+        mGoogleAnalyticsManager.initiatedCheckoutGourmet(params);
+        mTuneManager.initiatedCheckoutGourmet(params);
+        mFacebookManager.initiatedCheckoutGourmet(params);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,7 +193,7 @@ public class AnalyticsManager
     {
         public static final String DAILY_HOTEL_CLICKED = "DailyHotelClicked";
         public static final String HOTEL_LOCATIONS_CLICKED = "HotelLocationsClicked";
-        public static final String SORTING_CLICKED = "SortingClicked";
+        public static final String HOTEL_SORTING_CLICKED = "HotelSortingClicked";
         public static final String HOTEL_EVENT_BANNER_CLICKED = "HotelEventBannerClicked";
         public static final String HOTEL_ITEM_CLICKED = "HotelItemClicked";
         public static final String SOCIAL_SHARE_CLICKED = "SocialShareClicked";
@@ -198,6 +212,7 @@ public class AnalyticsManager
         public static final String PAYMENT_COMPLETE_POPPEDUP = "PaymentCompletePoppedup";
         public static final String DAILY_GOURMET_CLICKED = "DailyGourmetClicked";
         public static final String GOURMET_LOCATIONS_CLICKED = "GourmetLocationsClicked";
+        public static final String GOURMET_SORTING_CLICKED = "GourmetSortingClicked";
         public static final String GOURMET_EVENT_BANNER_CLICKED = "GourmetEventBannerClicked";
         public static final String GOURMET_ITEM_CLICKED = "GourmetItemClicked";
         public static final String TICKET_TYPE_CLICKED = "TicketTypeClicked";

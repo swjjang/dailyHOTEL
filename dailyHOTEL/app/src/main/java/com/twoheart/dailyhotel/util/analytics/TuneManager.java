@@ -56,7 +56,7 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordScreen(String screenName, Map<String, String> params)
+    public void recordScreen(String screen, Map<String, String> params)
     {
         if (params == null)
         {
@@ -65,7 +65,7 @@ public class TuneManager implements IBaseAnalyticsManager
 
         try
         {
-            if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
+            if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
             {
                 MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_DETAIL, params);
 
@@ -76,7 +76,7 @@ public class TuneManager implements IBaseAnalyticsManager
                 matEvent.withEventItems(list);
 
                 mMobileAppTracker.measureEvent(matEvent);
-            } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screenName) == true)
+            } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
             {
                 MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_DETAIL, params);
 
@@ -87,7 +87,7 @@ public class TuneManager implements IBaseAnalyticsManager
                 matEvent.withEventItems(list);
 
                 mMobileAppTracker.measureEvent(matEvent);
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screenName) == true)
+            } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
             {
                 MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PAYMENT, params);
 
@@ -98,7 +98,7 @@ public class TuneManager implements IBaseAnalyticsManager
                 matEvent.withEventItems(list);
 
                 mMobileAppTracker.measureEvent(matEvent);
-            } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screenName) == true)
+            } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
             {
                 MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PAYMENT, params);
 
@@ -314,6 +314,18 @@ public class TuneManager implements IBaseAnalyticsManager
         }
 
         mMobileAppTracker.measureEvent(matEvent);
+    }
+
+    @Override
+    public void initiatedCheckoutHotel(Map<String, String> params)
+    {
+
+    }
+
+    @Override
+    public void initiatedCheckoutGourmet(Map<String, String> params)
+    {
+
     }
 
     private MATEventItem getMATEventItem(Map<String, String> params)

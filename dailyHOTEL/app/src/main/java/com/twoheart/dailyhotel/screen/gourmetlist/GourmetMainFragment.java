@@ -943,7 +943,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             }
 
             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , Action.SORTING_CLICKED, label, null);
+                , Action.GOURMET_SORTING_CLICKED, label, null);
         }
 
         @Override

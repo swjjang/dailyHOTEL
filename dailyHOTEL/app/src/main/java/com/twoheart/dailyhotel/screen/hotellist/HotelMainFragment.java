@@ -1282,7 +1282,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , Action.SORTING_CLICKED, label, null);
+                , Action.HOTEL_SORTING_CLICKED, label, null);
         }
 
         @Override
