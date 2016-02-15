@@ -156,7 +156,7 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                 mViewPager.setCurrentItem(isOverseas ? 1 : 0);
 
-                if(isOverseas == false)
+                if (isOverseas == false)
                 {
                     AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
                 }
@@ -180,7 +180,7 @@ public class RegionListActivity extends BaseActivity
                 mViewPager.setAdapter(mFragmentPagerAdapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-                AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
+                AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
                 break;
             }
         }

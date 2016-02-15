@@ -63,56 +63,50 @@ public class TuneManager implements IBaseAnalyticsManager
             return;
         }
 
-        try
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
         {
-            if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
-            {
-                MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_DETAIL, params);
+            MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_DETAIL, params);
 
-                MATEventItem matEventItem = getMATEventItem(params);
+            MATEventItem matEventItem = getMATEventItem(params);
 
-                List<MATEventItem> list = new ArrayList<>();
-                list.add(matEventItem);
-                matEvent.withEventItems(list);
+            List<MATEventItem> list = new ArrayList<>();
+            list.add(matEventItem);
+            matEvent.withEventItems(list);
 
-                mMobileAppTracker.measureEvent(matEvent);
-            } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
-            {
-                MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_DETAIL, params);
-
-                MATEventItem matEventItem = getMATEventItem(params);
-
-                List<MATEventItem> list = new ArrayList<>();
-                list.add(matEventItem);
-                matEvent.withEventItems(list);
-
-                mMobileAppTracker.measureEvent(matEvent);
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
-            {
-                MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PAYMENT, params);
-
-                MATEventItem matEventItem = getMATEventItem(params);
-
-                List<MATEventItem> list = new ArrayList<>();
-                list.add(matEventItem);
-                matEvent.withEventItems(list);
-
-                mMobileAppTracker.measureEvent(matEvent);
-            } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
-            {
-                MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PAYMENT, params);
-
-                MATEventItem matEventItem = getMATEventItem(params);
-
-                List<MATEventItem> list = new ArrayList<>();
-                list.add(matEventItem);
-                matEvent.withEventItems(list);
-
-                mMobileAppTracker.measureEvent(matEvent);
-            }
-        } catch (Exception e)
+            mMobileAppTracker.measureEvent(matEvent);
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
-            ExLog.d(e.toString());
+            MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_DETAIL, params);
+
+            MATEventItem matEventItem = getMATEventItem(params);
+
+            List<MATEventItem> list = new ArrayList<>();
+            list.add(matEventItem);
+            matEvent.withEventItems(list);
+
+            mMobileAppTracker.measureEvent(matEvent);
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
+        {
+            MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PAYMENT, params);
+
+            MATEventItem matEventItem = getMATEventItem(params);
+
+            List<MATEventItem> list = new ArrayList<>();
+            list.add(matEventItem);
+            matEvent.withEventItems(list);
+
+            mMobileAppTracker.measureEvent(matEvent);
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+        {
+            MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PAYMENT, params);
+
+            MATEventItem matEventItem = getMATEventItem(params);
+
+            List<MATEventItem> list = new ArrayList<>();
+            list.add(matEventItem);
+            matEvent.withEventItems(list);
+
+            mMobileAppTracker.measureEvent(matEvent);
         }
     }
 

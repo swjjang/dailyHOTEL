@@ -38,45 +38,33 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
             return;
         }
 
-        try
-        {
-            // Send a screen view.
-            mGoogleAnalyticsTracker.setScreenName(screen);
-            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        // Send a screen view.
+        mGoogleAnalyticsTracker.setScreenName(screen);
+        mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-            if(DEBUG == true)
-            {
-                ExLog.d(TAG + "Screen : " + screen);
-            }
-        } catch (Exception e)
+        if (DEBUG == true)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + "Screen : " + screen);
         }
     }
 
     @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        try
+        long value = 0L;
+
+        if (params != null)
         {
-            long value = 0L;
 
-            if (params != null)
-            {
+        }
 
-            }
+        mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
+            .setCategory(category).setAction(action)//
+            .setLabel(label).setValue(value).build());
 
-            mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
-                .setCategory(category).setAction(action)//
-                .setLabel(label).setValue(value).build());
-
-            if(DEBUG == true)
-            {
-                ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label);
-            }
-        } catch (Exception e)
+        if (DEBUG == true)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label);
         }
     }
 
@@ -118,63 +106,51 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        try
-        {
-            String hotelName = params.get(AnalyticsManager.KeyType.NAME);
-            String roomIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
-            double price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
-            int quantity = Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY));
+        String hotelName = params.get(AnalyticsManager.KeyType.NAME);
+        String roomIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
+        double price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        int quantity = Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY));
 
-            Product product = new Product().setId(roomIndex).setName(hotelName)//
-                .setCategory(AnalyticsManager.Label.HOTEL).setBrand("DAILYHOTEL").setPrice(price).setQuantity(quantity);//
-            //                .setCustomDimension(1, "User Index : " + userIndex)//
-            //                .setCustomDimension(2, "Check-In : " + checkInTime)//
-            //                .setCustomDimension(3, "Check-Out : " + checkOutTime)//
-            //                .setCustomDimension(4, "Pay Type" + payType)//
-            //                .setCustomDimension(5, "Current Time : " + currentTime);
+        Product product = new Product().setId(roomIndex).setName(hotelName)//
+            .setCategory(AnalyticsManager.Label.HOTEL).setBrand("DAILYHOTEL").setPrice(price).setQuantity(quantity);//
+        //                .setCustomDimension(1, "User Index : " + userIndex)//
+        //                .setCustomDimension(2, "Check-In : " + checkInTime)//
+        //                .setCustomDimension(3, "Check-Out : " + checkOutTime)//
+        //                .setCustomDimension(4, "Pay Type" + payType)//
+        //                .setCustomDimension(5, "Current Time : " + currentTime);
 
-            ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
-                .setTransactionId(transId);
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
+            .setTransactionId(transId);
 
-            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+        HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
 
-            mGoogleAnalyticsTracker.set("&cu", "KRW");
-            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        mGoogleAnalyticsTracker.set("&cu", "KRW");
+        mGoogleAnalyticsTracker.send(screenViewBuilder.build());
     }
 
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        try
-        {
-            String name = params.get(AnalyticsManager.KeyType.NAME);
-            String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
-            double price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
-            int quantity = Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY));
+        String name = params.get(AnalyticsManager.KeyType.NAME);
+        String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
+        double price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        int quantity = Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY));
 
-            Product product = new Product().setId(ticketIndex).setName(name)//
-                .setCategory(AnalyticsManager.Label.GOURMET).setBrand("DAILYHOTEL").setPrice(price).setQuantity(quantity);//
-            //                .setCustomDimension(1, "User Index : " + userIndex)//
-            //                .setCustomDimension(2, "Check-In : " + checkInTime)//
-            //                .setCustomDimension(3, "Check-Out : " + checkOutTime)//
-            //                .setCustomDimension(4, "Pay Type" + payType)//
-            //                .setCustomDimension(5, "Current Time : " + currentTime);
+        Product product = new Product().setId(ticketIndex).setName(name)//
+            .setCategory(AnalyticsManager.Label.GOURMET).setBrand("DAILYHOTEL").setPrice(price).setQuantity(quantity);//
+        //                .setCustomDimension(1, "User Index : " + userIndex)//
+        //                .setCustomDimension(2, "Check-In : " + checkInTime)//
+        //                .setCustomDimension(3, "Check-Out : " + checkOutTime)//
+        //                .setCustomDimension(4, "Pay Type" + payType)//
+        //                .setCustomDimension(5, "Current Time : " + currentTime);
 
-            ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
-                .setTransactionId(transId);
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
+            .setTransactionId(transId);
 
-            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+        HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
 
-            mGoogleAnalyticsTracker.set("&cu", "KRW");
-            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        mGoogleAnalyticsTracker.set("&cu", "KRW");
+        mGoogleAnalyticsTracker.send(screenViewBuilder.build());
     }
 
     @Override
