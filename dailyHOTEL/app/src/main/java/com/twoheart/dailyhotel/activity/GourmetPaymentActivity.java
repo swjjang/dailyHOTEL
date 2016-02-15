@@ -31,11 +31,11 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.FinalCheckLayout;
 import com.twoheart.dailyhotel.view.GourmetBookingLayout;
 import com.twoheart.dailyhotel.view.GourmetBookingLayout.UserInformationType;
@@ -366,7 +366,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                             mFinalCheckDialog.dismiss();
 
                             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, 0L);
+                                , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
                         }
                     }
                 });
@@ -391,7 +391,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 mDoReload = true;
 
                 AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                    , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.CANCEL, 0L);
+                    , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
             }
         });
 
@@ -508,8 +508,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     // 1. 세션이 살아있는지 검사 시작.
                     DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, GourmetPaymentActivity.this);
 
-                    AnalyticsManager.getInstance(TicketPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                        , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, 0L);
+                    AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
                 }
             }
         };
@@ -663,7 +663,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             }
 
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-                , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, 0L);
+                , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
 
             Intent intent = new Intent(GourmetPaymentActivity.this, CreditCardListActivity.class);
             intent.setAction(Intent.ACTION_PICK);
@@ -767,7 +767,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
             String label = String.format("%s_%s", mTicketPayment.getTicketInformation().placeName, mTicketPayment.getTicketInformation().name);
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-                , AnalyticsManager.Action.PAYMENT_CLICKED, label, 0L);
+                , AnalyticsManager.Action.PAYMENT_CLICKED, label, null);
         }
 
         @Override

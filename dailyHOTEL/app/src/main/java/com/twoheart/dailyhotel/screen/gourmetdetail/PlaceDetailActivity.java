@@ -31,13 +31,12 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailLayout;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -227,7 +226,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.DAILYGOURMET_DETAIL);
+        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.DAILYGOURMET_DETAIL, null);
 
         try
         {
@@ -364,16 +363,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             shareKakao(mPlaceDetail, mDefaultImageUrl, mCheckInSaleTime, null);
-
-            // 호텔 공유하기 로그 추가
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.HOTEL_NAME, mPlaceDetail.name);
-            params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-
-            SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-            params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYGOURMET_DETAIL, Action.CLICK, Label.SHARE, params);
         }
     };
 
@@ -430,7 +419,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             String label = String.format("%s_%s", mPlaceDetail.name, mSelectedTicketInformation.name);
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-                , Action.BOOKING_CLICKED, label, 0L);
+                , Action.BOOKING_CLICKED, label, null);
         }
 
         @Override
@@ -460,7 +449,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-                , Action.KAKAO_INQUIRY_CLICKED, mPlaceDetail.name, 0L);
+                , Action.KAKAO_INQUIRY_CLICKED, mPlaceDetail.name, null);
         }
 
         @Override
@@ -481,7 +470,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             releaseUiComponent();
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-                , Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, 0L);
+                , Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, null);
         }
 
         @Override
@@ -502,7 +491,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             releaseUiComponent();
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-                , Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, 0L);
+                , Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
         }
 
         @Override
@@ -516,16 +505,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
             lockUiComponent();
 
             Intent intent = ZoomMapActivity.newInstance(PlaceDetailActivity.this//
-            , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name//
-            , mPlaceDetail.latitude, mPlaceDetail.longitude);
+                , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name//
+                , mPlaceDetail.latitude, mPlaceDetail.longitude);
 
             startActivity(intent);
 
-            // 호텔 공유하기 로그 추가
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay());
-            String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYGOURMET_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
+            //            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay());
+            //            String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            //
+            //            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYGOURMET_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
         }
 
         @Override

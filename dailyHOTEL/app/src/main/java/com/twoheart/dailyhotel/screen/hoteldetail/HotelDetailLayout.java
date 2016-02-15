@@ -246,7 +246,7 @@ public class HotelDetailLayout
                     mRoomTypeListAdapter.notifyDataSetChanged();
 
                     AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                        , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedSaleRoomInformation.roomName, 0L);
+                        , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedSaleRoomInformation.roomName, null);
                 }
             });
         }

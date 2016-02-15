@@ -1,15 +1,12 @@
 package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
-import android.content.Context;
 
 import java.util.Map;
 
 public interface IBaseAnalyticsManager
 {
     abstract void recordScreen(String screenName, Map<String, String> params);
-
-    abstract void recordEvent(String eventName, String action, String label, Long value);
 
     abstract void recordEvent(String eventName, String action, String label, Map<String, String> params);
 

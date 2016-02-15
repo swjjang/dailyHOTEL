@@ -26,14 +26,13 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.eventlist.EventListActivity;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -214,7 +213,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     @Override
     public void onStart()
     {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.INFORMATION);
+        //        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.INFORMATION);
 
         super.onStart();
 
@@ -265,13 +264,13 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     baseActivity.startActivityForResult(new Intent(baseActivity, LoginActivity.class), CODE_REQUEST_ACTIVITY_LOGIN);
                     baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.LOGIN, 0L);
+                    //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.LOGIN, 0L);
                 } else
                 {
                     startActivity(new Intent(baseActivity, ProfileActivity.class));
                     baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
+                    //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
                 }
                 break;
             }
@@ -281,7 +280,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 startActivity(new Intent(baseActivity, CreditCardListActivity.class));
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.CREDITCARD, 0L);
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , Action.CARD_MANAGEMENT_CLICKED, "", null);
                 break;
             }
 
@@ -290,7 +290,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 startActivity(new Intent(baseActivity, BonusActivity.class));
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.BOUNS, 0L);
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , Action.CREDIT_MANAGEMENT_CLICKED, "", null);
                 break;
             }
 
@@ -299,7 +300,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 startActivity(new Intent(baseActivity, EventListActivity.class));
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.EVENT, 0L);
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , Action.EVENT_CLICKED, "", null);
                 break;
             }
 
@@ -307,7 +309,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             {
                 showCallDialog(baseActivity);
 
-                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.CALL_CS, 0L);
+                //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.CALL_CS, 0L);
                 break;
             }
 
@@ -320,7 +322,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
                 startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
 
-                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
+                //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
                 break;
             }
 
@@ -329,7 +331,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 startActivity(new Intent(baseActivity, AboutActivity.class));
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
+                //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
                 break;
             }
 
@@ -424,12 +426,12 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
             if ("alive".equalsIgnoreCase(result) == true)
             {
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN);
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN, null);
 
                 setSigninLayout(true);
             } else
             {
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT);
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT, null);
 
                 setSigninLayout(false);
             }

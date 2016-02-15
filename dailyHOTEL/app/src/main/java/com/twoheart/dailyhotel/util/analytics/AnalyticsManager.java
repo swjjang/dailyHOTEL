@@ -54,25 +54,11 @@ public class AnalyticsManager
         mFacebookManager.onPause(activity);
     }
 
-    public void recordScreen(String screenName)
-    {
-        mGoogleAnalyticsManager.recordScreen(screenName, null);
-        mTuneManager.recordScreen(screenName, null);
-        mFacebookManager.recordScreen(screenName, null);
-    }
-
     public void recordScreen(String screenName, Map<String, String> params)
     {
         mGoogleAnalyticsManager.recordScreen(screenName, params);
         mTuneManager.recordScreen(screenName, params);
         mFacebookManager.recordScreen(screenName, params);
-    }
-
-    public void recordEvent(String category, String action, String label, Long value)
-    {
-        mGoogleAnalyticsManager.recordEvent(category, action, label, value);
-        mTuneManager.recordEvent(category, action, label, value);
-        mFacebookManager.recordEvent(category, action, label, value);
     }
 
     public void recordEvent(String category, String action, String label, Map<String, String> params)
@@ -225,6 +211,7 @@ public class AnalyticsManager
         public static final String CARD_MANAGEMENT_CLICKED = "CardManagementClicked";
         public static final String REGISTERED_CARD_DELETE_POPPEDUP = "RegisteredCardDeletePoppedup";
         public static final String CREDIT_MANAGEMENT_CLICKED = "CreditManagementClicked";
+        public static final String INVITE_FRIEND_CLICKED = "InviteFriendClicked";
         public static final String EVENT_CLICKED = "EventClicked";
     }
 
@@ -245,58 +232,20 @@ public class AnalyticsManager
     {
         public static final String HOTEL = "hotel";
         public static final String GOURMET = "gourmet";
-//        public static final String LOGIN = "login";
-//        public static final String SIGNUP = "singup";
-//        public static final String DATE_TAB = "dateTab";
-//        public static final String HOTEL_INDEX = "hotelIndex";
-//        public static final String HOTEL_ROOM_INDEX = "hotelRoomIndex";
-//        public static final String HOTEL_ROOM_NAME = "hotelRoomName";
-//        public static final String HOTEL_NAME = "hotelName";
-//        public static final String MENU_OPENED = "menuOpened";
-//        public static final String AREA = "area";
-//        public static final String NOTICE = "notice";
-//        public static final String VERSION = "version";
-//        public static final String PROFILE = "profile";
-//        public static final String CREDITCARD = "creditCard";
-//        public static final String CALL_CS = "callCS";
-//        public static final String MAIL_CS = "mainCS";
-//        public static final String FAQ = "faq";
-//        public static final String ABOUT = "about";
-//        public static final String PAYMENT = "payment";
-//        public static final String ON = "on";
-//        public static final String OFF = "off";
-//        public static final String USED_CREDIT = "usedCredit";
-//        public static final String INVITE_KAKAO_FRIEND = "inviteKakaoFriend";
-//        public static final String VIEW_CREDIT_HISTORY = "viewCreditHistory";
-//        public static final String BOOKING = "booking";
-//        public static final String SHARE = "share";
-//        public static final String CHECK_IN = "chekcInTime";
-//        public static final String CHECK_OUT = "chekcOutTime";
-//        public static final String CURRENT_TIME = "currentTime";
-//        public static final String USER_INDEX = "userIndex";
-//        public static final String USER_EMAIL = "userEmail";
-//        public static final String TYPE = "type";
-//        public static final String LOGOUT = "logout";
-//        public static final String LOGIN_FACEBOOK = "loginFacebook";
-//        public static final String FORGOT_PASSWORD = "forgotPassword";
-//        public static final String ISUSED = "isUsed";
-//        public static final String RESERVATION_INDEX = "reservationIndex";
-//        public static final String PROVINCE = "province";
-//        public static final String NIGHTS = "ngihts";
-//        public static final String EVENT = "event";
-//        public static final String FNB_INDEX = "fnbIndex";
-//        public static final String FNB_NAME = "fnbName";
-//        public static final String FNB_TICKET_NAME = "fnbTicketName";
-//        public static final String FNB_TICKET_INDEX = "fnbTicketIndex";
-//        public static final String PLACE_NAME = "placeName";
-//        public static final String PLACE_TICKET_NAME = "placeTicketName";
-//        public static final String PLACE_TICKET_INDEX = "placeTicketIndex";
-//        public static final String BOUNS = "bonus";
-
         //
         public static final String PAYMENT_CARD_EDIT = "PaymentCardEdit";
         public static final String AGREE = "Agree";
         public static final String CANCEL = "Cancel";
+        public static final String OK = "Okay";
+        public static final String AUTO_LOGIN_ON = "AutoLoginOn";
+        public static final String AUTO_LOGIN_OFF = "AutoLoginOff";
+        public static final String FACEBOOK_LOGIN = "FacebookLogin";
+        public static final String KAKAO_LOGIN = "KakaoLogin";
+        public static final String REGISTER_ACCOUNT = "RegisterAccount";
+        public static final String AGREE_AND_REGISTER = "AgreeAndRegister";
+        public static final String ADDING_CARD_ICON_CLICKED = "AddingCardIconClicked";
+        public static final String ADDING_CARD_BUTTON_CLICKED = "AddingCardButtonClicked";
+        public static final String CREDIT_HISTORY_VIEW = "CreditHistoryView";
     }
 
     public static class UserType

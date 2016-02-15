@@ -658,7 +658,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         }
 
         AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-            , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, type.getName(), 0L);
+            , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, type.getName(), null);
     }
 
     public void scrollTop()

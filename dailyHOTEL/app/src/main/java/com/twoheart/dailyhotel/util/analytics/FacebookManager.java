@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.Map;
@@ -60,15 +59,10 @@ public class FacebookManager implements IBaseAnalyticsManager
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, parameters);
             }
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
-    }
-
-    @Override
-    public void recordEvent(String eventName, String action, String label, Long value)
-    {
     }
 
     @Override

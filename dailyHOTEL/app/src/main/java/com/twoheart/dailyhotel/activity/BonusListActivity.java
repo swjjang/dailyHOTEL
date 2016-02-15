@@ -20,9 +20,9 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.model.Credit;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import java.util.List;
@@ -81,7 +81,7 @@ public class BonusListActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(BonusListActivity.this).recordScreen(Screen.BONUS_LIST);
+        AnalyticsManager.getInstance(BonusListActivity.this).recordScreen(Screen.BONUS_LIST, null);
 
         super.onStart();
     }

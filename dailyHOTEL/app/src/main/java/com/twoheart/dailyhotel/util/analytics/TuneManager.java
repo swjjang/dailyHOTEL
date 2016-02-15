@@ -49,7 +49,7 @@ public class TuneManager implements IBaseAnalyticsManager
         {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             mMobileAppTracker.setMacAddress(wifiManager.getConnectionInfo().getMacAddress());
-        } catch (NullPointerException e)
+        } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
@@ -117,27 +117,11 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordEvent(String eventName, String action, String label, Long value)
+    public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (AnalyticsManager.Event.MENU.equals(eventName) == true)
+        if (AnalyticsManager.Category.HOTELBOOKINGS.equalsIgnoreCase(category) == true)
         {
-            // 고메인 경우에만 수집한다.
-            String gourmet = mContext.getString(R.string.actionbar_title_gourmet_list_frag);
-
-            if (gourmet.equalsIgnoreCase(label) == true)
-            {
-                MATEvent matEvent = new MATEvent(TuneEventId.MENU_GOURMET);
-                mMobileAppTracker.measureEvent(matEvent);
-            }
-        }
-    }
-
-    @Override
-    public void recordEvent(String eventName, String action, String label, Map<String, String> params)
-    {
-        if(AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(eventName) == true)
-        {
-            if(AnalyticsManager.Label.SHARE.equalsIgnoreCase(label) == true)
+            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
             {
                 MATEvent matEvent = getMATEvent(TuneEventId.SOCIAL_SHARE_HOTEL, params);
 
@@ -149,9 +133,9 @@ public class TuneManager implements IBaseAnalyticsManager
 
                 mMobileAppTracker.measureEvent(matEvent);
             }
-        } else if(AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(eventName) == true)
+        } else if (AnalyticsManager.Category.GOURMETBOOKINGS.equalsIgnoreCase(category) == true)
         {
-            if(AnalyticsManager.Label.SHARE.equalsIgnoreCase(label) == true)
+            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
             {
                 MATEvent matEvent = getMATEvent(TuneEventId.SOCIAL_SHARE_GOURMET, params);
 
@@ -163,9 +147,18 @@ public class TuneManager implements IBaseAnalyticsManager
 
                 mMobileAppTracker.measureEvent(matEvent);
             }
-        } else if(AnalyticsManager.Screen.BONUS.equalsIgnoreCase(eventName) == true)
+        } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
-            if(AnalyticsManager.Label.INVITE_KAKAO_FRIEND.equalsIgnoreCase(label) == true)
+            if (AnalyticsManager.Action.DAILY_GOURMET_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                String gourmet = mContext.getString(R.string.actionbar_title_gourmet_list_frag);
+
+                if (gourmet.equalsIgnoreCase(label) == true)
+                {
+                    MATEvent matEvent = new MATEvent(TuneEventId.MENU_GOURMET);
+                    mMobileAppTracker.measureEvent(matEvent);
+                }
+            } else if (AnalyticsManager.Action.INVITE_FRIEND_CLICKED.equalsIgnoreCase(action) == true)
             {
                 MATEvent matEvent = new MATEvent(TuneEventId.INVITE_FRIEND);
                 mMobileAppTracker.measureEvent(matEvent);
@@ -281,7 +274,7 @@ public class TuneManager implements IBaseAnalyticsManager
         list.add(matEventItem);
         matEvent.withEventItems(list);
 
-        if(params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
+        if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
         {
             setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
         }
@@ -315,7 +308,7 @@ public class TuneManager implements IBaseAnalyticsManager
         list.add(matEventItem);
         matEvent.withEventItems(list);
 
-        if(params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
+        if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
         {
             setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
         }

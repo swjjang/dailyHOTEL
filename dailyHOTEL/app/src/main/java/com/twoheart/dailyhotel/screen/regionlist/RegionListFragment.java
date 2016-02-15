@@ -50,20 +50,20 @@ public class RegionListFragment extends BaseFragment
         switch (mType)
         {
             case HOTEL:
-                switch(mRegion)
+                switch (mRegion)
                 {
                     case DOMESTIC:
-                        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+                        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
                         break;
 
                     case GLOBAL:
-                        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL);
+                        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
                         break;
                 }
                 break;
 
             case FNB:
-                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC);
+                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
                 break;
         }
     }
@@ -71,7 +71,7 @@ public class RegionListFragment extends BaseFragment
     @Override
     public void onResume()
     {
-        if(mAdapter != null)
+        if (mAdapter != null)
         {
             recordAnalyticsScreen();
         }

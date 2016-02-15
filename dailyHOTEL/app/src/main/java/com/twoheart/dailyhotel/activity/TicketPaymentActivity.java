@@ -229,7 +229,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                             {
                                 String label = String.format("%s_%s", mTicketPayment.getTicketInformation().placeName, mTicketPayment.getTicketInformation().name);
                                 AnalyticsManager.getInstance(TicketPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                    , Action.PAYMENT_COMPLETE_POPPEDUP, label, 0L);
+                                    , Action.PAYMENT_COMPLETE_POPPEDUP, label, null);
 
                                 mState = STATE_NONE;
                                 mDoReload = true;
@@ -463,7 +463,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYGOURMET_PAYMENT);
+        AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYGOURMET_PAYMENT, null);
 
         try
         {
@@ -516,15 +516,15 @@ public abstract class TicketPaymentActivity extends BaseActivity
             showAgreeTermDialog(mTicketPayment.paymentType);
         }
 
-        String region = DailyPreference.getInstance(TicketPaymentActivity.this).getGASelectedPlaceRegion();
-
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
-        params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
-        params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
-        params.put(Label.AREA, region);
-
-        AnalyticsManager.getInstance(this).recordEvent(Screen.DAILYGOURMET_PAYMENT, Action.CLICK, Label.PAYMENT, params);
+        //        String region = DailyPreference.getInstance(TicketPaymentActivity.this).getGASelectedPlaceRegion();
+        //
+        //        HashMap<String, String> params = new HashMap<String, String>();
+        //        params.put(Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
+        //        params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
+        //        params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
+        //        params.put(Label.AREA, region);
+        //
+        //        AnalyticsManager.getInstance(this).recordEvent(Screen.DAILYGOURMET_PAYMENT, Action.CLICK, Label.PAYMENT, params);
     }
 
     protected void showProgressDialog()
@@ -592,8 +592,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 return;
         }
 
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYGOURMET_PAYMENT, Action.CLICK, type.name(), 0L);
-
         if (null != mFinalCheckDialog)
         {
             if (isFinishing() == true)
@@ -618,7 +616,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     mDoReload = true;
 
                     AnalyticsManager.getInstance(TicketPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                        , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, 0L);
+                        , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
                 }
             });
 
@@ -660,12 +658,12 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     DailyToast.showToast(TicketPaymentActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
                 }
 
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
-                params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
-                params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
-
-                AnalyticsManager.getInstance(TicketPaymentActivity.this).recordEvent(Screen.DAILYGOURMET_PAYMENT, Action.CLICK, Label.CALL_CS, params);
+                //                HashMap<String, String> params = new HashMap<String, String>();
+                //                params.put(Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
+                //                params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
+                //                params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
+                //
+                //                AnalyticsManager.getInstance(TicketPaymentActivity.this).recordEvent(Screen.DAILYGOURMET_PAYMENT, Action.CLICK, Label.CALL_CS, params);
             }
         };
 
@@ -793,7 +791,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(ticketPayment.ticketTime));
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteGourmet(transId, params);
-            AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE);
+            AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE, null);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

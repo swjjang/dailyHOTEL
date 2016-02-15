@@ -49,11 +49,11 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
@@ -314,7 +314,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         switch (type)
         {
             case LIST:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST);
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST, null);
 
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
@@ -333,7 +333,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 break;
 
             case MAP:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_MAP);
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_MAP, null);
 
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
@@ -350,7 +350,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 break;
 
             case GONE:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_EMPTY);
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_EMPTY, null);
 
                 mEmptyView.setVisibility(View.VISIBLE);
                 mMapLayout.setVisibility(View.GONE);
@@ -1220,8 +1220,6 @@ public class HotelListFragment extends BaseFragment implements Constants
                 EventBanner eventBanner = mEventBannerList.get(index.intValue());
 
                 mOnUserActionListener.selectEventBanner(eventBanner);
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent("event banner", "hotel", eventBanner.name, 0L);
             }
         }
     };

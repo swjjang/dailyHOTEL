@@ -162,7 +162,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
             });
         }
 
-        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP);
+        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
 
         super.onResume();
     }

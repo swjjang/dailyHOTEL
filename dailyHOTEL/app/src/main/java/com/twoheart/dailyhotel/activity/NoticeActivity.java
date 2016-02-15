@@ -9,9 +9,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.model.Board;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,7 +46,7 @@ public class NoticeActivity extends BaseActivity
                 mExpandedChildPos = groupPosition;
                 mListView.setSelectionFromTop(mExpandedChildPos, 0);
 
-//                AnalyticsManager.getInstance(NoticeActivity.this).recordEvent(Screen.NOTICE, Action.CLICK, mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
+                //                AnalyticsManager.getInstance(NoticeActivity.this).recordEvent(Screen.NOTICE, Action.CLICK, mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
             }
         });
     }
@@ -57,7 +54,7 @@ public class NoticeActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-//        AnalyticsManager.getInstance(NoticeActivity.this).recordScreen(Screen.NOTICE);
+        //        AnalyticsManager.getInstance(NoticeActivity.this).recordScreen(Screen.NOTICE);
         super.onStart();
     }
 

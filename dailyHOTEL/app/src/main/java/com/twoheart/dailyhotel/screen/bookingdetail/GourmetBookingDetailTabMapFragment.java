@@ -163,7 +163,7 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             });
         }
 
-        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP);
+        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
 
         super.onResume();
     }

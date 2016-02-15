@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoadingDialog;
 import com.twoheart.dailyhotel.view.OnLoadListener;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -166,6 +167,8 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             unLockUI();
 
             super.onPause();
+
+            AnalyticsManager.getInstance(this).onPause(this);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -183,6 +186,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         super.onResume();
 
         VolleyHttpClient.cookieManagerStartSync();
+        AnalyticsManager.getInstance(this).onResume(this);
     }
 
     @Override

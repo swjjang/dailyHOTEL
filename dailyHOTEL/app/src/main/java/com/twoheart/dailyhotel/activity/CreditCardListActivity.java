@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -150,7 +151,6 @@ public class CreditCardListActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
-
         @Override
         public void addCreditCard()
         {
@@ -181,6 +181,19 @@ public class CreditCardListActivity extends BaseActivity
                         Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+                        if (mCreditCardLayout != null)
+                        {
+                            if (mCreditCardLayout.getCreditCardCount() == 0)
+                            {
+                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                    , AnalyticsManager.Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.ADDING_CARD_ICON_CLICKED, null);
+                            } else
+                            {
+                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                    , AnalyticsManager.Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.ADDING_CARD_BUTTON_CLICKED, null);
+                            }
+                        }
                     } else
                     {
                         restartApp();
@@ -229,15 +242,33 @@ public class CreditCardListActivity extends BaseActivity
                                 params.put("billkey", card.billingkey);
 
                                 DailyNetworkAPI.getInstance().requestUserDeleteBillingCard(mNetworkTag, params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this);
+
+                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                                    , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.OK, null);
                             }
                         };
 
-                        if (isFinishing() == true)
+                        View.OnClickListener negativeListener = new View.OnClickListener()
                         {
-                            return;
-                        }
+                            @Override
+                            public void onClick(View v)
+                            {
+                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                                    , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
+                            }
+                        };
 
-                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+                        DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                                    , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
+                            }
+                        };
+
+                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, negativeListener, cancelListener, null, true);
                     } else
                     {
                         restartApp();
@@ -294,7 +325,7 @@ public class CreditCardListActivity extends BaseActivity
 
                 if (length == 0)
                 {
-                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST_EMPTY);
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST_EMPTY, null);
 
                     arrayList = new ArrayList<CreditCard>();
 
@@ -304,7 +335,7 @@ public class CreditCardListActivity extends BaseActivity
                     }
                 } else
                 {
-                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST);
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST, null);
 
                     arrayList = new ArrayList<CreditCard>(length);
 

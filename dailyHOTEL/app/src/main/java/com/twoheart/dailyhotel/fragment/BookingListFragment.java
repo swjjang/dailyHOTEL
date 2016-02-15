@@ -35,13 +35,11 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.bookingdetail.GourmetBookingDetailTabActivity;
 import com.twoheart.dailyhotel.screen.bookingdetail.HotelBookingDetailTabActivity;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
@@ -49,10 +47,8 @@ import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 /**
  * 예약한 호텔의 리스트들을 출력.
@@ -85,7 +81,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             initToolbar(baseActivity, view);
             initLayout(view);
-        }catch (OutOfMemoryError e)
+        } catch (OutOfMemoryError e)
         {
             Util.finishOutOfMemory(baseActivity);
         }
@@ -144,7 +140,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             startActivity(i);
             baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN, 0L);
+            //            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN, 0L);
         }
     }
 
@@ -205,18 +201,18 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             releaseUiComponent();
         }
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(Label.TYPE, String.valueOf(item.payType));
-        params.put(Label.ISUSED, String.valueOf(item.isUsed));
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        params.put(Label.CHECK_IN, simpleDateFormat.format(item.checkinTime));
-        params.put(Label.CHECK_OUT, simpleDateFormat.format(item.checkoutTime));
-        params.put(Label.RESERVATION_INDEX, String.valueOf(item.reservationIndex));
-
-        AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, item.placeName, params);
+        //        HashMap<String, String> params = new HashMap<String, String>();
+        //        params.put(Label.TYPE, String.valueOf(item.payType));
+        //        params.put(Label.ISUSED, String.valueOf(item.isUsed));
+        //
+        //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //
+        //        params.put(Label.CHECK_IN, simpleDateFormat.format(item.checkinTime));
+        //        params.put(Label.CHECK_OUT, simpleDateFormat.format(item.checkoutTime));
+        //        params.put(Label.RESERVATION_INDEX, String.valueOf(item.reservationIndex));
+        //
+        //        AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, item.placeName, params);
     }
 
     @Override
@@ -426,7 +422,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 if (length == 0)
                 {
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY, null);
 
                     if (mAdapter != null)
                     {
@@ -439,7 +435,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     btnLogin.setVisibility(View.INVISIBLE);
                 } else
                 {
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST);
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, null);
 
                     // 입금대기, 결제완료, 이용완료
                     ArrayList<Booking> waitBookingList = new ArrayList<Booking>();

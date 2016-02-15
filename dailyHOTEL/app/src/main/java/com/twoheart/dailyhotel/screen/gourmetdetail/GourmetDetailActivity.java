@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
@@ -72,8 +72,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , imageUrl //
             , checkInSaleTime);
 
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
+        params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
+
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-            , AnalyticsManager.Action.SOCIAL_SHARE_CLICKED, placeDetail.name, 0L);
+            , AnalyticsManager.Action.SOCIAL_SHARE_CLICKED, placeDetail.name, params);
     }
 
     @Override

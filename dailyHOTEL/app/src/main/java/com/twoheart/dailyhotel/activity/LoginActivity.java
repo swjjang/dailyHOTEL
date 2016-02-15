@@ -28,6 +28,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -73,13 +74,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
+public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener, CompoundButton.OnCheckedChangeListener
 {
     public CallbackManager mCallbackManager;
     private EditText mIdEditText, mPasswordEditText;
@@ -125,6 +125,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             public void onClick(View v)
             {
                 mFacebookLoginView.performClick();
+
+                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.FACEBOOK_LOGIN, null);
             }
         });
 
@@ -141,6 +143,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             public void onClick(View v)
             {
                 mKakaoLoginView.performClick();
+
+                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.KAKAO_LOGIN, null);
             }
         });
 
@@ -150,6 +154,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mAutoLoginSwitch.setChecked(true);
         mAutoLoginSwitch.setSwitchPadding(Util.dpToPx(LoginActivity.this, 15));
+        mAutoLoginSwitch.setOnCheckedChangeListener(this);
 
         mSignupView.setOnClickListener(this);
         mFindPasswordView.setOnClickListener(this);
@@ -192,7 +197,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.SIGNIN);
+        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.SIGNIN, null);
 
         super.onStart();
     }
@@ -352,7 +357,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             startActivity(i);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNIN, Action.CLICK, Label.FORGOT_PASSWORD, 0L);
+            //            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.REGISTRATION_CLICKED, xxx, 0L);
         } else if (v.getId() == mSignupView.getId())
         {
             // 회원가입
@@ -360,7 +365,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             startActivityForResult(i, CODE_REQEUST_ACTIVITY_SIGNUP);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNIN, Action.CLICK, Label.SIGNUP, 0L);
+            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.REGISTRATION_CLICKED, Label.REGISTER_ACCOUNT, null);
         } else if (v.getId() == mLoginView.getId())
         {
             // 일반 로그인
@@ -393,7 +398,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
             DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNIN, Action.CLICK, Label.LOGIN, 0L);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, "", null);
         }
     }
 
@@ -603,6 +608,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }.execute();
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    {
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , Action.LOGIN_CLICKED, isChecked ? Label.AUTO_LOGIN_ON : Label.AUTO_LOGIN_OFF, null);
+    }
+
     private class SessionCallback implements ISessionCallback
     {
         @Override
@@ -809,13 +821,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(false);
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-
-                    HashMap<String, String> params = new HashMap<String, String>();
-                    params.put(Label.CURRENT_TIME, dateFormat.format(new Date()));
-                    params.put(Label.USER_INDEX, userIndex);
-                    params.put(Label.TYPE, "Social");
-
-                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(Screen.SIGNIN, Action.NETWORK, Label.SIGNUP, params);
 
                     if (mStoreParams.containsKey("new_user") == true)
                     {

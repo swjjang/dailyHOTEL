@@ -158,8 +158,6 @@ public class MainActivity extends BaseActivity implements Constants
                 mMainPresenter.requestEvent();
             }
         }
-
-        AnalyticsManager.getInstance(this).onResume(this);
     }
 
     @Override
@@ -432,7 +430,7 @@ public class MainActivity extends BaseActivity implements Constants
                     if (Util.isTextEmpty(name) == false)
                     {
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, name, 0L);
+                            , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, name, null);
                     }
                     break;
 
@@ -442,7 +440,7 @@ public class MainActivity extends BaseActivity implements Constants
                     if (Util.isTextEmpty(name) == false)
                     {
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, name, 0L);
+                            , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, name, null);
                     }
                     break;
 
@@ -452,7 +450,7 @@ public class MainActivity extends BaseActivity implements Constants
                     if (Util.isTextEmpty(name) == false)
                     {
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, name, 0L);
+                            , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, name, null);
                     }
                     break;
 
@@ -460,7 +458,7 @@ public class MainActivity extends BaseActivity implements Constants
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.MENU_CLICKED, name, 0L);
+                        , AnalyticsManager.Action.MENU_CLICKED, name, null);
                     break;
             }
         }

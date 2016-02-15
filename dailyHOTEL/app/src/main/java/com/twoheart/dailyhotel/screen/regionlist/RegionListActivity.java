@@ -128,7 +128,7 @@ public class RegionListActivity extends BaseActivity
                         try
                         {
                             isOverseas = ((Area) province).getProvince().isOverseas;
-                        }catch (NullPointerException e)
+                        } catch (NullPointerException e)
                         {
                             isOverseas = DailyPreference.getInstance(this).isSelectedOverseaRegion(TYPE.HOTEL);
                         }
@@ -222,11 +222,11 @@ public class RegionListActivity extends BaseActivity
         {
             String label;
 
-            if(province instanceof Area)
+            if (province instanceof Area)
             {
-                Area area = (Area)province;
+                Area area = (Area) province;
 
-                if(area.index == -1)
+                if (area.index == -1)
                 {
                     label = String.format("%s_%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                         , area.getProvince().name);
@@ -242,7 +242,7 @@ public class RegionListActivity extends BaseActivity
             }
 
             AnalyticsManager.getInstance(RegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, label, 0L);
+                , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, label, null);
         }
 
         @Override
@@ -276,20 +276,20 @@ public class RegionListActivity extends BaseActivity
     {
         private void recordAnalytics(int position)
         {
-            switch(mType)
+            switch (mType)
             {
                 case HOTEL:
-                    if(position == 0)
+                    if (position == 0)
                     {
-                        AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+                        AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
                     } else
                     {
-                        AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL);
+                        AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
                     }
                     break;
 
                 case FNB:
-                    AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC);
+                    AnalyticsManager.getInstance(RegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
                     break;
             }
         }

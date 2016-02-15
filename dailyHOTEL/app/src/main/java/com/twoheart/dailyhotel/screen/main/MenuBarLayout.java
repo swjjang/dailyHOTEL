@@ -135,7 +135,7 @@ public class MenuBarLayout implements View.OnClickListener
 
     public String getName(int position)
     {
-        switch(position)
+        switch (position)
         {
             case MENU_HOTEL_INDEX:
                 return mBaseActivity.getString(R.string.menu_item_title_hotel);

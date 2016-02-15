@@ -79,7 +79,7 @@ public class HotelBookingDetailTabInfomationFragment extends BaseFragment
     @Override
     public void onResume()
     {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_INFORMATION);
+        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_INFORMATION, null);
 
         super.onResume();
     }

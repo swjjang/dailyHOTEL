@@ -11,7 +11,6 @@ import com.twoheart.dailyhotel.fragment.ErrorFragment;
 import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
 import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 

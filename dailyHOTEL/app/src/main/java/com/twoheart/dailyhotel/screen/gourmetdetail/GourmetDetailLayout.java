@@ -260,7 +260,7 @@ public class GourmetDetailLayout
                     mTicketTypeListAdapter.notifyDataSetChanged();
 
                     AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-                        , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, 0L);
+                        , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, null);
                 }
             });
         }

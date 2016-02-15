@@ -58,7 +58,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
     @Override
     public void onStart()
     {
-        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.NETWORK_ERROR);
+        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.NETWORK_ERROR, null);
 
         super.onStart();
     }

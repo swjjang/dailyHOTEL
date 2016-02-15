@@ -144,7 +144,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
     @Override
     public void onResume()
     {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL);
+        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL, null);
 
         super.onResume();
     }

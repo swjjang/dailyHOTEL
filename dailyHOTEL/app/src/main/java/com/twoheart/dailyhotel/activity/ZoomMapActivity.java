@@ -129,15 +129,15 @@ public class ZoomMapActivity extends BaseActivity
         switch (mSourceType)
         {
             case HOTEL:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DETAIL_MAP);
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DETAIL_MAP, null);
                 break;
 
             case GOURMET:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_MAP);
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_MAP, null);
                 break;
 
             case BOOKING:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP);
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
                 break;
         }
 

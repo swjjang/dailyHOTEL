@@ -9,7 +9,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void recordScreen(String screenName, Map<String, String> params)
     {
-        if(params != null)
+        if (params != null)
         {
             return;
         }
@@ -47,27 +46,20 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordEvent(String category, String action, String label, Long value)
-    {
-        try
-        {
-            mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
-                .setCategory(category).setAction(action)//
-                .setLabel(label).setValue(value).build());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
-    @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
         try
         {
+            long value = 0L;
+
+            if (params != null)
+            {
+
+            }
+
             mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
                 .setCategory(category).setAction(action)//
-                .setLabel(label).setAll(params).build());
+                .setLabel(label).setValue(value).build());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -136,8 +128,6 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
             mGoogleAnalyticsTracker.set("&cu", "KRW");
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-
-            recordEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -169,8 +159,6 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
             mGoogleAnalyticsTracker.set("&cu", "KRW");
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-
-            recordEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
