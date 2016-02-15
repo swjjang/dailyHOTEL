@@ -961,6 +961,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                             {
                                 requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
                             }
+
+                            recordAnalytics(mTicketPayment);
                             break;
                         }
 

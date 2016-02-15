@@ -10,7 +10,6 @@ import com.mobileapptracker.MATEvent;
 import com.mobileapptracker.MATEventItem;
 import com.mobileapptracker.MATGender;
 import com.mobileapptracker.MobileAppTracker;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -22,6 +21,9 @@ import java.util.Map;
 
 public class TuneManager implements IBaseAnalyticsManager
 {
+    private static final boolean DEBUG = true;
+    private static final String TAG = "[TuneManager]";
+
     private static final String ADVERTISE_ID = "190723";
     private static final String CONVERSION_KEY = "93aa9a40026991386dd92922cb14f58f";
 
@@ -74,6 +76,11 @@ public class TuneManager implements IBaseAnalyticsManager
             matEvent.withEventItems(list);
 
             mMobileAppTracker.measureEvent(matEvent);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
             MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_DETAIL, params);
@@ -85,6 +92,11 @@ public class TuneManager implements IBaseAnalyticsManager
             matEvent.withEventItems(list);
 
             mMobileAppTracker.measureEvent(matEvent);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
         {
             MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PAYMENT, params);
@@ -96,6 +108,11 @@ public class TuneManager implements IBaseAnalyticsManager
             matEvent.withEventItems(list);
 
             mMobileAppTracker.measureEvent(matEvent);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
         {
             MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PAYMENT, params);
@@ -107,6 +124,11 @@ public class TuneManager implements IBaseAnalyticsManager
             matEvent.withEventItems(list);
 
             mMobileAppTracker.measureEvent(matEvent);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         }
     }
 
@@ -126,6 +148,11 @@ public class TuneManager implements IBaseAnalyticsManager
                 matEvent.withEventItems(list);
 
                 mMobileAppTracker.measureEvent(matEvent);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + params.toString());
+                }
             }
         } else if (AnalyticsManager.Category.GOURMETBOOKINGS.equalsIgnoreCase(category) == true)
         {
@@ -140,22 +167,32 @@ public class TuneManager implements IBaseAnalyticsManager
                 matEvent.withEventItems(list);
 
                 mMobileAppTracker.measureEvent(matEvent);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + params.toString());
+                }
             }
         } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.DAILY_GOURMET_CLICKED.equalsIgnoreCase(action) == true)
             {
-                String gourmet = mContext.getString(R.string.actionbar_title_gourmet_list_frag);
+                MATEvent matEvent = new MATEvent(TuneEventId.MENU_GOURMET);
+                mMobileAppTracker.measureEvent(matEvent);
 
-                if (gourmet.equalsIgnoreCase(label) == true)
+                if (DEBUG == true)
                 {
-                    MATEvent matEvent = new MATEvent(TuneEventId.MENU_GOURMET);
-                    mMobileAppTracker.measureEvent(matEvent);
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label);
                 }
             } else if (AnalyticsManager.Action.INVITE_FRIEND_CLICKED.equalsIgnoreCase(action) == true)
             {
                 MATEvent matEvent = new MATEvent(TuneEventId.INVITE_FRIEND);
                 mMobileAppTracker.measureEvent(matEvent);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label);
+                }
             }
         }
     }
@@ -190,6 +227,11 @@ public class TuneManager implements IBaseAnalyticsManager
         matEvent.withAttribute1(cardType);
 
         mMobileAppTracker.measureEvent(matEvent);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "addCreditCard : " + cardType);
+        }
     }
 
     @Override
@@ -229,6 +271,11 @@ public class TuneManager implements IBaseAnalyticsManager
         matEvent.withAttribute1(userType);
 
         mMobileAppTracker.measureEvent(matEvent);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "signUpSocialUser : " + userIndex + ", " + email + ", " + name + ", " + gender + ", " + phoneNumber + ", " + userType);
+        }
     }
 
     @Override
@@ -245,6 +292,11 @@ public class TuneManager implements IBaseAnalyticsManager
         matEvent.withAttribute1(userType);
 
         mMobileAppTracker.measureEvent(matEvent);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "signUpDailyUser : " + userIndex + ", " + email + ", " + name + ", " + phoneNumber + ", " + userType);
+        }
     }
 
     @Override
@@ -274,6 +326,11 @@ public class TuneManager implements IBaseAnalyticsManager
         }
 
         mMobileAppTracker.measureEvent(matEvent);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "purchaseCompleteHotel : " + params.toString());
+        }
     }
 
     @Override
@@ -308,6 +365,11 @@ public class TuneManager implements IBaseAnalyticsManager
         }
 
         mMobileAppTracker.measureEvent(matEvent);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "purchaseCompleteGourmet : " + params.toString());
+        }
     }
 
     @Override
