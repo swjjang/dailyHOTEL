@@ -241,8 +241,18 @@ public class RegionListActivity extends BaseActivity
                     , province.name);
             }
 
-            AnalyticsManager.getInstance(RegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, label, null);
+            switch (mType)
+            {
+                case HOTEL:
+                    AnalyticsManager.getInstance(RegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, label, null);
+                    break;
+
+                case FNB:
+                    AnalyticsManager.getInstance(RegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.GOURMET_LOCATIONS_CLICKED, label, null);
+                    break;
+            }
         }
 
         @Override

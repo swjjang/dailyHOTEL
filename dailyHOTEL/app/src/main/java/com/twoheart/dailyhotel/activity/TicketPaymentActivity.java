@@ -168,6 +168,19 @@ public abstract class TicketPaymentActivity extends BaseActivity
         }
     }
 
+    protected void setResult(int resultCode, TicketPayment ticketPayment)
+    {
+        setResult(resultCode);
+
+        if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+        {
+
+        } else
+        {
+            recordAnalyticsInitiatedCheckout(ticketPayment);
+        }
+    }
+
     @Override
     public void finish()
     {
@@ -234,7 +247,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                                 mState = STATE_NONE;
                                 mDoReload = true;
 
-                                setResult(RESULT_OK);
+                                setResult(RESULT_OK, mTicketPayment);
                                 finish();
                             }
                         };
@@ -323,7 +336,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                         {
                             mDoReload = true;
 
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, mTicketPayment);
                             finish();
                         }
                     };
@@ -489,6 +502,38 @@ public abstract class TicketPaymentActivity extends BaseActivity
         hidePorgressDialog();
 
         super.onDestroy();
+    }
+
+    private void recordAnalyticsInitiatedCheckout(TicketPayment ticketPayment)
+    {
+        if (ticketPayment == null)
+        {
+            return;
+        }
+
+        try
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
+            Date date = new Date();
+            String strDate = dateFormat.format(date);
+            String userIndex = ticketPayment.getCustomer().getUserIdx();
+            String transId = strDate + '_' + userIndex;
+
+            TicketInformation ticketInformation = ticketPayment.getTicketInformation();
+
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.placeName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
+            params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            AnalyticsManager.getInstance(getApplicationContext()).initiatedCheckoutGourmet(params);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     /**
@@ -694,7 +739,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                setResult(RESULT_CANCELED);
+                setResult(RESULT_CANCELED, mTicketPayment);
                 finish();
             }
         };
@@ -721,7 +766,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             {
                 mDoReload = true;
 
-                setResult(RESULT_CANCELED);
+                setResult(RESULT_CANCELED, mTicketPayment);
                 finish();
             }
         };

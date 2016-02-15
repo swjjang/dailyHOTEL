@@ -49,7 +49,6 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -476,13 +475,14 @@ public class Util implements Constants
             @Override
             protected String doInBackground(Void... params)
             {
-                GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(baseActivity);
                 String registrationId = null;
 
                 try
                 {
+                    GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(baseActivity);
+
                     registrationId = instance.register(GCM_PROJECT_NUMBER);
-                } catch (IOException e)
+                } catch (Exception e)
                 {
                     ExLog.e(e.toString());
                 }

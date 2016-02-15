@@ -798,6 +798,19 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         }
     }
 
+    public void setResult(int resultCode, Pay pay)
+    {
+        setResult(resultCode);
+
+        if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
+        {
+
+        } else
+        {
+            recordAnalyticsInitiatedCheckout(mPay);
+        }
+    }
+
     @Override
     public void finish()
     {
@@ -872,7 +885,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             mDoReload = true;
                             mAliveCallSource = "";
 
-                            setResult(RESULT_OK);
+                            setResult(RESULT_OK, mPay);
                             finish();
                         }
                     };
@@ -958,7 +971,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         {
                             mDoReload = true;
 
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, mPay);
                             finish();
                         }
                     };
@@ -1027,7 +1040,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                         {
                                             mDoReload = true;
 
-                                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER, mPay);
                                             finish();
                                         }
                                     };
@@ -1046,7 +1059,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                             mDoReload = true;
                                             mAliveCallSource = "";
 
-                                            setResult(RESULT_OK);
+                                            setResult(RESULT_OK, mPay);
                                             finish();
                                         }
                                     };
@@ -1278,6 +1291,44 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         hidePorgressDialog();
 
         super.onDestroy();
+    }
+
+    private void recordAnalyticsInitiatedCheckout(Pay pay)
+    {
+        if (pay == null)
+        {
+            return;
+        }
+
+        try
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
+            Date date = new Date();
+            String strDate = dateFormat.format(date);
+            String userIndex = pay.getCustomer().getUserIdx();
+            String transId = strDate + '_' + userIndex;
+
+            SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
+
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, saleRoomInformation.hotelName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(saleRoomInformation.averageDiscount));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(saleRoomInformation.nights));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(pay.hotelIndex));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, saleRoomInformation.roomName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
+
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + pay.getSaleRoomInformation().nights);
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            AnalyticsManager.getInstance(this).initiatedCheckoutHotel(params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void showProgressDialog()
@@ -1584,7 +1635,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             public void onClick(View v)
             {
                 mDoReload = true;
-                setResult(RESULT_CANCELED);
+                setResult(RESULT_CANCELED, mPay);
                 finish();
             }
         };
@@ -1601,7 +1652,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             public void onClick(View v)
             {
                 mDoReload = true;
-                setResult(RESULT_CANCELED);
+                setResult(RESULT_CANCELED, mPay);
                 finish();
             }
         };
@@ -2171,7 +2222,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                 @Override
                                 public void onDismiss(DialogInterface dialog)
                                 {
-                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER, mPay);
                                     finish();
                                 }
                             });
@@ -2311,7 +2362,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                 @Override
                                 public void onDismiss(DialogInterface dialog)
                                 {
-                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER, mPay);
                                     finish();
                                 }
                             });

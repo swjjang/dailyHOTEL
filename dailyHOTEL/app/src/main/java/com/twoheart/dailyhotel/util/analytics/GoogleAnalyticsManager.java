@@ -27,7 +27,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordScreen(String screenName, Map<String, String> params)
+    public void recordScreen(String screen, Map<String, String> params)
     {
         if (params != null)
         {
@@ -37,7 +37,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         try
         {
             // Send a screen view.
-            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.setScreenName(screen);
             mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch (Exception e)
         {
@@ -84,13 +84,11 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void onPause(Activity activity)
     {
-
     }
 
     @Override
     public void addCreditCard(String cardType)
     {
-
     }
 
     @Override
@@ -163,5 +161,17 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         {
             ExLog.d(e.toString());
         }
+    }
+
+    @Override
+    public void initiatedCheckoutHotel(Map<String, String> params)
+    {
+
+    }
+
+    @Override
+    public void initiatedCheckoutGourmet(Map<String, String> params)
+    {
+
     }
 }

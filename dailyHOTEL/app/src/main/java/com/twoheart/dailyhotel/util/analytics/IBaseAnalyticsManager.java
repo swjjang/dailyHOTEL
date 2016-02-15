@@ -6,9 +6,9 @@ import java.util.Map;
 
 public interface IBaseAnalyticsManager
 {
-    abstract void recordScreen(String screenName, Map<String, String> params);
+    abstract void recordScreen(String screen, Map<String, String> params);
 
-    abstract void recordEvent(String eventName, String action, String label, Map<String, String> params);
+    abstract void recordEvent(String category, String action, String label, Map<String, String> params);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
@@ -29,4 +29,9 @@ public interface IBaseAnalyticsManager
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 
     abstract void purchaseCompleteGourmet(String transId, Map<String, String> params);
+
+    // 예약 진행화면에서 이탈한 경우(결제를 취소한 경우)
+    abstract void initiatedCheckoutHotel(Map<String, String> params);
+
+    abstract void initiatedCheckoutGourmet(Map<String, String> params);
 }
