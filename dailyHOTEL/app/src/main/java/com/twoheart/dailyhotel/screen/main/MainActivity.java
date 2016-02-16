@@ -126,6 +126,14 @@ public class MainActivity extends BaseActivity implements Constants
         mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        mOnResponsePresenterListener.onConfigurationResponse();
+    }
+
     private void initLayout()
     {
         setContentView(R.layout.activity_main);
