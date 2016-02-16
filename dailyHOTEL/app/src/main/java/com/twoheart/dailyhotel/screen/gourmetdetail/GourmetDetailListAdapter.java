@@ -21,8 +21,8 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -47,14 +47,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private GourmetDetail mGourmetDetail;
     private FragmentActivity mFragmentActivity;
     private GoogleMap mGoogleMap;
-    private SupportMapFragment mMapFragment;
+    private MapView mMapView;
     private View[] mDeatilViews;
     private boolean[] mNeedRefreshData;
     private int mImageHeight;
     protected View mTitleLayout;
     protected TextView mGradeTextView;
     protected TextView mNameTextView;
-    private View mGoogleMapLayout;
 
     private GourmetDetailActivity.OnUserActionListener mOnUserActionListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
@@ -472,141 +471,130 @@ public class GourmetDetailListAdapter extends BaseAdapter
             return;
         }
 
-        googleMapLayout.postDelayed(new Runnable()
+        try
+        {
+            mMapView = new MapView(googleMapLayout.getContext());
+
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+            googleMapLayout.addView(mMapView, layoutParams);
+
+            googleMapLayout.findViewById(R.id.googleMapTextView).setVisibility(View.GONE);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            googleMapLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.showMap();
+                    }
+                }
+            });
+            return;
+        } catch (Error e)
+        {
+            ExLog.e(e.toString());
+
+            googleMapLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.showMap();
+                    }
+                }
+            });
+            return;
+        }
+
+        googleMapLayout.setOnClickListener(null);
+
+        mMapView.onCreate(null);
+        mMapView.onResume();
+        mMapView.getMapAsync(new OnMapReadyCallback()
         {
             @Override
-            public void run()
+            public void onMapReady(GoogleMap googleMap)
             {
-                try
-                {
-                    if (mGoogleMapLayout == null)
-                    {
-                        LayoutInflater inflater = (LayoutInflater) mFragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
-                    }
+                mGoogleMap = googleMap;
 
-                    googleMapLayout.addView(mGoogleMapLayout);
+                final LatLng latlng = new LatLng(mGourmetDetail.latitude, mGourmetDetail.longitude);
 
-                    mMapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng));
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
 
-                    googleMapLayout.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.showMap();
-                            }
-                        }
-                    });
-                    return;
-                } catch (Error e)
-                {
-                    ExLog.e(e.toString());
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                    googleMapLayout.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.showMap();
-                            }
-                        }
-                    });
-                    return;
-                }
-
-                googleMapLayout.setOnClickListener(null);
-
-                mMapFragment.getMapAsync(new OnMapReadyCallback()
+                mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener()
                 {
                     @Override
-                    public void onMapReady(GoogleMap googleMap)
+                    public boolean onMarkerClick(Marker marker)
                     {
-                        mGoogleMap = googleMap;
+                        if (mOnUserActionListener != null)
+                        {
+                            mOnUserActionListener.showMap();
+                        }
 
-                        final LatLng latlng = new LatLng(mGourmetDetail.latitude, mGourmetDetail.longitude);
+                        return true;
+                    }
+                });
 
-                        Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng));
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+                mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+                mGoogleMap.setOnMapClickListener(new OnMapClickListener()
+                {
+                    @Override
+                    public void onMapClick(LatLng latlng)
+                    {
+                        if (mOnUserActionListener != null)
+                        {
+                            mOnUserActionListener.showMap();
+                        }
+                    }
+                });
 
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
-                        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                mGoogleMap.setOnMapLoadedCallback(new OnMapLoadedCallback()
+                {
+                    @Override
+                    public void onMapLoaded()
+                    {
+                        if (mGoogleMap == null)
+                        {
+                            return;
+                        }
 
-                        mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener()
+                        mGoogleMap.snapshot(new SnapshotReadyCallback()
                         {
                             @Override
-                            public boolean onMarkerClick(Marker marker)
+                            public void onSnapshotReady(Bitmap bitmap)
                             {
-                                if (mOnUserActionListener != null)
+                                if (Util.isOverAPI16() == true)
                                 {
-                                    mOnUserActionListener.showMap();
+                                    googleMapLayout.setBackground(new BitmapDrawable(mFragmentActivity.getResources(), bitmap));
+                                } else
+                                {
+                                    googleMapLayout.setBackgroundDrawable(new BitmapDrawable(mFragmentActivity.getResources(), bitmap));
                                 }
 
-                                return true;
-                            }
-                        });
+                                googleMapLayout.removeAllViews();
+                                mMapView = null;
+                                mGoogleMap = null;
 
-                        mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-                        mGoogleMap.setOnMapClickListener(new OnMapClickListener()
-                        {
-                            @Override
-                            public void onMapClick(LatLng latlng)
-                            {
-                                if (mOnUserActionListener != null)
-                                {
-                                    mOnUserActionListener.showMap();
-                                }
-                            }
-                        });
-
-                        mGoogleMap.setOnMapLoadedCallback(new OnMapLoadedCallback()
-                        {
-                            @Override
-                            public void onMapLoaded()
-                            {
-                                if (mGoogleMap == null)
-                                {
-                                    return;
-                                }
-
-                                mGoogleMap.snapshot(new SnapshotReadyCallback()
+                                googleMapLayout.setOnClickListener(new View.OnClickListener()
                                 {
                                     @Override
-                                    public void onSnapshotReady(Bitmap bitmap)
+                                    public void onClick(View v)
                                     {
-                                        if (Util.isOverAPI16() == true)
+                                        if (mOnUserActionListener != null)
                                         {
-                                            googleMapLayout.setBackground(new BitmapDrawable(mFragmentActivity.getResources(), bitmap));
-                                        } else
-                                        {
-                                            googleMapLayout.setBackgroundDrawable(new BitmapDrawable(mFragmentActivity.getResources(), bitmap));
+                                            mOnUserActionListener.showMap();
                                         }
-
-                                        mFragmentActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
-                                        googleMapLayout.removeAllViews();
-
-                                        mMapFragment = null;
-                                        mGoogleMap = null;
-                                        mGoogleMapLayout = null;
-
-                                        googleMapLayout.setOnClickListener(new View.OnClickListener()
-                                        {
-                                            @Override
-                                            public void onClick(View v)
-                                            {
-                                                if (mOnUserActionListener != null)
-                                                {
-                                                    mOnUserActionListener.showMap();
-                                                }
-                                            }
-                                        });
                                     }
                                 });
                             }
@@ -614,7 +602,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
                     }
                 });
             }
-        }, 500);
+        });
     }
 
     /**

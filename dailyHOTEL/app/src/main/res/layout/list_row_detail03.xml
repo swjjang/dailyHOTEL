@@ -74,6 +74,7 @@
         android:layout_height="match_parent">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/googleMapTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
