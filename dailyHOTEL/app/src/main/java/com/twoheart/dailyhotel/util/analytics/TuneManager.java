@@ -10,6 +10,7 @@ import com.mobileapptracker.MATEvent;
 import com.mobileapptracker.MATEventItem;
 import com.mobileapptracker.MATGender;
 import com.mobileapptracker.MobileAppTracker;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -21,7 +22,7 @@ import java.util.Map;
 
 public class TuneManager implements IBaseAnalyticsManager
 {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[TuneManager]";
 
     private static final String ADVERTISE_ID = "190723";

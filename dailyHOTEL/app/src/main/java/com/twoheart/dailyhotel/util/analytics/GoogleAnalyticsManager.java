@@ -8,13 +8,14 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.Map;
 
 public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[GoogleAnalyticsManager]";
 
     private static final String GA_PROPERTY_ID = "UA-43721645-6";

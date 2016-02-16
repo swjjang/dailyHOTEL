@@ -83,6 +83,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
     private ProgressDialog mProgressDialog;
     private String mCSoperatingTimeMessage;
 
+    private boolean mIsInitiatedCheckout = true;
+
     protected abstract void requestPayEasyPayment(TicketPayment ticketPayment, SaleTime checkInSaleTime);
 
     protected abstract void requestTicketPaymentInfomation(int index);
@@ -174,10 +176,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
         if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
         {
-
-        } else
-        {
-            recordAnalyticsInitiatedCheckout(ticketPayment);
+            mIsInitiatedCheckout = false;
         }
     }
 
@@ -500,6 +499,11 @@ public abstract class TicketPaymentActivity extends BaseActivity
         mFinalCheckDialog = null;
 
         hidePorgressDialog();
+
+        if (mIsInitiatedCheckout == true)
+        {
+            recordAnalyticsInitiatedCheckout(mTicketPayment);
+        }
 
         super.onDestroy();
     }

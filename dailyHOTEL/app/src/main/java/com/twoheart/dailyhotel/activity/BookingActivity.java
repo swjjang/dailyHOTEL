@@ -137,6 +137,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private String mWarningDialogMessage;
     private String mCSoperatingTimeMessage;
 
+    private boolean mIsInitiatedCheckout = true;
+
     public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation, SaleTime checkInSaleTime, Hotel.HotelGrade hotelGrade, int hotelIndex)
     {
         Intent intent = new Intent(context, BookingActivity.class);
@@ -846,12 +848,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         setResult(resultCode);
 
-        if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
+        if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
         {
-
-        } else
-        {
-            recordAnalyticsInitiatedCheckout(mPay);
+            mIsInitiatedCheckout = false;
         }
     }
 
@@ -1324,6 +1323,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         mFinalCheckDialog = null;
 
         hidePorgressDialog();
+
+        if (mIsInitiatedCheckout == true)
+        {
+            recordAnalyticsInitiatedCheckout(mPay);
+        }
 
         super.onDestroy();
     }

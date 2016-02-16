@@ -7,11 +7,15 @@ import android.os.Bundle;
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.Map;
 
 public class FacebookManager implements IBaseAnalyticsManager
 {
+    private static final boolean DEBUG = Constants.DEBUG;
+    private static final String TAG = "[FacebookManager]";
     private Context mContext;
 
     public FacebookManager(Context context)
@@ -42,6 +46,11 @@ public class FacebookManager implements IBaseAnalyticsManager
             parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
 
             appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, parameters);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+            }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
@@ -55,6 +64,11 @@ public class FacebookManager implements IBaseAnalyticsManager
             parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PRICE));
 
             appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, parameters);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+            }
         }
     }
 
@@ -73,6 +87,11 @@ public class FacebookManager implements IBaseAnalyticsManager
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + parameters.toString());
+                }
             } else if (AnalyticsManager.Action.GOURMET_LOCATIONS_CLICKED.equalsIgnoreCase(action) == true)
             {
                 AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
@@ -83,16 +102,26 @@ public class FacebookManager implements IBaseAnalyticsManager
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + parameters.toString());
+                }
             } else if (AnalyticsManager.Action.HOTEL_SORTING_CLICKED.equalsIgnoreCase(action) == true)
             {
                 AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
                 Bundle parameters = new Bundle();
 
-                String value = String.format("%s_%s", mContext.getString(R.string.label_fnb), label);
+                String value = String.format("%s_%s", mContext.getString(R.string.label_hotel), label);
                 parameters.putString(AppEventsConstants.EVENT_PARAM_SEARCH_STRING, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + parameters.toString());
+                }
             } else if (AnalyticsManager.Action.GOURMET_SORTING_CLICKED.equalsIgnoreCase(action) == true)
             {
                 AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
@@ -103,6 +132,11 @@ public class FacebookManager implements IBaseAnalyticsManager
                 parameters.putString(AppEventsConstants.EVENT_PARAM_SEARCH_STRING, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + parameters.toString());
+                }
             }
         }
     }
@@ -137,6 +171,11 @@ public class FacebookManager implements IBaseAnalyticsManager
         parameters.putString(EventParam.CARD_TYPE, cardType);
 
         appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_PAYMENT_INFO, parameters);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "addCreditCard : " + parameters.toString());
+        }
     }
 
     @Override
@@ -148,6 +187,11 @@ public class FacebookManager implements IBaseAnalyticsManager
         parameters.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, userType);
 
         appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, parameters);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "signUpSocialUser : " + parameters.toString());
+        }
     }
 
     @Override
@@ -159,6 +203,11 @@ public class FacebookManager implements IBaseAnalyticsManager
         parameters.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, userType);
 
         appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, parameters);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "signUpDailyUser : " + parameters.toString());
+        }
     }
 
     @Override
@@ -177,6 +226,11 @@ public class FacebookManager implements IBaseAnalyticsManager
         parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
 
         appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED, parameters);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "purchaseCompleteHotel : " + parameters.toString());
+        }
     }
 
     @Override
@@ -194,6 +248,11 @@ public class FacebookManager implements IBaseAnalyticsManager
         parameters.putString(AppEventsConstants.EVENT_PARAM_NUM_ITEMS, params.get(AnalyticsManager.KeyType.QUANTITY));
 
         appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED, parameters);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "purchaseCompleteGourmet : " + parameters.toString());
+        }
     }
 
     @Override
@@ -212,6 +271,11 @@ public class FacebookManager implements IBaseAnalyticsManager
         parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
 
         appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, parameters);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "initiatedCheckoutHotel : " + parameters.toString());
+        }
     }
 
     @Override
@@ -228,6 +292,11 @@ public class FacebookManager implements IBaseAnalyticsManager
         parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PRICE));
 
         appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, parameters);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "initiatedCheckoutGourmet : " + parameters.toString());
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
