@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -31,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
@@ -97,14 +95,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime, int gourmetIndex)
+    protected void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime, String category, int gourmetIndex, boolean isBenefit)
     {
         if (ticketInformation == null)
         {
             return;
         }
 
-        Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, ticketInformation, checkInSaleTime, gourmetIndex);
+        Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, ticketInformation, checkInSaleTime, category, gourmetIndex, isBenefit);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
 
@@ -118,36 +116,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private void recordAnalytics(PlaceDetail placeDetail)
-        {
-            if (placeDetail == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
-
-                if (placeDetail.getTicketInformation() == null || placeDetail.getTicketInformation().size() == 0)
-                {
-                    params.put(AnalyticsManager.KeyType.PRICE, "0");
-                } else
-                {
-                    params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(placeDetail.getTicketInformation().get(0).discountPrice));
-                }
-
-                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
-                params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, params);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -185,7 +153,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     mPlaceDetailLayout.setDetail(mPlaceDetail, mCurrentImage);
                 }
 
-                recordAnalytics(mPlaceDetail);
+                recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mPlaceDetail);
             } catch (Exception e)
             {
                 onError(e);

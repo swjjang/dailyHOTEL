@@ -5,20 +5,6 @@ import android.os.Parcelable;
 
 public class CreditCard implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public CreditCard createFromParcel(Parcel in)
-        {
-            return new CreditCard(in);
-        }
-
-        @Override
-        public CreditCard[] newArray(int size)
-        {
-            return new CreditCard[size];
-        }
-
-    };
     public String name;
     public String number;
     public String billingkey;
@@ -64,4 +50,18 @@ public class CreditCard implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public CreditCard createFromParcel(Parcel in)
+        {
+            return new CreditCard(in);
+        }
+
+        @Override
+        public CreditCard[] newArray(int size)
+        {
+            return new CreditCard[size];
+        }
+    };
 }

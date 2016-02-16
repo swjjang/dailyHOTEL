@@ -175,32 +175,6 @@ public class AnalyticsManager
         }
     }
 
-    public void initiatedCheckoutHotel(Map<String, String> params)
-    {
-        try
-        {
-            mGoogleAnalyticsManager.initiatedCheckoutHotel(params);
-            mTuneManager.initiatedCheckoutHotel(params);
-            mFacebookManager.initiatedCheckoutHotel(params);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
-    public void initiatedCheckoutGourmet(Map<String, String> params)
-    {
-        try
-        {
-            mGoogleAnalyticsManager.initiatedCheckoutGourmet(params);
-            mTuneManager.initiatedCheckoutGourmet(params);
-            mFacebookManager.initiatedCheckoutGourmet(params);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,9 +190,11 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_BANNER_DETAIL = "DailyHotel_EventBannerDetailView";
         //
         public static final String DAILYHOTEL_DETAIL = "DailyHotel_HotelDetailView";
+        public static final String DAILYHOTEL_DETAIL_ROOMTYPE = " DailyHotel_HotelRoomTypeList";
         public static final String DAILYHOTEL_DETAIL_MAP = "DailyHotel_HotelDetailMapView";
         //
         public static final String DAILYHOTEL_PAYMENT = "DailyHotel_BookingInitialise";
+        public static final String DAILYHOTEL_PAYMENT_AGREEMENT_POPUP = "DailyHotel_PaymentAgreementPopupScreen";
         public static final String DAILYHOTEL_PAYMENT_PROCESS = "DailyHotel_PaymentGateway";
         public static final String DAILYHOTEL_PAYMENT_COMPLETE = "DailyHotel_PaymentComplete";
         //
@@ -231,9 +207,11 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_BANNER_DETAIL = "DailyGourmet_EventBannerDetailView";
         //
         public static final String DAILYGOURMET_DETAIL = "DailyGourmet_GourmetDetailView";
+        public static final String DAILYGOURMET_DETAIL_TICKETTYPE = " DailyGourmet_GourmetMenuTypeList";
         public static final String DAILYGOURMET_DETAIL_MAP = "DailyGourmet_GourmetDetailMapView";
         //
         public static final String DAILYGOURMET_PAYMENT = "DailyGourmet_BookingInitialise";
+        public static final String DAILYGOURMET_PAYMENT_AGREEMENT_POPUP = "DailyGourmet_PaymentAgreementPopupScreen";
         public static final String DAILYGOURMET_PAYMENT_PROCESS = "DailyGourmet_PaymentGateway";
         public static final String DAILYGOURMET_PAYMENT_COMPLETE = "DailyGourmet_PaymentComplete";
         //
@@ -369,5 +347,8 @@ public class AnalyticsManager
         public static final String RESERVATION_TIME = "reservationTime";
         public static final String CURRENT_TIME = "currentTime";
         public static final String USER_INDEX = "userIndex";
+        public static final String GRADE = "grade";
+        public static final String DBENEFIT = "dBenefit";
+        public static final String CATEGORY = "category";
     }
 }

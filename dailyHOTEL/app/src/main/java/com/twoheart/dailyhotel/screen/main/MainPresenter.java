@@ -450,6 +450,8 @@ public class MainPresenter implements Response.ErrorListener
                 DailyNetworkAPI.getInstance().requestUserInformation(mBaseActivity.getNetworkTag(), mUserInfomationJsonResponseListener, MainPresenter.this);
             } else
             {
+                AnalyticsManager.getInstance(mBaseActivity).setUserIndex(null);
+
                 Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
                 {
                     @Override

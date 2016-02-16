@@ -8,8 +8,10 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Map;
 
@@ -33,18 +35,30 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void recordScreen(String screen, Map<String, String> params)
     {
-        if (params != null)
+        if (params == null)
         {
-            return;
-        }
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        // Send a screen view.
-        mGoogleAnalyticsTracker.setScreenName(screen);
-        mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
-        if (DEBUG == true)
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen);
+            }
+        } else
         {
-            ExLog.d(TAG + "Screen : " + screen);
+            if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+            {
+                checkoutStep(1, null, params);
+            } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
+            {
+                checkoutStep(2, null, params);
+            } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+            {
+                checkoutStep(3, null, params);
+            } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
+            {
+                checkoutStep(4, null, params);
+            }
         }
     }
 
@@ -75,7 +89,13 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
-        mGoogleAnalyticsTracker.set("userId", index);
+        if (Util.isTextEmpty(index) == true)
+        {
+
+        } else
+        {
+
+        }
     }
 
     @Override
@@ -106,62 +126,224 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        String hotelName = params.get(AnalyticsManager.KeyType.NAME);
-        String roomIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
-        double price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
-        int quantity = Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY));
+        double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
+        String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
 
-        Product product = new Product().setId(roomIndex).setName(hotelName)//
-            .setCategory(AnalyticsManager.Label.HOTEL).setBrand("DAILYHOTEL").setPrice(price).setQuantity(quantity);//
-        //                .setCustomDimension(1, "User Index : " + userIndex)//
-        //                .setCustomDimension(2, "Check-In : " + checkInTime)//
-        //                .setCustomDimension(3, "Check-Out : " + checkOutTime)//
-        //                .setCustomDimension(4, "Pay Type" + payType)//
-        //                .setCustomDimension(5, "Current Time : " + currentTime);
+        Product product = getProcuct(params);
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
-            .setTransactionId(transId);
+            .setTransactionId(transId)//
+            .setTransactionRevenue(paymentPrice)//
+            .setTransactionCouponCode(String.format("credit_%s", credit));
 
         HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+        //
+        if (Pay.Type.VBANK.name().equalsIgnoreCase(paymentType) == false)
+        {
+            ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
+                .setCheckoutStep(5)//
+                .setTransactionId(transId)//
+                .setTransactionRevenue(paymentPrice)//
+                .setTransactionCouponCode(String.format("credit_%s", credit));
+
+            HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productCheckoutAction);
+
+            mGoogleAnalyticsTracker.set("&cu", "KRW");
+            mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+        }
     }
 
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        String name = params.get(AnalyticsManager.KeyType.NAME);
-        String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
-        double price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
-        int quantity = Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY));
+        String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
+        String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
+        double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
 
-        Product product = new Product().setId(ticketIndex).setName(name)//
-            .setCategory(AnalyticsManager.Label.GOURMET).setBrand("DAILYHOTEL").setPrice(price).setQuantity(quantity);//
-        //                .setCustomDimension(1, "User Index : " + userIndex)//
-        //                .setCustomDimension(2, "Check-In : " + checkInTime)//
-        //                .setCustomDimension(3, "Check-Out : " + checkOutTime)//
-        //                .setCustomDimension(4, "Pay Type" + payType)//
-        //                .setCustomDimension(5, "Current Time : " + currentTime);
+        Product product = getProcuct(params);
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
-            .setTransactionId(transId);
+            .setTransactionId(transId)//
+            .setTransactionRevenue(paymentPrice)//
+            .setTransactionCouponCode(String.format("credit_%s", credit));
 
         HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+        //
+        if (Pay.Type.VBANK.name().equalsIgnoreCase(paymentType) == false)
+        {
+            ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
+                .setCheckoutStep(5)//
+                .setTransactionId(transId)//
+                .setTransactionRevenue(paymentPrice)//
+                .setTransactionCouponCode(String.format("credit_%s", credit));
+
+            HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productCheckoutAction);
+
+            mGoogleAnalyticsTracker.set("&cu", "KRW");
+            mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+        }
     }
 
-    @Override
-    public void initiatedCheckoutHotel(Map<String, String> params)
+    private Product getProcuct(Map<String, String> params)
     {
+        String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+        String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
 
+        String placeName = params.get(AnalyticsManager.KeyType.NAME);
+        String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
+
+        String checkIn = null;
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE);
+        }
+
+        String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
+
+        String grade = params.get(AnalyticsManager.KeyType.GRADE);
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY);
+
+        String price = params.get(AnalyticsManager.KeyType.PRICE);
+        String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
+        String quantity = params.get(AnalyticsManager.KeyType.QUANTITY);
+
+        String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT);
+        String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
+        String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
+
+        String id = null;
+
+        if (Util.isTextEmpty(placeIndex) == false && Util.isTextEmpty(ticketIndex) == false)
+        {
+            id = placeIndex + "_" + ticketIndex;
+        } else if (Util.isTextEmpty(placeIndex) == false)
+        {
+            id = placeIndex;
+        } else
+        {
+            return null;
+        }
+
+        Product product = new Product().setId(id);
+
+        String name = null;
+
+        if (Util.isTextEmpty(placeName) == false && Util.isTextEmpty(ticketName) == false)
+        {
+            name = placeIndex + "_" + ticketIndex;
+        } else if (Util.isTextEmpty(placeName) == false)
+        {
+            name = placeIndex;
+        }
+
+        if (Util.isTextEmpty(name) == false)
+        {
+            product.setName(name);
+        }
+
+        if (Util.isTextEmpty(grade) == false)
+        {
+            product.setCategory(grade);
+        }
+
+        if (Util.isTextEmpty(category) == false)
+        {
+            product.setCategory(category);
+        }
+
+        if (Util.isTextEmpty(price) == false)
+        {
+            try
+            {
+                product.setPrice(Double.parseDouble(price));
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        if (Util.isTextEmpty(quantity) == false)
+        {
+            try
+            {
+                product.setQuantity(Integer.parseInt(quantity));
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        if (Util.isTextEmpty(checkIn) == false)
+        {
+            product.setCustomDimension(1, checkIn);
+        }
+
+        if (Util.isTextEmpty(checkOut) == false)
+        {
+            product.setCustomDimension(2, checkOut);
+        }
+
+        if (Util.isTextEmpty(dBenefit) == false)
+        {
+            product.setCustomDimension(3, dBenefit);
+        }
+
+        if (Util.isTextEmpty(paymentType) == false)
+        {
+            product.setCustomDimension(4, paymentType);
+        }
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "Product : " + product.toString());
+        }
+
+        return product;
     }
 
-    @Override
-    public void initiatedCheckoutGourmet(Map<String, String> params)
+    private void checkoutStep(int step, String transId, Map<String, String> params)
     {
+        String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
+        String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
+        Product product = getProcuct(params);
+
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_CHECKOUT).setCheckoutStep(step);
+
+        if (Util.isTextEmpty(transId) == false)
+        {
+            productAction.setTransactionId(transId);
+        }
+
+        if (Util.isTextEmpty(paymentPrice) == false)
+        {
+            productAction.setTransactionRevenue(Double.parseDouble(paymentPrice));
+        }
+
+        if (Util.isTextEmpty(credit) == false)
+        {
+            productAction.setTransactionCouponCode(String.format("credit_%s", credit));
+        }
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "checkoutStep : " + step + " | " + transId + " | " + productAction.toString());
+        }
+
+        HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+
+        mGoogleAnalyticsTracker.set("&cu", "KRW");
+        mGoogleAnalyticsTracker.send(screenViewBuilder.build());
     }
 }

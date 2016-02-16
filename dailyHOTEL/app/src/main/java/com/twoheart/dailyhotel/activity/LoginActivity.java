@@ -809,6 +809,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 // GCM 등록을 위해 값이 필요한다.
                 userIndex = String.valueOf(response.getInt("idx"));
 
+                AnalyticsManager.getInstance(LoginActivity.this).setUserIndex(userIndex);
+
                 String name = response.getString("name");
 
                 if (Util.isTextEmpty(name) == false)

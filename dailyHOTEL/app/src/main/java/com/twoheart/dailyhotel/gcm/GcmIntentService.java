@@ -176,7 +176,7 @@ public class GcmIntentService extends IntentService implements Constants
             Date date = new Date();
             String strDate = dateFormat.format(date);
             String userIndex = DailyPreference.getInstance(context).getVBankUserIndex();
-            String transId = strDate + userIndex;
+            String transId = strDate + "_" + userIndex;
             String placeType = DailyPreference.getInstance(context).getVBankPlaceType();
 
             if (AnalyticsManager.Label.HOTEL.equalsIgnoreCase(placeType) == true)

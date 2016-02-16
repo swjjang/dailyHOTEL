@@ -205,7 +205,13 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
-        mMobileAppTracker.setUserId(index);
+        if (Util.isTextEmpty(index) == true)
+        {
+
+        } else
+        {
+            mMobileAppTracker.setUserId(index);
+        }
     }
 
     @Override
@@ -371,18 +377,6 @@ public class TuneManager implements IBaseAnalyticsManager
         {
             ExLog.d(TAG + "purchaseCompleteGourmet : " + params.toString());
         }
-    }
-
-    @Override
-    public void initiatedCheckoutHotel(Map<String, String> params)
-    {
-
-    }
-
-    @Override
-    public void initiatedCheckoutGourmet(Map<String, String> params)
-    {
-
     }
 
     private MATEventItem getMATEventItem(Map<String, String> params)

@@ -118,6 +118,9 @@ public class DailyPreference
     private static final String KEY_PREFERENCE_VBANK_PAYMENT_TYPE = "VBANK_PAYMENT_TYPE";
     private static final String KEY_PREFERENCE_VBANK_RESERVATION_TIME = "VBANK_RESERVATION_TIME";
     private static final String KEY_PREFERENCE_VBANK_PLACE_TYPE = "VBANK_PLACE_TYPE";
+    private static final String KEY_PREFERENCE_VBANK_CATEGORY = "VBANK_CATEGORY";
+    private static final String KEY_PREFERENCE_VBANK_GRADE = "VBANK_GRADE";
+    private static final String KEY_PREFERENCE_VBANK_DBENEFIT = "VBANK_DBENEFIT";
 
     private static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
 
@@ -726,7 +729,7 @@ public class DailyPreference
         return getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_USER_INDEX, null);
     }
 
-    public void setVirtuaAccountHotelInformation(Pay pay, SaleTime checkInSaleTime)
+    public void setVirtuaAccountHotelInformation(Context context, Pay pay, SaleTime checkInSaleTime)
     {
         if (mVBankEditor != null)
         {
@@ -743,6 +746,8 @@ public class DailyPreference
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_INDEX, Integer.toString(pay.hotelIndex));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_NAME, saleRoomInformation.roomName);
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_GRADE, pay.grade.getName(context));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_DBENEFIT, pay.isDBenefit ? "yes" : "no");
 
             SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + saleRoomInformation.nights);
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKIN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
@@ -792,6 +797,8 @@ public class DailyPreference
         params.put(AnalyticsManager.KeyType.USED_BOUNS, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_USED_BONUS, null));
         params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PAYMENT_PRICE, null));
         params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PAYMENT_TYPE, null));
+        params.put(AnalyticsManager.KeyType.GRADE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_GRADE, null));
+        params.put(AnalyticsManager.KeyType.DBENEFIT, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_DBENEFIT, null));
 
         return params;
     }
@@ -817,6 +824,8 @@ public class DailyPreference
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_USED_BONUS, "0");
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_TYPE, ticketPayment.paymentType.name());
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_CATEGORY, ticketPayment.category);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_DBENEFIT, ticketPayment.isDBenefit ? "yes" : "no");
 
             Calendar calendarTime = DailyCalendar.getInstance();
             calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -846,6 +855,8 @@ public class DailyPreference
         params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PAYMENT_PRICE, null));
         params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_PAYMENT_TYPE, null));
         params.put(AnalyticsManager.KeyType.RESERVATION_TIME, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_RESERVATION_TIME, null));
+        params.put(AnalyticsManager.KeyType.CATEGORY, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_CATEGORY, null));
+        params.put(AnalyticsManager.KeyType.DBENEFIT, getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_DBENEFIT, null));
 
         return params;
     }

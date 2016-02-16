@@ -12,21 +12,6 @@ import java.util.TimeZone;
 
 public class TicketPayment implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public TicketPayment createFromParcel(Parcel in)
-        {
-            return new TicketPayment(in);
-        }
-
-        @Override
-        public TicketPayment[] newArray(int size)
-        {
-            return new TicketPayment[size];
-        }
-
-    };
-
     public int bonus;
     public boolean isEnabledBonus;
     public String checkInTime;
@@ -43,6 +28,8 @@ public class TicketPayment implements Parcelable
     public long startTicketTime;
     public long endTicketTime;
     public int placeIndex;
+    public boolean isDBenefit;
+    public String category;
 
     public TicketPayment()
     {
@@ -73,6 +60,8 @@ public class TicketPayment implements Parcelable
         dest.writeLong(ticketTime);
         dest.writeLongArray(ticketTimes);
         dest.writeInt(placeIndex);
+        dest.writeByte((byte) (isDBenefit ? 1 : 0));
+        dest.writeString(category);
     }
 
     private void readFromParcel(Parcel in)
@@ -90,6 +79,8 @@ public class TicketPayment implements Parcelable
         ticketTime = in.readLong();
         ticketTimes = in.createLongArray();
         placeIndex = in.readInt();
+        isDBenefit = in.readByte() != 0;
+        category = in.readString();
     }
 
     public TicketInformation getTicketInformation()
@@ -171,11 +162,26 @@ public class TicketPayment implements Parcelable
         return 0;
     }
 
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public TicketPayment createFromParcel(Parcel in)
+        {
+            return new TicketPayment(in);
+        }
+
+        @Override
+        public TicketPayment[] newArray(int size)
+        {
+            return new TicketPayment[size];
+        }
+    };
+
+    // 명칭 변경하면 안됨 서버와 약속되어있음.
     public enum PaymentType
     {
         EASY_CARD("EasyCardPay"),
         CARD("CardPay"),
-        PHONE("PhoneBillPay"),
+        PHONE_PAY("PhoneBillPay"),
         VBANK("VirtualAccountPay");
 
         private String mName;
