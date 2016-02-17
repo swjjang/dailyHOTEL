@@ -781,6 +781,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
             params.put(AnalyticsManager.KeyType.CATEGORY, ticketPayment.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, ticketPayment.isDBenefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, ticketPayment.paymentType.getName());
 
             Calendar calendarTime = DailyCalendar.getInstance();
             calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));

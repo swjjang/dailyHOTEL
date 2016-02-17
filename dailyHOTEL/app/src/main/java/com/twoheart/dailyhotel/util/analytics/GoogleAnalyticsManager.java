@@ -142,7 +142,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         //
-        if (Pay.Type.VBANK.name().equalsIgnoreCase(paymentType) == false)
+        if (Pay.Type.VBANK.getName().equalsIgnoreCase(paymentType) == false)
         {
             ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
                 .setCheckoutStep(5)//
@@ -176,7 +176,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         //
-        if (Pay.Type.VBANK.name().equalsIgnoreCase(paymentType) == false)
+        if (Pay.Type.VBANK.getName().equalsIgnoreCase(paymentType) == false)
         {
             ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
                 .setCheckoutStep(5)//

@@ -1734,7 +1734,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
             }
 
-            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, pay.getType().name());
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, pay.getType().getName());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
