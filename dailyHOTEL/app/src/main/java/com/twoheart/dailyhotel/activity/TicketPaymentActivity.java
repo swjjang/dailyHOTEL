@@ -67,6 +67,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected static final int STATE_NONE = 0;
     protected static final int STATE_ACTIVITY_RESULT = 1;
     protected static final int STATE_PAYMENT = 2;
+    protected static final int STATE_REGISTER_CREDIT_CARD = 3;
 
     protected TicketPayment mTicketPayment;
     protected CreditCard mSelectedCreditCard;
@@ -437,10 +438,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             switch (resultCode)
             {
                 case CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
-                    lockUI();
-
-                    // credit card 요청
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, TicketPaymentActivity.this);
+                    mState = STATE_REGISTER_CREDIT_CARD;
                     return;
 
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -972,7 +970,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
             }
         }
     };
-    private DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+
+    protected DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -1054,7 +1053,48 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
                 switch (mState)
                 {
-                    case STATE_NONE:
+                    case STATE_ACTIVITY_RESULT:
+                    {
+                        unLockUI();
+
+                        if (isOnSession == true)
+                        {
+                            activityResulted(mReqCode, mResCode, mResIntent);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+
+                    case STATE_PAYMENT:
+                    {
+                        if (isOnSession == true)
+                        {
+                            int bonus = jsonData.getInt("user_bonus");
+
+                            if (bonus < 0)
+                            {
+                                bonus = 0;
+                            }
+
+                            if (mTicketPayment.isEnabledBonus == true && bonus != mTicketPayment.bonus)
+                            {
+                                // 보너스 값이 변경된 경우
+                                mTicketPayment.bonus = bonus;
+                                showChangedBonusDialog();
+                                return;
+                            }
+
+                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+
+                    default:
                     {
                         if (isOnSession == true)
                         {
@@ -1090,47 +1130,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                             }
 
                             // 2. 화면 정보 얻기
-                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-
-                    case STATE_ACTIVITY_RESULT:
-                    {
-                        unLockUI();
-
-                        if (isOnSession == true)
-                        {
-                            activityResulted(mReqCode, mResCode, mResIntent);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-
-                    case STATE_PAYMENT:
-                    {
-                        if (isOnSession == true)
-                        {
-                            int bonus = jsonData.getInt("user_bonus");
-
-                            if (bonus < 0)
-                            {
-                                bonus = 0;
-                            }
-
-                            if (mTicketPayment.isEnabledBonus == true && bonus != mTicketPayment.bonus)
-                            {
-                                // 보너스 값이 변경된 경우
-                                mTicketPayment.bonus = bonus;
-                                showChangedBonusDialog();
-                                return;
-                            }
-
                             requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
                         } else
                         {

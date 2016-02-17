@@ -1197,10 +1197,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             switch (resultCode)
             {
                 case CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
-                    lockUI();
-
-                    // credit card 요청
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, BookingActivity.this);
+                    mAliveCallSource = "REGISTERCREDITCARD";
                     return;
 
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -1803,6 +1800,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, pay.getSaleRoomInformation().hotelName);
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(pay.getSaleRoomInformation().averageDiscount));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(pay.getSaleRoomInformation().totalDiscount));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(pay.getSaleRoomInformation().nights));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(pay.hotelIndex));
 
@@ -2191,8 +2189,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             showStopOnSaleDialog();
                         } else
                         {
-                            // 3. 간편결제 credit card 요청
-                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this);
+                            if ("REGISTERCREDITCARD".equalsIgnoreCase(mAliveCallSource) == true)
+                            {
+                                mAliveCallSource = "";
+
+                                // 신용카드 등록후에 바로 결제를 할경우.
+                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, BookingActivity.this);
+                            } else
+                            {
+                                // 3. 간편결제 credit card 요청
+                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this);
+                            }
                         }
                         break;
                     }

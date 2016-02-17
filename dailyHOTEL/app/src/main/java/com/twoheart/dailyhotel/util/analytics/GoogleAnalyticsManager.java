@@ -8,7 +8,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -128,7 +127,6 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     {
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
-        String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
 
         Product product = getProcuct(params);
 
@@ -142,18 +140,20 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         //
-        if (Pay.Type.VBANK.getName().equalsIgnoreCase(paymentType) == false)
+        ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
+            .setCheckoutStep(5)//
+            .setTransactionId(transId)//
+            .setTransactionRevenue(paymentPrice)//
+            .setTransactionCouponCode(String.format("credit_%s", credit));
+
+        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productCheckoutAction);
+
+        mGoogleAnalyticsTracker.set("&cu", "KRW");
+        mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+
+        if (DEBUG == true)
         {
-            ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
-                .setCheckoutStep(5)//
-                .setTransactionId(transId)//
-                .setTransactionRevenue(paymentPrice)//
-                .setTransactionCouponCode(String.format("credit_%s", credit));
-
-            HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productCheckoutAction);
-
-            mGoogleAnalyticsTracker.set("&cu", "KRW");
-            mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+            ExLog.d(TAG + "checkoutStep : 5 | " + transId + " | " + productAction.toString());
         }
     }
 
@@ -161,7 +161,6 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
-        String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
 
         Product product = getProcuct(params);
@@ -176,18 +175,20 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         //
-        if (Pay.Type.VBANK.getName().equalsIgnoreCase(paymentType) == false)
+        ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
+            .setCheckoutStep(5)//
+            .setTransactionId(transId)//
+            .setTransactionRevenue(paymentPrice)//
+            .setTransactionCouponCode(String.format("credit_%s", credit));
+
+        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productCheckoutAction);
+
+        mGoogleAnalyticsTracker.set("&cu", "KRW");
+        mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+
+        if (DEBUG == true)
         {
-            ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
-                .setCheckoutStep(5)//
-                .setTransactionId(transId)//
-                .setTransactionRevenue(paymentPrice)//
-                .setTransactionCouponCode(String.format("credit_%s", credit));
-
-            HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productCheckoutAction);
-
-            mGoogleAnalyticsTracker.set("&cu", "KRW");
-            mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+            ExLog.d(TAG + "checkoutStep : 5 | " + transId + " | " + productAction.toString());
         }
     }
 

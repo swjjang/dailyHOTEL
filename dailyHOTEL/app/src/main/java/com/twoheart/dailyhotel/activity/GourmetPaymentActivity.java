@@ -844,7 +844,16 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                 if (isOnSale == true && msg_code == 0)
                 {
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
+                    switch (mState)
+                    {
+                        case STATE_REGISTER_CREDIT_CARD:
+                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
+                            break;
+
+                        default:
+                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
+                            break;
+                    }
                 } else
                 {
                     if (response.has("msg") == true)
@@ -942,39 +951,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                     switch (mState)
                     {
-                        case STATE_NONE:
-                        {
-                            // 가격이 변동 되었다.
-                            if (mTicketPayment.getTicketInformation().discountPrice != discountPrice)
-                            {
-                                mIsChangedPrice = true;
-                            }
-
-                            mTicketPayment.getTicketInformation().discountPrice = discountPrice;
-                            mTicketPayment.ticketMaxCount = maxCount;
-
-                            Calendar calendarCheckin = DailyCalendar.getInstance();
-                            calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
-                            calendarCheckin.setTimeInMillis(sday);
-
-                            SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
-                            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                            mTicketPayment.checkInTime = formatDay.format(calendarCheckin.getTime());
-
-                            if (mTicketPayment.ticketTime == 0)
-                            {
-                                // 방문시간을 선택하지 않은 경우
-                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
-                            } else
-                            {
-                                requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
-                            }
-
-                            recordAnalyticsPayment(mTicketPayment);
-                            break;
-                        }
-
                         case STATE_PAYMENT:
                         {
                             TicketInformation ticketInformation = mTicketPayment.getTicketInformation();
@@ -1015,6 +991,39 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                             {
                                 processPayment();
                             }
+                            break;
+                        }
+
+                        default:
+                        {
+                            // 가격이 변동 되었다.
+                            if (mTicketPayment.getTicketInformation().discountPrice != discountPrice)
+                            {
+                                mIsChangedPrice = true;
+                            }
+
+                            mTicketPayment.getTicketInformation().discountPrice = discountPrice;
+                            mTicketPayment.ticketMaxCount = maxCount;
+
+                            Calendar calendarCheckin = DailyCalendar.getInstance();
+                            calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
+                            calendarCheckin.setTimeInMillis(sday);
+
+                            SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
+                            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                            mTicketPayment.checkInTime = formatDay.format(calendarCheckin.getTime());
+
+                            if (mTicketPayment.ticketTime == 0)
+                            {
+                                // 방문시간을 선택하지 않은 경우
+                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
+                            } else
+                            {
+                                requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
+                            }
+
+                            recordAnalyticsPayment(mTicketPayment);
                             break;
                         }
                     }

@@ -43,10 +43,22 @@ public class TuneManager implements IBaseAnalyticsManager
             mMobileAppTracker.setExistingUser(true);
         }
 
-        mMobileAppTracker.setAndroidId(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
+        try
+        {
+            mMobileAppTracker.setAndroidId(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
-        String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-        mMobileAppTracker.setDeviceId(deviceId);
+        try
+        {
+            String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+            mMobileAppTracker.setDeviceId(deviceId);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
         try
         {
@@ -313,12 +325,12 @@ public class TuneManager implements IBaseAnalyticsManager
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
         {
-            matEvent.withAttribute1(AnalyticsManager.KeyType.USED_BOUNS);
+            matEvent.withAttribute1(params.get(AnalyticsManager.KeyType.USED_BOUNS));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_TYPE) == true)
         {
-            matEvent.withAttribute2(AnalyticsManager.KeyType.PAYMENT_TYPE);
+            matEvent.withAttribute2(params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
         }
 
         MATEventItem matEventItem = getMATEventItem(params);
@@ -347,17 +359,17 @@ public class TuneManager implements IBaseAnalyticsManager
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
         {
-            matEvent.withAttribute1(AnalyticsManager.KeyType.USED_BOUNS);
+            matEvent.withAttribute1(params.get(AnalyticsManager.KeyType.USED_BOUNS));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_TYPE) == true)
         {
-            matEvent.withAttribute2(AnalyticsManager.KeyType.PAYMENT_TYPE);
+            matEvent.withAttribute2(params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
         }
 
         if (params.containsKey(AnalyticsManager.KeyType.RESERVATION_TIME) == true)
         {
-            matEvent.withAttribute3(AnalyticsManager.KeyType.RESERVATION_TIME);
+            matEvent.withAttribute3(params.get(AnalyticsManager.KeyType.RESERVATION_TIME));
         }
 
         MATEventItem matEventItem = getMATEventItem(params);
@@ -441,7 +453,7 @@ public class TuneManager implements IBaseAnalyticsManager
 
         if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
         {
-            matEvent.withRevenue(Double.parseDouble(AnalyticsManager.KeyType.PAYMENT_PRICE));
+            matEvent.withRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
         }
 
         return matEvent;

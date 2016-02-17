@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class AnalyticsManager
 {
+    private static final String TAG = "[AnalyticsManager]";
+
     private static AnalyticsManager mInstance = null;
     private GoogleAnalyticsManager mGoogleAnalyticsManager;
     private TuneManager mTuneManager;
@@ -37,7 +39,7 @@ public class AnalyticsManager
             mFacebookManager = new FacebookManager(context);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -50,7 +52,7 @@ public class AnalyticsManager
             mFacebookManager.setUserIndex(index);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -63,7 +65,7 @@ public class AnalyticsManager
             mFacebookManager.onResume(activity);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -76,7 +78,7 @@ public class AnalyticsManager
             mFacebookManager.onPause(activity);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -89,7 +91,7 @@ public class AnalyticsManager
             mFacebookManager.recordScreen(screen, params);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -102,7 +104,7 @@ public class AnalyticsManager
             mFacebookManager.recordEvent(category, action, label, params);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -119,7 +121,7 @@ public class AnalyticsManager
             mFacebookManager.addCreditCard(cardType);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -132,7 +134,7 @@ public class AnalyticsManager
             mFacebookManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -145,7 +147,7 @@ public class AnalyticsManager
             mFacebookManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -158,7 +160,7 @@ public class AnalyticsManager
             mFacebookManager.purchaseCompleteHotel(transId, params);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -171,7 +173,7 @@ public class AnalyticsManager
             mFacebookManager.purchaseCompleteGourmet(transId, params);
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.d(TAG + e.toString());
         }
     }
 
