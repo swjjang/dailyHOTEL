@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
@@ -58,8 +57,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_profile);
 

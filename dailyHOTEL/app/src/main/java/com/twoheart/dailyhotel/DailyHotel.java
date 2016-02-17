@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
@@ -58,6 +59,7 @@ public class DailyHotel extends Application implements Constants
         initializeVolley();
         initializeAnalytics();
         Util.initializeFresco(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         KakaoSDK.init(new KakaoSDKAdapter());
 

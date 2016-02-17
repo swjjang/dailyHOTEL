@@ -114,6 +114,19 @@ public abstract class TicketPaymentActivity extends BaseActivity
     }
 
     @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+        {
+            mFinalCheckDialog.dismiss();
+        }
+
+        mFinalCheckDialog = null;
+    }
+
+    @Override
     public void onErrorResponse(VolleyError error)
     {
         super.onErrorResponse(error);
@@ -774,7 +787,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(ticketPayment.ticketCount));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.placeName);
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.name);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
             params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));

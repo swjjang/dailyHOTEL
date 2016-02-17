@@ -325,6 +325,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             , info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mEasyPaymentButton.setText(stringBuilder);
+
+        mPaymentRadioGroup.check(mEasyPaymentButton.getId());
     }
 
     @Override
@@ -338,6 +340,19 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
             DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, BookingActivity.this);
         }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+        {
+            mFinalCheckDialog.dismiss();
+        }
+
+        mFinalCheckDialog = null;
     }
 
     private void updatePayPrice(boolean applyCredit)
@@ -562,7 +577,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private void onClickPayment()
     {
         unLockUI();
-        mDoReload = false;
 
         if (mClickView != null)
         {
@@ -575,8 +589,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             if (mSelectedCreditCard == null)
             {
-                mDoReload = true;
-
                 if (mClickView != null)
                 {
                     mClickView.setClickable(true);
@@ -1972,7 +1984,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     mCardManagerButton.setVisibility(View.INVISIBLE);
 
                     mSelectedCreditCard = null;
-                    mEasyPaymentButton.setChecked(true);
                     mEasyPaymentButton.setText(R.string.label_booking_easypayment);
                 } else
                 {
@@ -1983,7 +1994,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         JSONObject jsonObject = jsonArray.getJSONObject(0);
 
                         mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                        mEasyPaymentButton.setChecked(true);
                     } else
                     {
                         boolean hasCreditCard = false;
@@ -2556,10 +2566,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                         String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
 
-                        if (DEBUG == true)
-                        {
-                            showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                        }
+                        //                        if (DEBUG == true)
+                        //                        {
+                        //                            showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+                        //                        }
 
                         // 2. 화면 정보 얻기
                         DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag, params, mHotelPaymentDetailJsonResponseListener, BookingActivity.this);

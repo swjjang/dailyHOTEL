@@ -382,14 +382,10 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         {
             // 카드 관리 관련 화면을 보여주지 않는다.
             mCardManagerButton.setVisibility(View.INVISIBLE);
-
-            mEasyPaymentButton.setChecked(true);
             mEasyPaymentButton.setText(R.string.label_booking_easypayment);
         } else
         {
             mCardManagerButton.setVisibility(View.VISIBLE);
-
-            mEasyPaymentButton.setChecked(true);
             mEasyPaymentButton.setText(String.format("%s %s", creditCard.name.replace("카드", ""), creditCard.number));
         }
     }

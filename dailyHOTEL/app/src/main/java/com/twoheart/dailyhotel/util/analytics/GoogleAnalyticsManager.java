@@ -91,10 +91,10 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     {
         if (Util.isTextEmpty(index) == true)
         {
-
+            mGoogleAnalyticsTracker.set("&uid", "");
         } else
         {
-
+            mGoogleAnalyticsTracker.set("&uid", index);
         }
     }
 
@@ -241,10 +241,10 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
         if (Util.isTextEmpty(placeName) == false && Util.isTextEmpty(ticketName) == false)
         {
-            name = placeIndex + "_" + ticketIndex;
+            name = placeName + "_" + ticketName;
         } else if (Util.isTextEmpty(placeName) == false)
         {
-            name = placeIndex;
+            name = placeName;
         }
 
         if (Util.isTextEmpty(name) == false)

@@ -39,7 +39,6 @@ import com.android.volley.VolleyError;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
@@ -89,7 +88,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
 
     private Map<String, String> mStoreParams;
-    private Map<String, String> mRegPushParams;
 
     // 카카오톡
     private com.kakao.usermgmt.LoginButton mKakaoLoginView;
@@ -101,8 +99,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         super.onCreate(savedInstanceState);
 
         DailyHotel.setCurrentActivity(this);
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_login);
 
