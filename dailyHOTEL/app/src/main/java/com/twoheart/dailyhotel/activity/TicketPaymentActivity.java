@@ -886,12 +886,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
                 SaleTime saleTime = new SaleTime();
 
                 saleTime.setCurrentTime(response.getLong("currentDateTime"));
@@ -943,6 +937,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             try
             {
                 int msg_code = response.getInt("msg_code");
+                mState = STATE_NONE;
 
                 if (msg_code == 0)
                 {
@@ -1022,12 +1017,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)

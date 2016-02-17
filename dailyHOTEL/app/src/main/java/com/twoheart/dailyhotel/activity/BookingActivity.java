@@ -2695,6 +2695,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             try
             {
                 int msg_code = response.getInt("msg_code");
+                mAliveCallSource = "";
 
                 if (msg_code == 0)
                 {
