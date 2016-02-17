@@ -29,9 +29,4 @@ public interface IBaseAnalyticsManager
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 
     abstract void purchaseCompleteGourmet(String transId, Map<String, String> params);
-
-    // 예약 진행화면에서 이탈한 경우(결제를 취소한 경우)
-    abstract void initiatedCheckoutHotel(Map<String, String> params);
-
-    abstract void initiatedCheckoutGourmet(Map<String, String> params);
 }

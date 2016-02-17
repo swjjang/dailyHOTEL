@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmetlist;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -94,13 +93,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         void hideAppBarLayout();
 
         void pinAppBarLayout();
-    }
-
-    private interface OnUserAnalyticsActionListener
-    {
-        void selectPlace(String name, long index, String checkInTime);
-
-        void selectRegion(Province province);
     }
 
     @Override
@@ -891,10 +883,12 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             {
                 case LIST:
                     mViewType = VIEW_TYPE.MAP;
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP, null);
                     break;
 
                 case MAP:
                     mViewType = VIEW_TYPE.LIST;
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, null);
                     break;
 
                 default:
@@ -914,38 +908,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             unLockUI();
         }
 
-        private void recordAnalyticsSortTypeEvent(Context context, SortType sortType)
-        {
-            if (context == null || sortType == null)
-            {
-                return;
-            }
-
-            String label;
-
-            switch (sortType)
-            {
-                case DISTANCE:
-                    label = context.getString(R.string.label_sort_by_distance);
-                    break;
-
-                case LOW_PRICE:
-                    label = context.getString(R.string.label_sort_by_low_price);
-                    break;
-
-                case HIGH_PRICE:
-                    label = context.getString(R.string.label_sort_by_high_price);
-                    break;
-
-                default:
-                    label = context.getString(R.string.label_sort_by_area);
-                    break;
-            }
-
-            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , Action.GOURMET_SORTING_CLICKED, label, null);
-        }
-
         @Override
         public void selectSortType(SortType sortType)
         {
@@ -962,8 +924,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             }
 
             baseActivity.invalidateOptionsMenu();
-
-            recordAnalyticsSortTypeEvent(baseActivity, sortType);
         }
 
         @Override

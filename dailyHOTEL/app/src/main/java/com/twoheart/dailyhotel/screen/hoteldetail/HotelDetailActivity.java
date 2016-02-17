@@ -310,7 +310,8 @@ public class HotelDetailActivity extends BaseActivity
             return;
         }
 
-        Intent intent = BookingActivity.newInstance(HotelDetailActivity.this, saleRoomInformation, checkInSaleTime, hotelDetail.grade, hotelDetail.hotelIndex);
+        Intent intent = BookingActivity.newInstance(HotelDetailActivity.this, saleRoomInformation//
+            , checkInSaleTime, hotelDetail.grade, hotelDetail.hotelIndex, !Util.isTextEmpty(hotelDetail.hotelBenefit));
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -340,6 +341,42 @@ public class HotelDetailActivity extends BaseActivity
         return false;
     }
 
+    private void recordAnalyticsHotelDetail(String screen, HotelDetail hotelDetail)
+    {
+        if (hotelDetail == null)
+        {
+            return;
+        }
+
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
+            params.put(AnalyticsManager.KeyType.GRADE, mHotelDetail.grade.getName(HotelDetailActivity.this));
+            params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mHotelDetail.hotelBenefit) ? "no" : "yes");
+
+            if (mHotelDetail.getSaleRoomList() == null || mHotelDetail.getSaleRoomList().size() == 0)
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, "0");
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(mHotelDetail.getSaleRoomList().get(0).averageDiscount));
+            }
+
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mHotelDetail.nights));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mHotelDetail.hotelIndex));
+
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + hotelDetail.nights);
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(screen, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
@@ -375,8 +412,8 @@ public class HotelDetailActivity extends BaseActivity
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
             params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
@@ -513,6 +550,7 @@ public class HotelDetailActivity extends BaseActivity
 
             releaseUiComponent();
 
+            recordAnalyticsHotelDetail(Screen.DAILYHOTEL_DETAIL_ROOMTYPE, mHotelDetail);
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
                 , Action.ROOM_TYPE_CLICKED, mHotelDetail.hotelName, null);
         }
@@ -568,41 +606,6 @@ public class HotelDetailActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mHotelDetailInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private void recordAnalytics(HotelDetail hotelDetail)
-        {
-            if (hotelDetail == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
-
-                if (mHotelDetail.getSaleRoomList() == null || mHotelDetail.getSaleRoomList().size() == 0)
-                {
-                    params.put(AnalyticsManager.KeyType.PRICE, "0");
-                } else
-                {
-                    params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(mHotelDetail.getSaleRoomList().get(0).averageDiscount));
-                }
-
-                params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mHotelDetail.nights));
-                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mHotelDetail.hotelIndex));
-
-                SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + hotelDetail.nights);
-
-                params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-                AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DETAIL, params);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -632,7 +635,7 @@ public class HotelDetailActivity extends BaseActivity
                             mHotelDetailLayout.setHotelDetail(mHotelDetail, mCurrentImage);
                         }
 
-                        recordAnalytics(mHotelDetail);
+                        recordAnalyticsHotelDetail(Screen.DAILYHOTEL_DETAIL, mHotelDetail);
                         break;
                     }
 

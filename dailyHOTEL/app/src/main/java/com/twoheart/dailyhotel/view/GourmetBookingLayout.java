@@ -382,14 +382,10 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         {
             // 카드 관리 관련 화면을 보여주지 않는다.
             mCardManagerButton.setVisibility(View.INVISIBLE);
-
-            mEasyPaymentButton.setChecked(true);
             mEasyPaymentButton.setText(R.string.label_booking_easypayment);
         } else
         {
             mCardManagerButton.setVisibility(View.VISIBLE);
-
-            mEasyPaymentButton.setChecked(true);
             mEasyPaymentButton.setText(String.format("%s %s", creditCard.name.replace("카드", ""), creditCard.number));
         }
     }
@@ -424,7 +420,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
             mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.CARD);
         } else if (checkedId == mHpPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.PHONE);
+            mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.PHONE_PAY);
         } else if (checkedId == mAccountPaymentButton.getId())
         {
             mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.VBANK);
@@ -648,7 +644,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
                 mPaymentGroup.check(mCardPaymentButton.getId());
                 break;
 
-            case PHONE:
+            case PHONE_PAY:
                 mPaymentGroup.check(mHpPaymentButton.getId());
                 break;
 

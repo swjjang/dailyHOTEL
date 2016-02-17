@@ -599,6 +599,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     mEmptyLayout.setVisibility(View.VISIBLE);
 
                     unLockUI();
+
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST, null);
                 }
 
             } else
@@ -608,6 +610,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 onError();
                 unLockUI();
+
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST, null);
             }
         }
     };

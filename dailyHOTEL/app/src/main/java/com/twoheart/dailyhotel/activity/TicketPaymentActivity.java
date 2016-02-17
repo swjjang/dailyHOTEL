@@ -67,6 +67,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected static final int STATE_NONE = 0;
     protected static final int STATE_ACTIVITY_RESULT = 1;
     protected static final int STATE_PAYMENT = 2;
+    protected static final int STATE_REGISTER_CREDIT_CARD = 3;
 
     protected TicketPayment mTicketPayment;
     protected CreditCard mSelectedCreditCard;
@@ -111,6 +112,19 @@ public abstract class TicketPaymentActivity extends BaseActivity
             lockUI();
             DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, TicketPaymentActivity.this);
         }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+        {
+            mFinalCheckDialog.dismiss();
+        }
+
+        mFinalCheckDialog = null;
     }
 
     @Override
@@ -165,19 +179,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
 
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-        }
-    }
-
-    protected void setResult(int resultCode, TicketPayment ticketPayment)
-    {
-        setResult(resultCode);
-
-        if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
-        {
-
-        } else
-        {
-            recordAnalyticsInitiatedCheckout(ticketPayment);
         }
     }
 
@@ -247,7 +248,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                                 mState = STATE_NONE;
                                 mDoReload = true;
 
-                                setResult(RESULT_OK, mTicketPayment);
+                                setResult(RESULT_OK);
                                 finish();
                             }
                         };
@@ -336,7 +337,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                         {
                             mDoReload = true;
 
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, mTicketPayment);
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                             finish();
                         }
                     };
@@ -437,10 +438,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             switch (resultCode)
             {
                 case CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
-                    lockUI();
-
-                    // credit card 요청
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, TicketPaymentActivity.this);
+                    mState = STATE_REGISTER_CREDIT_CARD;
                     return;
 
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -502,38 +500,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
         hidePorgressDialog();
 
         super.onDestroy();
-    }
-
-    private void recordAnalyticsInitiatedCheckout(TicketPayment ticketPayment)
-    {
-        if (ticketPayment == null)
-        {
-            return;
-        }
-
-        try
-        {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-            Date date = new Date();
-            String strDate = dateFormat.format(date);
-            String userIndex = ticketPayment.getCustomer().getUserIdx();
-            String transId = strDate + '_' + userIndex;
-
-            TicketInformation ticketInformation = ticketPayment.getTicketInformation();
-
-            Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.placeName);
-            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
-            params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-            AnalyticsManager.getInstance(getApplicationContext()).initiatedCheckoutGourmet(params);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
     }
 
     /**
@@ -623,7 +589,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
                 break;
 
-            case PHONE:
+            case PHONE_PAY:
                 // 핸드폰을 선택했을 경우
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
                 break;
@@ -668,6 +634,9 @@ public abstract class TicketPaymentActivity extends BaseActivity
             try
             {
                 mFinalCheckDialog.show();
+
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
+                    , getMapPaymentInformation(mTicketPayment));
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -739,7 +708,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                setResult(RESULT_CANCELED, mTicketPayment);
+                setResult(RESULT_CANCELED);
                 finish();
             }
         };
@@ -766,7 +735,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             {
                 mDoReload = true;
 
-                setResult(RESULT_CANCELED, mTicketPayment);
+                setResult(RESULT_CANCELED);
                 finish();
             }
         };
@@ -802,6 +771,44 @@ public abstract class TicketPaymentActivity extends BaseActivity
         }, null, false);
     }
 
+    protected Map<String, String> getMapPaymentInformation(TicketPayment ticketPayment)
+    {
+        Map<String, String> params = new HashMap<>();
+
+        try
+        {
+            TicketInformation ticketInformation = ticketPayment.getTicketInformation();
+
+            params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(ticketPayment.ticketCount));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.name);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
+            params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
+            params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+            params.put(AnalyticsManager.KeyType.CATEGORY, ticketPayment.category);
+            params.put(AnalyticsManager.KeyType.DBENEFIT, ticketPayment.isDBenefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, ticketPayment.paymentType.getName());
+
+            Calendar calendarTime = DailyCalendar.getInstance();
+            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(ticketPayment.ticketTime));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return params;
+    }
+
     protected void writeLogPaid(TicketPayment ticketPayment)
     {
         try
@@ -812,28 +819,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             String userIndex = ticketPayment.getCustomer().getUserIdx();
             String transId = strDate + '_' + userIndex;
 
-            TicketInformation ticketInformation = ticketPayment.getTicketInformation();
-
-            Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(ticketPayment.ticketCount));
-            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.placeName);
-            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
-            params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
-            params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, ticketPayment.paymentType.name());
-
-            Calendar calendarTime = DailyCalendar.getInstance();
-            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(ticketPayment.ticketTime));
+            Map<String, String> params = getMapPaymentInformation(ticketPayment);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteGourmet(transId, params);
             AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE, null);
@@ -984,7 +970,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
             }
         }
     };
-    private DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+
+    protected DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -1066,7 +1053,48 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
                 switch (mState)
                 {
-                    case STATE_NONE:
+                    case STATE_ACTIVITY_RESULT:
+                    {
+                        unLockUI();
+
+                        if (isOnSession == true)
+                        {
+                            activityResulted(mReqCode, mResCode, mResIntent);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+
+                    case STATE_PAYMENT:
+                    {
+                        if (isOnSession == true)
+                        {
+                            int bonus = jsonData.getInt("user_bonus");
+
+                            if (bonus < 0)
+                            {
+                                bonus = 0;
+                            }
+
+                            if (mTicketPayment.isEnabledBonus == true && bonus != mTicketPayment.bonus)
+                            {
+                                // 보너스 값이 변경된 경우
+                                mTicketPayment.bonus = bonus;
+                                showChangedBonusDialog();
+                                return;
+                            }
+
+                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+
+                    default:
                     {
                         if (isOnSession == true)
                         {
@@ -1102,47 +1130,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                             }
 
                             // 2. 화면 정보 얻기
-                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-
-                    case STATE_ACTIVITY_RESULT:
-                    {
-                        unLockUI();
-
-                        if (isOnSession == true)
-                        {
-                            activityResulted(mReqCode, mResCode, mResIntent);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-
-                    case STATE_PAYMENT:
-                    {
-                        if (isOnSession == true)
-                        {
-                            int bonus = jsonData.getInt("user_bonus");
-
-                            if (bonus < 0)
-                            {
-                                bonus = 0;
-                            }
-
-                            if (mTicketPayment.isEnabledBonus == true && bonus != mTicketPayment.bonus)
-                            {
-                                // 보너스 값이 변경된 경우
-                                mTicketPayment.bonus = bonus;
-                                showChangedBonusDialog();
-                                return;
-                            }
-
                             requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
                         } else
                         {

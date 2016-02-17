@@ -5,32 +5,18 @@ import android.os.Parcelable;
 
 public class Pay implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Pay createFromParcel(Parcel in)
-        {
-            return new Pay(in);
-        }
-
-        @Override
-        public Pay[] newArray(int size)
-        {
-            return new Pay[size];
-        }
-
-    };
-
     public int credit;
     public int hotelIndex;
     public String checkInTime;
     public String checkOutTime;
+    public boolean isDBenefit;
+    public Hotel.HotelGrade grade;
     private SaleRoomInformation mSaleRoomInformation;
     private Customer mCustomer;
     private int mOriginalPrice;
     private boolean isSaleCredit;
     private Type mType;
     private Guest mGuest;
-
 
     public Pay()
     {
@@ -54,6 +40,8 @@ public class Pay implements Parcelable
         dest.writeSerializable(mType);
         dest.writeValue(mGuest);
         dest.writeInt(hotelIndex);
+        dest.writeByte((byte) (isDBenefit ? 1 : 0));
+        dest.writeString(grade.name());
     }
 
     private void readFromParcel(Parcel in)
@@ -68,6 +56,15 @@ public class Pay implements Parcelable
         mType = (Type) in.readSerializable();
         mGuest = (Guest) in.readValue(Guest.class.getClassLoader());
         hotelIndex = in.readInt();
+        isDBenefit = in.readByte() != 0;
+
+        try
+        {
+            grade = Hotel.HotelGrade.valueOf(in.readString());
+        } catch (Exception e)
+        {
+            grade = Hotel.HotelGrade.etc;
+        }
     }
 
     public SaleRoomInformation getSaleRoomInformation()
@@ -136,11 +133,12 @@ public class Pay implements Parcelable
         return 0;
     }
 
+    // 명칭 변경하면 안됨 서버와 약속되어있음.
     public enum Type
     {
         EASY_CARD("EasyCardPay"),
         CARD("CardPay"),
-        PHONE("PhoneBillPay"),
+        PHONE_PAY("PhoneBillPay"),
         VBANK("VirtualAccountPay");
 
         private String mName;
@@ -155,4 +153,18 @@ public class Pay implements Parcelable
             return mName;
         }
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Pay createFromParcel(Parcel in)
+        {
+            return new Pay(in);
+        }
+
+        @Override
+        public Pay[] newArray(int size)
+        {
+            return new Pay[size];
+        }
+    };
 }

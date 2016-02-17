@@ -1,9 +1,8 @@
 package com.twoheart.dailyhotel.screen.hoteldetail;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -12,23 +11,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.DetailInformation;
@@ -46,15 +31,12 @@ public class HotelDetailListAdapter extends BaseAdapter
 
     private HotelDetail mHotelDetail;
     private FragmentActivity mFragmentActivity;
-    private GoogleMap mGoogleMap;
-    private SupportMapFragment mMapFragment;
     private View[] mDeatilViews;
     private boolean[] mNeedRefreshData;
     private int mImageHeight;
     private View mHotelTitleLayout;
     private TextView mHotelGradeTextView;
     private TextView mHotelNameTextView;
-    private View mGoogleMapLayout;
 
     private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
@@ -525,187 +507,58 @@ public class HotelDetailListAdapter extends BaseAdapter
             }
         });
 
-        FrameLayout googleMapLayout = (FrameLayout) view.findViewById(R.id.googleMapLayout);
+        final com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
 
-        googleMapLayout.setOnClickListener(new OnClickListener()
+        mapImageView.post(new Runnable()
         {
             @Override
-            public void onClick(View v)
+            public void run()
             {
-                Util.installGooglePlayService((BaseActivity) mFragmentActivity);
+                double width = mapImageView.getWidth();
+                double height = mapImageView.getHeight();
+                double ratio = height / width;
+
+                if (width >= 640)
+                {
+                    width = 640;
+                }
+
+                height = width * ratio;
+
+                String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
+                String iconUrl = "http://s3.dailyhotel.kr/resources/images/_banner/googlemap_marker-1.png";
+
+                mapImageView.setImageURI(Uri.parse("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size="//
+                    + size + "&markers=icon:" + iconUrl + "|" + mHotelDetail.latitude + "," + mHotelDetail.longitude + "&sensor=false&scale=2&format=png8&mobile=true"));
             }
         });
 
         if (Util.isInstallGooglePlayService(mFragmentActivity) == true)
         {
-            if (googleMapLayout.getBackground() == null)
+            mapImageView.setOnClickListener(new OnClickListener()
             {
-                try
+                @Override
+                public void onClick(View v)
                 {
-                    googleMapSetting(googleMapLayout);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } catch (Error error)
-                {
-                    ExLog.d(error.toString());
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.showMap();
+                    }
                 }
-            }
+            });
+        } else
+        {
+            mapImageView.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Util.installGooglePlayService((BaseActivity) mFragmentActivity);
+                }
+            });
         }
 
         return view;
-    }
-
-    private void googleMapSetting(final FrameLayout googleMapLayout)
-    {
-        if (googleMapLayout == null)
-        {
-            return;
-        }
-
-        googleMapLayout.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    if (mGoogleMapLayout == null)
-                    {
-                        LayoutInflater inflater = (LayoutInflater) mFragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
-                    }
-
-                    googleMapLayout.addView(mGoogleMapLayout);
-
-                    mMapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-
-                    googleMapLayout.setOnClickListener(new OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.showMap();
-                            }
-                        }
-                    });
-                    return;
-                } catch (Error e)
-                {
-                    ExLog.e(e.toString());
-
-                    googleMapLayout.setOnClickListener(new OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            if (mOnUserActionListener != null)
-                            {
-                                mOnUserActionListener.showMap();
-                            }
-                        }
-                    });
-                    return;
-                }
-
-                googleMapLayout.setOnClickListener(null);
-
-                mMapFragment.getMapAsync(new OnMapReadyCallback()
-                {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap)
-                    {
-                        mGoogleMap = googleMap;
-
-                        final LatLng latlng = new LatLng(mHotelDetail.latitude, mHotelDetail.longitude);
-
-                        Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng));
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
-
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
-                        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                        mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener()
-                        {
-                            @Override
-                            public boolean onMarkerClick(Marker marker)
-                            {
-                                if (mOnUserActionListener != null)
-                                {
-                                    mOnUserActionListener.showMap();
-                                }
-
-                                return true;
-                            }
-                        });
-
-                        mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-                        mGoogleMap.setOnMapClickListener(new OnMapClickListener()
-                        {
-                            @Override
-                            public void onMapClick(LatLng latlng)
-                            {
-                                if (mOnUserActionListener != null)
-                                {
-                                    mOnUserActionListener.showMap();
-                                }
-                            }
-                        });
-
-                        mGoogleMap.setOnMapLoadedCallback(new OnMapLoadedCallback()
-                        {
-                            @Override
-                            public void onMapLoaded()
-                            {
-                                if (mGoogleMap == null)
-                                {
-                                    return;
-                                }
-
-                                mGoogleMap.snapshot(new SnapshotReadyCallback()
-                                {
-                                    @Override
-                                    public void onSnapshotReady(Bitmap bitmap)
-                                    {
-                                        if (Util.isOverAPI16() == true)
-                                        {
-                                            googleMapLayout.setBackground(new BitmapDrawable(mFragmentActivity.getResources(), bitmap));
-                                        } else
-                                        {
-                                            googleMapLayout.setBackgroundDrawable(new BitmapDrawable(mFragmentActivity.getResources(), bitmap));
-                                        }
-
-                                        mFragmentActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
-                                        googleMapLayout.removeAllViews();
-
-                                        mMapFragment = null;
-                                        mGoogleMap = null;
-                                        mGoogleMapLayout = null;
-
-                                        googleMapLayout.setOnClickListener(new OnClickListener()
-                                        {
-                                            @Override
-                                            public void onClick(View v)
-                                            {
-                                                if (mOnUserActionListener != null)
-                                                {
-                                                    mOnUserActionListener.showMap();
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        }, 500);
     }
 
     /**

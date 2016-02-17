@@ -126,6 +126,14 @@ public class MainActivity extends BaseActivity implements Constants
         mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        mOnResponsePresenterListener.onConfigurationResponse();
+    }
+
     private void initLayout()
     {
         setContentView(R.layout.activity_main);
@@ -437,7 +445,10 @@ public class MainActivity extends BaseActivity implements Constants
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
 
-                    if (Util.isTextEmpty(name) == false)
+                    String gourmetName = getString(R.string.menu_item_title_fnb);
+
+                    // 같은 이름으로 올경우에는 처음 시작한 경우이다.
+                    if (Util.isTextEmpty(name) == false && name.equalsIgnoreCase(gourmetName) == false)
                     {
                         AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, name, null);

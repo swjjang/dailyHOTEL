@@ -354,8 +354,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
         switch (type)
         {
             case LIST:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST, null);
-
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
@@ -372,8 +370,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 break;
 
             case MAP:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
-
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
@@ -518,6 +514,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                         requestSortList(mSortType);
                         break;
                 }
+
+                recordAnalyticsSortTypeEvent(getContext(), mSortType);
             }
         };
 
@@ -604,6 +602,38 @@ public class GourmetListFragment extends BaseFragment implements Constants
         return hasPlace;
     }
 
+    private void recordAnalyticsSortTypeEvent(Context context, SortType sortType)
+    {
+        if (context == null || sortType == null)
+        {
+            return;
+        }
+
+        String label;
+
+        switch (sortType)
+        {
+            case DISTANCE:
+                label = context.getString(R.string.label_sort_by_distance);
+                break;
+
+            case LOW_PRICE:
+                label = context.getString(R.string.label_sort_by_low_price);
+                break;
+
+            case HIGH_PRICE:
+                label = context.getString(R.string.label_sort_by_high_price);
+                break;
+
+            default:
+                label = context.getString(R.string.label_sort_by_area);
+                break;
+        }
+
+        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.GOURMET_SORTING_CLICKED, label, null);
+    }
+
     private void searchMyLocation()
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -640,6 +670,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     mOnUserActionListener.selectSortType(mSortType);
                 }
 
+                recordAnalyticsSortTypeEvent(getContext(), mSortType);
+
                 if (Util.isOverAPI23() == true)
                 {
                     BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -671,6 +703,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                             {
                                 mOnUserActionListener.selectSortType(mSortType);
                             }
+
+                            recordAnalyticsSortTypeEvent(getContext(), mSortType);
                         }
                     }, true);
                 }
@@ -728,6 +762,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                         {
                             mOnUserActionListener.selectSortType(mSortType);
                         }
+
+                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
                     }
                 }, true);
             }
@@ -1255,6 +1291,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     if (mViewType == VIEW_TYPE.MAP)
                     {
                         setPlaceMapData(placeViewItemList);
+
+                        AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST, null);
                     }
 
                     if (mSortType == SortType.DEFAULT)

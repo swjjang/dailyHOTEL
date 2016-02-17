@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
@@ -58,8 +57,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_profile);
 
@@ -322,6 +319,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     lockUI();
                     DailyNetworkAPI.getInstance().requestUserLogout(mNetworkTag, mUserLogoutStringResponseListener, ProfileActivity.this);
 
+                    AnalyticsManager.getInstance(ProfileActivity.this).setUserIndex(null);
                     //                    AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
                 }
             };

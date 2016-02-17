@@ -3,10 +3,14 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 
+import com.twoheart.dailyhotel.util.ExLog;
+
 import java.util.Map;
 
 public class AnalyticsManager
 {
+    private static final String TAG = "[AnalyticsManager]";
+
     private static AnalyticsManager mInstance = null;
     private GoogleAnalyticsManager mGoogleAnalyticsManager;
     private TuneManager mTuneManager;
@@ -28,44 +32,80 @@ public class AnalyticsManager
 
     private void initAnalytics(Context context)
     {
-        mGoogleAnalyticsManager = new GoogleAnalyticsManager(context);
-        mTuneManager = new TuneManager(context);
-        mFacebookManager = new FacebookManager(context);
+        try
+        {
+            mGoogleAnalyticsManager = new GoogleAnalyticsManager(context);
+            mTuneManager = new TuneManager(context);
+            mFacebookManager = new FacebookManager(context);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void setUserIndex(String index)
     {
-        mGoogleAnalyticsManager.setUserIndex(index);
-        mTuneManager.setUserIndex(index);
-        mFacebookManager.setUserIndex(index);
+        try
+        {
+            mGoogleAnalyticsManager.setUserIndex(index);
+            mTuneManager.setUserIndex(index);
+            mFacebookManager.setUserIndex(index);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void onResume(Activity activity)
     {
-        mGoogleAnalyticsManager.onResume(activity);
-        mTuneManager.onResume(activity);
-        mFacebookManager.onResume(activity);
+        try
+        {
+            mGoogleAnalyticsManager.onResume(activity);
+            mTuneManager.onResume(activity);
+            mFacebookManager.onResume(activity);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void onPause(Activity activity)
     {
-        mGoogleAnalyticsManager.onPause(activity);
-        mTuneManager.onPause(activity);
-        mFacebookManager.onPause(activity);
+        try
+        {
+            mGoogleAnalyticsManager.onPause(activity);
+            mTuneManager.onPause(activity);
+            mFacebookManager.onPause(activity);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void recordScreen(String screen, Map<String, String> params)
     {
-        mGoogleAnalyticsManager.recordScreen(screen, params);
-        mTuneManager.recordScreen(screen, params);
-        mFacebookManager.recordScreen(screen, params);
+        try
+        {
+            mGoogleAnalyticsManager.recordScreen(screen, params);
+            mTuneManager.recordScreen(screen, params);
+            mFacebookManager.recordScreen(screen, params);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        mGoogleAnalyticsManager.recordEvent(category, action, label, params);
-        mTuneManager.recordEvent(category, action, label, params);
-        mFacebookManager.recordEvent(category, action, label, params);
+        try
+        {
+            mGoogleAnalyticsManager.recordEvent(category, action, label, params);
+            mTuneManager.recordEvent(category, action, label, params);
+            mFacebookManager.recordEvent(category, action, label, params);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,51 +114,67 @@ public class AnalyticsManager
 
     public void addCreditCard(String cardType)
     {
-        mGoogleAnalyticsManager.addCreditCard(cardType);
-        mTuneManager.addCreditCard(cardType);
-        mFacebookManager.addCreditCard(cardType);
+        try
+        {
+            mGoogleAnalyticsManager.addCreditCard(cardType);
+            mTuneManager.addCreditCard(cardType);
+            mFacebookManager.addCreditCard(cardType);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void singUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        mGoogleAnalyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
-        mTuneManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
-        mFacebookManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+        try
+        {
+            mGoogleAnalyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+            mTuneManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+            mFacebookManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
-        mGoogleAnalyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
-        mTuneManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
-        mFacebookManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
+        try
+        {
+            mGoogleAnalyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
+            mTuneManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
+            mFacebookManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        mGoogleAnalyticsManager.purchaseCompleteHotel(transId, params);
-        mTuneManager.purchaseCompleteHotel(transId, params);
-        mFacebookManager.purchaseCompleteHotel(transId, params);
+        try
+        {
+            mGoogleAnalyticsManager.purchaseCompleteHotel(transId, params);
+            mTuneManager.purchaseCompleteHotel(transId, params);
+            mFacebookManager.purchaseCompleteHotel(transId, params);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        mGoogleAnalyticsManager.purchaseCompleteGourmet(transId, params);
-        mTuneManager.purchaseCompleteGourmet(transId, params);
-        mFacebookManager.purchaseCompleteGourmet(transId, params);
-    }
-
-    public void initiatedCheckoutHotel(Map<String, String> params)
-    {
-        mGoogleAnalyticsManager.initiatedCheckoutHotel(params);
-        mTuneManager.initiatedCheckoutHotel(params);
-        mFacebookManager.initiatedCheckoutHotel(params);
-    }
-
-    public void initiatedCheckoutGourmet(Map<String, String> params)
-    {
-        mGoogleAnalyticsManager.initiatedCheckoutGourmet(params);
-        mTuneManager.initiatedCheckoutGourmet(params);
-        mFacebookManager.initiatedCheckoutGourmet(params);
+        try
+        {
+            mGoogleAnalyticsManager.purchaseCompleteGourmet(transId, params);
+            mTuneManager.purchaseCompleteGourmet(transId, params);
+            mFacebookManager.purchaseCompleteGourmet(transId, params);
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,9 +192,11 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_BANNER_DETAIL = "DailyHotel_EventBannerDetailView";
         //
         public static final String DAILYHOTEL_DETAIL = "DailyHotel_HotelDetailView";
+        public static final String DAILYHOTEL_DETAIL_ROOMTYPE = " DailyHotel_HotelRoomTypeList";
         public static final String DAILYHOTEL_DETAIL_MAP = "DailyHotel_HotelDetailMapView";
         //
         public static final String DAILYHOTEL_PAYMENT = "DailyHotel_BookingInitialise";
+        public static final String DAILYHOTEL_PAYMENT_AGREEMENT_POPUP = "DailyHotel_PaymentAgreementPopupScreen";
         public static final String DAILYHOTEL_PAYMENT_PROCESS = "DailyHotel_PaymentGateway";
         public static final String DAILYHOTEL_PAYMENT_COMPLETE = "DailyHotel_PaymentComplete";
         //
@@ -151,9 +209,11 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_BANNER_DETAIL = "DailyGourmet_EventBannerDetailView";
         //
         public static final String DAILYGOURMET_DETAIL = "DailyGourmet_GourmetDetailView";
+        public static final String DAILYGOURMET_DETAIL_TICKETTYPE = " DailyGourmet_GourmetMenuTypeList";
         public static final String DAILYGOURMET_DETAIL_MAP = "DailyGourmet_GourmetDetailMapView";
         //
         public static final String DAILYGOURMET_PAYMENT = "DailyGourmet_BookingInitialise";
+        public static final String DAILYGOURMET_PAYMENT_AGREEMENT_POPUP = "DailyGourmet_PaymentAgreementPopupScreen";
         public static final String DAILYGOURMET_PAYMENT_PROCESS = "DailyGourmet_PaymentGateway";
         public static final String DAILYGOURMET_PAYMENT_COMPLETE = "DailyGourmet_PaymentComplete";
         //
@@ -165,9 +225,10 @@ public class AnalyticsManager
         public static final String BOOKING_DETAIL_INFORMATION = "BookingDetail_PlaceInfo";
         public static final String BOOKING_DETAIL_MAP = "BookingDetail_MapView";
         public static final String BOOKING_RECEIPT = "BookingDetail_Receipt";
+        public static final String BOOKING_BEFORE_LOGIN_BOOKING_LIST = "Booking_BeforeLoginBookingList";
         //
-        public static final String INFORMATION_SIGNIN = "Menu_BeforeLogin";
-        public static final String INFORMATION_SIGNOUT = "Menu_AfterLogin";
+        public static final String INFORMATION_SIGNIN = "Menu_AfterLogin";
+        public static final String INFORMATION_SIGNOUT = "Menu_BeforeLogin";
         //
         public static final String SIGNIN = "Menu_Login";
         public static final String SIGNUP = "Menu_Registration";
@@ -201,7 +262,7 @@ public class AnalyticsManager
         public static final String ROOM_TYPE_CLICKED = "RoomTypeClicked";
         public static final String ROOM_TYPE_ITEM_CLICKED = "RoomTypeItemClicked";
         public static final String ROOM_TYPE_CANCEL_CLICKED = "RoomTypeCancelClicked";
-        public static final String BOOKING_CLICKED = "PaymentTypeItemClicked";
+        public static final String BOOKING_CLICKED = "BookingClicked";
         public static final String USING_CREDIT_CLICKED = "UsingCreditClicked";
         public static final String USING_CREDIT_CANCEL_CLICKED = "UsingCreditCancelClicked";
         public static final String PAYMENT_TYPE_ITEM_CLICKED = "PaymentTypeItemClicked";
@@ -288,5 +349,8 @@ public class AnalyticsManager
         public static final String RESERVATION_TIME = "reservationTime";
         public static final String CURRENT_TIME = "currentTime";
         public static final String USER_INDEX = "userIndex";
+        public static final String GRADE = "grade";
+        public static final String DBENEFIT = "dBenefit";
+        public static final String CATEGORY = "category";
     }
 }

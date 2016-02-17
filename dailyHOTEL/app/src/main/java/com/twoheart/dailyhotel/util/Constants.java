@@ -148,6 +148,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_ISDAILYUSER = "isDailyUser";
     public static final String NAME_INTENT_EXTRA_DATA_DATE = "date";
     public static final String NAME_INTENT_EXTRA_DATA_GOURMETIDX = "gourmetIndex";
+    public static final String NAME_INTENT_EXTRA_DATA_DBENEFIT = "dBenefit";
 
     // Push Type
     public static final int PUSH_TYPE_NOTICE = 0;

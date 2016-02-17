@@ -30,8 +30,6 @@ import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
@@ -109,12 +107,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     protected String mAliveCallSource = "";
     private TextView mCheckinDayTextView, mCheckinTimeTextView, mCheckoutDayTextView, mCheckoutTimeTextView;
     private TextView tvOriginalPriceValue, tvCreditValue, tvOriginalPrice, tvCredit, tvPrice;
-    private TextView btnPay;
     private SwitchCompat swCredit;
     private EditText etReserverName, etReserverNumber, etReserverEmail;
     private Drawable[] mEditTextBackground;
-    private RadioGroup rgPaymentMethod;
-    private RadioButton rbPaymentAccount, rbPaymentCard, rbPaymentHp, mSimplePaymentRadioButton;
+    private RadioGroup mPaymentRadioGroup;
+    private RadioButton mAccountPaymentButton, mCardPaymentButton, mHpPaymentButton, mEasyPaymentButton;
     private View mCardManagerButton;
     private Pay mPay;
     private CreditCard mSelectedCreditCard;
@@ -126,7 +123,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private ProgressDialog mProgressDialog;
 
     private SaleTime mCheckInSaleTime;
-    private Hotel.HotelGrade mHotelGrade;
     private boolean mIsEditMode;
 
     // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
@@ -138,7 +134,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private String mWarningDialogMessage;
     private String mCSoperatingTimeMessage;
 
-    public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation, SaleTime checkInSaleTime, Hotel.HotelGrade hotelGrade, int hotelIndex)
+    public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation, SaleTime checkInSaleTime, Hotel.HotelGrade hotelGrade, int hotelIndex, boolean isDBenefit)
     {
         Intent intent = new Intent(context, BookingActivity.class);
 
@@ -146,6 +142,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELGRADE, hotelGrade.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
 
         return intent;
     }
@@ -164,8 +161,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             mPay.setSaleRoomInformation((SaleRoomInformation) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
             mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
-            mHotelGrade = Hotel.HotelGrade.valueOf(bundle.getString(NAME_INTENT_EXTRA_DATA_HOTELGRADE));
+            mPay.grade = Hotel.HotelGrade.valueOf(bundle.getString(NAME_INTENT_EXTRA_DATA_HOTELGRADE));
             mPay.hotelIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_HOTELIDX);
+            mPay.isDBenefit = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DBENEFIT);
         }
 
         if (mPay.getSaleRoomInformation() == null)
@@ -205,27 +203,29 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
     private void initLayout()
     {
+        initHotelInformation();
+        initGuestInformation();
+        initPaymentInformation();
+        initPaymentTypeInformation();
+    }
+
+    private void initHotelInformation()
+    {
         mCheckinDayTextView = (TextView) findViewById(R.id.checkinDayTextView);
         mCheckinTimeTextView = (TextView) findViewById(R.id.checkinTimeTextView);
         mCheckoutDayTextView = (TextView) findViewById(R.id.checkoutDayTextView);
         mCheckoutTimeTextView = (TextView) findViewById(R.id.checkoutTimeTextView);
 
-        tvOriginalPrice = (TextView) findViewById(R.id.tv_hotel_payment_original_price);
-        tvCredit = (TextView) findViewById(R.id.tv_hotel_payment_credit);
-        tvOriginalPriceValue = (TextView) findViewById(R.id.tv_hotel_payment_original_price_value);
-        tvCreditValue = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
-        tvPrice = (TextView) findViewById(R.id.tv_hotel_payment_price);
-        btnPay = (TextView) findViewById(R.id.btn_hotel_payment);
+        // 객실 타입
+        TextView roomTypeTextView = (TextView) findViewById(R.id.roomTypeTextView);
+        roomTypeTextView.setText(mPay.getSaleRoomInformation().roomName);
+    }
 
-        swCredit = (SwitchCompat) findViewById(R.id.btn_on_off);
-
-        //		swCredit.setSwitchMinWidth(Util.dpToPx(BookingActivity.this, 60));
-
+    private void initGuestInformation()
+    {
         etReserverName = (EditText) findViewById(R.id.et_hotel_payment_reserver_name);
         etReserverNumber = (EditText) findViewById(R.id.et_hotel_payment_reserver_number);
         etReserverEmail = (EditText) findViewById(R.id.et_hotel_payment_reserver_email);
-
-        rgPaymentMethod = (RadioGroup) findViewById(R.id.rg_payment_method);
 
         mEditTextBackground = new Drawable[3];
         mEditTextBackground[0] = etReserverName.getBackground();
@@ -240,28 +240,73 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         etReserverNumber.setEnabled(false);
         etReserverEmail.setEnabled(false);
 
-        mSimplePaymentRadioButton = (RadioButton) findViewById(R.id.easyPaymentRadioButton);
-        rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
-        rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
-        rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
-        mCardManagerButton = findViewById(R.id.cardManagerButton);
-        mCardManagerButton.setOnClickListener(this);
+        // 수정.
+        View editLinearLayout = findViewById(R.id.editLinearLayout);
+        editLinearLayout.setOnClickListener(mOnEditInfoOnClickListener);
+    }
 
-        rbPaymentAccount.setOnClickListener(this);
-        rbPaymentCard.setOnClickListener(this);
-        rbPaymentHp.setOnClickListener(this);
-        mSimplePaymentRadioButton.setOnClickListener(this);
+    private void initPaymentInformation()
+    {
+        tvOriginalPrice = (TextView) findViewById(R.id.tv_hotel_payment_original_price);
+        tvCredit = (TextView) findViewById(R.id.tv_hotel_payment_credit);
+        tvOriginalPriceValue = (TextView) findViewById(R.id.tv_hotel_payment_original_price_value);
+        tvCreditValue = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
+        tvPrice = (TextView) findViewById(R.id.tv_hotel_payment_price);
+        View payButton = (TextView) findViewById(R.id.btn_hotel_payment);
 
-        rgPaymentMethod.setOnCheckedChangeListener(this);
+        swCredit = (SwitchCompat) findViewById(R.id.btn_on_off);
 
-        btnPay.setOnClickListener(this);
+        payButton.setOnClickListener(this);
+
         swCredit.setOnCheckedChangeListener(this);
-
-        rbPaymentCard.setChecked(true);
+        swCredit.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (swCredit.isChecked() == true)
+                {
+                    AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                        , Action.USING_CREDIT_CLICKED, Integer.toString(mPay.credit), null);
+                } else
+                {
+                    AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                        , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPay.credit), null);
+                }
+            }
+        });
 
         // 적립금 부분 기본 통화 표기.
         tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
-        rgPaymentMethod.setVisibility(View.VISIBLE);
+    }
+
+    private void initPaymentTypeInformation()
+    {
+        mPaymentRadioGroup = (RadioGroup) findViewById(R.id.rg_payment_method);
+
+        mEasyPaymentButton = (RadioButton) findViewById(R.id.easyPaymentRadioButton);
+        mAccountPaymentButton = (RadioButton) findViewById(R.id.rb_payment_account);
+        mCardPaymentButton = (RadioButton) findViewById(R.id.rb_payment_card);
+        mHpPaymentButton = (RadioButton) findViewById(R.id.rb_payment_hp);
+        mCardManagerButton = findViewById(R.id.cardManagerButton);
+        mCardManagerButton.setOnClickListener(this);
+
+        View.OnClickListener radioOnClickListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                    , Action.PAYMENT_TYPE_ITEM_CLICKED, mPay.getType().getName(), null);
+            }
+        };
+
+        mAccountPaymentButton.setOnClickListener(radioOnClickListener);
+        mCardPaymentButton.setOnClickListener(radioOnClickListener);
+        mHpPaymentButton.setOnClickListener(radioOnClickListener);
+        mEasyPaymentButton.setOnClickListener(radioOnClickListener);
+
+        mPaymentRadioGroup.setOnCheckedChangeListener(this);
 
         // 법인 카드 가능 추가
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
@@ -279,15 +324,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         stringBuilder.setSpan(new RelativeSizeSpan(Util.dpToPx(this, 12.5f))//
             , info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        mSimplePaymentRadioButton.setText(stringBuilder);
+        mEasyPaymentButton.setText(stringBuilder);
 
-        // 수정.
-        View editLinearLayout = findViewById(R.id.editLinearLayout);
-        editLinearLayout.setOnClickListener(mOnEditInfoOnClickListener);
-
-        // 객실 타입
-        TextView roomTypeTextView = (TextView) findViewById(R.id.roomTypeTextView);
-        roomTypeTextView.setText(mPay.getSaleRoomInformation().roomName);
+        mPaymentRadioGroup.check(mEasyPaymentButton.getId());
     }
 
     @Override
@@ -301,6 +340,19 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
             DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, BookingActivity.this);
         }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+        {
+            mFinalCheckDialog.dismiss();
+        }
+
+        mFinalCheckDialog = null;
     }
 
     private void updatePayPrice(boolean applyCredit)
@@ -360,166 +412,171 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             return;
         }
 
-        if (v.getId() == btnPay.getId())
+        switch (v.getId())
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
+            case R.id.btn_hotel_payment:
             {
-                return;
-            }
-
-            if (mIsEditMode == true)
-            {
-                guest.name = etReserverName.getText().toString().trim();
-                guest.phone = etReserverNumber.getText().toString().trim();
-                guest.email = etReserverEmail.getText().toString().trim();
-
-                releaseUiComponent();
-
-                if (Util.isTextEmpty(guest.name) == true)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
-                    etReserverName.requestFocus();
+                    return;
+                }
+
+                if (mIsEditMode == true)
+                {
+                    guest.name = etReserverName.getText().toString().trim();
+                    guest.phone = etReserverNumber.getText().toString().trim();
+                    guest.email = etReserverEmail.getText().toString().trim();
+
+                    releaseUiComponent();
+
+                    if (Util.isTextEmpty(guest.name) == true)
+                    {
+                        etReserverName.requestFocus();
+
+                        if (mPay.getSaleRoomInformation().isOverseas == true)
+                        {
+                            DailyToast.showToast(this, R.string.toast_msg_please_input_guest_typeoverseas, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            DailyToast.showToast(this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
+                        }
+                        return;
+                    } else if (Util.isTextEmpty(guest.phone) == true)
+                    {
+                        etReserverNumber.requestFocus();
+                        DailyToast.showToast(this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
+                        return;
+                    } else if (Util.isTextEmpty(guest.email) == true)
+                    {
+                        etReserverEmail.requestFocus();
+                        DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
+                        return;
+                    } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(guest.email).matches() == false)
+                    {
+                        etReserverEmail.requestFocus();
+                        DailyToast.showToast(BookingActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                        return;
+                    }
 
                     if (mPay.getSaleRoomInformation().isOverseas == true)
                     {
-                        DailyToast.showToast(this, R.string.toast_msg_please_input_guest_typeoverseas, Toast.LENGTH_SHORT);
-                    } else
-                    {
-                        DailyToast.showToast(this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
+                        DailyPreference.getInstance(BookingActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
                     }
-                    return;
-                } else if (Util.isTextEmpty(guest.phone) == true)
-                {
-                    etReserverNumber.requestFocus();
-                    DailyToast.showToast(this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
-                    return;
-                } else if (Util.isTextEmpty(guest.email) == true)
-                {
-                    etReserverEmail.requestFocus();
-                    DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
-                    return;
-                } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(guest.email).matches() == false)
-                {
-                    etReserverEmail.requestFocus();
-                    DailyToast.showToast(BookingActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-                    return;
                 }
 
-                if (mPay.getSaleRoomInformation().isOverseas == true)
+                //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
+                if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && mPay.credit != 0)
                 {
-                    DailyPreference.getInstance(BookingActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
-                }
-            }
+                    v.setClickable(false);
+                    v.setEnabled(false);
 
-            //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
-            if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && mPay.credit != 0)
-            {
-                v.setClickable(false);
-                v.setEnabled(false);
-
-                String title = getString(R.string.dialog_notice2);
-                String msg = getString(R.string.dialog_btn_payment_no_reserve);
-                String buttonText = getString(R.string.dialog_btn_payment_confirm);
-
-                showSimpleDialog(title, msg, buttonText, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        swCredit.setChecked(false);
-                    }
-                }, new OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        releaseUiComponent();
-
-                        v.setClickable(true);
-                        v.setEnabled(true);
-                    }
-                });
-
-                releaseUiComponent();
-            } else
-            {
-                mClickView = v;
-
-                if (mPay.getType() == Pay.Type.VBANK && DailyPreference.getInstance(BookingActivity.this).getNotificationUid() < 0)
-                {
-                    // 가상계좌 결제시 푸쉬를 받지 못하는 경우
                     String title = getString(R.string.dialog_notice2);
-                    String positive = getString(R.string.dialog_btn_text_confirm);
-                    String msg = getString(R.string.dialog_msg_none_gcmid);
+                    String msg = getString(R.string.dialog_btn_payment_no_reserve);
+                    String buttonText = getString(R.string.dialog_btn_payment_confirm);
 
-                    showSimpleDialog(title, msg, positive, new View.OnClickListener()
+                    showSimpleDialog(title, msg, buttonText, new View.OnClickListener()
                     {
-
                         @Override
                         public void onClick(View view)
                         {
-                            if (Hotel.HotelGrade.pension.compareTo(mHotelGrade) == 0 || Hotel.HotelGrade.fullvilla.compareTo(mHotelGrade) == 0)
-                            {
-                                lockUI();
-
-                                DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener, BookingActivity.this);
-                            } else
-                            {
-                                onClickPayment();
-                            }
-
+                            swCredit.setChecked(false);
                         }
-                    }, new DialogInterface.OnCancelListener()
+                    }, new OnDismissListener()
                     {
                         @Override
-                        public void onCancel(DialogInterface dialog)
+                        public void onDismiss(DialogInterface dialog)
                         {
-                            unLockUI();
+                            releaseUiComponent();
+
+                            v.setClickable(true);
+                            v.setEnabled(true);
                         }
                     });
+
+                    releaseUiComponent();
                 } else
                 {
-                    if (Hotel.HotelGrade.pension.compareTo(mHotelGrade) == 0 || Hotel.HotelGrade.fullvilla.compareTo(mHotelGrade) == 0)
-                    {
-                        lockUI();
+                    mClickView = v;
 
-                        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener, BookingActivity.this);
+                    if (mPay.getType() == Pay.Type.VBANK && DailyPreference.getInstance(BookingActivity.this).getNotificationUid() < 0)
+                    {
+                        // 가상계좌 결제시 푸쉬를 받지 못하는 경우
+                        String title = getString(R.string.dialog_notice2);
+                        String positive = getString(R.string.dialog_btn_text_confirm);
+                        String msg = getString(R.string.dialog_msg_none_gcmid);
+
+                        showSimpleDialog(title, msg, positive, new View.OnClickListener()
+                        {
+
+                            @Override
+                            public void onClick(View view)
+                            {
+                                if (Hotel.HotelGrade.pension.compareTo(mPay.grade) == 0 || Hotel.HotelGrade.fullvilla.compareTo(mPay.grade) == 0)
+                                {
+                                    lockUI();
+
+                                    DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener, BookingActivity.this);
+                                } else
+                                {
+                                    onClickPayment();
+                                }
+
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                unLockUI();
+                            }
+                        });
                     } else
                     {
-                        onClickPayment();
+                        if (Hotel.HotelGrade.pension.compareTo(mPay.grade) == 0 || Hotel.HotelGrade.fullvilla.compareTo(mPay.grade) == 0)
+                        {
+                            lockUI();
+
+                            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener, BookingActivity.this);
+                        } else
+                        {
+                            onClickPayment();
+                        }
                     }
                 }
+                break;
             }
-        } else if (v.getId() == mCardManagerButton.getId())
-        {
-            if (lockUiComponentAndIsLockUiComponent() == true)
+
+            case R.id.cardManagerButton:
             {
-                return;
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                if (mIsEditMode == true)
+                {
+                    guest.name = etReserverName.getText().toString();
+                    guest.phone = etReserverNumber.getText().toString();
+                    guest.email = etReserverEmail.getText().toString();
+                }
+
+                AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                    , Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
+
+                Intent intent = new Intent(this, CreditCardListActivity.class);
+                intent.setAction(Intent.ACTION_PICK);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                break;
             }
-
-            if (mIsEditMode == true)
-            {
-                guest.name = etReserverName.getText().toString();
-                guest.phone = etReserverNumber.getText().toString();
-                guest.email = etReserverEmail.getText().toString();
-            }
-
-            AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                , Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
-
-            Intent intent = new Intent(this, CreditCardListActivity.class);
-            intent.setAction(Intent.ACTION_PICK);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
-
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
-
     }
 
     private void onClickPayment()
     {
         unLockUI();
-        mDoReload = false;
 
         if (mClickView != null)
         {
@@ -532,8 +589,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             if (mSelectedCreditCard == null)
             {
-                mDoReload = true;
-
                 if (mClickView != null)
                 {
                     mClickView.setClickable(true);
@@ -788,26 +843,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             DailyNetworkAPI.getInstance().requestHotelPayment(mNetworkTag, params, mHotelPaymentSessionEasy, BookingActivity.this);
         } else
         {
-            Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
+            Intent intent = new Intent(this, PaymentActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
 
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-        }
-    }
-
-    public void setResult(int resultCode, Pay pay)
-    {
-        setResult(resultCode);
-
-        if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
-        {
-
-        } else
-        {
-            recordAnalyticsInitiatedCheckout(mPay);
         }
     }
 
@@ -885,7 +927,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             mDoReload = true;
                             mAliveCallSource = "";
 
-                            setResult(RESULT_OK, mPay);
+                            setResult(RESULT_OK);
                             finish();
                         }
                     };
@@ -957,7 +999,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAY) == true)
                     {
                         Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
-                        DailyPreference.getInstance(this).setVirtuaAccountHotelInformation(payData, mCheckInSaleTime);
+                        DailyPreference.getInstance(this).setVirtuaAccountHotelInformation(BookingActivity.this, payData, mCheckInSaleTime);
                     }
 
                     DailyPreference.getInstance(BookingActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
@@ -971,7 +1013,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         {
                             mDoReload = true;
 
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, mPay);
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                             finish();
                         }
                     };
@@ -1040,7 +1082,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                         {
                                             mDoReload = true;
 
-                                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER, mPay);
+                                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
                                             finish();
                                         }
                                     };
@@ -1059,7 +1101,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                             mDoReload = true;
                                             mAliveCallSource = "";
 
-                                            setResult(RESULT_OK, mPay);
+                                            setResult(RESULT_OK);
                                             finish();
                                         }
                                     };
@@ -1139,7 +1181,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         {
                             mSelectedCreditCard = creditCard;
 
-                            rgPaymentMethod.check(mSimplePaymentRadioButton.getId());
+                            mPaymentRadioGroup.check(mEasyPaymentButton.getId());
                         }
                     }
                     break;
@@ -1155,10 +1197,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             switch (resultCode)
             {
                 case CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
-                    lockUI();
-
-                    // credit card 요청
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, BookingActivity.this);
+                    mAliveCallSource = "REGISTERCREDITCARD";
                     return;
 
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -1199,24 +1238,21 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        if (group.getId() == rgPaymentMethod.getId())
+        if (group.getId() == mPaymentRadioGroup.getId())
         {
-            if (checkedId == mSimplePaymentRadioButton.getId())
+            if (checkedId == mEasyPaymentButton.getId())
             {
                 mPay.setType(Pay.Type.EASY_CARD);
-            } else if (checkedId == rbPaymentCard.getId())
+            } else if (checkedId == mCardPaymentButton.getId())
             {
                 mPay.setType(Pay.Type.CARD);
-            } else if (checkedId == rbPaymentHp.getId())
+            } else if (checkedId == mHpPaymentButton.getId())
             {
-                mPay.setType(Pay.Type.PHONE);
-            } else if (checkedId == rbPaymentAccount.getId())
+                mPay.setType(Pay.Type.PHONE_PAY);
+            } else if (checkedId == mAccountPaymentButton.getId())
             {
                 mPay.setType(Pay.Type.VBANK);
             }
-
-            AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                , Action.PAYMENT_TYPE_ITEM_CLICKED, mPay.getType().getName(), null);
         }
     }
 
@@ -1236,9 +1272,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     tvCredit.setEnabled(false);
                     tvOriginalPriceValue.setEnabled(false);
                     tvCreditValue.setEnabled(false);
-
-                    AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                        , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPay.credit), null);
                 } else
                 {
                     // 사용함으로 변경
@@ -1246,9 +1279,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     tvCredit.setEnabled(true);
                     tvOriginalPriceValue.setEnabled(true);
                     tvCreditValue.setEnabled(true);
-
-                    AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                        , Action.USING_CREDIT_CLICKED, Integer.toString(mPay.credit), null);
                 }
 
                 mPay.setSaleCredit(isChecked);
@@ -1291,44 +1321,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         hidePorgressDialog();
 
         super.onDestroy();
-    }
-
-    private void recordAnalyticsInitiatedCheckout(Pay pay)
-    {
-        if (pay == null)
-        {
-            return;
-        }
-
-        try
-        {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-            Date date = new Date();
-            String strDate = dateFormat.format(date);
-            String userIndex = pay.getCustomer().getUserIdx();
-            String transId = strDate + '_' + userIndex;
-
-            SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
-
-            Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, saleRoomInformation.hotelName);
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(saleRoomInformation.averageDiscount));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(saleRoomInformation.nights));
-            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(pay.hotelIndex));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, saleRoomInformation.roomName);
-            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
-
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + pay.getSaleRoomInformation().nights);
-
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-            AnalyticsManager.getInstance(this).initiatedCheckoutHotel(params);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
     }
 
     private void showProgressDialog()
@@ -1375,7 +1367,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
                 break;
 
-            case PHONE:
+            case PHONE_PAY:
                 // 핸드폰을 선택했을 경우
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
                 break;
@@ -1426,6 +1418,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             try
             {
                 mFinalCheckDialog.show();
+
+                AnalyticsManager.getInstance(BookingActivity.this).recordScreen(Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
+                    , getMapPaymentInformation(mPay));
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1568,6 +1563,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         try
         {
             mFinalCheckDialog.show();
+
+            AnalyticsManager.getInstance(BookingActivity.this).recordScreen(Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
+                , getMapPaymentInformation(mPay));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1635,7 +1633,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             public void onClick(View v)
             {
                 mDoReload = true;
-                setResult(RESULT_CANCELED, mPay);
+                setResult(RESULT_CANCELED);
                 finish();
             }
         };
@@ -1652,7 +1650,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             public void onClick(View v)
             {
                 mDoReload = true;
-                setResult(RESULT_CANCELED, mPay);
+                setResult(RESULT_CANCELED);
                 finish();
             }
         };
@@ -1697,26 +1695,25 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
     }
 
-    private void writeLogPaid(Pay pay)
+    private Map<String, String> getMapPaymentInformation(Pay pay)
     {
+        Map<String, String> params = new HashMap<>();
+
         try
         {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-            Date date = new Date();
-            String strDate = dateFormat.format(date);
-            String userIndex = pay.getCustomer().getUserIdx();
-            String transId = strDate + '_' + userIndex;
-
             SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
 
-            Map<String, String> params = new HashMap<>();
+
             params.put(AnalyticsManager.KeyType.NAME, saleRoomInformation.hotelName);
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(pay.hotelIndex));
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(saleRoomInformation.averageDiscount));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(saleRoomInformation.nights));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(pay.hotelIndex));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, saleRoomInformation.roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
+            params.put(AnalyticsManager.KeyType.GRADE, mPay.grade.getName(this));
+            params.put(AnalyticsManager.KeyType.DBENEFIT, pay.isDBenefit ? "yes" : "no");
 
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + pay.getSaleRoomInformation().nights);
 
@@ -1746,7 +1743,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
             }
 
-            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, pay.getType().name());
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, pay.getType().getName());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return params;
+    }
+
+    private void writeLogPaid(Pay pay)
+    {
+        try
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
+            Date date = new Date();
+            String strDate = dateFormat.format(date);
+            String userIndex = pay.getCustomer().getUserIdx();
+            String transId = strDate + '_' + userIndex;
+
+            Map<String, String> params = getMapPaymentInformation(pay);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteHotel(transId, params);
             AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_COMPLETE, null);
@@ -1772,34 +1788,35 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         }
     }
 
-    private class TelophoneClickSpannable extends ClickableSpan
+    private void recordAnalyticsPayment(Pay pay)
     {
-        public TelophoneClickSpannable()
+        if (pay == null)
         {
+            return;
         }
 
-        @Override
-        public void updateDrawState(TextPaint textPain)
+        try
         {
-            textPain.setColor(getResources().getColor(R.color.booking_tel_link));
-            textPain.setFakeBoldText(true);
-            textPain.setUnderlineText(true);
-        }
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, pay.getSaleRoomInformation().hotelName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(pay.getSaleRoomInformation().averageDiscount));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(pay.getSaleRoomInformation().totalDiscount));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(pay.getSaleRoomInformation().nights));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(pay.hotelIndex));
 
-        @Override
-        public void onClick(View widget)
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + pay.getSaleRoomInformation().nights);
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, pay.getSaleRoomInformation().roomName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(pay.getSaleRoomInformation().roomIndex));
+            params.put(AnalyticsManager.KeyType.GRADE, pay.grade.getName(BookingActivity.this));
+            params.put(AnalyticsManager.KeyType.DBENEFIT, pay.isDBenefit ? "yes" : "no");
+
+            AnalyticsManager.getInstance(BookingActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT, params);
+        } catch (Exception e)
         {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            showCallDialog();
+            ExLog.d(e.toString());
         }
     }
 
@@ -1965,8 +1982,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     mCardManagerButton.setVisibility(View.INVISIBLE);
 
                     mSelectedCreditCard = null;
-                    mSimplePaymentRadioButton.setChecked(true);
-                    mSimplePaymentRadioButton.setText(R.string.label_booking_easypayment);
+                    mEasyPaymentButton.setText(R.string.label_booking_easypayment);
                 } else
                 {
                     mCardManagerButton.setVisibility(View.VISIBLE);
@@ -1976,7 +1992,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         JSONObject jsonObject = jsonArray.getJSONObject(0);
 
                         mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                        mSimplePaymentRadioButton.setChecked(true);
                     } else
                     {
                         boolean hasCreditCard = false;
@@ -2001,7 +2016,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         }
                     }
 
-                    mSimplePaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
+                    mEasyPaymentButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
                 }
 
                 // 호텔 가격 정보가 변경되었습니다.
@@ -2064,7 +2079,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     mCardManagerButton.setVisibility(View.INVISIBLE);
 
                     mSelectedCreditCard = null;
-                    mSimplePaymentRadioButton.setText(R.string.label_booking_easypayment);
+                    mEasyPaymentButton.setText(R.string.label_booking_easypayment);
 
                 } else
                 {
@@ -2073,7 +2088,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
 
                     mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                    mSimplePaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
+                    mEasyPaymentButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
 
                     // final check 결제 화면을 보여준다.
                     showFinalCheckDialog();
@@ -2091,37 +2106,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
     private DailyHotelJsonResponseListener mHotelPaymentDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private void recordAnalytics(Pay pay)
-        {
-            if (pay == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.NAME, pay.getSaleRoomInformation().hotelName);
-                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(pay.getSaleRoomInformation().averageDiscount));
-
-                params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(pay.getSaleRoomInformation().nights));
-                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(pay.hotelIndex));
-
-                SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + pay.getSaleRoomInformation().nights);
-
-                params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-                params.put(AnalyticsManager.KeyType.TICKET_NAME, pay.getSaleRoomInformation().roomName);
-                params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(pay.getSaleRoomInformation().roomIndex));
-
-                AnalyticsManager.getInstance(BookingActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT, params);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -2190,7 +2174,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
                         mCheckoutTimeTextView.setText(formatHour.format(calendarCheckout.getTime()));
 
-                        recordAnalytics(mPay);
+                        recordAnalyticsPayment(mPay);
 
                         // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                         if (isOnSale == false || availableRooms == 0)
@@ -2205,8 +2189,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             showStopOnSaleDialog();
                         } else
                         {
-                            // 3. 간편결제 credit card 요청
-                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this);
+                            if ("REGISTERCREDITCARD".equalsIgnoreCase(mAliveCallSource) == true)
+                            {
+                                mAliveCallSource = "";
+
+                                // 신용카드 등록후에 바로 결제를 할경우.
+                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, BookingActivity.this);
+                            } else
+                            {
+                                // 3. 간편결제 credit card 요청
+                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this);
+                            }
                         }
                         break;
                     }
@@ -2222,7 +2215,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                 @Override
                                 public void onDismiss(DialogInterface dialog)
                                 {
-                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER, mPay);
+                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
                                     finish();
                                 }
                             });
@@ -2362,7 +2355,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                 @Override
                                 public void onDismiss(DialogInterface dialog)
                                 {
-                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER, mPay);
+                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
                                     finish();
                                 }
                             });
@@ -2580,10 +2573,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                         String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
 
-                        if (DEBUG == true)
-                        {
-                            showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                        }
+                        //                        if (DEBUG == true)
+                        //                        {
+                        //                            showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+                        //                        }
 
                         // 2. 화면 정보 얻기
                         DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag, params, mHotelPaymentDetailJsonResponseListener, BookingActivity.this);

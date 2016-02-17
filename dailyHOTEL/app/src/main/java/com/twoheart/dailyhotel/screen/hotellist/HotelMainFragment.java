@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -111,13 +110,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         void hideAppBarLayout();
 
         void pinAppBarLayout();
-    }
-
-    public interface UserAnalyticsActionListener
-    {
-        void selectHotel(String hotelName, long hotelIndex, String checkInTime, int nights);
-
-        void selectRegion(Province province);
     }
 
     @Override
@@ -1230,10 +1222,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 case LIST:
                     mHotelViewType = HOTEL_VIEW_TYPE.MAP;
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP, null);
                     break;
 
                 case MAP:
                     mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, null);
                     break;
             }
 
@@ -1253,38 +1247,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             unLockUI();
         }
 
-        private void recordAnalyticsSortTypeEvent(Context context, SortType sortType)
-        {
-            if (context == null || sortType == null)
-            {
-                return;
-            }
-
-            String label;
-
-            switch (sortType)
-            {
-                case DISTANCE:
-                    label = context.getString(R.string.label_sort_by_distance);
-                    break;
-
-                case LOW_PRICE:
-                    label = context.getString(R.string.label_sort_by_low_price);
-                    break;
-
-                case HIGH_PRICE:
-                    label = context.getString(R.string.label_sort_by_high_price);
-                    break;
-
-                default:
-                    label = context.getString(R.string.label_sort_by_area);
-                    break;
-            }
-
-            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , Action.HOTEL_SORTING_CLICKED, label, null);
-        }
-
         @Override
         public void selectSortType(SortType sortType)
         {
@@ -1301,9 +1263,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             baseActivity.invalidateOptionsMenu();
-
-            //
-            recordAnalyticsSortTypeEvent(baseActivity, sortType);
         }
 
         @Override

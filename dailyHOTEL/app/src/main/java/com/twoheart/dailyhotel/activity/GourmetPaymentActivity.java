@@ -82,13 +82,15 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         void showInputMobileNumberDialog(String mobileNumber);
     }
 
-    public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime, int gourmetIndex)
+    public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime, String category, int gourmetIndex, boolean isDBenefit)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, gourmetIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
 
         return intent;
     }
@@ -109,6 +111,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             mTicketPayment.setTicketInformation((TicketInformation) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
             mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
             mTicketPayment.placeIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_GOURMETIDX);
+            mTicketPayment.category = bundle.getString(NAME_INTENT_EXTRA_DATA_CATEGORY);
+            mTicketPayment.isDBenefit = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DBENEFIT);
         }
 
         if (mTicketPayment.getTicketInformation() == null)
@@ -398,6 +402,9 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         try
         {
             mFinalCheckDialog.show();
+
+            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
+                , getMapPaymentInformation(mTicketPayment));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -519,6 +526,32 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         dialog.setContentView(view);
 
         return dialog;
+    }
+
+    private void recordAnalyticsPayment(TicketPayment ticketPayment)
+    {
+        if (ticketPayment == null)
+        {
+            return;
+        }
+
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, ticketPayment.getTicketInformation().placeName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketPayment.getTicketInformation().discountPrice));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+            params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketPayment.getTicketInformation().name);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketPayment.getTicketInformation().index));
+            params.put(AnalyticsManager.KeyType.CATEGORY, ticketPayment.category);
+            params.put(AnalyticsManager.KeyType.DBENEFIT, ticketPayment.isDBenefit ? "yes" : "no");
+
+            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -811,7 +844,16 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                 if (isOnSale == true && msg_code == 0)
                 {
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
+                    switch (mState)
+                    {
+                        case STATE_REGISTER_CREDIT_CARD:
+                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
+                            break;
+
+                        default:
+                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
+                            break;
+                    }
                 } else
                 {
                     if (response.has("msg") == true)
@@ -841,30 +883,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
     private DailyHotelJsonResponseListener mTicketPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private void recordAnalytics(TicketPayment ticketPayment)
-        {
-            if (ticketPayment == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.NAME, ticketPayment.getTicketInformation().placeName);
-                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketPayment.getTicketInformation().discountPrice));
-                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
-                params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketPayment.getTicketInformation().name);
-                params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketPayment.getTicketInformation().index));
-
-                AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, params);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -933,37 +951,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                     switch (mState)
                     {
-                        case STATE_NONE:
-                        {
-                            // 가격이 변동 되었다.
-                            if (mTicketPayment.getTicketInformation().discountPrice != discountPrice)
-                            {
-                                mIsChangedPrice = true;
-                            }
-
-                            mTicketPayment.getTicketInformation().discountPrice = discountPrice;
-                            mTicketPayment.ticketMaxCount = maxCount;
-
-                            Calendar calendarCheckin = DailyCalendar.getInstance();
-                            calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
-                            calendarCheckin.setTimeInMillis(sday);
-
-                            SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
-                            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                            mTicketPayment.checkInTime = formatDay.format(calendarCheckin.getTime());
-
-                            if (mTicketPayment.ticketTime == 0)
-                            {
-                                // 방문시간을 선택하지 않은 경우
-                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
-                            } else
-                            {
-                                requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
-                            }
-                            break;
-                        }
-
                         case STATE_PAYMENT:
                         {
                             TicketInformation ticketInformation = mTicketPayment.getTicketInformation();
@@ -1004,6 +991,39 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                             {
                                 processPayment();
                             }
+                            break;
+                        }
+
+                        default:
+                        {
+                            // 가격이 변동 되었다.
+                            if (mTicketPayment.getTicketInformation().discountPrice != discountPrice)
+                            {
+                                mIsChangedPrice = true;
+                            }
+
+                            mTicketPayment.getTicketInformation().discountPrice = discountPrice;
+                            mTicketPayment.ticketMaxCount = maxCount;
+
+                            Calendar calendarCheckin = DailyCalendar.getInstance();
+                            calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
+                            calendarCheckin.setTimeInMillis(sday);
+
+                            SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
+                            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                            mTicketPayment.checkInTime = formatDay.format(calendarCheckin.getTime());
+
+                            if (mTicketPayment.ticketTime == 0)
+                            {
+                                // 방문시간을 선택하지 않은 경우
+                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
+                            } else
+                            {
+                                requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
+                            }
+
+                            recordAnalyticsPayment(mTicketPayment);
                             break;
                         }
                     }
@@ -1069,7 +1089,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                         {
                             mDoReload = true;
 
-                            setResult(RESULT_OK, mTicketPayment);
+                            setResult(RESULT_OK);
                             finish();
                         }
                     }, null, false);

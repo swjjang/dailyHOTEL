@@ -314,8 +314,6 @@ public class HotelListFragment extends BaseFragment implements Constants
         switch (type)
         {
             case LIST:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST, null);
-
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
@@ -326,15 +324,10 @@ public class HotelListFragment extends BaseFragment implements Constants
                     mHotelMapFragment = null;
                 }
 
-                //				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
-                //				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_map_mini);
-
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                 break;
 
             case MAP:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_MAP, null);
-
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
@@ -344,8 +337,6 @@ public class HotelListFragment extends BaseFragment implements Constants
                     getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelMapFragment).commitAllowingStateLoss();
                 }
 
-                //				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
-                //				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
                 break;
 
@@ -355,7 +346,6 @@ public class HotelListFragment extends BaseFragment implements Constants
                 mEmptyView.setVisibility(View.VISIBLE);
                 mMapLayout.setVisibility(View.GONE);
 
-                //				mDailyFloatingActionButton.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
                 break;
         }
@@ -557,6 +547,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                         baseActivity.invalidateOptionsMenu();
                         break;
                 }
+
+                recordAnalyticsSortTypeEvent(getContext(), mSortType);
             }
         };
 
@@ -609,6 +601,38 @@ public class HotelListFragment extends BaseFragment implements Constants
         return mSortType;
     }
 
+    private void recordAnalyticsSortTypeEvent(Context context, SortType sortType)
+    {
+        if (context == null || sortType == null)
+        {
+            return;
+        }
+
+        String label;
+
+        switch (sortType)
+        {
+            case DISTANCE:
+                label = context.getString(R.string.label_sort_by_distance);
+                break;
+
+            case LOW_PRICE:
+                label = context.getString(R.string.label_sort_by_low_price);
+                break;
+
+            case HIGH_PRICE:
+                label = context.getString(R.string.label_sort_by_high_price);
+                break;
+
+            default:
+                label = context.getString(R.string.label_sort_by_area);
+                break;
+        }
+
+        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.HOTEL_SORTING_CLICKED, label, null);
+    }
+
     private void searchMyLocation()
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -645,6 +669,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                     mOnUserActionListener.selectSortType(mSortType);
                 }
 
+                recordAnalyticsSortTypeEvent(getContext(), mSortType);
+
                 if (Util.isOverAPI23() == true)
                 {
                     BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -676,6 +702,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                             {
                                 mOnUserActionListener.selectSortType(mSortType);
                             }
+
+                            recordAnalyticsSortTypeEvent(getContext(), mSortType);
                         }
                     }, true);
                 }
@@ -733,6 +761,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                         {
                             mOnUserActionListener.selectSortType(mSortType);
                         }
+
+                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
                     }
                 }, false);
             }
@@ -1072,6 +1102,11 @@ public class HotelListFragment extends BaseFragment implements Constants
             {
                 mHotelMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mIsSelectionTop);
             }
+
+            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST_MAP, null);
+        } else
+        {
+            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST, null);
         }
 
         mHotelAdapter.clear();

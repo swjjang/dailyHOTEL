@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public abstract class PlaceDetailActivity extends BaseActivity
@@ -132,7 +133,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
-    protected abstract void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime, int gourmetIndex);
+    protected abstract void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime, String category, int gourmetIndex, boolean isBenefit);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -344,6 +345,37 @@ public abstract class PlaceDetailActivity extends BaseActivity
         return false;
     }
 
+    protected void recordAnalyticsGourmetDetail(String screen, PlaceDetail placeDetail)
+    {
+        if (placeDetail == null)
+        {
+            return;
+        }
+
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
+            params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) placeDetail).category);
+            params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(placeDetail.benefit) ? "no" : "yes");
+
+            if (placeDetail.getTicketInformation() == null || placeDetail.getTicketInformation().size() == 0)
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, "0");
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(placeDetail.getTicketInformation().get(0).discountPrice));
+            }
+
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
+            params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            AnalyticsManager.getInstance(this).recordScreen(screen, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
@@ -469,6 +501,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             releaseUiComponent();
 
+            recordAnalyticsGourmetDetail(Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mPlaceDetail);
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, null);
         }
@@ -584,7 +617,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
-                        processBooking(mSelectedTicketInformation, mCheckInSaleTime, mPlaceDetail.index);
+                        processBooking(mSelectedTicketInformation, mCheckInSaleTime, ((GourmetDetail) mPlaceDetail).category, mPlaceDetail.index, false);
                     } else
                     {
                         // 정보 업데이트 화면으로 이동.
