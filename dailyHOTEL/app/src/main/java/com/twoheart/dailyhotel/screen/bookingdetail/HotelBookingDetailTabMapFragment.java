@@ -103,10 +103,9 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
             return;
         }
 
-        Intent intent = new Intent(baseActivity, ZoomMapActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, mBookingDetail.placeName);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mBookingDetail.latitude);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mBookingDetail.longitude);
+        Intent intent = ZoomMapActivity.newInstance(baseActivity//
+            , ZoomMapActivity.SourceType.BOOKING, mBookingDetail.placeName//
+            , mBookingDetail.latitude, mBookingDetail.longitude);
 
         startActivity(intent);
     }
