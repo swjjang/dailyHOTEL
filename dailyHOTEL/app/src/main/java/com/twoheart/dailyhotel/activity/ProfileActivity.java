@@ -322,6 +322,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     lockUI();
                     DailyNetworkAPI.getInstance().requestUserLogout(mNetworkTag, mUserLogoutStringResponseListener, ProfileActivity.this);
 
+                    AnalyticsManager.getInstance(ProfileActivity.this).setUserIndex(null);
                     //                    AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
                 }
             };

@@ -207,7 +207,7 @@ public class TuneManager implements IBaseAnalyticsManager
     {
         if (Util.isTextEmpty(index) == true)
         {
-
+            mMobileAppTracker.setUserId("");
         } else
         {
             mMobileAppTracker.setUserId(index);

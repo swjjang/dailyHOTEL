@@ -434,11 +434,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
                 height = width * ratio;
 
-                String size = String.format("%dx%d", (int) width, (int) height);
+                String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
                 String iconUrl = "http://s3.dailyhotel.kr/resources/images/_banner/googlemap_marker.png";
 
-                mapImageView.setImageURI(Uri.parse("http://maps.googleapis.com/maps/api/staticmap?zoom=18&size="//
-                    + size + "&markers=icon:" + iconUrl + "|" + mGourmetDetail.latitude + "," + mGourmetDetail.longitude + "&sensor=false"));
+                mapImageView.setImageURI(Uri.parse("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size="//
+                    + size + "&markers=icon:" + iconUrl + "|" + mGourmetDetail.latitude + "," + mGourmetDetail.longitude + "&sensor=false&scale=2&format=png8&mobile=true"));
             }
         });
 
