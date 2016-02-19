@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 public class GourmetBookingDetailTabBookingFragment extends BaseFragment implements Constants
@@ -139,13 +138,5 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         }
 
         return view;
-    }
-
-    @Override
-    public void onResume()
-    {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL, null);
-
-        super.onResume();
     }
 }

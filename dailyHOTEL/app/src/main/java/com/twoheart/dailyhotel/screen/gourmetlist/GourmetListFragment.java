@@ -95,7 +95,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mGourmetRecycleView.setTag("GourmetListFragment");
 
-        mGourmetAdapter = new GourmetListAdapter(getContext(), new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        mGourmetAdapter = new GourmetListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
         mGourmetRecycleView.setAdapter(mGourmetAdapter);
         mGourmetRecycleView.setOnScrollListener(mOnScrollListener);
 

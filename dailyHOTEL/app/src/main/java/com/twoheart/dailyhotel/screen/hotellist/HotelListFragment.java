@@ -110,7 +110,9 @@ public class HotelListFragment extends BaseFragment implements Constants
         mHotelRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         mHotelRecycleView.setTag("HotelListFragment");
 
-        mHotelAdapter = new HotelListAdapter(getContext(), new ArrayList<PlaceViewItem>(), getOnItemClickListener(), mOnEventBannerItemClickListener);
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        mHotelAdapter = new HotelListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), getOnItemClickListener(), mOnEventBannerItemClickListener);
         mHotelRecycleView.setAdapter(mHotelAdapter);
         mHotelRecycleView.setOnScrollListener(mOnScrollListener);
 

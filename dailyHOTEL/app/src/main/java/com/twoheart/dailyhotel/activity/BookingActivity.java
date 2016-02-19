@@ -560,15 +560,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     guest.email = etReserverEmail.getText().toString();
                 }
 
-                AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                    , Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
-
                 Intent intent = new Intent(this, CreditCardListActivity.class);
                 intent.setAction(Intent.ACTION_PICK);
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+                AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                    , Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
                 break;
             }
         }
@@ -920,10 +920,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         @Override
                         public void onClick(View view)
                         {
-                            String label = String.format("%s_%s", mPay.getSaleRoomInformation().hotelName, mPay.getSaleRoomInformation().roomName);
-                            AnalyticsManager.getInstance(BookingActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                , Action.PAYMENT_COMPLETE_POPPEDUP, label, null);
-
                             mDoReload = true;
                             mAliveCallSource = "";
 

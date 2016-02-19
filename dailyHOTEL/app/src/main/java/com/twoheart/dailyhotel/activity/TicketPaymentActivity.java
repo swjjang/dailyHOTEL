@@ -241,10 +241,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                             @Override
                             public void onClick(View view)
                             {
-                                String label = String.format("%s_%s", mTicketPayment.getTicketInformation().placeName, mTicketPayment.getTicketInformation().name);
-                                AnalyticsManager.getInstance(TicketPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                    , Action.PAYMENT_COMPLETE_POPPEDUP, label, null);
-
                                 mState = STATE_NONE;
                                 mDoReload = true;
 

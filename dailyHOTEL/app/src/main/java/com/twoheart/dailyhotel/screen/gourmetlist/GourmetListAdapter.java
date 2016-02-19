@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.gourmetlist;
 
-import android.content.Context;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -34,6 +34,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
     private View.OnClickListener mOnClickListener;
     private View.OnClickListener mOnEventBannerClickListener;
     private int mLastEventBannerPosition;
+    private BaseActivity mActivity;
 
     private Handler mEventBannerHandler = new Handler()
     {
@@ -49,10 +50,11 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         }
     };
 
-    public GourmetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
+    public GourmetListAdapter(BaseActivity activity, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
-        super(context, arrayList);
+        super(activity, arrayList);
 
+        mActivity = activity;
         mOnClickListener = listener;
         mOnEventBannerClickListener = eventBannerListener;
 
@@ -91,28 +93,34 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        switch (viewType)
+        try
         {
-            case PlaceViewItem.TYPE_SECTION:
+            switch (viewType)
             {
-                View view = mInflater.inflate(R.layout.list_row_hotel_section, parent, false);
+                case PlaceViewItem.TYPE_SECTION:
+                {
+                    View view = mInflater.inflate(R.layout.list_row_hotel_section, parent, false);
 
-                return new SectionViewHolder(view);
+                    return new SectionViewHolder(view);
+                }
+
+                case PlaceViewItem.TYPE_ENTRY:
+                {
+                    View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
+
+                    return new GourmetViewHolder(view);
+                }
+
+                case PlaceViewItem.TYPE_EVENT_BANNER:
+                {
+                    View view = mInflater.inflate(R.layout.list_row_eventbanner, parent, false);
+
+                    return new EventBannerViewHolder(view);
+                }
             }
-
-            case PlaceViewItem.TYPE_ENTRY:
-            {
-                View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
-
-                return new GourmetViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_EVENT_BANNER:
-            {
-                View view = mInflater.inflate(R.layout.list_row_eventbanner, parent, false);
-
-                return new EventBannerViewHolder(view);
-            }
+        } catch (OutOfMemoryError e)
+        {
+            Util.finishOutOfMemory(mActivity);
         }
 
         return null;

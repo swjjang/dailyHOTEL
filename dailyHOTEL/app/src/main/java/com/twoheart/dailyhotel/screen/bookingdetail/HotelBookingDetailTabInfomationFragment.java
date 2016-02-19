@@ -21,7 +21,6 @@ import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 
@@ -74,14 +73,6 @@ public class HotelBookingDetailTabInfomationFragment extends BaseFragment
         }
 
         return view;
-    }
-
-    @Override
-    public void onResume()
-    {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_INFORMATION, null);
-
-        super.onResume();
     }
 
     private void addView(View view, String subject, List<String> contentList)
