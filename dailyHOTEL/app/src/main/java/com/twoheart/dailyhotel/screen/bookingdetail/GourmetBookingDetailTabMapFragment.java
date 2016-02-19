@@ -29,7 +29,6 @@ import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class GourmetBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
@@ -162,8 +161,6 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
                 }
             });
         }
-
-        AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
 
         super.onResume();
     }

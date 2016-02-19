@@ -137,7 +137,7 @@ public class ZoomMapActivity extends BaseActivity
                 break;
 
             case BOOKING:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
+                //                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
                 break;
         }
 

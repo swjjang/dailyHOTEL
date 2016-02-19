@@ -502,7 +502,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             releaseUiComponent();
 
             recordAnalyticsGourmetDetail(Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mPlaceDetail);
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, null);
         }
 
@@ -523,7 +523,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             releaseUiComponent();
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.DAILYGOURMET_DETAIL, null);
+            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
         }
 

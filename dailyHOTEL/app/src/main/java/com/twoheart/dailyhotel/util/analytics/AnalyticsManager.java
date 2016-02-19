@@ -220,12 +220,12 @@ public class AnalyticsManager
         //
         public static final String BOOKING_LIST = "Booking_BookingStatusList";
         public static final String BOOKING_LIST_EMPTY = "Booking_NoBookingHistory";
+        public static final String BOOKING_BEFORE_LOGIN_BOOKING_LIST = "Booking_BeforeLoginBookingList";
         //
         public static final String BOOKING_DETAIL = "BookingDetail_MyBookingInfo";
         public static final String BOOKING_DETAIL_INFORMATION = "BookingDetail_PlaceInfo";
         public static final String BOOKING_DETAIL_MAP = "BookingDetail_MapView";
-        public static final String BOOKING_RECEIPT = "BookingDetail_Receipt";
-        public static final String BOOKING_BEFORE_LOGIN_BOOKING_LIST = "Booking_BeforeLoginBookingList";
+        public static final String BOOKING_DETAIL_RECEIPT = "BookingDetail_Receipt";
         //
         public static final String INFORMATION_SIGNIN = "Menu_AfterLogin";
         public static final String INFORMATION_SIGNOUT = "Menu_BeforeLogin";
@@ -244,6 +244,7 @@ public class AnalyticsManager
         //
         public static final String BONUS = "Menu_CreditManagement";
         public static final String BONUS_LIST = "Menu_CreditHistoryList";
+        public static final String BONUS_BEFORE_LOGIN = "Menu_BeforeLoginCreditManagement";
         public static final String EVENT_LIST = "Menu_EventList";
         public static final String EVENT_DETAIL = "Menu_EventDetailView";
         public static final String ABOUT = "Menu_ServiceIntro";
@@ -270,7 +271,6 @@ public class AnalyticsManager
         public static final String PAYMENT_CLICKED = "PaymentClicked";
         public static final String PAYMENT_AGREEMENT_POPPEDUP = "PaymentAgreementPoppedup";
         public static final String HOTEL_PAYMENT_COMPLETED = "HotelPaymentCompleted";
-        public static final String PAYMENT_COMPLETE_POPPEDUP = "PaymentCompletePoppedup";
         public static final String DAILY_GOURMET_CLICKED = "DailyGourmetClicked";
         public static final String GOURMET_LOCATIONS_CLICKED = "GourmetLocationsClicked";
         public static final String GOURMET_SORTING_CLICKED = "GourmetSortingClicked";
@@ -289,11 +289,6 @@ public class AnalyticsManager
         public static final String CREDIT_MANAGEMENT_CLICKED = "CreditManagementClicked";
         public static final String INVITE_FRIEND_CLICKED = "InviteFriendClicked";
         public static final String EVENT_CLICKED = "EventClicked";
-    }
-
-    public static class Event
-    {
-        public static final String MENU = "menu";
     }
 
     public static class Category

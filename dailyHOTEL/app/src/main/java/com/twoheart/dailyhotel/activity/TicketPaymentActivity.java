@@ -241,10 +241,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                             @Override
                             public void onClick(View view)
                             {
-                                String label = String.format("%s_%s", mTicketPayment.getTicketInformation().placeName, mTicketPayment.getTicketInformation().name);
-                                AnalyticsManager.getInstance(TicketPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                    , Action.PAYMENT_COMPLETE_POPPEDUP, label, null);
-
                                 mState = STATE_NONE;
                                 mDoReload = true;
 
@@ -886,12 +882,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
                 SaleTime saleTime = new SaleTime();
 
                 saleTime.setCurrentTime(response.getLong("currentDateTime"));
@@ -943,6 +933,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             try
             {
                 int msg_code = response.getInt("msg_code");
+                mState = STATE_NONE;
 
                 if (msg_code == 0)
                 {
@@ -1022,12 +1013,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code != 0)

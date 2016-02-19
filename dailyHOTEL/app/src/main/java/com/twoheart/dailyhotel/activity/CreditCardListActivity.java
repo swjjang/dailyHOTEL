@@ -253,6 +253,8 @@ public class CreditCardListActivity extends BaseActivity
                             @Override
                             public void onClick(View v)
                             {
+                                unLockUI();
+
                                 AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                                     , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
                             }
@@ -263,6 +265,8 @@ public class CreditCardListActivity extends BaseActivity
                             @Override
                             public void onCancel(DialogInterface dialog)
                             {
+                                unLockUI();
+
                                 AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                                     , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
                             }

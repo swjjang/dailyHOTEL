@@ -18,8 +18,8 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[GoogleAnalyticsManager]";
-
     private static final String GA_PROPERTY_ID = "UA-43721645-6";
+
     private Tracker mGoogleAnalyticsTracker;
 
     public GoogleAnalyticsManager(Context context)
@@ -29,6 +29,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
         mGoogleAnalyticsTracker = googleAnalytics.newTracker(GA_PROPERTY_ID);
         mGoogleAnalyticsTracker.enableAdvertisingIdCollection(true);
+        mGoogleAnalyticsTracker.set("&cu", "KRW");
     }
 
     @Override
@@ -129,13 +130,14 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
         Product product = getProcuct(params);
+        product.setBrand("hotel");
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
             .setTransactionId(transId)//
             .setTransactionRevenue(paymentPrice)//
             .setTransactionCouponCode(String.format("credit_%s", credit));
 
-        HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+        HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
@@ -146,10 +148,15 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
             .setTransactionRevenue(paymentPrice)//
             .setTransactionCouponCode(String.format("credit_%s", credit));
 
-        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productCheckoutAction);
+        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = getScreenViewBuilder(params, product, productCheckoutAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME);
+        String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
+
+        recordEvent(AnalyticsManager.Category.HOTELBOOKINGS, AnalyticsManager.Action.HOTEL_PAYMENT_COMPLETED, placeName + "_" + ticketName, null);
 
         if (DEBUG == true)
         {
@@ -164,27 +171,33 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
 
         Product product = getProcuct(params);
+        product.setBrand("gourmet");
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
             .setTransactionId(transId)//
             .setTransactionRevenue(paymentPrice)//
             .setTransactionCouponCode(String.format("credit_%s", credit));
 
-        HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+        HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-        //
+
         ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
             .setCheckoutStep(5)//
             .setTransactionId(transId)//
             .setTransactionRevenue(paymentPrice)//
             .setTransactionCouponCode(String.format("credit_%s", credit));
 
-        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productCheckoutAction);
+        HitBuilders.ScreenViewBuilder screenCheckoutViewBuilder = getScreenViewBuilder(params, product, productCheckoutAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME);
+        String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
+
+        recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS, AnalyticsManager.Action.GOURMET_PAYMENT_COMPLETED, placeName + "_" + ticketName, null);
 
         if (DEBUG == true)
         {
@@ -200,18 +213,6 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
         String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
 
-        String checkIn = null;
-
-        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
-        {
-            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
-        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
-        {
-            checkIn = params.get(AnalyticsManager.KeyType.DATE);
-        }
-
-        String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
-
         String grade = params.get(AnalyticsManager.KeyType.GRADE);
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
 
@@ -219,9 +220,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         String quantity = params.get(AnalyticsManager.KeyType.QUANTITY);
 
-        String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT);
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
-        String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
 
         String id = null;
 
@@ -285,32 +284,53 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
             }
         }
 
-        if (Util.isTextEmpty(checkIn) == false)
-        {
-            product.setCustomDimension(1, checkIn);
-        }
-
-        if (Util.isTextEmpty(checkOut) == false)
-        {
-            product.setCustomDimension(2, checkOut);
-        }
-
-        if (Util.isTextEmpty(dBenefit) == false)
-        {
-            product.setCustomDimension(3, dBenefit);
-        }
-
-        if (Util.isTextEmpty(paymentType) == false)
-        {
-            product.setCustomDimension(4, paymentType);
-        }
-
         if (DEBUG == true)
         {
             ExLog.d(TAG + "Product : " + product.toString());
         }
 
         return product;
+    }
+
+    private HitBuilders.ScreenViewBuilder getScreenViewBuilder(Map<String, String> params, Product product, ProductAction productAction)
+    {
+        HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+
+        String checkIn = null;
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE);
+        }
+
+        String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
+        String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT);
+        String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
+
+        if (Util.isTextEmpty(checkIn) == false)
+        {
+            screenViewBuilder.setCustomDimension(1, checkIn);
+        }
+
+        if (Util.isTextEmpty(checkOut) == false)
+        {
+            screenViewBuilder.setCustomDimension(2, checkOut);
+        }
+
+        if (Util.isTextEmpty(dBenefit) == false)
+        {
+            screenViewBuilder.setCustomDimension(3, dBenefit);
+        }
+
+        if (Util.isTextEmpty(paymentType) == false)
+        {
+            screenViewBuilder.setCustomDimension(4, paymentType);
+        }
+
+        return screenViewBuilder;
     }
 
     private void checkoutStep(int step, String transId, Map<String, String> params)
@@ -342,7 +362,8 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
             ExLog.d(TAG + "checkoutStep : " + step + " | " + transId + " | " + productAction.toString());
         }
 
-        HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+
+        HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());

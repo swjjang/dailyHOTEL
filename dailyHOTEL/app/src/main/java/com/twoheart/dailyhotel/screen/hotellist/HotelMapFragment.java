@@ -719,7 +719,13 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             mViewPager.setCurrentItem(position);
             mHotelListViewPagerAdapter.notifyDataSetChanged();
 
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            if (Util.isOverAPI21() == true)
+            {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            } else
+            {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            }
 
             mSelectedMarker.showInfoWindow();
         }
@@ -803,7 +809,14 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         {
             mViewPager.setCurrentItem(position);
 
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            if (Util.isOverAPI21() == true)
+            {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            } else
+            {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            }
+
             mSelectedMarker.showInfoWindow();
         }
     }
@@ -922,7 +935,14 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
 
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                if (Util.isOverAPI21() == true)
+                {
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                } else
+                {
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
             }
         });
     }

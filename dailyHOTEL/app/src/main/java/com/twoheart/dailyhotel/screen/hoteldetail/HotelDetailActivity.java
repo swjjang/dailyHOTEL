@@ -572,6 +572,7 @@ public class HotelDetailActivity extends BaseActivity
 
             releaseUiComponent();
 
+            AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.DAILYHOTEL_DETAIL, null);
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
                 , Action.ROOM_TYPE_CANCEL_CLICKED, mHotelDetail.hotelName, null);
         }

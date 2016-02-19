@@ -120,10 +120,17 @@ public class MainActivity extends BaseActivity implements Constants
 
         initLayout();
 
-        mMainPresenter.requestCheckServer();
+        mDelayTimeHandler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mMainPresenter.requestCheckServer();
 
-        // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
-        mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
+                // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
+                mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
+            }
+        }, 500);
     }
 
     @Override

@@ -705,7 +705,13 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
             mViewPager.setCurrentItem(position);
             mPlaceViewPagerAdapter.notifyDataSetChanged();
 
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            if (Util.isOverAPI21() == true)
+            {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            } else
+            {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            }
 
             mSelectedMarker.showInfoWindow();
         }
@@ -789,7 +795,14 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         {
             mViewPager.setCurrentItem(position);
 
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            if (Util.isOverAPI21() == true)
+            {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            } else
+            {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+            }
+
             mSelectedMarker.showInfoWindow();
         }
     }
@@ -908,7 +921,14 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
                 mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
 
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                if (Util.isOverAPI21() == true)
+                {
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                } else
+                {
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
             }
         });
     }

@@ -36,6 +36,7 @@ public class TuneManager implements IBaseAnalyticsManager
         mContext = context;
 
         mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), ADVERTISE_ID, CONVERSION_KEY);
+        mMobileAppTracker.setCurrencyCode("KRW");
 
         // 기존 사용자와 구분하기 위한 값
         if (Util.isTextEmpty(DailyPreference.getInstance(context).getCompanyName()) == false)

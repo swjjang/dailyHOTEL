@@ -830,12 +830,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         {
             try
             {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
                 JSONObject jsonObject = response.getJSONObject("data");
 
                 boolean isOnSale = jsonObject.getBoolean("on_sale");
@@ -847,6 +841,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     switch (mState)
                     {
                         case STATE_REGISTER_CREDIT_CARD:
+                            mState = STATE_NONE;
                             DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
                             break;
 
@@ -888,14 +883,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         {
             try
             {
-                if (response == null)
-                {
-                    mDoReload = true;
-
-                    onInternalError();
-                    return;
-                }
-
                 int msg_code = response.getInt("msg_code");
 
                 if (msg_code == 0)

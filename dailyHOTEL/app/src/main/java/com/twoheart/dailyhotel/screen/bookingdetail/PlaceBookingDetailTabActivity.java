@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
@@ -56,6 +57,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         }
 
         initLayout();
+
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL, null);
     }
 
     private void initLayout()
@@ -120,6 +123,21 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             if (mViewPager != null)
             {
                 mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            switch (tab.getPosition())
+            {
+                case 0:
+                    AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL, null);
+                    break;
+
+                case 1:
+                    AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_INFORMATION, null);
+                    break;
+
+                case 2:
+                    AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
+                    break;
             }
         }
 

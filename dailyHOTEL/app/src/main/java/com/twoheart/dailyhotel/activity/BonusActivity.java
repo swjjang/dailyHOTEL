@@ -109,15 +109,6 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
         tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
     }
 
-
-    @Override
-    public void onStart()
-    {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS, null);
-
-        super.onStart();
-    }
-
     @Override
     public void onResume()
     {
@@ -192,10 +183,14 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
         {
             rlCreditNotLoggedIn.setVisibility(View.GONE);
             llCreditLoggedIn.setVisibility(View.VISIBLE);
+
+            AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS, null);
         } else
         {
             rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
             llCreditLoggedIn.setVisibility(View.GONE);
+
+            AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS_BEFORE_LOGIN, null);
         }
     }
 
