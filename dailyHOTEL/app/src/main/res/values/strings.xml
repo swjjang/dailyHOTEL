@@ -70,7 +70,7 @@
     <string name="actionbar_title_gourmet_list_frag">데일리고메</string>
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
-    <string name="actionbar_title_reg_creditcard">신용카드 추가하기</string>
+    <string name="actionbar_title_reg_creditcard">결제카드 추가하기</string>
     <string name="actionbar_title_setting_frag">설정</string>
     <string name="actionbar_title_error_frag">DAILYHOTEL</string>
     <string name="actionbar_title_wait_timer_frag">DAILYHOTEL</string>
@@ -89,7 +89,7 @@
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
-    <string name="actionbar_title_creditcard_activity">신용카드 관리</string>
+    <string name="actionbar_title_creditcard_activity">결제카드 관리</string>
     <string name="actionbar_title_hoteldetailinfo_activity">호텔 정보</string>
     <string name="actionbar_title_event_list_frag">이벤트</string>
 
@@ -200,12 +200,12 @@
     <string name="dialog_btn_update">업데이트</string>
     <string name="dialog_btn_text_close">닫기</string>
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
-    <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
-    <string name="dialog_msg_delete_register_creditcard">등록된 신용카드를 삭제하시겠습니까?</string>
+    <string name="dialog_msg_register_creditcard_cancel">결제카드 등록을 취소하시겠습니까?</string>
+    <string name="dialog_msg_delete_register_creditcard">등록된 결제카드를 삭제하시겠습니까?</string>
     <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
     <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
     <string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
-    <string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
+    <string name="dialog_msg_delete_failed_creditcard">결제카드 삭제를 실패하였습니다.</string>
     <string name="dialog_msg_delete_booking">이용 완료한 내역을 삭제하시겠습니까?</string>
     <string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격 혹은 객실이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_changed_bonus">적립금이 변동되었습니다.\n확인 뒤 결제해주세요.</string>
@@ -362,7 +362,7 @@
     <string name="act_booking_price">비용</string>
     <string name="act_booking_credit_discount">적립금 할인</string>
     <string name="act_booking_price_real">결제금액(VAT 포함)</string>
-    <string name="act_booking_pay_card">신용카드 일반결제</string>
+    <string name="act_booking_pay_card">결제카드 일반결제</string>
     <string name="act_booking_pay_mobile">휴대폰</string>
     <string name="act_booking_pay_account">계좌이체</string>
     <string name="act_booking_btn_pay">결제하기</string>
@@ -371,7 +371,7 @@
     <string name="act_booking_payment_info02">1800-9120</string>
     <string name="act_booking_payment_info03">으로 전화주세요.</string>
     <string name="action_booking_cardmanager">카드관리</string>
-    <string name="label_booking_easypayment">신용카드 간편결제</string>
+    <string name="label_booking_easypayment">결제카드 간편결제</string>
     <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>
     <string name="label_booking_confirm_signature">고객님, 확인하셨나요?</string>
     <string name="label_booking_room_info">객실 정보</string>
@@ -552,11 +552,11 @@
     <string name="message_failed_mylocation">일시적으로 내 위치 정보를 얻을 수 없습니다.</string>
 
     <!-- CreditCardFragment -->
-    <string name="label_add_creditcard">신용카드 등록하기</string>
+    <string name="label_add_creditcard">결제카드 등록하기</string>
     <string name="label_creditcard_introduce">간편하게 카드등록하고\n1초만에 결제하세요!</string>
     <string name="message_billing_success">카드 등록이 완료되었습니다.</string>
     <string name="message_billing_fail">카드 등록을 실패하였습니다.</string>
-    <string name="message_billing_duplicate">이미 등록된 신용카드입니다.</string>
+    <string name="message_billing_duplicate">이미 등록된 결제카드입니다.</string>
 
     <!-- Issuingreceipt Activity -->
     <string name="label_receipt_bookinginfo">예약 세부정보</string>
