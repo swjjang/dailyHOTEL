@@ -499,7 +499,7 @@ public class HotelDetailActivity extends BaseActivity
             DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, HotelDetailActivity.this);
 
             String label = String.format("%s_%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
                 , Action.BOOKING_CLICKED, label, null);
         }
 
@@ -529,7 +529,7 @@ public class HotelDetailActivity extends BaseActivity
                 }
             }
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
                 , Action.KAKAO_INQUIRY_CLICKED, mHotelDetail.hotelName, null);
         }
 
@@ -571,10 +571,6 @@ public class HotelDetailActivity extends BaseActivity
             }
 
             releaseUiComponent();
-
-            AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.DAILYHOTEL_DETAIL, null);
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                , Action.ROOM_TYPE_CANCEL_CLICKED, mHotelDetail.hotelName, null);
         }
 
         @Override

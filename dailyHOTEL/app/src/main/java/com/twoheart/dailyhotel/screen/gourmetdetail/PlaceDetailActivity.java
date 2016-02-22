@@ -450,7 +450,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, PlaceDetailActivity.this);
 
             String label = String.format("%s_%s", mPlaceDetail.name, mSelectedTicketInformation.name);
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , Action.BOOKING_CLICKED, label, null);
         }
 
@@ -480,7 +480,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 }
             }
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , Action.KAKAO_INQUIRY_CLICKED, mPlaceDetail.name, null);
         }
 
@@ -522,10 +522,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
 
             releaseUiComponent();
-
-            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.DAILYGOURMET_DETAIL, null);
-            AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
-                , Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
         }
 
         @Override

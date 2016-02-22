@@ -576,6 +576,10 @@ public class HotelDetailLayout
 
             setBookingStatus(STATUS_SEARCH_ROOM);
         }
+
+        AnalyticsManager.getInstance(mActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DETAIL, null);
+        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mHotelDetail.hotelName, null);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
