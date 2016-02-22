@@ -783,10 +783,12 @@ public class HotelDetailListAdapter extends BaseAdapter
                 textView.setText(contentsList.get(i));
                 textView.setTypeface(FontManager.getInstance(mFragmentActivity).getDemiLightTypeface());
 
-                if (Util.isOverAPI21() == true)
+                if (i != size - 1)
                 {
+                    int dp = Util.isOverAPI21() == true ? 5 : 7;
+
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                    layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 5);
+                    layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 7);
                     contentsLayout.addView(textLayout, layoutParams);
                 } else
                 {

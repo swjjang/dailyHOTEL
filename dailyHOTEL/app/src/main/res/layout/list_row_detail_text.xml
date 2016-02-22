@@ -22,10 +22,8 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:freezesText="true"
-            android:lineSpacingExtra="5dp"
+            android:lineSpacingExtra="-2dp"
             android:textColor="@color/hoteldetail_contents_text_color"
             android:textSize="13dp"/>
-
     </LinearLayout>
-
 </FrameLayout>
