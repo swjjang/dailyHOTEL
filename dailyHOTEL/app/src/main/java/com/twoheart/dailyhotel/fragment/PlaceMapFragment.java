@@ -58,7 +58,7 @@ import java.util.List;
 
 public abstract class PlaceMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
-    protected GourmetMainFragment.OnUserActionListener mUserActionListener;
+    protected GourmetMainFragment.OnCommunicateListener mUserActionListener;
     private GoogleMap mGoogleMap;
     private List<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
     private List<PlaceViewItem> mPlaceViewItemViewPagerList; // ViewPager을 위한 리스트
@@ -255,7 +255,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         }
     }
 
-    public void setOnUserActionListener(GourmetMainFragment.OnUserActionListener userActionLister)
+    public void setOnCommunicateListener(GourmetMainFragment.OnCommunicateListener userActionLister)
     {
         mUserActionListener = userActionLister;
     }

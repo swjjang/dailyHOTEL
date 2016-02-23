@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -57,7 +56,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
     private int mReservationIndex;
     private long mCheckInDate;
     private long mCheckOutDate;
-    private PlaceMainFragment.TYPE mPlaceType;
+    private Constants.TYPE mPlaceType;
     private Dialog mDialog;
     private ArrayList<ReviewCode> mReviewCodeList;
     private DailyEditText mCommentsView;
@@ -552,7 +551,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         }
     }
 
-    private void updateSatifactionRating(PlaceMainFragment.TYPE type, int index, String result)
+    private void updateSatifactionRating(Constants.TYPE type, int index, String result)
     {
         if (result == null)
         {

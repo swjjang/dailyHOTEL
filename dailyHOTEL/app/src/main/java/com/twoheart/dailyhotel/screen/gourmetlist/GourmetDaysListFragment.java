@@ -67,9 +67,9 @@ public class GourmetDaysListFragment extends GourmetListFragment
                 {
                     mSelectedSaleTime = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECKINDATE);
 
-                    if (mOnUserActionListener != null)
+                    if (mOnCommunicateListener != null)
                     {
-                        mOnUserActionListener.selectDay(mSelectedSaleTime, true);
+                        mOnCommunicateListener.selectDay(mSelectedSaleTime, true);
                     }
                 } else
                 {

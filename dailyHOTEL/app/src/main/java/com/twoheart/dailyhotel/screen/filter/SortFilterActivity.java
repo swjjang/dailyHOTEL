@@ -3,14 +3,12 @@ package com.twoheart.dailyhotel.screen.filter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class SortFilterActivity extends BaseActivity
 {

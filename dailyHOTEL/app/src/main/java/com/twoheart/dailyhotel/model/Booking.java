@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 
@@ -37,7 +36,7 @@ public class Booking implements Parcelable
     public long checkoutTime;
     public String hotelImageUrl;
     public boolean isUsed;
-    public PlaceMainFragment.TYPE placeType;
+    public Constants.TYPE placeType;
 
     public Booking()
     {

@@ -9,10 +9,10 @@ import android.support.v7.widget.Toolbar;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -30,7 +30,7 @@ public class RegionListActivity extends BaseActivity
     private ViewPager mViewPager;
     private RegionFragmentPagerAdapter mFragmentPagerAdapter;
 
-    private PlaceMainFragment.TYPE mType;
+    private Constants.TYPE mType;
     private RegionListPresenter mRegionListPresenter;
 
     public interface OnUserActionListener
@@ -53,7 +53,7 @@ public class RegionListActivity extends BaseActivity
         void onInternalError(String message);
     }
 
-    public static Intent newInstance(Context context, PlaceMainFragment.TYPE type, Province province)
+    public static Intent newInstance(Context context, Constants.TYPE type, Province province)
     {
         Intent intent = new Intent(context, RegionListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, type.toString());
@@ -93,7 +93,7 @@ public class RegionListActivity extends BaseActivity
         initLayout(mType, selectedProvince);
     }
 
-    private void initLayout(PlaceMainFragment.TYPE type, Province province)
+    private void initLayout(Constants.TYPE type, Province province)
     {
         if (mType == null)
         {

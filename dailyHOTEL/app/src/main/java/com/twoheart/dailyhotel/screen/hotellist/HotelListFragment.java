@@ -38,8 +38,8 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.HotelFilters;
-import com.twoheart.dailyhotel.model.HotelSortFilterOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -71,16 +71,14 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected PinnedSectionRecycleView mHotelRecycleView;
     protected HotelListAdapter mHotelAdapter;
     protected SaleTime mSaleTime;
-    protected Province mSelectedProvince;
 
     private View mEmptyView;
     private ViewGroup mMapLayout;
     private HotelMapFragment mHotelMapFragment;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private Location mMyLocation;
     private List<EventBanner> mEventBannerList;
 
-    private HotelMainFragment.HOTEL_VIEW_TYPE mHotelViewType;
+    private HotelMainFragment.VIEW_TYPE mViewType;
     protected boolean mScrollListTop;
     protected HotelMainFragment.OnCommunicateListener mOnCommunicateListener;
 
@@ -121,9 +119,9 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         mMapLayout = (ViewGroup) view.findViewById(R.id.hotelMapLayout);
 
-        mHotelViewType = HotelMainFragment.HOTEL_VIEW_TYPE.LIST;
+        mViewType = HotelMainFragment.VIEW_TYPE.LIST;
 
-        setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.LIST);
+        setVisibility(mViewType);
 
         mHotelRecycleView.setShadowVisible(false);
 
@@ -141,7 +139,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
+        if (mViewType == HotelMainFragment.VIEW_TYPE.MAP)
         {
             if (mHotelMapFragment != null)
             {
@@ -153,7 +151,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
+        if (mViewType == HotelMainFragment.VIEW_TYPE.MAP)
         {
             if (mHotelMapFragment != null)
             {
@@ -162,30 +160,16 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
     }
 
-    /**
-     * 토글이 아닌 경우에만 진행하는 프로세스.
-     *
-     * @param detailRegion
-     */
-    public void processSelectedDetailRegion(String detailRegion)
-    {
-        // 현재 맵화면을 보고 있으면 맵화면을 유지 시켜중어야 한다.
-        if (detailRegion != null && mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
-        {
-            refreshHotelList(mSelectedProvince);
-        }
-    }
-
     public void onPageSelected(boolean isRequestHotelList)
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        baseActivity.invalidateOptionsMenu();
+        //        BaseActivity baseActivity = (BaseActivity) getActivity();
+        //
+        //        if (baseActivity == null)
+        //        {
+        //            return;
+        //        }
+        //
+        //        baseActivity.invalidateOptionsMenu();
     }
 
     public void onPageUnSelected()
@@ -196,7 +180,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     {
         mSwipeRefreshLayout.setRefreshing(false);
 
-        if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
+        if (mViewType == HotelMainFragment.VIEW_TYPE.MAP)
         {
             return;
         }
@@ -240,27 +224,27 @@ public class HotelListFragment extends BaseFragment implements Constants
      * @param type
      * @param isCurrentPage
      */
-    public void setHotelViewType(HotelMainFragment.HOTEL_VIEW_TYPE type, boolean isCurrentPage)
+    public void setViewType(HotelMainFragment.VIEW_TYPE type, boolean isCurrentPage)
     {
-        mHotelViewType = type;
+        mViewType = type;
 
         if (mEmptyView.getVisibility() == View.VISIBLE)
         {
-            setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.GONE);
+            setVisibility(HotelMainFragment.VIEW_TYPE.GONE);
         } else
         {
-            switch (mHotelViewType)
+            switch (mViewType)
             {
                 case LIST:
-                    setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.LIST, isCurrentPage);
+                    setVisibility(HotelMainFragment.VIEW_TYPE.LIST, isCurrentPage);
                     break;
 
                 case MAP:
-                    setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.MAP, isCurrentPage);
+                    setVisibility(HotelMainFragment.VIEW_TYPE.MAP, isCurrentPage);
 
                     if (mHotelMapFragment != null)
                     {
-                        mHotelMapFragment.setUserActionListener(mOnCommunicateListener);
+                        mHotelMapFragment.setOnCommunicateListener(mOnCommunicateListener);
 
                         if (isCurrentPage == true)
                         {
@@ -281,7 +265,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
     }
 
-    private void setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE type, boolean isCurrentPage)
+    private void setVisibility(HotelMainFragment.VIEW_TYPE type, boolean isCurrentPage)
     {
         switch (type)
         {
@@ -323,7 +307,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
     }
 
-    private void setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE type)
+    private void setVisibility(HotelMainFragment.VIEW_TYPE type)
     {
         setVisibility(type, true);
     }
@@ -331,11 +315,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     public SaleTime getSaleTime()
     {
         return mSaleTime;
-    }
-
-    public View.OnClickListener getOnItemClickListener()
-    {
-        return mOnItemClickListener;
     }
 
     public void setSaleTime(SaleTime saleTime)
@@ -348,10 +327,13 @@ public class HotelListFragment extends BaseFragment implements Constants
         mOnCommunicateListener = listener;
     }
 
-    public void refreshHotelList(Province province)
+    public View.OnClickListener getOnItemClickListener()
     {
-        mSelectedProvince = province;
+        return mOnItemClickListener;
+    }
 
+    public void refreshList()
+    {
         Map<String, String> params = new HashMap<>();
         params.put("type", "hotel");
 
@@ -370,7 +352,8 @@ public class HotelListFragment extends BaseFragment implements Constants
      */
     protected void fetchHotelList()
     {
-        fetchHotelList(mSelectedProvince, mSaleTime, null);
+        HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
+        fetchHotelList(hotelCurationOption.getProvince(), mSaleTime, null);
     }
 
     /**
@@ -428,22 +411,12 @@ public class HotelListFragment extends BaseFragment implements Constants
         DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);
     }
 
-    public Province getProvince()
-    {
-        return mSelectedProvince;
-    }
-
     public void setScrollListTop(boolean scrollListTop)
     {
         mScrollListTop = scrollListTop;
     }
 
-    public void setLocation(Location location)
-    {
-        mMyLocation = location;
-    }
-
-    private void requestSortList(SortType type)
+    private void requestSortList(SortType type, final Location location)
     {
         if (SortType.DEFAULT == type)
         {
@@ -484,11 +457,11 @@ public class HotelListFragment extends BaseFragment implements Constants
                         Hotel hotel2 = placeViewItem2.<Hotel>getItem();
 
                         float[] results1 = new float[3];
-                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
+                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
                         hotel1.distance = results1[0];
 
                         float[] results2 = new float[3];
-                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
+                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
                         hotel2.distance = results2[0];
 
                         return Float.compare(results1[0], results2[0]);
@@ -501,7 +474,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                     Hotel hotel1 = placeViewItem.<Hotel>getItem();
 
                     float[] results1 = new float[3];
-                    Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
+                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
                     hotel1.distance = results1[0];
                 } else
                 {
@@ -555,7 +528,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         unLockUI();
     }
 
-    private ArrayList<PlaceViewItem> makeSortHotelList(List<Hotel> hotelList, SortType type)
+    private ArrayList<PlaceViewItem> curationSorting(List<Hotel> hotelList, HotelCurationOption hotelCurationOption)
     {
         ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
 
@@ -564,7 +537,9 @@ public class HotelListFragment extends BaseFragment implements Constants
             return hotelListViewItemList;
         }
 
-        switch (type)
+        final Location location = hotelCurationOption.getLocation();
+
+        switch (hotelCurationOption.getSortType())
         {
             case DEFAULT:
                 return makeSectionHotelList(hotelList);
@@ -577,11 +552,11 @@ public class HotelListFragment extends BaseFragment implements Constants
                     public int compare(Hotel hotel1, Hotel hotel2)
                     {
                         float[] results1 = new float[3];
-                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
+                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
                         hotel1.distance = results1[0];
 
                         float[] results2 = new float[3];
-                        Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
+                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
                         hotel2.distance = results2[0];
 
                         return Float.compare(results1[0], results2[0]);
@@ -593,7 +568,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                     Hotel hotel = hotelList.get(0);
 
                     float[] results1 = new float[3];
-                    Location.distanceBetween(mMyLocation.getLatitude(), mMyLocation.getLongitude(), hotel.latitude, hotel.longitude, results1);
+                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel.latitude, hotel.longitude, results1);
                     hotel.distance = results1[0];
                 } else
                 {
@@ -701,7 +676,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
     }
 
-    private List<Hotel> filteringCategory(List<Hotel> list, Category category)
+    private List<Hotel> curationCategory(List<Hotel> list, Category category)
     {
         if (category == null || Category.ALL.code.equalsIgnoreCase(category.code) == true)
         {
@@ -721,7 +696,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         return filteredCategoryList;
     }
 
-    private List<Hotel> filteringOption(List<Hotel> list, int flagBedType, int person)
+    private List<Hotel> curationFiltering(List<Hotel> list, int flagBedType, int person)
     {
         int size = list.size();
         Hotel hotel;
@@ -739,31 +714,30 @@ public class HotelListFragment extends BaseFragment implements Constants
         return list;
     }
 
-    public void requestFilteringCategory()
+    public void curationList(HotelCurationOption curationOption)
     {
         mScrollListTop = true;
 
-        HotelSortFilterOption sortFilterInformation = mOnCommunicateListener.getSortFilterOption();
-        ArrayList<PlaceViewItem> placeViewItemList = requestFilteringAndSort(mHotelList, sortFilterInformation);
-        setHotelListViewItemList(placeViewItemList, sortFilterInformation.getSortType());
+        ArrayList<PlaceViewItem> placeViewItemList = curationList(mHotelList, curationOption);
+        setHotelListViewItemList(placeViewItemList, curationOption.getSortType());
     }
 
-    private ArrayList<PlaceViewItem> requestFilteringAndSort(List<Hotel> list, HotelSortFilterOption sortFilterInformation)
+    private ArrayList<PlaceViewItem> curationList(List<Hotel> list, HotelCurationOption curationOption)
     {
-        List<Hotel> hotelList = filteringCategory(list, sortFilterInformation.getCategory());
+        List<Hotel> hotelList = curationCategory(list, curationOption.getCategory());
 
-        hotelList = filteringOption(hotelList, sortFilterInformation.flagFilters, sortFilterInformation.person);
+        hotelList = curationFiltering(hotelList, curationOption.flagFilters, curationOption.person);
 
-        return makeSortHotelList(hotelList, sortFilterInformation.getSortType());
+        return curationSorting(hotelList, curationOption);
     }
 
     private void setHotelListViewItemList(ArrayList<PlaceViewItem> hotelListViewItemList, SortType sortType)
     {
-        setVisibility(mHotelViewType);
+        setVisibility(mViewType);
 
-        if (mHotelViewType == HotelMainFragment.HOTEL_VIEW_TYPE.MAP)
+        if (mViewType == HotelMainFragment.VIEW_TYPE.MAP)
         {
-            mHotelMapFragment.setUserActionListener(mOnCommunicateListener);
+            mHotelMapFragment.setOnCommunicateListener(mOnCommunicateListener);
 
             if (HotelListFragment.this instanceof HotelDaysListFragment)
             {
@@ -785,7 +759,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             mHotelAdapter.notifyDataSetChanged();
 
-            setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.GONE);
+            setVisibility(HotelMainFragment.VIEW_TYPE.GONE);
 
             mOnCommunicateListener.expandedAppBar(true, true);
             mOnCommunicateListener.setMapViewVisible(false);
@@ -882,7 +856,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             if (position < 0)
             {
-                refreshHotelList(mSelectedProvince);
+                refreshList();
                 return;
             }
 
@@ -972,33 +946,6 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private ArrayList<Hotel> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
-        {
-            if (jsonArray == null)
-            {
-                return new ArrayList<Hotel>();
-            }
-
-            int length = jsonArray.length();
-            ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
-            JSONObject jsonObject;
-            Hotel hotel;
-
-            for (int i = 0; i < length; i++)
-            {
-                jsonObject = jsonArray.getJSONObject(i);
-
-                hotel = new Hotel();
-
-                if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
-                {
-                    hotelList.add(hotel); // 추가.
-                }
-            }
-
-            return hotelList;
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1047,7 +994,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                     mHotelAdapter.clear();
                     mHotelAdapter.notifyDataSetChanged();
 
-                    setVisibility(HotelMainFragment.HOTEL_VIEW_TYPE.GONE);
+                    setVisibility(HotelMainFragment.VIEW_TYPE.GONE);
 
                     mOnCommunicateListener.expandedAppBar(true, true);
                     mOnCommunicateListener.setMapViewVisible(false);
@@ -1058,26 +1005,19 @@ public class HotelListFragment extends BaseFragment implements Constants
                     // 필터 정보 넣기
                     ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(length);
 
-                    for(Hotel hotel : hotelList)
+                    for (Hotel hotel : hotelList)
                     {
                         hotelFiltersList.add(hotel.getFilters());
                     }
 
-                    HotelSortFilterOption hotelSortFilterOption = mOnCommunicateListener.getSortFilterOption();
+                    HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
 
                     // 기본적으로 보관한다.
                     mHotelList.addAll(hotelList);
 
-                    // section 및 HotelListViewItem 으로 바꾸어 주기.
-                    // 거리순인데 위치 정보가 없는 경우.
-                    if (mMyLocation == null && hotelSortFilterOption != null && hotelSortFilterOption.getSortType() == SortType.DISTANCE)
-                    {
-                        mOnCommunicateListener.setSortType(SortType.DEFAULT);
-                    }
+                    ArrayList<PlaceViewItem> placeViewItemList = curationList(hotelList, hotelCurationOption);
 
-                    ArrayList<PlaceViewItem> placeViewItemList = requestFilteringAndSort(hotelList, hotelSortFilterOption);
-
-                    setHotelListViewItemList(placeViewItemList, hotelSortFilterOption.getSortType());
+                    setHotelListViewItemList(placeViewItemList, hotelCurationOption.getSortType());
                 }
 
                 // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
@@ -1089,6 +1029,33 @@ public class HotelListFragment extends BaseFragment implements Constants
             {
                 unLockUI();
             }
+        }
+
+        private ArrayList<Hotel> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        {
+            if (jsonArray == null)
+            {
+                return new ArrayList<Hotel>();
+            }
+
+            int length = jsonArray.length();
+            ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
+            JSONObject jsonObject;
+            Hotel hotel;
+
+            for (int i = 0; i < length; i++)
+            {
+                jsonObject = jsonArray.getJSONObject(i);
+
+                hotel = new Hotel();
+
+                if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
+                {
+                    hotelList.add(hotel); // 추가.
+                }
+            }
+
+            return hotelList;
         }
     };
 }

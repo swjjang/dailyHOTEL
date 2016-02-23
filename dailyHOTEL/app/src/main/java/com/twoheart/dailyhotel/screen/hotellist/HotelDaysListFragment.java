@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 
@@ -38,7 +39,8 @@ public class HotelDaysListFragment extends HotelListFragment
     @Override
     protected void fetchHotelList()
     {
-        fetchHotelList(mSelectedProvince, mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
+        HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
+        fetchHotelList(hotelCurationOption.getProvince(), mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class HotelDaysListFragment extends HotelListFragment
 
             if (position < 0)
             {
-                refreshHotelList(mSelectedProvince);
+                refreshList();
                 return;
             }
 

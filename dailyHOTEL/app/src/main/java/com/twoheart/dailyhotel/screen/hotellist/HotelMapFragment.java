@@ -269,7 +269,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         }
     }
 
-    public void setUserActionListener(HotelMainFragment.OnCommunicateListener userActionLister)
+    public void setOnCommunicateListener(HotelMainFragment.OnCommunicateListener userActionLister)
     {
         mUserActionListener = userActionLister;
     }

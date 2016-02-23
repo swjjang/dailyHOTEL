@@ -263,7 +263,7 @@ public class Hotel implements Parcelable
 
     public boolean isFiltered(int flag, int person)
     {
-        if(mHotelFilters == null)
+        if (mHotelFilters == null)
         {
             return false;
         }
