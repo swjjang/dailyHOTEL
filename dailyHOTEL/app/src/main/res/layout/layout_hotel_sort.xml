@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="정렬"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/regionCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background_defaultcolor"
+            android:text="지역"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/distanceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background_defaultcolor"
+            android:text="거리"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/lowPriceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background_defaultcolor"
+            android:text="낮가"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/highPriceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background_defaultcolor"
+            android:text="높가"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/satisfactionCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background_defaultcolor"
+            android:text="만족도"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"/>
+    </LinearLayout>
+</LinearLayout>

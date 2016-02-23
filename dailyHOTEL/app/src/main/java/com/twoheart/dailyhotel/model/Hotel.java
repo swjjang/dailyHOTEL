@@ -31,11 +31,12 @@ public class Hotel implements Parcelable
     private int idx;
     private int availableRoom;
     private int sequence;
-    private String bedType;
     private String detailRegion;
     public int satisfaction;
     public float distance; // 정렬시에 보여주는 내용
     public String categoryCode;
+
+    private HotelFilters mHotelFilters;
 
     public Hotel()
     {
@@ -59,7 +60,6 @@ public class Hotel implements Parcelable
         dest.writeInt(idx);
         dest.writeInt(availableRoom);
         dest.writeInt(sequence);
-        dest.writeString(bedType);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeInt(isDailyChoice ? 1 : 0);
@@ -80,7 +80,6 @@ public class Hotel implements Parcelable
         idx = in.readInt();
         availableRoom = in.readInt();
         sequence = in.readInt();
-        bedType = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
         isDailyChoice = in.readInt() == 1 ? true : false;
@@ -153,16 +152,6 @@ public class Hotel implements Parcelable
     public void setSequence(int sequence)
     {
         this.sequence = sequence;
-    }
-
-    public String getBedType()
-    {
-        return bedType;
-    }
-
-    public void setBedType(String bedType)
-    {
-        this.bedType = bedType;
     }
 
     public String getDetailRegion()
@@ -260,6 +249,8 @@ public class Hotel implements Parcelable
             {
                 satisfaction = jsonObject.getInt("rating_value");
             }
+
+            mHotelFilters = makeHotelFilters(jsonObject.getJSONArray("roomTypeList"));
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -268,6 +259,39 @@ public class Hotel implements Parcelable
         }
 
         return true;
+    }
+
+    public boolean isFiltered(int flag, int person)
+    {
+        if(mHotelFilters == null)
+        {
+            return false;
+        }
+
+        return mHotelFilters.isFiltered(flag, person);
+    }
+
+    public HotelFilters getFilters()
+    {
+        return mHotelFilters;
+    }
+
+    private HotelFilters makeHotelFilters(JSONArray jsonArray) throws JSONException
+    {
+        if (jsonArray == null || jsonArray.length() == 0)
+        {
+            return null;
+        }
+
+        int length = jsonArray.length();
+        HotelFilters hotelFilters = new HotelFilters(length);
+
+        for (int i = 0; i < length; i++)
+        {
+            hotelFilters.setHotelFilter(i, jsonArray.getJSONObject(i));
+        }
+
+        return hotelFilters;
     }
 
     public enum HotelGrade

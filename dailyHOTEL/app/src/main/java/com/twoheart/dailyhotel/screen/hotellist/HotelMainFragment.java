@@ -9,7 +9,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,6 +20,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelSortFilterOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.gourmetdetail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.regionlist.RegionListActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -36,6 +37,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
@@ -65,12 +67,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private SaleTime mTodaySaleTime;
     private Province mSelectedProvince;
-    private Category mSelectedCategory;
 
     private boolean mMenuEnabled;
     private boolean mMapEnabled;
     private boolean mDontReloadAtOnResume;
     private boolean mIsHideAppBarlayout;
+
+    private HotelSortFilterOption mSortFilterOption;
 
     private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -81,7 +84,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         GONE, // 목록이 비어있는 경우.
     }
 
-    public interface OnUserActionListener
+    public interface OnCommunicateListener
     {
         void selectHotel(PlaceViewItem hotelListViewItem, SaleTime checkSaleTime);
 
@@ -93,7 +96,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         void toggleViewType();
 
-        void selectSortType(SortType sortType);
+        void setScrollListTop(boolean scrollListTop);
+
+        void setSortType(SortType sortType);
 
         void setLocation(Location location);
 
@@ -110,6 +115,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         void hideAppBarLayout();
 
         void pinAppBarLayout();
+
+        HotelSortFilterOption getSortFilterOption();
     }
 
     @Override
@@ -122,6 +129,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
         mTodaySaleTime = new SaleTime();
+
+        mSortFilterOption = new HotelSortFilterOption();
 
         initTabLayout(view);
 
@@ -149,7 +158,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onClick(View v)
             {
-                mOnUserActionListener.onClickActionBarArea();
+                mOnCommunicateListener.onClickActionBarArea();
             }
         });
 
@@ -169,7 +178,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
-        mFragmentPagerAdapter = new HotelFragmentPagerAdapter(getChildFragmentManager(), TAB_COUNT, mOnUserActionListener);
+        mFragmentPagerAdapter = new HotelFragmentPagerAdapter(getChildFragmentManager(), TAB_COUNT, mOnCommunicateListener);
 
         mViewPager.setOffscreenPageLimit(TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
@@ -182,7 +191,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     {
         if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
         {
-            mOnUserActionListener.hideAppBarLayout();
+            mOnCommunicateListener.hideAppBarLayout();
             mIsHideAppBarlayout = true;
 
             HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
@@ -190,7 +199,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         } else if (verticalOffset == 0 && mIsHideAppBarlayout == false)
         {
-            mOnUserActionListener.pinAppBarLayout();
+            mOnCommunicateListener.pinAppBarLayout();
             mIsHideAppBarlayout = true;
 
             HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
@@ -232,51 +241,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         super.onDestroy();
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        if (mMenuEnabled == true)
-        {
-            switch (mHotelViewType)
-            {
-                case LIST:
-
-                    HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-                    switch (currentFragment.getSortType())
-                    {
-                        case DEFAULT:
-                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_01);
-                            break;
-
-                        case DISTANCE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_02);
-                            break;
-
-                        case LOW_PRICE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_03);
-                            break;
-
-                        case HIGH_PRICE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_04);
-                            break;
-                    }
-                    break;
-
-                case MAP:
-                    mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_list : -1, -1);
-                    break;
-
-                default:
-                    mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
-                    break;
-            }
-        } else
-        {
-            mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
-        }
-    }
-
     public void setMenuEnabled(boolean enabled)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -306,6 +270,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         switch (requestCode)
         {
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+                searchMyLocation();
+                break;
+
             case CODE_REQUEST_ACTIVITY_CALENDAR:
             {
                 mDontReloadAtOnResume = true;
@@ -313,7 +280,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.onActivityResult(requestCode, resultCode, data);
 
-                mOnUserActionListener.expandedAppBar(true, false);
+                mOnCommunicateListener.expandedAppBar(true, false);
                 break;
             }
 
@@ -324,31 +291,30 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    mOnUserActionListener.selectSortType(SortType.DEFAULT);
-
-                    setSelectCategory(Category.ALL);
+                    clearSortFilterOption();
+                    mOnCommunicateListener.setScrollListTop(true);
 
                     if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
                     {
                         Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-                        setNavigationItemSelected(province);
+                        setProvince(province);
 
-                        mOnUserActionListener.refreshAll(true);
+                        mOnCommunicateListener.refreshAll(true);
                     } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
                     {
                         Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
-                        setNavigationItemSelected(province);
+                        setProvince(province);
 
-                        mOnUserActionListener.refreshAll(true);
+                        mOnCommunicateListener.refreshAll(true);
                     }
                 } else
                 {
-                    mOnUserActionListener.refreshAll(true);
+                    mOnCommunicateListener.refreshAll(true);
                 }
 
-                mOnUserActionListener.expandedAppBar(true, false);
+                mOnCommunicateListener.expandedAppBar(true, false);
                 break;
             }
         }
@@ -364,6 +330,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         if (hotelListFragment != null)
         {
             hotelListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+        {
+            searchMyLocation();
         }
     }
 
@@ -482,12 +453,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
     }
 
-
     private void makeCategoryTabLayout(List<Category> list)
     {
         if (list == null)
         {
-            setSelectCategory(Category.ALL);
+            setCategory(Category.ALL);
             mCategoryTabLayout.setVisibility(View.GONE);
             mUnderLine.setVisibility(View.GONE);
             return;
@@ -497,7 +467,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (size <= 2)
         {
-            setSelectCategory(Category.ALL);
+            setCategory(Category.ALL);
 
             mCategoryTabLayout.setVisibility(View.GONE);
             mUnderLine.setVisibility(View.GONE);
@@ -509,27 +479,29 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         fixCategoryTabLayout(size);
 
+        Category selectedCategory = mSortFilterOption.getCategory();
+
         // 선택된 카테고리가 없는 경우 2번째가 항상 선택된다
-        if (mSelectedCategory == null)
+        if (selectedCategory == null)
         {
-            setSelectCategory(Category.ALL);
+            setCategory(Category.ALL);
         } else
         {
             // 기존 카테고리에 존재하는지
             boolean isExist = false;
             for (Category category : list)
             {
-                if (category.code.equalsIgnoreCase(mSelectedCategory.code) == true)
+                if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {
                     isExist = true;
-                    setSelectCategory(category);
+                    setCategory(category);
                     break;
                 }
             }
 
             if (isExist == false)
             {
-                setSelectCategory(Category.ALL);
+                setCategory(Category.ALL);
             }
         }
 
@@ -553,7 +525,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             layoutParams.width = TAB_WIDTH;
             tabView.setLayoutParams(layoutParams);
 
-            if (mSelectedCategory.code.equalsIgnoreCase(category.code) == true)
+            if (selectedCategory.code.equalsIgnoreCase(category.code) == true)
             {
                 selectedTab = tab;
             }
@@ -580,31 +552,53 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         FontManager.apply(mCategoryTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
     }
 
-    private void setSelectCategory(Category category)
+    private void setCategory(Category category)
     {
         if (category == null)
         {
             category = Category.ALL;
         }
 
-        mSelectedCategory = category;
+        mSortFilterOption.setCategory(category);
+    }
 
-        for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
+    private void setCategory(SortType sortType)
+    {
+        if (sortType == null)
         {
-            hotelListFragment.setSelectedCategory(mSelectedCategory);
+            sortType = SortType.DEFAULT;
         }
+
+        mSortFilterOption.setSortType(sortType);
+    }
+
+    private void clearSortFilterOption()
+    {
+        if (mSortFilterOption == null)
+        {
+            return;
+        }
+
+        mSortFilterOption.clear();
+    }
+
+    private void refreshHotelList(Province province)
+    {
+        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+        hotelListFragment.refreshHotelList(province);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void setNavigationItemSelected(Province province)
+    private void setProvince(Province province)
     {
         mSelectedProvince = province;
     }
 
-    private void onNavigationItemSelected(Province province, boolean isSelectionTop)
+    private void requestRefreshByProvince(Province province)
     {
         if (province == null)
         {
@@ -618,9 +612,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             return;
         }
 
-        mSelectedProvince = province;
-
-        setNavigationItemSelected(mSelectedProvince);
+        setProvince(province);
 
         mDailyToolbarLayout.setToolbarRegionText(province.name);
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
@@ -631,11 +623,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(TYPE.HOTEL, province.isOverseas);
             DailyPreference.getInstance(baseActivity).setSelectedRegion(TYPE.HOTEL, province.name);
-
-            isSelectionTop = true;
         }
 
-        refreshHotelList(province, isSelectionTop);
+        refreshHotelList(province);
     }
 
     private void deepLinkDetail(BaseActivity baseActivity)
@@ -659,9 +649,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
             }
 
-            if (mOnUserActionListener != null)
+            if (mOnCommunicateListener != null)
             {
-                mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+                mOnCommunicateListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
             }
 
             DailyDeepLink.getInstance().clear();
@@ -763,9 +753,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         if (selectedProvince == null)
         {
             selectedProvince = mSelectedProvince;
+        } else
+        {
+            setProvince(selectedProvince);
         }
-
-        setNavigationItemSelected(selectedProvince);
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
@@ -793,24 +784,25 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
         Province selectedProvince = searchDeeLinkRegion(provinceList, areaList);
 
-        if (selectedProvince != null)
+        if (selectedProvince == null)
         {
-            mSelectedProvince = selectedProvince;
+            selectedProvince = mSelectedProvince;
+        } else
+        {
+            setProvince(selectedProvince);
         }
 
-        setNavigationItemSelected(mSelectedProvince);
-
-        mDailyToolbarLayout.setToolbarRegionText(mSelectedProvince.name);
+        mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
         // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
         if (Util.isTextEmpty(categoryCode) == false)
         {
-            for (Category category : mSelectedProvince.getCategoryList())
+            for (Category category : selectedProvince.getCategoryList())
             {
                 if (category.code.equalsIgnoreCase(categoryCode) == true)
                 {
-                    setSelectCategory(category);
+                    setCategory(category);
                     break;
                 }
             }
@@ -839,7 +831,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     HotelDaysListFragment hotelListFragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                     hotelListFragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
-                    mOnUserActionListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
+                    mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
                 }
             } catch (Exception e)
             {
@@ -848,14 +840,167 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mViewPager.setCurrentItem(0);
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-                onNavigationItemSelected(mSelectedProvince, true);
+                requestRefreshByProvince(selectedProvince);
             }
         } else
         {
-            onNavigationItemSelected(mSelectedProvince, true);
+            requestRefreshByProvince(selectedProvince);
         }
 
         DailyDeepLink.getInstance().clear();
+    }
+
+    private void searchMyLocation()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUI();
+
+        LocationFactory.getInstance(baseActivity).startLocationMeasure(baseActivity, null, new LocationFactory.LocationListenerEx()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                if (Util.isOverAPI23() == true)
+                {
+                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                }
+
+                unLockUI();
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+
+                mSortFilterOption.restoreSortType();
+
+                if (mOnCommunicateListener != null)
+                {
+                    mOnCommunicateListener.setSortType(mSortFilterOption.getSortType());
+                }
+
+                //                recordAnalyticsSortTypeEvent(getContext(), mSortFilterOption.getSortType());
+
+                if (Util.isOverAPI23() == true)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null || baseActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps_android6)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                        }
+                    }, true);
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+                unLockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mSortFilterOption.restoreSortType();
+
+                        if (mOnCommunicateListener != null)
+                        {
+                            mOnCommunicateListener.setSortType(mSortFilterOption.getSortType());
+                        }
+
+                        //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
+                    }
+                }, false);
+            }
+
+            @Override
+            public void onLocationChanged(Location location)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    unLockUI();
+                    return;
+                }
+
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                if (SortType.DISTANCE == mSortFilterOption.getSortType())
+                {
+                    HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    currentFragment.requestFilteringCategory();
+
+                    if (mOnCommunicateListener != null)
+                    {
+                        mOnCommunicateListener.setLocation(location);
+                    }
+                }
+            }
+        });
     }
 
 
@@ -863,18 +1008,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void refreshHotelList(Province province, boolean isSelectionTop)
-    {
-        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-        if (isSelectionTop == true)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.invalidateOptionsMenu();
-        }
-
-        hotelListFragment.refreshHotelList(province, isSelectionTop);
-    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
@@ -907,7 +1040,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     if (isInstalledGooglePlayServices == true)
                     {
-                        mOnUserActionListener.toggleViewType();
+                        mOnCommunicateListener.toggleViewType();
 
                         baseActivity.invalidateOptionsMenu();
                     }
@@ -920,25 +1053,15 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     if (isInstalledGooglePlayServices == true)
                     {
-                        mOnUserActionListener.toggleViewType();
+                        mOnCommunicateListener.toggleViewType();
 
                         baseActivity.invalidateOptionsMenu();
                     }
                     break;
                 }
-
-                case R.drawable.navibar_ic_sorting_01:
-                case R.drawable.navibar_ic_sorting_02:
-                case R.drawable.navibar_ic_sorting_03:
-                case R.drawable.navibar_ic_sorting_04:
-                {
-                    HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-                    currentFragment.showSortDialogView();
-                    break;
-                }
             }
 
-            mOnUserActionListener.expandedAppBar(true, true);
+            mOnCommunicateListener.expandedAppBar(true, true);
         }
     };
 
@@ -956,12 +1079,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mViewPager.setCurrentItem(tab.getPosition());
             }
 
-            mOnUserActionListener.expandedAppBar(true, true);
+            mOnCommunicateListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
 
-            mOnUserActionListener.refreshAll(true);
+            mOnCommunicateListener.refreshAll(true);
 
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -991,7 +1114,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 return;
             }
 
-            mOnUserActionListener.expandedAppBar(true, true);
+            mOnCommunicateListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected(true);
@@ -1016,7 +1139,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mCategoryTabLayout.setOnTabSelectedListener(null);
 
             Category category = (Category) tab.getTag();
-            setSelectCategory(category);
+            setCategory(category);
 
             HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
             currentFragment.requestFilteringCategory();
@@ -1035,7 +1158,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
     };
 
-    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+    private OnCommunicateListener mOnCommunicateListener = new OnCommunicateListener()
     {
         @Override
         public void selectHotel(PlaceViewItem placeViewItem, SaleTime checkSaleTime)
@@ -1149,7 +1272,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
-            refreshHotelList(mSelectedProvince, isListSelectionTop);
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.setScrollListTop(true);
+
+            refreshHotelList(mSelectedProvince);
             releaseUiComponent();
         }
 
@@ -1248,7 +1374,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         @Override
-        public void selectSortType(SortType sortType)
+        public void setScrollListTop(boolean scrollListTop)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -1259,10 +1385,14 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
             {
-                hotelListFragment.setSortType(sortType);
+                hotelListFragment.setScrollListTop(scrollListTop);
             }
+        }
 
-            baseActivity.invalidateOptionsMenu();
+        @Override
+        public void setSortType(SortType sortType)
+        {
+            setSortType(sortType);
         }
 
         @Override
@@ -1388,6 +1518,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 params.setScrollFlags(0);
                 toolbar.setLayoutParams(params);
             }
+        }
+
+        @Override
+        public HotelSortFilterOption getSortFilterOption()
+        {
+            return mSortFilterOption;
         }
     };
 
@@ -1520,17 +1656,16 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         }
                     }
 
-                    mSelectedProvince = selectedProvince;
+                    setProvince(selectedProvince);
 
                     if (DailyDeepLink.getInstance().isValidateLink() == true//
                         && processDeepLink(baseActivity, provinceList, areaList) == true)
                     {
-                        makeCategoryTabLayout(mSelectedProvince.getCategoryList());
+                        makeCategoryTabLayout(selectedProvince.getCategoryList());
                     } else
                     {
-                        makeCategoryTabLayout(mSelectedProvince.getCategoryList());
-                        boolean isSelectionTop = isSelectionTop();
-                        onNavigationItemSelected(selectedProvince, isSelectionTop);
+                        makeCategoryTabLayout(selectedProvince.getCategoryList());
+                        requestRefreshByProvince(selectedProvince);
                     }
                 } else
                 {
@@ -1546,31 +1681,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
                 unLockUI();
             }
-        }
-
-        private boolean isSelectionTop()
-        {
-            boolean isSelectionTop = false;
-
-            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
-            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-            for (HotelListFragment hotelListFragment : mFragmentPagerAdapter.getFragmentList())
-            {
-                if (hotelListFragment == currentFragment)
-                {
-                    Province province = hotelListFragment.getProvince();
-
-                    if (province == null || mSelectedProvince.index != province.index//
-                        || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
-                    {
-                        isSelectionTop = true;
-                        break;
-                    }
-                }
-            }
-
-            return isSelectionTop;
         }
 
         private ArrayList<Area> makeAreaList(JSONArray jsonArray) throws JSONException
