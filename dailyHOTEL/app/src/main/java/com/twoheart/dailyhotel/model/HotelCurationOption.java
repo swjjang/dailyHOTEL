@@ -1,21 +1,23 @@
 package com.twoheart.dailyhotel.model;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
-public class HotelCurationOption
+public class HotelCurationOption implements Parcelable
 {
-    private Constants.SortType prevSortType = Constants.SortType.DEFAULT;
+    private Constants.SortType prevSortType = Constants.SortType.DEFAULT; // Not Parcelable
     private Constants.SortType sortType = Constants.SortType.DEFAULT;
 
     public int person;
     public int flagFilters;
-    private Category mCategory;
-    private Province mProvince;
-    private Location mLocation;
+    private Category mCategory; // Not Parcelable
+    private Province mProvince; // Not Parcelable
+    private Location mLocation; // Not Parcelable
 
     private ArrayList<HotelFilters> mHotelFilterList;
 
@@ -26,10 +28,22 @@ public class HotelCurationOption
         clear();
     }
 
+    public HotelCurationOption(Parcel in)
+    {
+        mHotelFilterList = new ArrayList<>();
+
+        readFromParcel(in);
+    }
+
     public void setFilterList(ArrayList<HotelFilters> arrayList)
     {
         mHotelFilterList.clear();
         mHotelFilterList.addAll(arrayList);
+    }
+
+    public ArrayList<HotelFilters> getFilterList()
+    {
+        return mHotelFilterList;
     }
 
     public int getFilterCount(int flag, int person)
@@ -43,7 +57,6 @@ public class HotelCurationOption
             if (hotelFilters.isFiltered(flag, person) == true)
             {
                 count++;
-                continue;
             }
         }
 
@@ -111,4 +124,46 @@ public class HotelCurationOption
     {
         mLocation = location;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(person);
+        dest.writeInt(flagFilters);
+
+        dest.writeString(sortType.name());
+
+        dest.writeTypedList(mHotelFilterList);
+    }
+
+    private void readFromParcel(Parcel in)
+    {
+        person = in.readInt();
+        flagFilters = in.readInt();
+
+        sortType = Constants.SortType.valueOf(in.readString());
+
+        mHotelFilterList = new ArrayList<>();
+        in.readTypedList(mHotelFilterList, HotelFilters.CREATOR);
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public HotelCurationOption createFromParcel(Parcel in)
+        {
+            return new HotelCurationOption(in);
+        }
+
+        @Override
+        public HotelCurationOption[] newArray(int size)
+        {
+            return new HotelCurationOption[size];
+        }
+    };
 }

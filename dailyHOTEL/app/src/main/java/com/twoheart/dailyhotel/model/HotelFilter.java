@@ -9,21 +9,17 @@ import org.json.JSONObject;
 public class HotelFilter implements Parcelable
 {
     public static final int MIN_PERSON = 2;
-    public static final int MAX_PERSON = 8;
+    public static final int MAX_PERSON = 10;
 
     public int maxPerson;
     public int bedType;
 
-    public HotelFilter(int bedType, int maxPerson)
-    {
-        this.bedType = bedType;
-        this.maxPerson = maxPerson;
-    }
-
     public HotelFilter(JSONObject jsonObject) throws JSONException
     {
-        bedType = jsonObject.getInt("bedType");
-        maxPerson = jsonObject.getInt("maxPerson");
+        String type = jsonObject.getString("bedType");
+        setType(type);
+
+        maxPerson = jsonObject.getInt("personsMaxium");
     }
 
     public HotelFilter(Parcel in)
@@ -33,13 +29,38 @@ public class HotelFilter implements Parcelable
 
     public boolean isFiltered(int bedType, int person)
     {
-        if (this.bedType != bedType//
-            || person <= maxPerson)
+        if(bedType == HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
         {
-            return false;
+            if (person > maxPerson)
+            {
+                return false;
+            }
+        } else
+        {
+            if (this.bedType != bedType || person > maxPerson)
+            {
+                return false;
+            }
         }
 
         return true;
+    }
+
+    private void setType(String type)
+    {
+        if("더블".equalsIgnoreCase(type) == true)
+        {
+            bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_DOUBLE;
+        } else if("트윈".equalsIgnoreCase(type) == true)
+        {
+            bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_TWIN;
+        } else if("온돌".equalsIgnoreCase(type) == true)
+        {
+            bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS;
+        } else
+        {
+            bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_CHECKIN;
+        }
     }
 
     @Override

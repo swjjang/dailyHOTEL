@@ -37,6 +37,8 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 public class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
+    protected boolean mIsShowStatusBar = true;
+
     private Dialog mDialog;
     private LoadingDialog mLockUI;
     private Handler handler;
@@ -56,7 +58,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         handler = new Handler();
         mNetworkTag = getClass().getName();
 
-        if (Util.isOverAPI21() == true)
+        if (Util.isOverAPI21() == true && mIsShowStatusBar == true)
         {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

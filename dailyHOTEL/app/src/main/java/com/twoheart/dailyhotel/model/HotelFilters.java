@@ -10,10 +10,11 @@ import java.util.Arrays;
 
 public class HotelFilters implements Parcelable
 {
-    public static int FLAG_HOTEL_FILTER_BED_DOUBLE = 0x01000000;
-    public static int FLAG_HOTEL_FILTER_BED_TWIN = 0x02000000;
-    public static int FLAG_HOTEL_FILTER_BED_HEATEDFLOORS = 0x04000000;
-    public static int FLAG_HOTEL_FILTER_BED_CHECKIN = 0x08000000;
+    public static int FLAG_HOTEL_FILTER_BED_NONE = 0x00;
+    public static int FLAG_HOTEL_FILTER_BED_DOUBLE = 0x01;
+    public static int FLAG_HOTEL_FILTER_BED_TWIN = 0x02;
+    public static int FLAG_HOTEL_FILTER_BED_HEATEDFLOORS = 0x04;
+    public static int FLAG_HOTEL_FILTER_BED_CHECKIN = 0x08;
 
     private HotelFilter[] mHotelFilterArray;
     public boolean isFiltered;
@@ -30,7 +31,7 @@ public class HotelFilters implements Parcelable
 
     public void setHotelFilter(int index, JSONObject jsonObject) throws JSONException, ArrayIndexOutOfBoundsException
     {
-        if (mHotelFilterArray.length < index)
+        if (index < mHotelFilterArray.length)
         {
             mHotelFilterArray[index] = new HotelFilter(jsonObject);
         } else
@@ -41,37 +42,11 @@ public class HotelFilters implements Parcelable
 
     public boolean isFiltered(int flag, int person)
     {
-        int index = person - HotelFilter.MIN_PERSON;
-
         if (flag == 0)
         {
             for (HotelFilter hotelFilter : mHotelFilterArray)
             {
-                isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_DOUBLE, person);
-
-                if (isFiltered == true)
-                {
-                    break;
-                } else
-                {
-                    isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_TWIN, person);
-                }
-
-                if (isFiltered == true)
-                {
-                    break;
-                } else
-                {
-                    isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_HEATEDFLOORS, person);
-                }
-
-                if (isFiltered == true)
-                {
-                    break;
-                } else
-                {
-                    isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_CHECKIN, person);
-                }
+                isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_NONE, person) == true;
 
                 if (isFiltered == true)
                 {
@@ -82,9 +57,11 @@ public class HotelFilters implements Parcelable
         {
             for (HotelFilter hotelFilter : mHotelFilterArray)
             {
-                if ((flag & FLAG_HOTEL_FILTER_BED_DOUBLE) != 0)
+                isFiltered = false;
+
+                if ((flag & FLAG_HOTEL_FILTER_BED_CHECKIN) == FLAG_HOTEL_FILTER_BED_CHECKIN)
                 {
-                    isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_DOUBLE, person);
+                    isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_CHECKIN, person);
                 }
 
                 if (isFiltered == true)
@@ -92,7 +69,18 @@ public class HotelFilters implements Parcelable
                     break;
                 } else
                 {
-                    if ((flag & FLAG_HOTEL_FILTER_BED_TWIN) != 0)
+                    if ((flag & FLAG_HOTEL_FILTER_BED_DOUBLE) == FLAG_HOTEL_FILTER_BED_DOUBLE)
+                    {
+                        isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_DOUBLE, person);
+                    }
+                }
+
+                if (isFiltered == true)
+                {
+                    break;
+                } else
+                {
+                    if ((flag & FLAG_HOTEL_FILTER_BED_TWIN) == FLAG_HOTEL_FILTER_BED_TWIN)
                     {
                         isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_TWIN, person);
                     }
@@ -103,20 +91,9 @@ public class HotelFilters implements Parcelable
                     break;
                 } else
                 {
-                    if ((flag & FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) != 0)
+                    if ((flag & FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
                     {
                         isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_HEATEDFLOORS, person);
-                    }
-                }
-
-                if (isFiltered == true)
-                {
-                    break;
-                } else
-                {
-                    if ((flag & FLAG_HOTEL_FILTER_BED_CHECKIN) != 0)
-                    {
-                        isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_CHECKIN, person);
                     }
                 }
 
@@ -138,12 +115,12 @@ public class HotelFilters implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeParcelableArray(mHotelFilterArray, flags);
+        dest.writeTypedArray(mHotelFilterArray, flags);
     }
 
     private void readFromParcel(Parcel in)
     {
-        mHotelFilterArray = (HotelFilter[]) in.readParcelableArray(HotelFilter.class.getClassLoader());
+        mHotelFilterArray = (HotelFilter[]) in.createTypedArray(HotelFilter.CREATOR);
     }
 
     @Override

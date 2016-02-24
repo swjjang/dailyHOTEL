@@ -228,10 +228,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".activity.GuideActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.CalendarActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
@@ -243,6 +239,11 @@
             android:name=".screen.eventlist.EventListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.filter.CurationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
         <activity
             android:name=".activity.ExitActivity"
             android:autoRemoveFromRecents="true"
@@ -330,7 +331,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService"/>
 
         <receiver
             android:name=".AlarmBroadcastReceiver"
@@ -342,8 +343,8 @@
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.twoheart.dailyhotel" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.twoheart.dailyhotel"/>
             </intent-filter>
         </receiver>
 
@@ -351,7 +352,7 @@
             android:name=".gcm.GcmIntentService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
 

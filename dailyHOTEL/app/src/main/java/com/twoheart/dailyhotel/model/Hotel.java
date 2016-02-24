@@ -16,22 +16,21 @@ import java.util.Iterator;
 
 public class Hotel implements Parcelable
 {
+    public int index;
     public int averageDiscount;
     public double latitude;
     public double longitude;
     public boolean isDailyChoice;
-    public int saleIndex;
     public boolean isDBenefit;
     public int nights;
     public String imageUrl;
-    private String name;
-    private int price;
-    private String address;
-    private HotelGrade grade;
-    private int idx;
-    private int availableRoom;
-    private int sequence;
-    private String detailRegion;
+    public String name;
+    public int price;
+    public String addressSummary;
+    private HotelGrade mGrade;
+
+    public boolean isSoldOut;
+    public String detailRegion;
     public int satisfaction;
     public float distance; // 정렬시에 보여주는 내용
     public String categoryCode;
@@ -55,15 +54,13 @@ public class Hotel implements Parcelable
         dest.writeString(name);
         dest.writeInt(price);
         dest.writeInt(averageDiscount);
-        dest.writeString(address);
-        dest.writeSerializable(grade);
-        dest.writeInt(idx);
-        dest.writeInt(availableRoom);
-        dest.writeInt(sequence);
+        dest.writeString(addressSummary);
+        dest.writeSerializable(mGrade);
+        dest.writeInt(index);
+        dest.writeInt(isSoldOut ? 1 : 0);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeInt(isDailyChoice ? 1 : 0);
-        dest.writeInt(saleIndex);
         dest.writeInt(isDBenefit ? 1 : 0);
         dest.writeInt(satisfaction);
         dest.writeString(categoryCode);
@@ -75,15 +72,13 @@ public class Hotel implements Parcelable
         name = in.readString();
         price = in.readInt();
         averageDiscount = in.readInt();
-        address = in.readString();
-        grade = (HotelGrade) in.readSerializable();
-        idx = in.readInt();
-        availableRoom = in.readInt();
-        sequence = in.readInt();
+        addressSummary = in.readString();
+        mGrade = (HotelGrade) in.readSerializable();
+        index = in.readInt();
+        isSoldOut = in.readInt() == 1 ? true : false;
         latitude = in.readDouble();
         longitude = in.readDouble();
         isDailyChoice = in.readInt() == 1 ? true : false;
-        saleIndex = in.readInt();
         isDBenefit = in.readInt() == 1 ? true : false;
         satisfaction = in.readInt();
         categoryCode = in.readString();
@@ -91,83 +86,7 @@ public class Hotel implements Parcelable
 
     public HotelGrade getGrade()
     {
-        return grade;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public int getPrice()
-    {
-        return price;
-    }
-
-    public void setPrice(int price)
-    {
-        this.price = price;
-    }
-
-    public String getAddress()
-    {
-        return address;
-    }
-
-    public void setAddress(String address)
-    {
-        this.address = address;
-    }
-
-    public int getIdx()
-    {
-        return idx;
-    }
-
-    public void setIdx(int idx)
-    {
-        this.idx = idx;
-    }
-
-    public int getAvailableRoom()
-    {
-        return availableRoom;
-    }
-
-    public void setAvailableRoom(int availableRoom)
-    {
-        this.availableRoom = availableRoom;
-    }
-
-    public int getSequence()
-    {
-        return sequence;
-    }
-
-    public void setSequence(int sequence)
-    {
-        this.sequence = sequence;
-    }
-
-    public String getDetailRegion()
-    {
-        return detailRegion;
-    }
-
-    public void setDetailRegion(String detailRegion)
-    {
-        this.detailRegion = detailRegion;
-    }
-
-    @Override
-    public int describeContents()
-    {
-        return 0;
+        return mGrade;
     }
 
     public boolean setHotel(JSONObject jsonObject, String imageUrl, int nights)
@@ -177,25 +96,28 @@ public class Hotel implements Parcelable
         try
         {
             name = jsonObject.getString("name");
-            price = Integer.parseInt(jsonObject.getString("price"));
-            averageDiscount = Integer.parseInt(jsonObject.getString("discount_avg"));
-            address = jsonObject.getString("addr_summary");
+            price = jsonObject.getInt("price");
+            averageDiscount = jsonObject.getInt("discountAvg");
+            addressSummary = jsonObject.getString("addrSummary");
 
             try
             {
-                grade = HotelGrade.valueOf(jsonObject.getString("cat"));
+                mGrade = HotelGrade.valueOf(jsonObject.getString("grade"));
             } catch (Exception e)
             {
-                grade = HotelGrade.etc;
+                mGrade = HotelGrade.etc;
             }
 
-            idx = jsonObject.getInt("idx");
-            availableRoom = jsonObject.getInt("avail_room_count");
-            sequence = jsonObject.getInt("seq");
-            detailRegion = jsonObject.getString("district_name");
+            index = jsonObject.getInt("hotelIdx");
+            isSoldOut = jsonObject.getBoolean("isSoldout");
+            detailRegion = jsonObject.getString("districtName");
             categoryCode = jsonObject.getString("category");
+            latitude = jsonObject.getDouble("latitude");
+            longitude = jsonObject.getDouble("longitude");
+            isDailyChoice = jsonObject.getBoolean("isDailychoice");
+            satisfaction = jsonObject.getInt("ratingValue");
 
-            JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");
+            JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
             Iterator<String> iterator = imageJSONObject.keys();
             while (iterator.hasNext())
@@ -212,45 +134,17 @@ public class Hotel implements Parcelable
                 }
             }
 
-            if (jsonObject.has("lat") == true)
+            String dBenefit = jsonObject.getString("hotelBenefit");
+
+            if (Util.isTextEmpty(dBenefit) == true)
             {
-                latitude = jsonObject.getDouble("lat");
+                isDBenefit = false;
+            } else
+            {
+                isDBenefit = true;
             }
 
-            if (jsonObject.has("lng") == true)
-            {
-                longitude = jsonObject.getDouble("lng");
-            }
-
-            if (jsonObject.has("is_dailychoice") == true)
-            {
-                isDailyChoice = jsonObject.getBoolean("is_dailychoice");
-            }
-
-            if (jsonObject.has("sale_idx") == true)
-            {
-                saleIndex = jsonObject.getInt("sale_idx");
-            }
-
-            if (jsonObject.has("hotel_benefit") == true)
-            {
-                String dBenefit = jsonObject.getString("hotel_benefit");
-
-                if (Util.isTextEmpty(dBenefit) == true || "null".equalsIgnoreCase(dBenefit) == true)
-                {
-                    isDBenefit = false;
-                } else
-                {
-                    isDBenefit = true;
-                }
-            }
-
-            if (jsonObject.has("rating_value") == true)
-            {
-                satisfaction = jsonObject.getInt("rating_value");
-            }
-
-            mHotelFilters = makeHotelFilters(jsonObject.getJSONArray("roomTypeList"));
+            mHotelFilters = makeHotelFilters(jsonObject.getJSONArray("hotelRoomElementList"));
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -343,6 +237,12 @@ public class Hotel implements Parcelable
         {
             return mMarkerResId;
         }
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

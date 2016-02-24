@@ -205,6 +205,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                 public void onAnimationEnd(Animation animation)
                 {
                     mSwipeRefreshLayout.setAnimation(null);
+
+                    mOnCommunicateListener.showFloatingActionButton();
                 }
 
                 @Override
@@ -215,6 +217,9 @@ public class HotelListFragment extends BaseFragment implements Constants
             });
 
             mSwipeRefreshLayout.startAnimation(animation);
+        } else
+        {
+            mOnCommunicateListener.showFloatingActionButton();
         }
     }
 
@@ -397,10 +402,10 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             Area area = (Area) province;
 
-            params = String.format("?province_idx=%d&area_idx=%d&checkin_date=%s&length_stay=%d", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
+            params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
         } else
         {
-            params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
+            params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
         }
 
         if (DEBUG == true && this instanceof HotelDaysListFragment)
@@ -630,7 +635,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         for (Hotel hotel : hotelList)
         {
-            String region = hotel.getDetailRegion();
+            String region = hotel.detailRegion;
 
             if (Util.isTextEmpty(region) == true)
             {
@@ -958,70 +963,85 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msgCode != 0)
+                if (msgCode == 100)
                 {
-                    if (response.has("msg") == true)
+                    long nanoTime = System.nanoTime();
+
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String imageUrl = dataJSONObject.getString("imgUrl");
+                    int nights = dataJSONObject.getInt("lengthStay");
+                    JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+
+                    ExLog.d("11111111 : " + (System.nanoTime() - nanoTime) / 1000000);
+                    nanoTime = System.nanoTime();
+
+                    int length;
+
+                    if (hotelJSONArray == null)
                     {
-                        String msg = response.getString("msg");
-                        DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+                        length = 0;
+                    } else
+                    {
+                        length = hotelJSONArray.length();
                     }
 
-                    throw new NullPointerException("response == null");
-                }
+                    mHotelList.clear();
 
-                JSONObject dataJSONObject = response.getJSONObject("data");
-
-                String imageUrl = dataJSONObject.getString("imgUrl");
-                int nights = dataJSONObject.getInt("nights");
-                JSONArray hotelJSONArray = dataJSONObject.getJSONArray("saleList");
-
-                int length;
-
-                if (hotelJSONArray == null)
-                {
-                    length = 0;
-                } else
-                {
-                    length = hotelJSONArray.length();
-                }
-
-                mHotelList.clear();
-
-                if (length == 0)
-                {
-                    mHotelAdapter.clear();
-                    mHotelAdapter.notifyDataSetChanged();
-
-                    setVisibility(HotelMainFragment.VIEW_TYPE.GONE);
-
-                    mOnCommunicateListener.expandedAppBar(true, true);
-                    mOnCommunicateListener.setMapViewVisible(false);
-                } else
-                {
-                    ArrayList<Hotel> hotelList = makeHotelList(hotelJSONArray, imageUrl, nights);
-
-                    // 필터 정보 넣기
-                    ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(length);
-
-                    for (Hotel hotel : hotelList)
+                    if (length == 0)
                     {
-                        hotelFiltersList.add(hotel.getFilters());
+                        mHotelAdapter.clear();
+                        mHotelAdapter.notifyDataSetChanged();
+
+                        setVisibility(HotelMainFragment.VIEW_TYPE.GONE);
+
+                        mOnCommunicateListener.expandedAppBar(true, true);
+                        mOnCommunicateListener.setMapViewVisible(false);
+                    } else
+                    {
+                        ArrayList<Hotel> hotelList = makeHotelList(hotelJSONArray, imageUrl, nights);
+
+                        ExLog.d("111122222 : " + (System.nanoTime() - nanoTime) / 1000000);
+                        nanoTime = System.nanoTime();
+
+
+                        // 필터 정보 넣기
+                        ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(length);
+
+                        for (Hotel hotel : hotelList)
+                        {
+                            hotelFiltersList.add(hotel.getFilters());
+                        }
+
+                        HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
+                        hotelCurationOption.setFilterList(hotelFiltersList);
+
+                        ExLog.d("111133333 : " + (System.nanoTime() - nanoTime) / 1000000);
+                        nanoTime = System.nanoTime();
+
+                        // 기본적으로 보관한다.
+                        mHotelList.addAll(hotelList);
+
+                        ArrayList<PlaceViewItem> placeViewItemList = curationList(hotelList, hotelCurationOption);
+
+                        ExLog.d("1111444444 : " + (System.nanoTime() - nanoTime) / 1000000);
+                        nanoTime = System.nanoTime();
+
+                        setHotelListViewItemList(placeViewItemList, hotelCurationOption.getSortType());
+
+                        ExLog.d("1111555555 : " + (System.nanoTime() - nanoTime) / 1000000);
                     }
 
-                    HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
+                    // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
+                    onRefreshComplete();
+                } else
+                {
+                    String message = response.getString("msg");
 
-                    // 기본적으로 보관한다.
-                    mHotelList.addAll(hotelList);
-
-                    ArrayList<PlaceViewItem> placeViewItemList = curationList(hotelList, hotelCurationOption);
-
-                    setHotelListViewItemList(placeViewItemList, hotelCurationOption.getSortType());
+                    onInternalError(message);
                 }
-
-                // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
-                onRefreshComplete();
             } catch (Exception e)
             {
                 onError(e);

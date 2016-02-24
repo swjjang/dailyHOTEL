@@ -587,7 +587,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 arrangeList.remove(i);
             } else
             {
-                if (hotelListViewItem.<Hotel>getItem().getAvailableRoom() == 0)
+                if (hotelListViewItem.<Hotel>getItem().isSoldOut == true)
                 {
                     arrangeList.remove(i);
                 }

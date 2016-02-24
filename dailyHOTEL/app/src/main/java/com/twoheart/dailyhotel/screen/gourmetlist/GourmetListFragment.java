@@ -191,6 +191,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 public void onAnimationEnd(Animation animation)
                 {
                     mSwipeRefreshLayout.setAnimation(null);
+
+                    mOnCommunicateListener.showFloatingActionButton();
                 }
 
                 @Override
@@ -201,6 +203,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
             });
 
             mSwipeRefreshLayout.startAnimation(animation);
+        } else
+        {
+            mOnCommunicateListener.showFloatingActionButton();
         }
     }
 
