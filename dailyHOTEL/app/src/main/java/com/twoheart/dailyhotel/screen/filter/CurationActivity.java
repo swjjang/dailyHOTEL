@@ -40,6 +40,8 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     private static final int HANDLE_MESSAGE_GOURMET_RESULT = 2;
     private static final int HANDLE_MESSAGE_DELAYTIME = 750;
 
+    private static final int GOURMET_CATEGORY_COLUMN = 5;
+
     private PlaceCurationOption mPlaceCurationOption;
 
     private PlaceType mPlaceType;
@@ -130,6 +132,9 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         View resetCurationView = findViewById(R.id.resetCurationView);
         resetCurationView.setOnClickListener(this);
+
+        View closeView = findViewById(R.id.closeView);
+        closeView.setOnClickListener(this);
 
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
 
@@ -416,17 +421,24 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         List<String> keyList = new ArrayList<>(categoryMap.keySet());
 
+        boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN ? true : false;
+
         for (String key : keyList)
         {
-            if (Util.isTextEmpty(key) == true || "기타".equalsIgnoreCase(key) == true)
+            if (Util.isTextEmpty(key) == true)
             {
                 continue;
             }
 
-            DailyTextView categoryView = getCategoryView(key, getCategoryResourceId(categroyIconMap.get(key).intValue()));
+            DailyTextView categoryView = getCategoryView(key, getCategoryResourceId(categroyIconMap.get(key).intValue()), isSingleLine);
             categoryView.setOnClickListener(onClickListener);
 
             foodGridLayout.addView(categoryView);
+        }
+
+        if (isSingleLine == false)
+        {
+            foodGridLayout.setPadding(0, 0, 0, Util.dpToPx(this, 10));
         }
     }
 
@@ -478,10 +490,10 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         }.execute();
     }
 
-    private DailyTextView getCategoryView(String text, int resId)
+    private DailyTextView getCategoryView(String text, int resId, boolean isSingleLine)
     {
         DailyTextView categoryView = new DailyTextView(this);
-        categoryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        categoryView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         categoryView.setGravity(Gravity.CENTER);
         categoryView.setTypeface(categoryView.getTypeface(), Typeface.NORMAL);
         categoryView.setTextColor(getResources().getColorStateList(R.drawable.selector_curation_textcolor));
@@ -492,6 +504,14 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         layoutParams.width = 0;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+
+        if (isSingleLine == true)
+        {
+            categoryView.setPadding(0, Util.dpToPx(this, 10), 0, Util.dpToPx(this, 15));
+        } else
+        {
+            categoryView.setPadding(0, Util.dpToPx(this, 10), 0, Util.dpToPx(this, 5));
+        }
 
         categoryView.setLayoutParams(layoutParams);
 
@@ -615,6 +635,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 break;
             }
 
+            case R.id.closeView:
             case R.id.exitView:
                 finish();
                 break;

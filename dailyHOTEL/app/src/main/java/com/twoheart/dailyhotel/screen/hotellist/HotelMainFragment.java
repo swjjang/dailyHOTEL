@@ -780,11 +780,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         public void onClick(View v)
                         {
                             mCurationOption.restoreSortType();
+                            curationCurrentFragment();
                         }
                     }, true);
                 } else
                 {
                     mCurationOption.restoreSortType();
+                    curationCurrentFragment();
                 }
             }
 
@@ -835,6 +837,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     public void onClick(View v)
                     {
                         mCurationOption.restoreSortType();
+                        curationCurrentFragment();
 
                         //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
                     }

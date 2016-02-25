@@ -5,19 +5,30 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
+        android:text="@string/label_foodtype"
+        android:textColor="@color/curation_title_text"
+        android:textSize="13dp"
         android:background="@color/calendar_month_line"
-        android:gravity="center"
-        android:text="음식종류"
-        android:textColor="@android:color/black"
-        android:textSize="20dp"/>
+        android:gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/foodGridLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:columnCount="5"/>
+        app:columnCount="5"
+        />
 </LinearLayout>

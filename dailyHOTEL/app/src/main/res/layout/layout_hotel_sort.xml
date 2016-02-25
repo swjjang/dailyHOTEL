@@ -4,79 +4,90 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="정렬"
-        android:textColor="@android:color/black"
-        android:textSize="20dp"
+        android:layout_height="25dp"
+        android:text="@string/label_sort_by"
+        android:textColor="@color/curation_title_text"
+        android:textSize="13dp"
         android:background="@color/calendar_month_line"
         android:gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
 
     <RadioGroup
         android:id="@+id/sortLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyRadioButton
             android:id="@+id/regionCheckView"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/navibar_ic_sorting_01"
             android:gravity="center_horizontal"
-            android:text="지역"
+            android:text="@string/label_sort_by_area"
             android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="20dp"/>
+            android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyRadioButton
             android:id="@+id/distanceCheckView"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/navibar_ic_sorting_02"
-            android:gravity="center_horizontal"
-            android:text="거리"
-            android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="20dp"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
-            android:id="@+id/lowPriceCheckView"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/navibar_ic_sorting_03"
-            android:gravity="center_horizontal"
-            android:text="낮가"
-            android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="20dp"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
-            android:id="@+id/highPriceCheckView"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/navibar_ic_sorting_04"
-            android:gravity="center_horizontal"
-            android:text="높가"
-            android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="20dp"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
-            android:id="@+id/satisfactionCheckView"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/navibar_ic_sorting_01"
             android:gravity="center_horizontal"
-            android:text="만족도"
+            android:text="@string/label_sort_by_distance"
             android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="20dp"/>
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            android:id="@+id/lowPriceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:gravity="center_horizontal"
+            android:text="@string/label_sort_by_low_price"
+            android:textColor="@drawable/selector_curation_textcolor"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            android:id="@+id/highPriceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:gravity="center_horizontal"
+            android:text="@string/label_sort_by_high_price"
+            android:textColor="@drawable/selector_curation_textcolor"
+            android:textSize="11dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            android:id="@+id/satisfactionCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:gravity="center_horizontal"
+            android:text="@string/label_sort_by_satisfaction"
+            android:textColor="@drawable/selector_curation_textcolor"
+            android:textSize="11dp"/>
     </RadioGroup>
 </LinearLayout>

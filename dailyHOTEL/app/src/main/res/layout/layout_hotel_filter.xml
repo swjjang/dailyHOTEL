@@ -4,96 +4,141 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
+        android:text="@string/label_personnel"
+        android:textColor="@color/curation_title_text"
+        android:textSize="13dp"
         android:background="@color/calendar_month_line"
-        android:gravity="center"
-        android:text="인원"
-        android:textColor="@android:color/black"
-        android:textSize="20dp"/>
+        android:gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:orientation="horizontal">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/minusPersonView"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/selector_background_defaultcolor"
             android:text="-"
             android:textColor="@android:color/black"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:layout_weight="1"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/personCountView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_background_defaultcolor"
-            android:text="2명 이상"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/dh_theme_color"
+            android:textSize="13dp"
+            android:layout_weight="1"
+            android:gravity="center"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/plusPersonView"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/selector_background_defaultcolor"
             android:text="+"
             android:textColor="@android:color/black"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
+        android:text="@string/label_bedtype"
+        android:textColor="@color/curation_title_text"
+        android:textSize="13dp"
         android:background="@color/calendar_month_line"
-        android:gravity="center"
-        android:text="베드타입"
-        android:textColor="@android:color/black"
-        android:textSize="20dp"/>
+        android:gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_alignParentRight="true"
         android:orientation="horizontal"
         android:gravity="center">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/doubleCheckView"
-            android:layout_width="40dp"
-            android:layout_height="55dp"
-            android:text="더블"
-            android:drawableTop="@drawable/navibar_ic_sorting_02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:gravity="center_horizontal"
+            android:text="@string/label_double"
             android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="20dp"
-            android:gravity="center_horizontal"/>
+            android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/twinCheckView"
-            android:layout_width="40dp"
-            android:layout_height="55dp"
-            android:text="트윈"
-            android:drawableTop="@drawable/navibar_ic_sorting_02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:gravity="center_horizontal"
+            android:text="@string/label_twin"
             android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="20dp"
-            android:gravity="center_horizontal"/>
+            android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/heatedFloorsCheckView"
-            android:layout_width="40dp"
-            android:layout_height="55dp"
-            android:drawableTop="@drawable/navibar_ic_sorting_02"
-            android:text="온돌"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:gravity="center_horizontal"
+            android:text="@string/label_heatedfloors"
             android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="20dp"
-            android:gravity="clip_horizontal"/>
+            android:textSize="11dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 </LinearLayout>

@@ -208,4 +208,9 @@
 
     <!-- progress bar -->
     <color name="probressbar_default">#d3d3d3</color>
+
+    <!-- curation -->
+    <color name="curation_information_text">#323232</color>
+    <color name="curation_information_line">#e7e7e7</color>
+    <color name="curation_title_text">#929292</color>
 </resources>
