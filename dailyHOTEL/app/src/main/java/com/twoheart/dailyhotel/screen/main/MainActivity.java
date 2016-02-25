@@ -94,15 +94,15 @@ public class MainActivity extends BaseActivity implements Constants
         super.onCreate(savedInstanceState);
 
         // URL 만들때 사용
-//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
 
         VolleyHttpClient.cookieManagerCreate();
         //        DailyPreference.getInstance(this).removeDeepLink();
-        DailyPreference.getInstance(this).setSettingRegion(TYPE.HOTEL, false);
-        DailyPreference.getInstance(this).setSettingRegion(TYPE.FNB, false);
+        DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
+        DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
 
         // 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
         // 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.

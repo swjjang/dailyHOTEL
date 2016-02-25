@@ -44,7 +44,7 @@ public class GourmetDaysListFragment extends GourmetListFragment
 
         SaleTime saleTime = mSaleTime.getClone(0);
 
-        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), TYPE.FNB, saleTime);
+        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), PlaceType.FNB, saleTime);
         getParentFragment().startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 

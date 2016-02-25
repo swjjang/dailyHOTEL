@@ -32,7 +32,7 @@ public class HotelDaysListFragment extends HotelListFragment
 
         SaleTime saleTime = mSelectedCheckInSaleTime.getClone(0);
 
-        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), TYPE.HOTEL, saleTime);
+        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), PlaceType.HOTEL, saleTime);
         getParentFragment().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 

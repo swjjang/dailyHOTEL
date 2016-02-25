@@ -31,7 +31,7 @@ public class RegionListFragment extends BaseFragment
     private DailyAnimatedExpandableListView mListView;
     private RegionAnimatedExpandableListAdapter mAdapter;
 
-    private Constants.TYPE mType;
+    private Constants.PlaceType mPlaceType;
     private Province mSelectedProvince;
 
     private RegionListActivity.Region mRegion;
@@ -47,7 +47,7 @@ public class RegionListFragment extends BaseFragment
 
     private void recordAnalyticsScreen()
     {
-        switch (mType)
+        switch (mPlaceType)
         {
             case HOTEL:
                 switch (mRegion)
@@ -92,9 +92,9 @@ public class RegionListFragment extends BaseFragment
         selectedPreviousArea(mSelectedProvince, arrayList);
     }
 
-    public void setInformation(Constants.TYPE type, RegionListActivity.Region region, Province province)
+    public void setInformation(Constants.PlaceType type, RegionListActivity.Region region, Province province)
     {
-        mType = type;
+        mPlaceType = type;
         mRegion = region;
         mSelectedProvince = province;
     }

@@ -78,14 +78,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private HotelCurationOption mCurationOption;
 
-    private VIEW_TYPE mViewType = VIEW_TYPE.LIST;
-
-    public enum VIEW_TYPE
-    {
-        LIST,
-        MAP,
-        GONE, // 목록이 비어있는 경우.
-    }
+    private ViewType mViewType = ViewType.LIST;
 
     public interface OnCommunicateListener
     {
@@ -125,7 +118,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         initToolbar(view);
 
-        mViewType = VIEW_TYPE.LIST;
+        mViewType = ViewType.LIST;
 
         mTodaySaleTime = new SaleTime();
 
@@ -164,7 +157,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 lockUiComponent();
 
-                Intent intent = RegionListActivity.newInstance(getContext(), TYPE.HOTEL, mCurationOption.getProvince());
+                Intent intent = RegionListActivity.newInstance(getContext(), PlaceType.HOTEL, mCurationOption.getProvince());
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
@@ -240,7 +233,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 lockUiComponent();
 
-                Intent intent = CurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mCurationOption);
+                Intent intent = CurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
             }
@@ -378,7 +371,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         mCurationOption.person = curationOption.person;
                         mCurationOption.flagFilters = curationOption.flagFilters;
 
-                        curationCurrentFragment();
+                        if (curationOption.getSortType() == SortType.DISTANCE)
+                        {
+                            searchMyLocation();
+                        } else
+                        {
+                            curationCurrentFragment();
+                        }
                     }
                 }
 
@@ -397,13 +396,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        if (mViewType == VIEW_TYPE.LIST)
+        if (mViewType == ViewType.LIST)
         {
             if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
             {
                 searchMyLocation();
             }
-        } else if (mViewType == VIEW_TYPE.MAP)
+        } else if (mViewType == ViewType.MAP)
         {
             HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
@@ -713,12 +712,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);
+        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
 
         if (province.name.equalsIgnoreCase(savedRegion) == false)
         {
-            DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(TYPE.HOTEL, province.isOverseas);
-            DailyPreference.getInstance(baseActivity).setSelectedRegion(TYPE.HOTEL, province.name);
+            DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+            DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
         }
 
         refreshCurrentFragment();
@@ -861,6 +860,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     curationCurrentFragment();
                 }
+
+                unLockUI();
             }
         });
     }
@@ -999,7 +1000,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
-        Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.HOTEL, selectedProvince);
+        Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.HOTEL, selectedProvince);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
@@ -1267,7 +1268,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     Hotel hotel = placeViewItem.<Hotel>getItem();
 
-                    String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);
+                    String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
                     DailyPreference.getInstance(baseActivity).setGASelectedRegion(region);
                     DailyPreference.getInstance(baseActivity).setGAHotelName(hotel.name);
 
@@ -1425,12 +1426,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             switch (mViewType)
             {
                 case LIST:
-                    mViewType = VIEW_TYPE.MAP;
+                    mViewType = ViewType.MAP;
                     AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP, null);
                     break;
 
                 case MAP:
-                    mViewType = VIEW_TYPE.LIST;
+                    mViewType = ViewType.LIST;
                     AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, null);
                     break;
             }
@@ -1487,6 +1488,14 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         public void expandedAppBar(boolean expanded, boolean animate)
         {
             mAppBarLayout.setExpanded(expanded, animate);
+
+            if (expanded == true)
+            {
+                showFloatingActionButton();
+            } else
+            {
+                hideFloatingActionButton();
+            }
         }
 
         @Override
@@ -1725,8 +1734,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     }
 
                     // 처음 시작시에는 지역이 Area로 저장된 경우 Province로 변경하기 위한 저장값.
-                    boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(TYPE.HOTEL);
-                    DailyPreference.getInstance(baseActivity).setSettingRegion(TYPE.HOTEL, true);
+                    boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(PlaceType.HOTEL);
+                    DailyPreference.getInstance(baseActivity).setSettingRegion(PlaceType.HOTEL, true);
 
                     // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
                     if (mIsProvinceSetting == false && selectedProvince instanceof Area)
@@ -1775,7 +1784,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             Province selectedProvince = null;
 
             // 마지막으로 선택한 지역을 가져온다.
-            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.HOTEL);
+            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
 
             if (Util.isTextEmpty(regionName) == true)
             {

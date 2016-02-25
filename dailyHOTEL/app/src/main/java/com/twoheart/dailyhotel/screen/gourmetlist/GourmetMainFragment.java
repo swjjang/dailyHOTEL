@@ -76,14 +76,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private GourmetCurationOption mCurationOption;
 
-    private VIEW_TYPE mViewType = VIEW_TYPE.LIST;
-
-    public enum VIEW_TYPE
-    {
-        LIST,
-        MAP,
-        GONE, // 목록이 비어있는 경우.
-    }
+    private ViewType mViewType = ViewType.LIST;
 
     public interface OnCommunicateListener
     {
@@ -123,7 +116,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         initToolbar(view);
 
-        mViewType = VIEW_TYPE.LIST;
+        mViewType = ViewType.LIST;
 
         mTodaySaleTime = new SaleTime();
 
@@ -162,7 +155,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 lockUiComponent();
 
-                Intent intent = RegionListActivity.newInstance(getContext(), TYPE.FNB, mCurationOption.getProvince());
+                Intent intent = RegionListActivity.newInstance(getContext(), PlaceType.FNB, mCurationOption.getProvince());
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
@@ -235,7 +228,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 lockUiComponent();
 
-                Intent intent = CurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mCurationOption);
+                Intent intent = CurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
             }
@@ -372,7 +365,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.setFilterMap(curationOption.getFilterMap());
 
-                        curationCurrentFragment();
+                        if (curationOption.getSortType() == SortType.DISTANCE)
+                        {
+                            searchMyLocation();
+                        } else
+                        {
+                            curationCurrentFragment();
+                        }
                     }
                 }
 
@@ -391,13 +390,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        if (mViewType == VIEW_TYPE.LIST)
+        if (mViewType == ViewType.LIST)
         {
             if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
             {
                 searchMyLocation();
             }
-        } else if (mViewType == VIEW_TYPE.MAP)
+        } else if (mViewType == ViewType.MAP)
         {
             GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
@@ -542,12 +541,12 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
+        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
 
         if (province.name.equalsIgnoreCase(savedRegion) == false)
         {
-            DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(TYPE.FNB, province.isOverseas);
-            DailyPreference.getInstance(baseActivity).setSelectedRegion(TYPE.FNB, province.name);
+            DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+            DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.FNB, province.name);
         }
 
         refreshCurrentFragment();
@@ -690,6 +689,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 {
                     curationCurrentFragment();
                 }
+
+                unLockUI();
             }
         });
     }
@@ -828,7 +829,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
-        Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.FNB, selectedProvince);
+        Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.FNB, selectedProvince);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
@@ -1043,9 +1044,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 {
                     Gourmet gourmet = baseListViewItem.<Gourmet>getItem();
 
-                    String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
-
-
+                    String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
                     DailyPreference.getInstance(baseActivity).setGASelectedPlaceRegion(region);
                     DailyPreference.getInstance(baseActivity).setGASelectedPlaceName(gourmet.name);
 
@@ -1203,17 +1202,14 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         return;
                     }
 
-                    mViewType = VIEW_TYPE.MAP;
+                    mViewType = ViewType.MAP;
                     AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP, null);
                     break;
                 }
 
                 case MAP:
-                    mViewType = VIEW_TYPE.LIST;
+                    mViewType = ViewType.LIST;
                     AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, null);
-                    break;
-
-                default:
                     break;
             }
 
@@ -1266,6 +1262,14 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         public void expandedAppBar(boolean expanded, boolean animate)
         {
             mAppBarLayout.setExpanded(expanded, animate);
+
+            if (expanded == true)
+            {
+                showFloatingActionButton();
+            } else
+            {
+                hideFloatingActionButton();
+            }
         }
 
         @Override
@@ -1503,8 +1507,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         selectedProvince = provinceList.get(0);
                     }
 
-                    boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(TYPE.FNB);
-                    DailyPreference.getInstance(baseActivity).setSettingRegion(TYPE.FNB, true);
+                    boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(PlaceType.FNB);
+                    DailyPreference.getInstance(baseActivity).setSettingRegion(PlaceType.FNB, true);
 
                     // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
                     if (mIsProvinceSetting == false && selectedProvince instanceof Area)
@@ -1552,7 +1556,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             Province selectedProvince = null;
 
             // 마지막으로 선택한 지역을 가져온다.
-            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
+            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
 
             if (Util.isTextEmpty(regionName) == true)
             {

@@ -42,7 +42,7 @@ public class DailyFloatingActionButtonBehavior extends FloatingActionButton.Beha
 
     public void hide(final FloatingActionButton button)
     {
-        if(button.getVisibility() == View.GONE || mIsAnimatingOut == true)
+        if (button.getVisibility() == View.GONE || mIsAnimatingOut == true)
         {
             return;
         }
@@ -96,7 +96,7 @@ public class DailyFloatingActionButtonBehavior extends FloatingActionButton.Beha
 
     public void show(FloatingActionButton button)
     {
-        if(button.getVisibility() == View.VISIBLE)
+        if (button.getVisibility() == View.VISIBLE)
         {
             return;
         }

@@ -76,7 +76,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<EventBanner> mEventBannerList;
 
-    private HotelMainFragment.VIEW_TYPE mViewType;
+    private ViewType mViewType;
     protected boolean mScrollListTop;
     protected HotelMainFragment.OnCommunicateListener mOnCommunicateListener;
 
@@ -117,7 +117,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         mMapLayout = (ViewGroup) view.findViewById(R.id.hotelMapLayout);
 
-        mViewType = HotelMainFragment.VIEW_TYPE.LIST;
+        mViewType = ViewType.LIST;
 
         setVisibility(mViewType, true);
 
@@ -137,7 +137,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (mViewType == HotelMainFragment.VIEW_TYPE.MAP)
+        if (mViewType == ViewType.MAP)
         {
             if (mHotelMapFragment != null)
             {
@@ -149,7 +149,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        if (mViewType == HotelMainFragment.VIEW_TYPE.MAP)
+        if (mViewType == ViewType.MAP)
         {
             if (mHotelMapFragment != null)
             {
@@ -170,7 +170,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     {
         mSwipeRefreshLayout.setRefreshing(false);
 
-        if(mViewType == HotelMainFragment.VIEW_TYPE.MAP)
+        if (mViewType == ViewType.MAP)
         {
             mOnCommunicateListener.showFloatingActionButton();
         } else
@@ -214,12 +214,12 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
     }
 
-    public void setVisibility(HotelMainFragment.VIEW_TYPE viewType, boolean isCurrentPage)
+    public void setVisibility(ViewType viewType, boolean isCurrentPage)
     {
         switch (viewType)
         {
             case LIST:
-                mViewType = HotelMainFragment.VIEW_TYPE.LIST;
+                mViewType = ViewType.LIST;
 
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
@@ -235,7 +235,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 break;
 
             case MAP:
-                mViewType = HotelMainFragment.VIEW_TYPE.MAP;
+                mViewType = ViewType.MAP;
 
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
@@ -619,7 +619,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
     }
 
-    public void curationList(HotelMainFragment.VIEW_TYPE viewType, HotelCurationOption curationOption)
+    public void curationList(ViewType viewType, HotelCurationOption curationOption)
     {
         mScrollListTop = true;
 
@@ -676,7 +676,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         return list;
     }
 
-    private void setHotelListViewItemList(HotelMainFragment.VIEW_TYPE viewType, ArrayList<PlaceViewItem> hotelListViewItemList, SortType sortType)
+    private void setHotelListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> hotelListViewItemList, SortType sortType)
     {
         mHotelAdapter.clear();
 
@@ -684,14 +684,14 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             mHotelAdapter.notifyDataSetChanged();
 
-            setVisibility(HotelMainFragment.VIEW_TYPE.GONE, true);
+            setVisibility(ViewType.GONE, true);
 
             mOnCommunicateListener.expandedAppBar(true, true);
         } else
         {
             setVisibility(viewType, true);
 
-            if (viewType == HotelMainFragment.VIEW_TYPE.MAP)
+            if (viewType == ViewType.MAP)
             {
                 mHotelMapFragment.setOnCommunicateListener(mOnCommunicateListener);
 
@@ -772,7 +772,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     mDownDistance = 0;
                     mUpDistance = -1;
-                    mOnCommunicateListener.showAppBarLayout();
+                    mOnCommunicateListener.hideAppBarLayout();
                     mOnCommunicateListener.expandedAppBar(false, true);
                 }
             }
@@ -923,7 +923,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                         mHotelAdapter.clear();
                         mHotelAdapter.notifyDataSetChanged();
 
-                        setVisibility(HotelMainFragment.VIEW_TYPE.GONE, true);
+                        setVisibility(ViewType.GONE, true);
 
                         mOnCommunicateListener.expandedAppBar(true, true);
                     } else

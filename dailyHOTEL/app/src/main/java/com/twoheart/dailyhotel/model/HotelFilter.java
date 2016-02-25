@@ -34,7 +34,7 @@ public class HotelFilter implements Parcelable
 
     public boolean isFiltered(int bedType, int person)
     {
-        if(bedType == HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
+        if (bedType == HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
         {
             if (person > maxPerson)
             {
@@ -53,13 +53,13 @@ public class HotelFilter implements Parcelable
 
     private void setType(String type)
     {
-        if(DOUBLE.equalsIgnoreCase(type) == true)
+        if (DOUBLE.equalsIgnoreCase(type) == true)
         {
             bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_DOUBLE;
-        } else if(TWIN.equalsIgnoreCase(type) == true)
+        } else if (TWIN.equalsIgnoreCase(type) == true)
         {
             bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_TWIN;
-        } else if(HEATEDFLOORS.equalsIgnoreCase(type) == true)
+        } else if (HEATEDFLOORS.equalsIgnoreCase(type) == true)
         {
             bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS;
         } else

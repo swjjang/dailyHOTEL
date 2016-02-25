@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator;
