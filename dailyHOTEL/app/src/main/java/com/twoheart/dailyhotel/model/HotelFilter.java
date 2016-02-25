@@ -11,6 +11,11 @@ public class HotelFilter implements Parcelable
     public static final int MIN_PERSON = 2;
     public static final int MAX_PERSON = 10;
 
+    // 필터 목록
+    private static final String DOUBLE = "더블";
+    private static final String TWIN = "트윈";
+    private static final String HEATEDFLOORS = "온돌";
+
     public int maxPerson;
     public int bedType;
 
@@ -48,13 +53,13 @@ public class HotelFilter implements Parcelable
 
     private void setType(String type)
     {
-        if("더블".equalsIgnoreCase(type) == true)
+        if(DOUBLE.equalsIgnoreCase(type) == true)
         {
             bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_DOUBLE;
-        } else if("트윈".equalsIgnoreCase(type) == true)
+        } else if(TWIN.equalsIgnoreCase(type) == true)
         {
             bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_TWIN;
-        } else if("온돌".equalsIgnoreCase(type) == true)
+        } else if(HEATEDFLOORS.equalsIgnoreCase(type) == true)
         {
             bedType = HotelFilters.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS;
         } else

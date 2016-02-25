@@ -1,28 +1,23 @@
 package com.twoheart.dailyhotel.model;
 
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Constants;
-
 import java.util.HashMap;
-import java.util.Map;
 
-public class GourmetCurationOption implements Parcelable
+public class GourmetCurationOption extends PlaceCurationOption
 {
-    private Constants.SortType prevSortType = Constants.SortType.DEFAULT; // Not Parcelable
-    private Constants.SortType sortType = Constants.SortType.DEFAULT;
-
-    private Province mProvince; // Not Parcelable
-    private Location mLocation; // Not Parcelable
-
     private HashMap<String, Integer> mFilterMap;
-    private HashMap<String, Integer> mCategoryCountMap;
+    private HashMap<String, Integer> mCategoryIconMap;
+    private HashMap<String, Integer> mCategoryMap;
 
     public GourmetCurationOption()
     {
-        mCategoryCountMap = new HashMap<>();
+        super();
+
+        mCategoryMap = new HashMap<>();
+        mFilterMap = new HashMap<>();
+        mCategoryIconMap = new HashMap<>();
 
         clear();
     }
@@ -32,61 +27,29 @@ public class GourmetCurationOption implements Parcelable
         readFromParcel(in);
     }
 
-    public void setCategoryCountMap(HashMap<String, Integer> categoryCountMap)
-    {
-        mCategoryCountMap.clear();
-
-        if (mCategoryCountMap != null)
-        {
-            mCategoryCountMap.putAll(categoryCountMap);
-        }
-    }
-
+    @Override
     public void clear()
     {
-        prevSortType = Constants.SortType.DEFAULT;
-        sortType = Constants.SortType.DEFAULT;
+        super.clear();
+
+        mFilterMap.clear();
     }
 
-    public void setSortType(Constants.SortType sortType)
+    public void setCategoryMap(HashMap<String, Integer> categoryCountMap)
     {
-        prevSortType = this.sortType;
-        this.sortType = sortType;
+        mCategoryMap.clear();
+        mCategoryMap.putAll(categoryCountMap);
     }
 
-    public void restoreSortType()
+    public HashMap<String, Integer> getCategoryMap()
     {
-        sortType = prevSortType;
+        return mCategoryMap;
     }
 
-    public Constants.SortType getSortType()
+    public void setFilterMap(HashMap<String, Integer> filterMap)
     {
-        if (sortType == Constants.SortType.DISTANCE && mLocation == null)
-        {
-            sortType = Constants.SortType.DEFAULT;
-        }
-
-        return sortType;
-    }
-
-    public Province getProvince()
-    {
-        return mProvince;
-    }
-
-    public void setProvince(Province province)
-    {
-        mProvince = province;
-    }
-
-    public Location getLocation()
-    {
-        return mLocation;
-    }
-
-    public void setLocation(Location location)
-    {
-        mLocation = location;
+        mFilterMap.clear();
+        mFilterMap.putAll(filterMap);
     }
 
     public HashMap<String, Integer> getFilterMap()
@@ -94,31 +57,35 @@ public class GourmetCurationOption implements Parcelable
         return mFilterMap;
     }
 
-    public void setFilterMap(HashMap<String, Integer> filterMap)
+    public void setCategoryIconrMap(HashMap<String, Integer> categoryIconrMap)
     {
-        mFilterMap = filterMap;
+        mCategoryIconMap.clear();
+        mCategoryIconMap.putAll(categoryIconrMap);
+    }
+
+    public HashMap<String, Integer> getCategoryIconrMap()
+    {
+        return mCategoryIconMap;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(sortType.name());
+        super.writeToParcel(dest, flags);
+
         dest.writeSerializable(mFilterMap);
-        dest.writeSerializable(mCategoryCountMap);
-    }
-
-    private void readFromParcel(Parcel in)
-    {
-        sortType = Constants.SortType.valueOf(in.readString());
-
-        mFilterMap = (HashMap<String, Integer>) in.readSerializable();
-        mCategoryCountMap = (HashMap<String, Integer>) in.readSerializable();
+        dest.writeSerializable(mCategoryMap);
+        dest.writeSerializable(mCategoryIconMap);
     }
 
     @Override
-    public int describeContents()
+    protected void readFromParcel(Parcel in)
     {
-        return 0;
+        super.readFromParcel(in);
+
+        mFilterMap = (HashMap<String, Integer>) in.readSerializable();
+        mCategoryMap = (HashMap<String, Integer>) in.readSerializable();
+        mCategoryIconMap = (HashMap<String, Integer>) in.readSerializable();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

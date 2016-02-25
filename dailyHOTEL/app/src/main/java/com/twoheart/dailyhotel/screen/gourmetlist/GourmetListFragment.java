@@ -59,7 +59,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
     protected SaleTime mSaleTime;
 
     private View mEmptyView;
-    private FrameLayout mMapLayout;
+    private ViewGroup mMapLayout;
     private PlaceMapFragment mPlaceMapFragment;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<EventBanner> mEventBannerList;
@@ -103,11 +103,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         mEmptyView = view.findViewById(R.id.emptyView);
 
-        mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
+        mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
 
         mViewType = GourmetMainFragment.VIEW_TYPE.LIST;
 
-        setVisibility(mViewType);
+        setVisibility(mViewType, true);
 
         mGourmetRecycleView.setShadowVisible(false);
 
@@ -146,16 +146,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
         }
     }
 
-    public void onPageSelected(boolean isRequestHotelList)
+    public void onPageSelected()
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        baseActivity.invalidateOptionsMenu();
     }
 
     public void onPageUnSelected()
@@ -168,102 +160,57 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         if (mViewType == GourmetMainFragment.VIEW_TYPE.MAP)
         {
-            return;
-        }
-
-        Object objectTag = mSwipeRefreshLayout.getTag();
-
-        if (objectTag == null)
-        {
-            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
-
-            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-            animation.setDuration(300);
-            animation.setAnimationListener(new Animation.AnimationListener()
-            {
-                @Override
-                public void onAnimationStart(Animation animation)
-                {
-                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation)
-                {
-                    mSwipeRefreshLayout.setAnimation(null);
-
-                    mOnCommunicateListener.showFloatingActionButton();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation)
-                {
-
-                }
-            });
-
-            mSwipeRefreshLayout.startAnimation(animation);
-        } else
-        {
             mOnCommunicateListener.showFloatingActionButton();
-        }
-    }
-
-    /**
-     * 새로 고침을 하지 않고 기존의 있는 데이터를 보여준다.
-     *
-     * @param type
-     * @param isCurrentPage
-     */
-    public void setViewType(GourmetMainFragment.VIEW_TYPE type, boolean isCurrentPage)
-    {
-        mViewType = type;
-
-        if (mEmptyView.getVisibility() == View.VISIBLE)
-        {
-            setVisibility(GourmetMainFragment.VIEW_TYPE.GONE);
         } else
         {
-            switch (type)
+            Object objectTag = mSwipeRefreshLayout.getTag();
+
+            if (objectTag == null)
             {
-                case LIST:
-                    setVisibility(GourmetMainFragment.VIEW_TYPE.LIST, isCurrentPage);
-                    break;
+                mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
 
-                case MAP:
-                    setVisibility(GourmetMainFragment.VIEW_TYPE.MAP, isCurrentPage);
-
-                    if (mPlaceMapFragment != null)
+                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+                animation.setDuration(300);
+                animation.setAnimationListener(new Animation.AnimationListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animation animation)
                     {
-                        mPlaceMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-
-                        if (isCurrentPage == true)
-                        {
-                            List<PlaceViewItem> arrayList = mGourmetAdapter.getAll();
-
-                            if (arrayList != null)
-                            {
-                                mPlaceMapFragment.setPlaceViewItemList(arrayList, getSelectedSaleTime(), false);
-                            }
-                        }
+                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                     }
-                    break;
 
-                case GONE:
-                    break;
+                    @Override
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        mSwipeRefreshLayout.setAnimation(null);
+
+                        mOnCommunicateListener.showFloatingActionButton();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation)
+                    {
+
+                    }
+                });
+
+                mSwipeRefreshLayout.startAnimation(animation);
+            } else
+            {
+                mOnCommunicateListener.showFloatingActionButton();
             }
         }
     }
 
-    protected void setVisibility(GourmetMainFragment.VIEW_TYPE type, boolean isCurrentPage)
+    protected void setVisibility(GourmetMainFragment.VIEW_TYPE viewType, boolean isCurrentPage)
     {
-        switch (type)
+        switch (viewType)
         {
             case LIST:
+                mViewType = GourmetMainFragment.VIEW_TYPE.LIST;
+
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
-
-                // 맵과 리스트에서 당일상품 탭 안보이도록 수정
 
                 if (mPlaceMapFragment != null)
                 {
@@ -276,6 +223,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 break;
 
             case MAP:
+                mViewType = GourmetMainFragment.VIEW_TYPE.MAP;
+
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
@@ -297,11 +246,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
                 break;
         }
-    }
-
-    protected void setVisibility(GourmetMainFragment.VIEW_TYPE type)
-    {
-        setVisibility(type, true);
     }
 
     protected SaleTime getSelectedSaleTime()
@@ -504,10 +448,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             }
         }
 
-        if (mOnCommunicateListener != null)
-        {
-            mOnCommunicateListener.expandedAppBar(true, true);
-        }
+        mOnCommunicateListener.expandedAppBar(true, true);
 
         mGourmetAdapter.setSortType(type);
         mGourmetRecycleView.scrollToPosition(0);
@@ -650,12 +591,25 @@ public class GourmetListFragment extends BaseFragment implements Constants
         return placeViewItemList;
     }
 
-    public void curationList(GourmetCurationOption curationOption)
+    public void resetScrollDistance(boolean isUpDistance)
+    {
+        if (isUpDistance == true)
+        {
+            mDownDistance = 1;
+            mUpDistance = 0;
+        } else
+        {
+            mUpDistance = -1;
+            mDownDistance = 0;
+        }
+    }
+
+    public void curationList(GourmetMainFragment.VIEW_TYPE type, GourmetCurationOption curationOption)
     {
         mScrollListTop = true;
 
         ArrayList<PlaceViewItem> placeViewItemList = curationList(mGourmetList, curationOption);
-        setGourmetListViewItemList(placeViewItemList, curationOption.getSortType());
+        setGourmetListViewItemList(type, placeViewItemList, curationOption.getSortType());
     }
 
     private ArrayList<PlaceViewItem> curationList(List<Gourmet> list, GourmetCurationOption curationOption)
@@ -685,33 +639,32 @@ public class GourmetListFragment extends BaseFragment implements Constants
         return filteredCategoryList;
     }
 
-    private void setGourmetListViewItemList(ArrayList<PlaceViewItem> gourmetListViewItemList, SortType sortType)
+    private void setGourmetListViewItemList(GourmetMainFragment.VIEW_TYPE viewType, ArrayList<PlaceViewItem> gourmetListViewItemList, SortType sortType)
     {
-        setVisibility(mViewType);
-
-        if (mViewType == GourmetMainFragment.VIEW_TYPE.MAP)
-        {
-            mPlaceMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-            mPlaceMapFragment.setPlaceViewItemList(gourmetListViewItemList, getSelectedSaleTime(), mScrollListTop);
-
-            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
-        } else
-        {
-            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST, null);
-        }
-
         mGourmetAdapter.clear();
 
-        if (gourmetListViewItemList.size() == 0)
+        if (gourmetListViewItemList == null || gourmetListViewItemList.size() == 0)
         {
             mGourmetAdapter.notifyDataSetChanged();
 
-            setVisibility(GourmetMainFragment.VIEW_TYPE.GONE);
+            setVisibility(GourmetMainFragment.VIEW_TYPE.GONE, true);
 
             mOnCommunicateListener.expandedAppBar(true, true);
-            mOnCommunicateListener.setMapViewVisible(false);
         } else
         {
+            setVisibility(viewType, true);
+
+            if (viewType == GourmetMainFragment.VIEW_TYPE.MAP)
+            {
+                mPlaceMapFragment.setOnCommunicateListener(mOnCommunicateListener);
+                mPlaceMapFragment.setPlaceViewItemList(gourmetListViewItemList, getSelectedSaleTime(), mScrollListTop);
+
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
+            } else
+            {
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST, null);
+            }
+
             if (sortType == SortType.DEFAULT)
             {
                 if (mEventBannerList != null && mEventBannerList.size() > 0)
@@ -728,11 +681,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
             {
                 mScrollListTop = false;
                 mGourmetRecycleView.scrollToPosition(0);
-            }
-
-            if (mOnCommunicateListener != null)
-            {
-                mOnCommunicateListener.setMapViewVisible(true);
             }
         }
     }
@@ -791,18 +739,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
             , AnalyticsManager.Action.GOURMET_SORTING_CLICKED, label, null);
     }
 
-    public void resetScrollDistance(boolean isUpDistance)
-    {
-        if (isUpDistance == true)
-        {
-            mDownDistance = 1;
-            mUpDistance = 0;
-        } else
-        {
-            mUpDistance = -1;
-            mDownDistance = 0;
-        }
-    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -828,12 +764,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                 if (-mDownDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
-                    if (mOnCommunicateListener != null)
-                    {
-                        mUpDistance = 0;
-                        mDownDistance = 1;
-                        mOnCommunicateListener.showAppBarLayout();
-                    }
+                    mUpDistance = 0;
+                    mDownDistance = 1;
+                    mOnCommunicateListener.showAppBarLayout();
                 }
             } else if (dy > 0)
             {
@@ -848,13 +781,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                 if (mUpDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
                 {
-                    if (mOnCommunicateListener != null)
-                    {
-                        mDownDistance = 0;
-                        mUpDistance = -1;
-                        mOnCommunicateListener.showAppBarLayout();
-                        mOnCommunicateListener.expandedAppBar(false, true);
-                    }
+                    mDownDistance = 0;
+                    mUpDistance = -1;
+                    mOnCommunicateListener.showAppBarLayout();
+                    mOnCommunicateListener.expandedAppBar(false, true);
                 }
             }
         }
@@ -978,9 +908,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msg_code != 0)
+                if (msgCode != 0)
                 {
                     if (response.has("msg") == true)
                     {
@@ -1013,24 +943,43 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     mGourmetAdapter.clear();
                     mGourmetAdapter.notifyDataSetChanged();
 
-                    setVisibility(GourmetMainFragment.VIEW_TYPE.GONE);
+                    setVisibility(GourmetMainFragment.VIEW_TYPE.GONE, true);
 
                     mOnCommunicateListener.expandedAppBar(true, true);
-                    mOnCommunicateListener.setMapViewVisible(false);
                 } else
                 {
                     ArrayList<Gourmet> gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
 
+                    HashMap<String, Integer> categoryMap = new HashMap<>(12);
+                    HashMap<String, Integer> categoryIconMap = new HashMap<>(12);
+
+                    Integer categoryCount;
+
                     // 필터 정보 넣기
+                    for(Gourmet gourmet : gourmetList)
+                    {
+                        categoryCount = categoryMap.get(gourmet.category);
+
+                        if(categoryCount == null)
+                        {
+                            categoryMap.put(gourmet.category, 1);
+                            categoryIconMap.put(gourmet.category, gourmet.categoryIcon);
+                        } else
+                        {
+                            categoryMap.put(gourmet.category, categoryCount.intValue() + 1);
+                        }
+                    }
 
                     GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
+                    gourmetCurationOption.setCategoryMap(categoryMap);
+                    gourmetCurationOption.setCategoryIconrMap(categoryIconMap);
 
                     // 기본적으로 보관한다.
                     mGourmetList.addAll(gourmetList);
 
                     ArrayList<PlaceViewItem> placeViewItemList = curationList(gourmetList, gourmetCurationOption);
 
-                    setGourmetListViewItemList(placeViewItemList, gourmetCurationOption.getSortType());
+                    setGourmetListViewItemList(mViewType, placeViewItemList, gourmetCurationOption.getSortType());
                 }
 
                 // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.

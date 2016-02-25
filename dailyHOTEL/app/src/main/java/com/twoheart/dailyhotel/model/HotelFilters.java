@@ -46,7 +46,7 @@ public class HotelFilters implements Parcelable
         {
             for (HotelFilter hotelFilter : mHotelFilterArray)
             {
-                isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_NONE, person) == true;
+                isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_NONE, person);
 
                 if (isFiltered == true)
                 {

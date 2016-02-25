@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="정렬"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        android:background="@color/calendar_month_line"
+        android:gravity="center"/>
+
+    <RadioGroup
+        android:id="@+id/sortLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            android:id="@+id/regionCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:gravity="center_horizontal"
+            android:text="지역"
+            android:textColor="@drawable/selector_curation_textcolor"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            android:id="@+id/distanceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/navibar_ic_sorting_02"
+            android:gravity="center_horizontal"
+            android:text="거리"
+            android:textColor="@drawable/selector_curation_textcolor"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            android:id="@+id/lowPriceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/navibar_ic_sorting_03"
+            android:gravity="center_horizontal"
+            android:text="낮가"
+            android:textColor="@drawable/selector_curation_textcolor"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            android:id="@+id/highPriceCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/navibar_ic_sorting_04"
+            android:gravity="center_horizontal"
+            android:text="높가"
+            android:textColor="@drawable/selector_curation_textcolor"
+            android:textSize="20dp"/>
+    </RadioGroup>
+</LinearLayout>

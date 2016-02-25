@@ -26,9 +26,9 @@ public class HotelDaysListFragment extends HotelListFragment
     }
 
     @Override
-    public void onPageSelected(boolean isRequestHotelList)
+    public void onPageSelected()
     {
-        super.onPageSelected(isRequestHotelList);
+        super.onPageSelected();
 
         SaleTime saleTime = mSelectedCheckInSaleTime.getClone(0);
 

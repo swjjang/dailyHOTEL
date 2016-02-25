@@ -16,6 +16,7 @@ public class Gourmet extends Place implements Parcelable
     public String saleDay;
     public int persons;
     public String category;
+    public int categoryIcon;
     public float distance;
 
     public Gourmet()

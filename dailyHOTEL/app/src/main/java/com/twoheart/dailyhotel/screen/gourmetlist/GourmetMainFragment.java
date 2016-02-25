@@ -71,7 +71,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private SaleTime mTodaySaleTime;
 
-    private boolean mMapEnabled;
     private boolean mDontReloadAtOnResume;
     private boolean mIsHideAppBarlayout;
 
@@ -99,8 +98,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         void toggleViewType();
 
         void setScrollListTop(boolean scrollListTop);
-
-        void setMapViewVisible(boolean isVisible);
 
         void refreshAll(boolean isShowProgress);
 
@@ -200,7 +197,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             @Override
             public void onPageSelected(int position)
             {
-
             }
 
             @Override
@@ -293,11 +289,10 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         super.onResume();
     }
 
-
     @Override
     public void onDestroy()
     {
-        if(mAppBarLayout != null)
+        if (mAppBarLayout != null)
         {
             mAppBarLayout.removeOnOffsetChangedListener(this);
         }
@@ -379,12 +374,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                         curationCurrentFragment();
                     }
-
-                    mOnCommunicateListener.showFloatingActionButton();
-                } else
-                {
-                    mOnCommunicateListener.showFloatingActionButton();
                 }
+
+                mOnCommunicateListener.showFloatingActionButton();
                 break;
             }
 
@@ -422,11 +414,11 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         switch (mViewType)
         {
             case LIST:
-                mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, -1);
+                mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, -1);
                 break;
 
             case MAP:
-                mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_list : -1, -1);
+                mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_list, -1);
                 break;
 
             default:
@@ -521,7 +513,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     private void curationCurrentFragment()
     {
         GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-        gourmetListFragment.curationList(mCurationOption);
+        gourmetListFragment.curationList(mViewType, mCurationOption);
     }
 
     public void refreshCurrentFragment()
@@ -539,7 +531,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
+        if (baseActivity == null || baseActivity.isFinishing() == true)
         {
             return;
         }
@@ -702,30 +694,11 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         });
     }
 
-    //    @Override
-    //    public void requestRegionList(BaseActivity baseActivity)
-    //    {
-    //        // 지역 리스트를 가져온다
-    //        DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
-    //    }
-    //
-    //    @Override
-    //    public void refreshAll()
-    //    {
-    //        mOnCommunicateListener.refreshAll(true);
-    //    }
-    //
-    //    @Override
-    //    public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights)
-    //    {
-    //        mOnCommunicateListener.selectPlace(index, dailyTime, dailyDayOfDays, nights);
-    //    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected void deepLinkDetail(BaseActivity baseActivity)
+    private void deepLinkDetail(BaseActivity baseActivity)
     {
         try
         {
@@ -752,6 +725,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         } catch (Exception e)
         {
             ExLog.d(e.toString());
+
+            DailyDeepLink.getInstance().clear();
 
             //탭에 들어갈 날짜를 만든다.
             makeDateTabLayout();
@@ -971,7 +946,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
     };
 
-
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
         @Override
@@ -990,7 +964,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected(true);
+            fragment.onPageSelected();
 
             mOnCommunicateListener.refreshAll(true);
 
@@ -1025,7 +999,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected(true);
+            fragment.onPageSelected();
 
             //            if (mSelectedProvince != null)
             //            {
@@ -1089,7 +1063,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     break;
                 }
 
-                case PlaceViewItem.TYPE_SECTION:
                 default:
                     unLockUI();
                     break;
@@ -1208,30 +1181,32 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
             lockUI();
 
-            // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
             GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-            if (currentFragment.hasSalesPlace() == false)
-            {
-                unLockUI();
-
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null)
-                {
-                    return;
-                }
-
-                DailyToast.showToast(baseActivity, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
-                return;
-            }
 
             switch (mViewType)
             {
                 case LIST:
+                {
+                    // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
+                    if (currentFragment.hasSalesPlace() == false)
+                    {
+                        unLockUI();
+
+                        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                        if (baseActivity == null)
+                        {
+                            return;
+                        }
+
+                        DailyToast.showToast(baseActivity, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                        return;
+                    }
+
                     mViewType = VIEW_TYPE.MAP;
                     AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP, null);
                     break;
+                }
 
                 case MAP:
                     mViewType = VIEW_TYPE.LIST;
@@ -1249,8 +1224,10 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             {
                 boolean isCurrentFragment = placeListFragment == currentFragment;
 
-                placeListFragment.setViewType(mViewType, isCurrentFragment);
+                placeListFragment.setVisibility(mViewType, isCurrentFragment);
             }
+
+            currentFragment.curationList(mViewType, mCurationOption);
 
             unLockUI();
         }
@@ -1269,21 +1246,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             {
                 gourmetListFragment.setScrollListTop(scrollListTop);
             }
-        }
-
-        @Override
-        public void setMapViewVisible(boolean isVisible)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            mMapEnabled = isVisible;
-
-            baseActivity.invalidateOptionsMenu();
         }
 
         @Override
@@ -1516,9 +1478,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
             try
             {
-                int msg_code = response.getInt("msgCode");
+                int msgCode = response.getInt("msgCode");
 
-                if (msg_code == 100)
+                if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
@@ -1618,6 +1580,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                             {
                                 if (area.getProvinceIndex() == province.index)
                                 {
+                                    area.isOverseas = province.isOverseas;
                                     area.setProvince(province);
                                     break;
                                 }

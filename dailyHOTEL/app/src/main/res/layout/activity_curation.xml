@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="bottom"
-              android:orientation="vertical">
+              android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/exitView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/informationLayout"/>
 
     <RelativeLayout
+        android:id="@+id/informationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:layout_above="@+id/contentLayout">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/resetCurationView"
@@ -42,9 +48,10 @@
     <LinearLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_above="@+id/confirmView">
     </LinearLayout>
 
     <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -55,5 +62,6 @@
         android:gravity="center"
         android:text="적용완료"
         android:textColor="@android:color/white"
-        android:textSize="20dp"/>
-</LinearLayout>
+        android:textSize="20dp"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

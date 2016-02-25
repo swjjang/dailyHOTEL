@@ -48,6 +48,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="10dp"
+        android:src="@drawable/filter_ic"
+        app:borderWidth="0dp"
         app:layout_behavior="com.twoheart.dailyhotel.view.widget.DailyFloatingActionButtonBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

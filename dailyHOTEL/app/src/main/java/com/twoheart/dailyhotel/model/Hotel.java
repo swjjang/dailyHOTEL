@@ -27,14 +27,13 @@ public class Hotel implements Parcelable
     public String name;
     public int price;
     public String addressSummary;
-    private HotelGrade mGrade;
-
     public boolean isSoldOut;
     public String detailRegion;
     public int satisfaction;
     public float distance; // 정렬시에 보여주는 내용
     public String categoryCode;
 
+    private HotelGrade mGrade;
     private HotelFilters mHotelFilters;
 
     public Hotel()
