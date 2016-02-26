@@ -80,7 +80,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        String address = hotel.getAddress();
+        String address = hotel.addressSummary;
 
         if (address.indexOf('|') >= 0)
         {
@@ -91,7 +91,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         }
 
         addressTextView.setText(address);
-        name.setText(hotel.getName());
+        name.setText(hotel.name);
 
         // D.benefit
         if (hotel.isDBenefit == true)
@@ -104,9 +104,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 
         Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 
-        int price = hotel.getPrice();
-
-        if (price <= 0)
+        if (hotel.price <= 0)
         {
             priceTextView.setVisibility(View.INVISIBLE);
 
@@ -115,7 +113,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(comma.format(price) + currency);
+            priceTextView.setText(comma.format(hotel.price) + currency);
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -146,9 +144,6 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         grade.setBackgroundResource(hotel.getGrade().getColorResId());
 
         Util.requestImageResize(mContext, hotelImageView, hotel.imageUrl);
-
-        // 객실이 1~2 개일때 label 표시
-        int avail_cnt = hotel.getAvailableRoom();
 
         closeView.setOnClickListener(new View.OnClickListener()
         {

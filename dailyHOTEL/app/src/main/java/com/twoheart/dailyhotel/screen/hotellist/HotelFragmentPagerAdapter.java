@@ -11,7 +11,7 @@ public class HotelFragmentPagerAdapter extends FragmentPagerAdapter
     private ArrayList<HotelListFragment> mFragmentList;
     private int mTabCount;
 
-    public HotelFragmentPagerAdapter(FragmentManager fragmentManager, int count, HotelMainFragment.OnUserActionListener listener)
+    public HotelFragmentPagerAdapter(FragmentManager fragmentManager, int count, HotelMainFragment.OnCommunicateListener listener)
     {
         super(fragmentManager);
 
@@ -19,15 +19,15 @@ public class HotelFragmentPagerAdapter extends FragmentPagerAdapter
         mFragmentList = new ArrayList<>(count);
 
         HotelListFragment hotelListFragment01 = new HotelListFragment();
-        hotelListFragment01.setOnUserActionListener(listener);
+        hotelListFragment01.setOnCommunicateListener(listener);
         mFragmentList.add(hotelListFragment01);
 
         HotelListFragment hotelListFragment02 = new HotelListFragment();
-        hotelListFragment02.setOnUserActionListener(listener);
+        hotelListFragment02.setOnCommunicateListener(listener);
         mFragmentList.add(hotelListFragment02);
 
         HotelDaysListFragment hotelListFragment03 = new HotelDaysListFragment();
-        hotelListFragment03.setOnUserActionListener(listener);
+        hotelListFragment03.setOnCommunicateListener(listener);
         mFragmentList.add(hotelListFragment03);
     }
 

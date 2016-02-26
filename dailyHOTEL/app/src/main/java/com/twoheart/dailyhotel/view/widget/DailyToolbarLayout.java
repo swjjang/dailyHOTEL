@@ -49,7 +49,7 @@ public class DailyToolbarLayout
 
     public void initToolbarRegionMenu(View.OnClickListener listener)
     {
-        setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_sorting_01);
+        setToolbarRegionMenu(R.drawable.navibar_ic_map, -1);
 
         setToolbarMenuClickListener(listener);
 
@@ -109,15 +109,8 @@ public class DailyToolbarLayout
             return;
         }
 
-        if (menu1 != null)
-        {
-            menu1.setOnClickListener(listener);
-        }
-
-        if (menu2 != null)
-        {
-            menu2.setOnClickListener(listener);
-        }
+        menu1.setOnClickListener(listener);
+        menu2.setOnClickListener(listener);
     }
 
     public void setToolbarRegionMenuVisibility(boolean isVisibility)

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 
@@ -25,20 +26,21 @@ public class HotelDaysListFragment extends HotelListFragment
     }
 
     @Override
-    public void onPageSelected(boolean isRequestHotelList)
+    public void onPageSelected()
     {
-        super.onPageSelected(isRequestHotelList);
+        super.onPageSelected();
 
         SaleTime saleTime = mSelectedCheckInSaleTime.getClone(0);
 
-        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), TYPE.HOTEL, saleTime);
+        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), PlaceType.HOTEL, saleTime);
         getParentFragment().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
     @Override
-    protected void fetchHotelList()
+    protected void fetchList()
     {
-        fetchHotelList(mSelectedProvince, mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
+        HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
+        fetchList(hotelCurationOption.getProvince(), mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
     }
 
     @Override
@@ -53,17 +55,14 @@ public class HotelDaysListFragment extends HotelListFragment
                     mSelectedCheckInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
                     mSelectedCheckOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
 
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
-                    }
+                    mOnCommunicateListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
                 } else
                 {
                     if (mHotelRecycleView.getVisibility() == View.VISIBLE && mHotelRecycleView.getAdapter() != null)
                     {
                         if (mHotelRecycleView.getAdapter().getItemCount() == 0)
                         {
-                            fetchHotelList();
+                            fetchList();
                         }
                     }
                 }
@@ -96,21 +95,18 @@ public class HotelDaysListFragment extends HotelListFragment
 
             if (position < 0)
             {
-                refreshHotelList(mSelectedProvince, true);
+                refreshList();
                 return;
             }
 
-            if (mOnUserActionListener != null)
+            PlaceViewItem placeViewItem = mHotelAdapter.getItem(position);
+
+            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
             {
-                PlaceViewItem placeViewItem = mHotelAdapter.getItem(position);
-
-                if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
-                {
-                    return;
-                }
-
-                mOnUserActionListener.selectHotel(placeViewItem, mSelectedCheckInSaleTime);
+                return;
             }
+
+            mOnCommunicateListener.selectHotel(placeViewItem, mSelectedCheckInSaleTime);
         }
     };
 }

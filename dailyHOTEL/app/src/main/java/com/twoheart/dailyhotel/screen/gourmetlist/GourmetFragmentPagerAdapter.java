@@ -11,7 +11,7 @@ public class GourmetFragmentPagerAdapter extends FragmentPagerAdapter
     private ArrayList<GourmetListFragment> mFragmentList;
     private int mTabCount;
 
-    public GourmetFragmentPagerAdapter(FragmentManager fragmentManager, int count, GourmetMainFragment.OnUserActionListener listener)
+    public GourmetFragmentPagerAdapter(FragmentManager fragmentManager, int count, GourmetMainFragment.OnCommunicateListener listener)
     {
         super(fragmentManager);
 
@@ -19,15 +19,15 @@ public class GourmetFragmentPagerAdapter extends FragmentPagerAdapter
         mFragmentList = new ArrayList<>(count);
 
         GourmetListFragment gourmetListFragment01 = new GourmetListFragment();
-        gourmetListFragment01.setOnUserActionListener(listener);
+        gourmetListFragment01.setOnCommunicateListener(listener);
         mFragmentList.add(gourmetListFragment01);
 
         GourmetListFragment gourmetListFragment02 = new GourmetListFragment();
-        gourmetListFragment02.setOnUserActionListener(listener);
+        gourmetListFragment02.setOnCommunicateListener(listener);
         mFragmentList.add(gourmetListFragment02);
 
         GourmetDaysListFragment gourmetListFragment03 = new GourmetDaysListFragment();
-        gourmetListFragment03.setOnUserActionListener(listener);
+        gourmetListFragment03.setOnCommunicateListener(listener);
         mFragmentList.add(gourmetListFragment03);
     }
 

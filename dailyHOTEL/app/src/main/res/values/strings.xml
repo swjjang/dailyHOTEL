@@ -23,11 +23,6 @@
     <string name="label_daily_kakaotalk">데일리 카톡 문의</string>
     <string name="label_restaurant_direct_phone">레스토랑 직접 전화연결</string>
     <string name="label_hotel_direct_phone">호텔 직접 전화연결</string>
-    <string name="label_sort_by">정렬 기준</string>
-    <string name="label_sort_by_distance">거리순</string>
-    <string name="label_sort_by_low_price">낮은 가격순</string>
-    <string name="label_sort_by_high_price">높은 가격순</string>
-    <string name="label_sort_by_area">지역별(기본)</string>
     <string name="label_friend">친구</string>
     <string name="label_domestic">국내</string>
     <string name="label_global">해외</string>
@@ -71,7 +66,7 @@
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_reg_creditcard">결제카드 추가하기</string>
-    <string name="actionbar_title_setting_frag">설정</string>
+    <string name="actionbar_title_setting_frag">더보기</string>
     <string name="actionbar_title_error_frag">DAILYHOTEL</string>
     <string name="actionbar_title_wait_timer_frag">DAILYHOTEL</string>
     <string name="actionbar_title_about_activity">데일리호텔이란?</string>
@@ -154,7 +149,7 @@
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
     <string name="dialog_msg_hotel_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품이에요!</string>
-    <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'은 2인 기준의 더블 또는 트윈 객실로 랜덤 배정 해드려요.</string>
+    <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'타입을 구매 하신 경우 2인 기준의 더블 또는 트윈 객실로 랜덤 배정 해드려요.</string>
     <string name="dialog_msg_hotel_payment_message03">미성년자는 보호자 동반시 투숙 가능합니다.</string>
     <string name="dialog_msg_hotel_payment_message04">휴대폰 결제는 월 30만원이 한도입니다.</string>
     <string name="dialog_msg_hotel_payment_message05">발급된 가상 계좌번호로 10분 안에 입금해주세요. 미입금 시, 자동으로 예약이 취소됩니다.</string>
@@ -613,4 +608,23 @@
     <string name="label_saturday">토</string>
     <string name="label_sunday">일</string>
 
+
+    <!-- Curation Activity -->
+    <string name="label_double">더블</string>
+    <string name="label_twin">트윈</string>
+    <string name="label_heatedfloors">온돌</string>
+    <string name="label_more_person">%1$d명 이상</string>
+    <string name="label_hotel_filter_result_count">%1$d개의 숙소</string>
+    <string name="label_gourmet_filter_result_count">%1$d개의 레스토랑</string>
+    <string name="label_reset">재설정</string>
+    <string name="label_sort_by">정렬</string>
+    <string name="label_sort_by_distance">거리순</string>
+    <string name="label_sort_by_low_price">낮은 가격순</string>
+    <string name="label_sort_by_high_price">높은 가격순</string>
+    <string name="label_sort_by_area">지역별</string>
+    <string name="label_sort_by_satisfaction">만족도</string>
+    <string name="label_completed">적용완료</string>
+    <string name="label_personnel">인원</string>
+    <string name="label_bedtype">베드타입</string>
+    <string name="label_foodtype">음식종류</string>
 </resources>

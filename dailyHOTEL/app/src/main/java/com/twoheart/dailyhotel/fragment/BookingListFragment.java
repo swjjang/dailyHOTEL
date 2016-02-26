@@ -356,9 +356,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -402,21 +402,12 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            int msg_code = -1;
+            int msgCode = -1;
 
             try
             {
-                // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
-            } catch (Exception e)
-            {
-                onError(e);
-                unLockUI();
-                return;
-            }
+                msgCode = response.getInt("msg_code");
 
-            try
-            {
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();
 
@@ -629,12 +620,12 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            int msg_code = -1;
+            int msgCode = -1;
 
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
+                msgCode = response.getInt("msg_code");
 
                 JSONObject jsonObject = response.getJSONObject("data");
                 String message = null;
@@ -692,7 +683,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     };
                 }
 
-                switch (msg_code)
+                switch (msgCode)
                 {
                     case 0:
                     {

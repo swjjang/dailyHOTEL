@@ -416,9 +416,9 @@ public class DailyPreference
         setValue(mEditor, KEY_SOCIAL_SIGNUP, value);
     }
 
-    public boolean isSelectedOverseaRegion(Constants.TYPE type)
+    public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
     {
-        switch (type)
+        switch (placeType)
         {
             case FNB:
                 return getValue(mPreferences, KEY_GOURMET_REGION_ISOVERSEA, false);
@@ -429,9 +429,9 @@ public class DailyPreference
         }
     }
 
-    public void setSelectedOverseaRegion(Constants.TYPE type, boolean value)
+    public void setSelectedOverseaRegion(Constants.PlaceType placeType, boolean value)
     {
-        switch (type)
+        switch (placeType)
         {
             case HOTEL:
                 setValue(mEditor, KEY_HOTEL_REGION_ISOVERSEA, value);
@@ -477,9 +477,9 @@ public class DailyPreference
         setValue(mOldEditor, KEY_PREFERENCE_NEW_EVENT_TIME, value);
     }
 
-    public String getSelectedRegion(Constants.TYPE type)
+    public String getSelectedRegion(Constants.PlaceType placeType)
     {
-        switch (type)
+        switch (placeType)
         {
             case FNB:
                 return getValue(mOldPreferences, KEY_PREFERENCE_FNB_REGION_SELECT, null);
@@ -490,9 +490,9 @@ public class DailyPreference
         }
     }
 
-    public void setSelectedRegion(Constants.TYPE type, String value)
+    public void setSelectedRegion(Constants.PlaceType placeType, String value)
     {
-        switch (type)
+        switch (placeType)
         {
             case HOTEL:
                 setValue(mOldEditor, KEY_PREFERENCE_REGION_SELECT, value);
@@ -504,9 +504,9 @@ public class DailyPreference
         }
     }
 
-    public boolean isSettingRegion(Constants.TYPE type)
+    public boolean isSettingRegion(Constants.PlaceType placeType)
     {
-        switch (type)
+        switch (placeType)
         {
             case FNB:
                 return getValue(mOldPreferences, KEY_PREFERENCE_FNB_REGION_SETTING, false);
@@ -517,9 +517,9 @@ public class DailyPreference
         }
     }
 
-    public void setSettingRegion(Constants.TYPE type, boolean value)
+    public void setSettingRegion(Constants.PlaceType placeType, boolean value)
     {
-        switch (type)
+        switch (placeType)
         {
             case HOTEL:
                 setValue(mOldEditor, KEY_PREFERENCE_REGION_SETTING, value);

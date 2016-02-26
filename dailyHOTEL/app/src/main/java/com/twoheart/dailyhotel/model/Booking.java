@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 
@@ -37,7 +36,7 @@ public class Booking implements Parcelable
     public long checkoutTime;
     public String hotelImageUrl;
     public boolean isUsed;
-    public PlaceMainFragment.TYPE placeType;
+    public Constants.PlaceType placeType;
 
     public Booking()
     {
@@ -74,7 +73,7 @@ public class Booking implements Parcelable
             JSONArray jsonArray = jsonObject.getJSONArray("img");
             hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
 
-            placeType = Constants.TYPE.valueOf(jsonObject.getString("type").toUpperCase());
+            placeType = Constants.PlaceType.valueOf(jsonObject.getString("type").toUpperCase());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -111,7 +110,7 @@ public class Booking implements Parcelable
         checkoutTime = in.readLong();
         hotelImageUrl = in.readString();
         isUsed = in.readInt() == 1;
-        placeType = Constants.TYPE.valueOf(in.readString());
+        placeType = Constants.PlaceType.valueOf(in.readString());
     }
 
     @Override

@@ -90,13 +90,7 @@ public class HotelClusterRenderer extends DefaultClusterRenderer<HotelClusterIte
     @Override
     protected boolean shouldRenderAsCluster(Cluster<HotelClusterItem> cluster, float zoom)
     {
-        if (Float.compare(zoom, 13.0f) >= 0)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
+        return (Float.compare(zoom, 13.0f) < 0);
     }
 
     public void setSelectedClusterItem(HotelClusterItem hotelClusterItem)

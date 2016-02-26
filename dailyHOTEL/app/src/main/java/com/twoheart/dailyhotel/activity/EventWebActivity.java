@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class EventWebActivity extends WebViewActivity implements Constants
 {
-    private WebView mWebView;
     private SourceType mSourceType;
 
     public enum SourceType
@@ -68,24 +67,24 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         initToolbar();
 
-        mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        WebView webView = (WebView) findViewById(R.id.webView);
+        webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
-            mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
             CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.setAcceptCookie(true);
-            cookieManager.setAcceptThirdPartyCookies(mWebView, true);
+            cookieManager.setAcceptThirdPartyCookies(webView, true);
         }
 
         // 추가
-        mWebView.addJavascriptInterface(new JavaScriptExtention(), "android");
-        mWebView.clearCache(true);
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+        webView.clearCache(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         setWebView(url);
     }

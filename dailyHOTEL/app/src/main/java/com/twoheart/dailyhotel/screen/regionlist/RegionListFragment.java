@@ -14,10 +14,10 @@ import android.widget.ImageView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
@@ -31,7 +31,7 @@ public class RegionListFragment extends BaseFragment
     private DailyAnimatedExpandableListView mListView;
     private RegionAnimatedExpandableListAdapter mAdapter;
 
-    private PlaceMainFragment.TYPE mType;
+    private Constants.PlaceType mPlaceType;
     private Province mSelectedProvince;
 
     private RegionListActivity.Region mRegion;
@@ -47,7 +47,7 @@ public class RegionListFragment extends BaseFragment
 
     private void recordAnalyticsScreen()
     {
-        switch (mType)
+        switch (mPlaceType)
         {
             case HOTEL:
                 switch (mRegion)
@@ -92,9 +92,9 @@ public class RegionListFragment extends BaseFragment
         selectedPreviousArea(mSelectedProvince, arrayList);
     }
 
-    public void setInformation(PlaceMainFragment.TYPE type, RegionListActivity.Region region, Province province)
+    public void setInformation(Constants.PlaceType type, RegionListActivity.Region region, Province province)
     {
-        mType = type;
+        mPlaceType = type;
         mRegion = region;
         mSelectedProvince = province;
     }

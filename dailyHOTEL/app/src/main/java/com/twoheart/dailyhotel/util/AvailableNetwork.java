@@ -73,17 +73,6 @@ public class AvailableNetwork
         final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if (networkInfo != null)
-        {
-            ExLog.d("networkInfo : " + networkInfo);
-        }
-
-        if (networkInfo != null && networkInfo.isConnected())
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return (networkInfo != null && networkInfo.isConnected());
     }
 }

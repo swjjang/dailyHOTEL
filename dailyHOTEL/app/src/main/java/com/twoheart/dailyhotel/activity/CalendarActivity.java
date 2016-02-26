@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -34,17 +34,17 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
     private static final int HOTEL_ENABLE_DAYCOUNT_OF_MAX = 60;
     private static final int GOURMET_ENABLE_DAYCOUNT_OF_MAX = 14;
 
-    private PlaceMainFragment.TYPE mPlaceType;
+    private Constants.PlaceType mPlaceType;
     private Day mCheckInDay;
     private Day mCheckOutDay;
 
     private View[] mDailyTextViews;
     private DailyToolbarLayout mDailyToolbarLayout;
 
-    public static Intent newInstance(Context context, PlaceMainFragment.TYPE type, SaleTime dailyTime)
+    public static Intent newInstance(Context context, Constants.PlaceType placeType, SaleTime dailyTime)
     {
         Intent intent = new Intent(context, CalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, type.toString());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
 
         return intent;
@@ -57,7 +57,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
 
         Intent intent = getIntent();
 
-        mPlaceType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
 
         switch (mPlaceType)
@@ -287,7 +287,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             dailyTextView.setSelected(true);
             dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
 
-            if (mPlaceType == TYPE.FNB)
+            if (mPlaceType == PlaceType.FNB)
             {
                 lockUiComponent();
 
@@ -315,7 +315,7 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
             }
         } else
         {
-            if (mPlaceType == TYPE.FNB)
+            if (mPlaceType == PlaceType.FNB)
             {
                 return;
             }

@@ -38,13 +38,13 @@ public class GourmetDaysListFragment extends GourmetListFragment
     }
 
     @Override
-    public void onPageSelected(boolean isRequestHotelList)
+    public void onPageSelected()
     {
-        super.onPageSelected(isRequestHotelList);
+        super.onPageSelected();
 
         SaleTime saleTime = mSaleTime.getClone(0);
 
-        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), TYPE.FNB, saleTime);
+        Intent intent = com.twoheart.dailyhotel.activity.CalendarActivity.newInstance(getContext(), PlaceType.FNB, saleTime);
         getParentFragment().startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
@@ -67,10 +67,7 @@ public class GourmetDaysListFragment extends GourmetListFragment
                 {
                     mSelectedSaleTime = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECKINDATE);
 
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.selectDay(mSelectedSaleTime, true);
-                    }
+                    mOnCommunicateListener.selectDay(mSelectedSaleTime, true);
                 } else
                 {
                     if (mGourmetRecycleView.getVisibility() == View.VISIBLE && mGourmetRecycleView.getAdapter() != null)

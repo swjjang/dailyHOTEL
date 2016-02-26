@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -57,7 +56,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
     private int mReservationIndex;
     private long mCheckInDate;
     private long mCheckOutDate;
-    private PlaceMainFragment.TYPE mPlaceType;
+    private Constants.PlaceType mPlaceType;
     private Dialog mDialog;
     private ArrayList<ReviewCode> mReviewCodeList;
     private DailyEditText mCommentsView;
@@ -82,7 +81,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, TYPE.HOTEL.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceType.HOTEL.name());
 
         return intent;
     }
@@ -99,7 +98,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, TYPE.FNB.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceType.FNB.name());
 
         return intent;
     }
@@ -117,7 +116,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             return;
         }
 
-        mPlaceType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
+        mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
 
         switch (mPlaceType)
         {
@@ -552,7 +551,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         }
     }
 
-    private void updateSatifactionRating(PlaceMainFragment.TYPE type, int index, String result)
+    private void updateSatifactionRating(Constants.PlaceType placeType, int index, String result)
     {
         if (result == null)
         {
@@ -573,7 +572,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
         DailyHotelJsonResponseListener listener = mReserveReviewJsonResponseListener;
 
-        switch (type)
+        switch (placeType)
         {
             case HOTEL:
                 params.put("reserv_idx", String.valueOf(index));

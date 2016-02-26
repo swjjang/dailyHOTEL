@@ -15,7 +15,7 @@ public abstract class Place implements Parcelable
     public String name;
     public int price;
     public int discountPrice;
-    public String address;
+    public String addressSummary;
     public Grade grade;
     public String districtName;
     public double latitude;
@@ -43,7 +43,7 @@ public abstract class Place implements Parcelable
         dest.writeString(name);
         dest.writeInt(price);
         dest.writeInt(discountPrice);
-        dest.writeString(address);
+        dest.writeString(addressSummary);
         dest.writeSerializable(grade);
         dest.writeInt(index);
         dest.writeDouble(latitude);
@@ -59,7 +59,7 @@ public abstract class Place implements Parcelable
         name = in.readString();
         price = in.readInt();
         discountPrice = in.readInt();
-        address = in.readString();
+        addressSummary = in.readString();
         grade = (Grade) in.readSerializable();
         index = in.readInt();
         latitude = in.readDouble();

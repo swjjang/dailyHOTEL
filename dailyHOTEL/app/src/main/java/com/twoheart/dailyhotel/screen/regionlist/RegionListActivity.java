@@ -9,10 +9,10 @@ import android.support.v7.widget.Toolbar;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -30,7 +30,7 @@ public class RegionListActivity extends BaseActivity
     private ViewPager mViewPager;
     private RegionFragmentPagerAdapter mFragmentPagerAdapter;
 
-    private PlaceMainFragment.TYPE mType;
+    private Constants.PlaceType mPlaceType;
     private RegionListPresenter mRegionListPresenter;
 
     public interface OnUserActionListener
@@ -53,10 +53,10 @@ public class RegionListActivity extends BaseActivity
         void onInternalError(String message);
     }
 
-    public static Intent newInstance(Context context, PlaceMainFragment.TYPE type, Province province)
+    public static Intent newInstance(Context context, Constants.PlaceType placeType, Province province)
     {
         Intent intent = new Intent(context, RegionListActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, type.toString());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
 
         return intent;
@@ -78,10 +78,10 @@ public class RegionListActivity extends BaseActivity
         mRegionListPresenter = new RegionListPresenter(this, mOnResponsePresenterListener);
 
         // 호텔 인지 고메인지
-        mType = TYPE.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         Province selectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-        if (mType == null)
+        if (mPlaceType == null)
         {
             Util.restartApp(this);
             return;
@@ -90,12 +90,12 @@ public class RegionListActivity extends BaseActivity
         // 국내로 시작하는지 헤외로 시작하는지
         // 고메인 경우에는 해외 지역이 없기 때문에 기존과 동일하게?
 
-        initLayout(mType, selectedProvince);
+        initLayout(mPlaceType, selectedProvince);
     }
 
-    private void initLayout(PlaceMainFragment.TYPE type, Province province)
+    private void initLayout(Constants.PlaceType placeType, Province province)
     {
-        if (mType == null)
+        if (mPlaceType == null)
         {
             return;
         }
@@ -107,7 +107,7 @@ public class RegionListActivity extends BaseActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        switch (type)
+        switch (placeType)
         {
             case HOTEL:
             {
@@ -130,7 +130,7 @@ public class RegionListActivity extends BaseActivity
                             isOverseas = ((Area) province).getProvince().isOverseas;
                         } catch (NullPointerException e)
                         {
-                            isOverseas = DailyPreference.getInstance(this).isSelectedOverseaRegion(TYPE.HOTEL);
+                            isOverseas = DailyPreference.getInstance(this).isSelectedOverseaRegion(Constants.PlaceType.HOTEL);
                         }
                     } else
                     {
@@ -138,12 +138,12 @@ public class RegionListActivity extends BaseActivity
                     }
                 }
 
-                regionListFragment01.setInformation(type, Region.DOMESTIC, isOverseas ? null : province);
+                regionListFragment01.setInformation(placeType, Region.DOMESTIC, isOverseas ? null : province);
                 regionListFragment01.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment01);
 
                 RegionListFragment regionListFragment02 = new RegionListFragment();
-                regionListFragment02.setInformation(type, Region.GLOBAL, isOverseas ? province : null);
+                regionListFragment02.setInformation(placeType, Region.GLOBAL, isOverseas ? province : null);
                 regionListFragment02.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment02);
 
@@ -170,7 +170,7 @@ public class RegionListActivity extends BaseActivity
                 ArrayList<RegionListFragment> fragmentList = new ArrayList<>(GOURMET_TAB_COUNT);
 
                 RegionListFragment regionListFragment01 = new RegionListFragment();
-                regionListFragment01.setInformation(type, Region.DOMESTIC, false ? null : province);
+                regionListFragment01.setInformation(placeType, Region.DOMESTIC, false ? null : province);
                 regionListFragment01.setOnUserActionListener(mOnUserActionListener);
                 fragmentList.add(regionListFragment01);
 
@@ -203,7 +203,7 @@ public class RegionListActivity extends BaseActivity
 
         lockUI();
 
-        switch (mType)
+        switch (mPlaceType)
         {
             case HOTEL:
                 mRegionListPresenter.requestHotelRegionList();
@@ -248,7 +248,7 @@ public class RegionListActivity extends BaseActivity
                     , province.name);
             }
 
-            switch (mType)
+            switch (mPlaceType)
             {
                 case HOTEL:
                     AnalyticsManager.getInstance(RegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -293,7 +293,7 @@ public class RegionListActivity extends BaseActivity
     {
         private void recordAnalytics(int position)
         {
-            switch (mType)
+            switch (mPlaceType)
             {
                 case HOTEL:
                     if (position == 0)
@@ -342,7 +342,7 @@ public class RegionListActivity extends BaseActivity
         {
             ArrayList<RegionListFragment> arrayList = mFragmentPagerAdapter.getFragmentList();
 
-            switch (mType)
+            switch (mPlaceType)
             {
                 case HOTEL:
                 {

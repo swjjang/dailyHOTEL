@@ -211,12 +211,12 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         final Hotel hotel = placeViewItem.<Hotel>getItem();
 
         DecimalFormat comma = new DecimalFormat("###,##0");
-        int price = hotel.getPrice();
+        int price = hotel.price;
 
         String strPrice = comma.format(price);
         String strDiscount = comma.format(hotel.averageDiscount);
 
-        String address = hotel.getAddress();
+        String address = hotel.addressSummary;
 
         int barIndex = address.indexOf('|');
         if (barIndex >= 0)
@@ -228,7 +228,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         }
 
         holder.hotelAddressView.setText(address);
-        holder.hotelNameView.setText(hotel.getName());
+        holder.hotelNameView.setText(hotel.name);
 
         Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 
@@ -278,10 +278,8 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
         Util.requestImageResize(mContext, holder.hotelImageView, hotel.imageUrl);
 
-        int availableRoomCount = hotel.getAvailableRoom();
-
         // SOLD OUT 표시
-        if (availableRoomCount == 0)
+        if (hotel.isSoldOut == true)
         {
             holder.hotelSoldOutView.setVisibility(View.VISIBLE);
         } else

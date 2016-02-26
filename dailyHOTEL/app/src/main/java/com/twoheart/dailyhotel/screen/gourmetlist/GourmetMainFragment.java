@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -17,18 +18,21 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
+import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.filter.CurationActivity;
 import com.twoheart.dailyhotel.screen.gourmetdetail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.regionlist.RegionListActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -36,6 +40,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.view.LocationFactory;
+import com.twoheart.dailyhotel.view.widget.DailyFloatingActionButtonBehavior;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -50,7 +56,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayout.OnOffsetChangedListener
+public class GourmetMainFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
 {
     private static final int TAB_COUNT = 3;
     private int TOOLBAR_HEIGHT;
@@ -59,12 +65,19 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private GourmetFragmentPagerAdapter mFragmentPagerAdapter;
-    private Province mSelectedProvince;
     private DailyToolbarLayout mDailyToolbarLayout;
+    private View mFloatingActionView;
+
+    private SaleTime mTodaySaleTime;
+
+    private boolean mDontReloadAtOnResume;
     private boolean mIsHideAppBarlayout;
 
+    private GourmetCurationOption mCurationOption;
 
-    public interface OnUserActionListener
+    private ViewType mViewType = ViewType.LIST;
+
+    public interface OnCommunicateListener
     {
         void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime);
 
@@ -76,15 +89,11 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         void toggleViewType();
 
-        void selectSortType(SortType sortType);
-
-        void setLocation(Location location);
-
-        void onClickActionBarArea();
-
-        void setMapViewVisible(boolean isVisible);
+        void setScrollListTop(boolean scrollListTop);
 
         void refreshAll(boolean isShowProgress);
+
+        void refreshCompleted();
 
         void expandedAppBar(boolean expanded, boolean animate);
 
@@ -93,29 +102,32 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         void hideAppBarLayout();
 
         void pinAppBarLayout();
+
+        void showFloatingActionButton();
+
+        void hideFloatingActionButton();
+
+        GourmetCurationOption getCurationOption();
     }
 
     @Override
-    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_gourmet_main, container, false);
 
         initToolbar(view);
 
-        mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_today), true);
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
-        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+        mViewType = ViewType.LIST;
 
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        mTodaySaleTime = new SaleTime();
 
-        mFragmentPagerAdapter = new GourmetFragmentPagerAdapter(getChildFragmentManager(), TAB_COUNT, mOnGourmetUserActionListener);
+        mCurationOption = new GourmetCurationOption();
 
-        mViewPager.setOffscreenPageLimit(TAB_COUNT);
-        mViewPager.setAdapter(mFragmentPagerAdapter);
-        mViewPager.setCurrentItem(0);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        initDateTabLayout(view);
+
+        initFloatingActionButton(view);
+
+        setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
 
         return view;
     }
@@ -137,11 +149,91 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             @Override
             public void onClick(View v)
             {
-                mOnGourmetUserActionListener.onClickActionBarArea();
+                if (isLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+
+                Intent intent = RegionListActivity.newInstance(getContext(), PlaceType.FNB, mCurationOption.getProvince());
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
 
         mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
+    }
+
+    private void initDateTabLayout(View view)
+    {
+        mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_today), true);
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_tomorrow));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_selecteday));
+        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+
+        mFragmentPagerAdapter = new GourmetFragmentPagerAdapter(getChildFragmentManager(), TAB_COUNT, mOnCommunicateListener);
+
+        mViewPager.setOffscreenPageLimit(TAB_COUNT);
+        mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.setCurrentItem(0);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+                mOnCommunicateListener.hideFloatingActionButton();
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+                if (state == ViewPager.SCROLL_STATE_IDLE)
+                {
+                    mOnCommunicateListener.showFloatingActionButton();
+                }
+            }
+        });
+    }
+
+    private void initFloatingActionButton(View view)
+    {
+        mFloatingActionView = view.findViewById(R.id.floatingActionView);
+        mFloatingActionView.setVisibility(View.GONE);
+        mFloatingActionView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnCommunicateListener.hideFloatingActionButton();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                if (isLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+
+                Intent intent = CurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
+                baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+            }
+        });
     }
 
     @Override
@@ -149,20 +241,25 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
     {
         if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
         {
-            mOnGourmetUserActionListener.hideAppBarLayout();
+            mOnCommunicateListener.hideAppBarLayout();
             mIsHideAppBarlayout = true;
 
             GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
             currentFragment.resetScrollDistance(false);
 
-        } else if (verticalOffset == 0 && mIsHideAppBarlayout == false)
+        } else if (verticalOffset == 0)
         {
-            mOnGourmetUserActionListener.pinAppBarLayout();
-            mIsHideAppBarlayout = true;
+            if (mIsHideAppBarlayout == true)
+            {
+                mOnCommunicateListener.showFloatingActionButton();
+            } else
+            {
+                mOnCommunicateListener.pinAppBarLayout();
+                mIsHideAppBarlayout = true;
 
-            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-            currentFragment.resetScrollDistance(true);
-
+                GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                currentFragment.resetScrollDistance(true);
+            }
         } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
         {
             mIsHideAppBarlayout = false;
@@ -170,128 +267,36 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
     }
 
     @Override
-    public void onDestroy()
+    public void onResume()
     {
-        mAppBarLayout.removeOnOffsetChangedListener(this);
-
-        super.onDestroy();
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        if (mMenuEnabled == true)
+        if (mDontReloadAtOnResume == true)
         {
-            switch (mViewType)
-            {
-                case LIST:
-                {
-                    GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-                    switch (currentFragment.getSortType())
-                    {
-                        case DEFAULT:
-                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_01);
-                            break;
-
-                        case DISTANCE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_02);
-                            break;
-
-                        case LOW_PRICE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_03);
-                            break;
-
-                        case HIGH_PRICE:
-                            mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_map : -1, R.drawable.navibar_ic_sorting_04);
-                            break;
-                    }
-                    break;
-                }
-
-                case MAP:
-                    mDailyToolbarLayout.setToolbarRegionMenu(mMapEnabled ? R.drawable.navibar_ic_list : -1, -1);
-                    break;
-
-                default:
-                    mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
-                    break;
-            }
+            mDontReloadAtOnResume = false;
         } else
         {
-            mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-        if (gourmetListFragment != null)
-        {
-            gourmetListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    public void setNavigationItemSelected(Province province)
-    {
-        mSelectedProvince = province;
-    }
-
-    public void onNavigationItemSelected(Province province, boolean isSelectionTop)
-    {
-        if (province == null)
-        {
-            return;
-        }
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        mSelectedProvince = province;
-
-        setNavigationItemSelected(mSelectedProvince);
-
-        mDailyToolbarLayout.setToolbarRegionText(province.name);
-
-        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
-
-        if (province.name.equalsIgnoreCase(savedRegion) == false)
-        {
-            DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(TYPE.FNB, province.isOverseas);
-            DailyPreference.getInstance(baseActivity).setSelectedRegion(TYPE.FNB, province.name);
-
-            isSelectionTop = true;
-        }
-
-        refreshList(province, isSelectionTop);
-    }
-
-    @Override
-    public void requestRegionList(BaseActivity baseActivity)
-    {
-        // 지역 리스트를 가져온다
-        DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
-    }
-
-    @Override
-    public void refreshList(Province province, boolean isSelectionTop)
-    {
-        GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-        if (isSelectionTop == true)
-        {
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.invalidateOptionsMenu();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            lockUI();
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
 
-        gourmetListFragment.refreshList(province, isSelectionTop);
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        if (mAppBarLayout != null)
+        {
+            mAppBarLayout.removeOnOffsetChangedListener(this);
+        }
+
+        super.onDestroy();
     }
 
     @Override
@@ -308,18 +313,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         switch (requestCode)
         {
-            case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-            case CODE_REQUEST_ACTIVITY_CALENDAR:
-            {
-                mDontReloadAtOnResume = true;
-
-                GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-                currentFragment.onActivityResult(requestCode, resultCode, data);
-
-                mOnGourmetUserActionListener.expandedAppBar(true, false);
-                break;
-            }
-
             // 지역을 선택한 후에 되돌아 온경우.
             case CODE_REQUEST_ACTIVITY_REGIONLIST:
             {
@@ -327,60 +320,130 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    mOnGourmetUserActionListener.selectSortType(SortType.DEFAULT);
+                    clearCurationOption();
+                    updateFilteredFloatingActionButton();
+                    mOnCommunicateListener.setScrollListTop(true);
 
                     if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
                     {
                         Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
-                        setNavigationItemSelected(province);
+                        setProvince(province);
 
-                        refreshAll();
+                        mOnCommunicateListener.refreshAll(true);
                     } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
                     {
                         Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
-                        setNavigationItemSelected(province);
+                        setProvince(province);
 
-                        refreshAll();
+                        mOnCommunicateListener.refreshAll(true);
                     }
                 } else
                 {
-                    refreshAll();
+                    mOnCommunicateListener.refreshAll(true);
                 }
 
-                mOnGourmetUserActionListener.expandedAppBar(true, false);
+                mOnCommunicateListener.expandedAppBar(true, false);
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_CALENDAR:
+            {
+                mDontReloadAtOnResume = true;
+
+                GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                currentFragment.onActivityResult(requestCode, resultCode, data);
+
+                mOnCommunicateListener.expandedAppBar(true, false);
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_CURATION:
+            {
+                mDontReloadAtOnResume = true;
+
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    GourmetCurationOption curationOption = data.getParcelableExtra(CurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+
+                    if (curationOption != null)
+                    {
+                        mCurationOption.setSortType(curationOption.getSortType());
+                        mCurationOption.setFilterMap(curationOption.getFilterMap());
+
+                        if (curationOption.getSortType() == SortType.DISTANCE)
+                        {
+                            searchMyLocation();
+                        } else
+                        {
+                            curationCurrentFragment();
+                        }
+                    }
+                }
+
+                mOnCommunicateListener.showFloatingActionButton();
+                break;
+            }
+
+            case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+                searchMyLocation();
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    public void refreshAll()
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        mOnGourmetUserActionListener.refreshAll(true);
+        if (mViewType == ViewType.LIST)
+        {
+            if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+            {
+                searchMyLocation();
+            }
+        } else if (mViewType == ViewType.MAP)
+        {
+            GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (gourmetListFragment != null)
+            {
+                gourmetListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
     }
 
     @Override
-    public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights)
+    public void onPrepareOptionsMenu(Menu menu)
     {
-        mOnGourmetUserActionListener.selectPlace(index, dailyTime, dailyDayOfDays, nights);
+        switch (mViewType)
+        {
+            case LIST:
+                mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, -1);
+                break;
+
+            case MAP:
+                mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_list, -1);
+                break;
+
+            default:
+                mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
+                break;
+        }
     }
 
-    @Override
-    public void makeTabLayout()
+    public void makeDateTabLayout()
     {
-        SaleTime[] tabSaleTime = null;
-
-        tabSaleTime = new SaleTime[TAB_COUNT];
+        SaleTime[] tabSaleTime = new SaleTime[TAB_COUNT];
+        SaleTime saleTime;
+        GourmetListFragment gourmetListFragment;
 
         for (int i = 0; i < TAB_COUNT; i++)
         {
-            GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(i);
+            gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(i);
 
-            SaleTime saleTime = mTodaySaleTime.getClone(i);
+            saleTime = mTodaySaleTime.getClone(i);
             tabSaleTime[i] = saleTime;
 
             gourmetListFragment.setSaleTime(saleTime);
@@ -417,11 +480,303 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         for (int i = 0; i < TAB_COUNT; i++)
         {
-            String day = dayList.get(i);
-            mTabLayout.getTabAt(i).setText(day);
+            mTabLayout.getTabAt(i).setText(dayList.get(i));
         }
 
         FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+    }
+
+    private void setSortType(SortType sortType)
+    {
+        if (sortType == null)
+        {
+            sortType = SortType.DEFAULT;
+        }
+
+        mCurationOption.setSortType(sortType);
+    }
+
+    private void setProvince(Province province)
+    {
+        if (province == null)
+        {
+            return;
+        }
+
+        mCurationOption.setProvince(province);
+    }
+
+    private void clearCurationOption()
+    {
+        if (mCurationOption == null)
+        {
+            return;
+        }
+
+        mCurationOption.clear();
+    }
+
+    private void curationCurrentFragment()
+    {
+        updateFilteredFloatingActionButton();
+
+        GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+        gourmetListFragment.curationList(mViewType, mCurationOption);
+    }
+
+    public void refreshCurrentFragment()
+    {
+        GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+        gourmetListFragment.refreshList();
+    }
+
+    private void updateFilteredFloatingActionButton()
+    {
+        if (mCurationOption.isDefaultFilter() == true)
+        {
+            mFloatingActionView.setSelected(false);
+        } else
+        {
+            mFloatingActionView.setSelected(true);
+        }
+    }
+
+    private void refreshCurrentFragment(Province province)
+    {
+        if (province == null)
+        {
+            return;
+        }
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        setProvince(province);
+
+        mDailyToolbarLayout.setToolbarRegionText(province.name);
+        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+
+        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
+
+        if (province.name.equalsIgnoreCase(savedRegion) == false)
+        {
+            DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+            DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+        }
+
+        refreshCurrentFragment();
+    }
+
+    private void searchMyLocation()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUI();
+
+        LocationFactory.getInstance(baseActivity).startLocationMeasure(baseActivity, null, new LocationFactory.LocationListenerEx()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                if (Util.isOverAPI23() == true)
+                {
+                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                }
+
+                unLockUI();
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+
+                //                recordAnalyticsSortTypeEvent(getContext(), mSortType);
+
+                if (Util.isOverAPI23() == true)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null || baseActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps_android6)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mCurationOption.restoreSortType();
+                            curationCurrentFragment();
+                        }
+                    }, true);
+                } else
+                {
+                    mCurationOption.restoreSortType();
+                    curationCurrentFragment();
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+                unLockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mCurationOption.restoreSortType();
+                        curationCurrentFragment();
+
+                        //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
+                    }
+                }, false);
+            }
+
+            @Override
+            public void onLocationChanged(Location location)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    unLockUI();
+                    return;
+                }
+
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                mCurationOption.setLocation(location);
+
+                if (mCurationOption.getSortType() == SortType.DISTANCE)
+                {
+                    curationCurrentFragment();
+                }
+
+                unLockUI();
+            }
+        });
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Deep Link
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void deepLinkDetail(BaseActivity baseActivity)
+    {
+        try
+        {
+            // 신규 타입의 화면이동
+            int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            long dailyTime = mTodaySaleTime.getDailyTime();
+            int nights = 1;
+
+            String date = DailyDeepLink.getInstance().getDate();
+            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+            Date schemeDate = format.parse(date);
+            Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+            if (dailyDayOfDays < 0)
+            {
+                throw new NullPointerException("dailyDayOfDays < 0");
+            }
+
+            mOnCommunicateListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
+
+            DailyDeepLink.getInstance().clear();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+
+            DailyDeepLink.getInstance().clear();
+
+            //탭에 들어갈 날짜를 만든다.
+            makeDateTabLayout();
+
+            // 지역 리스트를 가져온다
+            DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+        }
+    }
+
+    private void deepLinkEventBannerWeb(BaseActivity baseActivity)
+    {
+        String url = DailyDeepLink.getInstance().getUrl();
+        DailyDeepLink.getInstance().clear();
+
+        if (Util.isTextEmpty(url) == false)
+        {
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url);
+            startActivity(intent);
+        } else
+        {
+            //탭에 들어갈 날짜를 만든다.
+            makeDateTabLayout();
+
+            // 지역 리스트를 가져온다
+            DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+        }
     }
 
     private Province searchDeeLinkRegion(ArrayList<Province> provinceList, ArrayList<Area> areaList)
@@ -488,15 +843,16 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
         if (selectedProvince == null)
         {
-            selectedProvince = mSelectedProvince;
+            selectedProvince = mCurationOption.getProvince();
+        } else
+        {
+            setProvince(selectedProvince);
         }
-
-        setNavigationItemSelected(selectedProvince);
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
-        Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.FNB, selectedProvince);
+        Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.FNB, selectedProvince);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
@@ -509,14 +865,15 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
         Province selectedProvince = searchDeeLinkRegion(provinceList, areaList);
 
-        if (selectedProvince != null)
+        if (selectedProvince == null)
         {
-            mSelectedProvince = selectedProvince;
+            selectedProvince = mCurationOption.getProvince();
+        } else
+        {
+            setProvince(selectedProvince);
         }
 
-        setNavigationItemSelected(mSelectedProvince);
-
-        mDailyToolbarLayout.setToolbarRegionText(mSelectedProvince.name);
+        mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
 
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
@@ -538,7 +895,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 if (dailyDayOfDays >= 0)
                 {
                     SaleTime selectedSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
-                    mOnGourmetUserActionListener.selectDay(selectedSaleTime, true);
+                    mOnCommunicateListener.selectDay(selectedSaleTime, true);
                 }
             } catch (Exception e)
             {
@@ -547,18 +904,18 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 mViewPager.setCurrentItem(0);
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-                onNavigationItemSelected(mSelectedProvince, true);
+                refreshCurrentFragment(selectedProvince);
             }
         } else
         {
-            onNavigationItemSelected(mSelectedProvince, true);
+            refreshCurrentFragment(selectedProvince);
         }
 
         DailyDeepLink.getInstance().clear();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UserActionListener
+    // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private View.OnClickListener mToolbarOptionsItemSelected = new View.OnClickListener()
@@ -588,7 +945,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
                     if (isInstalledGooglePlayServices == true)
                     {
-                        mOnGourmetUserActionListener.toggleViewType();
+                        mOnCommunicateListener.toggleViewType();
 
                         baseActivity.invalidateOptionsMenu();
                     }
@@ -601,28 +958,17 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
                     if (isInstalledGooglePlayServices == true)
                     {
-                        mOnGourmetUserActionListener.toggleViewType();
+                        mOnCommunicateListener.toggleViewType();
 
                         baseActivity.invalidateOptionsMenu();
                     }
                     break;
                 }
-
-                case R.drawable.navibar_ic_sorting_01:
-                case R.drawable.navibar_ic_sorting_02:
-                case R.drawable.navibar_ic_sorting_03:
-                case R.drawable.navibar_ic_sorting_04:
-                {
-                    GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-                    currentFragment.showSortDialogView();
-                    break;
-                }
             }
 
-            mOnGourmetUserActionListener.expandedAppBar(true, true);
+            mOnCommunicateListener.expandedAppBar(true, true);
         }
     };
-
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
@@ -638,13 +984,13 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 mViewPager.setCurrentItem(tab.getPosition());
             }
 
-            mOnGourmetUserActionListener.expandedAppBar(true, true);
+            mOnCommunicateListener.expandedAppBar(true, true);
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected(true);
+            fragment.onPageSelected();
 
-            mOnGourmetUserActionListener.refreshAll(true);
+            mOnCommunicateListener.refreshAll(true);
 
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -673,11 +1019,11 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 return;
             }
 
-            mOnGourmetUserActionListener.expandedAppBar(true, true);
+            mOnCommunicateListener.expandedAppBar(true, true);
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected(true);
+            fragment.onPageSelected();
 
             //            if (mSelectedProvince != null)
             //            {
@@ -690,7 +1036,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         }
     };
 
-    private OnUserActionListener mOnGourmetUserActionListener = new OnUserActionListener()
+    private OnCommunicateListener mOnCommunicateListener = new OnCommunicateListener()
     {
         @Override
         public void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime)
@@ -721,9 +1067,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 {
                     Gourmet gourmet = baseListViewItem.<Gourmet>getItem();
 
-                    String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
-
-
+                    String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
                     DailyPreference.getInstance(baseActivity).setGASelectedPlaceRegion(region);
                     DailyPreference.getInstance(baseActivity).setGASelectedPlaceName(gourmet.name);
 
@@ -741,7 +1085,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                     break;
                 }
 
-                case PlaceViewItem.TYPE_SECTION:
                 default:
                     unLockUI();
                     break;
@@ -766,7 +1109,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             lockUI();
 
             Intent intent = new Intent(baseActivity, GourmetDetailActivity.class);
-
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
@@ -792,8 +1134,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             mTabLayout.getTabAt(2).setText(checkInDay);
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
-            refreshList(mSelectedProvince, isListSelectionTop);
-
+            refreshCurrentFragment();
             releaseUiComponent();
         }
 
@@ -861,37 +1202,36 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
             lockUI();
 
-            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-            if (currentFragment.hasSalesPlace() == false)
-            {
-                unLockUI();
-
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null)
-                {
-                    return;
-                }
-
-                DailyToast.showToast(baseActivity, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
-                return;
-            }
 
             switch (mViewType)
             {
                 case LIST:
-                    mViewType = VIEW_TYPE.MAP;
+                {
+                    // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
+                    if (currentFragment.hasSalesPlace() == false)
+                    {
+                        unLockUI();
+
+                        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                        if (baseActivity == null)
+                        {
+                            return;
+                        }
+
+                        DailyToast.showToast(baseActivity, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    mViewType = ViewType.MAP;
                     AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP, null);
                     break;
+                }
 
                 case MAP:
-                    mViewType = VIEW_TYPE.LIST;
+                    mViewType = ViewType.LIST;
                     AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, null);
-                    break;
-
-                default:
                     break;
             }
 
@@ -902,14 +1242,16 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             {
                 boolean isCurrentFragment = placeListFragment == currentFragment;
 
-                placeListFragment.setViewType(mViewType, isCurrentFragment);
+                placeListFragment.setVisibility(mViewType, isCurrentFragment);
             }
+
+            currentFragment.curationList(mViewType, mCurationOption);
 
             unLockUI();
         }
 
         @Override
-        public void selectSortType(SortType sortType)
+        public void setScrollListTop(boolean scrollListTop)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -918,44 +1260,10 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                 return;
             }
 
-            for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
+            for (GourmetListFragment gourmetListFragment : mFragmentPagerAdapter.getFragmentList())
             {
-                placeListFragment.setSortType(sortType);
+                gourmetListFragment.setScrollListTop(scrollListTop);
             }
-
-            baseActivity.invalidateOptionsMenu();
-        }
-
-        @Override
-        public void setLocation(Location location)
-        {
-            for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
-            {
-                placeListFragment.setLocation(location);
-            }
-        }
-
-        @Override
-        public void onClickActionBarArea()
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            Intent intent = RegionListActivity.newInstance(baseActivity, TYPE.FNB, mSelectedProvince);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
-        }
-
-        @Override
-        public void setMapViewVisible(boolean isVisible)
-        {
-            mMapEnabled = isVisible;
-            setMenuEnabled(isVisible);
         }
 
         @Override
@@ -973,9 +1281,23 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
         }
 
         @Override
+        public void refreshCompleted()
+        {
+            mFloatingActionView.setTag("completed");
+        }
+
+        @Override
         public void expandedAppBar(boolean expanded, boolean animate)
         {
             mAppBarLayout.setExpanded(expanded, animate);
+
+            if (expanded == true)
+            {
+                showFloatingActionButton();
+            } else
+            {
+                hideFloatingActionButton();
+            }
         }
 
         @Override
@@ -1020,12 +1342,13 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
             AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 
-            if (params != null &&//
-                params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
+            if (params != null && params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
             {
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
                 toolbar.setLayoutParams(params);
             }
+
+            hideFloatingActionButton();
         }
 
         @Override
@@ -1045,12 +1368,52 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
 
             AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 
-            if (params != null &&//
-                params.getScrollFlags() != 0)
+            if (params != null && params.getScrollFlags() != 0)
             {
                 params.setScrollFlags(0);
                 toolbar.setLayoutParams(params);
             }
+
+            showFloatingActionButton();
+        }
+
+        @Override
+        public void showFloatingActionButton()
+        {
+            if(mFloatingActionView.getTag() == null)
+            {
+                return;
+            }
+
+            if (mFloatingActionView.getVisibility() != View.GONE)
+            {
+                return;
+            }
+
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
+            DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
+
+            dailyFloatingActionButtonBehavior.show(mFloatingActionView);
+        }
+
+        @Override
+        public void hideFloatingActionButton()
+        {
+            if (mFloatingActionView.getVisibility() == View.GONE)
+            {
+                return;
+            }
+
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
+            DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
+
+            dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
+        }
+
+        @Override
+        public GourmetCurationOption getCurationOption()
+        {
+            return mCurationOption;
         }
     };
 
@@ -1058,14 +1421,157 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    protected DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            try
+            {
+                mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
+                mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                if (DailyDeepLink.getInstance().isValidateLink() == true //
+                    && processDeepLink(baseActivity) == true)
+                {
+
+                } else
+                {
+                    //탭에 들어갈 날짜를 만든다.
+                    makeDateTabLayout();
+
+                    // 지역 리스트를 가져온다
+                    DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                unLockUI();
+            }
+        }
+
+        private boolean processDeepLink(BaseActivity baseActivity)
+        {
+            if (DailyDeepLink.getInstance().isGourmetDetailView() == true)
+            {
+                unLockUI();
+                deepLinkDetail(baseActivity);
+                return true;
+            } else if (DailyDeepLink.getInstance().isGourmetEventBannerWebView() == true)
+            {
+                unLockUI();
+                deepLinkEventBannerWeb(baseActivity);
+                return true;
+            } else
+            {
+                // 더이상 진입은 없다.
+                if (DailyDeepLink.getInstance().isGourmetListView() == false//
+                    && DailyDeepLink.getInstance().isGourmetRegionListView() == false)
+                {
+                    DailyDeepLink.getInstance().clear();
+                }
+            }
+
+            return false;
+        }
+    };
+
     private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                    ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+
+                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+
+                    Province selectedProvince = mCurationOption.getProvince();
+
+                    if (selectedProvince == null)
+                    {
+                        selectedProvince = searchLastRegion(baseActivity, provinceList, areaList);
+                    }
+
+                    // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
+                    if (selectedProvince == null)
+                    {
+                        selectedProvince = provinceList.get(0);
+                    }
+
+                    boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(PlaceType.FNB);
+                    DailyPreference.getInstance(baseActivity).setSettingRegion(PlaceType.FNB, true);
+
+                    // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
+                    if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+                    {
+                        int provinceIndex = ((Area) selectedProvince).getProvinceIndex();
+
+                        for (Province province : provinceList)
+                        {
+                            if (province.getProvinceIndex() == provinceIndex)
+                            {
+                                selectedProvince = province;
+                                break;
+                            }
+                        }
+                    }
+
+                    setProvince(selectedProvince);
+
+                    if (DailyDeepLink.getInstance().isValidateLink() == true//
+                        && processDeepLink(baseActivity, provinceList, areaList) == true)
+                    {
+
+                    } else
+                    {
+                        refreshCurrentFragment(selectedProvince);
+                    }
+                } else
+                {
+                    String message = response.getString("msg");
+
+                    onInternalError(message);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+                unLockUI();
+            }
+        }
+
         private Province searchLastRegion(BaseActivity baseActivity, ArrayList<Province> provinceList, ArrayList<Area> areaList)
         {
             Province selectedProvince = null;
 
             // 마지막으로 선택한 지역을 가져온다.
-            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(TYPE.FNB);
+            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
 
             if (Util.isTextEmpty(regionName) == true)
             {
@@ -1093,6 +1599,7 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
                             {
                                 if (area.getProvinceIndex() == province.index)
                                 {
+                                    area.isOverseas = province.isOverseas;
                                     area.setProvince(province);
                                     break;
                                 }
@@ -1126,115 +1633,6 @@ public class GourmetMainFragment extends PlaceMainFragment implements AppBarLayo
             }
 
             return false;
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || baseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                int msg_code = response.getInt("msgCode");
-
-                if (msg_code == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                    ArrayList<Province> provinceList = makeProvinceList(provinceArray);
-
-                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
-
-                    Province selectedProvince = null;
-
-                    if (mSelectedProvince != null)
-                    {
-                        selectedProvince = mSelectedProvince;
-                    } else
-                    {
-                        selectedProvince = searchLastRegion(baseActivity, provinceList, areaList);
-                    }
-
-                    // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
-                    if (selectedProvince == null)
-                    {
-                        selectedProvince = provinceList.get(0);
-                    }
-
-                    boolean mIsProvinceSetting = DailyPreference.getInstance(baseActivity).isSettingRegion(TYPE.FNB);
-                    DailyPreference.getInstance(baseActivity).setSettingRegion(TYPE.FNB, true);
-
-                    // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
-                    if (mIsProvinceSetting == false && selectedProvince instanceof Area)
-                    {
-                        int provinceIndex = ((Area) selectedProvince).getProvinceIndex();
-
-                        for (Province province : provinceList)
-                        {
-                            if (province.getProvinceIndex() == provinceIndex)
-                            {
-                                selectedProvince = province;
-                                break;
-                            }
-                        }
-                    }
-
-                    mSelectedProvince = selectedProvince;
-
-                    if (DailyDeepLink.getInstance().isValidateLink() == true//
-                        && processDeepLink(baseActivity, provinceList, areaList) == true)
-                    {
-
-                    } else
-                    {
-                        boolean isSelectionTop = isSelectionTop();
-                        onNavigationItemSelected(selectedProvince, isSelectionTop);
-                    }
-                } else
-                {
-                    String message = response.getString("msg");
-
-                    onInternalError(message);
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-                unLockUI();
-            }
-        }
-
-        private boolean isSelectionTop()
-        {
-            boolean isSelectionTop = false;
-
-            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
-            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-            for (GourmetListFragment gourmetListFragment : mFragmentPagerAdapter.getFragmentList())
-            {
-                if (gourmetListFragment == currentFragment)
-                {
-                    Province province = gourmetListFragment.getProvince();
-
-                    if (province == null || mSelectedProvince.index != province.index || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
-                    {
-                        isSelectionTop = true;
-                        break;
-                    }
-                }
-            }
-
-            return isSelectionTop;
         }
 
         private ArrayList<Area> makeAreaList(JSONArray jsonArray) throws JSONException

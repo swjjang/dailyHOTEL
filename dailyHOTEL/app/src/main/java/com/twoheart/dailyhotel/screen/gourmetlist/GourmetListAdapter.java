@@ -217,7 +217,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         String strPrice = comma.format(price);
         String strDiscount = comma.format(gourmet.discountPrice);
 
-        String address = gourmet.address;
+        String address = gourmet.addressSummary;
 
         if (address.indexOf('|') >= 0)
         {
