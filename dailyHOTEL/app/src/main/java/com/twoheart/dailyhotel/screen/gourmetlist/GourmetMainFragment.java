@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -67,7 +66,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     private ViewPager mViewPager;
     private GourmetFragmentPagerAdapter mFragmentPagerAdapter;
     private DailyToolbarLayout mDailyToolbarLayout;
-    private FloatingActionButton mFloatingActionButton;
+    private View mFloatingActionView;
 
     private SaleTime mTodaySaleTime;
 
@@ -205,9 +204,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private void initFloatingActionButton(View view)
     {
-        mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
-        mFloatingActionButton.setVisibility(View.INVISIBLE);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+        mFloatingActionView = view.findViewById(R.id.floatingActionView);
+        mFloatingActionView.setVisibility(View.INVISIBLE);
+        mFloatingActionView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -246,14 +245,19 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
             currentFragment.resetScrollDistance(false);
 
-        } else if (verticalOffset == 0 && mIsHideAppBarlayout == false)
+        } else if (verticalOffset == 0)
         {
-            mOnCommunicateListener.pinAppBarLayout();
-            mIsHideAppBarlayout = true;
+            if (mIsHideAppBarlayout == true)
+            {
+                mOnCommunicateListener.showFloatingActionButton();
+            } else
+            {
+                mOnCommunicateListener.pinAppBarLayout();
+                mIsHideAppBarlayout = true;
 
-            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-            currentFragment.resetScrollDistance(true);
-
+                GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                currentFragment.resetScrollDistance(true);
+            }
         } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
         {
             mIsHideAppBarlayout = false;
@@ -315,6 +319,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     clearCurationOption();
+                    updateFilteredFloatingActionButton();
                     mOnCommunicateListener.setScrollListTop(true);
 
                     if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
@@ -511,6 +516,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private void curationCurrentFragment()
     {
+        updateFilteredFloatingActionButton();
+
         GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
         gourmetListFragment.curationList(mViewType, mCurationOption);
     }
@@ -521,7 +528,18 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         gourmetListFragment.refreshList();
     }
 
-    public void refreshCurrentFragment(Province province)
+    private void updateFilteredFloatingActionButton()
+    {
+        if (mCurationOption.isDefaultFilter() == true)
+        {
+            mFloatingActionView.setSelected(false);
+        } else
+        {
+            mFloatingActionView.setSelected(true);
+        }
+    }
+
+    private void refreshCurrentFragment(Province province)
     {
         if (province == null)
         {
@@ -609,11 +627,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         public void onClick(View v)
                         {
                             mCurationOption.restoreSortType();
+                            curationCurrentFragment();
                         }
                     }, true);
                 } else
                 {
                     mCurationOption.restoreSortType();
+                    curationCurrentFragment();
                 }
             }
 
@@ -664,6 +684,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     public void onClick(View v)
                     {
                         mCurationOption.restoreSortType();
+                        curationCurrentFragment();
 
                         //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
                     }
@@ -1318,9 +1339,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             {
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
                 toolbar.setLayoutParams(params);
-
-                hideFloatingActionButton();
             }
+
+            hideFloatingActionButton();
         }
 
         @Override
@@ -1344,21 +1365,21 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             {
                 params.setScrollFlags(0);
                 toolbar.setLayoutParams(params);
-
-                showFloatingActionButton();
             }
+
+            showFloatingActionButton();
         }
 
         @Override
         public void showFloatingActionButton()
         {
-            if (mFloatingActionButton.getVisibility() == View.INVISIBLE)
+            if (mFloatingActionView.getVisibility() == View.INVISIBLE)
             {
-                mFloatingActionButton.setVisibility(View.GONE);
+                mFloatingActionView.setVisibility(View.GONE);
                 return;
             }
 
-            if (mFloatingActionButton.getVisibility() != View.GONE)
+            if (mFloatingActionView.getVisibility() != View.GONE)
             {
                 return;
             }
@@ -1374,25 +1395,25 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
             if (params != null && params.getScrollFlags() == 0)
             {
-                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionButton.getLayoutParams();
+                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
                 DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-                dailyFloatingActionButtonBehavior.show(mFloatingActionButton);
+                dailyFloatingActionButtonBehavior.show(mFloatingActionView);
             }
         }
 
         @Override
         public void hideFloatingActionButton()
         {
-            if (mFloatingActionButton.getVisibility() == View.GONE)
+            if (mFloatingActionView.getVisibility() == View.GONE)
             {
                 return;
             }
 
-            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionButton.getLayoutParams();
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
             DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-            dailyFloatingActionButtonBehavior.hide(mFloatingActionButton);
+            dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
         }
 
         @Override

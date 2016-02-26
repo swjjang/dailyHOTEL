@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.view.widget;
 import android.content.Context;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -15,7 +14,7 @@ import android.view.animation.Interpolator;
 
 import com.twoheart.dailyhotel.R;
 
-public class DailyFloatingActionButtonBehavior extends FloatingActionButton.Behavior
+public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavior
 {
     private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
     private boolean mIsAnimatingOut = false;
@@ -25,31 +24,16 @@ public class DailyFloatingActionButtonBehavior extends FloatingActionButton.Beha
         super();
     }
 
-    @Override
-    public boolean onStartNestedScroll(final CoordinatorLayout coordinatorLayout, final FloatingActionButton child//
-        , final View directTargetChild, final View target, final int nestedScrollAxes)
+    public void hide(final View view)
     {
-        // Ensure we react to vertical scrolling
-        return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL || super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
-    }
-
-    @Override
-    public void onNestedScroll(final CoordinatorLayout coordinatorLayout, final FloatingActionButton child//
-        , final View target, final int dxConsumed, final int dyConsumed, final int dxUnconsumed, final int dyUnconsumed)
-    {
-        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-    }
-
-    public void hide(final FloatingActionButton button)
-    {
-        if (button.getVisibility() == View.GONE || mIsAnimatingOut == true)
+        if (view.getVisibility() == View.GONE || mIsAnimatingOut == true)
         {
             return;
         }
 
         if (Build.VERSION.SDK_INT >= 14)
         {
-            ViewCompat.animate(button).scaleX(0.0F).scaleY(0.0F).alpha(0.0F).setInterpolator(INTERPOLATOR).withLayer().setListener(new ViewPropertyAnimatorListener()
+            ViewCompat.animate(view).scaleX(0.0F).scaleY(0.0F).alpha(0.0F).setInterpolator(INTERPOLATOR).withLayer().setListener(new ViewPropertyAnimatorListener()
             {
                 public void onAnimationStart(View view)
                 {
@@ -69,7 +53,7 @@ public class DailyFloatingActionButtonBehavior extends FloatingActionButton.Beha
             }).start();
         } else
         {
-            Animation anim = AnimationUtils.loadAnimation(button.getContext(), R.anim.scale_fade_out);
+            Animation anim = AnimationUtils.loadAnimation(view.getContext(), R.anim.scale_fade_out);
             anim.setInterpolator(INTERPOLATOR);
             anim.setDuration(200L);
             anim.setAnimationListener(new Animation.AnimationListener()
@@ -82,7 +66,7 @@ public class DailyFloatingActionButtonBehavior extends FloatingActionButton.Beha
                 public void onAnimationEnd(Animation animation)
                 {
                     mIsAnimatingOut = false;
-                    button.setVisibility(View.GONE);
+                    view.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -90,27 +74,27 @@ public class DailyFloatingActionButtonBehavior extends FloatingActionButton.Beha
                 {
                 }
             });
-            button.startAnimation(anim);
+            view.startAnimation(anim);
         }
     }
 
-    public void show(FloatingActionButton button)
+    public void show(View view)
     {
-        if (button.getVisibility() == View.VISIBLE)
+        if (view.getVisibility() == View.VISIBLE)
         {
             return;
         }
 
-        button.setVisibility(View.VISIBLE);
+        view.setVisibility(View.VISIBLE);
         if (Build.VERSION.SDK_INT >= 14)
         {
-            ViewCompat.animate(button).scaleX(1.0F).scaleY(1.0F).alpha(1.0F).setInterpolator(INTERPOLATOR).withLayer().setListener(null).start();
+            ViewCompat.animate(view).scaleX(1.0F).scaleY(1.0F).alpha(1.0F).setInterpolator(INTERPOLATOR).withLayer().setListener(null).start();
         } else
         {
-            Animation anim = AnimationUtils.loadAnimation(button.getContext(), R.anim.scale_fade_in);
+            Animation anim = AnimationUtils.loadAnimation(view.getContext(), R.anim.scale_fade_in);
             anim.setDuration(200L);
             anim.setInterpolator(INTERPOLATOR);
-            button.startAnimation(anim);
+            view.startAnimation(anim);
         }
     }
 }

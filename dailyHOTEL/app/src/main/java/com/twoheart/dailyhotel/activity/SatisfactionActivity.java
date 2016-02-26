@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;

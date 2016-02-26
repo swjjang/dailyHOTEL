@@ -620,18 +620,21 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     private List<Gourmet> curationCategory(List<Gourmet> list, Map<String, Integer> categoryMap)
     {
+        List<Gourmet> filteredCategoryList = new ArrayList<>(list.size());
+
         if (categoryMap == null || categoryMap.size() == 0)
         {
-            return list;
-        }
+            filteredCategoryList.addAll(list);
 
-        List<Gourmet> filteredCategoryList = new ArrayList<>(list);
-
-        for (Gourmet gourmet : list)
+            return filteredCategoryList;
+        } else
         {
-            if (categoryMap.containsKey(gourmet.category) == true)
+            for (Gourmet gourmet : list)
             {
-                filteredCategoryList.add(gourmet);
+                if (categoryMap.containsKey(gourmet.category) == true)
+                {
+                    filteredCategoryList.add(gourmet);
+                }
             }
         }
 
@@ -925,7 +928,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0)
+                if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
@@ -955,30 +958,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     } else
                     {
                         ArrayList<Gourmet> gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
-
-                        HashMap<String, Integer> categoryMap = new HashMap<>(12);
-                        HashMap<String, Integer> categoryIconMap = new HashMap<>(12);
-
-                        Integer categoryCount;
-
-                        // 필터 정보 넣기
-                        for (Gourmet gourmet : gourmetList)
-                        {
-                            categoryCount = categoryMap.get(gourmet.category);
-
-                            if (categoryCount == null)
-                            {
-                                categoryMap.put(gourmet.category, 1);
-                                categoryIconMap.put(gourmet.category, gourmet.categoryIcon);
-                            } else
-                            {
-                                categoryMap.put(gourmet.category, categoryCount.intValue() + 1);
-                            }
-                        }
-
                         GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
-                        gourmetCurationOption.setCategoryMap(categoryMap);
-                        gourmetCurationOption.setCategoryIconrMap(categoryIconMap);
+                        setFilterInformation(gourmetList, gourmetCurationOption);
 
                         // 기본적으로 보관한다.
                         mGourmetList.addAll(gourmetList);
@@ -1003,6 +984,32 @@ public class GourmetListFragment extends BaseFragment implements Constants
             {
                 unLockUI();
             }
+        }
+
+        private void setFilterInformation(ArrayList<Gourmet> gourmetList, GourmetCurationOption curationOption)
+        {
+            HashMap<String, Integer> categoryMap = new HashMap<>(12);
+            HashMap<String, Integer> categoryIconMap = new HashMap<>(12);
+
+            Integer categoryCount;
+
+            // 필터 정보 넣기
+            for (Gourmet gourmet : gourmetList)
+            {
+                categoryCount = categoryMap.get(gourmet.category);
+
+                if (categoryCount == null)
+                {
+                    categoryMap.put(gourmet.category, 1);
+                    categoryIconMap.put(gourmet.category, gourmet.categoryCode);
+                } else
+                {
+                    categoryMap.put(gourmet.category, categoryCount.intValue() + 1);
+                }
+            }
+
+            curationOption.setCategoryMap(categoryMap);
+            curationOption.setCategoryIconrMap(categoryIconMap);
         }
 
         private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -1031,8 +1038,5 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             return gourmetList;
         }
-
-
     };
-
 }

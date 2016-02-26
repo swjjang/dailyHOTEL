@@ -28,7 +28,9 @@
         android:layout_height="70dp"
         android:layout_alignParentRight="true"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <View
             android:layout_width="match_parent"
@@ -95,14 +97,16 @@
         android:layout_height="70dp"
         android:layout_alignParentRight="true"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/doubleCheckView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:drawableTop="@drawable/f_ic_hotel_bed_01"
             android:gravity="center_horizontal"
             android:text="@string/label_double"
             android:textColor="@drawable/selector_curation_textcolor"
@@ -113,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:drawableTop="@drawable/f_ic_hotel_bed_01"
             android:gravity="center_horizontal"
             android:text="@string/label_twin"
             android:textColor="@drawable/selector_curation_textcolor"
@@ -124,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/navibar_ic_sorting_01"
+            android:drawableTop="@drawable/f_ic_hotel_bed_01"
             android:gravity="center_horizontal"
             android:text="@string/label_heatedfloors"
             android:textColor="@drawable/selector_curation_textcolor"

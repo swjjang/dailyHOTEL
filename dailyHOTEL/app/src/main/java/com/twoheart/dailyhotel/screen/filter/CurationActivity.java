@@ -172,7 +172,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         if (viewType == ViewType.MAP)
         {
-            setDisabledSortView(sortLayout);
+            setDisabledSortView(view, sortLayout);
             return;
         }
 
@@ -347,7 +347,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         if (viewType == ViewType.MAP)
         {
-            setDisabledSortView(sortLayout);
+            setDisabledSortView(view, sortLayout);
             return;
         }
 
@@ -520,10 +520,25 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
     private int getCategoryResourceId(int index)
     {
-        return R.drawable.navibar_ic_sorting_01;
+        final int[] resourceIndex = new int[]{R.drawable.f_ic_hotel_bed_01//
+            , R.drawable.f_ic_hotel_bed_01//
+            , R.drawable.f_ic_hotel_bed_01//
+            , R.drawable.f_ic_hotel_bed_01//
+            , R.drawable.f_ic_hotel_bed_01//
+            , R.drawable.f_ic_hotel_bed_01//
+            , R.drawable.f_ic_hotel_bed_01//
+            , R.drawable.f_ic_hotel_bed_01//
+            , R.drawable.f_ic_hotel_bed_01};
+
+        if (index < 1 || index >= resourceIndex.length)
+        {
+            index = 0;
+        }
+
+        return resourceIndex[index];
     }
 
-    private void setDisabledSortView(RadioGroup sortLayout)
+    private void setDisabledSortView(View view, RadioGroup sortLayout)
     {
         if (sortLayout == null)
         {
@@ -538,6 +553,9 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         {
             sortLayout.getChildAt(i).setEnabled(false);
         }
+
+        View dimView = view.findViewById(R.id.dimView);
+        dimView.setVisibility(View.VISIBLE);
     }
 
     @Override

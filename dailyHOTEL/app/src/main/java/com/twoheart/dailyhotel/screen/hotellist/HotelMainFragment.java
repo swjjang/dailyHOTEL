@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -69,7 +68,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private ViewPager mViewPager;
     private HotelFragmentPagerAdapter mFragmentPagerAdapter;
     private DailyToolbarLayout mDailyToolbarLayout;
-    private FloatingActionButton mFloatingActionButton;
+    private View mFloatingActionView;
 
     private SaleTime mTodaySaleTime;
 
@@ -210,9 +209,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private void initFloatingActionButton(View view)
     {
-        mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
-        mFloatingActionButton.setVisibility(View.INVISIBLE);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+        mFloatingActionView = view.findViewById(R.id.floatingActionView);
+        mFloatingActionView.setVisibility(View.INVISIBLE);
+        mFloatingActionView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -243,6 +242,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
     {
+        ExLog.d("verticalOffset : " + verticalOffset + ", " + mIsHideAppBarlayout);
+
         if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
         {
             mOnCommunicateListener.hideAppBarLayout();
@@ -251,14 +252,19 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
             currentFragment.resetScrollDistance(false);
 
-        } else if (verticalOffset == 0 && mIsHideAppBarlayout == false)
+        } else if (verticalOffset == 0)
         {
-            mOnCommunicateListener.pinAppBarLayout();
-            mIsHideAppBarlayout = true;
+            if (mIsHideAppBarlayout == true)
+            {
+                mOnCommunicateListener.showFloatingActionButton();
+            } else
+            {
+                mOnCommunicateListener.pinAppBarLayout();
+                mIsHideAppBarlayout = true;
 
-            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-            currentFragment.resetScrollDistance(true);
-
+                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                currentFragment.resetScrollDistance(true);
+            }
         } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
         {
             mIsHideAppBarlayout = false;
@@ -320,6 +326,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     clearCurationOption();
+                    updateFilteredFloatingActionButton();
                     mOnCommunicateListener.setScrollListTop(true);
 
                     if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
@@ -682,6 +689,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private void curationCurrentFragment()
     {
+        updateFilteredFloatingActionButton();
+
         HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
         currentFragment.curationList(mViewType, mCurationOption);
     }
@@ -690,6 +699,17 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     {
         HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
         currentFragment.refreshList();
+    }
+
+    private void updateFilteredFloatingActionButton()
+    {
+        if (mCurationOption.isDefaultFilter() == true)
+        {
+            mFloatingActionView.setSelected(false);
+        } else
+        {
+            mFloatingActionView.setSelected(true);
+        }
     }
 
     private void refreshCurrentFragment(Province province)
@@ -1547,9 +1567,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
                 toolbar.setLayoutParams(params);
-
-                hideFloatingActionButton();
             }
+
+            hideFloatingActionButton();
         }
 
         @Override
@@ -1573,21 +1593,21 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 params.setScrollFlags(0);
                 toolbar.setLayoutParams(params);
-
-                showFloatingActionButton();
             }
+
+            showFloatingActionButton();
         }
 
         @Override
         public void showFloatingActionButton()
         {
-            if (mFloatingActionButton.getVisibility() == View.INVISIBLE)
+            if (mFloatingActionView.getVisibility() == View.INVISIBLE)
             {
-                mFloatingActionButton.setVisibility(View.GONE);
+                mFloatingActionView.setVisibility(View.GONE);
                 return;
             }
 
-            if (mFloatingActionButton.getVisibility() != View.GONE)
+            if (mFloatingActionView.getVisibility() != View.GONE)
             {
                 return;
             }
@@ -1603,25 +1623,25 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             if (params != null && params.getScrollFlags() == 0)
             {
-                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionButton.getLayoutParams();
+                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
                 DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-                dailyFloatingActionButtonBehavior.show(mFloatingActionButton);
+                dailyFloatingActionButtonBehavior.show(mFloatingActionView);
             }
         }
 
         @Override
         public void hideFloatingActionButton()
         {
-            if (mFloatingActionButton.getVisibility() == View.GONE)
+            if (mFloatingActionView.getVisibility() == View.GONE)
             {
                 return;
             }
 
-            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionButton.getLayoutParams();
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
             DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-            dailyFloatingActionButtonBehavior.hide(mFloatingActionButton);
+            dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
         }
 
         @Override

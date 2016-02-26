@@ -13,10 +13,9 @@ import java.util.Iterator;
 
 public class Gourmet extends Place implements Parcelable
 {
-    public String saleDay;
     public int persons;
     public String category;
-    public int categoryIcon;
+    public int categoryCode;
     public float distance;
 
     public Gourmet()
@@ -34,7 +33,6 @@ public class Gourmet extends Place implements Parcelable
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeString(saleDay);
         dest.writeInt(persons);
     }
 
@@ -42,7 +40,6 @@ public class Gourmet extends Place implements Parcelable
     {
         super.readFromParcel(in);
 
-        saleDay = in.readString();
         persons = in.readInt();
     }
 
@@ -51,16 +48,17 @@ public class Gourmet extends Place implements Parcelable
     {
         try
         {
-            index = jsonObject.getInt("restaurant_idx");
-            name = jsonObject.getString("restaurant_name");
+            index = jsonObject.getInt("restaurantIdx");
+            name = jsonObject.getString("restaurantName");
 
             price = jsonObject.getInt("price");
             discountPrice = jsonObject.getInt("discount");
-            address = jsonObject.getString("addr_summary");
+            addressSummary = jsonObject.getString("addrSummary");
             grade = Grade.gourmet;
-            districtName = jsonObject.getString("district_name");
+            districtName = jsonObject.getString("districtName");
+            categoryCode = jsonObject.getInt("categoryCode");
 
-            JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");
+            JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
             Iterator<String> iterator = imageJSONObject.keys();
             while (iterator.hasNext())
@@ -79,16 +77,14 @@ public class Gourmet extends Place implements Parcelable
 
             latitude = jsonObject.getDouble("latitude");
             longitude = jsonObject.getDouble("longitude");
-            isDailyChoice = "Y".equalsIgnoreCase(jsonObject.getString("is_dailychoice"));
-            isSoldOut = "Y".equalsIgnoreCase(jsonObject.getString("is_soldout"));
-
-            saleDay = jsonObject.getString("sday");
+            isDailyChoice = jsonObject.getBoolean("isDailychoice");
+            isSoldOut = jsonObject.getBoolean("isSoldOut");
             persons = jsonObject.getInt("persons");
             category = jsonObject.getString("category");
 
-            if (jsonObject.has("rating_value") == true)
+            if (jsonObject.has("ratingValue") == true)
             {
-                satisfaction = jsonObject.getInt("rating_value");
+                satisfaction = jsonObject.getInt("ratingValue");
             }
         } catch (JSONException e)
         {

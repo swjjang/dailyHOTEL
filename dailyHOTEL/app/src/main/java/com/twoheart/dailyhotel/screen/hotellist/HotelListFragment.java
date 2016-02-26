@@ -214,7 +214,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
     }
 
-    public void setVisibility(ViewType viewType, boolean isCurrentPage)
+    protected void setVisibility(ViewType viewType, boolean isCurrentPage)
     {
         switch (viewType)
         {
@@ -549,6 +549,21 @@ public class HotelListFragment extends BaseFragment implements Constants
                 Collections.sort(hotelList, comparator);
                 break;
             }
+
+            case SATISFACTION:
+            {
+                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+                Comparator<Hotel> comparator = new Comparator<Hotel>()
+                {
+                    public int compare(Hotel hotel1, Hotel hotel2)
+                    {
+                        return hotel2.satisfaction - hotel1.satisfaction;
+                    }
+                };
+
+                Collections.sort(hotelList, comparator);
+                break;
+            }
         }
 
         for (Hotel hotel : hotelList)
@@ -638,12 +653,13 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     private List<Hotel> curationCategory(List<Hotel> list, Category category)
     {
-        List<Hotel> filteredCategoryList = new ArrayList<>(list);
+        List<Hotel> filteredCategoryList = new ArrayList<>(list.size());
 
         if (category == null || Category.ALL.code.equalsIgnoreCase(category.code) == true)
         {
-            filteredCategoryList.clear();
             filteredCategoryList.addAll(list);
+
+            return filteredCategoryList;
         } else
         {
             for (Hotel hotel : list)
@@ -929,17 +945,8 @@ public class HotelListFragment extends BaseFragment implements Constants
                     } else
                     {
                         ArrayList<Hotel> hotelList = makeHotelList(hotelJSONArray, imageUrl, nights);
-
-                        // 필터 정보 넣기
-                        ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(length);
-
-                        for (Hotel hotel : hotelList)
-                        {
-                            hotelFiltersList.add(hotel.getFilters());
-                        }
-
                         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-                        hotelCurationOption.setFilterList(hotelFiltersList);
+                        setFilterInformation(hotelList, hotelCurationOption);
 
                         // 기본적으로 보관한다.
                         mHotelList.addAll(hotelList);
@@ -964,6 +971,19 @@ public class HotelListFragment extends BaseFragment implements Constants
             {
                 unLockUI();
             }
+        }
+
+        private void setFilterInformation(ArrayList<Hotel> hotelList, HotelCurationOption curationOption)
+        {
+            // 필터 정보 넣기
+            ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(hotelList.size());
+
+            for (Hotel hotel : hotelList)
+            {
+                hotelFiltersList.add(hotel.getFilters());
+            }
+
+            curationOption.setFilterList(hotelFiltersList);
         }
 
         private ArrayList<Hotel> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException

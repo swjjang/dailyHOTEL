@@ -40,7 +40,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        String address = gourmet.address;
+        String address = gourmet.addressSummary;
 
         if (address.indexOf('|') >= 0)
         {

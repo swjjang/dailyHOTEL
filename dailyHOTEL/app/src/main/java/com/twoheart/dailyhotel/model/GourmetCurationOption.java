@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.Constants;
+
 import java.util.HashMap;
 
 public class GourmetCurationOption extends PlaceCurationOption
@@ -33,6 +35,17 @@ public class GourmetCurationOption extends PlaceCurationOption
         super.clear();
 
         mFilterMap.clear();
+    }
+
+    public boolean isDefaultFilter()
+    {
+        if (getSortType() != Constants.SortType.DEFAULT//
+            || mFilterMap.size() != 0)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public void setCategoryMap(HashMap<String, Integer> categoryCountMap)

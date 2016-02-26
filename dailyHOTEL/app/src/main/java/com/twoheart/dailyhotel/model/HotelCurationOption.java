@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.Constants;
+
 import java.util.ArrayList;
 
 public class HotelCurationOption extends PlaceCurationOption
@@ -54,10 +56,22 @@ public class HotelCurationOption extends PlaceCurationOption
     {
         super.clear();
 
-        person = 2;
-        flagFilters = 0;
+        person = HotelFilter.MIN_PERSON;
+        flagFilters = HotelFilters.FLAG_HOTEL_FILTER_BED_NONE;
 
         mCategory = Category.ALL;
+    }
+
+    public boolean isDefaultFilter()
+    {
+        if (getSortType() != Constants.SortType.DEFAULT//
+            || person != HotelFilter.MIN_PERSON//
+            || flagFilters != HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
