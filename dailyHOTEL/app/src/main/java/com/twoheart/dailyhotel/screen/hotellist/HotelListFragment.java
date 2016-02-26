@@ -15,7 +15,6 @@
  */
 package com.twoheart.dailyhotel.screen.hotellist;
 
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -83,8 +82,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     private int mDownDistance;
     private int mUpDistance;
 
-    private boolean mIsAttach;
-
     protected List<Hotel> mHotelList = new ArrayList<>();
 
     @Override
@@ -127,14 +124,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     }
 
     @Override
-    public void onAttach(Context context)
-    {
-        super.onAttach(context);
-
-        mIsAttach = true;
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (mViewType == ViewType.MAP)
@@ -168,6 +157,8 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     public void onRefreshComplete()
     {
+        mOnCommunicateListener.refreshCompleted();
+
         mSwipeRefreshLayout.setRefreshing(false);
 
         if (mViewType == ViewType.MAP)
@@ -290,7 +281,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                fetchHotelList();
+                fetchList();
             }
         });
     }
@@ -298,13 +289,13 @@ public class HotelListFragment extends BaseFragment implements Constants
     /**
      * 이벤트 리스트를 얻어오는 API가 생겨서 어쩔수 없이 상속구조로 바꿈
      */
-    protected void fetchHotelList()
+    protected void fetchList()
     {
         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-        fetchHotelList(hotelCurationOption.getProvince(), mSaleTime, null);
+        fetchList(hotelCurationOption.getProvince(), mSaleTime, null);
     }
 
-    protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    protected void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -893,7 +884,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 ExLog.d(e.toString());
             } finally
             {
-                fetchHotelList();
+                fetchList();
             }
         }
     };

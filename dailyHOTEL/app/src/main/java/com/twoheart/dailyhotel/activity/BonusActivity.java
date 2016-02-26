@@ -132,7 +132,6 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
                 Date date = new Date();
-                String strDate = dateFormat.format(date);
 
                 String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode);
                 KakaoLinkManager.newInstance(this).sendInviteMsgKakaoLink(msg);

@@ -93,6 +93,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         void refreshAll(boolean isShowProgress);
 
+        void refreshCompleted();
+
         void expandedAppBar(boolean expanded, boolean animate);
 
         void showAppBarLayout();
@@ -205,7 +207,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     private void initFloatingActionButton(View view)
     {
         mFloatingActionView = view.findViewById(R.id.floatingActionView);
-        mFloatingActionView.setVisibility(View.INVISIBLE);
+        mFloatingActionView.setVisibility(View.GONE);
         mFloatingActionView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1107,7 +1109,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             lockUI();
 
             Intent intent = new Intent(baseActivity, GourmetDetailActivity.class);
-
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
@@ -1280,6 +1281,12 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
 
         @Override
+        public void refreshCompleted()
+        {
+            mFloatingActionView.setTag("completed");
+        }
+
+        @Override
         public void expandedAppBar(boolean expanded, boolean animate)
         {
             mAppBarLayout.setExpanded(expanded, animate);
@@ -1373,9 +1380,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         @Override
         public void showFloatingActionButton()
         {
-            if (mFloatingActionView.getVisibility() == View.INVISIBLE)
+            if(mFloatingActionView.getTag() == null)
             {
-                mFloatingActionView.setVisibility(View.GONE);
                 return;
             }
 
@@ -1384,22 +1390,10 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 return;
             }
 
-            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
+            DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-            if (toolbar == null)
-            {
-                return;
-            }
-
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-
-            if (params != null && params.getScrollFlags() == 0)
-            {
-                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
-                DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
-
-                dailyFloatingActionButtonBehavior.show(mFloatingActionView);
-            }
+            dailyFloatingActionButtonBehavior.show(mFloatingActionView);
         }
 
         @Override

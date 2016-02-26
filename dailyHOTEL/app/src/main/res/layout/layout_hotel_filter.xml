@@ -41,11 +41,11 @@
             android:id="@+id/minusPersonView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/selector_background_defaultcolor"
             android:text="-"
             android:textColor="@android:color/black"
             android:textSize="20dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="center"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/personCountView"
@@ -60,11 +60,11 @@
             android:id="@+id/plusPersonView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/selector_background_defaultcolor"
             android:text="+"
             android:textColor="@android:color/black"
             android:textSize="20dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="center"/>
 
         <View
             android:layout_width="match_parent"
@@ -93,6 +93,7 @@
         android:background="@color/curation_information_line"/>
 
     <LinearLayout
+        android:id="@+id/bedTypeLayout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentRight="true"

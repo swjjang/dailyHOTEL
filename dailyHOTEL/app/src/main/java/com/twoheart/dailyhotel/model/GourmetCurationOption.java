@@ -10,16 +10,18 @@ import java.util.HashMap;
 public class GourmetCurationOption extends PlaceCurationOption
 {
     private HashMap<String, Integer> mFilterMap;
-    private HashMap<String, Integer> mCategoryIconMap;
     private HashMap<String, Integer> mCategoryMap;
+    private HashMap<String, Integer> mCategoryCodeMap;
+    private HashMap<String, Integer> mCategorySequenceMap;
 
     public GourmetCurationOption()
     {
         super();
 
-        mCategoryMap = new HashMap<>();
         mFilterMap = new HashMap<>();
-        mCategoryIconMap = new HashMap<>();
+        mCategoryMap = new HashMap<>();
+        mCategoryCodeMap = new HashMap<>();
+        mCategorySequenceMap = new HashMap<>();
 
         clear();
     }
@@ -70,15 +72,26 @@ public class GourmetCurationOption extends PlaceCurationOption
         return mFilterMap;
     }
 
-    public void setCategoryIconrMap(HashMap<String, Integer> categoryIconrMap)
+    public void setCategoryCoderMap(HashMap<String, Integer> categoryIconrMap)
     {
-        mCategoryIconMap.clear();
-        mCategoryIconMap.putAll(categoryIconrMap);
+        mCategoryCodeMap.clear();
+        mCategoryCodeMap.putAll(categoryIconrMap);
     }
 
-    public HashMap<String, Integer> getCategoryIconrMap()
+    public HashMap<String, Integer> getCategoryCoderMap()
     {
-        return mCategoryIconMap;
+        return mCategoryCodeMap;
+    }
+
+    public void setCategorySequenceMap(HashMap<String, Integer> categoryIconrMap)
+    {
+        mCategorySequenceMap.clear();
+        mCategorySequenceMap.putAll(categoryIconrMap);
+    }
+
+    public HashMap<String, Integer> getCategorySequenceMap()
+    {
+        return mCategorySequenceMap;
     }
 
     @Override
@@ -88,7 +101,8 @@ public class GourmetCurationOption extends PlaceCurationOption
 
         dest.writeSerializable(mFilterMap);
         dest.writeSerializable(mCategoryMap);
-        dest.writeSerializable(mCategoryIconMap);
+        dest.writeSerializable(mCategoryCodeMap);
+        dest.writeSerializable(mCategorySequenceMap);
     }
 
     @Override
@@ -98,7 +112,8 @@ public class GourmetCurationOption extends PlaceCurationOption
 
         mFilterMap = (HashMap<String, Integer>) in.readSerializable();
         mCategoryMap = (HashMap<String, Integer>) in.readSerializable();
-        mCategoryIconMap = (HashMap<String, Integer>) in.readSerializable();
+        mCategoryCodeMap = (HashMap<String, Integer>) in.readSerializable();
+        mCategorySequenceMap = (HashMap<String, Integer>) in.readSerializable();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

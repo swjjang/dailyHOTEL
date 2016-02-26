@@ -70,8 +70,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
     private int mDownDistance;
     private int mUpDistance;
 
-    private boolean mIsAttach;
-
     protected List<Gourmet> mGourmetList = new ArrayList<>();
 
     @Override
@@ -114,14 +112,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
     }
 
     @Override
-    public void onAttach(Context context)
-    {
-        super.onAttach(context);
-
-        mIsAttach = true;
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (mViewType == ViewType.MAP)
@@ -155,6 +145,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public void onRefreshComplete()
     {
+        mOnCommunicateListener.refreshCompleted();
+
         mSwipeRefreshLayout.setRefreshing(false);
 
         if (mViewType == ViewType.MAP)
@@ -324,10 +316,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
         {
             Area area = (Area) province;
 
-            params = String.format("?province_idx=%d&area_idx=%d&sday=%s", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            params = String.format("?provinceIdx=%d&areaIdx=%d&dateTarget=%s", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
         } else
         {
-            params = String.format("?province_idx=%d&sday=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
+            params = String.format("?provinceIdx=%d&dateTarget=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
         }
 
         if (DEBUG == true && this instanceof GourmetDaysListFragment)
@@ -933,7 +925,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
                     String imageUrl = dataJSONObject.getString("imgUrl");
-                    JSONArray gourmetJSONArray = dataJSONObject.getJSONArray("saleList");
+                    JSONArray gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
 
                     int length;
 
@@ -989,7 +981,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
         private void setFilterInformation(ArrayList<Gourmet> gourmetList, GourmetCurationOption curationOption)
         {
             HashMap<String, Integer> categoryMap = new HashMap<>(12);
-            HashMap<String, Integer> categoryIconMap = new HashMap<>(12);
+            HashMap<String, Integer> categoryCodeMap = new HashMap<>(12);
+            HashMap<String, Integer> categorySequenceMap = new HashMap<>(12);
 
             Integer categoryCount;
 
@@ -1001,7 +994,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 if (categoryCount == null)
                 {
                     categoryMap.put(gourmet.category, 1);
-                    categoryIconMap.put(gourmet.category, gourmet.categoryCode);
+                    categoryCodeMap.put(gourmet.category, gourmet.categoryCode);
+                    categorySequenceMap.put(gourmet.category, gourmet.categorySequence);
                 } else
                 {
                     categoryMap.put(gourmet.category, categoryCount.intValue() + 1);
@@ -1009,7 +1003,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
             }
 
             curationOption.setCategoryMap(categoryMap);
-            curationOption.setCategoryIconrMap(categoryIconMap);
+            curationOption.setCategoryCoderMap(categoryCodeMap);
+            curationOption.setCategorySequenceMap(categorySequenceMap);
         }
 
         private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException

@@ -363,13 +363,7 @@ public class Util implements Constants
     {
         try
         {
-            if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity) == ConnectionResult.SUCCESS)
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
+            return (GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity) == ConnectionResult.SUCCESS);
         } catch (Exception e)
         {
             return false;

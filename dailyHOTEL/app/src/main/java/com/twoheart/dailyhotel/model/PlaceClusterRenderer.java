@@ -92,13 +92,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterIte
     @Override
     protected boolean shouldRenderAsCluster(Cluster<PlaceClusterItem> cluster, float zoom)
     {
-        if (Float.compare(zoom, 13.0f) >= 0)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
+        return (Float.compare(zoom, 13.0f) < 0);
     }
 
     public void setSelectedClusterItem(PlaceClusterItem placeClusterItem)

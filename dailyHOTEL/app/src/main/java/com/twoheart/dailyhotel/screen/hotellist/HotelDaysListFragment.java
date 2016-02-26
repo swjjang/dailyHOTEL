@@ -37,10 +37,10 @@ public class HotelDaysListFragment extends HotelListFragment
     }
 
     @Override
-    protected void fetchHotelList()
+    protected void fetchList()
     {
         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-        fetchHotelList(hotelCurationOption.getProvince(), mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
+        fetchList(hotelCurationOption.getProvince(), mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class HotelDaysListFragment extends HotelListFragment
                     {
                         if (mHotelRecycleView.getAdapter().getItemCount() == 0)
                         {
-                            fetchHotelList();
+                            fetchList();
                         }
                     }
                 }

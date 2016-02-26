@@ -40,19 +40,26 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     private static final int HANDLE_MESSAGE_GOURMET_RESULT = 2;
     private static final int HANDLE_MESSAGE_DELAYTIME = 750;
 
+    private static final int HOTEL_MAX_BEDTYPE = 3;
     private static final int GOURMET_CATEGORY_COLUMN = 5;
 
     private PlaceCurationOption mPlaceCurationOption;
 
     private PlaceType mPlaceType;
-    private ViewType mViewType;
 
     private TextView mResultCountView;
     private View mConfirmView;
-    //
+
+    private RadioGroup mSortRadioGroup;
+
+    // hotel
     private View mMinusPersonView;
     private View mPlusPersonView;
     private TextView mPersonCountView;
+    private ViewGroup mBedTypeLayout;
+
+    // Gourmet
+    private android.support.v7.widget.GridLayout mCategoryLayout;
 
     private Handler mHandler = new Handler()
     {
@@ -111,11 +118,11 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         }
 
         boolean isGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
-        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+        ViewType viewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         mPlaceCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
 
-        initLayout(mViewType, mPlaceType, isGlobal);
+        initLayout(viewType, mPlaceType, isGlobal);
     }
 
     private void initLayout(ViewType viewType, PlaceType placeType, boolean isGlobal)
@@ -168,38 +175,38 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
     private void initHotelSort(View view, ViewType viewType, HotelCurationOption hotelCurationOption)
     {
-        RadioGroup sortLayout = (RadioGroup) view.findViewById(R.id.sortLayout);
+        mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
         if (viewType == ViewType.MAP)
         {
-            setDisabledSortView(view, sortLayout);
+            setDisabledSortView(view, mSortRadioGroup);
             return;
         }
 
         switch (hotelCurationOption.getSortType())
         {
             case DEFAULT:
-                sortLayout.check(R.id.regionCheckView);
+                mSortRadioGroup.check(R.id.regionCheckView);
                 break;
 
             case DISTANCE:
-                sortLayout.check(R.id.distanceCheckView);
+                mSortRadioGroup.check(R.id.distanceCheckView);
                 break;
 
             case LOW_PRICE:
-                sortLayout.check(R.id.lowPriceCheckView);
+                mSortRadioGroup.check(R.id.lowPriceCheckView);
                 break;
 
             case HIGH_PRICE:
-                sortLayout.check(R.id.highPriceCheckView);
+                mSortRadioGroup.check(R.id.highPriceCheckView);
                 break;
 
             case SATISFACTION:
-                sortLayout.check(R.id.satisfactionCheckView);
+                mSortRadioGroup.check(R.id.satisfactionCheckView);
                 break;
         }
 
-        sortLayout.setOnCheckedChangeListener(this);
+        mSortRadioGroup.setOnCheckedChangeListener(this);
     }
 
     private void initHotelFilter(View view, HotelCurationOption hotelCurationOption)
@@ -215,6 +222,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         updateHotelPersonFilter(hotelCurationOption.person);
 
         // 베드타입
+        mBedTypeLayout = (ViewGroup) view.findViewById(R.id.bedTypeLayout);
         View doubleCheckView = view.findViewById(R.id.doubleCheckView);
         View twinCheckView = view.findViewById(R.id.twinCheckView);
         View heatedFloorsCheckView = view.findViewById(R.id.heatedFloorsCheckView);
@@ -291,6 +299,26 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
     }
 
+    private void resetHotelCureation()
+    {
+        mPlaceCurationOption.clear();
+
+        mSortRadioGroup.clearCheck();
+        mSortRadioGroup.check(R.id.regionCheckView);
+
+        updateHotelPersonFilter(HotelFilter.MIN_PERSON);
+
+        int bedTypeCount = mBedTypeLayout.getChildCount();
+
+        for (int i = 0; i < bedTypeCount; i++)
+        {
+            mBedTypeLayout.getChildAt(i).setSelected(false);
+        }
+
+        mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
+        mHandler.sendEmptyMessage(HANDLE_MESSAGE_HOTEL_RESULT);
+    }
+
     private void updateHotelResultCount()
     {
         mConfirmView.setEnabled(false);
@@ -343,51 +371,68 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
     private void initGourmetSort(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
     {
-        RadioGroup sortLayout = (RadioGroup) view.findViewById(R.id.sortLayout);
+        mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
         if (viewType == ViewType.MAP)
         {
-            setDisabledSortView(view, sortLayout);
+            setDisabledSortView(view, mSortRadioGroup);
             return;
         }
 
         switch (gourmetCurationOption.getSortType())
         {
             case DEFAULT:
-                sortLayout.check(R.id.regionCheckView);
+                mSortRadioGroup.check(R.id.regionCheckView);
                 break;
 
             case DISTANCE:
-                sortLayout.check(R.id.distanceCheckView);
+                mSortRadioGroup.check(R.id.distanceCheckView);
                 break;
 
             case LOW_PRICE:
-                sortLayout.check(R.id.lowPriceCheckView);
+                mSortRadioGroup.check(R.id.lowPriceCheckView);
                 break;
 
             case HIGH_PRICE:
-                sortLayout.check(R.id.highPriceCheckView);
-                break;
-
-            case SATISFACTION:
-                sortLayout.check(R.id.satisfactionCheckView);
+                mSortRadioGroup.check(R.id.highPriceCheckView);
                 break;
         }
 
-        sortLayout.setOnCheckedChangeListener(this);
+        mSortRadioGroup.setOnCheckedChangeListener(this);
     }
 
     private void initGourmetFilter(View view, GourmetCurationOption gourmetCurationOption)
     {
-        android.support.v7.widget.GridLayout foodGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.foodGridLayout);
+        mCategoryLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.foodGridLayout);
 
-        HashMap<String, Integer> categroyIconMap = gourmetCurationOption.getCategoryIconrMap();
+        final HashMap<String, Integer> categroySequenceMap = gourmetCurationOption.getCategorySequenceMap();
         TreeMap<String, Integer> categoryMap = new TreeMap<String, Integer>(new Comparator<String>()
         {
             @Override
             public int compare(String o1, String o2)
             {
-                return o2.compareTo(o1);
+                Integer sequence1 = categroySequenceMap.get(o1);
+                Integer sequence2 = categroySequenceMap.get(o2);
+
+                if (sequence1.intValue() < 0)
+                {
+                    sequence1 = Integer.MAX_VALUE;
+                }
+
+                if (sequence2.intValue() < 0)
+                {
+                    sequence2 = Integer.MAX_VALUE;
+                }
+
+                int result = sequence1.compareTo(sequence2);
+
+                if (result == 0)
+                {
+                    return o1.compareTo(o2);
+                } else
+                {
+                    return sequence1.compareTo(sequence2);
+                }
             }
         });
 
@@ -420,26 +465,50 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         };
 
         List<String> keyList = new ArrayList<>(categoryMap.keySet());
+        HashMap<String, Integer> categroyCodeMap = gourmetCurationOption.getCategoryCoderMap();
+        HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
 
         boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN ? true : false;
 
+
         for (String key : keyList)
         {
-            if (Util.isTextEmpty(key) == true)
-            {
-                continue;
-            }
-
-            DailyTextView categoryView = getCategoryView(key, getCategoryResourceId(categroyIconMap.get(key).intValue()), isSingleLine);
+            DailyTextView categoryView = getCategoryView(key, getCategoryResourceId(categroyCodeMap.get(key).intValue()), isSingleLine);
             categoryView.setOnClickListener(onClickListener);
 
-            foodGridLayout.addView(categoryView);
+            if (filterMap.containsKey(key) == true)
+            {
+                categoryView.setSelected(true);
+            }
+
+            mCategoryLayout.addView(categoryView);
         }
 
         if (isSingleLine == false)
         {
-            foodGridLayout.setPadding(0, 0, 0, Util.dpToPx(this, 10));
+            mCategoryLayout.setPadding(0, 0, 0, Util.dpToPx(this, 10));
         }
+
+        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
+        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+    }
+
+    private void resetGourmetCureation()
+    {
+        mPlaceCurationOption.clear();
+
+        mSortRadioGroup.clearCheck();
+        mSortRadioGroup.check(R.id.regionCheckView);
+
+        int categoryCount = mCategoryLayout.getChildCount();
+
+        for (int i = 0; i < categoryCount; i++)
+        {
+            mCategoryLayout.getChildAt(i).setSelected(false);
+        }
+
+        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
+        mHandler.sendEmptyMessage(HANDLE_MESSAGE_GOURMET_RESULT);
     }
 
     private void updateGourmetResultCount()
@@ -659,7 +728,16 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 break;
 
             case R.id.resetCurationView:
-                mPlaceCurationOption.clear();
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                        resetHotelCureation();
+                        break;
+
+                    case FNB:
+                        resetGourmetCureation();
+                        break;
+                }
                 break;
         }
     }

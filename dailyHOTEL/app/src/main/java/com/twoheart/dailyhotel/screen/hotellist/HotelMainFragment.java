@@ -95,6 +95,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         void refreshAll(boolean isShowProgress);
 
+        void refreshCompleted();
+
         void expandedAppBar(boolean expanded, boolean animate);
 
         void showAppBarLayout();
@@ -210,7 +212,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private void initFloatingActionButton(View view)
     {
         mFloatingActionView = view.findViewById(R.id.floatingActionView);
-        mFloatingActionView.setVisibility(View.INVISIBLE);
+        mFloatingActionView.setVisibility(View.GONE);
         mFloatingActionView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -242,8 +244,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
     {
-        ExLog.d("verticalOffset : " + verticalOffset + ", " + mIsHideAppBarlayout);
-
         if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
         {
             mOnCommunicateListener.hideAppBarLayout();
@@ -1508,6 +1508,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         @Override
+        public void refreshCompleted()
+        {
+            mFloatingActionView.setTag("completed");
+        }
+
+        @Override
         public void expandedAppBar(boolean expanded, boolean animate)
         {
             mAppBarLayout.setExpanded(expanded, animate);
@@ -1601,9 +1607,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void showFloatingActionButton()
         {
-            if (mFloatingActionView.getVisibility() == View.INVISIBLE)
+            if(mFloatingActionView.getTag() == null)
             {
-                mFloatingActionView.setVisibility(View.GONE);
                 return;
             }
 
@@ -1612,22 +1617,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 return;
             }
 
-            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
+            DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-            if (toolbar == null)
-            {
-                return;
-            }
-
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-
-            if (params != null && params.getScrollFlags() == 0)
-            {
-                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
-                DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
-
-                dailyFloatingActionButtonBehavior.show(mFloatingActionView);
-            }
+            dailyFloatingActionButtonBehavior.show(mFloatingActionView);
         }
 
         @Override

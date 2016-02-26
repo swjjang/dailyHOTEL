@@ -16,6 +16,7 @@ public class Gourmet extends Place implements Parcelable
     public int persons;
     public String category;
     public int categoryCode;
+    public int categorySequence;
     public float distance;
 
     public Gourmet()
@@ -56,7 +57,19 @@ public class Gourmet extends Place implements Parcelable
             addressSummary = jsonObject.getString("addrSummary");
             grade = Grade.gourmet;
             districtName = jsonObject.getString("districtName");
+            latitude = jsonObject.getDouble("latitude");
+            longitude = jsonObject.getDouble("longitude");
+            isDailyChoice = jsonObject.getBoolean("isDailychoice");
+            isSoldOut = jsonObject.getBoolean("isSoldOut");
+            persons = jsonObject.getInt("persons");
+            category = jsonObject.getString("category");
             categoryCode = jsonObject.getInt("categoryCode");
+            categorySequence = jsonObject.getInt("categorySequence");
+
+            if (jsonObject.has("ratingValue") == true)
+            {
+                satisfaction = jsonObject.getInt("ratingValue");
+            }
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
@@ -73,18 +86,6 @@ public class Gourmet extends Place implements Parcelable
                 } catch (JSONException e)
                 {
                 }
-            }
-
-            latitude = jsonObject.getDouble("latitude");
-            longitude = jsonObject.getDouble("longitude");
-            isDailyChoice = jsonObject.getBoolean("isDailychoice");
-            isSoldOut = jsonObject.getBoolean("isSoldOut");
-            persons = jsonObject.getInt("persons");
-            category = jsonObject.getString("category");
-
-            if (jsonObject.has("ratingValue") == true)
-            {
-                satisfaction = jsonObject.getInt("ratingValue");
             }
         } catch (JSONException e)
         {

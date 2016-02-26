@@ -109,15 +109,8 @@ public class DailyToolbarLayout
             return;
         }
 
-        if (menu1 != null)
-        {
-            menu1.setOnClickListener(listener);
-        }
-
-        if (menu2 != null)
-        {
-            menu2.setOnClickListener(listener);
-        }
+        menu1.setOnClickListener(listener);
+        menu2.setOnClickListener(listener);
     }
 
     public void setToolbarRegionMenuVisibility(boolean isVisibility)
