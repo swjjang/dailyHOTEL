@@ -72,6 +72,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private boolean mDontReloadAtOnResume;
     private boolean mIsHideAppBarlayout;
+    private int mCanScrollUpCount = 0;
 
     private GourmetCurationOption mCurationOption;
 
@@ -239,14 +240,37 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
     {
+        final int CANSCROLLUP_REPEAT_COUNT = 3;
+
         if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
         {
-            mOnCommunicateListener.hideAppBarLayout();
-            mIsHideAppBarlayout = true;
+            if (mIsHideAppBarlayout == true)
+            {
+                GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                boolean canScrollUp = currentFragment.canScrollUp();
 
-            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-            currentFragment.resetScrollDistance(false);
+                if (canScrollUp == false)
+                {
+                    if (++mCanScrollUpCount > CANSCROLLUP_REPEAT_COUNT)
+                    {
+                        mCanScrollUpCount = 0;
+                        mOnCommunicateListener.expandedAppBar(true, true);
+                        mOnCommunicateListener.showAppBarLayout();
+                        mIsHideAppBarlayout = false;
+                    }
+                } else
+                {
+                    mCanScrollUpCount = 0;
+                }
+            } else
+            {
+                mOnCommunicateListener.hideAppBarLayout();
+                mIsHideAppBarlayout = true;
+                mCanScrollUpCount = 0;
 
+                GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                currentFragment.resetScrollDistance(false);
+            }
         } else if (verticalOffset == 0)
         {
             if (mIsHideAppBarlayout == true)
@@ -256,6 +280,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             {
                 mOnCommunicateListener.pinAppBarLayout();
                 mIsHideAppBarlayout = true;
+                mCanScrollUpCount = 0;
 
                 GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.resetScrollDistance(true);
@@ -263,6 +288,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
         {
             mIsHideAppBarlayout = false;
+            mCanScrollUpCount = 0;
         }
     }
 
@@ -1380,7 +1406,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         @Override
         public void showFloatingActionButton()
         {
-            if(mFloatingActionView.getTag() == null)
+            if (mFloatingActionView.getTag() == null)
             {
                 return;
             }

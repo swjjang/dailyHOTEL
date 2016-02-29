@@ -271,7 +271,6 @@ public class Util implements Constants
         }
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-
         return displayMetrics.widthPixels;
     }
 
@@ -283,7 +282,6 @@ public class Util implements Constants
         }
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-
         return displayMetrics.heightPixels;
     }
 

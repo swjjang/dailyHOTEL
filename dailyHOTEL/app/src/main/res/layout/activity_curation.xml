@@ -13,7 +13,7 @@
         android:id="@+id/informationLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_above="@+id/contentLayout"
+        android:layout_above="@+id/contentScrollView"
         android:background="@color/white"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
@@ -22,21 +22,21 @@
             android:id="@+id/resetCurationView"
             android:layout_width="wrap_content"
             android:layout_height="55dp"
+            android:gravity="center_vertical"
+            android:paddingRight="10dp"
             android:text="@string/label_reset"
             android:textColor="@color/curation_information_text"
-            android:textSize="13dp"
-            android:paddingRight="10dp"
-            android:gravity="center_vertical"/>
+            android:textSize="13dp"/>
 
         <ImageView
             android:id="@+id/closeView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="right"
-            android:src="@drawable/room_select_x"
             android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"/>
+            android:src="@drawable/room_select_x"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/resultCountView"
@@ -46,28 +46,33 @@
             android:layout_toRightOf="@+id/resetCurationView"
             android:gravity="center"
             android:textColor="@color/curation_information_text"
-            android:textSize="13dp"
-            />
+            android:textSize="13dp"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/contentLayout"
+    <ScrollView
+        android:id="@+id/contentScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/confirmView"
-        android:background="@color/white"
-        android:orientation="vertical"
-        >
-    </LinearLayout>
+        android:fadingEdge="none"
+        android:overScrollMode="never"
+        android:layout_above="@+id/confirmView">
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"/>
+    </ScrollView>
 
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/confirmView"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/dh_theme_color"
+        android:background="@drawable/selector_curation_confirm_background_color"
         android:gravity="center"
         android:text="@string/label_completed"
-        android:textColor="@android:color/white"
+        android:textColor="@drawable/selector_curation_confirm_text_color"
         android:textSize="20dp"/>
 </RelativeLayout>

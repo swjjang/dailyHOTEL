@@ -10,8 +10,9 @@ import java.util.ArrayList;
 public class HotelCurationOption extends PlaceCurationOption
 {
     public int person;
-    public int flagFilters;
-    private Category mCategory; // Not Parcelable
+    public int flagBedTypeFilters;
+    public int flagAmenitiesFilters;
+    private Category mCategory;
 
     private ArrayList<HotelFilters> mHotelFiltersList;
 
@@ -26,8 +27,6 @@ public class HotelCurationOption extends PlaceCurationOption
 
     public HotelCurationOption(Parcel in)
     {
-        mHotelFiltersList = new ArrayList<>();
-
         readFromParcel(in);
     }
 
@@ -41,13 +40,13 @@ public class HotelCurationOption extends PlaceCurationOption
         mCategory = category;
     }
 
-    public void setFilterList(ArrayList<HotelFilters> arrayList)
+    public void setFiltersList(ArrayList<HotelFilters> arrayList)
     {
         mHotelFiltersList.clear();
         mHotelFiltersList.addAll(arrayList);
     }
 
-    public ArrayList<HotelFilters> getFilterList()
+    public ArrayList<HotelFilters> getFiltersList()
     {
         return mHotelFiltersList;
     }
@@ -57,7 +56,7 @@ public class HotelCurationOption extends PlaceCurationOption
         super.clear();
 
         person = HotelFilter.MIN_PERSON;
-        flagFilters = HotelFilters.FLAG_HOTEL_FILTER_BED_NONE;
+        flagBedTypeFilters = HotelFilters.FLAG_HOTEL_FILTER_BED_NONE;
 
         mCategory = Category.ALL;
     }
@@ -66,7 +65,7 @@ public class HotelCurationOption extends PlaceCurationOption
     {
         if (getSortType() != Constants.SortType.DEFAULT//
             || person != HotelFilter.MIN_PERSON//
-            || flagFilters != HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
+            || flagBedTypeFilters != HotelFilters.FLAG_HOTEL_FILTER_BED_NONE || flagAmenitiesFilters != HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return false;
         }
@@ -80,8 +79,9 @@ public class HotelCurationOption extends PlaceCurationOption
         super.writeToParcel(dest, flags);
 
         dest.writeInt(person);
-        dest.writeInt(flagFilters);
+        dest.writeInt(flagBedTypeFilters);
         dest.writeTypedList(mHotelFiltersList);
+        dest.writeParcelable(mCategory, flags);
     }
 
     protected void readFromParcel(Parcel in)
@@ -89,10 +89,11 @@ public class HotelCurationOption extends PlaceCurationOption
         super.readFromParcel(in);
 
         person = in.readInt();
-        flagFilters = in.readInt();
+        flagBedTypeFilters = in.readInt();
 
         mHotelFiltersList = new ArrayList<>();
         in.readTypedList(mHotelFiltersList, HotelFilters.CREATOR);
+        mCategory = in.readParcelable(Category.class.getClassLoader());
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

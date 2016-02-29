@@ -106,6 +106,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             @Override
             public void onRefresh()
             {
+                mOnCommunicateListener.showAppBarLayout();
                 mOnCommunicateListener.refreshAll(false);
             }
         });
@@ -145,6 +146,16 @@ public class HotelListFragment extends BaseFragment implements Constants
                 mHotelMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
+    }
+
+    public boolean canScrollUp()
+    {
+        if (mSwipeRefreshLayout != null)
+        {
+            return mSwipeRefreshLayout.canChildScrollUp();
+        }
+
+        return true;
     }
 
     public void onPageSelected()
@@ -637,7 +648,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     {
         List<Hotel> hotelList = curationCategory(list, curationOption.getCategory());
 
-        hotelList = curationFiltering(hotelList, curationOption.flagFilters, curationOption.person);
+        hotelList = curationFiltering(hotelList, curationOption);
 
         return curationSorting(hotelList, curationOption);
     }
@@ -665,7 +676,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         return filteredCategoryList;
     }
 
-    private List<Hotel> curationFiltering(List<Hotel> list, int flagBedType, int person)
+    private List<Hotel> curationFiltering(List<Hotel> list, HotelCurationOption curationOption)
     {
         int size = list.size();
         Hotel hotel;
@@ -674,7 +685,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             hotel = list.get(i);
 
-            if (hotel.isFiltered(flagBedType, person) == false)
+            if (hotel.isFiltered(curationOption) == false)
             {
                 list.remove(i);
             }
@@ -974,7 +985,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 hotelFiltersList.add(hotel.getFilters());
             }
 
-            curationOption.setFilterList(hotelFiltersList);
+            curationOption.setFiltersList(hotelFiltersList);
         }
 
         private ArrayList<Hotel> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
