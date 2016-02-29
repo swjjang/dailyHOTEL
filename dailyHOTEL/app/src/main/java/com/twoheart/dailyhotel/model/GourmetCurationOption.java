@@ -110,8 +110,9 @@ public class GourmetCurationOption extends PlaceCurationOption
         dest.writeSerializable(mFilterMap);
         dest.writeSerializable(mCategoryCodeMap);
         dest.writeSerializable(mCategorySequenceMap);
-
         dest.writeTypedList(mGourmetFiltersList);
+        dest.writeInt(flagTimeFilter);
+        dest.writeInt(isParking ? 1 : 0);
     }
 
     @Override
@@ -125,6 +126,9 @@ public class GourmetCurationOption extends PlaceCurationOption
 
         mGourmetFiltersList = new ArrayList<>();
         in.readTypedList(mGourmetFiltersList, GourmetFilters.CREATOR);
+
+        flagTimeFilter = in.readInt();
+        isParking = in.readInt() == 1 ? true : false;
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

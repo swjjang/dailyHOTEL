@@ -348,10 +348,10 @@ public class HotelListFragment extends BaseFragment implements Constants
             params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
         }
 
-//        if (DEBUG == true && this instanceof HotelDaysListFragment)
-//        {
-//            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
-//        }
+        //        if (DEBUG == true && this instanceof HotelDaysListFragment)
+        //        {
+        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
+        //        }
 
         DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);
     }

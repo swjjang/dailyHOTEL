@@ -27,8 +27,8 @@ public class GourmetFilter implements Parcelable
 
     public GourmetFilter(JSONObject jsonObject) throws JSONException
     {
-        long openTimeInMillis = jsonObject.getInt("startEatingTime");
-        long closeTimeInMillis = jsonObject.getInt("endEatingTime");
+        long openTimeInMillis = jsonObject.getLong("startEatingTime");
+        long closeTimeInMillis = jsonObject.getLong("endEatingTime");
 
         timeFlag = getTimeFlag(openTimeInMillis) | getTimeFlag(closeTimeInMillis);
 

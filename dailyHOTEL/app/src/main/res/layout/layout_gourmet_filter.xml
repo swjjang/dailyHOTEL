@@ -41,67 +41,6 @@
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="22dp"
-        android:text="@string/label_amenities"
-        android:textColor="@color/curation_title_text"
-        android:textSize="13dp"
-        android:background="@color/calendar_month_line"
-        android:gravity="center"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/curation_information_line"/>
-
-    <LinearLayout
-        android:id="@+id/amenitiesLayout"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp">
-
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/parkingCheckView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
-            android:gravity="center_horizontal"
-            android:text="@string/label_parking"
-            android:textColor="@drawable/selector_curation_textcolor"
-            android:textSize="11dp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/curation_information_line"/>
-
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
-        android:layout_width="match_parent"
-        android:layout_height="22dp"
         android:text="@string/label_time_range"
         android:textColor="@color/curation_title_text"
         android:textSize="13dp"
@@ -128,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
+            android:drawableTop="@drawable/selector_filter_time_0611_button"
             android:gravity="center_horizontal"
             android:text="@string/label_time_0611"
             android:textColor="@drawable/selector_curation_textcolor"
@@ -139,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
+            android:drawableTop="@drawable/selector_filter_time_1115_button"
             android:gravity="center_horizontal"
             android:text="@string/label_time_1115"
             android:textColor="@drawable/selector_curation_textcolor"
@@ -150,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
+            android:drawableTop="@drawable/selector_filter_time_1517_button"
             android:gravity="center_horizontal"
             android:text="@string/label_time_1517"
             android:textColor="@drawable/selector_curation_textcolor"
@@ -161,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
+            android:drawableTop="@drawable/selector_filter_time_1721_button"
             android:gravity="center_horizontal"
             android:text="@string/label_time_1721"
             android:textColor="@drawable/selector_curation_textcolor"
@@ -172,10 +111,71 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
+            android:drawableTop="@drawable/selector_filter_time_2106_button"
             android:gravity="center_horizontal"
             android:text="@string/label_time_2106"
             android:textColor="@drawable/selector_curation_textcolor"
             android:textSize="11dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:text="@string/label_amenities"
+        android:textColor="@color/curation_title_text"
+        android:textSize="13dp"
+        android:background="@color/calendar_month_line"
+        android:gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
+    <LinearLayout
+        android:id="@+id/amenitiesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/parkingCheckView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/selector_filter_amenities_parking_button"
+            android:gravity="center_horizontal"
+            android:text="@string/label_parking"
+            android:textColor="@drawable/selector_curation_textcolor"
+            android:textSize="11dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>

@@ -108,7 +108,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         void showFloatingActionButton();
 
-        void hideFloatingActionButton();
+        void hideFloatingActionButton(boolean isAnimation);
 
         HotelCurationOption getCurationOption();
     }
@@ -191,7 +191,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
-                mOnCommunicateListener.hideFloatingActionButton();
+                mOnCommunicateListener.hideFloatingActionButton(true);
             }
 
             @Override
@@ -219,7 +219,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onClick(View v)
             {
-                mOnCommunicateListener.hideFloatingActionButton();
+                mOnCommunicateListener.hideFloatingActionButton(false);
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -406,6 +406,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.person = curationOption.person;
                         mCurationOption.flagBedTypeFilters = curationOption.flagBedTypeFilters;
+                        mCurationOption.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
 
                         if (curationOption.getSortType() == SortType.DISTANCE)
                         {
@@ -1555,7 +1556,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 showFloatingActionButton();
             } else
             {
-                hideFloatingActionButton();
+                hideFloatingActionButton(true);
             }
         }
 
@@ -1607,7 +1608,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 toolbar.setLayoutParams(params);
             }
 
-            hideFloatingActionButton();
+            hideFloatingActionButton(true);
         }
 
         @Override
@@ -1656,17 +1657,23 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         @Override
-        public void hideFloatingActionButton()
+        public void hideFloatingActionButton(boolean isAnimation)
         {
             if (mFloatingActionView.getVisibility() == View.GONE)
             {
                 return;
             }
 
-            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
-            DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
+            if (isAnimation == true)
+            {
+                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
+                DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-            dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
+                dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
+            } else
+            {
+                mFloatingActionView.setVisibility(View.GONE);
+            }
         }
 
         @Override
