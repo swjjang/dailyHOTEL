@@ -334,10 +334,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
             params = String.format("?provinceIdx=%d&dateTarget=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
         }
 
-        if (DEBUG == true && this instanceof GourmetDaysListFragment)
-        {
-            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
-        }
+        //        if (DEBUG == true && this instanceof GourmetDaysListFragment)
+        //        {
+        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
+        //        }
 
         DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
     }
@@ -619,6 +619,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         List<Gourmet> gourmetList = curationCategory(list, curationOption.getFilterMap());
 
+        gourmetList = curationFiltering(gourmetList, curationOption);
+
         return curationSorting(gourmetList, curationOption);
     }
 
@@ -643,6 +645,24 @@ public class GourmetListFragment extends BaseFragment implements Constants
         }
 
         return filteredCategoryList;
+    }
+
+    private List<Gourmet> curationFiltering(List<Gourmet> list, GourmetCurationOption curationOption)
+    {
+        int size = list.size();
+        Gourmet gourmet;
+
+        for (int i = size - 1; i >= 0; i--)
+        {
+            gourmet = list.get(i);
+
+            if (gourmet.isFiltered(curationOption) == false)
+            {
+                list.remove(i);
+            }
+        }
+
+        return list;
     }
 
     private void setGourmetListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> gourmetListViewItemList, SortType sortType)

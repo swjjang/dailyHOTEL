@@ -242,7 +242,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     {
         final int CANSCROLLUP_REPEAT_COUNT = 3;
 
-        if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
+        if (verticalOffset == -TOOLBAR_HEIGHT)
         {
             if (mIsHideAppBarlayout == true)
             {
@@ -1159,6 +1159,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             // 선택탭의 이름을 수정한다.
             mTabLayout.getTabAt(2).setText(checkInDay);
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+            currentFragment.setScrollListTop(true);
 
             refreshCurrentFragment();
             releaseUiComponent();
