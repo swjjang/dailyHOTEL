@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -94,6 +95,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             @Override
             public void onRefresh()
             {
+                mOnCommunicateListener.showAppBarLayout();
                 mOnCommunicateListener.refreshAll(false);
             }
         });
@@ -133,6 +135,16 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mPlaceMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
+    }
+
+    public boolean canScrollUp()
+    {
+        if (mSwipeRefreshLayout != null)
+        {
+            return mSwipeRefreshLayout.canChildScrollUp();
+        }
+
+        return true;
     }
 
     public void onPageSelected()
@@ -322,10 +334,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
             params = String.format("?provinceIdx=%d&dateTarget=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
         }
 
-        if (DEBUG == true && this instanceof GourmetDaysListFragment)
-        {
-            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
-        }
+        //        if (DEBUG == true && this instanceof GourmetDaysListFragment)
+        //        {
+        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
+        //        }
 
         DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
     }
@@ -607,6 +619,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         List<Gourmet> gourmetList = curationCategory(list, curationOption.getFilterMap());
 
+        gourmetList = curationFiltering(gourmetList, curationOption);
+
         return curationSorting(gourmetList, curationOption);
     }
 
@@ -633,6 +647,24 @@ public class GourmetListFragment extends BaseFragment implements Constants
         return filteredCategoryList;
     }
 
+    private List<Gourmet> curationFiltering(List<Gourmet> list, GourmetCurationOption curationOption)
+    {
+        int size = list.size();
+        Gourmet gourmet;
+
+        for (int i = size - 1; i >= 0; i--)
+        {
+            gourmet = list.get(i);
+
+            if (gourmet.isFiltered(curationOption) == false)
+            {
+                list.remove(i);
+            }
+        }
+
+        return list;
+    }
+
     private void setGourmetListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> gourmetListViewItemList, SortType sortType)
     {
         mGourmetAdapter.clear();
@@ -650,7 +682,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             if (viewType == ViewType.MAP)
             {
-                if (hasSalesPlace() == false)
+                if (hasSalesPlace(gourmetListViewItemList) == false)
                 {
                     unLockUI();
 
@@ -698,9 +730,14 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public boolean hasSalesPlace()
     {
+        return hasSalesPlace(mGourmetAdapter.getAll());
+    }
+
+    private boolean hasSalesPlace(List<PlaceViewItem> gourmetListViewItemList)
+    {
         boolean hasPlace = false;
 
-        List<PlaceViewItem> arrayList = mGourmetAdapter.getAll();
+        List<PlaceViewItem> arrayList = gourmetListViewItemList;
 
         if (arrayList != null)
         {
@@ -980,29 +1017,21 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         private void setFilterInformation(ArrayList<Gourmet> gourmetList, GourmetCurationOption curationOption)
         {
-            HashMap<String, Integer> categoryMap = new HashMap<>(12);
             HashMap<String, Integer> categoryCodeMap = new HashMap<>(12);
             HashMap<String, Integer> categorySequenceMap = new HashMap<>(12);
 
-            Integer categoryCount;
+            ArrayList<GourmetFilters> gourmetFiltersList = new ArrayList<>(gourmetList.size());
 
             // 필터 정보 넣기
             for (Gourmet gourmet : gourmetList)
             {
-                categoryCount = categoryMap.get(gourmet.category);
+                gourmetFiltersList.add(gourmet.getFilters());
 
-                if (categoryCount == null)
-                {
-                    categoryMap.put(gourmet.category, 1);
-                    categoryCodeMap.put(gourmet.category, gourmet.categoryCode);
-                    categorySequenceMap.put(gourmet.category, gourmet.categorySequence);
-                } else
-                {
-                    categoryMap.put(gourmet.category, categoryCount.intValue() + 1);
-                }
+                categoryCodeMap.put(gourmet.category, gourmet.categoryCode);
+                categorySequenceMap.put(gourmet.category, gourmet.categorySequence);
             }
 
-            curationOption.setCategoryMap(categoryMap);
+            curationOption.setFiltersList(gourmetFiltersList);
             curationOption.setCategoryCoderMap(categoryCodeMap);
             curationOption.setCategorySequenceMap(categorySequenceMap);
         }

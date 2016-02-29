@@ -221,6 +221,11 @@ public class DailyToolbarLayout
 
     public void setToolbarVisibility(boolean visible)
     {
+        if (mToolbar == null)
+        {
+            return;
+        }
+
         mToolbar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 }

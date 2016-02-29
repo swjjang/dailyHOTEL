@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
@@ -11,12 +12,12 @@
 
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="22dp"
+        android:background="@color/calendar_month_line"
+        android:gravity="center"
         android:text="@string/label_personnel"
         android:textColor="@color/curation_title_text"
-        android:textSize="13dp"
-        android:background="@color/calendar_month_line"
-        android:gravity="center"/>
+        android:textSize="13dp"/>
 
     <View
         android:layout_width="match_parent"
@@ -41,30 +42,30 @@
             android:id="@+id/minusPersonView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="-"
             android:textColor="@android:color/black"
-            android:textSize="20dp"
-            android:layout_weight="1"
-            android:gravity="center"/>
+            android:textSize="20dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/personCountView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/dh_theme_color"
-            android:textSize="13dp"
             android:layout_weight="1"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/dh_theme_color"
+            android:textSize="13dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/plusPersonView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="+"
             android:textColor="@android:color/black"
-            android:textSize="20dp"
-            android:layout_weight="1"
-            android:gravity="center"/>
+            android:textSize="20dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -80,12 +81,12 @@
 
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="22dp"
+        android:background="@color/calendar_month_line"
+        android:gravity="center"
         android:text="@string/label_bedtype"
         android:textColor="@color/curation_title_text"
-        android:textSize="13dp"
-        android:background="@color/calendar_month_line"
-        android:gravity="center"/>
+        android:textSize="13dp"/>
 
     <View
         android:layout_width="match_parent"
@@ -144,6 +145,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
-
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:background="@color/calendar_month_line"
+        android:gravity="center"
+        android:text="@string/label_amenities"
+        android:textColor="@color/curation_title_text"
+        android:textSize="13dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/amenitiesGridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@color/white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:columnCount="5"/>
 </LinearLayout>

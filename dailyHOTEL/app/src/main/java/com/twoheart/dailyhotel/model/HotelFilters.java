@@ -11,13 +11,9 @@ import java.util.Arrays;
 public class HotelFilters implements Parcelable
 {
     public static int FLAG_HOTEL_FILTER_BED_NONE = 0x00;
-    public static int FLAG_HOTEL_FILTER_BED_DOUBLE = 0x01;
-    public static int FLAG_HOTEL_FILTER_BED_TWIN = 0x02;
-    public static int FLAG_HOTEL_FILTER_BED_HEATEDFLOORS = 0x04;
-    public static int FLAG_HOTEL_FILTER_BED_CHECKIN = 0x08;
 
     private HotelFilter[] mHotelFilterArray;
-    public boolean isFiltered;
+    public String categoryCode;
 
     public HotelFilters(int size)
     {
@@ -40,71 +36,63 @@ public class HotelFilters implements Parcelable
         }
     }
 
-    public boolean isFiltered(int flag, int person)
+    public boolean isFiltered(HotelCurationOption curationOption)
     {
-        if (flag == 0)
+        return isPersonFiltered(curationOption.person) & isBedTypeFiltered(curationOption.flagBedTypeFilters) & isAmenitiesFiltered(curationOption.flagAmenitiesFilters);
+    }
+
+    private boolean isPersonFiltered(int person)
+    {
+        if (person == HotelFilter.MIN_PERSON)
         {
-            for (HotelFilter hotelFilter : mHotelFilterArray)
-            {
-                isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_NONE, person);
+            return true;
+        }
 
-                if (isFiltered == true)
-                {
-                    break;
-                }
-            }
-        } else
+        for (HotelFilter hotelFilter : mHotelFilterArray)
         {
-            for (HotelFilter hotelFilter : mHotelFilterArray)
+            if (hotelFilter.isPersonFiltered(person) == true)
             {
-                isFiltered = false;
-
-                if ((flag & FLAG_HOTEL_FILTER_BED_CHECKIN) == FLAG_HOTEL_FILTER_BED_CHECKIN)
-                {
-                    isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_CHECKIN, person);
-                }
-
-                if (isFiltered == true)
-                {
-                    break;
-                } else
-                {
-                    if ((flag & FLAG_HOTEL_FILTER_BED_DOUBLE) == FLAG_HOTEL_FILTER_BED_DOUBLE)
-                    {
-                        isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_DOUBLE, person);
-                    }
-                }
-
-                if (isFiltered == true)
-                {
-                    break;
-                } else
-                {
-                    if ((flag & FLAG_HOTEL_FILTER_BED_TWIN) == FLAG_HOTEL_FILTER_BED_TWIN)
-                    {
-                        isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_TWIN, person);
-                    }
-                }
-
-                if (isFiltered == true)
-                {
-                    break;
-                } else
-                {
-                    if ((flag & FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
-                    {
-                        isFiltered = hotelFilter.isFiltered(FLAG_HOTEL_FILTER_BED_HEATEDFLOORS, person);
-                    }
-                }
-
-                if (isFiltered == true)
-                {
-                    break;
-                }
+                return true;
             }
         }
 
-        return isFiltered;
+        return false;
+    }
+
+    private boolean isBedTypeFiltered(int flagBedTypeFilters)
+    {
+        if (flagBedTypeFilters == HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
+        {
+            return true;
+        }
+
+        for (HotelFilter hotelFilter : mHotelFilterArray)
+        {
+            if (hotelFilter.isBedTypeFiltered(flagBedTypeFilters) == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isAmenitiesFiltered(int flagAmenitiesFilters)
+    {
+        if (flagAmenitiesFilters == HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        {
+            return true;
+        }
+
+        for (HotelFilter hotelFilter : mHotelFilterArray)
+        {
+            if (hotelFilter.isAmenitiesFiltered(flagAmenitiesFilters) == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void clear()
@@ -116,11 +104,13 @@ public class HotelFilters implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeTypedArray(mHotelFilterArray, flags);
+        dest.writeString(categoryCode);
     }
 
     private void readFromParcel(Parcel in)
     {
         mHotelFilterArray = (HotelFilter[]) in.createTypedArray(HotelFilter.CREATOR);
+        categoryCode = in.readString();
     }
 
     @Override

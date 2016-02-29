@@ -5,23 +5,29 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GourmetCurationOption extends PlaceCurationOption
 {
     private HashMap<String, Integer> mFilterMap;
-    private HashMap<String, Integer> mCategoryMap;
     private HashMap<String, Integer> mCategoryCodeMap;
     private HashMap<String, Integer> mCategorySequenceMap;
+
+    public int flagTimeFilter;
+    public boolean isParking;
+
+    private ArrayList<GourmetFilters> mGourmetFiltersList;
 
     public GourmetCurationOption()
     {
         super();
 
         mFilterMap = new HashMap<>();
-        mCategoryMap = new HashMap<>();
         mCategoryCodeMap = new HashMap<>();
         mCategorySequenceMap = new HashMap<>();
+
+        mGourmetFiltersList = new ArrayList<>();
 
         clear();
     }
@@ -29,6 +35,17 @@ public class GourmetCurationOption extends PlaceCurationOption
     public GourmetCurationOption(Parcel in)
     {
         readFromParcel(in);
+    }
+
+    public void setFiltersList(ArrayList<GourmetFilters> arrayList)
+    {
+        mGourmetFiltersList.clear();
+        mGourmetFiltersList.addAll(arrayList);
+    }
+
+    public ArrayList<GourmetFilters> getFiltersList()
+    {
+        return mGourmetFiltersList;
     }
 
     @Override
@@ -42,23 +59,14 @@ public class GourmetCurationOption extends PlaceCurationOption
     public boolean isDefaultFilter()
     {
         if (getSortType() != Constants.SortType.DEFAULT//
-            || mFilterMap.size() != 0)
+            || mFilterMap.size() != 0//
+            || flagTimeFilter != GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE//
+            || isParking == true)
         {
             return false;
         }
 
         return true;
-    }
-
-    public void setCategoryMap(HashMap<String, Integer> categoryCountMap)
-    {
-        mCategoryMap.clear();
-        mCategoryMap.putAll(categoryCountMap);
-    }
-
-    public HashMap<String, Integer> getCategoryMap()
-    {
-        return mCategoryMap;
     }
 
     public void setFilterMap(HashMap<String, Integer> filterMap)
@@ -100,9 +108,10 @@ public class GourmetCurationOption extends PlaceCurationOption
         super.writeToParcel(dest, flags);
 
         dest.writeSerializable(mFilterMap);
-        dest.writeSerializable(mCategoryMap);
         dest.writeSerializable(mCategoryCodeMap);
         dest.writeSerializable(mCategorySequenceMap);
+
+        dest.writeTypedList(mGourmetFiltersList);
     }
 
     @Override
@@ -111,9 +120,11 @@ public class GourmetCurationOption extends PlaceCurationOption
         super.readFromParcel(in);
 
         mFilterMap = (HashMap<String, Integer>) in.readSerializable();
-        mCategoryMap = (HashMap<String, Integer>) in.readSerializable();
         mCategoryCodeMap = (HashMap<String, Integer>) in.readSerializable();
         mCategorySequenceMap = (HashMap<String, Integer>) in.readSerializable();
+
+        mGourmetFiltersList = new ArrayList<>();
+        in.readTypedList(mGourmetFiltersList, GourmetFilters.CREATOR);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

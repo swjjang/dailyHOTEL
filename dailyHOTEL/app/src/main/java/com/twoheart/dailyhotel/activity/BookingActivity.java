@@ -2299,8 +2299,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     {
                         JSONObject jsonData = response.getJSONObject("data");
 
-//                        long checkInDate = jsonData.getLong("check_in_date");
-//                        long checkOutDate = jsonData.getLong("check_out_date");
+                        //                        long checkInDate = jsonData.getLong("check_in_date");
+                        //                        long checkOutDate = jsonData.getLong("check_out_date");
                         int discount = jsonData.getInt("discount_total");
                         boolean isOnSale = jsonData.getBoolean("on_sale");
                         int availableRooms = jsonData.getInt("available_rooms");

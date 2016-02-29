@@ -74,6 +74,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private boolean mDontReloadAtOnResume;
     private boolean mIsHideAppBarlayout;
+    private int mCanScrollUpCount = 0;
 
     private HotelCurationOption mCurationOption;
 
@@ -244,14 +245,37 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
     {
-        if (verticalOffset == -TOOLBAR_HEIGHT && mIsHideAppBarlayout == false)
+        final int CANSCROLLUP_REPEAT_COUNT = 3;
+
+        if (verticalOffset == -TOOLBAR_HEIGHT)
         {
-            mOnCommunicateListener.hideAppBarLayout();
-            mIsHideAppBarlayout = true;
+            if (mIsHideAppBarlayout == true)
+            {
+                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                boolean canScrollUp = currentFragment.canScrollUp();
 
-            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-            currentFragment.resetScrollDistance(false);
+                if (canScrollUp == false)
+                {
+                    if (++mCanScrollUpCount > CANSCROLLUP_REPEAT_COUNT)
+                    {
+                        mCanScrollUpCount = 0;
+                        mOnCommunicateListener.expandedAppBar(true, true);
+                        mOnCommunicateListener.showAppBarLayout();
+                        mIsHideAppBarlayout = false;
+                    }
+                } else
+                {
+                    mCanScrollUpCount = 0;
+                }
+            } else
+            {
+                mOnCommunicateListener.hideAppBarLayout();
+                mIsHideAppBarlayout = true;
+                mCanScrollUpCount = 0;
 
+                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                currentFragment.resetScrollDistance(false);
+            }
         } else if (verticalOffset == 0)
         {
             if (mIsHideAppBarlayout == true)
@@ -261,6 +285,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 mOnCommunicateListener.pinAppBarLayout();
                 mIsHideAppBarlayout = true;
+                mCanScrollUpCount = 0;
 
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                 currentFragment.resetScrollDistance(true);
@@ -268,6 +293,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
         {
             mIsHideAppBarlayout = false;
+            mCanScrollUpCount = 0;
         }
     }
 
@@ -376,7 +402,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     {
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.person = curationOption.person;
-                        mCurationOption.flagFilters = curationOption.flagFilters;
+                        mCurationOption.flagBedTypeFilters = curationOption.flagBedTypeFilters;
 
                         if (curationOption.getSortType() == SortType.DISTANCE)
                         {
@@ -1607,7 +1633,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void showFloatingActionButton()
         {
-            if(mFloatingActionView.getTag() == null)
+            if (mFloatingActionView.getTag() == null)
             {
                 return;
             }

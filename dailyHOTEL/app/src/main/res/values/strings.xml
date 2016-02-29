@@ -627,4 +627,20 @@
     <string name="label_personnel">인원</string>
     <string name="label_bedtype">베드타입</string>
     <string name="label_foodtype">음식종류</string>
+    <string name="label_amenities">부대시설</string>
+    <string name="label_wifi">무료WIFI</string>
+    <string name="label_breakfast">조식포함</string>
+    <string name="label_cooking">취사가능</string>
+    <string name="label_beth">욕조포함</string>
+    <string name="label_pool">수영장</string>
+    <string name="label_fitness">피트니스</string>
+    <string name="label_settime">시간설정</string>
+    <string name="label_parking">주차가능</string>
+    <string name="label_time_range">시간대</string>
+    <string name="label_time_0611">06~11시</string>
+    <string name="label_time_1115">11~15시</string>
+    <string name="label_time_1517">15~17시</string>
+    <string name="label_time_1721">17~21시</string>
+    <string name="label_time_2106">21시 이후</string>
+
 </resources>
