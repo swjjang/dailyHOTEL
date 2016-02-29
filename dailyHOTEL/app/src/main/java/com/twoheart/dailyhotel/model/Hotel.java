@@ -143,7 +143,7 @@ public class Hotel implements Parcelable
                 isDBenefit = true;
             }
 
-            mHotelFilters = makeHotelFilters(categoryCode, jsonObject.getJSONArray("hotelRoomElementList"));
+            mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -169,12 +169,14 @@ public class Hotel implements Parcelable
         return mHotelFilters;
     }
 
-    private HotelFilters makeHotelFilters(String categoryCode, JSONArray jsonArray) throws JSONException
+    private HotelFilters makeHotelFilters(String categoryCode, JSONObject jsonObject) throws JSONException
     {
-        if (jsonArray == null || jsonArray.length() == 0)
+        if (jsonObject == null)
         {
             return null;
         }
+
+        JSONArray jsonArray = jsonObject.getJSONArray("hotelRoomElementList");
 
         int length = jsonArray.length();
         HotelFilters hotelFilters = new HotelFilters(length);
@@ -182,7 +184,12 @@ public class Hotel implements Parcelable
 
         for (int i = 0; i < length; i++)
         {
-            hotelFilters.setHotelFilter(i, jsonArray.getJSONObject(i));
+            JSONObject jsonFilter = jsonArray.getJSONObject(i);
+            jsonFilter.put("parking", jsonObject.getString("parking"));
+            jsonFilter.put("pool", jsonObject.getString("pool"));
+            jsonFilter.put("fitness", jsonObject.getString("fitness"));
+
+            hotelFilters.setHotelFilter(i, jsonFilter);
         }
 
         return hotelFilters;

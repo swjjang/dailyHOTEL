@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.gourmetlist;
 
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -754,39 +753,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         return hasPlace;
     }
-
-    private void recordAnalyticsSortTypeEvent(Context context, SortType sortType)
-    {
-        if (context == null || sortType == null)
-        {
-            return;
-        }
-
-        String label;
-
-        switch (sortType)
-        {
-            case DISTANCE:
-                label = context.getString(R.string.label_sort_by_distance);
-                break;
-
-            case LOW_PRICE:
-                label = context.getString(R.string.label_sort_by_low_price);
-                break;
-
-            case HIGH_PRICE:
-                label = context.getString(R.string.label_sort_by_high_price);
-                break;
-
-            default:
-                label = context.getString(R.string.label_sort_by_area);
-                break;
-        }
-
-        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.GOURMET_SORTING_CLICKED, label, null);
-    }
-
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //

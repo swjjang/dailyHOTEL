@@ -24,9 +24,9 @@ public class HotelFilter implements Parcelable
     public static int FLAG_HOTEL_FILTER_AMENITIES_POOL = 0x20;
     public static int FLAG_HOTEL_FILTER_AMENITIES_FITNESS = 0x40;
 
-    private static final String DOUBLE = "더블";
-    private static final String TWIN = "트윈";
-    private static final String HEATEDFLOORS = "온돌";
+    public static final String DOUBLE = "더블";
+    public static final String TWIN = "트윈";
+    public static final String HEATEDFLOORS = "온돌";
 
     public int maxPerson;
     public int bedType;
@@ -95,6 +95,7 @@ public class HotelFilter implements Parcelable
         boolean parking = false;
         boolean pool = false;
         boolean fitness = false;
+        amenitiesFlag = FLAG_HOTEL_FILTER_AMENITIES_NONE;
 
         if (jsonObject.has("wifi") == true)
         {

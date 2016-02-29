@@ -233,6 +233,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 Intent intent = CurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, mViewType.name(), null);
             }
         });
     }

@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyEditText;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -232,6 +233,19 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             public void onClick(View v)
             {
                 updateSatifactionRating(mPlaceType, mReservationIndex, RECOMMEND);
+
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_SATISFACTION, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_SATISFACTION, null);
+                        break;
+                }
             }
         });
 
@@ -241,6 +255,19 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             public void onClick(View v)
             {
                 updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RECOMMEND);
+
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_DISSATISFACTION, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_DISSATISFACTION, null);
+                        break;
+                }
             }
         });
 
@@ -250,6 +277,19 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             public void onCancel(DialogInterface dialog)
             {
                 updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RATE);
+
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_CLOSE_BUTTON_CLICKED, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
+                        break;
+                }
             }
         });
 
