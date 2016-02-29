@@ -190,6 +190,7 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_LIST_REGION_GLOBAL = "DailyHotel_HotelGlobalLocationList";
         public static final String DAILYHOTEL_LIST_CALENDAR = "DailyHotel_HotelBookingWindow";
         public static final String DAILYHOTEL_BANNER_DETAIL = "DailyHotel_EventBannerDetailView";
+        public static final String DAILYHOTEL_CURATION = "DailyHotel_SortFilterSelectView";
         //
         public static final String DAILYHOTEL_DETAIL = "DailyHotel_HotelDetailView";
         public static final String DAILYHOTEL_DETAIL_ROOMTYPE = " DailyHotel_HotelRoomTypeList";
@@ -207,6 +208,7 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_LIST_REGION_DOMESTIC = "DailyGourmet_GourmetLocationList";
         public static final String DAILYGOURMET_LIST_CALENDAR = "DailyGourmet_GourmetBookingWindow";
         public static final String DAILYGOURMET_BANNER_DETAIL = "DailyGourmet_EventBannerDetailView";
+        public static final String DAILYGOURMET_CURATION = "DailyGourmet_SortFilterSelectView";
         //
         public static final String DAILYGOURMET_DETAIL = "DailyGourmet_GourmetDetailView";
         public static final String DAILYGOURMET_DETAIL_TICKETTYPE = " DailyGourmet_GourmetMenuTypeList";
@@ -255,9 +257,11 @@ public class AnalyticsManager
     {
         public static final String DAILY_HOTEL_CLICKED = "DailyHotelClicked";
         public static final String HOTEL_LOCATIONS_CLICKED = "HotelLocationsClicked";
-        public static final String HOTEL_SORTING_CLICKED = "HotelSortingClicked";
         public static final String HOTEL_EVENT_BANNER_CLICKED = "HotelEventBannerClicked";
         public static final String HOTEL_ITEM_CLICKED = "HotelItemClicked";
+        public static final String HOTEL_CATEGORY_CLICKED = "DailyHotelCategoryClicked";
+        public static final String HOTEL_SORT_FILTER_BUTTON_CLICKED = "HotelSortFilterButtonClicked";
+        //
         public static final String SOCIAL_SHARE_CLICKED = "SocialShareClicked";
         public static final String KAKAO_INQUIRY_CLICKED = "KakaoInquiryClicked";
         public static final String ROOM_TYPE_CLICKED = "RoomTypeClicked";
@@ -273,9 +277,10 @@ public class AnalyticsManager
         public static final String HOTEL_PAYMENT_COMPLETED = "HotelPaymentCompleted";
         public static final String DAILY_GOURMET_CLICKED = "DailyGourmetClicked";
         public static final String GOURMET_LOCATIONS_CLICKED = "GourmetLocationsClicked";
-        public static final String GOURMET_SORTING_CLICKED = "GourmetSortingClicked";
         public static final String GOURMET_EVENT_BANNER_CLICKED = "GourmetEventBannerClicked";
         public static final String GOURMET_ITEM_CLICKED = "GourmetItemClicked";
+        public static final String GOURMET_SORT_FILTER_BUTTON_CLICKED = "GourmetSortFilterButtonClicked";
+        //
         public static final String TICKET_TYPE_CLICKED = "TicketTypeClicked";
         public static final String TICKET_TYPE_ITEM_CLICKED = "TicketTypeItemClicked";
         public static final String TICKET_TYPE_CANCEL_CLICKED = "TicketTypeCancelClicked";
@@ -289,6 +294,9 @@ public class AnalyticsManager
         public static final String CREDIT_MANAGEMENT_CLICKED = "CreditManagementClicked";
         public static final String INVITE_FRIEND_CLICKED = "InviteFriendClicked";
         public static final String EVENT_CLICKED = "EventClicked";
+        //
+        public static final String SATISFACTION_EVALUATION_POPPEDUP = "SatisfactionEvaluationPoppedup";
+        //
     }
 
     public static class Category
@@ -317,6 +325,19 @@ public class AnalyticsManager
         public static final String ADDING_CARD_ICON_CLICKED = "AddingCardIconClicked";
         public static final String ADDING_CARD_BUTTON_CLICKED = "AddingCardButtonClicked";
         public static final String CREDIT_HISTORY_VIEW = "CreditHistoryView";
+        //
+        public static final String HOTEL_SATISFACTION = "HotelSatisfaction";
+        public static final String HOTEL_DISSATISFACTION = "HotelDissatisfaction";
+        public static final String HOTEL_CLOSE_BUTTON_CLICKED = "HotelCloseButtonClicked";
+        public static final String GOURMET_SATISFACTION = "GourmetSatisfaction";
+        public static final String GOURMET_DISSATISFACTION = "GourmetDissatisfaction";
+        public static final String GOURMET_CLOSE_BUTTON_CLICKED = "GourmetCloseButtonClicked";
+        //
+        public static final String CURATION_MINUS_BUTTON_CLICKED = "MinusButtonClicked";
+        public static final String CURATION_PLUS_BUTTON_CLICKED = "PlusButtonClicked";
+        public static final String CURATION_RESET_BUTTON_CLICKED = "ResetButtonClicked";
+        public static final String CURATION_APPLY_BUTTON_CLICKED = "ApplyButtonClicked";
+        public static final String CURATION_CLOSE_BUTTON_CLICKED = "CloseButtonClicked";
     }
 
     public static class UserType

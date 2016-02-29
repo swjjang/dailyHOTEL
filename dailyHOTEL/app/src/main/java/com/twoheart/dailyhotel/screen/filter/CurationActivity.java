@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.model.HotelFilter;
 import com.twoheart.dailyhotel.model.HotelFilters;
 import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
 
 import java.util.ArrayList;
@@ -195,7 +196,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
             contentLayout.addView(filterLayout);
 
-            initAmenities(filterLayout, hotelCurationOption);
+            initHotelAmenities(filterLayout, hotelCurationOption);
         }
     }
 
@@ -273,7 +274,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         }
     }
 
-    private void initAmenities(View view, HotelCurationOption hotelCurationOption)
+    private void initHotelAmenities(View view, HotelCurationOption hotelCurationOption)
     {
         mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
 
@@ -402,7 +403,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
     }
 
-    private void resetHotelCureation()
+    private void resetHotelCuration()
     {
         mPlaceCurationOption.clear();
 
@@ -571,10 +572,16 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 {
                     dailyTextView.setSelected(false);
                     filterMap.remove(key);
+
+                    AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);
                 } else
                 {
                     dailyTextView.setSelected(true);
                     filterMap.put(key, 0);
+
+                    AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);
                 }
 
                 mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
@@ -678,10 +685,16 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         {
             view.setSelected(false);
             gourmetCurationOption.isParking = false;
+
+            AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, ((TextView) view).getText().toString(), null);
         } else
         {
             view.setSelected(true);
             gourmetCurationOption.isParking = true;
+
+            AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, ((TextView) view).getText().toString(), null);
         }
 
         mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
@@ -696,17 +709,23 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         {
             view.setSelected(false);
             gourmetCurationOption.flagTimeFilter ^= flag;
+
+            AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, ((TextView) view).getText().toString(), null);
         } else
         {
             view.setSelected(true);
             gourmetCurationOption.flagTimeFilter |= flag;
+
+            AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, ((TextView) view).getText().toString(), null);
         }
 
         mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
         mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
     }
 
-    private void resetGourmetCureation()
+    private void resetGourmetCuration()
     {
         mPlaceCurationOption.clear();
 
@@ -843,10 +862,20 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     }
 
     @Override
-    protected void onResume()
+    protected void onStart()
     {
-        super.onResume();
+        super.onStart();
 
+        switch (mPlaceType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_CURATION, null);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_CURATION, null);
+                break;
+        }
     }
 
     @Override
@@ -868,26 +897,46 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
+        String label = "";
+
         switch (checkedId)
         {
             case R.id.regionCheckView:
+                label = getString(R.string.label_sort_by_area);
                 mPlaceCurationOption.setSortType(SortType.DEFAULT);
                 break;
 
             case R.id.distanceCheckView:
+                label = getString(R.string.label_sort_by_distance);
                 mPlaceCurationOption.setSortType(SortType.DISTANCE);
                 break;
 
             case R.id.lowPriceCheckView:
+                label = getString(R.string.label_sort_by_low_price);
                 mPlaceCurationOption.setSortType(SortType.LOW_PRICE);
                 break;
 
             case R.id.highPriceCheckView:
+                label = getString(R.string.label_sort_by_high_price);
                 mPlaceCurationOption.setSortType(SortType.HIGH_PRICE);
                 break;
 
             case R.id.satisfactionCheckView:
+                label = getString(R.string.label_sort_by_satisfaction);
                 mPlaceCurationOption.setSortType(SortType.SATISFACTION);
+                break;
+        }
+
+        switch (mPlaceType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, null);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, null);
                 break;
         }
     }
@@ -899,22 +948,37 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         {
             case R.id.minusPersonView:
                 updateHotelPersonFilter(((HotelCurationOption) mPlaceCurationOption).person - 1);
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_MINUS_BUTTON_CLICKED, null);
                 break;
 
             case R.id.plusPersonView:
                 updateHotelPersonFilter(((HotelCurationOption) mPlaceCurationOption).person + 1);
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_PLUS_BUTTON_CLICKED, null);
                 break;
 
             case R.id.doubleCheckView:
                 updateHotelBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, HotelFilter.DOUBLE, null);
                 break;
 
             case R.id.twinCheckView:
                 updateHotelBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN);
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, HotelFilter.TWIN, null);
                 break;
 
             case R.id.heatedFloorsCheckView:
                 updateHotelBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, HotelFilter.HEATEDFLOORS, null);
                 break;
 
             case R.id.parkingCheckView:
@@ -949,10 +1013,16 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 {
                     case HOTEL:
                         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, (HotelCurationOption) mPlaceCurationOption);
+
+                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_APPLY_BUTTON_CLICKED, null);
                         break;
 
                     case FNB:
                         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, (GourmetCurationOption) mPlaceCurationOption);
+
+                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_APPLY_BUTTON_CLICKED, null);
                         break;
                 }
 
@@ -963,6 +1033,19 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
             case R.id.closeView:
             case R.id.exitView:
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
+                        break;
+                }
+
                 finish();
                 break;
 
@@ -970,11 +1053,17 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 switch (mPlaceType)
                 {
                     case HOTEL:
-                        resetHotelCureation();
+                        resetHotelCuration();
+
+                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_RESET_BUTTON_CLICKED, null);
                         break;
 
                     case FNB:
-                        resetGourmetCureation();
+                        resetGourmetCuration();
+
+                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_RESET_BUTTON_CLICKED, null);
                         break;
                 }
                 break;

@@ -238,6 +238,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 Intent intent = CurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, mViewType.name(), null);
             }
         });
     }
@@ -1269,6 +1272,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             Category category = (Category) tab.getTag();
             setCategory(category);
+
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.HOTEL_CATEGORY_CLICKED, category.name, null);
 
             curationCurrentFragment();
 
