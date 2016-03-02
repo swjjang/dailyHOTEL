@@ -64,9 +64,14 @@ public class HotelFilter implements Parcelable
         return (bedType & bedTypeFlag) == bedType;
     }
 
-    public boolean isAmenitiesFiltered(int flag)
+    public boolean isAmenitiesFiltered(int flags)
     {
-        return (amenitiesFlag & flag) == flag;
+        if (flags == FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        {
+            return true;
+        }
+
+        return (amenitiesFlag & flags) != 0;
     }
 
     private void setBedType(String type)

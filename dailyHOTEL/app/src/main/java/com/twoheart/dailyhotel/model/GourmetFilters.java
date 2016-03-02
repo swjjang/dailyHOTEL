@@ -59,16 +59,16 @@ public class GourmetFilters implements Parcelable
         return categoryMap.containsKey(category);
     }
 
-    private boolean isTimeFiltered(int flagTimeFilter)
+    private boolean isTimeFiltered(int flagTimeFilters)
     {
-        if (flagTimeFilter == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
+        if (flagTimeFilters == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
         {
             return true;
         }
 
         for (GourmetFilter gourmetFilter : mGourmetFilterArray)
         {
-            if (gourmetFilter.isTimeFiltered(flagTimeFilter) == true)
+            if (gourmetFilter.isTimeFiltered(flagTimeFilters) == true)
             {
                 return true;
             }
@@ -93,11 +93,6 @@ public class GourmetFilters implements Parcelable
         }
 
         return false;
-    }
-
-    public void clear()
-    {
-        Arrays.fill(mGourmetFilterArray, 0, mGourmetFilterArray.length, null);
     }
 
     @Override

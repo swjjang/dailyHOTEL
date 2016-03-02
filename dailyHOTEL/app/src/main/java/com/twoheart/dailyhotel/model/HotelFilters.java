@@ -103,11 +103,6 @@ public class HotelFilters implements Parcelable
         return false;
     }
 
-    public void clear()
-    {
-        Arrays.fill(mHotelFilterArray, 0, mHotelFilterArray.length, null);
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
