@@ -261,6 +261,8 @@ public class AnalyticsManager
         public static final String HOTEL_ITEM_CLICKED = "HotelItemClicked";
         public static final String HOTEL_CATEGORY_CLICKED = "DailyHotelCategoryClicked";
         public static final String HOTEL_SORT_FILTER_BUTTON_CLICKED = "HotelSortFilterButtonClicked";
+        public static final String HOTEL_SORT_FILTER_BUTTON_CHECKED = "HotelSortFilterButtonChecked";
+        public static final String HOTEL_SORT_FILTER_BUTTON_UNCHECKED = "HotelSortFilterButtonUnchecked";
         //
         public static final String SOCIAL_SHARE_CLICKED = "SocialShareClicked";
         public static final String KAKAO_INQUIRY_CLICKED = "KakaoInquiryClicked";
@@ -280,6 +282,8 @@ public class AnalyticsManager
         public static final String GOURMET_EVENT_BANNER_CLICKED = "GourmetEventBannerClicked";
         public static final String GOURMET_ITEM_CLICKED = "GourmetItemClicked";
         public static final String GOURMET_SORT_FILTER_BUTTON_CLICKED = "GourmetSortFilterButtonClicked";
+        public static final String GOURMET_SORT_FILTER_BUTTON_CHECKED = "GourmetSortFilterButtonChecked";
+        public static final String GOURMET_SORT_FILTER_BUTTON_UNCHECKED = "GourmetSortFilterButtonUnchecked";
         //
         public static final String TICKET_TYPE_CLICKED = "TicketTypeClicked";
         public static final String TICKET_TYPE_ITEM_CLICKED = "TicketTypeItemClicked";
