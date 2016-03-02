@@ -36,7 +36,7 @@ public class FacebookManager implements IBaseAnalyticsManager
             @Override
             public void onDeferredAppLinkDataFetched(AppLinkData appLinkData)
             {
-                if(appLinkData == null)
+                if (appLinkData == null)
                 {
                     return;
                 }
