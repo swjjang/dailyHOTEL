@@ -36,6 +36,11 @@ public class FacebookManager implements IBaseAnalyticsManager
             @Override
             public void onDeferredAppLinkDataFetched(AppLinkData appLinkData)
             {
+                if(appLinkData == null)
+                {
+                    return;
+                }
+
                 Intent intent = new Intent(mContext, LauncherActivity.class);
                 intent.setData(appLinkData.getTargetUri());
 
