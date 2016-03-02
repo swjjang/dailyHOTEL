@@ -2,14 +2,18 @@ package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
+import com.mobileapptracker.MATDeeplinkListener;
 import com.mobileapptracker.MATEvent;
 import com.mobileapptracker.MATEventItem;
 import com.mobileapptracker.MATGender;
 import com.mobileapptracker.MobileAppTracker;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -69,6 +73,31 @@ public class TuneManager implements IBaseAnalyticsManager
         {
             ExLog.d(e.toString());
         }
+
+        setDeferredDeepLink();
+    }
+
+    private void setDeferredDeepLink()
+    {
+        mMobileAppTracker.checkForDeferredDeeplink(new MATDeeplinkListener()
+        {
+            @Override
+            public void didReceiveDeeplink(String deeplink)
+            {
+                if (Util.isTextEmpty(deeplink) == false)
+                {
+                    Intent intent = new Intent(mContext, LauncherActivity.class);
+                    intent.setData(Uri.parse(deeplink));
+
+                    mContext.startActivity(intent);
+                }
+            }
+
+            @Override
+            public void didFailDeeplink(String error)
+            {
+            }
+        });
     }
 
     @Override
