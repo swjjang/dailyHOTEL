@@ -30,11 +30,11 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.screen.gourmetlist.GourmetDetailRoomTypeListAdapter;
-import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailListView;
+import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
+import com.twoheart.dailyhotel.view.widget.DailyPlaceDetailListView;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class GourmetDetailLayout
     protected LoopViewPager mViewPager;
     protected DailyViewPagerIndicator mDailyViewPagerIndicator;
 
-    protected HotelDetailListView mListView;
+    protected DailyPlaceDetailListView mListView;
     private GourmetDetailListAdapter mListAdapter;
     protected DetailImageViewPagerAdapter mImageAdapter;
 
@@ -100,7 +100,7 @@ public class GourmetDetailLayout
 
     private void initLayout(BaseActivity activity, String defaultImageUrl)
     {
-        mListView = (HotelDetailListView) activity.findViewById(R.id.hotelListView);
+        mListView = (DailyPlaceDetailListView) activity.findViewById(R.id.hotelListView);
         mListView.setOnScrollListener(mOnScrollListener);
 
         // 이미지 ViewPage 넣기.
@@ -287,7 +287,7 @@ public class GourmetDetailLayout
         return mBookingStatus;
     }
 
-    protected void setBookingStatus(int status)
+    public void setBookingStatus(int status)
     {
         mBookingStatus = status;
 
@@ -386,7 +386,7 @@ public class GourmetDetailLayout
         mTicketTypeBackgroundView.setEnabled(enabled);
     }
 
-    protected void hideTicketInformationLayout()
+    public void hideTicketInformationLayout()
     {
         if (mObjectAnimator != null)
         {

@@ -286,6 +286,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mOnCommunicateListener.showFloatingActionButton();
             } else
             {
+                mOnCommunicateListener.showAppBarLayout();
                 mOnCommunicateListener.pinAppBarLayout();
                 mIsHideAppBarlayout = true;
                 mCanScrollUpCount = 0;
@@ -304,6 +305,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     public void onResume()
     {
         mOnCommunicateListener.showAppBarLayout();
+        mOnCommunicateListener.pinAppBarLayout();
         mOnCommunicateListener.expandedAppBar(true, false);
 
         if (mDontReloadAtOnResume == true)
@@ -1649,6 +1651,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             if (mFloatingActionView.getVisibility() != View.GONE)
+            {
+                return;
+            }
+
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currentFragment.isShowInformationAtMapView() == true)
             {
                 return;
             }

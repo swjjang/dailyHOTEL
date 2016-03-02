@@ -4,29 +4,56 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.adapter.PlaceViewPagerAdapter;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
 
-public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
+public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 {
-    public GourmetViewPagerAdapter(Context context)
+    private GourmetMapFragment.OnUserActionListener mOnUserActionListener;
+
+    public GourmetMapViewPagerAdapter(Context context)
     {
         super(context);
     }
 
     @Override
-    protected void makeLayout(View view, Place place)
+    public Object instantiateItem(ViewGroup container, int position)
     {
-        final Gourmet gourmet = (Gourmet) place;
+        if (mPlaceViewItemList == null || mPlaceViewItemList.size() < position)
+        {
+            return null;
+        }
 
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = layoutInflater.inflate(R.layout.viewpager_column_gourmet, null);
+
+        PlaceViewItem item = mPlaceViewItemList.get(position);
+
+        makeLayout(view, item.<Gourmet>getItem());
+
+        container.addView(view, 0);
+
+        return view;
+    }
+
+    public void setOnUserActionListener(GourmetMapFragment.OnUserActionListener listener)
+    {
+        mOnUserActionListener = listener;
+    }
+
+    private void makeLayout(View view, final Gourmet gourmet)
+    {
         View gradientView = view.findViewById(R.id.gradientView);
         com.facebook.drawee.view.SimpleDraweeView placeImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
         TextView name = (TextView) view.findViewById(R.id.nameTextView);

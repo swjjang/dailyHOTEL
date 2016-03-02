@@ -15,6 +15,9 @@ package com.twoheart.dailyhotel.network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -283,9 +286,21 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelList(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/list" : "MTQkNDUkODQkMzUkMjIk$NDA3MDMzRUNFQkYQ5NTA3MUjg5MDEzNjU1QkVQ1NTlGNTZEVMDgyREY2NkQ4Njc4Njk4NThBMTQ5RkUzRDFDQTJA4MQ==$";
+
+        String params;
+
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+
+            params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+        } else
+        {
+            params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+        }
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
@@ -395,9 +410,21 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetList(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetList(Object tag, Province province, SaleTime saleTime, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "gourmet/sale/v2/list" : "MTQkMjgkNTgkNTEkMzAk$NjAxMDJFODkyMzWMxMjAzQUM2N0UC2TMDkwREQ1REU2RjdCOEI5OCUYxMEJEAQzRGRjNBNzEwQUVBNUYxRjg1MkQ1NA==$";
+
+        String params;
+
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+
+            params = String.format("?provinceIdx=%d&areaIdx=%d&dateTarget=%s", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysDateFormat("yyMMdd"));
+        } else
+        {
+            params = String.format("?provinceIdx=%d&dateTarget=%s", province.getProvinceIndex(), saleTime.getDayOfDaysDateFormat("yyMMdd"));
+        }
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }

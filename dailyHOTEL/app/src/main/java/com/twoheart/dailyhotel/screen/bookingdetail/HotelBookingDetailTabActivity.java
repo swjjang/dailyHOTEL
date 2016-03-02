@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;

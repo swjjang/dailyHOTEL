@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;

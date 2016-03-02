@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotellist;
+package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
 import android.net.Uri;

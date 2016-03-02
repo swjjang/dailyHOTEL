@@ -32,7 +32,6 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -283,6 +282,16 @@ public class HotelListFragment extends BaseFragment implements Constants
         return mOnItemClickListener;
     }
 
+    public boolean isShowInformationAtMapView()
+    {
+        if (mViewType == ViewType.MAP && mHotelMapFragment != null)
+        {
+            return mHotelMapFragment.isShowInformation();
+        }
+
+        return false;
+    }
+
     public void refreshList()
     {
         Map<String, String> params = new HashMap<>();
@@ -298,9 +307,6 @@ public class HotelListFragment extends BaseFragment implements Constants
         });
     }
 
-    /**
-     * 이벤트 리스트를 얻어오는 API가 생겨서 어쩔수 없이 상속구조로 바꿈
-     */
     protected void fetchList()
     {
         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
@@ -319,34 +325,22 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         lockUI();
 
-        int stayDays = 0;
+        int nights = 0;
 
         if (checkOutSaleTime == null)
         {
             // 오늘, 내일인 경우
-            stayDays = 1;
+            nights = 1;
         } else
         {
             // 연박인 경우
-            stayDays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+            nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
         }
 
-        if (stayDays <= 0)
+        if (nights <= 0)
         {
             unLockUI();
             return;
-        }
-
-        String params = null;
-
-        if (province instanceof Area)
-        {
-            Area area = (Area) province;
-
-            params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
-        } else
-        {
-            params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
         }
 
         //        if (DEBUG == true && this instanceof HotelDaysListFragment)
@@ -354,7 +348,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);
+        DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, province, checkInSaleTime, nights, mHotelListJsonResponseListener, baseActivity);
     }
 
     public void setScrollListTop(boolean scrollListTop)

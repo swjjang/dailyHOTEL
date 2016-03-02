@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
+import com.twoheart.dailyhotel.view.widget.DailyPlaceDetailListView;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class HotelDetailLayout
     private BaseActivity mActivity;
     private LoopViewPager mViewPager;
     private DailyViewPagerIndicator mDailyViewPagerIndicator;
-    private HotelDetailListView mListView;
+    private DailyPlaceDetailListView mListView;
     private DetailImageViewPagerAdapter mImageAdapter;
     private HotelDetailListAdapter mListAdapter;
     private SaleRoomInformation mSelectedSaleRoomInformation;
@@ -86,7 +87,7 @@ public class HotelDetailLayout
 
     private void initLayout(BaseActivity activity, String defaultImageUrl)
     {
-        mListView = (HotelDetailListView) activity.findViewById(R.id.hotelListView);
+        mListView = (DailyPlaceDetailListView) activity.findViewById(R.id.hotelListView);
         mListView.setOnScrollListener(mOnScrollListener);
 
         // 이미지 ViewPage 넣기.

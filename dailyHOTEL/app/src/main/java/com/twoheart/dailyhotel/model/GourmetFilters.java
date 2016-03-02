@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class GourmetFilters implements Parcelable

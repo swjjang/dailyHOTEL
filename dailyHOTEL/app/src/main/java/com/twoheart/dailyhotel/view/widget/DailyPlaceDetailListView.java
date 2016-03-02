@@ -1,36 +1,36 @@
-package com.twoheart.dailyhotel.screen.hoteldetail;
+package com.twoheart.dailyhotel.view.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ListView;
 
-public class HotelDetailListView extends ListView
+public class DailyPlaceDetailListView extends ListView
 {
     private boolean mScrollable = true;
 
-    public HotelDetailListView(Context context)
+    public DailyPlaceDetailListView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public HotelDetailListView(Context context, AttributeSet attrs)
+    public DailyPlaceDetailListView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public HotelDetailListView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyPlaceDetailListView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
         initLayout(context);
     }
 
-    public HotelDetailListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    public DailyPlaceDetailListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
 

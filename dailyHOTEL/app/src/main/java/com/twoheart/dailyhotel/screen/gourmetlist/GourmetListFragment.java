@@ -18,13 +18,10 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.fragment.PlaceMapFragment;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilters;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -59,7 +56,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     private View mEmptyView;
     private ViewGroup mMapLayout;
-    private PlaceMapFragment mPlaceMapFragment;
+    private GourmetMapFragment mGourmetMapFragment;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<EventBanner> mEventBannerList;
 
@@ -118,9 +115,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         if (mViewType == ViewType.MAP)
         {
-            if (mPlaceMapFragment != null)
+            if (mGourmetMapFragment != null)
             {
-                mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
+                mGourmetMapFragment.onActivityResult(requestCode, resultCode, data);
             }
         }
     }
@@ -130,9 +127,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         if (mViewType == ViewType.MAP)
         {
-            if (mPlaceMapFragment != null)
+            if (mGourmetMapFragment != null)
             {
-                mPlaceMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                mGourmetMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
     }
@@ -215,11 +212,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
-                if (mPlaceMapFragment != null)
+                if (mGourmetMapFragment != null)
                 {
-                    getChildFragmentManager().beginTransaction().remove(mPlaceMapFragment).commitAllowingStateLoss();
+                    getChildFragmentManager().beginTransaction().remove(mGourmetMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
-                    mPlaceMapFragment = null;
+                    mGourmetMapFragment = null;
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -231,10 +228,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
-                if (isCurrentPage == true && mPlaceMapFragment == null)
+                if (isCurrentPage == true && mGourmetMapFragment == null)
                 {
-                    mPlaceMapFragment = new GourmetMapFragment();
-                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mPlaceMapFragment).commitAllowingStateLoss();
+                    mGourmetMapFragment = new GourmetMapFragment();
+                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mGourmetMapFragment).commitAllowingStateLoss();
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
@@ -269,6 +266,16 @@ public class GourmetListFragment extends BaseFragment implements Constants
     public void setOnCommunicateListener(GourmetMainFragment.OnCommunicateListener listener)
     {
         mOnCommunicateListener = listener;
+    }
+
+    public boolean isShowInformationAtMapView()
+    {
+        if (mViewType == ViewType.MAP && mGourmetMapFragment != null)
+        {
+            return mGourmetMapFragment.isShowInformation();
+        }
+
+        return false;
     }
 
     public void refreshList()
@@ -322,24 +329,12 @@ public class GourmetListFragment extends BaseFragment implements Constants
             return;
         }
 
-        String params = null;
-
-        if (province instanceof Area)
-        {
-            Area area = (Area) province;
-
-            params = String.format("?provinceIdx=%d&areaIdx=%d&dateTarget=%s", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-        } else
-        {
-            params = String.format("?provinceIdx=%d&dateTarget=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-        }
-
         //        if (DEBUG == true && this instanceof GourmetDaysListFragment)
         //        {
         //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
+        DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, province, checkInSaleTime, mGourmetListJsonResponseListener, baseActivity);
     }
 
     public void setScrollListTop(boolean scrollListTop)
@@ -587,8 +582,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     return;
                 }
 
-                mPlaceMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-                mPlaceMapFragment.setPlaceViewItemList(gourmetListViewItemList, getSelectedSaleTime(), mScrollListTop);
+                mGourmetMapFragment.setOnCommunicateListener(mOnCommunicateListener);
+                mGourmetMapFragment.setPlaceViewItemList(gourmetListViewItemList, getSelectedSaleTime(), mScrollListTop);
 
                 AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
             } else

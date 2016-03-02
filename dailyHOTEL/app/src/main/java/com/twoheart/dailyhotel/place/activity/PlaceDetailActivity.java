@@ -4,7 +4,7 @@
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
-package com.twoheart.dailyhotel.screen.gourmetdetail;
+package com.twoheart.dailyhotel.place.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.screen.gourmetdetail.GourmetDetailLayout;
 import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;

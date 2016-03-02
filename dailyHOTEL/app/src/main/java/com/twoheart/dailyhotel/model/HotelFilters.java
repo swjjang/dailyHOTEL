@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-
 public class HotelFilters implements Parcelable
 {
     private HotelFilter[] mHotelFilterArray;

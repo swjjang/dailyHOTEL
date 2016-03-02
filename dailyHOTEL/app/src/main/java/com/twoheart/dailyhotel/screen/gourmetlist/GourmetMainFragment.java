@@ -281,6 +281,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 mOnCommunicateListener.showFloatingActionButton();
             } else
             {
+                mOnCommunicateListener.showAppBarLayout();
                 mOnCommunicateListener.pinAppBarLayout();
                 mIsHideAppBarlayout = true;
                 mCanScrollUpCount = 0;
@@ -299,6 +300,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     public void onResume()
     {
         mOnCommunicateListener.showAppBarLayout();
+        mOnCommunicateListener.pinAppBarLayout();
         mOnCommunicateListener.expandedAppBar(true, false);
 
         if (mDontReloadAtOnResume == true)
@@ -1413,6 +1415,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             }
 
             if (mFloatingActionView.getVisibility() != View.GONE)
+            {
+                return;
+            }
+
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currentFragment.isShowInformationAtMapView() == true)
             {
                 return;
             }
