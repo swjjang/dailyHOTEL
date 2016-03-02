@@ -403,6 +403,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                     if (curationOption != null)
                     {
+                        mOnCommunicateListener.setScrollListTop(true);
+
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.setFilterMap(curationOption.getFilterMap());
                         mCurationOption.flagTimeFilter = curationOption.flagTimeFilter;
@@ -1463,7 +1465,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)

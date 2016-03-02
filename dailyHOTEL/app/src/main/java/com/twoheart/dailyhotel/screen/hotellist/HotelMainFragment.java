@@ -408,6 +408,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     if (curationOption != null)
                     {
+                        mOnCommunicateListener.setScrollListTop(true);
+
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.person = curationOption.person;
                         mCurationOption.flagBedTypeFilters = curationOption.flagBedTypeFilters;

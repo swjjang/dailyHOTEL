@@ -311,24 +311,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         lockUI();
 
-        int stayDays = 0;
-
-        if (checkOutSaleTime == null)
-        {
-            // 오늘, 내일인 경우
-            stayDays = 1;
-        } else
-        {
-            // 연박인 경우
-            stayDays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-        }
-
-        if (stayDays <= 0)
-        {
-            unLockUI();
-            return;
-        }
-
         //        if (DEBUG == true && this instanceof GourmetDaysListFragment)
         //        {
         //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
@@ -432,14 +414,14 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     private ArrayList<PlaceViewItem> makeSectionList(List<Gourmet> gourmetList)
     {
-        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
+        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         if (gourmetList == null || gourmetList.size() == 0)
         {
             return placeViewItemList;
         }
 
-        String area = null;
+        String previousRegion = null;
         boolean hasDailyChoice = false;
 
         for (Gourmet gourmet : gourmetList)
@@ -462,9 +444,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 }
             } else
             {
-                if (Util.isTextEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+                if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
                 {
-                    area = region;
+                    previousRegion = region;
 
                     PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
                     placeViewItemList.add(section);
@@ -892,11 +874,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
         {
             if (jsonArray == null)
             {
-                return new ArrayList<Gourmet>();
+                return new ArrayList<>();
             }
 
             int length = jsonArray.length();
-            ArrayList<Gourmet> gourmetList = new ArrayList<Gourmet>(length);
+            ArrayList<Gourmet> gourmetList = new ArrayList<>(length);
             JSONObject jsonObject;
             Gourmet gouremt;
 

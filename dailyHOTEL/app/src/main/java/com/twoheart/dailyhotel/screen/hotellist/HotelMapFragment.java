@@ -99,7 +99,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
         if (mDuplicateHotel == null)
         {
-            mDuplicateHotel = new HashMap<String, ArrayList<Hotel>>();
+            mDuplicateHotel = new HashMap<>();
         }
 
         getMapAsync(new OnMapReadyCallback()
@@ -126,7 +126,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 relocationMyLocation();
                 relocationZoomControl();
 
-                mClusterManager = new ClusterManager<HotelClusterItem>(baseActivity, mGoogleMap);
+                mClusterManager = new ClusterManager<>(baseActivity, mGoogleMap);
                 mHotelClusterRenderer = new HotelClusterRenderer(baseActivity, mGoogleMap, mClusterManager);
                 mHotelClusterRenderer.setOnClusterRenderedListener(mOnClusterRenderedListener);
 
@@ -261,7 +261,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         mOnCommunicateListener = communicateListener;
     }
 
-    public void setHotelList(List<PlaceViewItem> hotelArrayList, SaleTime saleTime, boolean isChangedRegion)
+    public void setHotelViewItemList(List<PlaceViewItem> hotelArrayList, SaleTime saleTime, boolean isChangedRegion)
     {
         mHotelArrayList = hotelArrayList;
         mSaleTime = saleTime;
@@ -384,7 +384,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
         if (mDuplicateHotel == null)
         {
-            mDuplicateHotel = new HashMap<String, ArrayList<Hotel>>();
+            mDuplicateHotel = new HashMap<>();
         }
 
         mDuplicateHotel.clear();
@@ -396,13 +396,12 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         }
 
         mHotelArrangeArrayList = null;
-
         mHotelArrangeArrayList = searchDuplicateLocateion(mHotelArrayList, mDuplicateHotel);
 
         mClusterManager.clearItems();
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
-        mClusterManager.setOnClusterClickListener(HotelMapFragment.this);
-        mClusterManager.setOnClusterItemClickListener(HotelMapFragment.this);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
 
         for (PlaceViewItem hotelListViewItem : mHotelArrangeArrayList)
         {
@@ -567,7 +566,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         List<PlaceViewItem> arrangeList = new ArrayList<>(hotelArrayList);
 
         int size = arrangeList.size();
-        PlaceViewItem hotelListViewItem = null;
+        PlaceViewItem hotelListViewItem;
 
         // 섹션 정보와 솔드 아웃인 경우 목록에서 제거 시킨다.
         for (int i = size - 1; i >= 0; i--)
@@ -651,7 +650,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                         }
                     } else
                     {
-                        ArrayList<Hotel> dulicateHotelArrayList = new ArrayList<Hotel>();
+                        ArrayList<Hotel> dulicateHotelArrayList = new ArrayList<>();
 
                         dulicateHotelArrayList.add(item01);
                         dulicateHotelArrayList.add(item02);
@@ -816,7 +815,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
     private void searchMyLocation(BaseActivity baseActivity)
     {
-        LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelMapFragment.this, mMyLocationView, new LocationFactory.LocationListenerEx()
+        LocationFactory.getInstance(baseActivity).startLocationMeasure(this, mMyLocationView, new LocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()

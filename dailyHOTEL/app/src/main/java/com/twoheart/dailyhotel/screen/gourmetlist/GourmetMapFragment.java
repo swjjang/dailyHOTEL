@@ -69,8 +69,15 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
     private PlaceClusterRenderer mPlaceClusterRenderer;
     private Marker mSelectedMarker;
     private View mMyLocationView;
-    private ViewPager mViewPager;
+    private LoopViewPager mViewPager;
     private GourmetMapViewPagerAdapter mGourmetMapViewPagerAdapter;
+
+    public interface OnUserActionListener
+    {
+        void onInfoWindowClickListener(Place place);
+
+        void onCloseInfoWindowClickListener();
+    }
 
     public GourmetMapFragment()
     {
@@ -88,7 +95,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
 
         if (mDuplicatePlace == null)
         {
-            mDuplicatePlace = new HashMap<String, ArrayList<Place>>();
+            mDuplicatePlace = new HashMap<>();
         }
 
         getMapAsync(new OnMapReadyCallback()
@@ -115,7 +122,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                 relocationMyLocation();
                 relocationZoomControl();
 
-                mClusterManager = new ClusterManager<PlaceClusterItem>(baseActivity, mGoogleMap);
+                mClusterManager = new ClusterManager<>(baseActivity, mGoogleMap);
                 mPlaceClusterRenderer = new PlaceClusterRenderer(baseActivity, mGoogleMap, mClusterManager);
                 mPlaceClusterRenderer.setOnClusterRenderedListener(mOnClusterRenderedListener);
 
@@ -373,7 +380,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
 
         if (mDuplicatePlace == null)
         {
-            mDuplicatePlace = new HashMap<String, ArrayList<Place>>();
+            mDuplicatePlace = new HashMap<>();
         }
 
         mDuplicatePlace.clear();
@@ -385,7 +392,6 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
         }
 
         mPlaceViewItemViewPagerList = null;
-
         mPlaceViewItemViewPagerList = searchDuplicateLocateion(mPlaceViewItemList, mDuplicatePlace);
 
         mClusterManager.clearItems();
@@ -556,7 +562,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
         ArrayList<PlaceViewItem> arrangeList = new ArrayList<>(hotelArrayList);
 
         int size = arrangeList.size();
-        PlaceViewItem placeViewItem = null;
+        PlaceViewItem placeViewItem;
 
         // 섹션 정보와 솔드 아웃인 경우 목록에서 제거 시킨다.
         for (int i = size - 1; i >= 0; i--)
@@ -640,7 +646,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                         }
                     } else
                     {
-                        ArrayList<Place> dulicateArrayList = new ArrayList<Place>();
+                        ArrayList<Place> dulicateArrayList = new ArrayList<>();
 
                         dulicateArrayList.add(item01);
                         dulicateArrayList.add(item02);
@@ -927,17 +933,6 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                 }
             }
         });
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    ////////////////////////////////////////////////////////////////////////////////
-
-    public interface OnUserActionListener
-    {
-        void onInfoWindowClickListener(Place selectedPlace);
-
-        void onCloseInfoWindowClickListener();
     }
 
     private class MapWindowAdapter implements GoogleMap.InfoWindowAdapter

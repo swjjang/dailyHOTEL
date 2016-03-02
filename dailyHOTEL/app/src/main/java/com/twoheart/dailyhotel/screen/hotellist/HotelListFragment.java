@@ -113,7 +113,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         mEmptyView = view.findViewById(R.id.emptyView);
 
-        mMapLayout = (ViewGroup) view.findViewById(R.id.hotelMapLayout);
+        mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
 
         mViewType = ViewType.LIST;
 
@@ -598,10 +598,10 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 if (HotelListFragment.this instanceof HotelDaysListFragment)
                 {
-                    mHotelMapFragment.setHotelList(hotelListViewItemList, ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), mScrollListTop);
+                    mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), mScrollListTop);
                 } else
                 {
-                    mHotelMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mScrollListTop);
+                    mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, mSaleTime, mScrollListTop);
                 }
 
                 AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST_MAP, null);
@@ -877,11 +877,11 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             if (jsonArray == null)
             {
-                return new ArrayList<Hotel>();
+                return new ArrayList<>();
             }
 
             int length = jsonArray.length();
-            ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
+            ArrayList<Hotel> hotelList = new ArrayList<>(length);
             JSONObject jsonObject;
             Hotel hotel;
 
