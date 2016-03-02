@@ -172,37 +172,6 @@ public class FacebookManager implements IBaseAnalyticsManager
                     ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + parameters.toString());
                 }
             }
-            //            else if (AnalyticsManager.Action.HOTEL_SORTING_CLICKED.equalsIgnoreCase(action) == true)
-            //            {
-            //                AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
-            //
-            //                Bundle parameters = new Bundle();
-            //
-            //                String value = String.format("%s_%s", mContext.getString(R.string.label_hotel), label);
-            //                parameters.putString(AppEventsConstants.EVENT_PARAM_SEARCH_STRING, value);
-            //
-            //                appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
-            //
-            //                if (DEBUG == true)
-            //                {
-            //                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + parameters.toString());
-            //                }
-            //            } else if (AnalyticsManager.Action.GOURMET_SORTING_CLICKED.equalsIgnoreCase(action) == true)
-            //            {
-            //                AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
-            //
-            //                Bundle parameters = new Bundle();
-            //
-            //                String value = String.format("%s_%s", mContext.getString(R.string.label_fnb), label);
-            //                parameters.putString(AppEventsConstants.EVENT_PARAM_SEARCH_STRING, value);
-            //
-            //                appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
-            //
-            //                if (DEBUG == true)
-            //                {
-            //                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + parameters.toString());
-            //                }
-            //            }
         }
     }
 

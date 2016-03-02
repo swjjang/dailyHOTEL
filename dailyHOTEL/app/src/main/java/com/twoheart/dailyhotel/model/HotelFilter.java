@@ -11,10 +11,12 @@ public class HotelFilter implements Parcelable
     public static final int MIN_PERSON = 2;
     public static final int MAX_PERSON = 10;
 
+    public static int FLAG_HOTEL_FILTER_BED_NONE = 0x00;
     public static int FLAG_HOTEL_FILTER_BED_DOUBLE = 0x01;
     public static int FLAG_HOTEL_FILTER_BED_TWIN = 0x02;
     public static int FLAG_HOTEL_FILTER_BED_HEATEDFLOORS = 0x04;
     public static int FLAG_HOTEL_FILTER_BED_CHECKIN = 0x08;
+    //
     public static int FLAG_HOTEL_FILTER_AMENITIES_NONE = 0x00;
     public static int FLAG_HOTEL_FILTER_AMENITIES_WIFI = 0x01;
     public static int FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST = 0x02;
@@ -56,7 +58,7 @@ public class HotelFilter implements Parcelable
 
     public boolean isBedTypeFiltered(int bedTypeFlag)
     {
-        if (bedTypeFlag == HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
+        if (bedTypeFlag == FLAG_HOTEL_FILTER_BED_NONE)
         {
             return true;
         }

@@ -262,8 +262,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     if (++mCanScrollUpCount > CANSCROLLUP_REPEAT_COUNT)
                     {
                         mCanScrollUpCount = 0;
-                        mOnCommunicateListener.expandedAppBar(true, true);
                         mOnCommunicateListener.showAppBarLayout();
+                        mOnCommunicateListener.expandedAppBar(true, true);
                         mIsHideAppBarlayout = false;
                     }
                 } else
@@ -303,6 +303,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     @Override
     public void onResume()
     {
+        mOnCommunicateListener.showAppBarLayout();
+        mOnCommunicateListener.expandedAppBar(true, false);
+
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;

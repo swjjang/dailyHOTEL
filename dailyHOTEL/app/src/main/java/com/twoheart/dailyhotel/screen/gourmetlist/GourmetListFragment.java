@@ -95,6 +95,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             public void onRefresh()
             {
                 mOnCommunicateListener.showAppBarLayout();
+                mOnCommunicateListener.expandedAppBar(true, true);
                 mOnCommunicateListener.refreshAll(false);
             }
         });
@@ -344,118 +345,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
     public void setScrollListTop(boolean scrollListTop)
     {
         mScrollListTop = scrollListTop;
-    }
-
-    private void requestSortList(SortType type, final Location location)
-    {
-        if (SortType.DEFAULT == type)
-        {
-            ExLog.d("Not supported type");
-            return;
-        }
-
-        List<PlaceViewItem> arrayList = mGourmetAdapter.getAll();
-
-        int size = arrayList.size();
-
-        if (size == 0)
-        {
-            unLockUI();
-            return;
-        }
-
-        for (int i = size - 1; i >= 0; i--)
-        {
-            PlaceViewItem placeViewItem = arrayList.get(i);
-
-            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
-            {
-                arrayList.remove(i);
-            }
-        }
-
-        switch (type)
-        {
-            case DISTANCE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Place place1 = placeViewItem1.<Gourmet>getItem();
-                        Place place2 = placeViewItem2.<Gourmet>getItem();
-
-                        float[] results1 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), place1.latitude, place1.longitude, results1);
-                        ((Gourmet) place1).distance = results1[0];
-
-                        float[] results2 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), place2.latitude, place2.longitude, results2);
-                        ((Gourmet) place2).distance = results2[0];
-
-                        return Float.compare(results1[0], results2[0]);
-                    }
-                };
-
-                if (arrayList.size() == 1)
-                {
-                    PlaceViewItem placeViewItem = arrayList.get(0);
-                    Place place1 = placeViewItem.<Gourmet>getItem();
-
-                    float[] results1 = new float[3];
-                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), place1.latitude, place1.longitude, results1);
-                    ((Gourmet) place1).distance = results1[0];
-                } else
-                {
-                    Collections.sort(arrayList, comparator);
-                }
-                break;
-            }
-
-            case LOW_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Place place1 = placeViewItem1.<Gourmet>getItem();
-                        Place place2 = placeViewItem2.<Gourmet>getItem();
-
-                        return place1.discountPrice - place2.discountPrice;
-                    }
-                };
-
-                Collections.sort(arrayList, comparator);
-                break;
-            }
-
-            case HIGH_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Place place1 = placeViewItem1.<Gourmet>getItem();
-                        Place place2 = placeViewItem2.<Gourmet>getItem();
-
-                        return place2.discountPrice - place1.discountPrice;
-                    }
-                };
-
-                Collections.sort(arrayList, comparator);
-                break;
-            }
-        }
-
-        mOnCommunicateListener.expandedAppBar(true, true);
-
-        mGourmetAdapter.setSortType(type);
-        mGourmetRecycleView.scrollToPosition(0);
-        mGourmetAdapter.notifyDataSetChanged();
-        unLockUI();
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Gourmet> gourmetList, GourmetCurationOption gourmetCurationOption)

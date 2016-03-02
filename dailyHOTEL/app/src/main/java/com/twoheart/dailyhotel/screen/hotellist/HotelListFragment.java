@@ -107,6 +107,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             public void onRefresh()
             {
                 mOnCommunicateListener.showAppBarLayout();
+                mOnCommunicateListener.expandedAppBar(true, true);
                 mOnCommunicateListener.refreshAll(false);
             }
         });
@@ -359,118 +360,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     public void setScrollListTop(boolean scrollListTop)
     {
         mScrollListTop = scrollListTop;
-    }
-
-    private void requestSortList(SortType type, final Location location)
-    {
-        if (SortType.DEFAULT == type)
-        {
-            ExLog.d("Not supported type");
-            return;
-        }
-
-        List<PlaceViewItem> arrayList = mHotelAdapter.getAll();
-
-        int size = arrayList.size();
-
-        if (size == 0)
-        {
-            unLockUI();
-            return;
-        }
-
-        for (int i = size - 1; i >= 0; i--)
-        {
-            PlaceViewItem hotelListViewItem = arrayList.get(i);
-
-            if (hotelListViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
-            {
-                arrayList.remove(i);
-            }
-        }
-
-        switch (type)
-        {
-            case DISTANCE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
-                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
-
-                        float[] results1 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
-                        hotel1.distance = results1[0];
-
-                        float[] results2 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
-                        hotel2.distance = results2[0];
-
-                        return Float.compare(results1[0], results2[0]);
-                    }
-                };
-
-                if (arrayList.size() == 1)
-                {
-                    PlaceViewItem placeViewItem = arrayList.get(0);
-                    Hotel hotel1 = placeViewItem.<Hotel>getItem();
-
-                    float[] results1 = new float[3];
-                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
-                    hotel1.distance = results1[0];
-                } else
-                {
-                    Collections.sort(arrayList, comparator);
-                }
-                break;
-            }
-
-            case LOW_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
-                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
-
-                        return hotel1.averageDiscount - hotel2.averageDiscount;
-                    }
-                };
-
-                Collections.sort(arrayList, comparator);
-                break;
-            }
-
-            case HIGH_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
-                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
-
-                        return hotel2.averageDiscount - hotel1.averageDiscount;
-                    }
-                };
-
-                Collections.sort(arrayList, comparator);
-                break;
-            }
-        }
-
-        mOnCommunicateListener.expandedAppBar(true, true);
-
-        mHotelAdapter.setSortType(type);
-        mHotelRecycleView.scrollToPosition(0);
-        mHotelAdapter.notifyDataSetChanged();
-        unLockUI();
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Hotel> hotelList, HotelCurationOption hotelCurationOption)

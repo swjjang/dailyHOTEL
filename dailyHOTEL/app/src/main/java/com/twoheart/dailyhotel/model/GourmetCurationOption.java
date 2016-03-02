@@ -58,6 +58,8 @@ public class GourmetCurationOption extends PlaceCurationOption
         super.clear();
 
         mFilterMap.clear();
+        flagTimeFilter = GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE;
+        isParking = false;
     }
 
     public boolean isDefaultFilter()

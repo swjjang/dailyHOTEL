@@ -10,8 +10,6 @@ import java.util.Arrays;
 
 public class HotelFilters implements Parcelable
 {
-    public static int FLAG_HOTEL_FILTER_BED_NONE = 0x00;
-
     private HotelFilter[] mHotelFilterArray;
     public String categoryCode;
 
@@ -69,7 +67,7 @@ public class HotelFilters implements Parcelable
 
     private boolean isBedTypeFiltered(int flagBedTypeFilters)
     {
-        if (flagBedTypeFilters == HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
+        if (flagBedTypeFilters == HotelFilter.FLAG_HOTEL_FILTER_BED_NONE)
         {
             return true;
         }

@@ -60,16 +60,16 @@ public class HotelCurationOption extends PlaceCurationOption
         super.clear();
 
         person = HotelFilter.MIN_PERSON;
-        flagBedTypeFilters = HotelFilters.FLAG_HOTEL_FILTER_BED_NONE;
-
+        flagBedTypeFilters = HotelFilter.FLAG_HOTEL_FILTER_BED_NONE;
         mCategory = Category.ALL;
+        flagAmenitiesFilters = HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
     }
 
     public boolean isDefaultFilter()
     {
         if (getSortType() != Constants.SortType.DEFAULT//
             || person != HotelFilter.MIN_PERSON//
-            || flagBedTypeFilters != HotelFilters.FLAG_HOTEL_FILTER_BED_NONE || flagAmenitiesFilters != HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+            || flagBedTypeFilters != HotelFilter.FLAG_HOTEL_FILTER_BED_NONE || flagAmenitiesFilters != HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return false;
         }

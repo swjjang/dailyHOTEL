@@ -257,8 +257,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     if (++mCanScrollUpCount > CANSCROLLUP_REPEAT_COUNT)
                     {
                         mCanScrollUpCount = 0;
-                        mOnCommunicateListener.expandedAppBar(true, true);
                         mOnCommunicateListener.showAppBarLayout();
+                        mOnCommunicateListener.expandedAppBar(true, true);
                         mIsHideAppBarlayout = false;
                     }
                 } else
@@ -298,6 +298,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     @Override
     public void onResume()
     {
+        mOnCommunicateListener.showAppBarLayout();
+        mOnCommunicateListener.expandedAppBar(true, false);
+
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
@@ -515,16 +518,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
 
         FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
-    }
-
-    private void setSortType(SortType sortType)
-    {
-        if (sortType == null)
-        {
-            sortType = SortType.DEFAULT;
-        }
-
-        mCurationOption.setSortType(sortType);
     }
 
     private void setProvince(Province province)

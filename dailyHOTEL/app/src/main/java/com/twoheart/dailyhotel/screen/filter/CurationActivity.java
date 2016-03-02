@@ -92,8 +92,8 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         Intent intent = new Intent(context, CurationActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, PlaceType.HOTEL.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, hotelCurationOption);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, hotelCurationOption);
 
         return intent;
     }
@@ -103,8 +103,8 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         Intent intent = new Intent(context, CurationActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, PlaceType.FNB.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, gourmetCurationOption);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, gourmetCurationOption);
 
         return intent;
     }
@@ -1072,24 +1072,21 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
             case R.id.confirmView:
             {
-                Intent intent = new Intent();
-
                 switch (mPlaceType)
                 {
                     case HOTEL:
-                        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, (HotelCurationOption) mPlaceCurationOption);
-
                         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_APPLY_BUTTON_CLICKED, null);
                         break;
 
                     case FNB:
-                        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, (GourmetCurationOption) mPlaceCurationOption);
-
                         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_APPLY_BUTTON_CLICKED, null);
                         break;
                 }
+
+                Intent intent = new Intent();
+                intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mPlaceCurationOption);
 
                 setResult(RESULT_OK, intent);
                 finish();
@@ -1101,11 +1098,25 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 switch (mPlaceType)
                 {
                     case HOTEL:
+                        if (((HotelCurationOption) mPlaceCurationOption).isDefaultFilter() == true)
+                        {
+                            Intent intent = new Intent();
+                            intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mPlaceCurationOption);
+                            setResult(RESULT_OK, intent);
+                        }
+
                         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
                         break;
 
                     case FNB:
+                        if (((GourmetCurationOption) mPlaceCurationOption).isDefaultFilter() == true)
+                        {
+                            Intent intent = new Intent();
+                            intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mPlaceCurationOption);
+                            setResult(RESULT_OK, intent);
+                        }
+
                         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
                         break;
