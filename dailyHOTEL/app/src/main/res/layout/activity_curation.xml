@@ -36,7 +36,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="right"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/room_select_x"/>
+            android:src="@drawable/navibar_ic_x"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/resultCountView"

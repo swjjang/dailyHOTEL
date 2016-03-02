@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilters;
+import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -944,7 +945,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                     if (length == 0)
                     {
-                        mGourmetAdapter.clear();
+                        GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
+                        gourmetCurationOption.setFiltersList(null);
+
                         mGourmetAdapter.notifyDataSetChanged();
 
                         setVisibility(ViewType.GONE, true);

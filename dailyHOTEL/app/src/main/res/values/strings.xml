@@ -637,10 +637,11 @@
     <string name="label_settime">시간설정</string>
     <string name="label_parking">주차가능</string>
     <string name="label_time_range">시간대</string>
-    <string name="label_time_0611">06~11시</string>
-    <string name="label_time_1115">11~15시</string>
-    <string name="label_time_1517">15~17시</string>
-    <string name="label_time_1721">17~21시</string>
+    <string name="label_time_0611">06-11시</string>
+    <string name="label_time_1115">11-15시</string>
+    <string name="label_time_1517">15-17시</string>
+    <string name="label_time_1721">17-21시</string>
     <string name="label_time_2106">21시 이후</string>
+    <string name="label_searching">검색중...</string>
 
 </resources>

@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class MainPresenter implements Response.ErrorListener
 {
@@ -141,25 +140,12 @@ public class MainPresenter implements Response.ErrorListener
         int uid = DailyPreference.getInstance(mBaseActivity).getNotificationUid();
         if (uid < 0)
         {
-            Map<String, String> paramHashMap = new HashMap<>();
-            paramHashMap.put("registrationId", registrationId);
-
-            DailyNetworkAPI.getInstance().requestUserRegisterNotification(mBaseActivity.getNetworkTag(), paramHashMap, dailyHotelJsonResponseListener, null);
+            DailyNetworkAPI.getInstance().requestUserRegisterNotification(mBaseActivity.getNetworkTag(), registrationId, dailyHotelJsonResponseListener, null);
         } else
         {
             if (registrationId.equalsIgnoreCase(DailyPreference.getInstance(mBaseActivity).getGCMRegistrationId()) == false)
             {
-                Map<String, String> paramHashMap = new HashMap<>();
-
-                if (Util.isTextEmpty(userIndex) == false)
-                {
-                    paramHashMap.put("userIdx", userIndex);
-                }
-
-                paramHashMap.put("changedRegistrationId", registrationId);
-                paramHashMap.put("uid", Integer.toString(uid));
-
-                DailyNetworkAPI.getInstance().requestUserUpdateNotification(mBaseActivity.getNetworkTag(), paramHashMap, dailyHotelJsonResponseListener, null);
+                DailyNetworkAPI.getInstance().requestUserUpdateNotification(mBaseActivity.getNetworkTag(), userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener, null);
             }
         }
     }

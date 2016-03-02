@@ -15,8 +15,6 @@ public class GourmetFilters implements Parcelable
     private GourmetFilter[] mGourmetFilterArray;
     public String category;
 
-    public boolean isFiltered;
-
     public GourmetFilters(int size)
     {
         mGourmetFilterArray = new GourmetFilter[size];
@@ -40,7 +38,15 @@ public class GourmetFilters implements Parcelable
 
     public boolean isFiltered(GourmetCurationOption curationOption)
     {
-        return isCategoryFiltered(curationOption.getFilterMap()) & isTimeFiltered(curationOption.flagTimeFilter) & isParkingFiltered(curationOption.isParking);
+        if (isCategoryFiltered(curationOption.getFilterMap()) == false//
+            || isTimeFiltered(curationOption.flagTimeFilter) == false//
+            || isParkingFiltered(curationOption.isParking) == false)
+        {
+            return false;
+        } else
+        {
+            return true;
+        }
     }
 
     private boolean isCategoryFiltered(HashMap<String, Integer> categoryMap)

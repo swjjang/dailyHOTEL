@@ -56,6 +56,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     private View mConfirmView;
 
     private RadioGroup mSortRadioGroup;
+    private android.support.v7.widget.GridLayout mGridLayout;
 
     // hotel
     private View mMinusPersonView;
@@ -64,7 +65,8 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     private ViewGroup mBedTypeLayout;
 
     // Gourmet
-    private android.support.v7.widget.GridLayout mGridLayout;
+    private ViewGroup mAmenitiesLayout;
+    private ViewGroup mTimeRangeLayout;
 
     private Handler mHandler = new Handler()
     {
@@ -241,6 +243,13 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         // 인원
         mMinusPersonView = view.findViewById(R.id.minusPersonView);
         mPlusPersonView = view.findViewById(R.id.plusPersonView);
+
+        View minusDimView = view.findViewById(R.id.minusDimView);
+        View plusDimView = view.findViewById(R.id.plusDimView);
+
+        mMinusPersonView.setTag(minusDimView);
+        mPlusPersonView.setTag(plusDimView);
+
         mPersonCountView = (TextView) view.findViewById(R.id.personCountView);
 
         mMinusPersonView.setOnClickListener(this);
@@ -303,8 +312,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                     curationOption.flagAmenitiesFilters |= flag.intValue();
                 }
 
-                mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
-                mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
+                requestHotelUpdateResult(true);
             }
         };
 
@@ -316,13 +324,13 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             , getString(R.string.label_pool)//
             , getString(R.string.label_fitness)};
 
-        final int[] amenitiesResId = new int[]{R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01};
+        final int[] amenitiesResId = new int[]{R.drawable.selector_filter_amenities_wifi_button//
+            , R.drawable.selector_filter_amenities_breakfast_button//
+            , R.drawable.selector_filter_amenities_cooking_button//
+            , R.drawable.selector_filter_amenities_bath_button//
+            , R.drawable.selector_filter_amenities_parking_button//
+            , R.drawable.selector_filter_amenities_pool_button//
+            , R.drawable.selector_filter_amenities_fitness_button};
 
         final int[] amenitiesflag = new int[]{HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
             , HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
@@ -348,7 +356,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             mGridLayout.addView(amenitiesView);
         }
 
-        mGridLayout.setPadding(0, 0, 0, Util.dpToPx(this, 10));
+        mGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
     }
 
     private void updateHotelPersonFilter(int person)
@@ -367,22 +375,30 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         mPersonCountView.setText(getString(R.string.label_more_person, person));
 
+        View minusDimview = (View) mMinusPersonView.getTag();
+        View plusDimview = (View) mPlusPersonView.getTag();
+
         if (person == HotelFilter.MIN_PERSON)
         {
             mMinusPersonView.setEnabled(false);
             mPlusPersonView.setEnabled(true);
+            minusDimview.setVisibility(View.VISIBLE);
+            plusDimview.setVisibility(View.GONE);
         } else if (person == HotelFilter.MAX_PERSON)
         {
             mMinusPersonView.setEnabled(true);
             mPlusPersonView.setEnabled(false);
+            minusDimview.setVisibility(View.GONE);
+            plusDimview.setVisibility(View.VISIBLE);
         } else
         {
             mMinusPersonView.setEnabled(true);
             mPlusPersonView.setEnabled(true);
+            minusDimview.setVisibility(View.GONE);
+            plusDimview.setVisibility(View.GONE);
         }
 
-        mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestHotelUpdateResult(true);
     }
 
     private void updateHotelBedTypeFilter(View view, int flag)
@@ -399,8 +415,22 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             hotelCurationOption.flagBedTypeFilters |= flag;
         }
 
-        mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestHotelUpdateResult(true);
+    }
+
+    private void requestHotelUpdateResult(boolean isDelay)
+    {
+        if (isDelay == true)
+        {
+            mResultCountView.setText(R.string.label_searching);
+
+            mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
+            mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        } else
+        {
+            mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
+            mHandler.sendEmptyMessage(HANDLE_MESSAGE_HOTEL_RESULT);
+        }
     }
 
     private void resetHotelCuration()
@@ -412,15 +442,10 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         updateHotelPersonFilter(HotelFilter.MIN_PERSON);
 
-        int bedTypeCount = mBedTypeLayout.getChildCount();
+        resetLayout(mBedTypeLayout);
+        resetLayout(mGridLayout);
 
-        for (int i = 0; i < bedTypeCount; i++)
-        {
-            mBedTypeLayout.getChildAt(i).setSelected(false);
-        }
-
-        mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
-        mHandler.sendEmptyMessage(HANDLE_MESSAGE_HOTEL_RESULT);
+        requestHotelUpdateResult(true);
     }
 
     private void updateHotelResultCount()
@@ -484,8 +509,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         contentLayout.addView(filterLayout);
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessage(HANDLE_MESSAGE_GOURMET_RESULT);
+        requestGourmetUpdateResult(true);
     }
 
     private void initGourmetSort(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
@@ -584,8 +608,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                         , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);
                 }
 
-                mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-                mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+                requestGourmetUpdateResult(true);
             }
         };
 
@@ -611,19 +634,20 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         if (isSingleLine == false)
         {
-            mGridLayout.setPadding(0, 0, 0, Util.dpToPx(this, 10));
+            mGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
         }
 
         initGourmetAmenities(view, gourmetCurationOption);
         initGourmetTimeRangeFilter(view, gourmetCurationOption);
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestGourmetUpdateResult(true);
     }
 
     private void initGourmetAmenities(View view, GourmetCurationOption gourmetCurationOption)
     {
-        View parkingCheckView = view.findViewById(R.id.parkingCheckView);
+        mAmenitiesLayout = (ViewGroup) view.findViewById(R.id.amenitiesLayout);
+
+        View parkingCheckView = mAmenitiesLayout.findViewById(R.id.parkingCheckView);
 
         parkingCheckView.setSelected(gourmetCurationOption.isParking);
         parkingCheckView.setOnClickListener(this);
@@ -631,11 +655,13 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
     private void initGourmetTimeRangeFilter(View view, GourmetCurationOption gourmetCurationOption)
     {
-        View time0611View = view.findViewById(R.id.time0611View);
-        View time1115View = view.findViewById(R.id.time1115View);
-        View time1517View = view.findViewById(R.id.time1517View);
-        View time1721View = view.findViewById(R.id.time1721View);
-        View time2106View = view.findViewById(R.id.time2106View);
+        mTimeRangeLayout = (ViewGroup) view.findViewById(R.id.timeRangeLayout);
+
+        View time0611View = mTimeRangeLayout.findViewById(R.id.time0611View);
+        View time1115View = mTimeRangeLayout.findViewById(R.id.time1115View);
+        View time1517View = mTimeRangeLayout.findViewById(R.id.time1517View);
+        View time1721View = mTimeRangeLayout.findViewById(R.id.time1721View);
+        View time2106View = mTimeRangeLayout.findViewById(R.id.time2106View);
 
         time0611View.setOnClickListener(this);
         time1115View.setOnClickListener(this);
@@ -697,8 +723,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, ((TextView) view).getText().toString(), null);
         }
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestGourmetUpdateResult(true);
     }
 
     private void updateGourmetTimeRangeFilter(View view, int flag)
@@ -721,8 +746,22 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, ((TextView) view).getText().toString(), null);
         }
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestGourmetUpdateResult(true);
+    }
+
+    private void requestGourmetUpdateResult(boolean isDelay)
+    {
+        if (isDelay == true)
+        {
+            mResultCountView.setText(R.string.label_searching);
+
+            mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
+            mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        } else
+        {
+            mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
+            mHandler.sendEmptyMessage(HANDLE_MESSAGE_GOURMET_RESULT);
+        }
     }
 
     private void resetGourmetCuration()
@@ -732,15 +771,11 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         mSortRadioGroup.clearCheck();
         mSortRadioGroup.check(R.id.regionCheckView);
 
-        int categoryCount = mGridLayout.getChildCount();
+        resetLayout(mGridLayout);
+        resetLayout(mAmenitiesLayout);
+        resetLayout(mTimeRangeLayout);
 
-        for (int i = 0; i < categoryCount; i++)
-        {
-            mGridLayout.getChildAt(i).setSelected(false);
-        }
-
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessage(HANDLE_MESSAGE_GOURMET_RESULT);
+        requestGourmetUpdateResult(false);
     }
 
     private void updateGourmetResultCount()
@@ -777,7 +812,6 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                         }
                     }
                 }
-
 
                 return count;
             }
@@ -823,15 +857,21 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
     private int getCategoryResourceId(int index)
     {
-        final int[] resourceIndex = new int[]{R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01//
-            , R.drawable.f_ic_hotel_bed_01};
+        final int[] resourceIndex = new int[]{R.drawable.selector_gourmet_category_button00//
+            , R.drawable.selector_gourmet_category_button01//
+            , R.drawable.selector_gourmet_category_button02//
+            , R.drawable.selector_gourmet_category_button03//
+            , R.drawable.selector_gourmet_category_button04//
+            , R.drawable.selector_gourmet_category_button05//
+            , R.drawable.selector_gourmet_category_button06//
+            , R.drawable.selector_gourmet_category_button07//
+            , R.drawable.selector_gourmet_category_button08//
+            , R.drawable.selector_gourmet_category_button09//
+            , R.drawable.selector_gourmet_category_button10//
+            , R.drawable.selector_gourmet_category_button11//
+            , R.drawable.selector_gourmet_category_button12//
+            , R.drawable.selector_gourmet_category_button13//
+            , R.drawable.selector_gourmet_category_button14};
 
         if (index < 1 || index >= resourceIndex.length)
         {
@@ -860,6 +900,22 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         View dimView = view.findViewById(R.id.dimView);
         dimView.setVisibility(View.VISIBLE);
     }
+
+    private void resetLayout(ViewGroup viewGroup)
+    {
+        if (viewGroup == null)
+        {
+            return;
+        }
+
+        int childCount = viewGroup.getChildCount();
+
+        for (int i = 0; i < childCount; i++)
+        {
+            viewGroup.getChildAt(i).setSelected(false);
+        }
+    }
+
 
     @Override
     protected void onStart()

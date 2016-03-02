@@ -38,15 +38,25 @@
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/minusPersonView"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="-"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"/>
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/minusPersonView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/selector_curation_minus_button"
+                android:scaleType="center"/>
+
+            <View
+                android:id="@+id/minusDimView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white_a80"
+                android:visibility="gone"/>
+        </FrameLayout>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/personCountView"
@@ -57,15 +67,25 @@
             android:textColor="@color/dh_theme_color"
             android:textSize="13dp"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/plusPersonView"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="+"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"/>
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/plusPersonView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/selector_curation_plus_button"
+                android:scaleType="center"/>
+
+            <View
+                android:id="@+id/plusDimView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white_a80"
+                android:visibility="gone"/>
+        </FrameLayout>
 
         <View
             android:layout_width="match_parent"
@@ -108,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
+            android:drawableTop="@drawable/selector_filter_bedtype_double_button"
             android:gravity="center_horizontal"
             android:text="@string/label_double"
             android:textColor="@drawable/selector_curation_textcolor"
@@ -119,7 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
+            android:drawableTop="@drawable/selector_filter_bedtype_twin_button"
             android:gravity="center_horizontal"
             android:text="@string/label_twin"
             android:textColor="@drawable/selector_curation_textcolor"
@@ -130,7 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/f_ic_hotel_bed_01"
+            android:drawableTop="@drawable/selector_filter_bedtype_heatedfloors_button"
             android:gravity="center_horizontal"
             android:text="@string/label_heatedfloors"
             android:textColor="@drawable/selector_curation_textcolor"

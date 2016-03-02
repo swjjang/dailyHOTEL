@@ -458,14 +458,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 if (mIsDailyUser == true)
                 {
-                    Map<String, String> updateParams = new HashMap<String, String>();
-                    updateParams.put("name", mNameEditText.getText().toString().trim());
+                    String name = mNameEditText.getText().toString().trim();
+                    String phone = mPhoneTextView.getText().toString().trim();
+                    phone = phone.replaceAll("-", "");
 
-                    String phoneNumber = mPhoneTextView.getText().toString().trim();
-                    phoneNumber = phoneNumber.replaceAll("-", "");
-                    updateParams.put("phone", phoneNumber);
-
-                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, updateParams, mUserUpdateJsonResponseListener, this);
+                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, name, phone, mUserUpdateJsonResponseListener, this);
                 } else
                 {
                     Map<String, String> updateParams = new HashMap<String, String>();
@@ -608,10 +605,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                     return;
                 }
 
-                Map<String, String> paramHashMap = new HashMap<>();
-                paramHashMap.put("registrationId", registrationId);
-
-                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, paramHashMap, new DailyHotelJsonResponseListener()
+                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, registrationId, new DailyHotelJsonResponseListener()
                 {
                     @Override
                     public void onResponse(String url, JSONObject response)

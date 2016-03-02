@@ -23,9 +23,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener
 {
     private TextView btnForgot;
@@ -107,12 +104,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
             }
 
             lockUI();
-
-            Map<String, String> params = new HashMap<String, String>();
-
-            params.put("userEmail", mEmail);
-
-            DailyNetworkAPI.getInstance().requestUserCheckEmail(mNetworkTag, params, mUserCheckEmailJsonResponseListener, this);
+            DailyNetworkAPI.getInstance().requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener, this);
         }
     }
 
@@ -186,10 +178,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
                         DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
                     } else
                     {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("userEmail", mEmail);
-
-                        DailyNetworkAPI.getInstance().requestUserChangePassword(mNetworkTag, params, mUserChangePwJsonResponseListener, ForgotPasswordActivity.this);
+                        DailyNetworkAPI.getInstance().requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwJsonResponseListener, ForgotPasswordActivity.this);
                     }
                 } else
                 {

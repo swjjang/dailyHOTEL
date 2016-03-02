@@ -108,7 +108,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         void showFloatingActionButton();
 
-        void hideFloatingActionButton();
+        void hideFloatingActionButton(boolean isAnimation);
 
         HotelCurationOption getCurationOption();
     }
@@ -191,7 +191,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
-                mOnCommunicateListener.hideFloatingActionButton();
+                mOnCommunicateListener.hideFloatingActionButton(true);
             }
 
             @Override
@@ -219,7 +219,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onClick(View v)
             {
-                mOnCommunicateListener.hideFloatingActionButton();
+                mOnCommunicateListener.hideFloatingActionButton(false);
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -406,6 +406,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.person = curationOption.person;
                         mCurationOption.flagBedTypeFilters = curationOption.flagBedTypeFilters;
+                        mCurationOption.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
 
                         if (curationOption.getSortType() == SortType.DISTANCE)
                         {
@@ -967,8 +968,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url);
-            startActivity(intent);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, mTodaySaleTime);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
         } else
         {
             //탭에 들어갈 날짜를 만든다.
@@ -1455,7 +1456,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
 
-                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
                     }
                 } catch (Exception e)
                 {
@@ -1463,8 +1464,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink);
-                startActivity(intent);
+                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink, mTodaySaleTime);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
 
@@ -1555,7 +1556,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 showFloatingActionButton();
             } else
             {
-                hideFloatingActionButton();
+                hideFloatingActionButton(true);
             }
         }
 
@@ -1607,7 +1608,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 toolbar.setLayoutParams(params);
             }
 
-            hideFloatingActionButton();
+            hideFloatingActionButton(true);
         }
 
         @Override
@@ -1656,17 +1657,23 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         @Override
-        public void hideFloatingActionButton()
+        public void hideFloatingActionButton(boolean isAnimation)
         {
             if (mFloatingActionView.getVisibility() == View.GONE)
             {
                 return;
             }
 
-            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
-            DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
+            if (isAnimation == true)
+            {
+                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
+                DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-            dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
+                dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
+            } else
+            {
+                mFloatingActionView.setVisibility(View.GONE);
+            }
         }
 
         @Override

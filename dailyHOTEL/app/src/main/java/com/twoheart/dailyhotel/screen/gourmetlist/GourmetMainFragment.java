@@ -106,7 +106,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         void showFloatingActionButton();
 
-        void hideFloatingActionButton();
+        void hideFloatingActionButton(boolean isAnimation);
 
         GourmetCurationOption getCurationOption();
     }
@@ -186,7 +186,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
-                mOnCommunicateListener.hideFloatingActionButton();
+                mOnCommunicateListener.hideFloatingActionButton(true);
             }
 
             @Override
@@ -214,7 +214,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             @Override
             public void onClick(View v)
             {
-                mOnCommunicateListener.hideFloatingActionButton();
+                mOnCommunicateListener.hideFloatingActionButton(false);
 
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -400,6 +400,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     {
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.setFilterMap(curationOption.getFilterMap());
+                        mCurationOption.flagTimeFilter = curationOption.flagTimeFilter;
+                        mCurationOption.isParking = curationOption.isParking;
 
                         if (curationOption.getSortType() == SortType.DISTANCE)
                         {
@@ -796,8 +798,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url);
-            startActivity(intent);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, mTodaySaleTime);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
         } else
         {
             //탭에 들어갈 날짜를 만든다.
@@ -1208,7 +1210,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
 
-                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                     } else
                     {
                         selectPlace(eventBanner.index, dailyTime, dailyDayOfDays, eventBanner.nights);
@@ -1219,8 +1221,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink);
-                startActivity(intent);
+                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, mTodaySaleTime);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
 
@@ -1328,7 +1330,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 showFloatingActionButton();
             } else
             {
-                hideFloatingActionButton();
+                hideFloatingActionButton(true);
             }
         }
 
@@ -1380,7 +1382,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 toolbar.setLayoutParams(params);
             }
 
-            hideFloatingActionButton();
+            hideFloatingActionButton(true);
         }
 
         @Override
@@ -1429,17 +1431,23 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
 
         @Override
-        public void hideFloatingActionButton()
+        public void hideFloatingActionButton(boolean isAnimation)
         {
             if (mFloatingActionView.getVisibility() == View.GONE)
             {
                 return;
             }
 
-            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
-            DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
+            if (isAnimation == true)
+            {
+                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
+                DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
-            dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
+                dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
+            } else
+            {
+                mFloatingActionView.setVisibility(View.GONE);
+            }
         }
 
         @Override

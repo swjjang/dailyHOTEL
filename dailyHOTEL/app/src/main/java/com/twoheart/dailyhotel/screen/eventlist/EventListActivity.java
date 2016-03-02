@@ -168,7 +168,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void processEventPage(String eventUrl)
         {
-            Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, eventUrl);
+            Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, eventUrl, null);
             startActivity(intent);
 
             AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//

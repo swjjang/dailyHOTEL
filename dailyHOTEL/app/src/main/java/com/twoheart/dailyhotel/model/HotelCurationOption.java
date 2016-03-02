@@ -43,7 +43,11 @@ public class HotelCurationOption extends PlaceCurationOption
     public void setFiltersList(ArrayList<HotelFilters> arrayList)
     {
         mHotelFiltersList.clear();
-        mHotelFiltersList.addAll(arrayList);
+
+        if (arrayList != null)
+        {
+            mHotelFiltersList.addAll(arrayList);
+        }
     }
 
     public ArrayList<HotelFilters> getFiltersList()
@@ -82,6 +86,7 @@ public class HotelCurationOption extends PlaceCurationOption
         dest.writeInt(flagBedTypeFilters);
         dest.writeTypedList(mHotelFiltersList);
         dest.writeParcelable(mCategory, flags);
+        dest.writeInt(flagAmenitiesFilters);
     }
 
     protected void readFromParcel(Parcel in)
@@ -93,7 +98,9 @@ public class HotelCurationOption extends PlaceCurationOption
 
         mHotelFiltersList = new ArrayList<>();
         in.readTypedList(mHotelFiltersList, HotelFilters.CREATOR);
+
         mCategory = in.readParcelable(Category.class.getClassLoader());
+        flagAmenitiesFilters = in.readInt();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
