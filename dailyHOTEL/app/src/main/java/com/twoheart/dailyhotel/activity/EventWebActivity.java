@@ -15,15 +15,24 @@ import android.webkit.WebView;
 
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.screen.gourmetdetail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class EventWebActivity extends WebViewActivity implements Constants
 {
     private SourceType mSourceType;
+    private SaleTime mSaleTime;
 
     public enum SourceType
     {
@@ -32,7 +41,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         EVENT,
     }
 
-    public static Intent newInstance(Context context, SourceType sourceType, String url)
+    public static Intent newInstance(Context context, SourceType sourceType, String url, SaleTime saleTime)
     {
         if (sourceType == null || Util.isTextEmpty(url) == true)
         {
@@ -42,6 +51,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = new Intent(context, EventWebActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, url);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
 
         return intent;
     }
@@ -56,6 +66,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
         mSourceType = SourceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
+        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
         if (Util.isTextEmpty(url) == true)
         {
@@ -117,6 +128,111 @@ public class EventWebActivity extends WebViewActivity implements Constants
         super.onStart();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            {
+                setResult(resultCode);
+
+                if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
+                {
+                    finish();
+                }
+                break;
+            }
+        }
+    }
+
+    private boolean deepLinkHotelDetail(SaleTime saleTime)
+    {
+        boolean result = true;
+
+        try
+        {
+            int index = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            long dailyTime = saleTime.getDailyTime();
+            int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
+
+            String date = DailyDeepLink.getInstance().getDate();
+            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+            Date schemeDate = format.parse(date);
+            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+            if (nights <= 0 || dailyDayOfDays < 0)
+            {
+                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+            }
+
+            Intent intent = new Intent(EventWebActivity.this, HotelDetailActivity.class);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, index);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+        } catch (Exception e)
+        {
+            result = false;
+            ExLog.d(e.toString());
+        } finally
+        {
+            DailyDeepLink.getInstance().clear();
+        }
+
+        return result;
+    }
+
+    private boolean deepLinkGourmetDetail(SaleTime saleTime)
+    {
+        boolean result = true;
+
+        try
+        {
+            int index = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            long dailyTime = saleTime.getDailyTime();
+            int nights = 1;
+
+            String date = DailyDeepLink.getInstance().getDate();
+            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+            Date schemeDate = format.parse(date);
+            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+            if (dailyDayOfDays < 0)
+            {
+                throw new NullPointerException("dailyDayOfDays < 0");
+            }
+
+            Intent intent = new Intent(EventWebActivity.this, GourmetDetailActivity.class);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+        } catch (Exception e)
+        {
+            result = false;
+            ExLog.d(e.toString());
+        } finally
+        {
+            DailyDeepLink.getInstance().clear();
+        }
+
+        return result;
+    }
+
     /**
      * JavaScript
      *
@@ -153,6 +269,26 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void interlLink(String uri)
         {
+            if (mSaleTime != null)
+            {
+                DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
+                dailyDeepLink.setDeepLink(Uri.parse(uri));
+
+                if (dailyDeepLink.isHotelDetailView() == true)
+                {
+                    if (deepLinkHotelDetail(mSaleTime) == true)
+                    {
+                        return;
+                    }
+                } else if (dailyDeepLink.isGourmetDetailView() == true)
+                {
+                    if (deepLinkGourmetDetail(mSaleTime) == true)
+                    {
+                        return;
+                    }
+                }
+            }
+
             Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
             intent.setData(Uri.parse(uri));
 
