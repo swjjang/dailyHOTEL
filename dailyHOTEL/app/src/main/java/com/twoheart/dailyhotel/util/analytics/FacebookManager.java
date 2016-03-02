@@ -2,10 +2,13 @@ package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.applinks.AppLinkData;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -22,6 +25,23 @@ public class FacebookManager implements IBaseAnalyticsManager
     public FacebookManager(Context context)
     {
         mContext = context;
+
+        setDeferredDeepLink();
+    }
+
+    private void setDeferredDeepLink()
+    {
+        AppLinkData.fetchDeferredAppLinkData(mContext, new AppLinkData.CompletionHandler()
+        {
+            @Override
+            public void onDeferredAppLinkDataFetched(AppLinkData appLinkData)
+            {
+                Intent intent = new Intent(mContext, LauncherActivity.class);
+                intent.setData(appLinkData.getTargetUri());
+
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
