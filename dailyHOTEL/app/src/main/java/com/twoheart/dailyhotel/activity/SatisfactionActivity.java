@@ -682,20 +682,20 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                         lockUI();
 
                         // 만족안함
-                        String params = null;
+                        String review = null;
 
                         switch (mPlaceType)
                         {
                             case HOTEL:
-                                params = "?type=HOTEL_DISSATISFACTION";
+                                review = "HOTEL_DISSATISFACTION";
                                 break;
 
                             case FNB:
-                                params = "?type=FNB_DISSATISFACTION";
+                                review = "FNB_DISSATISFACTION";
                                 break;
                         }
 
-                        DailyNetworkAPI.getInstance().requestCommonReview(mNetworkTag, params, mRequestServicesJsonResponseListener, new ErrorListener()
+                        DailyNetworkAPI.getInstance().requestCommonReview(mNetworkTag, review, mRequestServicesJsonResponseListener, new ErrorListener()
                         {
                             @Override
                             public void onErrorResponse(VolleyError arg0)

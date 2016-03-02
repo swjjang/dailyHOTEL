@@ -183,6 +183,7 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET = 22;
     public static final int CODE_REQUEST_ACTIVITY_CALENDAR = 30;
     public static final int CODE_REQUEST_ACTIVITY_CURATION = 31;
+    public static final int CODE_REQUEST_ACTIVITY_EVENTWEB = 32;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

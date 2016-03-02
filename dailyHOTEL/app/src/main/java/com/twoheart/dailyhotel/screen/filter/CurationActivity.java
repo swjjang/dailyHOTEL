@@ -312,8 +312,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                     curationOption.flagAmenitiesFilters |= flag.intValue();
                 }
 
-                mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
-                mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
+                requestHotelUpdateResult(true);
             }
         };
 
@@ -399,8 +398,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             plusDimview.setVisibility(View.GONE);
         }
 
-        mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestHotelUpdateResult(true);
     }
 
     private void updateHotelBedTypeFilter(View view, int flag)
@@ -417,8 +415,22 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             hotelCurationOption.flagBedTypeFilters |= flag;
         }
 
-        mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestHotelUpdateResult(true);
+    }
+
+    private void requestHotelUpdateResult(boolean isDelay)
+    {
+        if (isDelay == true)
+        {
+            mResultCountView.setText(R.string.label_searching);
+
+            mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
+            mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        } else
+        {
+            mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
+            mHandler.sendEmptyMessage(HANDLE_MESSAGE_HOTEL_RESULT);
+        }
     }
 
     private void resetHotelCuration()
@@ -433,8 +445,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         resetLayout(mBedTypeLayout);
         resetLayout(mGridLayout);
 
-        mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
-        mHandler.sendEmptyMessage(HANDLE_MESSAGE_HOTEL_RESULT);
+        requestHotelUpdateResult(true);
     }
 
     private void updateHotelResultCount()
@@ -498,8 +509,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
         contentLayout.addView(filterLayout);
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessage(HANDLE_MESSAGE_GOURMET_RESULT);
+        requestGourmetUpdateResult(true);
     }
 
     private void initGourmetSort(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
@@ -598,8 +608,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                         , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);
                 }
 
-                mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-                mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+                requestGourmetUpdateResult(true);
             }
         };
 
@@ -631,8 +640,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         initGourmetAmenities(view, gourmetCurationOption);
         initGourmetTimeRangeFilter(view, gourmetCurationOption);
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestGourmetUpdateResult(true);
     }
 
     private void initGourmetAmenities(View view, GourmetCurationOption gourmetCurationOption)
@@ -715,8 +723,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, ((TextView) view).getText().toString(), null);
         }
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestGourmetUpdateResult(true);
     }
 
     private void updateGourmetTimeRangeFilter(View view, int flag)
@@ -739,8 +746,22 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, ((TextView) view).getText().toString(), null);
         }
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        requestGourmetUpdateResult(true);
+    }
+
+    private void requestGourmetUpdateResult(boolean isDelay)
+    {
+        if (isDelay == true)
+        {
+            mResultCountView.setText(R.string.label_searching);
+
+            mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
+            mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
+        } else
+        {
+            mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
+            mHandler.sendEmptyMessage(HANDLE_MESSAGE_GOURMET_RESULT);
+        }
     }
 
     private void resetGourmetCuration()
@@ -754,8 +775,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         resetLayout(mAmenitiesLayout);
         resetLayout(mTimeRangeLayout);
 
-        mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
-        mHandler.sendEmptyMessage(HANDLE_MESSAGE_GOURMET_RESULT);
+        requestGourmetUpdateResult(false);
     }
 
     private void updateGourmetResultCount()
@@ -792,7 +812,6 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                         }
                     }
                 }
-
 
                 return count;
             }

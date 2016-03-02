@@ -798,8 +798,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url);
-            startActivity(intent);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, mTodaySaleTime);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
         } else
         {
             //탭에 들어갈 날짜를 만든다.
@@ -1210,7 +1210,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
 
-                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                     } else
                     {
                         selectPlace(eventBanner.index, dailyTime, dailyDayOfDays, eventBanner.nights);
@@ -1221,8 +1221,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink);
-                startActivity(intent);
+                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, mTodaySaleTime);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
 

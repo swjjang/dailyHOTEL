@@ -43,7 +43,11 @@ public class HotelCurationOption extends PlaceCurationOption
     public void setFiltersList(ArrayList<HotelFilters> arrayList)
     {
         mHotelFiltersList.clear();
-        mHotelFiltersList.addAll(arrayList);
+
+        if (arrayList != null)
+        {
+            mHotelFiltersList.addAll(arrayList);
+        }
     }
 
     public ArrayList<HotelFilters> getFiltersList()

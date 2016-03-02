@@ -32,7 +32,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestCommonReview(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCommonReview(Object tag, String type, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/common/datetime
@@ -81,7 +81,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserInformationUpdate(Object tag, String name, String phone, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -90,7 +90,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserCheckEmail(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserCheckEmail(Object tag, String userEmail, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -99,7 +99,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserChangePassword(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserChangePassword(Object tag, String userEmail, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -108,7 +108,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserRegisterNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserRegisterNotification(Object tag, String registrationId, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * @param tag
@@ -116,7 +116,7 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestUserUpdateNotification(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserUpdateNotification(Object tag, String userIdx, String changedRegistrationId, String uid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/user/information/omission;

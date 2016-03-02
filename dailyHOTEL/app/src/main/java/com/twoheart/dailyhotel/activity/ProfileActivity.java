@@ -39,9 +39,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ProfileActivity extends BaseActivity implements OnClickListener
 {
     private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
@@ -293,12 +290,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 {
                     toggleKeyboard(false);
 
-                    Map<String, String> updateParams = new HashMap<String, String>();
-                    updateParams.put("name", name);
-                    updateParams.put("phone", phone);
-
                     lockUI();
-                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, updateParams, mUserUpdateJsonResponseListener, this);
+                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, name, phone, mUserUpdateJsonResponseListener, this);
                 }
             }
         } else if (v.getId() == R.id.btn_profile_logout)

@@ -968,8 +968,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url);
-            startActivity(intent);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, mTodaySaleTime);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
         } else
         {
             //탭에 들어갈 날짜를 만든다.
@@ -1456,7 +1456,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
 
-                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
                     }
                 } catch (Exception e)
                 {
@@ -1464,8 +1464,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink);
-                startActivity(intent);
+                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink, mTodaySaleTime);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
 

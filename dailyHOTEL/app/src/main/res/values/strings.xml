@@ -642,5 +642,6 @@
     <string name="label_time_1517">15-17시</string>
     <string name="label_time_1721">17-21시</string>
     <string name="label_time_2106">21시 이후</string>
+    <string name="label_searching">검색중...</string>
 
 </resources>

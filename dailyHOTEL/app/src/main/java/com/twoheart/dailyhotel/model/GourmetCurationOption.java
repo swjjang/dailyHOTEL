@@ -40,7 +40,11 @@ public class GourmetCurationOption extends PlaceCurationOption
     public void setFiltersList(ArrayList<GourmetFilters> arrayList)
     {
         mGourmetFiltersList.clear();
-        mGourmetFiltersList.addAll(arrayList);
+
+        if (arrayList != null)
+        {
+            mGourmetFiltersList.addAll(arrayList);
+        }
     }
 
     public ArrayList<GourmetFilters> getFiltersList()

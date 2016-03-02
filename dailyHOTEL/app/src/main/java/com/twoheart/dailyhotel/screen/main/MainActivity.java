@@ -203,6 +203,7 @@ public class MainActivity extends BaseActivity implements Constants
                     }
                     break;
 
+                case CODE_REQUEST_ACTIVITY_EVENTWEB:
                 case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
                 case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
                     if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)

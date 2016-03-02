@@ -36,10 +36,8 @@ import java.net.URISyntaxException;
 
 public class WebViewActivity extends BaseActivity implements OnLongClickListener
 {
-
     protected DailyHotelWebChromeClient webChromeClient;
     protected DailyHotelWebViewClient webViewClient;
-
     protected WebView webView;
 
     @Override
@@ -47,7 +45,6 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
     {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_PROGRESS);
-
     }
 
     @JavascriptInterface
@@ -62,12 +59,9 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
         webView.getSettings().setSupportZoom(false);
         webView.setOnLongClickListener(this);
         webView.setLongClickable(false);
-
         webView.setWebViewClient(webViewClient);
         webView.setWebChromeClient(webChromeClient);
-
         webView.loadUrl(url);
-
     }
 
     @Override
@@ -81,7 +75,6 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
     {
         super.finish();
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-
     }
 
     @Override
@@ -93,12 +86,12 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
                 onBackPressed();
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
     public class DailyHotelWebViewClient extends WebViewClient
     {
-
         @JavascriptInterface
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, final String url)
@@ -157,7 +150,6 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
             Uri uri = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
-
         }
 
         @JavascriptInterface
@@ -210,12 +202,9 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
             return true;
         }
 
-        ;
-
         public void onProgressChanged(WebView view, int progress)
         {
             WebViewActivity.this.setProgress(progress * 100);
         }
     }
-
 }
