@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -450,8 +451,9 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     {
         mPlaceCurationOption.clear();
 
-        mSortRadioGroup.clearCheck();
+        mSortRadioGroup.setOnCheckedChangeListener(null);
         mSortRadioGroup.check(R.id.regionCheckView);
+        mSortRadioGroup.setOnCheckedChangeListener(this);
 
         if (mIsGlobal == false)
         {
@@ -784,8 +786,9 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     {
         mPlaceCurationOption.clear();
 
-        mSortRadioGroup.clearCheck();
+        mSortRadioGroup.setOnCheckedChangeListener(null);
         mSortRadioGroup.check(R.id.regionCheckView);
+        mSortRadioGroup.setOnCheckedChangeListener(this);
 
         if (mIsGlobal == false)
         {
@@ -972,34 +975,46 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        String label = "";
+        RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
+
+        if (radioButton == null)
+        {
+            return;
+        }
+
+        String label = radioButton.getText().toString();
+
+        boolean isChecked = radioButton.isChecked();
+
+        if (isChecked == false)
+        {
+            return;
+        }
 
         switch (checkedId)
         {
             case R.id.regionCheckView:
-                label = getString(R.string.label_sort_by_area);
                 mPlaceCurationOption.setSortType(SortType.DEFAULT);
                 break;
 
             case R.id.distanceCheckView:
-                label = getString(R.string.label_sort_by_distance);
                 mPlaceCurationOption.setSortType(SortType.DISTANCE);
                 break;
 
             case R.id.lowPriceCheckView:
-                label = getString(R.string.label_sort_by_low_price);
                 mPlaceCurationOption.setSortType(SortType.LOW_PRICE);
                 break;
 
             case R.id.highPriceCheckView:
-                label = getString(R.string.label_sort_by_high_price);
                 mPlaceCurationOption.setSortType(SortType.HIGH_PRICE);
                 break;
 
             case R.id.satisfactionCheckView:
-                label = getString(R.string.label_sort_by_satisfaction);
                 mPlaceCurationOption.setSortType(SortType.SATISFACTION);
                 break;
+
+            default:
+                return;
         }
 
         switch (mPlaceType)

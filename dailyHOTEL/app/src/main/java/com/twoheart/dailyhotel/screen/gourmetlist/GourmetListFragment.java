@@ -342,6 +342,13 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             case DISTANCE:
             {
+                if (location == null)
+                {
+                    gourmetCurationOption.setSortType(SortType.DEFAULT);
+                    DailyToast.showToast(getContext(), R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    return makeSectionList(gourmetList);
+                }
+
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
                 Comparator<Gourmet> comparator = new Comparator<Gourmet>()
                 {

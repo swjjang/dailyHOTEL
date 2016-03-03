@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -47,6 +48,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
 
 import org.json.JSONArray;
@@ -374,6 +376,13 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             case DISTANCE:
             {
+                if (location == null)
+                {
+                    hotelCurationOption.setSortType(SortType.DEFAULT);
+                    DailyToast.showToast(getContext(), R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    return makeSectionHotelList(hotelList);
+                }
+
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
                 Comparator<Hotel> comparator = new Comparator<Hotel>()
                 {

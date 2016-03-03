@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.util.Constants;
 
 public abstract class PlaceCurationOption implements Parcelable
 {
-    private Constants.SortType prevSortType = Constants.SortType.DEFAULT; // Not Parcelable
     private Constants.SortType sortType = Constants.SortType.DEFAULT;
 
     private Province mProvince; // Not Parcelable
@@ -16,19 +15,12 @@ public abstract class PlaceCurationOption implements Parcelable
 
     public void clear()
     {
-        prevSortType = Constants.SortType.DEFAULT;
         sortType = Constants.SortType.DEFAULT;
     }
 
     public void setSortType(Constants.SortType sortType)
     {
-        prevSortType = this.sortType;
         this.sortType = sortType;
-    }
-
-    public void restoreSortType()
-    {
-        sortType = prevSortType;
     }
 
     public Constants.SortType getSortType()

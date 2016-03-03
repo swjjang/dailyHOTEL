@@ -836,13 +836,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         @Override
                         public void onClick(View v)
                         {
-                            mCurationOption.restoreSortType();
+                            mCurationOption.setSortType(SortType.DEFAULT);
                             curationCurrentFragment();
                         }
                     }, true);
                 } else
                 {
-                    mCurationOption.restoreSortType();
+                    mCurationOption.setSortType(SortType.DEFAULT);
                     curationCurrentFragment();
                 }
             }
@@ -893,7 +893,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     @Override
                     public void onClick(View v)
                     {
-                        mCurationOption.restoreSortType();
+                        mCurationOption.setSortType(SortType.DEFAULT);
                         curationCurrentFragment();
 
                         //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
@@ -914,11 +914,18 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
-                mCurationOption.setLocation(location);
-
-                if (mCurationOption.getSortType() == SortType.DISTANCE)
+                if (location == null)
                 {
+                    mCurationOption.setSortType(SortType.DEFAULT);
                     curationCurrentFragment();
+                } else
+                {
+                    mCurationOption.setLocation(location);
+
+                    if (mCurationOption.getSortType() == SortType.DISTANCE)
+                    {
+                        curationCurrentFragment();
+                    }
                 }
 
                 unLockUI();
