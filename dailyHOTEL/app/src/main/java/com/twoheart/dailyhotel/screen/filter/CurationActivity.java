@@ -51,6 +51,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     private PlaceCurationOption mPlaceCurationOption;
 
     private PlaceType mPlaceType;
+    private boolean mIsGlobal;
 
     private TextView mResultCountView;
     private View mConfirmView;
@@ -124,12 +125,12 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             return;
         }
 
-        boolean isGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
+        mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
         ViewType viewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         mPlaceCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
 
-        initLayout(viewType, mPlaceType, isGlobal);
+        initLayout(viewType, mPlaceType, mIsGlobal);
     }
 
     private void initLayout(ViewType viewType, PlaceType placeType, boolean isGlobal)
@@ -205,6 +206,12 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     private void initHotelSort(View view, ViewType viewType, HotelCurationOption hotelCurationOption)
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
+
+        if (mIsGlobal == true)
+        {
+            View satisfactionCheckView = view.findViewById(R.id.satisfactionCheckView);
+            satisfactionCheckView.setVisibility(View.INVISIBLE);
+        }
 
         if (viewType == ViewType.MAP)
         {
@@ -446,12 +453,15 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         mSortRadioGroup.clearCheck();
         mSortRadioGroup.check(R.id.regionCheckView);
 
-        updateHotelPersonFilter(HotelFilter.MIN_PERSON);
+        if (mIsGlobal == false)
+        {
+            updateHotelPersonFilter(HotelFilter.MIN_PERSON);
 
-        resetLayout(mBedTypeLayout);
-        resetLayout(mGridLayout);
+            resetLayout(mBedTypeLayout);
+            resetLayout(mGridLayout);
 
-        requestHotelUpdateResult(true);
+            requestHotelUpdateResult(true);
+        }
     }
 
     private void updateHotelResultCount()
@@ -777,11 +787,14 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         mSortRadioGroup.clearCheck();
         mSortRadioGroup.check(R.id.regionCheckView);
 
-        resetLayout(mGridLayout);
-        resetLayout(mAmenitiesLayout);
-        resetLayout(mTimeRangeLayout);
+        if (mIsGlobal == false)
+        {
+            resetLayout(mGridLayout);
+            resetLayout(mAmenitiesLayout);
+            resetLayout(mTimeRangeLayout);
 
-        requestGourmetUpdateResult(false);
+            requestGourmetUpdateResult(false);
+        }
     }
 
     private void updateGourmetResultCount()
