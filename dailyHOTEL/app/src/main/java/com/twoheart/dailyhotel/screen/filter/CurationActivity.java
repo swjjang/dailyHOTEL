@@ -53,6 +53,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
     private PlaceType mPlaceType;
     private boolean mIsGlobal;
+    private ViewType mViewType;
 
     private TextView mResultCountView;
     private View mConfirmView;
@@ -127,11 +128,11 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         }
 
         mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
-        ViewType viewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         mPlaceCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
 
-        initLayout(viewType, mPlaceType, mIsGlobal);
+        initLayout(mViewType, mPlaceType, mIsGlobal);
     }
 
     private void initLayout(ViewType viewType, PlaceType placeType, boolean isGlobal)
@@ -437,6 +438,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         if (isDelay == true)
         {
             mResultCountView.setText(R.string.label_searching);
+            mConfirmView.setOnClickListener(null);
 
             mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
             mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
@@ -451,9 +453,12 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     {
         mPlaceCurationOption.clear();
 
-        mSortRadioGroup.setOnCheckedChangeListener(null);
-        mSortRadioGroup.check(R.id.regionCheckView);
-        mSortRadioGroup.setOnCheckedChangeListener(this);
+        if (mViewType == ViewType.LIST)
+        {
+            mSortRadioGroup.setOnCheckedChangeListener(null);
+            mSortRadioGroup.check(R.id.regionCheckView);
+            mSortRadioGroup.setOnCheckedChangeListener(this);
+        }
 
         if (mIsGlobal == false)
         {
@@ -772,6 +777,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         if (isDelay == true)
         {
             mResultCountView.setText(R.string.label_searching);
+            mConfirmView.setOnClickListener(null);
 
             mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
             mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
@@ -786,9 +792,12 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     {
         mPlaceCurationOption.clear();
 
-        mSortRadioGroup.setOnCheckedChangeListener(null);
-        mSortRadioGroup.check(R.id.regionCheckView);
-        mSortRadioGroup.setOnCheckedChangeListener(this);
+        if (mViewType == ViewType.LIST)
+        {
+            mSortRadioGroup.setOnCheckedChangeListener(null);
+            mSortRadioGroup.check(R.id.regionCheckView);
+            mSortRadioGroup.setOnCheckedChangeListener(this);
+        }
 
         if (mIsGlobal == false)
         {
