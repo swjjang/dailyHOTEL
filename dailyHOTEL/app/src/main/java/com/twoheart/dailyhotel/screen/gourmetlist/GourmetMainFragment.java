@@ -425,7 +425,16 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             }
 
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-                searchMyLocation();
+                mDontReloadAtOnResume = true;
+
+                if (mViewType == ViewType.MAP)
+                {
+                    GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    currentFragment.onActivityResult(requestCode, resultCode, data);
+                } else
+                {
+                    searchMyLocation();
+                }
                 break;
         }
 

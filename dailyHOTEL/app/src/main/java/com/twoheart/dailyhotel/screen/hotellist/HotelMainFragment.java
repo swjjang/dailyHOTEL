@@ -430,7 +430,16 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-                searchMyLocation();
+                mDontReloadAtOnResume = true;
+
+                if (mViewType == ViewType.MAP)
+                {
+                    HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    currentFragment.onActivityResult(requestCode, resultCode, data);
+                } else
+                {
+                    searchMyLocation();
+                }
                 break;
         }
 
