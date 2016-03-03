@@ -96,60 +96,6 @@ public class ExLog
 
     /**
      * <PRE>
-     * print
-     * </PRE>
-     * <p>
-     * pinkred 2013. 4. 11. 오후 6:17:07
-     *
-     * @param format 포맷
-     * @param args   Args
-     */
-    public static void print(String format, Object... args)
-    {
-
-        String message = "";
-        try
-        {
-            message = String.format(format, args);
-        } catch (Exception e)
-        {
-            Log.d(TAG, e.getMessage());
-        }
-
-        print(TAG, message, Log.DEBUG, getCallerInfo());
-    }
-
-    /**
-     * <PRE>
-     * print
-     * </PRE>
-     * <p>
-     * pinkred 2013. 4. 11. 오후 6:17:24
-     *
-     * @param message 메시지
-     */
-    public static void print(String message)
-    {
-        print(TAG, message, Log.DEBUG, getCallerInfo());
-    }
-
-    /**
-     * <PRE>
-     * print
-     * </PRE>
-     * <p>
-     * pinkred 2013. 4. 11. 오후 6:17:33
-     *
-     * @param message 메시지
-     * @param method  메소드
-     */
-    public static void print(String message, int method)
-    {
-        print(TAG, message, method, getCallerInfo());
-    }
-
-    /**
-     * <PRE>
      * 디버그
      * </PRE>
      * <p>
@@ -159,15 +105,7 @@ public class ExLog
      */
     public static void d(String message)
     {
-        String caller = getCallerInfo(); // 호출한 Class와 Method를 찾아서 로그에 넣어준다(직전
-        // Class와
-        // Method)
-        print(TAG, message, Log.DEBUG, caller);
-    }
-
-    public static void d(String prefix, String[] message)
-    {
-        if (null == message)
+        if (DEBUG == false)
         {
             return;
         }
@@ -175,12 +113,7 @@ public class ExLog
         String caller = getCallerInfo(); // 호출한 Class와 Method를 찾아서 로그에 넣어준다(직전
         // Class와
         // Method)
-        int length = message.length;
-
-        for (int i = 0; i < length; i++)
-        {
-            print(TAG, prefix + " : " + message[i], Log.DEBUG, caller);
-        }
+        print(TAG, message, Log.DEBUG, caller);
     }
 
     /**
@@ -194,6 +127,10 @@ public class ExLog
      */
     public static void e(String message)
     {
+        if (DEBUG == false)
+        {
+            return;
+        }
 
         String caller = getCallerInfo(); // 호출한 Class와 Method를 찾아서 로그에 넣어준다(직전
         // Class와
@@ -212,6 +149,11 @@ public class ExLog
      */
     public static void i(String message)
     {
+        if (DEBUG == false)
+        {
+            return;
+        }
+
         String caller = getCallerInfo(); // 호출한 Class와 Method를 찾아서 로그에 넣어준다(직전
         // Class와
         // Method)
@@ -229,6 +171,11 @@ public class ExLog
      */
     public static void v(String message)
     {
+        if (DEBUG == false)
+        {
+            return;
+        }
+
         String caller = getCallerInfo(); // 호출한 Class와 Method를 찾아서 로그에 넣어준다(직전
         // Class와
         // Method)
@@ -246,6 +193,11 @@ public class ExLog
      */
     public static void w(String message)
     {
+        if (DEBUG == false)
+        {
+            return;
+        }
+
         String caller = getCallerInfo(); // 호출한 Class와 Method를 찾아서 로그에 넣어준다(직전
         // Class와
         // Method)

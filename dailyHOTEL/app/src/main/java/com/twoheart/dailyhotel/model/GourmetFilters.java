@@ -37,15 +37,9 @@ public class GourmetFilters implements Parcelable
 
     public boolean isFiltered(GourmetCurationOption curationOption)
     {
-        if (isCategoryFiltered(curationOption.getFilterMap()) == false//
-            || isTimeFiltered(curationOption.flagTimeFilter) == false//
-            || isParkingFiltered(curationOption.isParking) == false)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
+        return (isCategoryFiltered(curationOption.getFilterMap()) == true//
+            && isTimeFiltered(curationOption.flagTimeFilter) == true//
+            && isParkingFiltered(curationOption.isParking) == true);
     }
 
     private boolean isCategoryFiltered(HashMap<String, Integer> categoryMap)

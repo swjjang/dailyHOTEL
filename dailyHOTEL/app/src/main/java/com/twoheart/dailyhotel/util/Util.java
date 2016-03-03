@@ -270,8 +270,7 @@ public class Util implements Constants
             return 0;
         }
 
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return displayMetrics.widthPixels;
+        return context.getResources().getDisplayMetrics().widthPixels;
     }
 
     public static int getLCDHeight(Context context)
@@ -281,8 +280,7 @@ public class Util implements Constants
             return 0;
         }
 
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return displayMetrics.heightPixels;
+        return context.getResources().getDisplayMetrics().heightPixels;
     }
 
     public static boolean isNameCharacter(String text)

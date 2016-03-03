@@ -34,15 +34,9 @@ public class HotelFilters implements Parcelable
 
     public boolean isFiltered(HotelCurationOption curationOption)
     {
-        if (isPersonFiltered(curationOption.person) == false//
-            || isBedTypeFiltered(curationOption.flagBedTypeFilters) == false//
-            || isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == false)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
+        return (isPersonFiltered(curationOption.person) == true//
+            && isBedTypeFiltered(curationOption.flagBedTypeFilters) == true//
+            && isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true);
     }
 
     private boolean isPersonFiltered(int person)

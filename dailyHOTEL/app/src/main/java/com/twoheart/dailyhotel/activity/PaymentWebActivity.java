@@ -725,28 +725,13 @@ public class PaymentWebActivity extends BaseActivity implements Constants
         }
     }
 
-    /**
-     * 종종 에러 발생.
-     *
-     * @author jangjunho
-     */
-    @Deprecated
-    private class HtmlObserver
-    {
-        @JavascriptInterface
-        public void showHTML(String html)
-        {
-            //			ExLog.e("WEB_VIEW : " + html);
-        }
-    }
-
     private class KCPPayPinReturn
     {
         @JavascriptInterface
         public String getConfirm()
         {
             if (ResultRcvActivity.b_type)
-            {// ResultRcvActivity.b_type
+            {
                 ResultRcvActivity.b_type = false;
                 return "true";
             } else

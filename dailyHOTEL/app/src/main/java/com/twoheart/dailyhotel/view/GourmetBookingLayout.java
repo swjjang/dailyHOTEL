@@ -12,8 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextPaint;
-import android.text.style.ClickableSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -673,34 +671,5 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         NAME,
         PHONE,
         EMAIL
-    }
-
-    private class TelophoneClickSpannable extends ClickableSpan
-    {
-        private Context mContext;
-        private GourmetPaymentActivity.OnUserActionListener mOnUserActionListener;
-
-        public TelophoneClickSpannable(Context context, GourmetPaymentActivity.OnUserActionListener listener)
-        {
-            mContext = context;
-            mOnUserActionListener = listener;
-        }
-
-        @Override
-        public void updateDrawState(TextPaint textPain)
-        {
-            textPain.setColor(mContext.getResources().getColor(R.color.booking_tel_link));
-            textPain.setFakeBoldText(true);
-            textPain.setUnderlineText(true);
-        }
-
-        @Override
-        public void onClick(View widget)
-        {
-            if (mOnUserActionListener != null)
-            {
-                mOnUserActionListener.showCallDialog();
-            }
-        }
     }
 }

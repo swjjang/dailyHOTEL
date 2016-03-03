@@ -16,11 +16,6 @@ public class AnalyticsManager
     private TuneManager mTuneManager;
     private FacebookManager mFacebookManager;
 
-    private AnalyticsManager(Context context)
-    {
-        initAnalytics(context);
-    }
-
     public synchronized static AnalyticsManager getInstance(Context context)
     {
         if (mInstance == null)
@@ -28,6 +23,11 @@ public class AnalyticsManager
             mInstance = new AnalyticsManager(context);
         }
         return mInstance;
+    }
+
+    private AnalyticsManager(Context context)
+    {
+        initAnalytics(context);
     }
 
     private void initAnalytics(Context context)

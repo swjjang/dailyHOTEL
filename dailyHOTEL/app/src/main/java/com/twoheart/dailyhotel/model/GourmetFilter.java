@@ -15,12 +15,12 @@ import java.util.TimeZone;
 
 public class GourmetFilter implements Parcelable
 {
-    public static int FLAG_GOURMET_FILTER_TIME_NONE = 0x00;
-    public static int FLAG_GOURMET_FILTER_TIME_06_11 = 0x01;
-    public static int FLAG_GOURMET_FILTER_TIME_11_15 = 0x02;
-    public static int FLAG_GOURMET_FILTER_TIME_15_17 = 0x04;
-    public static int FLAG_GOURMET_FILTER_TIME_17_21 = 0x08;
-    public static int FLAG_GOURMET_FILTER_TIME_21_06 = 0x10;
+    public static final int FLAG_GOURMET_FILTER_TIME_NONE = 0x00;
+    public static final int FLAG_GOURMET_FILTER_TIME_06_11 = 0x01;
+    public static final int FLAG_GOURMET_FILTER_TIME_11_15 = 0x02;
+    public static final int FLAG_GOURMET_FILTER_TIME_15_17 = 0x04;
+    public static final int FLAG_GOURMET_FILTER_TIME_17_21 = 0x08;
+    public static final int FLAG_GOURMET_FILTER_TIME_21_06 = 0x10;
 
     public int timeFlag;
     public boolean isParking;

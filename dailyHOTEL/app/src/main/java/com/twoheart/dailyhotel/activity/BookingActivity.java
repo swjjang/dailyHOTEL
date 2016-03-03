@@ -863,39 +863,31 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
-        try
+        super.onActivityResult(requestCode, resultCode, intent);
+        unLockUI();
+
+        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
         {
-            super.onActivityResult(requestCode, resultCode, intent);
-            unLockUI();
-
-            if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+            if (resultCode == RESULT_OK && intent != null)
             {
-                if (resultCode == RESULT_OK && intent != null)
-                {
-                    String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
 
-                    etReserverNumber.setText(mobileNumber);
-                }
-
-                return;
+                etReserverNumber.setText(mobileNumber);
             }
 
-            mReqCode = requestCode;
-            mResCode = resultCode;
-            mResIntent = intent;
-
-            mAliveCallSource = "ACTIVITY_RESULT";
-
-            lockUI();
-
-            // 1. 세션이 연결되어있는지 검사.
-            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.toString());
-
-            Util.restartApp(this);
+            return;
         }
+
+        mReqCode = requestCode;
+        mResCode = resultCode;
+        mResIntent = intent;
+
+        mAliveCallSource = "ACTIVITY_RESULT";
+
+        lockUI();
+
+        // 1. 세션이 연결되어있는지 검사.
+        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     private void activityResulted(int requestCode, int resultCode, Intent intent)
@@ -1293,15 +1285,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT, null);
 
-        try
-        {
-            super.onStart();
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.toString());
-
-            Util.restartApp(this);
-        }
+        super.onStart();
     }
 
     @Override
