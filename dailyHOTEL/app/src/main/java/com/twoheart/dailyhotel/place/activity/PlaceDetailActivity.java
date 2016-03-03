@@ -208,6 +208,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mPlaceDetailLayout.setImageActionListener(mOnImageActionListener);
         }
 
+        setLockUICancelable(true);
         initToolbar(placeName);
 
         mOnUserActionListener.hideActionBar();

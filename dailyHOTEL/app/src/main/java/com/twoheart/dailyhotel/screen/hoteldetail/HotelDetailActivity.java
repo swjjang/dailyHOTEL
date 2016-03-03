@@ -190,6 +190,7 @@ public class HotelDetailActivity extends BaseActivity
             mHotelDetailLayout.setUserActionListener(mOnUserActionListener);
         }
 
+        setLockUICancelable(true);
         initToolbar(hotelName);
 
         mOnUserActionListener.hideActionBar();

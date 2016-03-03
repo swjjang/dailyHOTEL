@@ -87,9 +87,8 @@ public class RegionListActivity extends BaseActivity
             return;
         }
 
-        // 국내로 시작하는지 헤외로 시작하는지
-        // 고메인 경우에는 해외 지역이 없기 때문에 기존과 동일하게?
-
+        // 지역로딩시에 백버튼 누르면 종료되도록 수정
+        setLockUICancelable(true);
         initLayout(mPlaceType, selectedProvince);
     }
 
