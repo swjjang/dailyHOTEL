@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -854,7 +855,6 @@ public class HotelDetailLayout
             }
 
             View hotelNameTextView = mListAdapter.getHotelNameTextView();
-
             Rect firstRect = (Rect) hotelNameTextView.getTag();
             Integer firstWidth = (Integer) hotelNameTextView.getTag(hotelNameTextView.getId());
 
@@ -866,18 +866,9 @@ public class HotelDetailLayout
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - TOOLBAR_TEXT_X;
 
-                if (Float.compare(xFactor, 1.0f) > 0)
-                {
-                    if (Util.isOverAPI11() == true)
-                    {
-                        hotelNameTextView.setTranslationX(0);
-                    }
-                    return;
-                }
-
                 if (Util.isOverAPI11() == true)
                 {
-                    if (Float.compare(xFactor, 0.0f) >= 0)
+                    if (Float.compare(xFactor, 1.0f) <= 0)
                     {
                         hotelNameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
                     } else
@@ -886,7 +877,7 @@ public class HotelDetailLayout
                     }
                 } else
                 {
-                    if (Float.compare(xFactor, 0.0f) >= 0)
+                    if (Float.compare(xFactor, 1.0f) <= 0)
                     {
                         TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax * (1.0f - xFactor), 0.0f, 0.0f);
                         anim.setDuration(0);
@@ -906,17 +897,23 @@ public class HotelDetailLayout
                 }
 
                 float widthNameMax = firstRect.width() - firstWidth;
+                int newWidth;
 
-                ViewGroup.LayoutParams layoutParams = hotelNameTextView.getLayoutParams();
-                if (Float.compare(xFactor, 0.0f) >= 0)
+                if (Float.compare(xFactor, 1.0f) <= 0)
                 {
-                    layoutParams.width = (int) (firstWidth - (widthNameMax * (1.0f - xFactor)));
+                    newWidth = (int) (firstRect.width() - (widthNameMax * (1.0f - xFactor)));
                 } else
                 {
-                    layoutParams.width = firstWidth;
+                    newWidth = firstRect.width();
                 }
 
-                hotelNameTextView.setLayoutParams(layoutParams);
+                ViewGroup.LayoutParams layoutParams = hotelNameTextView.getLayoutParams();
+
+                if (layoutParams.width != newWidth)
+                {
+                    layoutParams.width = newWidth;
+                    hotelNameTextView.setLayoutParams(layoutParams);
+                }
             }
         }
     };

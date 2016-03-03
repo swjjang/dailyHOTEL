@@ -179,10 +179,11 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             return;
         }
 
-        String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d&arrival_time=%s", //
-            ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), ticketPayment.ticketCount, String.valueOf(ticketPayment.ticketTime));
-
-        DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag, params, mTicketSellCheckJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag//
+            , ticketPayment.getTicketInformation().index//
+            , checkInSaleTime.getDayOfDaysDateFormat("yyMMdd")//
+            , ticketPayment.ticketCount//
+            , Long.toString(ticketPayment.ticketTime), mTicketSellCheckJsonResponseListener, this);
     }
 
     @Override
@@ -227,8 +228,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             return;
         }
 
-        String params = String.format("?sale_reco_idx=%d", index);
-        DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, params, mTicketPaymentInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, index, mTicketPaymentInformationJsonResponseListener, this);
     }
 
     @Override

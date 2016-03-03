@@ -296,10 +296,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     public void refreshList()
     {
-        Map<String, String> params = new HashMap<>();
-        params.put("type", "hotel");
-
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, params, mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)

@@ -90,15 +90,13 @@ public class PaymentWaitActivity extends BaseActivity
         {
             case HOTEL:
             {
-                String params = String.format("/%d/%s", booking.payType, booking.tid);
-                DailyNetworkAPI.getInstance().requestDepositWaitDetailInformation(mNetworkTag, params, mHotelReservationJsonResponseListener, this);
+                DailyNetworkAPI.getInstance().requestDepositWaitDetailInformation(mNetworkTag, booking.payType, booking.tid, mHotelReservationJsonResponseListener, this);
                 break;
             }
 
             case FNB:
             {
-                String params = String.format("?tid=%s", booking.tid);
-                DailyNetworkAPI.getInstance().requestGourmetAccountInformation(mNetworkTag, params, mFnBReservationJsonResponseListener, this);
+                DailyNetworkAPI.getInstance().requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener, this);
                 break;
             }
         }

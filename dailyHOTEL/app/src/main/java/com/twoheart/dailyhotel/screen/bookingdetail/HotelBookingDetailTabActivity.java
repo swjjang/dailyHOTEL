@@ -187,8 +187,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         lockUI();
 
         // 호텔 정보를 가져온다.
-        String params = String.format("?reservationIdx=%d", reservationIndex);
-        DailyNetworkAPI.getInstance().requestHotelBookingDetailInformation(mNetworkTag, params, mReservationBookingDetailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestHotelBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

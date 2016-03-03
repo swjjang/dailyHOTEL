@@ -346,15 +346,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             if ("alive".equalsIgnoreCase(result) == true)
             {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("reservation_idx", String.valueOf(mBookingIdx));
-
-                if (DEBUG == true)
-                {
-                    showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-                }
-
-                DailyNetworkAPI.getInstance().requestHotelReceipt(mNetworkTag, params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this);
+                DailyNetworkAPI.getInstance().requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener, IssuingReceiptActivity.this);
             } else
             {
                 finish();

@@ -607,16 +607,12 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
         mSatisfaction = result;
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("rating", result);
-
         DailyHotelJsonResponseListener listener = mReserveReviewJsonResponseListener;
 
         switch (placeType)
         {
             case HOTEL:
-                params.put("reserv_idx", String.valueOf(index));
-                DailyNetworkAPI.getInstance().requestHotelRating(mNetworkTag, params, listener, new ErrorListener()
+                DailyNetworkAPI.getInstance().requestHotelRating(mNetworkTag, result, Integer.toString(index), listener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
@@ -627,8 +623,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 break;
 
             case FNB:
-                params.put("reservation_rec_idx", String.valueOf(index));
-                DailyNetworkAPI.getInstance().requestGourmetRating(mNetworkTag, params, listener, new ErrorListener()
+                DailyNetworkAPI.getInstance().requestGourmetRating(mNetworkTag, result, Integer.toString(index), listener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)

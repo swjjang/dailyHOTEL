@@ -238,10 +238,7 @@ public class CreditCardListActivity extends BaseActivity
                                 lockUI();
 
                                 // 등록된 카드 삭제.
-                                HashMap<String, String> params = new HashMap<String, String>();
-                                params.put("billkey", card.billingkey);
-
-                                DailyNetworkAPI.getInstance().requestUserDeleteBillingCard(mNetworkTag, params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this);
+                                DailyNetworkAPI.getInstance().requestUserDeleteBillingCard(mNetworkTag, card.billingkey, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this);
 
                                 AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                                     , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.OK, null);

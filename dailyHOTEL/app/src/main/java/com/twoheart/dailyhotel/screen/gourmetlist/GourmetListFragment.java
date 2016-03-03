@@ -280,10 +280,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public void refreshList()
     {
-        Map<String, String> params = new HashMap<>();
-        params.put("type", "gourmet");
-
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, params, mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)

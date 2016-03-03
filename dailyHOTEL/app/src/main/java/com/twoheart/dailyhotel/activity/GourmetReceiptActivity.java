@@ -164,8 +164,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
     protected void requestReceiptDetail(int index)
     {
-        String params = String.format("?reservation_rec_idx=%d", index);
-        DailyNetworkAPI.getInstance().requestGourmetReceipt(mNetworkTag, params, mReservReceiptJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetReceipt(mNetworkTag, index, mReservReceiptJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

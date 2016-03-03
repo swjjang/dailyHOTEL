@@ -846,11 +846,10 @@ public class GourmetDetailLayout
             }
 
             View nameTextView = mListAdapter.getNameTextView();
-
             Rect firstRect = (Rect) nameTextView.getTag();
             Integer firstWidth = (Integer) nameTextView.getTag(nameTextView.getId());
 
-            if (firstRect != null)
+            if (firstRect != null && firstWidth != null)
             {
                 final int TOOLBAR_TEXT_X = Util.dpToPx(mActivity, 60);
                 float gradeMax = ((float) mImageHeight - TOOLBAR_HEIGHT) / 3;
@@ -858,18 +857,9 @@ public class GourmetDetailLayout
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - TOOLBAR_TEXT_X;
 
-                if (Float.compare(xFactor, 1.0f) > 0)
-                {
-                    if (Util.isOverAPI11() == true)
-                    {
-                        nameTextView.setTranslationX(0);
-                    }
-                    return;
-                }
-
                 if (Util.isOverAPI11() == true)
                 {
-                    if (Float.compare(xFactor, 0.0f) >= 0)
+                    if (Float.compare(xFactor, 1.0f) <= 0)
                     {
                         nameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
                     } else
@@ -878,7 +868,7 @@ public class GourmetDetailLayout
                     }
                 } else
                 {
-                    if (Float.compare(xFactor, 0.0f) >= 0)
+                    if (Float.compare(xFactor, 1.0f) <= 0)
                     {
                         TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax * (1.0f - xFactor), 0.0f, 0.0f);
                         anim.setDuration(0);
@@ -898,17 +888,23 @@ public class GourmetDetailLayout
                 }
 
                 float widthNameMax = firstRect.width() - firstWidth;
+                int newWidth;
 
-                ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
-                if (Float.compare(xFactor, 0.0f) >= 0)
+                if (Float.compare(xFactor, 1.0f) <= 0)
                 {
-                    layoutParams.width = (int) (firstWidth - (widthNameMax * (1.0f - xFactor)));
+                    newWidth = (int) (firstRect.width() - (widthNameMax * (1.0f - xFactor)));
                 } else
                 {
-                    layoutParams.width = firstWidth;
+                    newWidth = firstRect.width();
                 }
 
-                nameTextView.setLayoutParams(layoutParams);
+                ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
+
+                if (layoutParams.width != newWidth)
+                {
+                    layoutParams.width = newWidth;
+                    nameTextView.setLayoutParams(layoutParams);
+                }
             }
         }
     };

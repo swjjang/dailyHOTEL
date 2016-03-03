@@ -830,30 +830,10 @@ public class HotelDetailActivity extends BaseActivity
                     }
 
                     // 호텔 정보를 가져온다.
-                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights);
-
-                    if (DEBUG == true)
-                    {
-                        showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                    }
-
-                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
+                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
                 } else
                 {
-                    SaleTime saleTime = new SaleTime();
-
-                    saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    saleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-                    // 호텔 정보를 가져온다.
-                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights);
-
-                    if (DEBUG == true)
-                    {
-                        showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                    }
-
-                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
+                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
                 }
             } catch (Exception e)
             {

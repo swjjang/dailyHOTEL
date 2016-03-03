@@ -186,9 +186,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     protected void requestPlaceBookingDetail(int reservationIndex)
     {
         lockUI();
-
-        String params = String.format("?reservation_rec_idx=%d", reservationIndex);
-        DailyNetworkAPI.getInstance().requestGourmetBookingDetailInformation(mNetworkTag, params, mReservationBookingDetailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
