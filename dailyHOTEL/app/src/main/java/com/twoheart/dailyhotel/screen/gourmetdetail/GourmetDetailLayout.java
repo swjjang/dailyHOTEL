@@ -857,6 +857,11 @@ public class GourmetDetailLayout
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - TOOLBAR_TEXT_X;
 
+                if (Float.compare(xFactor, 0.0f) < 0)
+                {
+                    xFactor = 0.0f;
+                }
+
                 if (Util.isOverAPI11() == true)
                 {
                     if (Float.compare(xFactor, 1.0f) <= 0)
@@ -864,7 +869,7 @@ public class GourmetDetailLayout
                         nameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
                     } else
                     {
-                        nameTextView.setTranslationX(-nameMax);
+                        nameTextView.setTranslationX(0);
                     }
                 } else
                 {
@@ -878,12 +883,7 @@ public class GourmetDetailLayout
                         mLastFactor = -nameMax * (1.0f - xFactor);
                     } else
                     {
-                        TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax, 0.0f, 0.0f);
-                        anim.setDuration(0);
-                        anim.setFillAfter(true);
-                        nameTextView.startAnimation(anim);
-
-                        mLastFactor = -nameMax;
+                        nameTextView.setAnimation(null);
                     }
                 }
 

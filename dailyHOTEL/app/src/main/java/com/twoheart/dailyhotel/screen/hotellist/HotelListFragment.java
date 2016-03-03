@@ -176,6 +176,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         if (mViewType == ViewType.MAP)
         {
+            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
             mOnCommunicateListener.showFloatingActionButton();
         } else
         {

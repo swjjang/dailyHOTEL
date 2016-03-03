@@ -30,7 +30,6 @@ import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -854,9 +853,9 @@ public class HotelDetailLayout
                 }
             }
 
-            View hotelNameTextView = mListAdapter.getHotelNameTextView();
-            Rect firstRect = (Rect) hotelNameTextView.getTag();
-            Integer firstWidth = (Integer) hotelNameTextView.getTag(hotelNameTextView.getId());
+            View nameTextView = mListAdapter.getHotelNameTextView();
+            Rect firstRect = (Rect) nameTextView.getTag();
+            Integer firstWidth = (Integer) nameTextView.getTag(nameTextView.getId());
 
             if (firstRect != null && firstWidth != null)
             {
@@ -866,14 +865,19 @@ public class HotelDetailLayout
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - TOOLBAR_TEXT_X;
 
+                if (Float.compare(xFactor, 0.0f) < 0)
+                {
+                    xFactor = 0.0f;
+                }
+
                 if (Util.isOverAPI11() == true)
                 {
                     if (Float.compare(xFactor, 1.0f) <= 0)
                     {
-                        hotelNameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
+                        nameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
                     } else
                     {
-                        hotelNameTextView.setTranslationX(-nameMax);
+                        nameTextView.setTranslationX(0);
                     }
                 } else
                 {
@@ -882,17 +886,12 @@ public class HotelDetailLayout
                         TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax * (1.0f - xFactor), 0.0f, 0.0f);
                         anim.setDuration(0);
                         anim.setFillAfter(true);
-                        hotelNameTextView.startAnimation(anim);
+                        nameTextView.startAnimation(anim);
 
                         mLastFactor = -nameMax * (1.0f - xFactor);
                     } else
                     {
-                        TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax, 0.0f, 0.0f);
-                        anim.setDuration(0);
-                        anim.setFillAfter(true);
-                        hotelNameTextView.startAnimation(anim);
-
-                        mLastFactor = -nameMax;
+                        nameTextView.setAnimation(null);
                     }
                 }
 
@@ -907,12 +906,12 @@ public class HotelDetailLayout
                     newWidth = firstRect.width();
                 }
 
-                ViewGroup.LayoutParams layoutParams = hotelNameTextView.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
 
                 if (layoutParams.width != newWidth)
                 {
                     layoutParams.width = newWidth;
-                    hotelNameTextView.setLayoutParams(layoutParams);
+                    nameTextView.setLayoutParams(layoutParams);
                 }
             }
         }
