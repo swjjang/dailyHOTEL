@@ -89,6 +89,11 @@ public class LoadingDialog
         });
     }
 
+    public void setCancelable(boolean falg)
+    {
+        mDialog.setCancelable(false);
+    }
+
     public boolean isVisible()
     {
         return mDialog != null && mDialog.isShowing();

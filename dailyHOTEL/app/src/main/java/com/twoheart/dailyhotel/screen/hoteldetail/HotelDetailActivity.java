@@ -190,6 +190,7 @@ public class HotelDetailActivity extends BaseActivity
             mHotelDetailLayout.setUserActionListener(mOnUserActionListener);
         }
 
+        setLockUICancelable(true);
         initToolbar(hotelName);
 
         mOnUserActionListener.hideActionBar();
@@ -212,15 +213,7 @@ public class HotelDetailActivity extends BaseActivity
     {
         AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.DAILYHOTEL_DETAIL, null);
 
-        try
-        {
-            super.onStart();
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.toString());
-
-            Util.restartApp(this);
-        }
+        super.onStart();
     }
 
     @Override
@@ -258,41 +251,33 @@ public class HotelDetailActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        try
+        releaseUiComponent();
+
+        switch (requestCode)
         {
-            releaseUiComponent();
-
-            switch (requestCode)
+            case CODE_REQUEST_ACTIVITY_BOOKING:
             {
-                case CODE_REQUEST_ACTIVITY_BOOKING:
-                {
-                    setResult(resultCode);
+                setResult(resultCode);
 
-                    if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
-                    {
-                        finish();
-                    }
-                    break;
-                }
-
-                case CODE_REQUEST_ACTIVITY_LOGIN:
-                case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
+                if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
                 {
-                    if (resultCode == RESULT_OK)
-                    {
-                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
-                    }
-                    break;
+                    finish();
                 }
+                break;
             }
 
-            super.onActivityResult(requestCode, resultCode, data);
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.toString());
-
-            Util.restartApp(this);
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
+                }
+                break;
+            }
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -845,30 +830,10 @@ public class HotelDetailActivity extends BaseActivity
                     }
 
                     // 호텔 정보를 가져온다.
-                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights);
-
-                    if (DEBUG == true)
-                    {
-                        showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                    }
-
-                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
+                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
                 } else
                 {
-                    SaleTime saleTime = new SaleTime();
-
-                    saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    saleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-                    // 호텔 정보를 가져온다.
-                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights);
-
-                    if (DEBUG == true)
-                    {
-                        showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                    }
-
-                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, params, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
+                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
                 }
             } catch (Exception e)
             {

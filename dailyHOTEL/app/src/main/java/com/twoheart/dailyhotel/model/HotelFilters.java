@@ -6,12 +6,8 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-
 public class HotelFilters implements Parcelable
 {
-    public static int FLAG_HOTEL_FILTER_BED_NONE = 0x00;
-
     private HotelFilter[] mHotelFilterArray;
     public String categoryCode;
 
@@ -38,15 +34,9 @@ public class HotelFilters implements Parcelable
 
     public boolean isFiltered(HotelCurationOption curationOption)
     {
-        if (isPersonFiltered(curationOption.person) == false//
-            || isBedTypeFiltered(curationOption.flagBedTypeFilters) == false//
-            || isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == false)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
+        return (isPersonFiltered(curationOption.person) == true//
+            && isBedTypeFiltered(curationOption.flagBedTypeFilters) == true//
+            && isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true);
     }
 
     private boolean isPersonFiltered(int person)
@@ -69,7 +59,7 @@ public class HotelFilters implements Parcelable
 
     private boolean isBedTypeFiltered(int flagBedTypeFilters)
     {
-        if (flagBedTypeFilters == HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
+        if (flagBedTypeFilters == HotelFilter.FLAG_HOTEL_FILTER_BED_NONE)
         {
             return true;
         }
@@ -101,11 +91,6 @@ public class HotelFilters implements Parcelable
         }
 
         return false;
-    }
-
-    public void clear()
-    {
-        Arrays.fill(mHotelFilterArray, 0, mHotelFilterArray.length, null);
     }
 
     @Override

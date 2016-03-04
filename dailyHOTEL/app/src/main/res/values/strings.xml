@@ -616,7 +616,7 @@
     <string name="label_more_person">%1$d명 이상</string>
     <string name="label_hotel_filter_result_count">%1$d개의 숙소</string>
     <string name="label_gourmet_filter_result_count">%1$d개의 레스토랑</string>
-    <string name="label_reset">재설정</string>
+    <string name="label_reset">초기화</string>
     <string name="label_sort_by">정렬</string>
     <string name="label_sort_by_distance">거리순</string>
     <string name="label_sort_by_low_price">낮은 가격순</string>

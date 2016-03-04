@@ -32,7 +32,7 @@
         android:background="@drawable/blur"
         android:visibility="invisible"/>
 
-    <com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailListView
+    <com.twoheart.dailyhotel.view.widget.DailyPlaceDetailListView
         android:id="@+id/hotelListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

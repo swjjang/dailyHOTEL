@@ -257,8 +257,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     if (++mCanScrollUpCount > CANSCROLLUP_REPEAT_COUNT)
                     {
                         mCanScrollUpCount = 0;
-                        mOnCommunicateListener.expandedAppBar(true, true);
                         mOnCommunicateListener.showAppBarLayout();
+                        mOnCommunicateListener.expandedAppBar(true, true);
                         mIsHideAppBarlayout = false;
                     }
                 } else
@@ -281,6 +281,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 mOnCommunicateListener.showFloatingActionButton();
             } else
             {
+                mOnCommunicateListener.showAppBarLayout();
                 mOnCommunicateListener.pinAppBarLayout();
                 mIsHideAppBarlayout = true;
                 mCanScrollUpCount = 0;
@@ -298,6 +299,10 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     @Override
     public void onResume()
     {
+        mOnCommunicateListener.showAppBarLayout();
+        mOnCommunicateListener.pinAppBarLayout();
+        mOnCommunicateListener.expandedAppBar(true, false);
+
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
@@ -368,9 +373,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                         mOnCommunicateListener.refreshAll(true);
                     }
-                } else
-                {
-                    mOnCommunicateListener.refreshAll(true);
                 }
 
                 mOnCommunicateListener.expandedAppBar(true, false);
@@ -398,6 +400,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                     if (curationOption != null)
                     {
+                        mOnCommunicateListener.setScrollListTop(true);
+
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.setFilterMap(curationOption.getFilterMap());
                         mCurationOption.flagTimeFilter = curationOption.flagTimeFilter;
@@ -418,7 +422,16 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             }
 
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-                searchMyLocation();
+                mDontReloadAtOnResume = true;
+
+                if (mViewType == ViewType.MAP)
+                {
+                    GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    currentFragment.onActivityResult(requestCode, resultCode, data);
+                } else
+                {
+                    searchMyLocation();
+                }
                 break;
         }
 
@@ -515,16 +528,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
 
         FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
-    }
-
-    private void setSortType(SortType sortType)
-    {
-        if (sortType == null)
-        {
-            sortType = SortType.DEFAULT;
-        }
-
-        mCurationOption.setSortType(sortType);
     }
 
     private void setProvince(Province province)
@@ -659,13 +662,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         @Override
                         public void onClick(View v)
                         {
-                            mCurationOption.restoreSortType();
+                            mCurationOption.setSortType(SortType.DEFAULT);
                             curationCurrentFragment();
                         }
                     }, true);
                 } else
                 {
-                    mCurationOption.restoreSortType();
+                    mCurationOption.setSortType(SortType.DEFAULT);
                     curationCurrentFragment();
                 }
             }
@@ -716,7 +719,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     @Override
                     public void onClick(View v)
                     {
-                        mCurationOption.restoreSortType();
+                        mCurationOption.setSortType(SortType.DEFAULT);
                         curationCurrentFragment();
 
                         //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
@@ -737,11 +740,18 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
-                mCurationOption.setLocation(location);
-
-                if (mCurationOption.getSortType() == SortType.DISTANCE)
+                if (location == null)
                 {
+                    mCurationOption.setSortType(SortType.DEFAULT);
                     curationCurrentFragment();
+                } else
+                {
+                    mCurationOption.setLocation(location);
+
+                    if (mCurationOption.getSortType() == SortType.DISTANCE)
+                    {
+                        curationCurrentFragment();
+                    }
                 }
 
                 unLockUI();
@@ -1424,6 +1434,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 return;
             }
 
+            GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currentFragment.isShowInformationAtMapView() == true)
+            {
+                return;
+            }
+
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
             DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
 
@@ -1461,7 +1478,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)

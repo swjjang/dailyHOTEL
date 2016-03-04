@@ -18,8 +18,6 @@ public class HotelCurationOption extends PlaceCurationOption
 
     public HotelCurationOption()
     {
-        super();
-
         mHotelFiltersList = new ArrayList<>();
 
         clear();
@@ -27,6 +25,10 @@ public class HotelCurationOption extends PlaceCurationOption
 
     public HotelCurationOption(Parcel in)
     {
+        mHotelFiltersList = new ArrayList<>();
+
+        clear();
+
         readFromParcel(in);
     }
 
@@ -60,16 +62,16 @@ public class HotelCurationOption extends PlaceCurationOption
         super.clear();
 
         person = HotelFilter.MIN_PERSON;
-        flagBedTypeFilters = HotelFilters.FLAG_HOTEL_FILTER_BED_NONE;
-
+        flagBedTypeFilters = HotelFilter.FLAG_HOTEL_FILTER_BED_NONE;
         mCategory = Category.ALL;
+        flagAmenitiesFilters = HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
     }
 
     public boolean isDefaultFilter()
     {
         if (getSortType() != Constants.SortType.DEFAULT//
             || person != HotelFilter.MIN_PERSON//
-            || flagBedTypeFilters != HotelFilters.FLAG_HOTEL_FILTER_BED_NONE || flagAmenitiesFilters != HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+            || flagBedTypeFilters != HotelFilter.FLAG_HOTEL_FILTER_BED_NONE || flagAmenitiesFilters != HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return false;
         }
@@ -95,10 +97,7 @@ public class HotelCurationOption extends PlaceCurationOption
 
         person = in.readInt();
         flagBedTypeFilters = in.readInt();
-
-        mHotelFiltersList = new ArrayList<>();
         in.readTypedList(mHotelFiltersList, HotelFilters.CREATOR);
-
         mCategory = in.readParcelable(Category.class.getClassLoader());
         flagAmenitiesFilters = in.readInt();
     }

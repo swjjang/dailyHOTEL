@@ -16,11 +16,6 @@ public class AnalyticsManager
     private TuneManager mTuneManager;
     private FacebookManager mFacebookManager;
 
-    private AnalyticsManager(Context context)
-    {
-        initAnalytics(context);
-    }
-
     public synchronized static AnalyticsManager getInstance(Context context)
     {
         if (mInstance == null)
@@ -28,6 +23,11 @@ public class AnalyticsManager
             mInstance = new AnalyticsManager(context);
         }
         return mInstance;
+    }
+
+    private AnalyticsManager(Context context)
+    {
+        initAnalytics(context);
     }
 
     private void initAnalytics(Context context)
@@ -324,6 +324,7 @@ public class AnalyticsManager
         public static final String AUTO_LOGIN_OFF = "AutoLoginOff";
         public static final String FACEBOOK_LOGIN = "FacebookLogin";
         public static final String KAKAO_LOGIN = "KakaoLogin";
+        public static final String EMAIL_LOGIN = "EmailLogin";
         public static final String REGISTER_ACCOUNT = "RegisterAccount";
         public static final String AGREE_AND_REGISTER = "AgreeAndRegister";
         public static final String ADDING_CARD_ICON_CLICKED = "AddingCardIconClicked";

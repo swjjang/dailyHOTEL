@@ -307,19 +307,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                 switch (booking.placeType)
                                 {
                                     case HOTEL:
-                                    {
-                                        HashMap<String, String> params = new HashMap<String, String>();
-                                        params.put("idx", String.valueOf(booking.reservationIndex));
-
-                                        DailyNetworkAPI.getInstance().requestHotelHiddenBooking(mNetworkTag, params, mReservationHiddenJsonResponseListener, baseActivity);
+                                        DailyNetworkAPI.getInstance().requestHotelHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener, baseActivity);
                                         break;
-                                    }
 
                                     case FNB:
-                                        HashMap<String, String> params = new HashMap<String, String>();
-                                        params.put("reservation_rec_idx", String.valueOf(booking.reservationIndex));
-
-                                        DailyNetworkAPI.getInstance().requestGourmetHiddenBooking(mNetworkTag, params, mReservationHiddenJsonResponseListener, baseActivity);
+                                        DailyNetworkAPI.getInstance().requestGourmetHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener, baseActivity);
                                         break;
                                 }
 

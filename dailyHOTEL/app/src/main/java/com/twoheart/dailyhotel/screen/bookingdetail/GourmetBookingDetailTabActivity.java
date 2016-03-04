@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -185,9 +186,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     protected void requestPlaceBookingDetail(int reservationIndex)
     {
         lockUI();
-
-        String params = String.format("?reservation_rec_idx=%d", reservationIndex);
-        DailyNetworkAPI.getInstance().requestGourmetBookingDetailInformation(mNetworkTag, params, mReservationBookingDetailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

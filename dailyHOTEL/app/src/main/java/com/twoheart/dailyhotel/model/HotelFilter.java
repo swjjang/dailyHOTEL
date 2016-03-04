@@ -11,18 +11,20 @@ public class HotelFilter implements Parcelable
     public static final int MIN_PERSON = 2;
     public static final int MAX_PERSON = 10;
 
-    public static int FLAG_HOTEL_FILTER_BED_DOUBLE = 0x01;
-    public static int FLAG_HOTEL_FILTER_BED_TWIN = 0x02;
-    public static int FLAG_HOTEL_FILTER_BED_HEATEDFLOORS = 0x04;
-    public static int FLAG_HOTEL_FILTER_BED_CHECKIN = 0x08;
-    public static int FLAG_HOTEL_FILTER_AMENITIES_NONE = 0x00;
-    public static int FLAG_HOTEL_FILTER_AMENITIES_WIFI = 0x01;
-    public static int FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST = 0x02;
-    public static int FLAG_HOTEL_FILTER_AMENITIES_COOKING = 0x04;
-    public static int FLAG_HOTEL_FILTER_AMENITIES_BATH = 0x08;
-    public static int FLAG_HOTEL_FILTER_AMENITIES_PARKING = 0x10;
-    public static int FLAG_HOTEL_FILTER_AMENITIES_POOL = 0x20;
-    public static int FLAG_HOTEL_FILTER_AMENITIES_FITNESS = 0x40;
+    public static final int FLAG_HOTEL_FILTER_BED_NONE = 0x00;
+    public static final int FLAG_HOTEL_FILTER_BED_DOUBLE = 0x01;
+    public static final int FLAG_HOTEL_FILTER_BED_TWIN = 0x02;
+    public static final int FLAG_HOTEL_FILTER_BED_HEATEDFLOORS = 0x04;
+    public static final int FLAG_HOTEL_FILTER_BED_CHECKIN = 0x08;
+    //
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_NONE = 0x00;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_WIFI = 0x01;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST = 0x02;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_COOKING = 0x04;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_BATH = 0x08;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_PARKING = 0x10;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_POOL = 0x20;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_FITNESS = 0x40;
 
     public static final String DOUBLE = "더블";
     public static final String TWIN = "트윈";
@@ -56,7 +58,7 @@ public class HotelFilter implements Parcelable
 
     public boolean isBedTypeFiltered(int bedTypeFlag)
     {
-        if (bedTypeFlag == HotelFilters.FLAG_HOTEL_FILTER_BED_NONE)
+        if (bedTypeFlag == FLAG_HOTEL_FILTER_BED_NONE)
         {
             return true;
         }
@@ -64,9 +66,14 @@ public class HotelFilter implements Parcelable
         return (bedType & bedTypeFlag) == bedType;
     }
 
-    public boolean isAmenitiesFiltered(int flag)
+    public boolean isAmenitiesFiltered(int flags)
     {
-        return (amenitiesFlag & flag) == flag;
+        if (flags == FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        {
+            return true;
+        }
+
+        return (amenitiesFlag & flags) != 0;
     }
 
     private void setBedType(String type)

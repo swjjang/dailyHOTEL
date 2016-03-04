@@ -54,17 +54,17 @@ public class EventListPresenter implements Response.ErrorListener
 
     public void requestEventPageUrl(Event event, String userIndex)
     {
-        String params;
+        String store;
 
         if (Constants.RELEASE_STORE == Constants.Stores.PLAY_STORE || Constants.RELEASE_STORE == Constants.Stores.N_STORE)
         {
-            params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "google");
+            store = "google";
         } else
         {
-            params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
+            store = "skt";
         }
 
-        DailyNetworkAPI.getInstance().requestEventPageUrl(mBaseActivity.getNetworkTag(), params, mDailyEventPageJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestEventPageUrl(mBaseActivity.getNetworkTag(), userIndex, event.index, store, mDailyEventPageJsonResponseListener, this);
     }
 
     private boolean isEmptyTextField(String... fieldText)

@@ -18,13 +18,10 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.fragment.PlaceMapFragment;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilters;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -59,7 +56,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     private View mEmptyView;
     private ViewGroup mMapLayout;
-    private PlaceMapFragment mPlaceMapFragment;
+    private GourmetMapFragment mGourmetMapFragment;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<EventBanner> mEventBannerList;
 
@@ -95,6 +92,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             public void onRefresh()
             {
                 mOnCommunicateListener.showAppBarLayout();
+                mOnCommunicateListener.expandedAppBar(true, true);
                 mOnCommunicateListener.refreshAll(false);
             }
         });
@@ -117,9 +115,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         if (mViewType == ViewType.MAP)
         {
-            if (mPlaceMapFragment != null)
+            if (mGourmetMapFragment != null)
             {
-                mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
+                mGourmetMapFragment.onActivityResult(requestCode, resultCode, data);
             }
         }
     }
@@ -129,9 +127,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         if (mViewType == ViewType.MAP)
         {
-            if (mPlaceMapFragment != null)
+            if (mGourmetMapFragment != null)
             {
-                mPlaceMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                mGourmetMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
     }
@@ -162,6 +160,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         if (mViewType == ViewType.MAP)
         {
+            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
             mOnCommunicateListener.showFloatingActionButton();
         } else
         {
@@ -214,11 +213,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
-                if (mPlaceMapFragment != null)
+                if (mGourmetMapFragment != null)
                 {
-                    getChildFragmentManager().beginTransaction().remove(mPlaceMapFragment).commitAllowingStateLoss();
+                    getChildFragmentManager().beginTransaction().remove(mGourmetMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
-                    mPlaceMapFragment = null;
+                    mGourmetMapFragment = null;
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -230,10 +229,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
-                if (isCurrentPage == true && mPlaceMapFragment == null)
+                if (isCurrentPage == true && mGourmetMapFragment == null)
                 {
-                    mPlaceMapFragment = new GourmetMapFragment();
-                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mPlaceMapFragment).commitAllowingStateLoss();
+                    mGourmetMapFragment = new GourmetMapFragment();
+                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mGourmetMapFragment).commitAllowingStateLoss();
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
@@ -270,12 +269,19 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mOnCommunicateListener = listener;
     }
 
+    public boolean isShowInformationAtMapView()
+    {
+        if (mViewType == ViewType.MAP && mGourmetMapFragment != null)
+        {
+            return mGourmetMapFragment.isShowInformation();
+        }
+
+        return false;
+    }
+
     public void refreshList()
     {
-        Map<String, String> params = new HashMap<>();
-        params.put("type", "gourmet");
-
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, params, mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)
@@ -303,159 +309,17 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         lockUI();
 
-        int stayDays = 0;
-
-        if (checkOutSaleTime == null)
-        {
-            // 오늘, 내일인 경우
-            stayDays = 1;
-        } else
-        {
-            // 연박인 경우
-            stayDays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-        }
-
-        if (stayDays <= 0)
-        {
-            unLockUI();
-            return;
-        }
-
-        String params = null;
-
-        if (province instanceof Area)
-        {
-            Area area = (Area) province;
-
-            params = String.format("?provinceIdx=%d&areaIdx=%d&dateTarget=%s", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-        } else
-        {
-            params = String.format("?provinceIdx=%d&dateTarget=%s", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-        }
-
         //        if (DEBUG == true && this instanceof GourmetDaysListFragment)
         //        {
         //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, params, mGourmetListJsonResponseListener, baseActivity);
+        DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, province, checkInSaleTime, mGourmetListJsonResponseListener, baseActivity);
     }
 
     public void setScrollListTop(boolean scrollListTop)
     {
         mScrollListTop = scrollListTop;
-    }
-
-    private void requestSortList(SortType type, final Location location)
-    {
-        if (SortType.DEFAULT == type)
-        {
-            ExLog.d("Not supported type");
-            return;
-        }
-
-        List<PlaceViewItem> arrayList = mGourmetAdapter.getAll();
-
-        int size = arrayList.size();
-
-        if (size == 0)
-        {
-            unLockUI();
-            return;
-        }
-
-        for (int i = size - 1; i >= 0; i--)
-        {
-            PlaceViewItem placeViewItem = arrayList.get(i);
-
-            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
-            {
-                arrayList.remove(i);
-            }
-        }
-
-        switch (type)
-        {
-            case DISTANCE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Place place1 = placeViewItem1.<Gourmet>getItem();
-                        Place place2 = placeViewItem2.<Gourmet>getItem();
-
-                        float[] results1 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), place1.latitude, place1.longitude, results1);
-                        ((Gourmet) place1).distance = results1[0];
-
-                        float[] results2 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), place2.latitude, place2.longitude, results2);
-                        ((Gourmet) place2).distance = results2[0];
-
-                        return Float.compare(results1[0], results2[0]);
-                    }
-                };
-
-                if (arrayList.size() == 1)
-                {
-                    PlaceViewItem placeViewItem = arrayList.get(0);
-                    Place place1 = placeViewItem.<Gourmet>getItem();
-
-                    float[] results1 = new float[3];
-                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), place1.latitude, place1.longitude, results1);
-                    ((Gourmet) place1).distance = results1[0];
-                } else
-                {
-                    Collections.sort(arrayList, comparator);
-                }
-                break;
-            }
-
-            case LOW_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Place place1 = placeViewItem1.<Gourmet>getItem();
-                        Place place2 = placeViewItem2.<Gourmet>getItem();
-
-                        return place1.discountPrice - place2.discountPrice;
-                    }
-                };
-
-                Collections.sort(arrayList, comparator);
-                break;
-            }
-
-            case HIGH_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Place place1 = placeViewItem1.<Gourmet>getItem();
-                        Place place2 = placeViewItem2.<Gourmet>getItem();
-
-                        return place2.discountPrice - place1.discountPrice;
-                    }
-                };
-
-                Collections.sort(arrayList, comparator);
-                break;
-            }
-        }
-
-        mOnCommunicateListener.expandedAppBar(true, true);
-
-        mGourmetAdapter.setSortType(type);
-        mGourmetRecycleView.scrollToPosition(0);
-        mGourmetAdapter.notifyDataSetChanged();
-        unLockUI();
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Gourmet> gourmetList, GourmetCurationOption gourmetCurationOption)
@@ -476,6 +340,13 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             case DISTANCE:
             {
+                if (location == null)
+                {
+                    gourmetCurationOption.setSortType(SortType.DEFAULT);
+                    DailyToast.showToast(getContext(), R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    return makeSectionList(gourmetList);
+                }
+
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
                 Comparator<Gourmet> comparator = new Comparator<Gourmet>()
                 {
@@ -548,14 +419,14 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     private ArrayList<PlaceViewItem> makeSectionList(List<Gourmet> gourmetList)
     {
-        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
+        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         if (gourmetList == null || gourmetList.size() == 0)
         {
             return placeViewItemList;
         }
 
-        String area = null;
+        String previousRegion = null;
         boolean hasDailyChoice = false;
 
         for (Gourmet gourmet : gourmetList)
@@ -578,9 +449,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 }
             } else
             {
-                if (Util.isTextEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+                if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
                 {
-                    area = region;
+                    previousRegion = region;
 
                     PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
                     placeViewItemList.add(section);
@@ -698,8 +569,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     return;
                 }
 
-                mPlaceMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-                mPlaceMapFragment.setPlaceViewItemList(gourmetListViewItemList, getSelectedSaleTime(), mScrollListTop);
+                mGourmetMapFragment.setOnCommunicateListener(mOnCommunicateListener);
+                mGourmetMapFragment.setPlaceViewItemList(gourmetListViewItemList, getSelectedSaleTime(), mScrollListTop);
 
                 AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
             } else
@@ -947,6 +818,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                         GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
                         gourmetCurationOption.setFiltersList(null);
 
+                        mGourmetAdapter.clear();
                         mGourmetAdapter.notifyDataSetChanged();
 
                         setVisibility(ViewType.GONE, true);
@@ -1008,11 +880,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
         {
             if (jsonArray == null)
             {
-                return new ArrayList<Gourmet>();
+                return new ArrayList<>();
             }
 
             int length = jsonArray.length();
-            ArrayList<Gourmet> gourmetList = new ArrayList<Gourmet>(length);
+            ArrayList<Gourmet> gourmetList = new ArrayList<>(length);
             JSONObject jsonObject;
             Gourmet gouremt;
 

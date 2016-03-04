@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -84,14 +85,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime)
     {
-        String params = String.format("?restaurant_idx=%d&sday=%s", placeDetail.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-
-        if (DEBUG == true)
-        {
-            showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-        }
-
-        DailyNetworkAPI.getInstance().requestGourmetDetailInformation(mNetworkTag, params, mGourmetDetailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetDetailInformation(mNetworkTag, placeDetail.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), mGourmetDetailJsonResponseListener, this);
     }
 
     @Override

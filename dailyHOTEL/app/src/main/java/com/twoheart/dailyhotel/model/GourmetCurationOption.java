@@ -21,8 +21,6 @@ public class GourmetCurationOption extends PlaceCurationOption
 
     public GourmetCurationOption()
     {
-        super();
-
         mFilterMap = new HashMap<>();
         mCategoryCodeMap = new HashMap<>();
         mCategorySequenceMap = new HashMap<>();
@@ -34,6 +32,10 @@ public class GourmetCurationOption extends PlaceCurationOption
 
     public GourmetCurationOption(Parcel in)
     {
+        mGourmetFiltersList = new ArrayList<>();
+
+        clear();
+
         readFromParcel(in);
     }
 
@@ -58,6 +60,8 @@ public class GourmetCurationOption extends PlaceCurationOption
         super.clear();
 
         mFilterMap.clear();
+        flagTimeFilter = GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE;
+        isParking = false;
     }
 
     public boolean isDefaultFilter()
@@ -127,10 +131,7 @@ public class GourmetCurationOption extends PlaceCurationOption
         mFilterMap = (HashMap<String, Integer>) in.readSerializable();
         mCategoryCodeMap = (HashMap<String, Integer>) in.readSerializable();
         mCategorySequenceMap = (HashMap<String, Integer>) in.readSerializable();
-
-        mGourmetFiltersList = new ArrayList<>();
         in.readTypedList(mGourmetFiltersList, GourmetFilters.CREATOR);
-
         flagTimeFilter = in.readInt();
         isParking = in.readInt() == 1 ? true : false;
     }

@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.hotellist;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -13,34 +12,24 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
-public class HotelListViewPagerAdapter extends PagerAdapter
+public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 {
-    private Context mContext;
-    private ArrayList<PlaceViewItem> mHotelListViewItemList;
     private HotelMapFragment.OnUserActionListener mOnUserActionListener;
 
-    public HotelListViewPagerAdapter(Context context)
+    public HotelMapViewPagerAdapter(Context context)
     {
-        mContext = context;
-
-        mHotelListViewItemList = new ArrayList<PlaceViewItem>();
-    }
-
-    public void setOnUserActionListener(HotelMapFragment.OnUserActionListener listener)
-    {
-        mOnUserActionListener = listener;
+        super(context);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
-        if (mHotelListViewItemList == null || mHotelListViewItemList.size() < position)
+        if (mPlaceViewItemList == null || mPlaceViewItemList.size() < position)
         {
             return null;
         }
@@ -49,7 +38,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 
         View view = layoutInflater.inflate(R.layout.viewpager_column_hotel, null);
 
-        PlaceViewItem item = mHotelListViewItemList.get(position);
+        PlaceViewItem item = mPlaceViewItemList.get(position);
 
         makeLayout(view, item.<Hotel>getItem());
 
@@ -58,10 +47,9 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         return view;
     }
 
-    @Override
-    public int getItemPosition(Object object)
+    public void setOnUserActionListener(HotelMapFragment.OnUserActionListener listener)
     {
-        return POSITION_NONE;
+        mOnUserActionListener = listener;
     }
 
     private void makeLayout(View view, final Hotel hotel)
@@ -168,44 +156,5 @@ public class HotelListViewPagerAdapter extends PagerAdapter
                 }
             }
         });
-    }
-
-    @Override
-    public int getCount()
-    {
-        if (mHotelListViewItemList != null)
-        {
-            return mHotelListViewItemList.size();
-        } else
-        {
-            return 0;
-        }
-    }
-
-    @Override
-    public boolean isViewFromObject(View view, Object object)
-    {
-        return view == object;
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object)
-    {
-        container.removeView((View) object);
-    }
-
-    public void setData(List<PlaceViewItem> list)
-    {
-        if (mHotelListViewItemList == null)
-        {
-            mHotelListViewItemList = new ArrayList<>();
-        }
-
-        mHotelListViewItemList.clear();
-
-        if (list != null)
-        {
-            mHotelListViewItemList.addAll(list);
-        }
     }
 }

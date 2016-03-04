@@ -151,31 +151,23 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
-        try
+        unLockUI();
+
+        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
         {
-            unLockUI();
-
-            if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+            if (resultCode == RESULT_OK && intent != null)
             {
-                if (resultCode == RESULT_OK && intent != null)
-                {
-                    String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
 
-                    mTicketPayment.getGuest().phone = mobileNumber;
+                mTicketPayment.getGuest().phone = mobileNumber;
 
-                    mGourmetBookingLayout.updateUserInformationLayout(mobileNumber);
-                }
-
-                return;
+                mGourmetBookingLayout.updateUserInformationLayout(mobileNumber);
             }
 
-            super.onActivityResult(requestCode, resultCode, intent);
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.toString());
-
-            Util.restartApp(this);
+            return;
         }
+
+        super.onActivityResult(requestCode, resultCode, intent);
     }
 
     @Override
@@ -187,10 +179,11 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             return;
         }
 
-        String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d&arrival_time=%s", //
-            ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), ticketPayment.ticketCount, String.valueOf(ticketPayment.ticketTime));
-
-        DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag, params, mTicketSellCheckJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag//
+            , ticketPayment.getTicketInformation().index//
+            , checkInSaleTime.getDayOfDaysDateFormat("yyMMdd")//
+            , ticketPayment.ticketCount//
+            , Long.toString(ticketPayment.ticketTime), mTicketSellCheckJsonResponseListener, this);
     }
 
     @Override
@@ -235,8 +228,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             return;
         }
 
-        String params = String.format("?sale_reco_idx=%d", index);
-        DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, params, mTicketPaymentInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, index, mTicketPaymentInformationJsonResponseListener, this);
     }
 
     @Override

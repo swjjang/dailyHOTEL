@@ -92,8 +92,7 @@ public class MainPresenter implements Response.ErrorListener
 
                 DailyPreference.getInstance(mBaseActivity).setLookUpEventTime(currentDateTime);
 
-                String params = String.format("?date_time=%s", Long.toString(lastLookupDateTime));
-                DailyNetworkAPI.getInstance().requestEventNewCount(mBaseActivity.getNetworkTag(), params, mDailyEventCountJsonResponseListener, null);
+                DailyNetworkAPI.getInstance().requestEventNewCount(mBaseActivity.getNetworkTag(), Long.toString(lastLookupDateTime), mDailyEventCountJsonResponseListener, null);
             }
         }, null);
     }

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.gourmetlist;
+package com.twoheart.dailyhotel.screen.gourmetdetail;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

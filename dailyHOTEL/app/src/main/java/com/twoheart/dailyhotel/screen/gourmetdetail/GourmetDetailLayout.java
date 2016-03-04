@@ -30,11 +30,11 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.screen.gourmetlist.GourmetDetailRoomTypeListAdapter;
-import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailListView;
+import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
+import com.twoheart.dailyhotel.view.widget.DailyPlaceDetailListView;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class GourmetDetailLayout
     protected LoopViewPager mViewPager;
     protected DailyViewPagerIndicator mDailyViewPagerIndicator;
 
-    protected HotelDetailListView mListView;
+    protected DailyPlaceDetailListView mListView;
     private GourmetDetailListAdapter mListAdapter;
     protected DetailImageViewPagerAdapter mImageAdapter;
 
@@ -100,7 +100,7 @@ public class GourmetDetailLayout
 
     private void initLayout(BaseActivity activity, String defaultImageUrl)
     {
-        mListView = (HotelDetailListView) activity.findViewById(R.id.hotelListView);
+        mListView = (DailyPlaceDetailListView) activity.findViewById(R.id.hotelListView);
         mListView.setOnScrollListener(mOnScrollListener);
 
         // 이미지 ViewPage 넣기.
@@ -287,7 +287,7 @@ public class GourmetDetailLayout
         return mBookingStatus;
     }
 
-    protected void setBookingStatus(int status)
+    public void setBookingStatus(int status)
     {
         mBookingStatus = status;
 
@@ -386,7 +386,7 @@ public class GourmetDetailLayout
         mTicketTypeBackgroundView.setEnabled(enabled);
     }
 
-    protected void hideTicketInformationLayout()
+    public void hideTicketInformationLayout()
     {
         if (mObjectAnimator != null)
         {
@@ -846,11 +846,10 @@ public class GourmetDetailLayout
             }
 
             View nameTextView = mListAdapter.getNameTextView();
-
             Rect firstRect = (Rect) nameTextView.getTag();
             Integer firstWidth = (Integer) nameTextView.getTag(nameTextView.getId());
 
-            if (firstRect != null)
+            if (firstRect != null && firstWidth != null)
             {
                 final int TOOLBAR_TEXT_X = Util.dpToPx(mActivity, 60);
                 float gradeMax = ((float) mImageHeight - TOOLBAR_HEIGHT) / 3;
@@ -858,27 +857,23 @@ public class GourmetDetailLayout
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - TOOLBAR_TEXT_X;
 
-                if (Float.compare(xFactor, 1.0f) > 0)
+                if (Float.compare(xFactor, 0.0f) < 0)
                 {
-                    if (Util.isOverAPI11() == true)
-                    {
-                        nameTextView.setTranslationX(0);
-                    }
-                    return;
+                    xFactor = 0.0f;
                 }
 
                 if (Util.isOverAPI11() == true)
                 {
-                    if (Float.compare(xFactor, 0.0f) >= 0)
+                    if (Float.compare(xFactor, 1.0f) <= 0)
                     {
                         nameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
                     } else
                     {
-                        nameTextView.setTranslationX(-nameMax);
+                        nameTextView.setTranslationX(0);
                     }
                 } else
                 {
-                    if (Float.compare(xFactor, 0.0f) >= 0)
+                    if (Float.compare(xFactor, 1.0f) <= 0)
                     {
                         TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax * (1.0f - xFactor), 0.0f, 0.0f);
                         anim.setDuration(0);
@@ -888,27 +883,28 @@ public class GourmetDetailLayout
                         mLastFactor = -nameMax * (1.0f - xFactor);
                     } else
                     {
-                        TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax, 0.0f, 0.0f);
-                        anim.setDuration(0);
-                        anim.setFillAfter(true);
-                        nameTextView.startAnimation(anim);
-
-                        mLastFactor = -nameMax;
+                        nameTextView.setAnimation(null);
                     }
                 }
 
                 float widthNameMax = firstRect.width() - firstWidth;
+                int newWidth;
 
-                ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
-                if (Float.compare(xFactor, 0.0f) >= 0)
+                if (Float.compare(xFactor, 1.0f) <= 0)
                 {
-                    layoutParams.width = (int) (firstWidth - (widthNameMax * (1.0f - xFactor)));
+                    newWidth = (int) (firstRect.width() - (widthNameMax * (1.0f - xFactor)));
                 } else
                 {
-                    layoutParams.width = firstWidth;
+                    newWidth = firstRect.width();
                 }
 
-                nameTextView.setLayoutParams(layoutParams);
+                ViewGroup.LayoutParams layoutParams = nameTextView.getLayoutParams();
+
+                if (layoutParams.width != newWidth)
+                {
+                    layoutParams.width = newWidth;
+                    nameTextView.setLayoutParams(layoutParams);
+                }
             }
         }
     };

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.adapter;
+package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
 import android.graphics.Color;

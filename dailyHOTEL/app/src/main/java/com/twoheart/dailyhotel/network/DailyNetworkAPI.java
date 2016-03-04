@@ -15,6 +15,9 @@ package com.twoheart.dailyhotel.network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -22,6 +25,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -125,8 +129,8 @@ public class DailyNetworkAPI implements IDailyNetwork
     public void requestCommonDatetime(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/common/datetime" : "MTQkNzMkNzUkMSQzNyQ=$OCEY4MTlBNEY1NjHZFQ0FGNkFFQkNEOThEQkRODNTRFMTc1MzA5NTk5OTE4ODM2ODEzREEzREEzNRNjZDNTU1QTlBNw==$";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("timeZone", "Asia/Seoul");
+
+        Map<String, String> params = Collections.singletonMap("timeZone", "Asia/Seoul");
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
     }
@@ -180,8 +184,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "user/check/email_auth" : "NCQ4MCQ0MyQyNiQ4OCQ=$MzY0XM0YwNTgwNzYwMjJBOEQyMQEIxMDM3MDQ1RjBGMjUZGQzJERjU5OTAwQzQ2OEM2REJGMzc3RTI3REIUwNEYzGMQ==$";
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userEmail", userEmail);
+        Map<String, String> params = Collections.singletonMap("userEmail", userEmail);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
     }
@@ -191,8 +194,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "user/change_pw" : "MjMkMzAkMyQxNCQzMiQ=$QzcB0MkU1RjExOATlDMjU5OTBKCMkU4NIK0IwMUVCNTZENjI=$";
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userEmail", userEmail);
+        Map<String, String> params = Collections.singletonMap("userEmail", userEmail);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
     }
@@ -202,8 +204,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "notification/v1/register" : "MTkkNTckMiQ0OSQxMCQ=$MTBEyNUM1QNUY2OEFDOUZYBRTA2Mjg4NDc1RjkwRDMwQ0Q5MUEAyRjU2NTcwTMkZEMjgxMTc1NDlBMEY0MTlDNzI5QQ==$";
 
-        Map<String, String> params = new HashMap<>();
-        params.put("registrationId", registrationId);
+        Map<String, String> params = Collections.singletonMap("registrationId", registrationId);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
     }
@@ -275,17 +276,31 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestUserDeleteBillingCard(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestUserDeleteBillingCard(Object tag, String billkey, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/del" : "NyQyNyQxMTEkODIkMTEzJA==$MDQ2RUMO3QzJEMTNBQjI4MDAzRDLczQzM1REY1NjIxNTgzODZCMjYwNzc1RjA3NEEyRDI2REM2QjkxNDZBMMzZBMDBCNzVGNTk2MzM0Mjg3MDg0QEHTlBQzEwRDg1QjlDNjc5$";
+
+        Map<String, String> params = Collections.singletonMap("billkey", billkey);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
     }
 
     @Override
-    public void requestHotelList(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/list" : "MTQkNDUkODQkMzUkMjIk$NDA3MDMzRUNFQkYQ5NTA3MUjg5MDEzNjU1QkVQ1NTlGNTZEVMDgyREY2NkQ4Njc4Njk4NThBMTQ5RkUzRDFDQTJA4MQ==$";
+
+        String params;
+
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+
+            params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+        } else
+        {
+            params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+        }
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
@@ -299,17 +314,21 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelPaymentInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelPaymentInformation(Object tag, int roomIndex, String date, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/detail" : "ODEkNzEkMzMkMTYkMyQ=$QkUG5QkI4MDA0QjAxRM0MyN0JEMTFCNzM1OHUIyRkUxNjUyMDFBODcxNUE1MzI5QTc3OTdEOUMFwOTE2NDY3RVjE5NQ==$";
+
+        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", roomIndex, date, nights);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
-    public void requestHotelDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelDetailInformation(Object tag, int index, String date, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/hotel/v1/sale/detail" : "ODUkMjUkNTAkMzAkODIk$MzRDNzU3QjM1OEE0MTEyQkJCQIzhDRUEMzOEYyQUQyOTBBMjlERYjJEN0Q0QUNCRUZGNkRGQkE0MUJCOUQOwQkFBROg==$";
+
+        String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", index, date, nights);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
@@ -339,17 +358,21 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetBookingDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetBookingDetailInformation(Object tag, int index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/booking/detail" : "OTEkNDMkNjEkNCQ0NSQ=$Mzk1LREFENEREODg4Qzg1QzE2NDBDMDFGMTFEMERCRDgBLwMTdGOUJDQkU3RkFGWRTg4NjVFODQ3NkI5NzJDMzMzNTEzNjVJGMTNENUM2RTExMkI5NjNEREREOUZEMTg0REM0$";
+
+        String params = String.format("?reservation_rec_idx=%d", index);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
-    public void requestGourmetReceipt(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetReceipt(Object tag, int index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/booking/receipt" : "MTA3JDk4JDUyJDc1JDc0JA==$NTdEMjBFRDA2Q0I0RDc0OTI2REMzNjYxRUU2RTdCOTFBNUUwRkY4ERTMxQTI0N0Y2MTExQ0I2QIzHYzMDUwRkE5OTkwQjVEMkNGREWY2ODhGNkQG2MzgwMzFGMUNDQThDMDdF$";
+
+        String params = String.format("?reservation_rec_idx=%d", index);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
@@ -363,25 +386,33 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetRating(Object tag, String result, String index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/rating/update" : "MTQkNzgkOTIkMTEzJDEwMCQ=$QzEzMzAwQ0VFMjZkxQzZDQkM2QjM0Q0QzRkJEQTNEMTY4MzA1MzFGRDdCMDQyOUNFMzlCNUIyRjQzNBEZCMzREMUMwMjGdGN0UzOPDAyQUNEQjZDRjGYxRDk2QkNFQzY1NzY1$";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("rating", result);
+        params.put("reservation_rec_idx", index);
 
         mQueue.add(new DailyHotelJsonRequest(Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
     }
 
     @Override
-    public void requestGourmetHiddenBooking(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetHiddenBooking(Object tag, int index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden" : "MTI1JDI0JDIkNDQkNzck$QzXFGQzQwNTRCRERFQ0UxRjczZQjI2QTI2M0ZFNzExMkZY5NEYwRjdDMUMxNDhFMzgyM0FFNDUxRUHEzNzAzMUUyRUFDMTUyMTM0MDRDMkEyNDJDN0Q4OTE3OUFCNTM4RVTYy$";
+
+        Map<String, String> params = Collections.singletonMap("reservation_rec_idx", Integer.toString(index));
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
     }
 
     @Override
-    public void requestGourmetAccountInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetAccountInformation(Object tag, String tid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/vbank/account/info" : "MCQxMDQkOTIkODIkMTAk$FRDRCRTU2MFDExMjk5Njg2MEZCMzYwQTU4QzZENzg2RTdEQkFGNzUyM0Q2NjkxOTU3M0Y1OEZBQURENDY0QUzVFMjc2NDJZGMURDNkVCRUYDzOEExQjdCRDU5RDVBQUVBMEI0$";
+
+        String params = String.format("?tid=%s", tid);
 
         mQueue.add(new DailyHotelJsonRequest(Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
@@ -395,33 +426,51 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetList(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetList(Object tag, Province province, SaleTime saleTime, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "gourmet/sale/v2/list" : "MTQkMjgkNTgkNTEkMzAk$NjAxMDJFODkyMzWMxMjAzQUM2N0UC2TMDkwREQ1REU2RjdCOEI5OCUYxMEJEAQzRGRjNBNzEwQUVBNUYxRjg1MkQ1NA==$";
+
+        String params;
+
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+
+            params = String.format("?provinceIdx=%d&areaIdx=%d&dateTarget=%s", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysDateFormat("yyMMdd"));
+        } else
+        {
+            params = String.format("?provinceIdx=%d&dateTarget=%s", province.getProvinceIndex(), saleTime.getDayOfDaysDateFormat("yyMMdd"));
+        }
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
-    public void requestGourmetDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetDetailInformation(Object tag, int index, String day, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/restaurant/info" : "MjkkMzYkNDckMjUkODMk$M0FCMTY0Qjk2RDU1NTRFNTc1ROURDRVEFFOTEVyMUFDQTkwNJkExRTkwMzBGNUQ5MTgyQUI4MzJGNEQ2MTBUEOEY2OQ==$";
+
+        String params = String.format("?restaurant_idx=%d&sday=%s", index, day);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
-    public void requestGourmetPaymentInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetPaymentInformation(Object tag, int index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info" : "NTkkNDYkMTAzJDc1JDIk$NzDc3MjA1MTg5QjgwMTg5QkFCOENEMDFBRUY5NTlGNzY4QjTEzMUNCMTBGOUMD1NkM1MzRBOTZFMRjY4MjAwNjlDMDQ3OUNEREIyQTQyMEEZCQ0IwOTgxNkFGMzMwNUYyOTg0$";
+
+        String params = String.format("?sale_reco_idx=%d", index);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
-    public void requestGourmetCheckTicket(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestGourmetCheckTicket(Object tag, int index, String day, int count, String time, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/session/ticket/sell/check" : "NzckMTA3JDYxJDEyNCQ0MyQ=$MjczMEVDNkQ2ODQzRDE3ODYzRjZCQzMwNzc0NjU0RkYYxMUY0RTYyOTA0QzkwQXTFGNTUxN0M2NjQwNCDQ3ODlCNEZEMEM5RkMwMjQ3OUM2NzJMyNkJCQUU1MTVFRSkZGODRE$";
+
+        String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d&arrival_time=%s", index, day, count, time);
 
         mQueue.add(new DailyHotelJsonRequest(Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
@@ -435,9 +484,11 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestDepositWaitDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestDepositWaitDetailInformation(Object tag, int payType, String tid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
+
+        String params = String.format("/%d/%s", payType, tid);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
@@ -451,9 +502,13 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelRating(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelRating(Object tag, String result, String index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/update" : "MTExJDQ5JDIzJDU4JDg5JA==$NTg0NUMwNTE5QURGQzU1QTRJCRDIwN0UzODY3QTY0MjI3ODY1QCUI4QTk2DMTc2N0EyNzQzMTg4OTUxOTFFQ0Y2NzDQzNjdDOTlBMzYyMDYzNjE1NkFMDNkEzMDdFQ0NGQzg2$";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("rating", result);
+        params.put("reserv_idx", index);
 
         mQueue.add(new DailyHotelJsonRequest(Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
     }
@@ -467,25 +522,31 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelBookingDetailInformation(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelBookingDetailInformation(Object tag, int index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/detail" : "MSQ4MCQ1OSQ5JDYwJA==$NVDY2OTY3XM0FBODdEM0UxNDVDODlEQzhGM0RDRUZGMkYzRTRGQzczRjcyOTZQhBQzVDRDM0NDkxMDgxNkMZwRTkyRg==$";
+
+        String params = String.format("?reservationIdx=%d", index);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
-    public void requestHotelHiddenBooking(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelHiddenBooking(Object tag, int index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/mine/hidden" : "NyQ1OCQzMiQyMyQzOCQ=$RkI3OTZDGQ0UzOEYzQ0U2RkZMzQ0ZFRTNDGRkQOxNERFMjc4NDYzMkQ0MEE1RFDI5Q0NDMDk5NjEzMTEyRkIyNUIzRQ==$";
+
+        Map<String, String> params = Collections.singletonMap("idx", Integer.toString(index));
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
     }
 
     @Override
-    public void requestHotelReceipt(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelReceipt(Object tag, String index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/receipt" : "OCQ3NiQ3OSQyNSQ2NyQ=$MDgxRDE5WRDExNDUzRjAzNTg1KNDIyMEVCQTlGMDE5NjE5RjVEMjYxMEFBRTRCQzQ4RRTFBMDU0NjFADNCEUxMkI4Qg==$";
+
+        Map<String, String> params = Collections.singletonMap("reservation_idx", index);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), params, listener, errorListener));
     }
@@ -507,17 +568,21 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestEventNewCount(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestEventNewCount(Object tag, String timeMillis, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/daily/event/count" : "NDQkNDIkNjMkODYkMzYk$Mjg4QzY4OEFERDc1RjAzMzE5MDQwNDVGNjVDQNzcyNETI3EMkJDNEIxRTZDMEM1RGDFCNTIxNDczRTc4OTlDNEFIFOA==$";
+
+        String params = String.format("?date_time=%s", timeMillis);
 
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
-    public void requestEventPageUrl(Object tag, String params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestEventPageUrl(Object tag, String userIndex, int eventIndex, String store, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/daily/event/page" : "MyQzNCQ3NyQyOSQ5MCQ=$MURDFQ0UwQkFGRDJCOTBFMDhDRTg0DMjhGOVTdBQzhERTVBQjU2Q0EyMkQ0M0NBODBGNEU1MTQ4RkUM2M0QxQzFBQwT==$";
+
+        String params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, eventIndex, store);
 
         mQueue.add(new DailyHotelJsonRequest(Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
@@ -531,9 +596,11 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestEventBannerList(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestEventBannerList(Object tag, String place, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "event/v1/banner" : "MjUkNyQ1JDQwJDE2JA==$MzdCQPzlAGQkRCNDZNGNzE2NEY4OLEU1MjMzMkQ3NFzU3Mjk=$";
+
+        Map<String, String> params = Collections.singletonMap("type", place);
 
         mQueue.add(new DailyHotelJsonRequest(Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).toString(), params, listener, errorListener));
     }

@@ -26,13 +26,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -48,6 +48,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
 
 import org.json.JSONArray;
@@ -107,13 +108,14 @@ public class HotelListFragment extends BaseFragment implements Constants
             public void onRefresh()
             {
                 mOnCommunicateListener.showAppBarLayout();
+                mOnCommunicateListener.expandedAppBar(true, true);
                 mOnCommunicateListener.refreshAll(false);
             }
         });
 
         mEmptyView = view.findViewById(R.id.emptyView);
 
-        mMapLayout = (ViewGroup) view.findViewById(R.id.hotelMapLayout);
+        mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
 
         mViewType = ViewType.LIST;
 
@@ -174,6 +176,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         if (mViewType == ViewType.MAP)
         {
+            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
             mOnCommunicateListener.showFloatingActionButton();
         } else
         {
@@ -282,12 +285,19 @@ public class HotelListFragment extends BaseFragment implements Constants
         return mOnItemClickListener;
     }
 
+    public boolean isShowInformationAtMapView()
+    {
+        if (mViewType == ViewType.MAP && mHotelMapFragment != null)
+        {
+            return mHotelMapFragment.isShowInformation();
+        }
+
+        return false;
+    }
+
     public void refreshList()
     {
-        Map<String, String> params = new HashMap<>();
-        params.put("type", "hotel");
-
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, params, mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)
@@ -297,9 +307,6 @@ public class HotelListFragment extends BaseFragment implements Constants
         });
     }
 
-    /**
-     * 이벤트 리스트를 얻어오는 API가 생겨서 어쩔수 없이 상속구조로 바꿈
-     */
     protected void fetchList()
     {
         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
@@ -318,34 +325,22 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         lockUI();
 
-        int stayDays = 0;
+        int nights = 0;
 
         if (checkOutSaleTime == null)
         {
             // 오늘, 내일인 경우
-            stayDays = 1;
+            nights = 1;
         } else
         {
             // 연박인 경우
-            stayDays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+            nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
         }
 
-        if (stayDays <= 0)
+        if (nights <= 0)
         {
             unLockUI();
             return;
-        }
-
-        String params = null;
-
-        if (province instanceof Area)
-        {
-            Area area = (Area) province;
-
-            params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
-        } else
-        {
-            params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), stayDays);
         }
 
         //        if (DEBUG == true && this instanceof HotelDaysListFragment)
@@ -353,124 +348,12 @@ public class HotelListFragment extends BaseFragment implements Constants
         //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, params, mHotelListJsonResponseListener, baseActivity);
+        DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, province, checkInSaleTime, nights, mHotelListJsonResponseListener, baseActivity);
     }
 
     public void setScrollListTop(boolean scrollListTop)
     {
         mScrollListTop = scrollListTop;
-    }
-
-    private void requestSortList(SortType type, final Location location)
-    {
-        if (SortType.DEFAULT == type)
-        {
-            ExLog.d("Not supported type");
-            return;
-        }
-
-        List<PlaceViewItem> arrayList = mHotelAdapter.getAll();
-
-        int size = arrayList.size();
-
-        if (size == 0)
-        {
-            unLockUI();
-            return;
-        }
-
-        for (int i = size - 1; i >= 0; i--)
-        {
-            PlaceViewItem hotelListViewItem = arrayList.get(i);
-
-            if (hotelListViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
-            {
-                arrayList.remove(i);
-            }
-        }
-
-        switch (type)
-        {
-            case DISTANCE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
-                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
-
-                        float[] results1 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
-                        hotel1.distance = results1[0];
-
-                        float[] results2 = new float[3];
-                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel2.latitude, hotel2.longitude, results2);
-                        hotel2.distance = results2[0];
-
-                        return Float.compare(results1[0], results2[0]);
-                    }
-                };
-
-                if (arrayList.size() == 1)
-                {
-                    PlaceViewItem placeViewItem = arrayList.get(0);
-                    Hotel hotel1 = placeViewItem.<Hotel>getItem();
-
-                    float[] results1 = new float[3];
-                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
-                    hotel1.distance = results1[0];
-                } else
-                {
-                    Collections.sort(arrayList, comparator);
-                }
-                break;
-            }
-
-            case LOW_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
-                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
-
-                        return hotel1.averageDiscount - hotel2.averageDiscount;
-                    }
-                };
-
-                Collections.sort(arrayList, comparator);
-                break;
-            }
-
-            case HIGH_PRICE:
-            {
-                // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
-                {
-                    public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
-                    {
-                        Hotel hotel1 = placeViewItem1.<Hotel>getItem();
-                        Hotel hotel2 = placeViewItem2.<Hotel>getItem();
-
-                        return hotel2.averageDiscount - hotel1.averageDiscount;
-                    }
-                };
-
-                Collections.sort(arrayList, comparator);
-                break;
-            }
-        }
-
-        mOnCommunicateListener.expandedAppBar(true, true);
-
-        mHotelAdapter.setSortType(type);
-        mHotelRecycleView.scrollToPosition(0);
-        mHotelAdapter.notifyDataSetChanged();
-        unLockUI();
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Hotel> hotelList, HotelCurationOption hotelCurationOption)
@@ -491,6 +374,13 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             case DISTANCE:
             {
+                if (location == null)
+                {
+                    hotelCurationOption.setSortType(SortType.DEFAULT);
+                    DailyToast.showToast(getContext(), R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    return makeSectionHotelList(hotelList);
+                }
+
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
                 Comparator<Hotel> comparator = new Comparator<Hotel>()
                 {
@@ -715,10 +605,10 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 if (HotelListFragment.this instanceof HotelDaysListFragment)
                 {
-                    mHotelMapFragment.setHotelList(hotelListViewItemList, ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), mScrollListTop);
+                    mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), mScrollListTop);
                 } else
                 {
-                    mHotelMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mScrollListTop);
+                    mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, mSaleTime, mScrollListTop);
                 }
 
                 AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST_MAP, null);
@@ -941,6 +831,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
                         hotelCurationOption.setFiltersList(null);
 
+                        mHotelAdapter.clear();
                         mHotelAdapter.notifyDataSetChanged();
 
                         setVisibility(ViewType.GONE, true);
@@ -994,11 +885,11 @@ public class HotelListFragment extends BaseFragment implements Constants
         {
             if (jsonArray == null)
             {
-                return new ArrayList<Hotel>();
+                return new ArrayList<>();
             }
 
             int length = jsonArray.length();
-            ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
+            ArrayList<Hotel> hotelList = new ArrayList<>(length);
             JSONObject jsonObject;
             Hotel hotel;
 

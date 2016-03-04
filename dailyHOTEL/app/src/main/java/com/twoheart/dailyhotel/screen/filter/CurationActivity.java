@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -51,6 +52,8 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     private PlaceCurationOption mPlaceCurationOption;
 
     private PlaceType mPlaceType;
+    private boolean mIsGlobal;
+    private ViewType mViewType;
 
     private TextView mResultCountView;
     private View mConfirmView;
@@ -92,8 +95,8 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         Intent intent = new Intent(context, CurationActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, PlaceType.HOTEL.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, hotelCurationOption);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, hotelCurationOption);
 
         return intent;
     }
@@ -103,8 +106,8 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         Intent intent = new Intent(context, CurationActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, PlaceType.FNB.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, gourmetCurationOption);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, gourmetCurationOption);
 
         return intent;
     }
@@ -124,12 +127,12 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             return;
         }
 
-        boolean isGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
-        ViewType viewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+        mIsGlobal = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_REGION, false);
+        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
         mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         mPlaceCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
 
-        initLayout(viewType, mPlaceType, isGlobal);
+        initLayout(mViewType, mPlaceType, mIsGlobal);
     }
 
     private void initLayout(ViewType viewType, PlaceType placeType, boolean isGlobal)
@@ -205,6 +208,12 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     private void initHotelSort(View view, ViewType viewType, HotelCurationOption hotelCurationOption)
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
+
+        if (mIsGlobal == true)
+        {
+            View satisfactionCheckView = view.findViewById(R.id.satisfactionCheckView);
+            satisfactionCheckView.setVisibility(View.INVISIBLE);
+        }
 
         if (viewType == ViewType.MAP)
         {
@@ -429,6 +438,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         if (isDelay == true)
         {
             mResultCountView.setText(R.string.label_searching);
+            mConfirmView.setOnClickListener(null);
 
             mHandler.removeMessages(HANDLE_MESSAGE_HOTEL_RESULT);
             mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_HOTEL_RESULT, HANDLE_MESSAGE_DELAYTIME);
@@ -443,15 +453,22 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     {
         mPlaceCurationOption.clear();
 
-        mSortRadioGroup.clearCheck();
-        mSortRadioGroup.check(R.id.regionCheckView);
+        if (mViewType == ViewType.LIST)
+        {
+            mSortRadioGroup.setOnCheckedChangeListener(null);
+            mSortRadioGroup.check(R.id.regionCheckView);
+            mSortRadioGroup.setOnCheckedChangeListener(this);
+        }
 
-        updateHotelPersonFilter(HotelFilter.MIN_PERSON);
+        if (mIsGlobal == false)
+        {
+            updateHotelPersonFilter(HotelFilter.MIN_PERSON);
 
-        resetLayout(mBedTypeLayout);
-        resetLayout(mGridLayout);
+            resetLayout(mBedTypeLayout);
+            resetLayout(mGridLayout);
 
-        requestHotelUpdateResult(true);
+            requestHotelUpdateResult(true);
+        }
     }
 
     private void updateHotelResultCount()
@@ -760,6 +777,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         if (isDelay == true)
         {
             mResultCountView.setText(R.string.label_searching);
+            mConfirmView.setOnClickListener(null);
 
             mHandler.removeMessages(HANDLE_MESSAGE_GOURMET_RESULT);
             mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_GOURMET_RESULT, HANDLE_MESSAGE_DELAYTIME);
@@ -774,14 +792,21 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     {
         mPlaceCurationOption.clear();
 
-        mSortRadioGroup.clearCheck();
-        mSortRadioGroup.check(R.id.regionCheckView);
+        if (mViewType == ViewType.LIST)
+        {
+            mSortRadioGroup.setOnCheckedChangeListener(null);
+            mSortRadioGroup.check(R.id.regionCheckView);
+            mSortRadioGroup.setOnCheckedChangeListener(this);
+        }
 
-        resetLayout(mGridLayout);
-        resetLayout(mAmenitiesLayout);
-        resetLayout(mTimeRangeLayout);
+        if (mIsGlobal == false)
+        {
+            resetLayout(mGridLayout);
+            resetLayout(mAmenitiesLayout);
+            resetLayout(mTimeRangeLayout);
 
-        requestGourmetUpdateResult(false);
+            requestGourmetUpdateResult(false);
+        }
     }
 
     private void updateGourmetResultCount()
@@ -959,34 +984,46 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        String label = "";
+        RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
+
+        if (radioButton == null)
+        {
+            return;
+        }
+
+        String label = radioButton.getText().toString();
+
+        boolean isChecked = radioButton.isChecked();
+
+        if (isChecked == false)
+        {
+            return;
+        }
 
         switch (checkedId)
         {
             case R.id.regionCheckView:
-                label = getString(R.string.label_sort_by_area);
                 mPlaceCurationOption.setSortType(SortType.DEFAULT);
                 break;
 
             case R.id.distanceCheckView:
-                label = getString(R.string.label_sort_by_distance);
                 mPlaceCurationOption.setSortType(SortType.DISTANCE);
                 break;
 
             case R.id.lowPriceCheckView:
-                label = getString(R.string.label_sort_by_low_price);
                 mPlaceCurationOption.setSortType(SortType.LOW_PRICE);
                 break;
 
             case R.id.highPriceCheckView:
-                label = getString(R.string.label_sort_by_high_price);
                 mPlaceCurationOption.setSortType(SortType.HIGH_PRICE);
                 break;
 
             case R.id.satisfactionCheckView:
-                label = getString(R.string.label_sort_by_satisfaction);
                 mPlaceCurationOption.setSortType(SortType.SATISFACTION);
                 break;
+
+            default:
+                return;
         }
 
         switch (mPlaceType)
@@ -1072,24 +1109,21 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
 
             case R.id.confirmView:
             {
-                Intent intent = new Intent();
-
                 switch (mPlaceType)
                 {
                     case HOTEL:
-                        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, (HotelCurationOption) mPlaceCurationOption);
-
                         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_APPLY_BUTTON_CLICKED, null);
                         break;
 
                     case FNB:
-                        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, (GourmetCurationOption) mPlaceCurationOption);
-
                         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_APPLY_BUTTON_CLICKED, null);
                         break;
                 }
+
+                Intent intent = new Intent();
+                intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mPlaceCurationOption);
 
                 setResult(RESULT_OK, intent);
                 finish();
@@ -1101,11 +1135,25 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
                 switch (mPlaceType)
                 {
                     case HOTEL:
+                        if (((HotelCurationOption) mPlaceCurationOption).isDefaultFilter() == true)
+                        {
+                            Intent intent = new Intent();
+                            intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mPlaceCurationOption);
+                            setResult(RESULT_OK, intent);
+                        }
+
                         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
                         break;
 
                     case FNB:
+                        if (((GourmetCurationOption) mPlaceCurationOption).isDefaultFilter() == true)
+                        {
+                            Intent intent = new Intent();
+                            intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mPlaceCurationOption);
+                            setResult(RESULT_OK, intent);
+                        }
+
                         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
                         break;

@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class GourmetFilters implements Parcelable
@@ -38,15 +37,9 @@ public class GourmetFilters implements Parcelable
 
     public boolean isFiltered(GourmetCurationOption curationOption)
     {
-        if (isCategoryFiltered(curationOption.getFilterMap()) == false//
-            || isTimeFiltered(curationOption.flagTimeFilter) == false//
-            || isParkingFiltered(curationOption.isParking) == false)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
+        return (isCategoryFiltered(curationOption.getFilterMap()) == true//
+            && isTimeFiltered(curationOption.flagTimeFilter) == true//
+            && isParkingFiltered(curationOption.isParking) == true);
     }
 
     private boolean isCategoryFiltered(HashMap<String, Integer> categoryMap)
@@ -59,16 +52,16 @@ public class GourmetFilters implements Parcelable
         return categoryMap.containsKey(category);
     }
 
-    private boolean isTimeFiltered(int flagTimeFilter)
+    private boolean isTimeFiltered(int flagTimeFilters)
     {
-        if (flagTimeFilter == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
+        if (flagTimeFilters == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
         {
             return true;
         }
 
         for (GourmetFilter gourmetFilter : mGourmetFilterArray)
         {
-            if (gourmetFilter.isTimeFiltered(flagTimeFilter) == true)
+            if (gourmetFilter.isTimeFiltered(flagTimeFilters) == true)
             {
                 return true;
             }
@@ -93,11 +86,6 @@ public class GourmetFilters implements Parcelable
         }
 
         return false;
-    }
-
-    public void clear()
-    {
-        Arrays.fill(mGourmetFilterArray, 0, mGourmetFilterArray.length, null);
     }
 
     @Override

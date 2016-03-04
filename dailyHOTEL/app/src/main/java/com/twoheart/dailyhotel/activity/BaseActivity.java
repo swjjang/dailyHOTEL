@@ -212,6 +212,11 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         return mLockUI.isVisible();
     }
 
+    protected void setLockUICancelable(boolean flag)
+    {
+        mLockUI.setCancelable(flag);
+    }
+
     public void lockUI()
     {
         lockUI(true);

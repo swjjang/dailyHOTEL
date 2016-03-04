@@ -863,39 +863,31 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
-        try
+        super.onActivityResult(requestCode, resultCode, intent);
+        unLockUI();
+
+        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
         {
-            super.onActivityResult(requestCode, resultCode, intent);
-            unLockUI();
-
-            if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+            if (resultCode == RESULT_OK && intent != null)
             {
-                if (resultCode == RESULT_OK && intent != null)
-                {
-                    String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
 
-                    etReserverNumber.setText(mobileNumber);
-                }
-
-                return;
+                etReserverNumber.setText(mobileNumber);
             }
 
-            mReqCode = requestCode;
-            mResCode = resultCode;
-            mResIntent = intent;
-
-            mAliveCallSource = "ACTIVITY_RESULT";
-
-            lockUI();
-
-            // 1. 세션이 연결되어있는지 검사.
-            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.toString());
-
-            Util.restartApp(this);
+            return;
         }
+
+        mReqCode = requestCode;
+        mResCode = resultCode;
+        mResIntent = intent;
+
+        mAliveCallSource = "ACTIVITY_RESULT";
+
+        lockUI();
+
+        // 1. 세션이 연결되어있는지 검사.
+        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     private void activityResulted(int requestCode, int resultCode, Intent intent)
@@ -1293,15 +1285,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT, null);
 
-        try
-        {
-            super.onStart();
-        } catch (NullPointerException e)
-        {
-            ExLog.e(e.toString());
-
-            Util.restartApp(this);
-        }
+        super.onStart();
     }
 
     @Override
@@ -1679,8 +1663,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 mDoReload = true;
 
                 // 호텔 디테일 정보 재 요청
-                String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
-                DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag, params, mHotelPaymentDetailJsonResponseListener, BookingActivity.this);
+                DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag//
+                    , mPay.getSaleRoomInformation().roomIndex//
+                    , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
+                    , mPay.getSaleRoomInformation().nights, mHotelPaymentDetailJsonResponseListener, BookingActivity.this);
             }
         }, null, false);
     }
@@ -2442,8 +2428,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         }
 
                         // 2. 마지막 가격 및 기타 이상이 없는지 검사
-                        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
-                        DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag, params, mFinalCheckPayJsonResponseListener, BookingActivity.this);
+                        DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag//
+                            , mPay.getSaleRoomInformation().roomIndex//
+                            , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
+                            , mPay.getSaleRoomInformation().nights, mFinalCheckPayJsonResponseListener, BookingActivity.this);
                     } else
                     {
                         requestLogin();
@@ -2567,15 +2555,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             }
                         }
 
-                        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
-
-                        //                        if (DEBUG == true)
-                        //                        {
-                        //                            showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                        //                        }
-
                         // 2. 화면 정보 얻기
-                        DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag, params, mHotelPaymentDetailJsonResponseListener, BookingActivity.this);
+                        DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag//
+                            , mPay.getSaleRoomInformation().roomIndex//
+                            , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
+                            , mPay.getSaleRoomInformation().nights, mHotelPaymentDetailJsonResponseListener, BookingActivity.this);
                     } else
                     {
                         requestLogin();

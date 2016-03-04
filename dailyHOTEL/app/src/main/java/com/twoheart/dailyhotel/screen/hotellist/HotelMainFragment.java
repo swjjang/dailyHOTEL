@@ -262,8 +262,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     if (++mCanScrollUpCount > CANSCROLLUP_REPEAT_COUNT)
                     {
                         mCanScrollUpCount = 0;
-                        mOnCommunicateListener.expandedAppBar(true, true);
                         mOnCommunicateListener.showAppBarLayout();
+                        mOnCommunicateListener.expandedAppBar(true, true);
                         mIsHideAppBarlayout = false;
                     }
                 } else
@@ -286,6 +286,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mOnCommunicateListener.showFloatingActionButton();
             } else
             {
+                mOnCommunicateListener.showAppBarLayout();
                 mOnCommunicateListener.pinAppBarLayout();
                 mIsHideAppBarlayout = true;
                 mCanScrollUpCount = 0;
@@ -303,6 +304,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     @Override
     public void onResume()
     {
+        mOnCommunicateListener.showAppBarLayout();
+        mOnCommunicateListener.pinAppBarLayout();
+        mOnCommunicateListener.expandedAppBar(true, false);
+
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
@@ -373,9 +378,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                         mOnCommunicateListener.refreshAll(true);
                     }
-                } else
-                {
-                    mOnCommunicateListener.refreshAll(true);
                 }
 
                 mOnCommunicateListener.expandedAppBar(true, false);
@@ -403,6 +405,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     if (curationOption != null)
                     {
+                        mOnCommunicateListener.setScrollListTop(true);
+
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.person = curationOption.person;
                         mCurationOption.flagBedTypeFilters = curationOption.flagBedTypeFilters;
@@ -423,7 +427,16 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-                searchMyLocation();
+                mDontReloadAtOnResume = true;
+
+                if (mViewType == ViewType.MAP)
+                {
+                    HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    currentFragment.onActivityResult(requestCode, resultCode, data);
+                } else
+                {
+                    searchMyLocation();
+                }
                 break;
         }
 
@@ -829,13 +842,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         @Override
                         public void onClick(View v)
                         {
-                            mCurationOption.restoreSortType();
+                            mCurationOption.setSortType(SortType.DEFAULT);
                             curationCurrentFragment();
                         }
                     }, true);
                 } else
                 {
-                    mCurationOption.restoreSortType();
+                    mCurationOption.setSortType(SortType.DEFAULT);
                     curationCurrentFragment();
                 }
             }
@@ -886,7 +899,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     @Override
                     public void onClick(View v)
                     {
-                        mCurationOption.restoreSortType();
+                        mCurationOption.setSortType(SortType.DEFAULT);
                         curationCurrentFragment();
 
                         //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
@@ -907,11 +920,18 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
-                mCurationOption.setLocation(location);
-
-                if (mCurationOption.getSortType() == SortType.DISTANCE)
+                if (location == null)
                 {
+                    mCurationOption.setSortType(SortType.DEFAULT);
                     curationCurrentFragment();
+                } else
+                {
+                    mCurationOption.setLocation(location);
+
+                    if (mCurationOption.getSortType() == SortType.DISTANCE)
+                    {
+                        curationCurrentFragment();
+                    }
                 }
 
                 unLockUI();
@@ -1646,6 +1666,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             if (mFloatingActionView.getVisibility() != View.GONE)
+            {
+                return;
+            }
+
+            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+            if (currentFragment.isShowInformationAtMapView() == true)
             {
                 return;
             }

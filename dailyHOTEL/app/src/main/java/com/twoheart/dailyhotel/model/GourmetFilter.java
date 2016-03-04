@@ -15,12 +15,12 @@ import java.util.TimeZone;
 
 public class GourmetFilter implements Parcelable
 {
-    public static int FLAG_GOURMET_FILTER_TIME_NONE = 0x00;
-    public static int FLAG_GOURMET_FILTER_TIME_06_11 = 0x01;
-    public static int FLAG_GOURMET_FILTER_TIME_11_15 = 0x02;
-    public static int FLAG_GOURMET_FILTER_TIME_15_17 = 0x04;
-    public static int FLAG_GOURMET_FILTER_TIME_17_21 = 0x08;
-    public static int FLAG_GOURMET_FILTER_TIME_21_06 = 0x10;
+    public static final int FLAG_GOURMET_FILTER_TIME_NONE = 0x00;
+    public static final int FLAG_GOURMET_FILTER_TIME_06_11 = 0x01;
+    public static final int FLAG_GOURMET_FILTER_TIME_11_15 = 0x02;
+    public static final int FLAG_GOURMET_FILTER_TIME_15_17 = 0x04;
+    public static final int FLAG_GOURMET_FILTER_TIME_17_21 = 0x08;
+    public static final int FLAG_GOURMET_FILTER_TIME_21_06 = 0x10;
 
     public int timeFlag;
     public boolean isParking;
@@ -51,7 +51,7 @@ public class GourmetFilter implements Parcelable
 
         int time = Integer.parseInt(simpleTimeFormat.format(calendar.getTime()));
 
-        if (time >= 0600 && time < 1100)
+        if (time >= 600 && time < 1100)
         {
             flag |= FLAG_GOURMET_FILTER_TIME_06_11;
         }
@@ -71,7 +71,7 @@ public class GourmetFilter implements Parcelable
             flag |= FLAG_GOURMET_FILTER_TIME_17_21;
         }
 
-        if ((time >= 2100 && time < 2400) || (time >= 0000 && time < 0600))
+        if ((time >= 2100 && time < 2400) || (time >= 0 && time < 600))
         {
             flag |= FLAG_GOURMET_FILTER_TIME_21_06;
         }
@@ -84,14 +84,14 @@ public class GourmetFilter implements Parcelable
         readFromParcel(in);
     }
 
-    public boolean isTimeFiltered(int flag)
+    public boolean isTimeFiltered(int flags)
     {
-        if (timeFlag == FLAG_GOURMET_FILTER_TIME_NONE)
+        if (flags == FLAG_GOURMET_FILTER_TIME_NONE)
         {
             return true;
         }
 
-        return (timeFlag & flag) != 0;
+        return (timeFlag & flags) != 0;
     }
 
     public boolean isParkingFiltered(boolean isParking)

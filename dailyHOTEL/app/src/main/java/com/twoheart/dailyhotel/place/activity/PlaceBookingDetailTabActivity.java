@@ -6,7 +6,7 @@
  * 예약한 호텔리스트에서 호텔 클릭 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  */
-package com.twoheart.dailyhotel.screen.bookingdetail;
+package com.twoheart.dailyhotel.place.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
