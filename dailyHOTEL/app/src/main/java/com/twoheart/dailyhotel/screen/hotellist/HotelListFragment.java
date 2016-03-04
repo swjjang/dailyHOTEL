@@ -58,9 +58,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HotelListFragment extends BaseFragment implements Constants
 {
@@ -419,7 +417,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     public int compare(Hotel hotel1, Hotel hotel2)
                     {
-                        return hotel1.averageDiscount - hotel2.averageDiscount;
+                        return hotel1.averageDiscountPrice - hotel2.averageDiscountPrice;
                     }
                 };
 
@@ -434,7 +432,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     public int compare(Hotel hotel1, Hotel hotel2)
                     {
-                        return hotel2.averageDiscount - hotel1.averageDiscount;
+                        return hotel2.averageDiscountPrice - hotel1.averageDiscountPrice;
                     }
                 };
 

@@ -215,7 +215,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         int price = hotel.price;
 
         String strPrice = comma.format(price);
-        String strDiscount = comma.format(hotel.averageDiscount);
+        String strDiscount = comma.format(hotel.averageDiscountPrice);
 
         String address = hotel.addressSummary;
 

@@ -123,7 +123,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             averageTextView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(comma.format(hotel.averageDiscount) + currency);
+        discountTextView.setText(comma.format(hotel.averageDiscountPrice) + currency);
 
         name.setSelected(true); // Android TextView marquee bug
 
