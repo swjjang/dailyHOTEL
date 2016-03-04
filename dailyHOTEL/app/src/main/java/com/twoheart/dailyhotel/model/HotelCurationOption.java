@@ -18,8 +18,6 @@ public class HotelCurationOption extends PlaceCurationOption
 
     public HotelCurationOption()
     {
-        super();
-
         mHotelFiltersList = new ArrayList<>();
 
         clear();
@@ -27,6 +25,10 @@ public class HotelCurationOption extends PlaceCurationOption
 
     public HotelCurationOption(Parcel in)
     {
+        mHotelFiltersList = new ArrayList<>();
+
+        clear();
+
         readFromParcel(in);
     }
 
@@ -95,10 +97,7 @@ public class HotelCurationOption extends PlaceCurationOption
 
         person = in.readInt();
         flagBedTypeFilters = in.readInt();
-
-        mHotelFiltersList = new ArrayList<>();
         in.readTypedList(mHotelFiltersList, HotelFilters.CREATOR);
-
         mCategory = in.readParcelable(Category.class.getClassLoader());
         flagAmenitiesFilters = in.readInt();
     }

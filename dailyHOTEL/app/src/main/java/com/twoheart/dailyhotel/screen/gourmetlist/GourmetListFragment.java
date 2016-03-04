@@ -818,6 +818,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                         GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
                         gourmetCurationOption.setFiltersList(null);
 
+                        mGourmetAdapter.clear();
                         mGourmetAdapter.notifyDataSetChanged();
 
                         setVisibility(ViewType.GONE, true);

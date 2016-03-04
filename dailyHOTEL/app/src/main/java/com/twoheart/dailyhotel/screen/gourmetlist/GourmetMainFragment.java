@@ -373,9 +373,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                         mOnCommunicateListener.refreshAll(true);
                     }
-                } else
-                {
-                    mOnCommunicateListener.refreshAll(true);
                 }
 
                 mOnCommunicateListener.expandedAppBar(true, false);

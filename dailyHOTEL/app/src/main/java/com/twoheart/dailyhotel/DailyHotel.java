@@ -60,9 +60,7 @@ public class DailyHotel extends Application implements Constants
         initializeAnalytics();
         Util.initializeFresco(getApplicationContext());
         FacebookSdk.sdkInitialize(getApplicationContext());
-
         KakaoSDK.init(new KakaoSDKAdapter());
-
         FontManager.getInstance(getApplicationContext());
     }
 

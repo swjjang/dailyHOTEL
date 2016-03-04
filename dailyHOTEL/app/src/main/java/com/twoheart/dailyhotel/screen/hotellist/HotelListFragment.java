@@ -831,6 +831,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
                         hotelCurationOption.setFiltersList(null);
 
+                        mHotelAdapter.clear();
                         mHotelAdapter.notifyDataSetChanged();
 
                         setVisibility(ViewType.GONE, true);

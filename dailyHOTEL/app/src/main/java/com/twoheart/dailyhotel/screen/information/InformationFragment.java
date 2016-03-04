@@ -264,7 +264,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     baseActivity.startActivityForResult(new Intent(baseActivity, LoginActivity.class), CODE_REQUEST_ACTIVITY_LOGIN);
                     baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                    //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.LOGIN, 0L);
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, "", null);
                 } else
                 {
                     startActivity(new Intent(baseActivity, ProfileActivity.class));

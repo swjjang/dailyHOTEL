@@ -534,7 +534,9 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
     private void directCameraSetting(final LatLngBounds bounds, int hotelCount)
     {
-        if (getActivity() == null)
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
         {
             return;
         }
@@ -547,7 +549,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
         } else
         {
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(baseActivity, 50));
             mGoogleMap.moveCamera(cameraUpdate);
         }
 

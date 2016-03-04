@@ -73,6 +73,7 @@ public class HotelDetailLayout
 
     private int mStatusBarHeight;
     private int mImageHeight;
+    private float mLastFactor;
 
     private int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
 
@@ -748,8 +749,6 @@ public class HotelDetailLayout
             }
         }
     };
-
-    private float mLastFactor;
 
     private OnScrollListener mOnScrollListener = new OnScrollListener()
     {
