@@ -307,8 +307,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:gravity="bottom|center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/btn_credit_invite_frd"
@@ -322,7 +321,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"
-                    android:src="@drawable/img_ic_kakao"/>
+                    android:src="@drawable/ic_detail_share_kakao"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:layout_width="wrap_content"

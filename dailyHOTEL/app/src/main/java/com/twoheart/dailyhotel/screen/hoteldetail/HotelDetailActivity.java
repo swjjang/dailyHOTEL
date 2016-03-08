@@ -6,15 +6,20 @@
  */
 package com.twoheart.dailyhotel.screen.hoteldetail;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -363,6 +368,42 @@ public class HotelDetailActivity extends BaseActivity
         }
     }
 
+    private void shareKakao()
+    {
+        if (mDefaultImageUrl == null && mHotelDetail.getImageInformationList() != null && mHotelDetail.getImageInformationList().size() > 0)
+        {
+            mDefaultImageUrl = mHotelDetail.getImageInformationList().get(0).url;
+        }
+
+        String name = DailyPreference.getInstance(HotelDetailActivity.this).getUserName();
+
+        if (Util.isTextEmpty(name) == true)
+        {
+            name = getString(R.string.label_friend) + "가";
+        } else
+        {
+            name += "님이";
+        }
+
+        KakaoLinkManager.newInstance(HotelDetailActivity.this).shareHotel(name, mHotelDetail.hotelName, mHotelDetail.address//
+            , mHotelDetail.hotelIndex//
+            , mDefaultImageUrl//
+            , mCheckInSaleTime, mHotelDetail.nights);
+
+        SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
+        params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+        params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+        params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
+
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            , Action.SOCIAL_SHARE_CLICKED, mHotelDetail.hotelName, params);
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -373,38 +414,34 @@ public class HotelDetailActivity extends BaseActivity
         @Override
         public void onClick(View v)
         {
-            if (mDefaultImageUrl == null && mHotelDetail.getImageInformationList() != null && mHotelDetail.getImageInformationList().size() > 0)
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);
+
+            Dialog shareDialog = new Dialog(HotelDetailActivity.this);
+            shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            shareDialog.setCanceledOnTouchOutside(false);
+
+            // 버튼
+            View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
+
+            kakaoShareLayout.setOnClickListener(new View.OnClickListener()
             {
-                mDefaultImageUrl = mHotelDetail.getImageInformationList().get(0).url;
+                @Override
+                public void onClick(View v)
+                {
+                    shareKakao();
+                }
+            });
+
+            try
+            {
+                shareDialog.setContentView(dialogView);
+                shareDialog.show();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
             }
-
-            String name = DailyPreference.getInstance(HotelDetailActivity.this).getUserName();
-
-            if (Util.isTextEmpty(name) == true)
-            {
-                name = getString(R.string.label_friend) + "가";
-            } else
-            {
-                name += "님이";
-            }
-
-            KakaoLinkManager.newInstance(HotelDetailActivity.this).shareHotel(name, mHotelDetail.hotelName, mHotelDetail.address//
-                , mHotelDetail.hotelIndex//
-                , mDefaultImageUrl//
-                , mCheckInSaleTime, mHotelDetail.nights);
-
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
-
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-
-            SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-            params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-                , Action.SOCIAL_SHARE_CLICKED, mHotelDetail.hotelName, params);
         }
     };
 
@@ -614,7 +651,7 @@ public class HotelDetailActivity extends BaseActivity
 
                         if (mHotelDetailLayout != null)
                         {
-                            mHotelDetailLayout.setHotelDetail(mHotelDetail, mCurrentImage);
+                            mHotelDetailLayout.setHotelDetail(mHotelDetail, mCheckInSaleTime, mCurrentImage);
                         }
 
                         recordAnalyticsHotelDetail(Screen.DAILYHOTEL_DETAIL, mHotelDetail);

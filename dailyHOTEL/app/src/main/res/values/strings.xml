@@ -17,6 +17,8 @@
     <string name="label_dailyhotel">DAILYHOTEL</string>
     <string name="label_paradise">PARADISE IS WHERE WE ARE</string>
     <string name="label_share">공유</string>
+    <string name="label_doshare">공유하기</string>
+    <string name="label_share_kakao">카카오톡으로 보내기</string>
     <string name="label_question">문의</string>
     <string name="label_sort">정렬</string>
     <string name="label_daily_customer_service">데일리 고객센터 전화</string>
@@ -398,10 +400,12 @@
     <string name="act_signup_btn_signup">약관 동의하고 회원가입</string>
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관</string>
+    <string name="label_signup_allagreement">전체동의</string>
     <string name="act_signup_privacy">개인정보 취급방침</string>
     <string name="message_signup_inputmobile">신속한 예약확인 및 안내를 위해 고객님의\n정확한 연락처를 등록해주세요.</string>
     <string name="label_inputmobile">휴대폰 번호 입력</string>
     <string name="label_registeration_mobile">연락처 등록</string>
+    <string name="label_view_content">내용보기</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>
