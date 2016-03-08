@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -30,6 +31,7 @@ public class HotelDetailListAdapter extends BaseAdapter
     private static final int NUMBER_OF_ROWSLIST = 9;
 
     private HotelDetail mHotelDetail;
+    private SaleTime mCheckInSaleTime;
     private FragmentActivity mFragmentActivity;
     private View[] mDeatilViews;
     private boolean[] mNeedRefreshData;
@@ -41,10 +43,11 @@ public class HotelDetailListAdapter extends BaseAdapter
     private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public HotelDetailListAdapter(FragmentActivity activity, HotelDetail hotelDetail, HotelDetailActivity.OnUserActionListener onUserActionListener, View.OnTouchListener emptyViewOnTouchListener)
+    public HotelDetailListAdapter(FragmentActivity activity, HotelDetail hotelDetail, SaleTime checkInSaleTime, HotelDetailActivity.OnUserActionListener onUserActionListener, View.OnTouchListener emptyViewOnTouchListener)
     {
         mFragmentActivity = activity;
         mHotelDetail = hotelDetail;
+        mCheckInSaleTime = checkInSaleTime;
 
         mNeedRefreshData = new boolean[NUMBER_OF_ROWSLIST];
 
@@ -418,6 +421,15 @@ public class HotelDetailListAdapter extends BaseAdapter
             satisfactionView.setVisibility(View.VISIBLE);
             satisfactionView.setText(hotelDetail.satisfaction);
         }
+
+        TextView dateView = (TextView) view.findViewById(R.id.dateView);
+
+        // 체크인체크아웃 날짜
+        String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
+        SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
+        String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(E)");
+
+        dateView.setText(checkInDate + " - " + checkOutDate);
 
         return view;
     }

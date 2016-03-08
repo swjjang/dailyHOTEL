@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.util.Util;
@@ -152,7 +153,7 @@ public class GourmetDetailLayout
         hideTicketInformationLayout();
     }
 
-    public void setDetail(PlaceDetail placeDetail, int imagePosition)
+    public void setDetail(PlaceDetail placeDetail, SaleTime saleTime, int imagePosition)
     {
         if (placeDetail == null)
         {
@@ -173,7 +174,7 @@ public class GourmetDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new GourmetDetailListAdapter((FragmentActivity) mActivity, (GourmetDetail) mPlaceDetail, mOnUserActionListener, mEmptyViewOnTouchListener);
+            mListAdapter = new GourmetDetailListAdapter((FragmentActivity) mActivity, (GourmetDetail) mPlaceDetail, saleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         }
 

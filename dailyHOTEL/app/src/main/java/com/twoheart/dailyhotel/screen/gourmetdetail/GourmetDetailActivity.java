@@ -144,7 +144,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 if (mPlaceDetailLayout != null)
                 {
-                    mPlaceDetailLayout.setDetail(mPlaceDetail, mCurrentImage);
+                    mPlaceDetailLayout.setDetail(mPlaceDetail, mCheckInSaleTime, mCurrentImage);
                 }
 
                 recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mPlaceDetail);

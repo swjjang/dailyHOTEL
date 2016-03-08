@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:fresco="http://schemas.android.com/apk/res-auto"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:minHeight="256dp"
               android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/selectarea_underline"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="20dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="5dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -27,7 +24,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="11dp"
             android:orientation="vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -37,30 +34,31 @@
                 android:freezesText="true"
                 android:maxLines="1"
                 android:textColor="@color/hoteldetail_contents_text_color"
-                android:textSize="13dp"/>
+                android:textSize="13dp"
+                dailyFont:style="DemiLight"/>/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/hotelAddressTextView02"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:freezesText="true"
                 android:maxLines="1"
                 android:textColor="@color/hoteldetail_contents_text_color"
                 android:textSize="13dp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                dailyFont:style="DemiLight"/>/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/hotelAddressTextView03"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:freezesText="true"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/hoteldetail_contents_text_color"
                 android:textSize="13dp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                dailyFont:style="DemiLight"/>/>
         </LinearLayout>
     </LinearLayout>
 

@@ -2,6 +2,7 @@
 <LinearLayout
     android:id="@+id/hotelTitleLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -46,17 +47,38 @@
             android:textSize="18dp"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/selectarea_underline"
+        android:layout_marginBottom="5dp"/>
+
     <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/satisfactionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="-7dp"
         android:drawableLeft="@drawable/detail_ic_satisfaction"
-        android:drawablePadding="7dp"
+        android:drawablePadding="11dp"
         android:gravity="center_vertical"
         android:textColor="@color/black"
         android:textSize="13dp"
-        android:visibility="gone"/>
+        android:visibility="visible"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        dailyFont:style="DemiLight"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/dateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/detail_ic_date"
+        android:drawablePadding="11dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/black"
+        android:textSize="13dp"
+        android:layout_marginRight="15dp"
+        dailyFont:style="DemiLight"/>/>
 </LinearLayout>

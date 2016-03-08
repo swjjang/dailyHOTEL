@@ -6,14 +6,19 @@
  */
 package com.twoheart.dailyhotel.place.activity;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -388,15 +393,42 @@ public abstract class PlaceDetailActivity extends BaseActivity
         @Override
         public void onClick(View v)
         {
-            if (mDefaultImageUrl == null)
-            {
-                if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)
-                {
-                    mDefaultImageUrl = mPlaceDetail.getImageInformationList().get(0).url;
-                }
-            }
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);
 
-            shareKakao(mPlaceDetail, mDefaultImageUrl, mCheckInSaleTime, null);
+            Dialog shareDialog = new Dialog(PlaceDetailActivity.this);
+            shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            shareDialog.setCanceledOnTouchOutside(false);
+
+            // 버튼
+            View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
+
+            kakaoShareLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mDefaultImageUrl == null)
+                    {
+                        if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)
+                        {
+                            mDefaultImageUrl = mPlaceDetail.getImageInformationList().get(0).url;
+                        }
+                    }
+
+                    shareKakao(mPlaceDetail, mDefaultImageUrl, mCheckInSaleTime, null);
+                }
+            });
+
+            try
+            {
+                shareDialog.setContentView(dialogView);
+                shareDialog.show();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     };
 

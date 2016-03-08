@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -30,6 +31,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private static final int NUMBER_OF_ROWSLIST = 6;
 
     private GourmetDetail mGourmetDetail;
+    private SaleTime mSaleTime;
     private FragmentActivity mFragmentActivity;
     private View[] mDeatilViews;
     private boolean[] mNeedRefreshData;
@@ -41,10 +43,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private GourmetDetailActivity.OnUserActionListener mOnUserActionListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public GourmetDetailListAdapter(FragmentActivity activity, GourmetDetail gourmetDetail, GourmetDetailActivity.OnUserActionListener onUserActionListener, View.OnTouchListener emptyViewOnTouchListener)
+    public GourmetDetailListAdapter(FragmentActivity activity, GourmetDetail gourmetDetail, SaleTime saleTime, GourmetDetailActivity.OnUserActionListener onUserActionListener, View.OnTouchListener emptyViewOnTouchListener)
     {
         mFragmentActivity = activity;
         mGourmetDetail = gourmetDetail;
+        mSaleTime = saleTime;
 
         mNeedRefreshData = new boolean[NUMBER_OF_ROWSLIST];
 
@@ -327,6 +330,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
             satisfactionView.setVisibility(View.VISIBLE);
             satisfactionView.setText(gourmetDetail.satisfaction);
         }
+
+        TextView dateView = (TextView) view.findViewById(R.id.dateView);
+
+        // 날짜
+        dateView.setText(mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(E)"));
 
         return view;
     }

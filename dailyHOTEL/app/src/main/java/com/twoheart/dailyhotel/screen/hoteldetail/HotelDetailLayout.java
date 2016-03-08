@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -51,6 +52,7 @@ public class HotelDetailLayout
     public static final int STATUS_SOLD_OUT = 3;
 
     private HotelDetail mHotelDetail;
+    private SaleTime mCheckInSaleTime;
     private BaseActivity mActivity;
     private LoopViewPager mViewPager;
     private DailyViewPagerIndicator mDailyViewPagerIndicator;
@@ -140,7 +142,7 @@ public class HotelDetailLayout
         hideRoomType();
     }
 
-    public void setHotelDetail(HotelDetail hotelDetail, int imagePosition)
+    public void setHotelDetail(HotelDetail hotelDetail, SaleTime checkInSaleTime, int imagePosition)
     {
         if (hotelDetail == null)
         {
@@ -148,6 +150,7 @@ public class HotelDetailLayout
         }
 
         mHotelDetail = hotelDetail;
+        mCheckInSaleTime = checkInSaleTime;
 
         if (mImageAdapter == null)
         {
@@ -161,7 +164,7 @@ public class HotelDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new HotelDetailListAdapter((FragmentActivity) mActivity, hotelDetail, mOnUserActionListener, mEmptyViewOnTouchListener);
+            mListAdapter = new HotelDetailListAdapter((FragmentActivity) mActivity, hotelDetail, mCheckInSaleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         }
 
