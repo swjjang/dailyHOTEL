@@ -607,7 +607,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             showAgreeTermDialog(mPay.getType());
         }
 
-        String label = String.format("%s_%s", mPay.getSaleRoomInformation().hotelName, mPay.getSaleRoomInformation().roomName);
+        String label = String.format("%s-%s", mPay.getSaleRoomInformation().hotelName, mPay.getSaleRoomInformation().roomName);
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
             , Action.PAYMENT_CLICKED, label, null);
     }

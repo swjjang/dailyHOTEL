@@ -11,6 +11,7 @@ package com.twoheart.dailyhotel.screen.bookingdetail;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
@@ -38,6 +39,14 @@ import java.util.ArrayList;
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
     public HotelBookingDetail mHotelBookingDetail;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        mHotelBookingDetail = new HotelBookingDetail();
+    }
 
     @Override
     protected void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail)
@@ -206,11 +215,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
-
-                    if (mHotelBookingDetail == null)
-                    {
-                        mHotelBookingDetail = new HotelBookingDetail();
-                    }
 
                     mHotelBookingDetail.setData(jsonObject);
 

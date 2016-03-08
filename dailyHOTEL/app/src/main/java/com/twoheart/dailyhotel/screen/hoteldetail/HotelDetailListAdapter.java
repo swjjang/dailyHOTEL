@@ -376,6 +376,7 @@ public class HotelDetailListAdapter extends BaseAdapter
     private View getDetail01View(View view, HotelDetail hotelDetail)
     {
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
+        mHotelTitleLayout.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
         // 등급
         mHotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
@@ -430,6 +431,8 @@ public class HotelDetailListAdapter extends BaseAdapter
      */
     private View getDetail02View(final View view, HotelDetail hotelDetail)
     {
+        view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+
         // 주소지
         final TextView hotelAddressTextView01 = (TextView) view.findViewById(R.id.hotelAddressTextView01);
         final TextView hotelAddressTextView02 = (TextView) view.findViewById(R.id.hotelAddressTextView02);
@@ -636,6 +639,8 @@ public class HotelDetailListAdapter extends BaseAdapter
             return viewGroup;
         }
 
+        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+
         ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
         if (arrayList != null)
@@ -661,6 +666,8 @@ public class HotelDetailListAdapter extends BaseAdapter
             return viewGroup;
         }
 
+        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+
         ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
         if (arrayList != null)
@@ -684,6 +691,8 @@ public class HotelDetailListAdapter extends BaseAdapter
         {
             return viewGroup;
         }
+
+        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
         ArrayList<DetailInformation> arrayList = hotelDetail.getMoreInformation();
 
@@ -716,6 +725,8 @@ public class HotelDetailListAdapter extends BaseAdapter
             return viewGroup;
         }
 
+        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+
         ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
         if (arrayList != null && arrayList.size() >= 3)
@@ -739,6 +750,8 @@ public class HotelDetailListAdapter extends BaseAdapter
         {
             return view;
         }
+
+        view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
         // 카톡 1:1 실시간 상담
         View consultKakaoView = view.findViewById(R.id.kakaoImageView);
@@ -783,17 +796,7 @@ public class HotelDetailListAdapter extends BaseAdapter
                 textView.setText(contentsList.get(i));
                 textView.setTypeface(FontManager.getInstance(mFragmentActivity).getDemiLightTypeface());
 
-                if (i != size - 1)
-                {
-                    int dp = Util.isOverAPI21() == true ? 5 : 7;
-
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                    layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 7);
-                    contentsLayout.addView(textLayout, layoutParams);
-                } else
-                {
-                    contentsLayout.addView(textLayout);
-                }
+                contentsLayout.addView(textLayout);
             }
         }
     }

@@ -337,7 +337,6 @@
             android:name=".AlarmBroadcastReceiver"
             android:process=":remote"/>
 
-
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"

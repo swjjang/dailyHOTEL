@@ -269,24 +269,37 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void interlLink(String uri)
         {
-            if (mSaleTime != null)
+            switch (mSourceType)
             {
-                DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
-                dailyDeepLink.setDeepLink(Uri.parse(uri));
+                case HOTEL_BANNER:
+                case GOURMET_BANNER:
+                {
+                    if (mSaleTime == null)
+                    {
+                        break;
+                    }
 
-                if (dailyDeepLink.isHotelDetailView() == true)
-                {
-                    if (deepLinkHotelDetail(mSaleTime) == true)
+                    DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
+                    dailyDeepLink.setDeepLink(Uri.parse(uri));
+
+                    if (dailyDeepLink.isHotelDetailView() == true)
                     {
-                        return;
-                    }
-                } else if (dailyDeepLink.isGourmetDetailView() == true)
-                {
-                    if (deepLinkGourmetDetail(mSaleTime) == true)
+                        if (deepLinkHotelDetail(mSaleTime) == true)
+                        {
+                            return;
+                        }
+                    } else if (dailyDeepLink.isGourmetDetailView() == true)
                     {
-                        return;
+                        if (deepLinkGourmetDetail(mSaleTime) == true)
+                        {
+                            return;
+                        }
                     }
+                    break;
                 }
+
+                case EVENT:
+                    break;
             }
 
             Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);

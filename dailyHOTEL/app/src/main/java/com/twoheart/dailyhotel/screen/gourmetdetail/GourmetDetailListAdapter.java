@@ -278,6 +278,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         GourmetDetail gourmetDetail = (GourmetDetail) placeDetail;
 
         mTitleLayout = view.findViewById(R.id.hotelTitleLayout);
+        mTitleLayout.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
         // 등급
         mGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
@@ -339,6 +340,8 @@ public class GourmetDetailListAdapter extends BaseAdapter
      */
     private View getAddressView(final View view, PlaceDetail placeDetail)
     {
+        view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+
         // 주소지
         final TextView hotelAddressTextView01 = (TextView) view.findViewById(R.id.hotelAddressTextView01);
         final TextView hotelAddressTextView02 = (TextView) view.findViewById(R.id.hotelAddressTextView02);
@@ -544,6 +547,8 @@ public class GourmetDetailListAdapter extends BaseAdapter
             return viewGroup;
         }
 
+        viewGroup.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
+
         ArrayList<DetailInformation> arrayList = placeDetail.getInformation();
 
         if (arrayList != null)
@@ -575,6 +580,8 @@ public class GourmetDetailListAdapter extends BaseAdapter
         {
             return view;
         }
+
+        view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));
 
         // 카톡 1:1 실시간 상담
         View consultKakaoView = view.findViewById(R.id.kakaoImageView);
@@ -619,17 +626,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
                 textView.setText(contentsList.get(i));
                 textView.setTypeface(FontManager.getInstance(mFragmentActivity).getDemiLightTypeface());
 
-                if (i != size - 1)
-                {
-                    int dp = Util.isOverAPI21() == true ? 5 : 7;
-
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                    layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 7);
-                    contentsLayout.addView(textLayout, layoutParams);
-                } else
-                {
-                    contentsLayout.addView(textLayout);
-                }
+                contentsLayout.addView(textLayout);
             }
         }
     }
