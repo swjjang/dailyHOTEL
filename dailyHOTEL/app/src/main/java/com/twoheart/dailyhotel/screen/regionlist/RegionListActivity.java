@@ -246,7 +246,7 @@ public class RegionListActivity extends BaseActivity
                 }
             } else
             {
-                label = String.format("%-%s", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                label = String.format("%s-%s", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                     , province.name);
             }
 

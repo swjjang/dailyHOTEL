@@ -690,7 +690,7 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         time1115View.setTag("1115");
         time1517View.setTag("1517");
         time1721View.setTag("1721");
-        time2106View.setTag("2106");
+        time2106View.setTag("2199");
 
         time0611View.setOnClickListener(this);
         time1115View.setOnClickListener(this);
