@@ -11,6 +11,7 @@ package com.twoheart.dailyhotel.screen.bookingdetail;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
@@ -39,6 +40,14 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 {
     private GourmetBookingDetail mGourmetBookingDetail;
     private BookingDetailFragmentPagerAdapter mFragmentPagerAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        mGourmetBookingDetail = new GourmetBookingDetail();
+    }
 
     @Override
     protected void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail)
@@ -205,11 +214,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
-
-                    if (mGourmetBookingDetail == null)
-                    {
-                        mGourmetBookingDetail = new GourmetBookingDetail();
-                    }
 
                     mGourmetBookingDetail.setData(jsonObject);
 
