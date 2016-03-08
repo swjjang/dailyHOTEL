@@ -266,8 +266,8 @@ public class GourmetDetailLayout
         }
 
         int size = ticketInformationList.size();
-        int height = Util.dpToPx(mActivity, 92) * size;
-        final int maxHeight = Util.dpToPx(mActivity, 322);
+        int height = Util.dpToPx(mActivity, 100) * size;
+        final int maxHeight = Util.dpToPx(mActivity, 350);
         ViewGroup.LayoutParams layoutParams = mTicketTypeRecyclerView.getLayoutParams();
 
         if (height > maxHeight)

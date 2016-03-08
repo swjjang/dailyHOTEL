@@ -411,7 +411,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 lockUI();
 
-                mSignupParams = new HashMap<String, String>();
+                mSignupParams = new HashMap<>();
                 mSignupParams.put("email", mEmailEditText.getText().toString().trim());
                 mSignupParams.put("pw", mPasswordEditText.getText().toString().trim());
                 mSignupParams.put("name", mNameEditText.getText().toString().trim());

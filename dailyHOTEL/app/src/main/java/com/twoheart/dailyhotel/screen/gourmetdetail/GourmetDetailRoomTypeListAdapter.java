@@ -96,9 +96,10 @@ public class GourmetDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recyc
 
         DecimalFormat comma = new DecimalFormat("###,##0");
         String currency = mContext.getString(R.string.currency);
-        String price = comma.format(ticketInformation.discountPrice);
+        String discountPrice = comma.format(ticketInformation.discountPrice);
 
-        ticketInformationViewHolder.priceTextView.setText(price + currency);
+        ticketInformationViewHolder.priceTextView.setVisibility(View.GONE);
+        ticketInformationViewHolder.discountPriceTextView.setText(discountPrice + currency);
 
         if (Util.isTextEmpty(ticketInformation.option) == true)
         {
@@ -108,6 +109,8 @@ public class GourmetDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recyc
             ticketInformationViewHolder.optionTextView.setVisibility(View.VISIBLE);
             ticketInformationViewHolder.optionTextView.setText(ticketInformation.option);
         }
+
+        ticketInformationViewHolder.amenitiesTextView.setVisibility(View.GONE);
 
         if (Util.isTextEmpty(ticketInformation.benefit) == true)
         {
@@ -135,7 +138,9 @@ public class GourmetDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recyc
         View viewRoot;
         TextView nameTextView;
         TextView priceTextView;
+        TextView discountPriceTextView;
         TextView optionTextView;
+        TextView amenitiesTextView;
         TextView benefitTextView;
 
         public TicketInformationViewHolder(View itemView)
@@ -146,7 +151,9 @@ public class GourmetDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recyc
 
             nameTextView = (TextView) itemView.findViewById(R.id.roomTypeTextView);
             priceTextView = (TextView) itemView.findViewById(R.id.priceTextView);
+            discountPriceTextView = (TextView) itemView.findViewById(R.id.discountPriceTextView);
             optionTextView = (TextView) itemView.findViewById(R.id.optionTextView);
+            amenitiesTextView = (TextView) itemView.findViewById(R.id.amenitiesTextView);
             benefitTextView = (TextView) itemView.findViewById(R.id.benefitTextView);
 
             itemView.setOnClickListener(mOnClickListener);

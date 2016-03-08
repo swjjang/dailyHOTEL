@@ -10,9 +10,11 @@ public class SaleRoomInformation implements Parcelable
     public int roomIndex;
     public String roomName;
     public String option;
+    public String amenities;
     public String roomBenefit;
     public boolean isOverseas;
     public String hotelName;
+    public int price;
     public int averageDiscount;
     public int totalDiscount;
     public int nights;
@@ -26,9 +28,11 @@ public class SaleRoomInformation implements Parcelable
     {
         roomIndex = jsonObject.getInt("room_idx");
         averageDiscount = jsonObject.getInt("discount_avg");
+        price = averageDiscount;
         totalDiscount = jsonObject.getInt("discount_total");
         roomName = jsonObject.getString("room_name").trim();
         option = jsonObject.getString("option").trim();
+        amenities = option;
 
         if (jsonObject.has("room_benefit") == true)
         {
@@ -44,10 +48,12 @@ public class SaleRoomInformation implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(roomIndex);
+        dest.writeInt(price);
         dest.writeInt(averageDiscount);
         dest.writeInt(totalDiscount);
         dest.writeString(roomName);
         dest.writeString(option);
+        dest.writeString(amenities);
         dest.writeString(roomBenefit);
         dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(hotelName);
@@ -57,10 +63,12 @@ public class SaleRoomInformation implements Parcelable
     protected void readFromParcel(Parcel in)
     {
         roomIndex = in.readInt();
+        price = in.readInt();
         averageDiscount = in.readInt();
         totalDiscount = in.readInt();
         roomName = in.readString();
         option = in.readString();
+        amenities = in.readString();
         roomBenefit = in.readString();
         isOverseas = in.readInt() == 1 ? true : false;
         hotelName = in.readString();

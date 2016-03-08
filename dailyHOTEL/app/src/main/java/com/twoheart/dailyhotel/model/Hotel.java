@@ -17,7 +17,7 @@ import java.util.Iterator;
 public class Hotel implements Parcelable
 {
     public int index;
-    public int averageDiscount;
+    public int averageDiscountPrice;
     public double latitude;
     public double longitude;
     public boolean isDailyChoice;
@@ -52,7 +52,7 @@ public class Hotel implements Parcelable
         dest.writeString(imageUrl);
         dest.writeString(name);
         dest.writeInt(price);
-        dest.writeInt(averageDiscount);
+        dest.writeInt(averageDiscountPrice);
         dest.writeString(addressSummary);
         dest.writeSerializable(mGrade);
         dest.writeInt(index);
@@ -70,7 +70,7 @@ public class Hotel implements Parcelable
         imageUrl = in.readString();
         name = in.readString();
         price = in.readInt();
-        averageDiscount = in.readInt();
+        averageDiscountPrice = in.readInt();
         addressSummary = in.readString();
         mGrade = (HotelGrade) in.readSerializable();
         index = in.readInt();
@@ -96,7 +96,7 @@ public class Hotel implements Parcelable
         {
             name = jsonObject.getString("name");
             price = jsonObject.getInt("price");
-            averageDiscount = jsonObject.getInt("discountAvg");
+            averageDiscountPrice = jsonObject.getInt("discountAvg");
             addressSummary = jsonObject.getString("addrSummary");
 
             try
