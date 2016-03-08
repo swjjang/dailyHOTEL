@@ -1129,6 +1129,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mTabLayout.setScrollPosition(2, 0f, true);
                 mViewPager.setCurrentItem(2);
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+                DailyDeepLink.getInstance().clear();
 
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
@@ -1152,14 +1153,14 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mViewPager.setCurrentItem(0);
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
+                DailyDeepLink.getInstance().clear();
                 refreshCurrentFragment(selectedProvince);
             }
         } else
         {
+            DailyDeepLink.getInstance().clear();
             refreshCurrentFragment(selectedProvince);
         }
-
-        DailyDeepLink.getInstance().clear();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1839,7 +1840,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     if (DailyDeepLink.getInstance().isValidateLink() == true//
                         && processDeepLink(baseActivity, provinceList, areaList) == true)
                     {
-                        makeCategoryTabLayout(selectedProvince.getCategoryList());
+                        makeCategoryTabLayout(mCurationOption.getProvince().getCategoryList());
                     } else
                     {
                         makeCategoryTabLayout(selectedProvince.getCategoryList());

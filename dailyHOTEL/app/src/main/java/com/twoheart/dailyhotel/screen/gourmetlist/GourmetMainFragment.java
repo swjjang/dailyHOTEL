@@ -926,6 +926,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 mTabLayout.setScrollPosition(2, 0f, true);
                 mViewPager.setCurrentItem(2);
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+                DailyDeepLink.getInstance().clear();
 
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
@@ -945,14 +946,14 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 mViewPager.setCurrentItem(0);
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
+                DailyDeepLink.getInstance().clear();
                 refreshCurrentFragment(selectedProvince);
             }
         } else
         {
+            DailyDeepLink.getInstance().clear();
             refreshCurrentFragment(selectedProvince);
         }
-
-        DailyDeepLink.getInstance().clear();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
