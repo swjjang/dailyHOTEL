@@ -274,23 +274,25 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 case HOTEL_BANNER:
                 case GOURMET_BANNER:
                 {
-                    if (mSaleTime != null)
+                    if (mSaleTime == null)
                     {
-                        DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
-                        dailyDeepLink.setDeepLink(Uri.parse(uri));
+                        break;
+                    }
 
-                        if (dailyDeepLink.isHotelDetailView() == true)
+                    DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
+                    dailyDeepLink.setDeepLink(Uri.parse(uri));
+
+                    if (dailyDeepLink.isHotelDetailView() == true)
+                    {
+                        if (deepLinkHotelDetail(mSaleTime) == true)
                         {
-                            if (deepLinkHotelDetail(mSaleTime) == true)
-                            {
-                                return;
-                            }
-                        } else if (dailyDeepLink.isGourmetDetailView() == true)
+                            return;
+                        }
+                    } else if (dailyDeepLink.isGourmetDetailView() == true)
+                    {
+                        if (deepLinkGourmetDetail(mSaleTime) == true)
                         {
-                            if (deepLinkGourmetDetail(mSaleTime) == true)
-                            {
-                                return;
-                            }
+                            return;
                         }
                     }
                     break;

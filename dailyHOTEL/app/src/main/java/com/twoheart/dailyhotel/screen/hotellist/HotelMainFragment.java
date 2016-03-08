@@ -1058,6 +1058,57 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         return selectedProvince;
     }
 
+    private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, boolean isOverseas, ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    {
+        Province selectedProvince = null;
+
+        if (provinceIndex < 0 && areaIndex < 0)
+        {
+            return searchDeeLinkRegion(provinceList, areaList);
+        }
+
+        try
+        {
+            if (areaIndex == -1)
+            {
+                // 전체 지역으로 이동
+                for (Province province : provinceList)
+                {
+                    if (province.isOverseas == isOverseas && province.index == provinceIndex)
+                    {
+                        selectedProvince = province;
+                        break;
+                    }
+                }
+            } else
+            {
+                // 소지역으로 이동
+                for (Area area : areaList)
+                {
+                    if (area.index == areaIndex)
+                    {
+                        for (Province province : provinceList)
+                        {
+                            if (area.getProvinceIndex() == province.index)
+                            {
+                                area.setProvince(province);
+                                break;
+                            }
+                        }
+
+                        selectedProvince = area;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return selectedProvince;
+    }
+
     private void deepLinkRegionList(BaseActivity baseActivity, ArrayList<Province> provinceList, ArrayList<Area> areaList)
     {
         Province selectedProvince = searchDeeLinkRegion(provinceList, areaList);
@@ -1090,11 +1141,32 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             night = Integer.parseInt(DailyDeepLink.getInstance().getNights());
         } catch (Exception e)
         {
-
+            night = 1;
         }
 
+        int provinceIndex = -1;
+        int areaIndex = -1;
+
+        try
+        {
+            provinceIndex = Integer.parseInt(DailyDeepLink.getInstance().getProvinceIndex());
+        } catch (Exception e)
+        {
+            provinceIndex = -1;
+        }
+
+        try
+        {
+            areaIndex = Integer.parseInt(DailyDeepLink.getInstance().getAreaIndex());
+        } catch (Exception e)
+        {
+            areaIndex = -1;
+        }
+
+        boolean isOverseas = DailyDeepLink.getInstance().getIsOverseas();
+
         // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-        Province selectedProvince = searchDeeLinkRegion(provinceList, areaList);
+        Province selectedProvince = searchDeeLinkRegion(provinceIndex, areaIndex, isOverseas, provinceList, areaList);
 
         if (selectedProvince == null)
         {
