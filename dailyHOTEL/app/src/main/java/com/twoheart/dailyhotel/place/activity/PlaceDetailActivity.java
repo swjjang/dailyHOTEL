@@ -451,7 +451,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             lockUI();
             DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, PlaceDetailActivity.this);
 
-            String label = String.format("%s_%s", mPlaceDetail.name, mSelectedTicketInformation.name);
+            String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);
             AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , Action.BOOKING_CLICKED, label, null);
         }

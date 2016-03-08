@@ -686,6 +686,12 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
         View time1721View = mTimeRangeLayout.findViewById(R.id.time1721View);
         View time2106View = mTimeRangeLayout.findViewById(R.id.time2106View);
 
+        time0611View.setTag("0611");
+        time1115View.setTag("1115");
+        time1517View.setTag("1517");
+        time1721View.setTag("1721");
+        time2106View.setTag("2106");
+
         time0611View.setOnClickListener(this);
         time1115View.setOnClickListener(this);
         time1517View.setOnClickListener(this);
@@ -759,14 +765,14 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             gourmetCurationOption.flagTimeFilter ^= flag;
 
             AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCHECKED, ((TextView) view).getText().toString(), null);
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCHECKED, (String)view.getTag(), null);
         } else
         {
             view.setSelected(true);
             gourmetCurationOption.flagTimeFilter |= flag;
 
             AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CHECKED, ((TextView) view).getText().toString(), null);
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CHECKED, (String)view.getTag(), null);
         }
 
         requestGourmetUpdateResult(true);

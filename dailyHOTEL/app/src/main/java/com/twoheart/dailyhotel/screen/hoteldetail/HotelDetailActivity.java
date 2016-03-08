@@ -483,7 +483,7 @@ public class HotelDetailActivity extends BaseActivity
             lockUI();
             DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, HotelDetailActivity.this);
 
-            String label = String.format("%s_%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
+            String label = String.format("%s-%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
             AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
                 , Action.BOOKING_CLICKED, label, null);
         }

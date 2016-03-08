@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 
+import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.Map;
@@ -12,6 +13,7 @@ public class AnalyticsManager
     private static final String TAG = "[AnalyticsManager]";
 
     private static AnalyticsManager mInstance = null;
+    private Context mContext;
     private GoogleAnalyticsManager mGoogleAnalyticsManager;
     private TuneManager mTuneManager;
     private FacebookManager mFacebookManager;
@@ -32,6 +34,8 @@ public class AnalyticsManager
 
     private void initAnalytics(Context context)
     {
+        mContext = context;
+
         try
         {
             mGoogleAnalyticsManager = new GoogleAnalyticsManager(context);
@@ -158,6 +162,8 @@ public class AnalyticsManager
             mGoogleAnalyticsManager.purchaseCompleteHotel(transId, params);
             mTuneManager.purchaseCompleteHotel(transId, params);
             mFacebookManager.purchaseCompleteHotel(transId, params);
+
+            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "tbh5COOWgWQQpurozwM", "90000.00", true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -171,6 +177,8 @@ public class AnalyticsManager
             mGoogleAnalyticsManager.purchaseCompleteGourmet(transId, params);
             mTuneManager.purchaseCompleteGourmet(transId, params);
             mFacebookManager.purchaseCompleteGourmet(transId, params);
+
+            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "tbh5COOWgWQQpurozwM", "90000.00", true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());

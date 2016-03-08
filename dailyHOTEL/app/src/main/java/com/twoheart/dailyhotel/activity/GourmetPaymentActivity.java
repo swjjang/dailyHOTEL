@@ -790,7 +790,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 processValidatePayment();
             }
 
-            String label = String.format("%s_%s", mTicketPayment.getTicketInformation().placeName, mTicketPayment.getTicketInformation().name);
+            String label = String.format("%s-%s", mTicketPayment.getTicketInformation().placeName, mTicketPayment.getTicketInformation().name);
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , AnalyticsManager.Action.PAYMENT_CLICKED, label, null);
         }

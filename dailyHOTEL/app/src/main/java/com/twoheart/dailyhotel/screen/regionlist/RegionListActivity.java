@@ -237,16 +237,16 @@ public class RegionListActivity extends BaseActivity
 
                 if (area.index == -1)
                 {
-                    label = String.format("%s_%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                    label = String.format("%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                         , area.getProvince().name);
                 } else
                 {
-                    label = String.format("%s_%s_%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                    label = String.format("%s-%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                         , area.getProvince().name, area.name);
                 }
             } else
             {
-                label = String.format("%s_%s", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                label = String.format("%-%s", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                     , province.name);
             }
 

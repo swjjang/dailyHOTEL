@@ -49,15 +49,19 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
             if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
             {
                 checkoutStep(1, null, params);
+                recordScreen(screen, null);
             } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
             {
                 checkoutStep(2, null, params);
+                recordScreen(screen, null);
             } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
             {
                 checkoutStep(3, null, params);
+                recordScreen(screen, null);
             } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
             {
                 checkoutStep(4, null, params);
+                recordScreen(screen, null);
             }
         }
     }
@@ -156,7 +160,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
         String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
 
-        recordEvent(AnalyticsManager.Category.HOTELBOOKINGS, AnalyticsManager.Action.HOTEL_PAYMENT_COMPLETED, placeName + "_" + ticketName, null);
+        recordEvent(AnalyticsManager.Category.HOTELBOOKINGS, AnalyticsManager.Action.HOTEL_PAYMENT_COMPLETED, placeName + "-" + ticketName, null);
 
         if (DEBUG == true)
         {
@@ -197,7 +201,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
         String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
 
-        recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS, AnalyticsManager.Action.GOURMET_PAYMENT_COMPLETED, placeName + "_" + ticketName, null);
+        recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS, AnalyticsManager.Action.GOURMET_PAYMENT_COMPLETED, placeName + "-" + ticketName, null);
 
         if (DEBUG == true)
         {
@@ -357,15 +361,14 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
             productAction.setTransactionCouponCode(String.format("credit_%s", credit));
         }
 
-        if (DEBUG == true)
-        {
-            ExLog.d(TAG + "checkoutStep : " + step + " | " + transId + " | " + productAction.toString());
-        }
-
-
         HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "checkoutStep : " + step + " | " + transId + " | " + productAction.toString());
+        }
     }
 }
