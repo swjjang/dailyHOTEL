@@ -5,11 +5,11 @@ import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.fragment.BookingListFragment;
-import com.twoheart.dailyhotel.fragment.ErrorFragment;
-import com.twoheart.dailyhotel.screen.gourmetlist.GourmetMainFragment;
-import com.twoheart.dailyhotel.screen.hotellist.HotelMainFragment;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.BookingListFragment;
+import com.twoheart.dailyhotel.screen.common.ErrorFragment;
+import com.twoheart.dailyhotel.screen.list.gourmet.GourmetMainFragment;
+import com.twoheart.dailyhotel.screen.list.hotel.HotelMainFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;

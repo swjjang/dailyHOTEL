@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.twoheart.dailyhotel.fragment.BaseFragment;
+import com.twoheart.dailyhotel.screen.common.BaseFragment;
 
 import java.util.ArrayList;
 

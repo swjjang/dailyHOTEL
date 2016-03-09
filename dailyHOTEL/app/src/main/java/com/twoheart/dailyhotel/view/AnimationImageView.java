@@ -13,7 +13,7 @@ import android.os.Message;
 import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
-import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.detail.hotel.HotelDetailActivity;
 
 public class AnimationImageView extends ImageView
 {

@@ -38,7 +38,6 @@
                 android:background="@color/section_background"
                 android:gravity="center"
                 android:padding="15dp"
-                android:text="데일리 슈퍼 프리미어 호텔"
                 android:textColor="@color/black"
                 android:textSize="16dp"
                 android:textStyle="bold"/>

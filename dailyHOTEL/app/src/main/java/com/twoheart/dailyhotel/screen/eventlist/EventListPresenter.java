@@ -2,7 +2,7 @@ package com.twoheart.dailyhotel.screen.eventlist;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;

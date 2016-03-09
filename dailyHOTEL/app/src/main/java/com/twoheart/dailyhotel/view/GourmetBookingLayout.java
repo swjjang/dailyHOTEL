@@ -27,8 +27,8 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.activity.GourmetPaymentActivity;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.payment.gourmet.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.TicketInformation;

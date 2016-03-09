@@ -12,7 +12,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
-import com.twoheart.dailyhotel.activity.PushDialogActivity;
+import com.twoheart.dailyhotel.screen.common.PushDialogActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.WakeLock;
 
