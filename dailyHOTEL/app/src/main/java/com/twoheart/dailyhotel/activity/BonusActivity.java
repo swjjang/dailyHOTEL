@@ -168,7 +168,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN, 0L);
         } else if (v.getId() == btnSignup.getId())
         {
-            Intent intent = new Intent(this, SignupActivity.class);
+            Intent intent = SignupActivity.newInstance(BonusActivity.this);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 

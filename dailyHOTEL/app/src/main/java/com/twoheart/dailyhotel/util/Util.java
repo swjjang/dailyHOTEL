@@ -457,6 +457,10 @@ public class Util implements Constants
     {
         if (Util.isGooglePlayServicesAvailable(baseActivity) == false)
         {
+            if (listener != null)
+            {
+                listener.onResult(null);
+            }
             return;
         }
 

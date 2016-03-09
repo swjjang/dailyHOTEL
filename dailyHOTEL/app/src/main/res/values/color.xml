@@ -19,7 +19,7 @@
     <color name="textView_textColor_section">#969696</color>
     <color name="textView_textColor_main">#5c5c5c</color>
     <color name="textView_textColor_sub">#7f7f7f</color>
-    <color name="textView_textColor_disabled">#c6c6c6</color>
+    <color name="textView_textColor_disabled">#c5c5c5</color>
     <color name="textView_textColor_reg_date">#c6c6c6</color>
     <color name="textView_textColor_shadow">#7F000000</color>
     <color name="textView_textColor_shadow_soldout">#99000000</color>

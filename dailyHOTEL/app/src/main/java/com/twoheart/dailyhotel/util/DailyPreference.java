@@ -52,6 +52,7 @@ public class DailyPreference
     private static final String KEY_COMPANY_ADDRESS = "104";
     private static final String KEY_COMPANY_PHONENUMBER = "105";
     private static final String KEY_COMPANY_FAX = "106";
+    private static final String KEY_COMPANY_PRIVACY_EMAIL = "107";
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -166,6 +167,7 @@ public class DailyPreference
         String address = getCompanyAddress();
         String phoneNumber = getCompanyPhoneNumber();
         String fax = getCompanyFax();
+        String privacyEmail = getCompanyPrivacyEmail();
 
         if (mEditor != null)
         {
@@ -185,7 +187,7 @@ public class DailyPreference
             mVBankEditor.apply();
         }
 
-        setCompanyInformation(name, ceo, bizRegNumber, itcRegNumber, address, phoneNumber, fax);
+        setCompanyInformation(name, ceo, bizRegNumber, itcRegNumber, address, phoneNumber, fax, privacyEmail);
     }
 
     private String getValue(SharedPreferences sharedPreferences, String key, String defaultValue)
@@ -346,7 +348,7 @@ public class DailyPreference
     }
 
     public void setCompanyInformation(String name, String ceo, String bizRegNumber//
-        , String itcRegNumber, String address, String phoneNumber, String fax)
+        , String itcRegNumber, String address, String phoneNumber, String fax, String email)
     {
         if (mEditor != null)
         {
@@ -357,6 +359,7 @@ public class DailyPreference
             mEditor.putString(KEY_COMPANY_ADDRESS, address);
             mEditor.putString(KEY_COMPANY_PHONENUMBER, phoneNumber);
             mEditor.putString(KEY_COMPANY_FAX, fax);
+            mEditor.putString(KEY_COMPANY_PRIVACY_EMAIL, email);
             mEditor.apply();
         }
     }
@@ -394,6 +397,11 @@ public class DailyPreference
     public String getCompanyFax()
     {
         return getValue(mPreferences, KEY_COMPANY_FAX, null);
+    }
+
+    public String getCompanyPrivacyEmail()
+    {
+        return getValue(mPreferences, KEY_COMPANY_PRIVACY_EMAIL, "privacy.korea@dailyhotel.com");
     }
 
     public String getCollapsekey()

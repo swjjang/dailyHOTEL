@@ -309,11 +309,7 @@ public class HotelDetailActivity extends BaseActivity
 
     private void moveToUserInfoUpdate(Customer user, int recommender, boolean isDailyUser)
     {
-        Intent intent = new Intent(HotelDetailActivity.this, SignupActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, isDailyUser);
-
+        Intent intent = SignupActivity.newInstance(HotelDetailActivity.this, user, recommender, isDailyUser);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }

@@ -18,16 +18,16 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,7 +42,6 @@ import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
@@ -70,7 +69,6 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
@@ -81,10 +79,9 @@ import java.util.Map;
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener, CompoundButton.OnCheckedChangeListener
 {
     public CallbackManager mCallbackManager;
-    private EditText mIdEditText, mPasswordEditText;
-    private SwitchCompat mAutoLoginSwitch;
+    private EditText mEmailEditText, mPasswordEditText;
+    private CheckBox mAutoSigninView;
     private TextView mLoginView;
-    private TextView mSignupView, mFindPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
 
     private Map<String, String> mStoreParams;
@@ -103,13 +100,70 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         setContentView(R.layout.activity_login);
 
         initToolbar();
+        initTopLayout();
+        initEditTextsLayout();
+        initButtonsLayout();
 
-        mIdEditText = (EditText) findViewById(R.id.et_login_id);
-        mPasswordEditText = (EditText) findViewById(R.id.et_login_pwd);
-        mAutoLoginSwitch = (SwitchCompat) findViewById(R.id.cb_login_auto);
-        mSignupView = (TextView) findViewById(R.id.tv_login_signup);
-        mFindPasswordView = (TextView) findViewById(R.id.tv_login_forgot);
-        mLoginView = (TextView) findViewById(R.id.btn_login);
+        if (Util.isOverAPI23() == true)
+        {
+            if (hasPermission() == false)
+            {
+                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
+            }
+        }
+    }
+
+    private void initToolbar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
+    }
+
+    private void initTopLayout()
+    {
+        TextView signupView = (TextView) findViewById(R.id.signupView);
+        TextView findPasswordView = (TextView) findViewById(R.id.findPasswordView);
+
+        signupView.setPaintFlags(signupView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        findPasswordView.setPaintFlags(findPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        signupView.setOnClickListener(this);
+        findPasswordView.setOnClickListener(this);
+    }
+
+    private void initEditTextsLayout()
+    {
+        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mPasswordEditText = (EditText) findViewById(R.id.passowrdEditText);
+        mAutoSigninView = (CheckBox) findViewById(R.id.autoSigninView);
+
+        mEmailEditText.requestFocus();
+
+        mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mPasswordEditText.setOnEditorActionListener(new OnEditorActionListener()
+        {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                switch (actionId)
+                {
+                    case EditorInfo.IME_ACTION_DONE:
+                        mLoginView.performClick();
+                        break;
+                }
+                return false;
+            }
+        });
+
+        mAutoSigninView.setChecked(true);
+        mAutoSigninView.setOnCheckedChangeListener(this);
+    }
+
+    private void initButtonsLayout()
+    {
+        mLoginView = (TextView) findViewById(R.id.signinView);
 
         mFacebookLoginView = (com.facebook.login.widget.LoginButton) findViewById(R.id.facebookLoginButton);
         mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
@@ -148,46 +202,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         Session.getCurrentSession().addCallback(mKakaoSessionCallback);
         Session.getCurrentSession().checkAndImplicitOpen();
 
-        mAutoLoginSwitch.setChecked(true);
-        mAutoLoginSwitch.setSwitchPadding(Util.dpToPx(LoginActivity.this, 15));
-        mAutoLoginSwitch.setOnCheckedChangeListener(this);
-
-        mSignupView.setOnClickListener(this);
-        mFindPasswordView.setOnClickListener(this);
         mLoginView.setOnClickListener(this);
         mFacebookLoginView.setOnClickListener(this);
-
-        mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        mPasswordEditText.setOnEditorActionListener(new OnEditorActionListener()
-        {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
-                switch (actionId)
-                {
-                    case EditorInfo.IME_ACTION_DONE:
-                        mLoginView.performClick();
-                        break;
-                }
-                return false;
-            }
-        });
-
-        if (Util.isOverAPI23() == true)
-        {
-            if (hasPermission() == false)
-            {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
-            }
-        }
-    }
-
-    private void initToolbar()
-    {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
     }
 
     @Override
@@ -241,7 +257,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         return true;
     }
 
-
     private void registerFacebookUser(String id, String name, String email, String gender)
     {
         TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -251,7 +266,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         if (mStoreParams == null)
         {
-            mStoreParams = new HashMap<String, String>();
+            mStoreParams = new HashMap<>();
         }
 
         mStoreParams.clear();
@@ -259,21 +274,23 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         if (Util.isTextEmpty(email) == false)
         {
-            mStoreParams.put("email", email);
             params.put("email", email);
         }
 
         if (Util.isTextEmpty(id) == false)
         {
-            mStoreParams.put("social_id", id);
             params.put("social_id", id);
         }
 
         if (encryptedId != null)
         {
-            mStoreParams.put("pw", encryptedId);
             params.put("pw", encryptedId);
         }
+
+        params.put("is_auto", "true");
+        params.put("user_type", "facebook");
+
+        mStoreParams.putAll(params);
 
         if (Util.isTextEmpty(name) == false)
         {
@@ -290,12 +307,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             mStoreParams.put("device", deviceId);
         }
 
-        mStoreParams.put("is_auto", "true");
-        params.put("is_auto", "true");
-
         mStoreParams.put("market_type", RELEASE_STORE.getName());
-        mStoreParams.put("user_type", "facebook");
-        params.put("user_type", "facebook");
 
         DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
     }
@@ -310,35 +322,33 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         if (mStoreParams == null)
         {
-            mStoreParams = new HashMap<String, String>();
+            mStoreParams = new HashMap<>();
         }
 
         mStoreParams.clear();
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
 
         if (Util.isTextEmpty(index) == false)
         {
-            mStoreParams.put("social_id", index);
             params.put("social_id", index);
         }
 
         if (encryptedId != null)
         {
-            mStoreParams.put("pw", encryptedId);
             params.put("pw", encryptedId);
         }
+
+        params.put("is_auto", "true");
+        params.put("user_type", "kakao_talk");
+
+        mStoreParams.putAll(params);
 
         if (deviceId != null)
         {
             mStoreParams.put("device", deviceId);
         }
 
-        mStoreParams.put("is_auto", "true");
-        params.put("is_auto", "true");
-
         mStoreParams.put("market_type", RELEASE_STORE.getName());
-        mStoreParams.put("user_type", "kakao_talk");
-        params.put("user_type", "kakao_talk");
 
         DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
     }
@@ -346,79 +356,80 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == mFindPasswordView.getId())
+        switch (v.getId())
         {
-            // 비밀번호 찾기
-            Intent i = new Intent(this, ForgotPasswordActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-            //            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.REGISTRATION_CLICKED, xxx, 0L);
-        } else if (v.getId() == mSignupView.getId())
-        {
-            // 회원가입
-            Intent i = new Intent(this, SignupActivity.class);
-            startActivityForResult(i, CODE_REQEUST_ACTIVITY_SIGNUP);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.REGISTRATION_CLICKED, Label.REGISTER_ACCOUNT, null);
-        } else if (v.getId() == mLoginView.getId())
-        {
-            // 일반 로그인
-            if (isBlankFields() == false)
+            case R.id.signupView:
             {
-                return;
+                Intent intent = SignupActivity.newInstance(this);
+                startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.REGISTRATION_CLICKED, Label.REGISTER_ACCOUNT, null);
+                break;
             }
 
-            lockUI();
-
-            String md5 = Crypto.encrypt(mPasswordEditText.getText().toString().trim()).replace("\n", "");
-
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put("email", mIdEditText.getText().toString().trim());
-            params.put("pw", md5);
-            params.put("social_id", "0");
-            params.put("user_type", "normal");
-            params.put("is_auto", mAutoLoginSwitch.isChecked() ? "true" : "false");
-
-            if (mStoreParams == null)
+            case R.id.findPasswordView:
             {
-                mStoreParams = new HashMap<String, String>();
+                Intent intent = new Intent(this, ForgotPasswordActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                break;
             }
 
-            mStoreParams.clear();
-            mStoreParams.put("email", mIdEditText.getText().toString().trim());
-            mStoreParams.put("pw", md5);
-            mStoreParams.put("social_id", "0");
-            mStoreParams.put("user_type", "normal");
-
-            DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
+            case R.id.signinView:
+            {
+                processSignin();
+                break;
+            }
         }
     }
 
-    public boolean isBlankFields()
+    private void processSignin()
     {
-        if (mIdEditText.getText().toString().trim().length() == 0)
+        String email = mEmailEditText.getText().toString().trim();
+        String password = mPasswordEditText.getText().toString().trim();
+
+        if (Util.isTextEmpty(email) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
-            return false;
+            return;
         }
 
-        if (mPasswordEditText.getText().toString().trim().length() == 0)
+        if (Util.isTextEmpty(password) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_passwd, Toast.LENGTH_SHORT);
-            return false;
+            return;
         }
 
-        return true;
+        lockUI();
+
+        String passwordEncrypt = Crypto.encrypt(password.replace("\n", ""));
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("email", email);
+        params.put("pw", passwordEncrypt);
+        params.put("social_id", "0");
+        params.put("user_type", "normal");
+        params.put("is_auto", mAutoSigninView.isChecked() ? "true" : "false");
+
+        if (mStoreParams == null)
+        {
+            mStoreParams = new HashMap<>();
+        }
+
+        mStoreParams.clear();
+        mStoreParams.putAll(params);
+
+        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
+
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
     }
+
 
     public void storeLoginInfo()
     {
         // 자동 로그인 체크시
-        if (mAutoLoginSwitch.isChecked() == false)
+        if (mAutoSigninView.isChecked() == false)
         {
             return;
         }
@@ -543,52 +554,26 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     }
 
-    private void regGcmId(final String userIndex)
+    private void requestGoogleCloudMessagingId(final String userIndex)
     {
-        if (Util.isGooglePlayServicesAvailable(this) == false)
-        {
-            DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-            setResult(RESULT_OK);
-            finish();
-            return;
-        }
-
-        new AsyncTask<Void, Void, String>()
+        Util.requestGoogleCloudMessaging(this, new Util.OnGoogleCloudMessagingListener()
         {
             @Override
-            protected String doInBackground(Void... params)
+            public void onResult(String registrationId)
             {
-                GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(LoginActivity.this);
-                String regId = "";
-                try
+                if (Util.isTextEmpty(registrationId) == false)
                 {
-                    regId = instance.register(GCM_PROJECT_NUMBER);
-                } catch (IOException e)
-                {
-                    ExLog.e(e.toString());
-                }
-
-                return regId;
-            }
-
-            @Override
-            protected void onPostExecute(String regId)
-            {
-                // 이 값을 서버에 등록하기.
-                // gcm id가 없을 경우 스킵.
-                if (regId == null || regId.isEmpty())
+                    registerNotificationId(registrationId, userIndex);
+                } else
                 {
                     unLockUI();
 
                     DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
                     setResult(RESULT_OK);
                     finish();
-                    return;
                 }
-
-                registerNotificationId(regId, userIndex);
             }
-        }.execute();
+        });
     }
 
     @Override
@@ -635,11 +620,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     }
 
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     private FacebookCallback facebookCallback = new FacebookCallback<LoginResult>()
     {
@@ -721,7 +704,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     if (isSignup == true)
                     {
                         // 회원가입에 성공하면 이제 로그인 절차
-
                         DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(true);
 
                         HashMap<String, String> params = new HashMap<String, String>();
@@ -751,7 +733,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             params.put("is_auto", mStoreParams.get("is_auto"));
                         }
 
-                        mAutoLoginSwitch.setChecked(true);
+                        mAutoSigninView.setChecked(true);
 
                         mStoreParams.put("new_user", "1");
 
@@ -832,7 +814,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 onError(e);
             } finally
             {
-                regGcmId(userIndex);
+                requestGoogleCloudMessagingId(userIndex);
             }
         }
     };
@@ -905,20 +887,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
                     DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupJsonResponseListener, LoginActivity.this);
                 }
-
-                //                {
-                //                    // 로그인이 실패한 경우
-                //                    String msg = response.getString("msg");
-                //
-                //                    if (Util.isTextEmpty(msg) == true)
-                //                    {
-                //                        msg = getString(R.string.toast_msg_failed_to_login);
-                //                    }
-                //
-                //                    DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
-                //
-                //                    unLockUI();
-                //                }
             } catch (Exception e)
             {
                 unLockUI();

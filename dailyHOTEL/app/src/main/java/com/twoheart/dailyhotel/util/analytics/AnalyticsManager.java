@@ -39,7 +39,7 @@ public class AnalyticsManager
         try
         {
             mGoogleAnalyticsManager = new GoogleAnalyticsManager(context);
-            mTuneManager = new TuneManager(context);
+            mTuneManager = new TuneManager(context, mGoogleAnalyticsManager.getClientId());
             mFacebookManager = new FacebookManager(context);
         } catch (Exception e)
         {

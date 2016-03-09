@@ -66,7 +66,7 @@ public class Gourmet extends Place implements Parcelable
             persons = jsonObject.getInt("persons");
             category = jsonObject.getString("category");
             categoryCode = jsonObject.getInt("categoryCode");
-            categorySequence = jsonObject.getInt("categorySequence");
+            categorySequence = jsonObject.getInt("categorySeq");
 
             if (jsonObject.has("ratingValue") == true)
             {

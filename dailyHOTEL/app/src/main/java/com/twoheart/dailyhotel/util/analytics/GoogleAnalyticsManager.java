@@ -21,15 +21,23 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     private static final String GA_PROPERTY_ID = "UA-43721645-6";
 
     private Tracker mGoogleAnalyticsTracker;
+    private String mClientId;
 
     public GoogleAnalyticsManager(Context context)
     {
         GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
         googleAnalytics.setLocalDispatchPeriod(60);
 
+        mClientId = googleAnalytics.getClientId();
+
         mGoogleAnalyticsTracker = googleAnalytics.newTracker(GA_PROPERTY_ID);
         mGoogleAnalyticsTracker.enableAdvertisingIdCollection(true);
         mGoogleAnalyticsTracker.set("&cu", "KRW");
+    }
+
+    public String getClientId()
+    {
+        return mClientId;
     }
 
     @Override
