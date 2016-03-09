@@ -16,20 +16,20 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -50,14 +50,13 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SignupActivity extends BaseActivity implements OnClickListener
 {
+    private static final String INTENT_EXTRA_DATA_MODE = "mode";
+
     private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
 
     private static final int MAX_OF_RECOMMENDER = 45;
@@ -66,9 +65,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private static final int MODE_USERINFO_UPDATE = 2;
 
     private EditText mPhoneTextView, mEmailEditText, mNameEditText, mPasswordEditText, mRecommenderEditText;
-    private TextView mTermTextView, mPrivacyTextView;
     private TextView mSingupView;
     private View mFakeMobileView;
+    private CheckBox mAllAgreementCheckBox;
+    private CheckBox mTermsCheckBox;
+    private CheckBox mPersonalCheckBox;
     private int mMode;
     private String mUserIdx;
     private int mRecommender; // 추천인 코드
@@ -77,6 +78,27 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private Map<String, String> mSignupParams;
 
     private boolean mFirstMobileNumberFocus;
+
+    public static Intent newInstance(Context context, Customer customer, int recommender, boolean isDailyUser)
+    {
+        Intent intent = new Intent(context, SignupActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_MODE, MODE_USERINFO_UPDATE);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, customer);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, isDailyUser);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context)
+    {
+        Intent intent = new Intent(context, SignupActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_MODE, MODE_SIGNUP);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -87,90 +109,90 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         Intent intent = getIntent();
 
-        Customer user = null;
-        String phoneNumber = null;
         mFirstMobileNumberFocus = true;
+        mMode = intent.getIntExtra(INTENT_EXTRA_DATA_MODE, MODE_SIGNUP);
 
-        boolean isVisibleRecommender = true;
-
-        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER) == true)
+        switch (mMode)
         {
-            mMode = MODE_USERINFO_UPDATE;
+            case MODE_SIGNUP:
+                initSignupUser();
+                break;
 
-            user = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
+            case MODE_USERINFO_UPDATE:
+                initUpdateUser(intent);
+                break;
+        }
+    }
 
-            mRecommender = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, -1);
-            mIsDailyUser = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, true);
+    private void initUpdateUser(Intent intent)
+    {
+        boolean isVisibleRecommender = true;
+        String phoneNumber = null;
+        Customer customer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
-            initToolbar(getString(R.string.actionbar_title_userinfo_update_activity));
+        mRecommender = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, -1);
+        mIsDailyUser = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, true);
 
-            if (user == null)
-            {
-                finish();
-                return;
-            }
+        initToolbar(getString(R.string.actionbar_title_userinfo_update_activity));
 
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mIsDailyUser == true)
-            {
-                isVisibleRecommender = false;
-            } else
-            {
-                // 3가지 정보가 전부 있는 경우에는 소셜 유저가 업데이트 하는 경우이다
-                if (Util.isTextEmpty(user.getName()) == false && Util.isTextEmpty(user.getEmail()) == false && Util.isTextEmpty(user.getPhone()) == false)
-                {
-                    isVisibleRecommender = false;
-                }
-            }
-
-            if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-            {
-                user.setPhone(null);
-            } else
-            {
-                phoneNumber = user.getPhone();
-            }
-
-            View.OnClickListener onClickListener = null;
-            String message;
-
-            // 전화번호만 업데이트 하는 경우
-            if (isVisibleRecommender == true)
-            {
-                message = getString(R.string.dialog_msg_facebook_update);
-            } else
-            {
-                message = getString(R.string.toast_msg_confirm_mobilenumber);
-
-                onClickListener = new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        if (mFakeMobileView != null)
-                        {
-                            mFakeMobileView.performClick();
-                        }
-                    }
-                };
-            }
-
-            showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null, onClickListener, null);
+        if (mIsDailyUser == true)
+        {
+            isVisibleRecommender = false;
         } else
         {
-            mMode = MODE_SIGNUP;
-            mIsDailyUser = true;
-
-            phoneNumber = Util.getLine1Number(this);
-
-            initToolbar(getString(R.string.actionbar_title_signup_activity));
+            // 3가지 정보가 전부 있는 경우에는 소셜 유저가 업데이트 하는 경우이다
+            if (Util.isTextEmpty(customer.getName()) == false && Util.isTextEmpty(customer.getEmail()) == false//
+                && Util.isTextEmpty(customer.getPhone()) == false)
+            {
+                isVisibleRecommender = false;
+            }
         }
 
-        initLayout(user, phoneNumber, isVisibleRecommender);
+        if (Util.isValidatePhoneNumber(customer.getPhone()) == false)
+        {
+            customer.setPhone(null);
+        }
+
+        phoneNumber = customer.getPhone();
+
+        View.OnClickListener onClickListener = null;
+        String message;
+
+        // 전화번호만 업데이트 하는 경우
+        if (isVisibleRecommender == true)
+        {
+            message = getString(R.string.dialog_msg_facebook_update);
+        } else
+        {
+            message = getString(R.string.toast_msg_confirm_mobilenumber);
+
+            onClickListener = new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mFakeMobileView != null)
+                    {
+                        mFakeMobileView.performClick();
+                    }
+                }
+            };
+        }
+
+        showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null, onClickListener, null);
+
+        initLayout(customer, phoneNumber, isVisibleRecommender);
+    }
+
+    private void initSignupUser()
+    {
+        mIsDailyUser = true;
+
+        String phoneNumber = Util.getLine1Number(this);
+
+        initToolbar(getString(R.string.actionbar_title_signup_activity));
+
+        initLayout(null, phoneNumber, true);
     }
 
     private void initToolbar(String title)
@@ -182,10 +204,10 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
     private void initLayout(Customer user, final String mobileNumber, boolean isVisibleRecommender)
     {
-        mPasswordEditText = (EditText) findViewById(R.id.et_signup_pwd);
-        mEmailEditText = (EditText) findViewById(R.id.et_signup_email);
-        mRecommenderEditText = (EditText) findViewById(R.id.et_signup_recommender);
-        mNameEditText = (EditText) findViewById(R.id.et_signup_name);
+        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mRecommenderEditText = (EditText) findViewById(R.id.recommenderEditText);
+        mNameEditText = (EditText) findViewById(R.id.nameEditText);
 
         if (isVisibleRecommender == false)
         {
@@ -204,11 +226,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
         mRecommenderEditText.setFilters(fArray);
 
-        mPhoneTextView = (EditText) findViewById(R.id.et_signup_phone);
+        mPhoneTextView = (EditText) findViewById(R.id.phoneEditText);
         mPhoneTextView.setCursorVisible(false);
 
-        mTermTextView = (TextView) findViewById(R.id.tv_signup_agreement);
-        mPrivacyTextView = (TextView) findViewById(R.id.tv_signup_personal_info);
         mSingupView = (TextView) findViewById(R.id.btn_signup);
 
         if (user != null)
@@ -288,8 +308,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         });
 
-        mTermTextView.setOnClickListener(this);
-        mPrivacyTextView.setOnClickListener(this);
         mSingupView.setOnClickListener(this);
 
         if (Util.isOverAPI23() == true)
@@ -299,6 +317,27 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
             }
         }
+
+        initLayoutCheckBox();
+    }
+
+    private void initLayoutCheckBox()
+    {
+        mAllAgreementCheckBox = (CheckBox) findViewById(R.id.allAgreementCheckBox);
+        mPersonalCheckBox = (CheckBox) findViewById(R.id.personalCheckBox);
+        mTermsCheckBox = (CheckBox) findViewById(R.id.termsCheckBox);
+
+        mAllAgreementCheckBox.setOnClickListener(this);
+        mPersonalCheckBox.setOnClickListener(this);
+        mTermsCheckBox.setOnClickListener(this);
+
+        TextView termsContentView = (TextView) findViewById(R.id.termsContentView);
+        termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        termsContentView.setOnClickListener(this);
+
+        TextView personalContentView = (TextView) findViewById(R.id.personalContentView);
+        personalContentView.setPaintFlags(personalContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        personalContentView.setOnClickListener(this);
     }
 
     @Override
@@ -347,167 +386,220 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         return true;
     }
 
-    public boolean checkInput(boolean checkPassword)
+    private boolean isEmptyFields(int mode)
     {
-        if (mEmailEditText.getText().toString().trim().equals("") == true)
+        if (Util.isTextEmpty(mEmailEditText.getText().toString().trim()) == true//
+            || Util.isTextEmpty(mNameEditText.getText().toString().trim()) == true//
+            || Util.isTextEmpty(mPhoneTextView.getText().toString().trim()) == true)
         {
             return false;
-        } else if (mNameEditText.getText().toString().trim().equals("") == true)
+        }
+
+        switch (mode)
         {
-            return false;
-        } else if (mPhoneTextView.getText().toString().trim().equals("") == true)
+            case MODE_SIGNUP:
+                break;
+
+            case MODE_USERINFO_UPDATE:
+                if (Util.isTextEmpty(mPasswordEditText.getText().toString().trim()) == true)
+                {
+                    return false;
+                }
+                break;
+        }
+
+        return true;
+    }
+
+    private boolean isCheckedAgreement()
+    {
+        if (mTermsCheckBox.isChecked() == false)
         {
+            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_terms_agreement, Toast.LENGTH_SHORT);
             return false;
-        } else if (checkPassword == true && mPasswordEditText.getText().toString().trim().equals("") == true)
+        }
+
+        if (mPersonalCheckBox.isChecked() == false)
         {
+            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_personal_agreement, Toast.LENGTH_SHORT);
             return false;
+        }
+
+        return true;
+    }
+
+
+    private void processSignup()
+    {
+        if (isEmptyFields(MODE_SIGNUP) == false)
+        {
+            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        // email 유효성 체크
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches() == false)
+        {
+            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if (mPasswordEditText.length() < 4)
+        {
+            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if (isCheckedAgreement() == false)
+        {
+            return;
+        }
+
+        lockUI();
+
+        mSignupParams = new HashMap<>();
+        mSignupParams.put("email", mEmailEditText.getText().toString().trim());
+        mSignupParams.put("pw", mPasswordEditText.getText().toString().trim());
+        mSignupParams.put("name", mNameEditText.getText().toString().trim());
+
+        String phoneNumber = mPhoneTextView.getText().toString().trim();
+        phoneNumber = phoneNumber.replaceAll("-", "");
+
+        mSignupParams.put("phone", phoneNumber);
+
+        TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        mSignupParams.put("device", tManager.getDeviceId());
+        mSignupParams.put("market_type", RELEASE_STORE.getName());
+
+        String recommender = mRecommenderEditText.getText().toString().trim();
+        if (Util.isTextEmpty(recommender) == false)
+        {
+            mSignupParams.put("recommender", recommender);
+        }
+
+        mSignupParams.put("social_id", "0");
+        mSignupParams.put("user_type", "normal");
+
+        DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mSignupParams, mUserSignupJsonResponseListener, this);
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , Action.REGISTRATION_CLICKED, Label.AGREE_AND_REGISTER, null);
+    }
+
+    private void processUpdateUser()
+    {
+        if (isEmptyFields(MODE_USERINFO_UPDATE) == false)
+        {
+            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        // email 유효성 체크
+        if (mEmailEditText.isEnabled() == true && android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches() == false)
+        {
+            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if (isCheckedAgreement() == false)
+        {
+            return;
+        }
+
+        lockUI();
+
+        if (mIsDailyUser == true)
+        {
+            String name = mNameEditText.getText().toString().trim();
+            String phone = mPhoneTextView.getText().toString().trim();
+            phone = phone.replaceAll("-", "");
+
+            DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, name, phone, mUserUpdateJsonResponseListener, this);
         } else
         {
-            return true;
+            Map<String, String> updateParams = new HashMap<>();
+            updateParams.put("user_idx", mUserIdx);
+
+            if (mEmailEditText.isEnabled() == true)
+            {
+                updateParams.put("user_email", mEmailEditText.getText().toString().trim());
+            }
+
+            if (mNameEditText.isEnabled() == true)
+            {
+                updateParams.put("user_name", mNameEditText.getText().toString().trim());
+            }
+
+            if (mPhoneTextView.isEnabled() == true)
+            {
+                String phoneNumber = mPhoneTextView.getText().toString().trim();
+                phoneNumber = phoneNumber.replaceAll("-", "");
+
+                updateParams.put("user_phone", phoneNumber);
+            }
+
+            String recommender = mRecommenderEditText.getText().toString().trim();
+            if (Util.isTextEmpty(recommender) == false)
+            {
+                updateParams.put("recommendation_code", recommender);
+            }
+
+            DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, updateParams, mUserUpdateFacebookJsonResponseListener, this);
         }
-    }
-
-    public boolean isValidPhone(String inputStr)
-    {
-        Pattern p = Pattern.compile("^(01[0|1|6|7|8|9])(\\d{4}|\\d{3})(\\d{4})$");
-        Matcher m = p.matcher(inputStr);
-        return m.matches();
-    }
-
-    public boolean isVaildrecommend(String inputStr)
-    {
-        Pattern p = Pattern.compile("^[a-zA-Z0-9]+$");
-        Matcher m = p.matcher(inputStr);
-        return m.matches();
     }
 
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == mSingupView.getId())
+        switch (v.getId())
         {
-            if (mMode == MODE_SIGNUP)
+            case R.id.btn_signup:
+                switch (mMode)
+                {
+                    case MODE_SIGNUP:
+                        processSignup();
+                        break;
+
+                    case MODE_USERINFO_UPDATE:
+                        processUpdateUser();
+                        break;
+                }
+                break;
+
+            case R.id.termsContentView:
             {
-                // 회원가입
-                // 필수 입력 check
-                if (checkInput(true) == false)
-                {
-                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
-                    return;
-                }
+                Intent intent = new Intent(this, TermActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                break;
+            }
 
-                // email check
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches() == false)
-                {
-                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-                    return;
-                }
-
-                if (mPasswordEditText.length() < 4)
-                {
-                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
-                    return;
-                }
-
-                lockUI();
-
-                mSignupParams = new HashMap<>();
-                mSignupParams.put("email", mEmailEditText.getText().toString().trim());
-                mSignupParams.put("pw", mPasswordEditText.getText().toString().trim());
-                mSignupParams.put("name", mNameEditText.getText().toString().trim());
-
-                String phoneNumber = mPhoneTextView.getText().toString().trim();
-                phoneNumber = phoneNumber.replaceAll("-", "");
-
-                mSignupParams.put("phone", phoneNumber);
-
-                TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                mSignupParams.put("device", tManager.getDeviceId());
-                mSignupParams.put("market_type", RELEASE_STORE.getName());
-
-                String recommender = mRecommenderEditText.getText().toString().trim();
-                if (Util.isTextEmpty(recommender) == false)
-                {
-                    mSignupParams.put("recommender", recommender);
-                }
-
-                mSignupParams.put("social_id", "0");
-                mSignupParams.put("user_type", "normal");
-
-                DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mSignupParams, mUserSignupJsonResponseListener, this);
-                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , Action.REGISTRATION_CLICKED, Label.AGREE_AND_REGISTER, null);
-            } else
+            case R.id.personalContentView:
             {
-                // 회원 정보 업데이트
-                // 필수 입력 check
-                if (checkInput(false) == false)
+                Intent intent = new Intent(this, PrivacyActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                break;
+            }
+
+            case R.id.allAgreementCheckBox:
+            {
+                boolean isChecked = mAllAgreementCheckBox.isChecked();
+
+                mTermsCheckBox.setChecked(isChecked);
+                mPersonalCheckBox.setChecked(isChecked);
+                break;
+            }
+
+            case R.id.personalCheckBox:
+            case R.id.termsCheckBox:
+                if (mPersonalCheckBox.isChecked() == true && mTermsCheckBox.isChecked() == true)
                 {
-                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
-                    return;
-                }
-
-                // email check
-                if (mEmailEditText.isEnabled() == true && android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches() == false)
-                {
-                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-                    return;
-                }
-
-                lockUI();
-
-                if (mIsDailyUser == true)
-                {
-                    String name = mNameEditText.getText().toString().trim();
-                    String phone = mPhoneTextView.getText().toString().trim();
-                    phone = phone.replaceAll("-", "");
-
-                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, name, phone, mUserUpdateJsonResponseListener, this);
+                    mAllAgreementCheckBox.setChecked(true);
                 } else
                 {
-                    Map<String, String> updateParams = new HashMap<String, String>();
-                    updateParams.put("user_idx", mUserIdx);
-
-                    if (mEmailEditText.isEnabled() == true)
-                    {
-                        updateParams.put("user_email", mEmailEditText.getText().toString().trim());
-                    }
-
-                    if (mNameEditText.isEnabled() == true)
-                    {
-                        updateParams.put("user_name", mNameEditText.getText().toString().trim());
-                    }
-
-                    if (mPhoneTextView.isEnabled() == true)
-                    {
-                        String phoneNumber = mPhoneTextView.getText().toString().trim();
-                        phoneNumber = phoneNumber.replaceAll("-", "");
-
-                        updateParams.put("user_phone", phoneNumber);
-                    }
-
-                    String recommender = mRecommenderEditText.getText().toString().trim();
-                    if (recommender.equals("") == false)
-                    {
-                        updateParams.put("recommendation_code", recommender);
-                    }
-
-                    DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, updateParams, mUserUpdateFacebookJsonResponseListener, this);
+                    mAllAgreementCheckBox.setChecked(false);
                 }
-            }
-        } else if (v.getId() == mTermTextView.getId())
-        { // 이용약관
-
-            Intent i = new Intent(this, TermActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-        } else if (v.getId() == mPrivacyTextView.getId())
-        { // 개인정보 취급
-
-            Intent i = new Intent(this, PrivacyActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                break;
         }
     }
 
@@ -568,78 +660,54 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
     }
 
-    private void regGcmId(final String idx)
+    private void requestGoogleCloudMessagingId()
     {
-        if (Util.isGooglePlayServicesAvailable(this) == false)
-        {
-            signUpAndFinish();
-            return;
-        }
-
-        new AsyncTask<Void, Void, String>()
+        Util.requestGoogleCloudMessaging(this, new Util.OnGoogleCloudMessagingListener()
         {
             @Override
-            protected String doInBackground(Void... params)
+            public void onResult(final String registrationId)
             {
-                GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(SignupActivity.this);
-                String registrationId = "";
-
-                try
+                if (Util.isTextEmpty(registrationId) == false)
                 {
-                    registrationId = instance.register(GCM_PROJECT_NUMBER);
-                } catch (IOException e)
-                {
-                    ExLog.e(e.toString());
-                }
-
-                return registrationId;
-            }
-
-            @Override
-            protected void onPostExecute(final String registrationId)
-            {
-                // gcm id가 없을 경우 스킵.
-                if (Util.isTextEmpty(registrationId) == true)
-                {
-                    signUpAndFinish();
-                    return;
-                }
-
-                DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, registrationId, new DailyHotelJsonResponseListener()
-                {
-                    @Override
-                    public void onResponse(String url, JSONObject response)
+                    DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, registrationId, new DailyHotelJsonResponseListener()
                     {
-                        try
+                        @Override
+                        public void onResponse(String url, JSONObject response)
                         {
-                            int msg_code = response.getInt("msgCode");
-
-                            if (msg_code == 0 && response.has("data") == true)
+                            try
                             {
-                                JSONObject jsonObject = response.getJSONObject("data");
+                                int msg_code = response.getInt("msgCode");
 
-                                int uid = jsonObject.getInt("uid");
-                                DailyPreference.getInstance(SignupActivity.this).setNotificationUid(uid);
-                                DailyPreference.getInstance(SignupActivity.this).setGCMRegistrationId(registrationId);
+                                if (msg_code == 0 && response.has("data") == true)
+                                {
+                                    JSONObject jsonObject = response.getJSONObject("data");
+
+                                    int uid = jsonObject.getInt("uid");
+                                    DailyPreference.getInstance(SignupActivity.this).setNotificationUid(uid);
+                                    DailyPreference.getInstance(SignupActivity.this).setGCMRegistrationId(registrationId);
+                                }
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            } finally
+                            {
+                                signUpAndFinish();
                             }
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
-                        } finally
+                        }
+                    }, new ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError arg0)
                         {
                             signUpAndFinish();
                         }
-                    }
-                }, new ErrorListener()
+                    });
+                } else
                 {
-                    @Override
-                    public void onErrorResponse(VolleyError arg0)
-                    {
-                        signUpAndFinish();
-                    }
-                });
+                    signUpAndFinish();
+                }
             }
-        }.execute();
+        });
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -809,7 +877,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 AnalyticsManager.getInstance(SignupActivity.this).signUpDailyUser(userIndex, mSignupParams.get("email")//
                     , mSignupParams.get("name"), mSignupParams.get("phone"), AnalyticsManager.UserType.EMAIL);
 
-                regGcmId(userIndex);
+                requestGoogleCloudMessagingId();
             } catch (Exception e)
             {
                 unLockUI();

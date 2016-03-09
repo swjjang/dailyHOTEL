@@ -171,6 +171,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.LocationTermsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.BookingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

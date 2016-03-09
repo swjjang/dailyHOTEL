@@ -73,9 +73,9 @@ public class GcmIntentService extends IntentService implements Constants
         }
 
         Bundle extras = intent.getExtras();
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
+        GoogleCloudMessaging googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
 
-        String messageType = gcm.getMessageType(intent);
+        String messageType = googleCloudMessaging.getMessageType(intent);
 
         mIsBadge = false;
         mIsSound = true;

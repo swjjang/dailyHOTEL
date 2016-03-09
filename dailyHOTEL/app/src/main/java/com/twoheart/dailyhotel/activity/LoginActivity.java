@@ -18,7 +18,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -42,7 +42,6 @@ import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
@@ -70,7 +69,6 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
@@ -124,8 +122,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initTopLayout()
     {
-        View signupView = findViewById(R.id.signupView);
-        View findPasswordView = findViewById(R.id.findPasswordView);
+        TextView signupView = (TextView) findViewById(R.id.signupView);
+        TextView findPasswordView = (TextView) findViewById(R.id.findPasswordView);
+
+        signupView.setPaintFlags(signupView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        findPasswordView.setPaintFlags(findPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         signupView.setOnClickListener(this);
         findPasswordView.setOnClickListener(this);
@@ -136,6 +137,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mEmailEditText = (EditText) findViewById(R.id.emailEditText);
         mPasswordEditText = (EditText) findViewById(R.id.passowrdEditText);
         mAutoSigninView = (CheckBox) findViewById(R.id.autoSigninView);
+
+        mEmailEditText.requestFocus();
 
         mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mPasswordEditText.setOnEditorActionListener(new OnEditorActionListener()
@@ -357,7 +360,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             case R.id.signupView:
             {
-                Intent intent = new Intent(this, SignupActivity.class);
+                Intent intent = SignupActivity.newInstance(this);
                 startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
@@ -551,52 +554,26 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     }
 
-    private void requestGoogleCloudMessageId(final String userIndex)
+    private void requestGoogleCloudMessagingId(final String userIndex)
     {
-        if (Util.isGooglePlayServicesAvailable(this) == false)
-        {
-            DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-            setResult(RESULT_OK);
-            finish();
-            return;
-        }
-
-        new AsyncTask<Void, Void, String>()
+        Util.requestGoogleCloudMessaging(this, new Util.OnGoogleCloudMessagingListener()
         {
             @Override
-            protected String doInBackground(Void... params)
+            public void onResult(String registrationId)
             {
-                GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(LoginActivity.this);
-                String regId = "";
-                try
+                if (Util.isTextEmpty(registrationId) == false)
                 {
-                    regId = instance.register(GCM_PROJECT_NUMBER);
-                } catch (IOException e)
-                {
-                    ExLog.e(e.toString());
-                }
-
-                return regId;
-            }
-
-            @Override
-            protected void onPostExecute(String regId)
-            {
-                // 이 값을 서버에 등록하기.
-                // gcm id가 없을 경우 스킵.
-                if (regId == null || regId.isEmpty())
+                    registerNotificationId(registrationId, userIndex);
+                } else
                 {
                     unLockUI();
 
                     DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
                     setResult(RESULT_OK);
                     finish();
-                    return;
                 }
-
-                registerNotificationId(regId, userIndex);
             }
-        }.execute();
+        });
     }
 
     @Override
@@ -837,7 +814,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 onError(e);
             } finally
             {
-                requestGoogleCloudMessageId(userIndex);
+                requestGoogleCloudMessagingId(userIndex);
             }
         }
     };

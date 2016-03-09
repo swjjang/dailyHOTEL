@@ -20,89 +20,50 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/label_signin_email"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="12dp"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/findPasswordView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/act_login_forgot_pwd"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="12dp"
-                android:layout_toLeftOf="@+id/signupView"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/signupView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/act_login_signup"
-                android:layout_gravity="right"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="12dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="10dp"/>
-        </RelativeLayout>
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyEditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="47dp"
             android:ems="10"
             android:hint="@string/label_email"
             android:inputType="textEmailAddress"
             android:maxLength="50"
-            android:paddingLeft="10dp"
             android:singleLine="true"
-            android:textColorHint="@color/textView_textColor_disabled"/>
+            android:textColorHint="@color/textView_textColor_disabled"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="15dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyEditText
             android:id="@+id/passowrdEditText"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="47dp"
             android:ems="10"
             android:hint="@string/act_login_pwd"
             android:imeActionId="@+id/signinView"
             android:inputType="textPassword"
             android:maxLength="20"
-            android:paddingLeft="10dp"
             android:singleLine="true"
-            android:textColorHint="@color/textView_textColor_disabled"/>
+            android:textColor="@color/hoteldetail_title_text"
+            android:textColorHint="@color/textView_textColor_disabled"
+            android:textSize="15dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyCheckBox
             android:id="@+id/autoSigninView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:paddingBottom="10dp"
-            android:paddingRight="4dp"
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:text="@string/act_login_autologin"
-            android:textColor="@color/textView_textColor_main"/>
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="12dp"
+            android:gravity="center_vertical"/>\/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/signinView"
@@ -115,63 +76,94 @@
             android:textColor="@android:color/white"
             android:textSize="17dp"/>
 
-        <LinearLayout
-            android:id="@+id/facebookLoginView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/shape_button_facebooklogin_background"
-            android:gravity="center"
-            android:layout_marginTop="20dp">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.3"
-                android:scaleType="fitEnd"
-                android:src="@drawable/facebook_icon"/>
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="0.7"
-                android:gravity="left|center_vertical"
-                android:text="@string/act_login_facebook"
-                android:textColor="@color/white"
-                android:textSize="17dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/kakaoLoginView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/shape_button_kakaologin_background"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="0dp"
+                android:id="@+id/findPasswordView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0.3"
-                android:scaleType="fitEnd"
-                android:src="@drawable/kakao_login_symbol"/>
+                android:paddingBottom="10dp"
+                android:paddingTop="20dp"
+                android:text="@string/act_login_forgot_pwd"
+                android:textColor="@color/textView_textColor_sub"
+                android:textSize="12dp"
+                />
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="0.7"
-                android:gravity="left|center_vertical"
-                android:text="@string/act_login_kakao"
-                android:textColor="@color/com_kakao_brown"
-                android:textSize="17dp"/>
+                android:id="@+id/signupView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingTop="20dp"
+                android:text="@string/act_login_signup"
+                android:textColor="@color/textView_textColor_sub"
+                android:textSize="12dp"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/findPasswordView"/>
+        </RelativeLayout>
+    </LinearLayout>
 
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/facebookLoginView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_button_facebooklogin_background"
+        android:gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_above="@+id/kakaoLoginView">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.3"
+            android:scaleType="fitEnd"
+            android:src="@drawable/facebook_icon"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.7"
+            android:gravity="left|center_vertical"
+            android:text="@string/act_login_facebook"
+            android:textColor="@color/white"
+            android:textSize="17dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/kakaoLoginView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_button_kakaologin_background"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dp">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.3"
+            android:scaleType="fitEnd"
+            android:src="@drawable/kakao_login_symbol"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.7"
+            android:gravity="left|center_vertical"
+            android:text="@string/act_login_kakao"
+            android:textColor="@color/com_kakao_brown"
+            android:textSize="17dp"/>
+
     </LinearLayout>
 
     <com.facebook.login.widget.LoginButton

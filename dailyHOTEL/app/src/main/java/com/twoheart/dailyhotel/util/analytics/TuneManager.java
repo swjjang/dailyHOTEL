@@ -34,11 +34,12 @@ public class TuneManager implements IBaseAnalyticsManager
 
     private MobileAppTracker mMobileAppTracker;
     private Context mContext;
+    private String mGoogleCliendId;
 
-    public TuneManager(Context context)
+    public TuneManager(Context context, String googleCliendId)
     {
         mContext = context;
-
+        mGoogleCliendId = googleCliendId;
         mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), ADVERTISE_ID, CONVERSION_KEY);
         mMobileAppTracker.setCurrencyCode("KRW");
 

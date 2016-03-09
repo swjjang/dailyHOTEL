@@ -19,8 +19,11 @@ import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.BonusActivity;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
+import com.twoheart.dailyhotel.activity.LocationTermsActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
+import com.twoheart.dailyhotel.activity.PrivacyActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
+import com.twoheart.dailyhotel.activity.TermActivity;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -93,6 +96,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         initSnsLayout(view);
         initBusinessLayout(baseActivity, view);
+        initTermsLayout(baseActivity, view);
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
         versionTextView.setText(getString(R.string.label_version, DailyHotel.VERSION));
@@ -113,84 +117,38 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         View viewInstagram = view.findViewById(R.id.instagramLinkView);
         View viewNaver = view.findViewById(R.id.naverLinkView);
 
-        viewFacebook.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-
-                try
-                {
-                    intent.setData(Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/Dailyhotel.Korea"));
-                    startActivity(intent);
-                } catch (Exception e)
-                {
-                    try
-                    {
-                        intent.setData(Uri.parse("http://www.facebook.com/dailyhotel"));
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e1)
-                    {
-
-                    }
-                }
-            }
-        });
-
-        viewInstagram.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-
-                try
-                {
-                    intent.setData(Uri.parse("instagram://user?username=dailyhotel"));
-                    startActivity(intent);
-                } catch (Exception e)
-                {
-                    try
-                    {
-                        intent.setData(Uri.parse("http://www.instagram.com/dailyhotel"));
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e1)
-                    {
-                    }
-                }
-            }
-        });
-
-        viewNaver.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                try
-                {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("http://blog.naver.com/dailyhotels"));
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e)
-                {
-
-                }
-            }
-        });
+        viewFacebook.setOnClickListener(this);
+        viewInstagram.setOnClickListener(this);
+        viewNaver.setOnClickListener(this);
     }
 
     private void initBusinessLayout(BaseActivity baseActivity, View view)
     {
         TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
         TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
+        TextView business3TextView = (TextView) view.findViewById(R.id.business3TextView);
 
         business1TextView.setText(getString(R.string.frag_about_business_license01//
             , DailyPreference.getInstance(baseActivity).getCompanyCEO()//
-            , DailyPreference.getInstance(baseActivity).getCompanyBizRegNumber()));
-        business2TextView.setText(getString(R.string.frag_about_business_license02//
-            , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber()//
+            , DailyPreference.getInstance(baseActivity).getCompanyBizRegNumber()//
             , DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber()));
+
+        business2TextView.setText(getString(R.string.frag_about_business_license02//
+            , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber()));
+
+        business3TextView.setText(getString(R.string.frag_about_business_license03//
+            , DailyPreference.getInstance(baseActivity).getCompanyPrivacyEmail()));
+    }
+
+    private void initTermsLayout(BaseActivity baseActivity, View view)
+    {
+        View termsView = view.findViewById(R.id.termsView);
+        View personalView = view.findViewById(R.id.personalView);
+        View locationTermsView = view.findViewById(R.id.locationTermsView);
+
+        termsView.setOnClickListener(this);
+        personalView.setOnClickListener(this);
+        locationTermsView.setOnClickListener(this);
     }
 
     private void setSigninLayout(boolean isSignin)
@@ -347,6 +305,92 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     ((TextView) v).setText(R.string.label_on);
                 }
                 releaseUiComponent();
+                break;
+            }
+
+            case R.id.facebookLinkView:
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                try
+                {
+                    intent.setData(Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/Dailyhotel.Korea"));
+                    startActivity(intent);
+                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                } catch (Exception e)
+                {
+                    try
+                    {
+                        intent.setData(Uri.parse("http://www.facebook.com/dailyhotel"));
+                        startActivity(intent);
+                        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                    } catch (ActivityNotFoundException e1)
+                    {
+
+                    }
+                }
+                break;
+            }
+
+            case R.id.instagramLinkView:
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                try
+                {
+                    intent.setData(Uri.parse("instagram://user?username=dailyhotel"));
+                    startActivity(intent);
+                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                } catch (Exception e)
+                {
+                    try
+                    {
+                        intent.setData(Uri.parse("http://www.instagram.com/dailyhotel"));
+                        startActivity(intent);
+                        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                    } catch (ActivityNotFoundException e1)
+                    {
+                    }
+                }
+                break;
+            }
+
+            case R.id.naverLinkView:
+            {
+                try
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("http://blog.naver.com/dailyhotels"));
+                    startActivity(intent);
+                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                } catch (ActivityNotFoundException e)
+                {
+
+                }
+                break;
+            }
+
+            case R.id.termsView:
+            {
+                Intent intent = new Intent(baseActivity, TermActivity.class);
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                break;
+            }
+
+            case R.id.personalView:
+            {
+                Intent intent = new Intent(baseActivity, PrivacyActivity.class);
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                break;
+            }
+
+            case R.id.locationTermsView:
+            {
+                Intent intent = new Intent(baseActivity, LocationTermsActivity.class);
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
                 break;
             }
 
