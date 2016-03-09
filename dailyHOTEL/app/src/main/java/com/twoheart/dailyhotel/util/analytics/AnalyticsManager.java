@@ -163,7 +163,8 @@ public class AnalyticsManager
             mTuneManager.purchaseCompleteHotel(transId, params);
             mFacebookManager.purchaseCompleteHotel(transId, params);
 
-            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "tbh5COOWgWQQpurozwM", "90000.00", true);
+            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
+            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "tbh5COOWgWQQpurozwM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -178,7 +179,8 @@ public class AnalyticsManager
             mTuneManager.purchaseCompleteGourmet(transId, params);
             mFacebookManager.purchaseCompleteGourmet(transId, params);
 
-            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "tbh5COOWgWQQpurozwM", "90000.00", true);
+            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
+            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "tbh5COOWgWQQpurozwM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());

@@ -169,7 +169,6 @@ public class PaymentWaitActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {

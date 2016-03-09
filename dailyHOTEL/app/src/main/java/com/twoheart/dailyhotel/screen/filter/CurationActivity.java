@@ -765,14 +765,14 @@ public class CurationActivity extends BaseActivity implements RadioGroup.OnCheck
             gourmetCurationOption.flagTimeFilter ^= flag;
 
             AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCHECKED, (String)view.getTag(), null);
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCHECKED, (String) view.getTag(), null);
         } else
         {
             view.setSelected(true);
             gourmetCurationOption.flagTimeFilter |= flag;
 
             AnalyticsManager.getInstance(CurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CHECKED, (String)view.getTag(), null);
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CHECKED, (String) view.getTag(), null);
         }
 
         requestGourmetUpdateResult(true);
