@@ -20,8 +20,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 public class IssuingReceiptActivity extends BaseActivity
 {

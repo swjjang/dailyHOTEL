@@ -8,7 +8,6 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,7 +20,6 @@ import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -632,7 +630,6 @@ public class GourmetDetailListAdapter extends BaseAdapter
                 View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
                 textView.setText(contentsList.get(i));
-                textView.setTypeface(FontManager.getInstance(mFragmentActivity).getDemiLightTypeface());
 
                 contentsLayout.addView(textLayout);
             }

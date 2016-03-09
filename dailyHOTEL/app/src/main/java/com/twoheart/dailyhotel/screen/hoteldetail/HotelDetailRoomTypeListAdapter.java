@@ -100,7 +100,7 @@ public class HotelDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycle
         String price = comma.format(saleRoomInformation.price);
         String discountPrice = comma.format(saleRoomInformation.averageDiscount);
 
-        if(saleRoomInformation.price <= 0)
+        if (saleRoomInformation.price <= 0)
         {
             saleRoomInformationViewHolder.priceTextView.setVisibility(View.GONE);
             saleRoomInformationViewHolder.priceTextView.setText(null);

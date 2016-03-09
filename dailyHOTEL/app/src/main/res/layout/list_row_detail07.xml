@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,9 +18,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/message_consult_kakao"
-            android:textColor="@color/hoteldetail_contents_text_color"
+            android:textColor="@color/hoteldetail_title_text"
             android:textSize="15dp"
-            android:textStyle="bold"/>
+            dailyFont:style="Medium"/>
 
         <ImageView
             android:id="@+id/kakaoImageView"
@@ -30,5 +30,4 @@
             android:layout_centerVertical="true"
             android:src="@drawable/info_btn_kakao"/>
     </RelativeLayout>
-
 </LinearLayout>
