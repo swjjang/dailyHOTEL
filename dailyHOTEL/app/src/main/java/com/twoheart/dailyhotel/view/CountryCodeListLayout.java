@@ -8,7 +8,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.information.member.CountryCodeListActivity;
-import com.twoheart.dailyhotel.adapter.CountryCodeListAdapter;
+import com.twoheart.dailyhotel.screen.information.member.CountryCodeListAdapter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
 

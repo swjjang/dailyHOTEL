@@ -652,4 +652,11 @@
     <string name="label_time_2106">21시 이후</string>
     <string name="label_searching">검색중...</string>
 
+    <!-- PaymentResult Activity -->
+    <string name="label_completed_payment">예약완료</string>
+    <string name="label_booking_place">예약장소</string>
+    <string name="label_product_type">상품타입</string>
+    <string name="label_use_day">이용일</string>
+    <string name="label_check_booking_history">예약내역 확인하기</string>
+
 </resources>

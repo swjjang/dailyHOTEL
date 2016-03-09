@@ -112,15 +112,15 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".screen.detail.hotel.HotelDetailActivity"
+            android:name=".screen.hotel.detail.HotelDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.detail.gourmet.GourmetDetailActivity"
+            android:name=".screen.gourmet.detail.GourmetDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.detail.ImageDetailListActivity"
+            android:name=".screen.common.detail.ImageDetailListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -128,11 +128,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.bookingdetail.hotel.HotelBookingDetailTabActivity"
+            android:name=".screen.booking.detail.hotel.HotelBookingDetailTabActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.bookingdetail.gourmet.GourmetBookingDetailTabActivity"
+            android:name=".screen.booking.detail.gourmet.GourmetBookingDetailTabActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -140,11 +140,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.NoticeActivity"
+            android:name=".screen.deprecated.NoticeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.FAQActivity"
+            android:name=".screen.deprecated.FAQActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -163,24 +163,24 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.TermActivity"
+            android:name=".screen.information.terms.TermActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.PrivacyActivity"
+            android:name=".screen.information.terms.PrivacyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.LocationTermsActivity"
+            android:name=".screen.information.terms.LocationTermsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.payment.hotel.BookingActivity"
+            android:name=".screen.hotel.payment.BookingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".screen.payment.gourmet.GourmetPaymentActivity"
+            android:name=".screen.gourmet.payment.GourmetPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
@@ -194,7 +194,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".screen.bookingdetail.PaymentWaitActivity"
+            android:name=".screen.booking.detail.PaymentWaitActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -215,11 +215,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.bookingdetail.hotel.IssuingReceiptActivity"
+            android:name=".screen.booking.detail.hotel.IssuingReceiptActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.bookingdetail.gourmet.GourmetReceiptActivity"
+            android:name=".screen.booking.detail.gourmet.GourmetReceiptActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -227,12 +227,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.common.SatisfactionActivity"
+            android:name=".screen.common.list.SatisfactionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.list.CalendarActivity"
+            android:name=".screen.common.list.CalendarActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -255,7 +255,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoDisplay"/>
         <activity
-            android:name=".screen.payment.hotel.PaymentActivity"
+            android:name=".screen.hotel.payment.PaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -263,7 +263,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screen.payment.gourmet.PaymentWebActivity"
+            android:name=".screen.gourmet.payment.PaymentWebActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -281,19 +281,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screen.common.PushDialogActivity"
+            android:name=".screen.common.push.PushDialogActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
         <activity
-            android:name=".screen.common.PushLockDialogActivity"
+            android:name=".screen.common.push.PushLockDialogActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.twoheart.dailyhotel.popup"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         </activity>
         <activity
-            android:name=".screen.common.ScreenOnPushDialogActivity"
+            android:name=".screen.common.push.ScreenOnPushDialogActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>

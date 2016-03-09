@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.adapter.NameInfoWindowAdapter;
+import com.twoheart.dailyhotel.screen.booking.NameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;

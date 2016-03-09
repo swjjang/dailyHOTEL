@@ -57,7 +57,7 @@ public class Crypto
                 throw new Exception("Can't conver to Message Digest 5 String value!!");
             }
             byte[] ret = digest("MD5", inputValue.getBytes());
-            return Base64.encodeToString(ret, 0);
+            return Base64.encodeToString(ret, Base64.NO_WRAP);
         } catch (Exception e)
         {
             return null;

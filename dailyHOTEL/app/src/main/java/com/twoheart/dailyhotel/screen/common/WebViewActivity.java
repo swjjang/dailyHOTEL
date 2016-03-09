@@ -96,7 +96,6 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, final String url)
         {
-            ExLog.e("url : " + url);
             if (url.equals("event://"))
             {
                 finish();
