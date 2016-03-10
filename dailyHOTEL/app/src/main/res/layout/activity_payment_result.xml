@@ -31,22 +31,50 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:paddingLeft="10dp"
             android:src="@drawable/navibar_ic_x"/>
     </RelativeLayout>
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/imageView"
+        android:id="@+id/placeImageView"
         android:layout_width="match_parent"
-        android:layout_height="202dp"
+        android:layout_height="169dp"
         android:layout_below="@+id/toolbar"
         android:adjustViewBounds="true"
         fresco:actualImageScaleType="centerCrop"
-        fresco:placeholderImage="@drawable/img_placeholder"/>
+        fresco:placeholderImage="@drawable/img_placeholder_small"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="169dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/dim_center"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_complete"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/messageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/message_completed_payment"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:layout_marginTop="11dp"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/placeImageView"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -57,11 +85,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:background="@color/calendar_month_line"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="15dp"
                 android:text="@string/label_personnel"
                 android:textColor="@color/curation_title_text"
-                android:textSize="13dp"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="15dp"/>
+                android:textSize="13dp"/>
 
             <View
                 android:layout_width="match_parent"
@@ -71,8 +99,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/curation_information_line"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true"
+                android:background="@color/curation_information_line"/>
         </RelativeLayout>
 
 
@@ -81,29 +109,29 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:minHeight="35dp"
             android:layout_marginTop="10dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="5dp">
+            android:minHeight="35dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="6dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/bookingPlaceView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:text="@string/label_booking_place"
                 android:textColor="@color/curation_title_text"
-                android:textSize="13dp"
-                android:layout_marginRight="10dp"/>
+                android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/bookingPlaceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/curation_information_text"
-                android:textSize="13dp"
                 android:layout_alignParentRight="true"
                 android:layout_toRightOf="@+id/bookingPlaceView"
-                android:gravity="right"/>
+                android:gravity="right"
+                android:textColor="@color/curation_information_text"
+                android:textSize="13dp"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -112,28 +140,28 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:minHeight="35dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="5dp">
+            android:paddingBottom="5dp"
+            android:paddingTop="6dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/productTypeView"
+                android:id="@+id/placeTypeView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:text="@string/label_product_type"
                 android:textColor="@color/curation_title_text"
                 android:textSize="13dp"
-                android:layout_marginRight="10dp"
                 />
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/productTypeTextView"
+                android:id="@+id/placeTypeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/placeTypeView"
+                android:gravity="right"
                 android:textColor="@color/curation_information_text"
                 android:textSize="13dp"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/productTypeView"
-                android:gravity="right"
                 />
         </RelativeLayout>
 
@@ -145,35 +173,35 @@
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/useDayView"
+                android:id="@+id/dateView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:text="@string/label_use_day"
                 android:textColor="@color/curation_title_text"
-                android:textSize="13dp"
-                android:layout_marginRight="10dp"/>
+                android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/useDayTextView"
+                android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/curation_information_text"
-                android:textSize="13dp"
                 android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/useDayView"
-                android:gravity="right"/>
+                android:layout_toRightOf="@+id/dateView"
+                android:gravity="right"
+                android:textColor="@color/curation_information_text"
+                android:textSize="13dp"/>
         </RelativeLayout>
     </LinearLayout>
 
     <com.twoheart.dailyhotel.view.widget.DailyTextView
-        android:id="@+id/btn_hotel_payment"
+        android:id="@+id/confirmView"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="14dp"
         android:background="@color/dh_theme_color"
         android:gravity="center"
         android:text="@string/label_check_booking_history"
         android:textColor="@android:color/white"
-        android:textSize="20dp"
-        android:layout_alignParentBottom="true"/>
+        android:textSize="20dp"/>
 </RelativeLayout>

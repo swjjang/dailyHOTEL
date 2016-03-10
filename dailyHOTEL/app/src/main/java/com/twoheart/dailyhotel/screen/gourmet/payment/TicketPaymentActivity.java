@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
@@ -35,6 +34,7 @@ import com.twoheart.dailyhotel.model.TicketPayment.PaymentType;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -77,6 +77,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected int mState;
     protected Dialog mFinalCheckDialog;
     protected SaleTime mCheckInSaleTime;
+    protected String mPlaceImageUrl;
     protected boolean mIsEditMode;
     protected boolean mDoReload;
 
@@ -101,6 +102,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected abstract void checkLastChangedValue();
 
     protected abstract void showFinalCheckDialog();
+
+    protected abstract void showPaymentResult(TicketPayment ticketPayment, String imageUrl);
 
     protected abstract Dialog getPaymentConfirmDialog(int type);
 
@@ -233,33 +236,12 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     if (mTicketPayment.paymentType == PaymentType.VBANK)
                     {
                         activityResulted(requestCode, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, intent);
-                        return;
                     } else
                     {
                         writeLogPaid(mTicketPayment);
-
-                        posListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                mState = STATE_NONE;
-                                mDoReload = true;
-
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-                        };
-
-                        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
-                        {
-                            msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
-                        } else
-                        {
-                            msg = getString(R.string.act_toast_payment_success);
-                        }
+                        showPaymentResult(mTicketPayment, mPlaceImageUrl);
                     }
-                    break;
+                    return;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
                     msg = getString(R.string.act_toast_payment_soldout);

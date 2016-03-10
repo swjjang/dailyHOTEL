@@ -658,5 +658,6 @@
     <string name="label_product_type">상품타입</string>
     <string name="label_use_day">이용일</string>
     <string name="label_check_booking_history">예약내역 확인하기</string>
+    <string name="message_completed_payment">결제가 완료되었습니다.</string>
 
 </resources>

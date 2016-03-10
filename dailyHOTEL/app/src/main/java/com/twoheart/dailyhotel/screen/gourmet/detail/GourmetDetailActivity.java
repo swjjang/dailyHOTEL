@@ -10,15 +10,16 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.model.GourmetDetail;
+import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -28,6 +29,7 @@ import com.twoheart.dailyhotel.view.widget.DailyToast;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -89,16 +91,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime, String category, int gourmetIndex, boolean isBenefit)
+    protected void processBooking(PlaceDetail placeDetail, TicketInformation ticketInformation, SaleTime checkInSaleTime, boolean isBenefit)
     {
-        if (ticketInformation == null)
+        if (placeDetail == null || ticketInformation == null || checkInSaleTime == null)
         {
             return;
         }
 
-        Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, ticketInformation, checkInSaleTime, category, gourmetIndex, isBenefit);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        String imageUrl = null;
+        ArrayList<ImageInformation> mImageInformationList = placeDetail.getImageInformationList();
+
+        if (mImageInformationList != null && mImageInformationList.size() > 0)
+        {
+            imageUrl = mImageInformationList.get(0).url;
+        }
+
+        Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, ticketInformation//
+            , checkInSaleTime, imageUrl, ((GourmetDetail) mPlaceDetail).category, mPlaceDetail.index, isBenefit);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);

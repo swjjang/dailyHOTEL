@@ -110,7 +110,7 @@ public class HotelDetail
             mMoreInformationList = null;
         } else
         {
-            mMoreInformationList = new ArrayList<DetailInformation>(detailMoreLength);
+            mMoreInformationList = new ArrayList<>(detailMoreLength);
 
             for (int i = 0; i < detailMoreLength; i++)
             {
@@ -122,7 +122,7 @@ public class HotelDetail
         JSONArray saleRoomJSONArray = jsonObject.getJSONArray("room_sale_info");
         int saleRoomLength = saleRoomJSONArray.length();
 
-        mSaleRoomList = new ArrayList<SaleRoomInformation>(saleRoomLength);
+        mSaleRoomList = new ArrayList<>(saleRoomLength);
 
         for (int i = 0; i < saleRoomLength; i++)
         {

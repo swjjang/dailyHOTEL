@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;

@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.common.PaymentResultActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -59,6 +60,7 @@ import java.util.TimeZone;
 public class GourmetPaymentActivity extends TicketPaymentActivity
 {
     private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
+    private static final int REQUEST_CODE_PAYMETRESULT_ACTIVITY = 10001;
 
     private GourmetBookingLayout mGourmetBookingLayout;
     private boolean mIsChangedTime;
@@ -84,12 +86,14 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         void showInputMobileNumberDialog(String mobileNumber);
     }
 
-    public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime, String category, int gourmetIndex, boolean isDBenefit)
+    public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime//
+        , String imageUrl, String category, int gourmetIndex, boolean isDBenefit)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
@@ -112,6 +116,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         {
             mTicketPayment.setTicketInformation((TicketInformation) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
             mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
+            mPlaceImageUrl = bundle.getString(NAME_INTENT_EXTRA_DATA_URL);
             mTicketPayment.placeIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_GOURMETIDX);
             mTicketPayment.category = bundle.getString(NAME_INTENT_EXTRA_DATA_CATEGORY);
             mTicketPayment.isDBenefit = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DBENEFIT);
@@ -155,18 +160,30 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     {
         unLockUI();
 
-        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+        switch (requestCode)
         {
-            if (resultCode == RESULT_OK && intent != null)
+            case REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY:
             {
-                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+                if (resultCode == RESULT_OK && intent != null)
+                {
+                    String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
 
-                mTicketPayment.getGuest().phone = mobileNumber;
+                    mTicketPayment.getGuest().phone = mobileNumber;
 
-                mGourmetBookingLayout.updateUserInformationLayout(mobileNumber);
+                    mGourmetBookingLayout.updateUserInformationLayout(mobileNumber);
+                }
+                break;
             }
 
-            return;
+            case REQUEST_CODE_PAYMETRESULT_ACTIVITY:
+            {
+                mState = STATE_NONE;
+                mDoReload = true;
+
+                setResult(RESULT_OK);
+                finish();
+                return;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
@@ -403,6 +420,28 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         {
             ExLog.d(e.toString());
         }
+    }
+
+    @Override
+    protected void showPaymentResult(TicketPayment ticketPayment, String imageUrl)
+    {
+        TicketInformation ticketInformation = ticketPayment.getTicketInformation();
+
+        String placyType = String.format("%s X %d", ticketInformation.name, ticketPayment.ticketCount);
+
+        Calendar calendarTime = DailyCalendar.getInstance();
+        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        SimpleDateFormat formatDay = new SimpleDateFormat("HH시 mm분", Locale.KOREA);
+        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        calendarTime.setTimeInMillis(ticketPayment.ticketTime);
+        String time = formatDay.format(calendarTime.getTime());
+        String date = String.format("%s %s", ticketPayment.checkInTime, time);
+
+        Intent intent = PaymentResultActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
+
+        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
 
     /**
@@ -1063,17 +1102,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     // 결제 관련 로그 남기기
                     writeLogPaid(mTicketPayment);
 
-                    showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.act_toast_payment_success), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            mDoReload = true;
-
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    }, null, false);
+                    showPaymentResult(mTicketPayment, mPlaceImageUrl);
                 } else
                 {
                     int resultCode = 0;

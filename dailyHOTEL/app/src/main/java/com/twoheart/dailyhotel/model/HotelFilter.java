@@ -73,7 +73,7 @@ public class HotelFilter implements Parcelable
             return true;
         }
 
-        return (amenitiesFlag & flags) != 0;
+        return (amenitiesFlag & flags) == flags;
     }
 
     private void setBedType(String type)

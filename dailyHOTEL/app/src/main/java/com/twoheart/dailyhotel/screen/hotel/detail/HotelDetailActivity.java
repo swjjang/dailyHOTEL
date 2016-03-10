@@ -23,19 +23,20 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.hotel.payment.BookingActivity;
-import com.twoheart.dailyhotel.screen.common.detail.ImageDetailListActivity;
-import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
-import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.common.detail.ImageDetailListActivity;
+import com.twoheart.dailyhotel.screen.hotel.payment.BookingActivity;
+import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -50,6 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -295,13 +297,21 @@ public class HotelDetailActivity extends BaseActivity
 
     private void moveToBooking(HotelDetail hotelDetail, SaleRoomInformation saleRoomInformation, SaleTime checkInSaleTime)
     {
-        if (saleRoomInformation == null)
+        if (hotelDetail == null || saleRoomInformation == null || checkInSaleTime == null)
         {
             return;
         }
 
+        String imageUrl = null;
+        ArrayList<ImageInformation> mImageInformationList = hotelDetail.getImageInformationList();
+
+        if (mImageInformationList != null && mImageInformationList.size() > 0)
+        {
+            imageUrl = mImageInformationList.get(0).url;
+        }
+
         Intent intent = BookingActivity.newInstance(HotelDetailActivity.this, saleRoomInformation//
-            , checkInSaleTime, hotelDetail.grade, hotelDetail.hotelIndex, !Util.isTextEmpty(hotelDetail.hotelBenefit));
+            , checkInSaleTime, imageUrl, hotelDetail.grade, hotelDetail.hotelIndex, !Util.isTextEmpty(hotelDetail.hotelBenefit));
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);

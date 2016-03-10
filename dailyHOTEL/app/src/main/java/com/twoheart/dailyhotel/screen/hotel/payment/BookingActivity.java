@@ -55,8 +55,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
@@ -67,7 +65,10 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.PaymentResultActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
+import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -102,6 +103,8 @@ import java.util.TimeZone;
 public class BookingActivity extends BaseActivity implements OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener
 {
     private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
+    private static final int REQUEST_CODE_PAYMETRESULT_ACTIVITY = 10001;
+
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
     private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
@@ -127,6 +130,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private ProgressDialog mProgressDialog;
 
     private SaleTime mCheckInSaleTime;
+    private String mPlaceImageUrl;
     private boolean mIsEditMode;
 
     // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
@@ -138,12 +142,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private String mWarningDialogMessage;
     private String mCSoperatingTimeMessage;
 
-    public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation, SaleTime checkInSaleTime, Hotel.HotelGrade hotelGrade, int hotelIndex, boolean isDBenefit)
+    public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation//
+        , SaleTime checkInSaleTime, String imageUrl, Hotel.HotelGrade hotelGrade, int hotelIndex, boolean isDBenefit)
     {
         Intent intent = new Intent(context, BookingActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION, saleRoomInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELGRADE, hotelGrade.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
@@ -165,6 +171,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             mPay.setSaleRoomInformation((SaleRoomInformation) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
             mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
+            mPlaceImageUrl = bundle.getString(NAME_INTENT_EXTRA_DATA_URL);
             mPay.grade = Hotel.HotelGrade.valueOf(bundle.getString(NAME_INTENT_EXTRA_DATA_HOTELGRADE));
             mPay.hotelIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_HOTELIDX);
             mPay.isDBenefit = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DBENEFIT);
@@ -870,16 +877,28 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         super.onActivityResult(requestCode, resultCode, intent);
         unLockUI();
 
-        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+        switch (requestCode)
         {
-            if (resultCode == RESULT_OK && intent != null)
+            case REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY:
             {
-                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+                if (resultCode == RESULT_OK && intent != null)
+                {
+                    String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
 
-                etReserverNumber.setText(mobileNumber);
+                    etReserverNumber.setText(mobileNumber);
+                }
+                break;
             }
 
-            return;
+            case REQUEST_CODE_PAYMETRESULT_ACTIVITY:
+            {
+                mDoReload = true;
+                mAliveCallSource = "";
+
+                setResult(RESULT_OK);
+                finish();
+                return;
+            }
         }
 
         mReqCode = requestCode;
@@ -911,21 +930,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
                     writeLogPaid(mPay);
 
-                    posListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            mDoReload = true;
-                            mAliveCallSource = "";
-
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    };
-
-                    msg = getString(R.string.act_toast_payment_success);
-                    break;
+                    showPaymentResult(mPay, mPlaceImageUrl);
+                    return;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
 
@@ -1681,6 +1687,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
     }
 
+    private void showPaymentResult(Pay pay, String imageUrl)
+    {
+        SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
+
+        Intent intent = PaymentResultActivity.newInstance(this, imageUrl, saleRoomInformation.hotelName//
+            , saleRoomInformation.roomName, pay.checkInOutDate);
+
+        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+    }
+
     private Map<String, String> getMapPaymentInformation(Pay pay)
     {
         Map<String, String> params = new HashMap<>();
@@ -2151,14 +2167,23 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
                         calendarCheckout.setTimeInMillis(checkOutDate);
 
-                        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh", Locale.KOREA);
-                        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                        mPay.checkInTime = format.format(calendarCheckin.getTime());
-                        mPay.checkOutTime = format.format(calendarCheckout.getTime());
-
                         mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
                         mCheckoutTimeTextView.setText(formatHour.format(calendarCheckout.getTime()));
+
+                        SimpleDateFormat checkInOutFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시", Locale.KOREA);
+                        checkInOutFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                        if (Util.getLCDWidth(BookingActivity.this) >= 720)
+                        {
+                            mPay.checkInOutDate = String.format("%s - %s"//
+                                , checkInOutFormat.format(calendarCheckin.getTime())//
+                                , checkInOutFormat.format(calendarCheckout.getTime()));
+                        } else
+                        {
+                            mPay.checkInOutDate = String.format("%s\n- %s"//
+                                , checkInOutFormat.format(calendarCheckin.getTime())//
+                                , checkInOutFormat.format(calendarCheckout.getTime()));
+                        }
 
                         recordAnalyticsPayment(mPay);
 

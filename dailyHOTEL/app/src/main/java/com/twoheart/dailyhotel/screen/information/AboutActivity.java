@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;

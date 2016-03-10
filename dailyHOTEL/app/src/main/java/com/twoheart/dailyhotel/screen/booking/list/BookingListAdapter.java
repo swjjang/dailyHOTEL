@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -35,7 +34,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
         if (mBookingList == null)
         {
-            mBookingList = new ArrayList<Booking>();
+            mBookingList = new ArrayList<>();
         }
 
         mBookingList.clear();
@@ -54,7 +53,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
     {
         if (mBookingList == null)
         {
-            mBookingList = new ArrayList<Booking>();
+            mBookingList = new ArrayList<>();
         }
 
         mBookingList.clear();
@@ -94,7 +93,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
         if (mBookingList == null)
         {
-            mBookingList = new ArrayList<Booking>();
+            mBookingList = new ArrayList<>();
         }
 
         mBookingList.addAll(collection);
