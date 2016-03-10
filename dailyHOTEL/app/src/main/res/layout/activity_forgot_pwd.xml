@@ -21,26 +21,24 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyEditText
             android:id="@+id/et_forgot_pwd"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="47dp"
             android:ems="10"
             android:hint="@string/act_forgot_pwd_email"
             android:imeActionId="@+id/btn_forgot_pwd"
             android:inputType="textEmailAddress"
             android:maxLength="50"
-            android:paddingLeft="10dp"
+            android:maxLines="1"
             android:singleLine="true"
-            android:textColorHint="@color/textView_textColor_sub">
-
-            <requestFocus/>
-        </com.twoheart.dailyhotel.view.widget.DailyEditText>
+            android:textColor="@color/hoteldetail_title_text"
+            android:textColorHint="@color/textView_textColor_disabled"
+            android:textSize="15dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:layout_width="match_parent"

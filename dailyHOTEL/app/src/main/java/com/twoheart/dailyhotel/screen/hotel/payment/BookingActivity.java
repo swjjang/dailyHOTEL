@@ -1363,6 +1363,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 break;
 
             case VBANK:
+//                showPaymentResult(mPay, mPlaceImageUrl);
+//
+//                if(true)
+//                {
+//                    return;
+//                }
+
                 // 가상계좌 입금을 선택했을 경우
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
                 break;

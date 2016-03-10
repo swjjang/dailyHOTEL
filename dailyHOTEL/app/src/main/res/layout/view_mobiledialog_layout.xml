@@ -10,15 +10,13 @@
         android:layout_height="wrap_content"
         android:background="@drawable/popup_bg_white"
         android:orientation="vertical"
-        android:paddingTop="22dp"
-        >
+        android:paddingTop="22dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:paddingRight="16dp"
             android:text="@string/label_registeration_mobile"
             android:textColor="@color/dialog_message_text"
             android:textSize="17dp"

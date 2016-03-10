@@ -178,7 +178,6 @@ public class VolleyHttpClient implements Constants
 
         class HttpsTrustManager implements X509TrustManager
         {
-            private TrustManager[] trustManagers;
             private final X509Certificate[] x509Certificate = new X509Certificate[]{};
 
             @Override
@@ -189,16 +188,6 @@ public class VolleyHttpClient implements Constants
             @Override
             public void checkServerTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws java.security.cert.CertificateException
             {
-            }
-
-            public boolean isClientTrusted(X509Certificate[] chain)
-            {
-                return true;
-            }
-
-            public boolean isServerTrusted(X509Certificate[] chain)
-            {
-                return true;
             }
 
             @Override

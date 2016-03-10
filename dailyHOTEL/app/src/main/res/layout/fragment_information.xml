@@ -19,17 +19,18 @@
     </android.support.v7.widget.Toolbar>
 
     <ScrollView
+        android:id="@+id/informationScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:background="@color/information_background">
 
         <LinearLayout
+            android:id="@+id/informationLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:orientation="vertical"
-            android:weightSum="1">
+            android:orientation="vertical">
 
             <View
                 android:layout_width="match_parent"
@@ -311,9 +312,11 @@
                 android:id="@+id/dailyInformationView"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
+                android:layout_centerVertical="true"
                 android:background="@color/information_background"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -326,23 +329,23 @@
                         android:id="@+id/facebookLinkView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/more_sns_01"
-                        android:paddingLeft="5dp"/>
+                        android:paddingLeft="5dp"
+                        android:src="@drawable/more_sns_01"/>
 
                     <ImageView
                         android:id="@+id/instagramLinkView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/more_sns_02"
-                        android:paddingLeft="5dp"/>
+                        android:paddingLeft="5dp"
+                        android:src="@drawable/more_sns_02"/>
 
                     <ImageView
                         android:id="@+id/naverLinkView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/more_sns_03"
                         android:paddingLeft="5dp"
-                        android:paddingRight="5dp"/>
+                        android:paddingRight="5dp"
+                        android:src="@drawable/more_sns_03"/>
                 </LinearLayout>
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -375,8 +378,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_marginTop="4dp">
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal">
 
                     <com.twoheart.dailyhotel.view.widget.DailyTextView
                         android:id="@+id/termsView"
@@ -384,40 +387,37 @@
                         android:layout_height="15dp"
                         android:background="@drawable/more_btn"
                         android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/actionbar_title_term_activity"
                         android:textColor="@color/setting_business_license"
-                        android:textSize="8dp"
-                        dailyFont:style="Medium"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"/>
+                        android:textSize="8dp"/>
 
                     <com.twoheart.dailyhotel.view.widget.DailyTextView
                         android:id="@+id/personalView"
                         android:layout_width="wrap_content"
                         android:layout_height="15dp"
+                        android:layout_marginLeft="6dp"
                         android:background="@drawable/more_btn"
                         android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/actionbar_title_privacy_activity"
                         android:textColor="@color/setting_business_license"
-                        android:textSize="8dp"
-                        dailyFont:style="Medium"
-                        android:layout_marginLeft="6dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"/>
+                        android:textSize="8dp"/>
 
                     <com.twoheart.dailyhotel.view.widget.DailyTextView
                         android:id="@+id/locationTermsView"
                         android:layout_width="wrap_content"
                         android:layout_height="15dp"
+                        android:layout_marginLeft="6dp"
                         android:background="@drawable/more_btn"
                         android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/label_terms_location"
                         android:textColor="@color/setting_business_license"
-                        android:textSize="8dp"
-                        dailyFont:style="Medium"
-                        android:layout_marginLeft="6dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"/>
+                        android:textSize="8dp"/>
                 </LinearLayout>
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -428,8 +428,7 @@
                     android:gravity="center"
                     android:text="Version 1.0.0"
                     android:textColor="@color/setting_business_license"
-                    android:textSize="8dp"
-                    dailyFont:style="Medium"/>
+                    android:textSize="8dp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -26,20 +26,10 @@
                 android:id="@+id/messageTextView01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_fnblistfragment_empty_text01"
+                android:text="@string/frag_hotel_list_no_hotels"
                 android:textColor="@color/white"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/messageTextView02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:gravity="center"
-                android:text="@string/label_fnblistfragment_empty_text02"
-                android:textColor="@color/white"
-                android:textSize="16dp"/>
         </LinearLayout>
 
         <ImageView

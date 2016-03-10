@@ -49,6 +49,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private View mProfileLayout, mCreditcardLayout;
     private View mNewEventIconView;
     private String mCSoperatingTimeMessage;
+    private View mInformationScrollView, mInformationLayout, mDailyInformationView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -74,6 +75,10 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
+
+        mDailyInformationView = view.findViewById(R.id.dailyInformationView);
+        mInformationScrollView = view.findViewById(R.id.informationScrollView);
+        mInformationLayout = view.findViewById(R.id.informationLayout);
 
         // 프로필
         setSigninLayout(false);
@@ -164,6 +169,26 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             profileTextView.setText(R.string.frag_login);
             mCreditcardLayout.setVisibility(View.GONE);
         }
+
+//        mDailyInformationView.post(new Runnable()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
+//                {
+//                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
+//
+//                    if (layoutParams != null)
+//                    {
+//                        layoutParams.height += mInformationScrollView.getHeight() - mInformationLayout.getHeight();
+//                        mDailyInformationView.setLayoutParams(layoutParams);
+//                    }
+//                }
+//
+//                mDailyInformationView.setVisibility(View.VISIBLE);
+//            }
+//        });
     }
 
     @Override
