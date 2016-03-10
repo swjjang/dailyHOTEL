@@ -90,4 +90,7 @@
         <item name="android:textSize">13dp</item>
     </style>
 
+    <style name="EditTextTheme">
+        <item name="colorControlNormal">#c5c5c5</item>
+    </style>
 </resources>

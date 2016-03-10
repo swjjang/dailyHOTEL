@@ -81,7 +81,8 @@
                 android:textColor="@color/dialog_message_text"
                 android:textColorHint="@color/dialog_inputmobile_hint"
                 android:textSize="17dp"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                android:theme="@style/EditTextTheme"/>
         </RelativeLayout>
     </LinearLayout>
 

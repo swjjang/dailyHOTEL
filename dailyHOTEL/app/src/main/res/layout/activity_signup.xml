@@ -41,7 +41,8 @@
                 android:singleLine="true"
                 android:textColor="@color/hoteldetail_title_text"
                 android:textColorHint="@color/textView_textColor_disabled"
-                android:textSize="15dp"/>
+                android:textSize="15dp"
+                android:theme="@style/EditTextTheme"/>
 
             <View
                 android:id="@+id/fakeMobileEditView"
@@ -59,7 +60,8 @@
             android:singleLine="true"
             android:textColor="@color/hoteldetail_title_text"
             android:textColorHint="@color/textView_textColor_disabled"
-            android:textSize="15dp"/>
+            android:textSize="15dp"
+            android:theme="@style/EditTextTheme"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyEditText
             android:id="@+id/nameEditText"
@@ -71,7 +73,8 @@
             android:singleLine="true"
             android:textColor="@color/hoteldetail_title_text"
             android:textColorHint="@color/textView_textColor_disabled"
-            android:textSize="15dp"/>
+            android:textSize="15dp"
+            android:theme="@style/EditTextTheme"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyEditText
             android:id="@+id/passwordEditText"
@@ -83,7 +86,8 @@
             android:singleLine="true"
             android:textColor="@color/hoteldetail_title_text"
             android:textColorHint="@color/textView_textColor_disabled"
-            android:textSize="15dp"/>
+            android:textSize="15dp"
+            android:theme="@style/EditTextTheme"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyEditText
             android:id="@+id/recommenderEditText"
@@ -94,7 +98,7 @@
             android:textColor="@color/hoteldetail_title_text"
             android:textColorHint="@color/textView_textColor_disabled"
             android:textSize="15dp"
-            />
+            android:theme="@style/EditTextTheme"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyCheckBox
             android:id="@+id/allAgreementCheckBox"
@@ -103,7 +107,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/label_signup_allagreement"
-            android:textColor="@color/hoteldetail_title_text"
+            android:textColor="@color/curation_title_text"
             android:textSize="12dp"/>
 
         <RelativeLayout
@@ -116,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/act_signup_terms"
-                android:textColor="@color/hoteldetail_title_text"
+                android:textColor="@color/curation_title_text"
                 android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -128,7 +132,7 @@
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:text="@string/label_view_content"
-                android:textColor="@color/hoteldetail_title_text"
+                android:textColor="@color/textView_textColor_disabled"
                 android:textSize="12dp"/>
         </RelativeLayout>
 
@@ -142,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/act_signup_privacy"
-                android:textColor="@color/hoteldetail_title_text"
+                android:textColor="@color/curation_title_text"
                 android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -154,7 +158,7 @@
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:text="@string/label_view_content"
-                android:textColor="@color/hoteldetail_title_text"
+                android:textColor="@color/textView_textColor_disabled"
                 android:textSize="12dp"/>
         </RelativeLayout>
     </LinearLayout>
