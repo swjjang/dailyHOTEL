@@ -401,13 +401,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         switch (mode)
         {
             case MODE_SIGNUP:
-                break;
-
-            case MODE_USERINFO_UPDATE:
                 if (Util.isTextEmpty(mPasswordEditText.getText().toString().trim()) == true)
                 {
                     return false;
                 }
+                break;
+
+            case MODE_USERINFO_UPDATE:
                 break;
         }
 
