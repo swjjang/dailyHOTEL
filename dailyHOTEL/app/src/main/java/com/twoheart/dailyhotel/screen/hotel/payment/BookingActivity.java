@@ -1695,6 +1695,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             , saleRoomInformation.roomName, pay.checkInOutDate);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
     }
 
     private Map<String, String> getMapPaymentInformation(Pay pay)

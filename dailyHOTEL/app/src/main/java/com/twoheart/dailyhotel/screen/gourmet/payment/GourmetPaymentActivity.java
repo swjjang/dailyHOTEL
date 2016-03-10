@@ -442,6 +442,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         Intent intent = PaymentResultActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
     }
 
     /**
