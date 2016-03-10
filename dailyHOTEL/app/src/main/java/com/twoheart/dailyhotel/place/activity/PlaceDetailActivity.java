@@ -22,10 +22,6 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.activity.ImageDetailListActivity;
-import com.twoheart.dailyhotel.activity.SignupActivity;
-import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -35,8 +31,12 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.screen.gourmetdetail.GourmetDetailLayout;
-import com.twoheart.dailyhotel.screen.hoteldetail.HotelDetailLayout;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.common.detail.ImageDetailListActivity;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
+import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailLayout;
+import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -139,7 +139,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
-    protected abstract void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime, String category, int gourmetIndex, boolean isBenefit);
+    protected abstract void processBooking(PlaceDetail placeDetail, TicketInformation ticketInformation, SaleTime checkInSaleTime, boolean isBenefit);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -644,7 +644,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
-                        processBooking(mSelectedTicketInformation, mCheckInSaleTime, ((GourmetDetail) mPlaceDetail).category, mPlaceDetail.index, false);
+                        processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
                     } else
                     {
                         // 정보 업데이트 화면으로 이동.

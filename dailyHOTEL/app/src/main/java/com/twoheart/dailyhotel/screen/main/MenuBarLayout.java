@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
 
 public class MenuBarLayout implements View.OnClickListener
 {

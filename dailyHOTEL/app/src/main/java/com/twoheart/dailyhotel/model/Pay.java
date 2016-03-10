@@ -7,8 +7,7 @@ public class Pay implements Parcelable
 {
     public int credit;
     public int hotelIndex;
-    public String checkInTime;
-    public String checkOutTime;
+    public String checkInOutDate;
     public boolean isDBenefit;
     public Hotel.HotelGrade grade;
     private SaleRoomInformation mSaleRoomInformation;
@@ -35,8 +34,6 @@ public class Pay implements Parcelable
         dest.writeValue(mCustomer);
         dest.writeInt(mOriginalPrice);
         dest.writeByte((byte) (isSaleCredit ? 1 : 0));
-        dest.writeString(checkInTime);
-        dest.writeString(checkOutTime);
         dest.writeSerializable(mType);
         dest.writeValue(mGuest);
         dest.writeInt(hotelIndex);
@@ -51,8 +48,6 @@ public class Pay implements Parcelable
         mCustomer = (Customer) in.readValue(Customer.class.getClassLoader());
         mOriginalPrice = in.readInt();
         isSaleCredit = in.readByte() != 0;
-        checkInTime = in.readString();
-        checkOutTime = in.readString();
         mType = (Type) in.readSerializable();
         mGuest = (Guest) in.readValue(Guest.class.getClassLoader());
         hotelIndex = in.readInt();

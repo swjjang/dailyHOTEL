@@ -12,11 +12,11 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;

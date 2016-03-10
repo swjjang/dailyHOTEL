@@ -112,114 +112,118 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".screen.hoteldetail.HotelDetailActivity"
+            android:name=".screen.hotel.detail.HotelDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.gourmetdetail.GourmetDetailActivity"
+            android:name=".screen.gourmet.detail.GourmetDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.ImageDetailListActivity"
+            android:name=".screen.common.detail.ImageDetailListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.ZoomMapActivity"
+            android:name=".screen.common.ZoomMapActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.bookingdetail.HotelBookingDetailTabActivity"
+            android:name=".screen.booking.detail.hotel.HotelBookingDetailTabActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.bookingdetail.GourmetBookingDetailTabActivity"
+            android:name=".screen.booking.detail.gourmet.GourmetBookingDetailTabActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".screen.information.AboutActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.NoticeActivity"
+            android:name=".screen.deprecated.NoticeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.FAQActivity"
+            android:name=".screen.deprecated.FAQActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".screen.information.member.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".activity.SignupActivity"
+            android:name=".screen.information.member.SignupActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.ForgotPasswordActivity"
+            android:name=".screen.information.ForgotPasswordActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.TermActivity"
+            android:name=".screen.information.terms.TermActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.PrivacyActivity"
+            android:name=".screen.information.terms.PrivacyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.LocationTermsActivity"
+            android:name=".screen.information.terms.LocationTermsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.BookingActivity"
+            android:name=".screen.hotel.payment.BookingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".activity.GourmetPaymentActivity"
+            android:name=".screen.gourmet.payment.GourmetPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".activity.EventWebActivity"
+            android:name=".screen.common.PaymentResultActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.ProfileActivity"
+            android:name=".screen.eventlist.EventWebActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.information.ProfileActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".activity.PaymentWaitActivity"
+            android:name=".screen.booking.detail.PaymentWaitActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.RegisterCreditCardActivity"
+            android:name=".screen.information.creditcard.RegisterCreditCardActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.BonusListActivity"
+            android:name=".screen.information.bonus.BonusListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.CountryCodeListActivity"
+            android:name=".screen.information.member.CountryCodeListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.InputMobileNumberDialogActivity"
+            android:name=".screen.information.member.InputMobileNumberDialogActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".activity.IssuingReceiptActivity"
+            android:name=".screen.booking.detail.hotel.IssuingReceiptActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.GourmetReceiptActivity"
+            android:name=".screen.booking.detail.gourmet.GourmetReceiptActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -227,16 +231,16 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.SatisfactionActivity"
+            android:name=".screen.common.list.SatisfactionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".activity.CalendarActivity"
+            android:name=".screen.common.list.CalendarActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.BonusActivity"
+            android:name=".screen.information.bonus.BonusActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -249,13 +253,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
         <activity
-            android:name=".activity.ExitActivity"
+            android:name=".screen.common.ExitActivity"
             android:autoRemoveFromRecents="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoDisplay"/>
         <activity
-            android:name=".activity.PaymentActivity"
+            android:name=".screen.hotel.payment.PaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -263,7 +267,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.PaymentWebActivity"
+            android:name=".screen.gourmet.payment.PaymentWebActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -281,19 +285,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.PushDialogActivity"
+            android:name=".screen.common.push.PushDialogActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
         <activity
-            android:name=".activity.PushLockDialogActivity"
+            android:name=".screen.common.push.PushLockDialogActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:taskAffinity="com.twoheart.dailyhotel.popup"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         </activity>
         <activity
-            android:name=".activity.ScreenOnPushDialogActivity"
+            android:name=".screen.common.push.ScreenOnPushDialogActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
@@ -303,7 +307,7 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
-            android:name=".activity.CreditCardListActivity"
+            android:name=".screen.information.creditcard.CreditCardListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>
