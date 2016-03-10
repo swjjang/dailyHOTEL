@@ -93,4 +93,8 @@
     <style name="EditTextTheme">
         <item name="colorControlNormal">#c5c5c5</item>
     </style>
+
+    <style name="CheckBoxTheme">
+        <item name="colorControlNormal">#323232</item>
+    </style>
 </resources>

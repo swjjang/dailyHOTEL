@@ -653,6 +653,7 @@
     <string name="label_searching">검색중...</string>
 
     <!-- PaymentResult Activity -->
+    <string name="label_booking_information">예약정보</string>
     <string name="label_completed_payment">예약완료</string>
     <string name="label_booking_place">예약장소</string>
     <string name="label_product_type">상품타입</string>
