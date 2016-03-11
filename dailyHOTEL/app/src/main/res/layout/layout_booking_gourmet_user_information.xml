@@ -83,7 +83,8 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@drawable/selector_textview_textcolor"
-                android:textSize="15dp"/>
+                android:textSize="15dp"
+                android:theme="@style/EditTextTheme"/>
         </LinearLayout>
 
         <LinearLayout
@@ -115,7 +116,8 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@drawable/selector_textview_textcolor"
-                    android:textSize="15dp"/>
+                    android:textSize="15dp"
+                    android:theme="@style/EditTextTheme"/>
 
                 <View
                     android:id="@+id/fakeMobileEditView"
@@ -149,7 +151,8 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@drawable/selector_textview_textcolor"
-                android:textSize="15dp"/>
+                android:textSize="15dp"
+                android:theme="@style/EditTextTheme"/>
         </LinearLayout>
     </LinearLayout>
 

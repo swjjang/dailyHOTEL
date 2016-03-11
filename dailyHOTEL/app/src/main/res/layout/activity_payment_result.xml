@@ -87,7 +87,7 @@
                 android:background="@color/calendar_month_line"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="15dp"
-                android:text="@string/label_personnel"
+                android:text="@string/label_booking_information"
                 android:textColor="@color/curation_title_text"
                 android:textSize="13dp"/>
 
@@ -150,8 +150,7 @@
                 android:layout_marginRight="10dp"
                 android:text="@string/label_product_type"
                 android:textColor="@color/curation_title_text"
-                android:textSize="13dp"
-                />
+                android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/placeTypeTextView"
@@ -161,8 +160,7 @@
                 android:layout_toRightOf="@+id/placeTypeView"
                 android:gravity="right"
                 android:textColor="@color/curation_information_text"
-                android:textSize="13dp"
-                />
+                android:textSize="13dp"/>
         </RelativeLayout>
 
         <RelativeLayout

@@ -567,6 +567,13 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 break;
 
             case VBANK:
+//                showPaymentResult(mTicketPayment, mPlaceImageUrl);
+//
+//                if(true)
+//                {
+//                    return;
+//                }
+
                 // 가상계좌 입금을 선택했을 경우
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
                 break;

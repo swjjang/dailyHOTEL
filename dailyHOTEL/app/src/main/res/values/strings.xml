@@ -396,11 +396,11 @@
     <string name="act_payment_chk_contain">취소</string>
 
     <!-- Signup Activity -->
-    <string name="act_signup_phone">필수.휴대폰 번호 (예약시 사용)</string>
-    <string name="act_signup_email">필수.이메일</string>
-    <string name="act_signup_name">필수.이름 (예약시 사용)</string>
-    <string name="act_signup_pwd">필수.비밀번호 (4자이상)</string>
-    <string name="act_signup_code">선택.추천인 코드</string>
+    <string name="act_signup_phone">필수. 휴대폰 번호 (예약시 사용)</string>
+    <string name="act_signup_email">필수. 이메일</string>
+    <string name="act_signup_name">필수. 이름 (예약시 사용)</string>
+    <string name="act_signup_pwd">필수. 비밀번호 (4자이상)</string>
+    <string name="act_signup_code">선택. 추천인 코드</string>
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관 동의 (필수)</string>
     <string name="label_signup_allagreement">전체동의</string>
@@ -653,6 +653,7 @@
     <string name="label_searching">검색중...</string>
 
     <!-- PaymentResult Activity -->
+    <string name="label_booking_information">예약정보</string>
     <string name="label_completed_payment">예약완료</string>
     <string name="label_booking_place">예약장소</string>
     <string name="label_product_type">상품타입</string>
