@@ -578,6 +578,8 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
+
+        finish();
     }
 
     @Override

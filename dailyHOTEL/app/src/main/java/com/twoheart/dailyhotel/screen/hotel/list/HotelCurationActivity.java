@@ -548,6 +548,8 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
+
+        finish();
     }
 
     @Override
