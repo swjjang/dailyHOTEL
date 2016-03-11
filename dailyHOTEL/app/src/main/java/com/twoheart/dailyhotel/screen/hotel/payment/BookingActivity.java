@@ -112,7 +112,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
 
     protected String mAliveCallSource = "";
-    private TextView mCheckinDayTextView, mCheckinTimeTextView, mCheckoutDayTextView, mCheckoutTimeTextView;
+    private TextView mCheckinDayTextView, mCheckoutDayTextView;
     private TextView tvOriginalPriceValue, tvCreditValue, tvOriginalPrice, tvCredit, tvPrice;
     private SwitchCompat swCredit;
     private EditText etReserverName, etReserverNumber, etReserverEmail;
@@ -223,9 +223,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private void initHotelInformation()
     {
         mCheckinDayTextView = (TextView) findViewById(R.id.checkinDayTextView);
-        mCheckinTimeTextView = (TextView) findViewById(R.id.checkinTimeTextView);
         mCheckoutDayTextView = (TextView) findViewById(R.id.checkoutDayTextView);
-        mCheckoutTimeTextView = (TextView) findViewById(R.id.checkoutTimeTextView);
 
         // 객실 타입
         TextView roomTypeTextView = (TextView) findViewById(R.id.roomTypeTextView);
@@ -2161,14 +2159,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
                         calendarCheckin.setTimeInMillis(checkInDate);
 
-                        SimpleDateFormat formatDay = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
+                        SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.M.d (EEE) HH시", Locale.KOREA);
                         formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-                        SimpleDateFormat formatHour = new SimpleDateFormat(" HH시", Locale.KOREA);
-                        formatHour.setTimeZone(TimeZone.getTimeZone("GMT"));
-
                         mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));
-                        mCheckinTimeTextView.setText(formatHour.format(calendarCheckin.getTime()));
 
                         // CheckOut
                         Calendar calendarCheckout = DailyCalendar.getInstance();
@@ -2176,9 +2170,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         calendarCheckout.setTimeInMillis(checkOutDate);
 
                         mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
-                        mCheckoutTimeTextView.setText(formatHour.format(calendarCheckout.getTime()));
 
-                        SimpleDateFormat checkInOutFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시", Locale.KOREA);
+                        SimpleDateFormat checkInOutFormat = new SimpleDateFormat("yyyy.M.d(EEE) HH시", Locale.KOREA);
                         checkInOutFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
                         if (Util.getLCDWidth(BookingActivity.this) >= 720)

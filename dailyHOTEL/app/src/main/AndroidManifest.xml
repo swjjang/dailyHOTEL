@@ -178,11 +178,13 @@
             android:name=".screen.hotel.payment.BookingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppBaseTheme"/>
         <activity
             android:name=".screen.gourmet.payment.GourmetPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppBaseTheme"/>
         <activity
             android:name=".screen.common.PaymentResultActivity"

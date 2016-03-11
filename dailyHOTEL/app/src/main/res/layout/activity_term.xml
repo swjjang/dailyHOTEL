@@ -20,6 +20,8 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
         android:layout_below="@+id/toolbar">
 
         <WebView

@@ -20,6 +20,8 @@
         android:layout_height="match_parent"
         android:layout_above="@id/viewReceiptTextView"
         android:fillViewport="true"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
         android:orientation="vertical">
 
         <LinearLayout
