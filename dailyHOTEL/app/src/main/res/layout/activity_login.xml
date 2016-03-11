@@ -170,13 +170,13 @@
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/facebookLoginButton"
-        android:layout_width="1px"
+        android:layout_width="0dp"
         android:layout_height="1px"
         android:layout_alignParentBottom="true"/>
 
     <com.kakao.usermgmt.LoginButton
         android:id="@+id/kakaoLoginButton"
-        android:layout_width="1px"
+        android:layout_width="0dp"
         android:layout_height="1px"
         android:layout_alignParentBottom="true"/>
 

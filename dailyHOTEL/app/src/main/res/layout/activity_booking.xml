@@ -22,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
         android:background="@color/white">
 
         <LinearLayout
@@ -36,37 +38,18 @@
                 android:layout_height="wrap_content"/>
 
             <!-- 객실 정보 -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/common_border"/>
-
-
             <include
                 layout="@layout/layout_booking_hotel_ticket_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <!-- 예약자 정보 -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/common_border"/>
-
             <include
                 layout="@layout/layout_booking_hotel_user_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <!-- 결제 -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/common_border"/>
-
             <include
                 layout="@layout/layout_booking_hotel_payment_information"
                 android:layout_width="match_parent"
@@ -78,7 +61,6 @@
                 android:id="@+id/btn_hotel_payment"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_marginTop="14dp"
                 android:background="@color/dh_theme_color"
                 android:gravity="center"
                 android:text="@string/act_booking_btn_pay"

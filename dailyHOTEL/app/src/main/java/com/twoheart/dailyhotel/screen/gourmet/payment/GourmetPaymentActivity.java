@@ -40,8 +40,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.FinalCheckLayout;
-import com.twoheart.dailyhotel.view.GourmetBookingLayout;
-import com.twoheart.dailyhotel.view.GourmetBookingLayout.UserInformationType;
+import com.twoheart.dailyhotel.view.GourmetPaymentLayout;
+import com.twoheart.dailyhotel.view.GourmetPaymentLayout.UserInformationType;
 import com.twoheart.dailyhotel.view.widget.DailySignatureView;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
@@ -62,7 +62,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
     private static final int REQUEST_CODE_PAYMETRESULT_ACTIVITY = 10001;
 
-    private GourmetBookingLayout mGourmetBookingLayout;
+    private GourmetPaymentLayout mGourmetPaymentLayout;
     private boolean mIsChangedTime;
 
     public interface OnUserActionListener
@@ -107,9 +107,9 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         super.onCreate(savedInstanceState);
 
         mTicketPayment = new TicketPayment();
-        mGourmetBookingLayout = new GourmetBookingLayout(this, mOnUserActionListener);
+        mGourmetPaymentLayout = new GourmetPaymentLayout(this, mOnUserActionListener);
 
-        setContentView(mGourmetBookingLayout.getLayout());
+        setContentView(mGourmetPaymentLayout.getLayout());
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null)
@@ -170,7 +170,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                     mTicketPayment.getGuest().phone = mobileNumber;
 
-                    mGourmetBookingLayout.updateUserInformationLayout(mobileNumber);
+                    mGourmetPaymentLayout.updateUserInformationLayout(mobileNumber);
                 }
                 break;
             }
@@ -253,23 +253,23 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     @Override
     protected void updateLayout(TicketPayment ticketPayment, CreditCard creditCard)
     {
-        if (mGourmetBookingLayout == null || ticketPayment == null)
+        if (mGourmetPaymentLayout == null || ticketPayment == null)
         {
             return;
         }
 
-        mGourmetBookingLayout.updateTicketPaymentInformation(ticketPayment, creditCard);
+        mGourmetPaymentLayout.updateTicketPaymentInformation(ticketPayment, creditCard);
     }
 
     @Override
     protected void updatePaymentInformation(TicketPayment ticketPayment, CreditCard creditCard)
     {
-        if (mGourmetBookingLayout == null || ticketPayment == null)
+        if (mGourmetPaymentLayout == null || ticketPayment == null)
         {
             return;
         }
 
-        mGourmetBookingLayout.updatePaymentInformationLayout(this, ticketPayment, creditCard);
+        mGourmetPaymentLayout.updatePaymentInformationLayout(this, ticketPayment, creditCard);
     }
 
     @Override
@@ -280,9 +280,9 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             mTicketPayment.paymentType = type;
         }
 
-        if (mGourmetBookingLayout != null)
+        if (mGourmetPaymentLayout != null)
         {
-            mGourmetBookingLayout.checkPaymentType(type);
+            mGourmetPaymentLayout.checkPaymentType(type);
         }
     }
 
@@ -635,7 +635,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     try
                     {
                         mTicketPayment.ticketTime = mTicketPayment.ticketTimes[select];
-                        mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
+                        mGourmetPaymentLayout.setTicketTime(mTicketPayment.ticketTime);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -666,16 +666,16 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
             if (count >= maxCount)
             {
-                mGourmetBookingLayout.setTicketCountPlusButtonEnabled(false);
+                mGourmetPaymentLayout.setTicketCountPlusButtonEnabled(false);
                 DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_LONG);
             } else
             {
                 mTicketPayment.ticketCount = count + 1;
-                mGourmetBookingLayout.setTicketCount(mTicketPayment.ticketCount);
-                mGourmetBookingLayout.setTicketCountMinusButtonEnabled(true);
+                mGourmetPaymentLayout.setTicketCount(mTicketPayment.ticketCount);
+                mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetBookingLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment);
+                mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment);
             }
         }
 
@@ -686,15 +686,15 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
             if (count <= 1)
             {
-                mGourmetBookingLayout.setTicketCountMinusButtonEnabled(false);
+                mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(false);
             } else
             {
                 mTicketPayment.ticketCount = count - 1;
-                mGourmetBookingLayout.setTicketCount(mTicketPayment.ticketCount);
-                mGourmetBookingLayout.setTicketCountPlusButtonEnabled(true);
+                mGourmetPaymentLayout.setTicketCount(mTicketPayment.ticketCount);
+                mGourmetPaymentLayout.setTicketCountPlusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetBookingLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment);
+                mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment);
             }
         }
 
@@ -708,9 +708,9 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
             mIsEditMode = true;
 
-            if (mGourmetBookingLayout != null)
+            if (mGourmetPaymentLayout != null)
             {
-                mGourmetBookingLayout.enabledEditUserInformation();
+                mGourmetPaymentLayout.enabledEditUserInformation();
             }
         }
 
@@ -725,7 +725,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             if (mIsEditMode == true)
             {
                 // 현재 수정 사항을 기억한다.
-                Guest editGuest = mGourmetBookingLayout.getGuest();
+                Guest editGuest = mGourmetPaymentLayout.getGuest();
                 mTicketPayment.setGuest(editGuest);
             }
 
@@ -757,7 +757,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             if (mTicketPayment.ticketTime == 0)
             {
                 releaseUiComponent();
-                mGourmetBookingLayout.scrollTop();
+                mGourmetPaymentLayout.scrollTop();
 
                 DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_select_reservationtime, Toast.LENGTH_SHORT);
                 return;
@@ -766,13 +766,13 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             // 수정 모드인 경우 데이터를 다시 받아와야 한다.
             if (mIsEditMode == true)
             {
-                Guest guest = mGourmetBookingLayout.getGuest();
+                Guest guest = mGourmetPaymentLayout.getGuest();
 
                 if (Util.isTextEmpty(guest.name) == true)
                 {
                     releaseUiComponent();
 
-                    mGourmetBookingLayout.requestUserInformationFocus(UserInformationType.NAME);
+                    mGourmetPaymentLayout.requestUserInformationFocus(UserInformationType.NAME);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
                     return;
@@ -780,7 +780,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetBookingLayout.requestUserInformationFocus(UserInformationType.PHONE);
+                    mGourmetPaymentLayout.requestUserInformationFocus(UserInformationType.PHONE);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
                     return;
@@ -788,7 +788,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetBookingLayout.requestUserInformationFocus(UserInformationType.EMAIL);
+                    mGourmetPaymentLayout.requestUserInformationFocus(UserInformationType.EMAIL);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                     return;
@@ -796,7 +796,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetBookingLayout.requestUserInformationFocus(UserInformationType.EMAIL);
+                    mGourmetPaymentLayout.requestUserInformationFocus(UserInformationType.EMAIL);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
@@ -846,7 +846,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         @Override
         public void showInputMobileNumberDialog(String mobileNumber)
         {
-            mTicketPayment.setGuest(mGourmetBookingLayout.getGuest());
+            mTicketPayment.setGuest(mGourmetPaymentLayout.getGuest());
 
             Intent intent = InputMobileNumberDialogActivity.newInstance(GourmetPaymentActivity.this, mobileNumber);
             startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);

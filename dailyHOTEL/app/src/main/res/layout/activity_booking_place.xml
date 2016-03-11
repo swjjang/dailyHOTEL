@@ -22,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
         android:background="@color/white">
 
         <LinearLayout
@@ -37,7 +39,6 @@
                 android:id="@+id/payButton"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_marginTop="14dp"
                 android:background="@color/dh_theme_color"
                 android:gravity="center"
                 android:text="@string/act_booking_btn_pay"
@@ -51,5 +52,4 @@
         android:layout_height="6px"
         android:layout_below="@+id/toolbar"
         android:background="@drawable/navibar_gradation"/>
-
 </RelativeLayout>
