@@ -230,7 +230,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 lockUiComponent();
 
-                Intent intent = CurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
+                Intent intent = GourmetCurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 

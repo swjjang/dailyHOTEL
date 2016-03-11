@@ -28,7 +28,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
         googleAnalytics.setLocalDispatchPeriod(60);
 
-        mClientId = googleAnalytics.getClientId();
+//        mClientId = googleAnalytics.getClientId();
 
         mGoogleAnalyticsTracker = googleAnalytics.newTracker(GA_PROPERTY_ID);
         mGoogleAnalyticsTracker.enableAdvertisingIdCollection(true);

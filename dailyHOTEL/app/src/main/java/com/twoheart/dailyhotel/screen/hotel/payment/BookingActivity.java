@@ -1893,6 +1893,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 @Override
                 public void onFocusChange(View v, boolean hasFocus)
                 {
+                    if(isFinishing() == true)
+                    {
+                        return;
+                    }
+                    
                     if (hasFocus == true)
                     {
                         showInputMobileNumberDialog(etReserverNumber.getText().toString());

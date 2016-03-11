@@ -44,7 +44,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class GourmetBookingLayout implements OnCheckedChangeListener
+public class GourmetPaymentLayout implements OnCheckedChangeListener
 {
     private BaseActivity mActivity;
 
@@ -65,7 +65,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
 
     private GourmetPaymentActivity.OnUserActionListener mOnUserActionListener;
 
-    public GourmetBookingLayout(BaseActivity activity, GourmetPaymentActivity.OnUserActionListener listener)
+    public GourmetPaymentLayout(BaseActivity activity, GourmetPaymentActivity.OnUserActionListener listener)
     {
         mActivity = activity;
         mOnUserActionListener = listener;
@@ -551,6 +551,11 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
                 @Override
                 public void onFocusChange(View v, boolean hasFocus)
                 {
+                    if(mActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
                     if (hasFocus == true)
                     {
                         if (mOnUserActionListener != null)
@@ -572,6 +577,11 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
                 @Override
                 public void onClick(View v)
                 {
+                    if (mActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
                     if (mUserPhoneEditText.isSelected() == true)
                     {
                         if (mOnUserActionListener != null)

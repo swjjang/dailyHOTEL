@@ -1,47 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@color/section_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="15dp">
+        android:layout_height="25dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:background="@color/calendar_month_line"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="15dp"
             android:text="@string/label_booking_ticket_info"
-            android:textColor="@color/textView_textColor_section"
-            android:textSize="13dp"
-            android:textStyle="bold"/>
-    </LinearLayout>
+            android:textColor="@color/curation_title_text"
+            android:textSize="13dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/curation_information_line"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/curation_information_line"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="27dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="7dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:minHeight="35dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
                 android:text="@string/label_booking_ticket_type"
-                android:textColor="@color/booking_subtext"
-                android:textSize="15dp"/>
+                android:textColor="@color/curation_title_text"
+                android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/ticketTypeTextView"
@@ -50,13 +62,14 @@
                 android:layout_weight="0.7"
                 android:gravity="right|center_vertical"
                 android:textColor="@color/dh_theme_color"
-                android:textSize="15dp"
-                android:textStyle="bold"/>
+                android:lineSpacingExtra="-2dp"
+                android:textSize="13dp"
+                dailyFont:style="Medium"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="35dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -64,8 +77,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
                 android:text="@string/label_selecteday"
-                android:textColor="@color/booking_subtext"
-                android:textSize="15dp"/>
+                android:textColor="@color/curation_title_text"
+                android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/ticketDateTextView"
@@ -73,13 +86,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
                 android:gravity="right|center_vertical"
-                android:textColor="@drawable/selector_textview_textcolor"
-                android:textSize="15dp"/>
+                android:textColor="@color/curation_information_text"
+                android:textSize="13dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="35dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -87,8 +100,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
                 android:text="@string/label_booking_select_ticket_time"
-                android:textColor="@color/booking_subtext"
-                android:textSize="15dp"/>
+                android:textColor="@color/curation_title_text"
+                android:textSize="13dp"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -98,17 +111,17 @@
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:id="@+id/ticketTimeTextView"
-                    android:layout_width="99dp"
-                    android:layout_height="29dp"
-                    android:background="@drawable/payment_ic_time_bg"
+                    android:layout_width="82dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/payment_ic_amount_time_bg"
                     android:gravity="center"
-                    android:textColor="@drawable/selector_textview_textcolor"
-                    android:textSize="15dp"/>
+                    android:textColor="@color/curation_information_text"
+                    android:textSize="13dp"/>
 
                 <ImageView
                     android:id="@+id/ticketTimeTab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="29dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/payment_ic_time_tab"/>
 
             </LinearLayout>
@@ -116,7 +129,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="35dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -124,8 +137,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
                 android:text="@string/label_booking_select_ticket_count"
-                android:textColor="@color/booking_subtext"
-                android:textSize="15dp"/>
+                android:textColor="@color/curation_title_text"
+                android:textSize="13dp"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -135,25 +148,24 @@
 
                 <ImageView
                     android:id="@+id/ticketCountMinus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="29dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/selector_payment_minus_button"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:id="@+id/ticketCountTextView"
-                    android:layout_width="69dp"
-                    android:layout_height="29dp"
+                    android:layout_width="57dp"
+                    android:layout_height="25dp"
                     android:background="@drawable/payment_ic_amount_bg"
                     android:gravity="center"
-                    android:textColor="@drawable/selector_textview_textcolor"
-                    android:textSize="15dp"/>
+                    android:textColor="@color/curation_information_text"
+                    android:textSize="13dp"/>
 
                 <ImageView
                     android:id="@+id/ticketCountPlus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="29dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/selector_payment_plus_button"/>
-
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

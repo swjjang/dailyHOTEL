@@ -56,6 +56,7 @@
             android:layout_weight="0.7"
             android:gravity="right|center_vertical"
             android:textColor="@color/curation_information_text"
+            android:lineSpacingExtra="-2dp"
             android:textSize="13dp"/>
     </LinearLayout>
 </LinearLayout>

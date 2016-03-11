@@ -250,7 +250,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.filter.CurationActivity"
+            android:name=".screen.hotel.list.HotelCurationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
+        <activity
+            android:name=".screen.gourmet.list.GourmetCurationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
