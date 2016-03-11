@@ -170,25 +170,25 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             mCreditcardLayout.setVisibility(View.GONE);
         }
 
-//        mDailyInformationView.post(new Runnable()
-//        {
-//            @Override
-//            public void run()
-//            {
-//                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
-//                {
-//                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
-//
-//                    if (layoutParams != null)
-//                    {
-//                        layoutParams.height += mInformationScrollView.getHeight() - mInformationLayout.getHeight();
-//                        mDailyInformationView.setLayoutParams(layoutParams);
-//                    }
-//                }
-//
-//                mDailyInformationView.setVisibility(View.VISIBLE);
-//            }
-//        });
+        //        mDailyInformationView.post(new Runnable()
+        //        {
+        //            @Override
+        //            public void run()
+        //            {
+        //                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
+        //                {
+        //                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
+        //
+        //                    if (layoutParams != null)
+        //                    {
+        //                        layoutParams.height += mInformationScrollView.getHeight() - mInformationLayout.getHeight();
+        //                        mDailyInformationView.setLayoutParams(layoutParams);
+        //                    }
+        //                }
+        //
+        //                mDailyInformationView.setVisibility(View.VISIBLE);
+        //            }
+        //        });
     }
 
     @Override
