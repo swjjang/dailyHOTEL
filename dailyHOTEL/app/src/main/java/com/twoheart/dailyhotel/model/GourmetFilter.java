@@ -30,7 +30,7 @@ public class GourmetFilter implements Parcelable
         long openTimeInMillis = jsonObject.getLong("startEatingTime");
         long closeTimeInMillis = jsonObject.getLong("endEatingTime");
 
-        timeFlag = getTimeFlag(openTimeInMillis) | getTimeFlag(closeTimeInMillis);
+        timeFlag = getTimeFlag(openTimeInMillis, closeTimeInMillis);
 
         if (jsonObject.has("parking") == true)
         {
@@ -38,18 +38,71 @@ public class GourmetFilter implements Parcelable
         }
     }
 
-    private int getTimeFlag(long timeInMillis)
+    public GourmetFilter(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    public boolean isTimeFiltered(int flags)
+    {
+        if (flags == FLAG_GOURMET_FILTER_TIME_NONE)
+        {
+            return true;
+        }
+
+        return (timeFlag & flags) != 0;
+    }
+
+    public boolean isParkingFiltered(boolean isParking)
+    {
+        if (isParking == false)
+        {
+            return true;
+        }
+
+        return this.isParking == isParking;
+    }
+
+    private int getTimeFlag(long openTimeInMillis, long closeTimeInMillis)
     {
         int flag = FLAG_GOURMET_FILTER_TIME_NONE;
 
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
+        int openFlag = getOpenTimeFlag(openTimeInMillis);
+        int closeFlag = getCloseTimeFlag(closeTimeInMillis);
 
-        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HHmm", Locale.KOREA);
-        simpleTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        int[] flags = {FLAG_GOURMET_FILTER_TIME_06_11, FLAG_GOURMET_FILTER_TIME_11_15, FLAG_GOURMET_FILTER_TIME_15_17, FLAG_GOURMET_FILTER_TIME_17_21, FLAG_GOURMET_FILTER_TIME_21_06};
+        int flagCount = flags.length;
 
-        int time = Integer.parseInt(simpleTimeFormat.format(calendar.getTime()));
+        boolean includeFlag = false;
+
+        for (int i = 0; i < flagCount; i++)
+        {
+            if (openFlag == flags[i])
+            {
+                includeFlag = true;
+                flag |= openFlag;
+            }
+
+            if (includeFlag == true)
+            {
+                flag |= flags[i];
+            }
+
+            if (closeFlag == flags[i])
+            {
+                flag |= closeFlag;
+                break;
+            }
+        }
+
+        return flag;
+    }
+
+    private int getOpenTimeFlag(long openTimeInMillis)
+    {
+        int time = getHHmmByMillis(openTimeInMillis);
+
+        int flag = FLAG_GOURMET_FILTER_TIME_NONE;
 
         if (time >= 600 && time < 1100)
         {
@@ -79,29 +132,50 @@ public class GourmetFilter implements Parcelable
         return flag;
     }
 
-    public GourmetFilter(Parcel in)
+    private int getCloseTimeFlag(long closeTimeInMillis)
     {
-        readFromParcel(in);
-    }
+        int time = getHHmmByMillis(closeTimeInMillis);
 
-    public boolean isTimeFiltered(int flags)
-    {
-        if (flags == FLAG_GOURMET_FILTER_TIME_NONE)
+        int flag = FLAG_GOURMET_FILTER_TIME_NONE;
+
+        if (time > 600 && time <= 1100)
         {
-            return true;
+            flag |= FLAG_GOURMET_FILTER_TIME_06_11;
         }
 
-        return (timeFlag & flags) != 0;
-    }
-
-    public boolean isParkingFiltered(boolean isParking)
-    {
-        if (isParking == false)
+        if (time > 1100 && time <= 1500)
         {
-            return true;
+            flag |= FLAG_GOURMET_FILTER_TIME_11_15;
         }
 
-        return this.isParking == isParking;
+        if (time > 1500 && time <= 1700)
+        {
+            flag |= FLAG_GOURMET_FILTER_TIME_15_17;
+        }
+
+        if (time > 1700 && time <= 2100)
+        {
+            flag |= FLAG_GOURMET_FILTER_TIME_17_21;
+        }
+
+        if ((time > 2100 && time <= 2400) || (time >= 0 && time <= 600))
+        {
+            flag |= FLAG_GOURMET_FILTER_TIME_21_06;
+        }
+
+        return flag;
+    }
+
+    private int getHHmmByMillis(long timeInMillis)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeInMillis(timeInMillis);
+
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HHmm", Locale.KOREA);
+        simpleTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return Integer.parseInt(simpleTimeFormat.format(calendar.getTime()));
     }
 
     @Override
