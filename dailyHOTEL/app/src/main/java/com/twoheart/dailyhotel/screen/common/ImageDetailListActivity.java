@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common.detail;
+package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
 import android.graphics.drawable.Animatable;
@@ -23,7 +23,6 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 

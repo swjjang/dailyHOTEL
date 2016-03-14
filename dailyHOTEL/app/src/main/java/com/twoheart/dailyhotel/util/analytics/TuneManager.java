@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
 
 import com.mobileapptracker.MATDeeplinkListener;
 import com.mobileapptracker.MATEvent;
@@ -34,12 +31,10 @@ public class TuneManager implements IBaseAnalyticsManager
 
     private MobileAppTracker mMobileAppTracker;
     private Context mContext;
-    private String mGoogleCliendId;
 
-    public TuneManager(Context context, String googleCliendId)
+    public TuneManager(Context context)
     {
         mContext = context;
-        mGoogleCliendId = googleCliendId;
         mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), ADVERTISE_ID, CONVERSION_KEY);
         mMobileAppTracker.setCurrencyCode("KRW");
 
@@ -49,33 +44,12 @@ public class TuneManager implements IBaseAnalyticsManager
             mMobileAppTracker.setExistingUser(true);
         }
 
-        try
-        {
-            mMobileAppTracker.setAndroidId(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        try
-        {
-            String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-            mMobileAppTracker.setDeviceId(deviceId);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        try
-        {
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            mMobileAppTracker.setMacAddress(wifiManager.getConnectionInfo().getMacAddress());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
         setDeferredDeepLink();
+    }
+
+    public void setGoogleClientId(String clientId)
+    {
+        mMobileAppTracker.setGoogleUserId(clientId);
     }
 
     private void setDeferredDeepLink()
@@ -262,6 +236,8 @@ public class TuneManager implements IBaseAnalyticsManager
     {
         mMobileAppTracker.setReferralSources(activity);
         mMobileAppTracker.measureSession();
+
+
     }
 
     @Override

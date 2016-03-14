@@ -846,6 +846,11 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         @Override
         public void showInputMobileNumberDialog(String mobileNumber)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
             mTicketPayment.setGuest(mGourmetPaymentLayout.getGuest());
 
             Intent intent = InputMobileNumberDialogActivity.newInstance(GourmetPaymentActivity.this, mobileNumber);

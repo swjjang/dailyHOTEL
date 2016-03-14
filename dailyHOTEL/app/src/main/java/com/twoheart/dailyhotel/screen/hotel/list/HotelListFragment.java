@@ -871,9 +871,16 @@ public class HotelListFragment extends BaseFragment implements Constants
             // 필터 정보 넣기
             ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(hotelList.size());
 
+            HotelFilters hotelFilters;
+
             for (Hotel hotel : hotelList)
             {
-                hotelFiltersList.add(hotel.getFilters());
+                hotelFilters = hotel.getFilters();
+
+                if (hotelFilters != null)
+                {
+                    hotelFiltersList.add(hotelFilters);
+                }
             }
 
             curationOption.setFiltersList(hotelFiltersList);

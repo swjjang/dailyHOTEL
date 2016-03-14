@@ -652,6 +652,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
     private void showInputMobileNumberDialog(String mobileNumber)
     {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
         String internationalMobileNumber = mobileNumber;
 
         if (mPhoneTextView.length() > 0)

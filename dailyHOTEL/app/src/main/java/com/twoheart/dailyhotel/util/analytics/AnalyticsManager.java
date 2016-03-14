@@ -38,8 +38,17 @@ public class AnalyticsManager
 
         try
         {
-            mGoogleAnalyticsManager = new GoogleAnalyticsManager(context);
-            mTuneManager = new TuneManager(context, mGoogleAnalyticsManager.getClientId());
+            mTuneManager = new TuneManager(context);
+
+            mGoogleAnalyticsManager = new GoogleAnalyticsManager(context, new GoogleAnalyticsManager.OnClientIdListener()
+            {
+                @Override
+                public void onResponseClientId(String clientId)
+                {
+                    mTuneManager.setGoogleClientId(clientId);
+                }
+            });
+
             mFacebookManager = new FacebookManager(context);
         } catch (Exception e)
         {

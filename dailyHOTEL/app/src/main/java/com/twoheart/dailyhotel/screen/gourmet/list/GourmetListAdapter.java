@@ -15,9 +15,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.place.adapter.PlaceBannerViewPagerAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.list.EventBannerViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -161,7 +161,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
     {
         ArrayList<EventBanner> eventBannerList = placeViewItem.<ArrayList<EventBanner>>getItem();
 
-        EventBannerViewPagerAdapter adapter = new EventBannerViewPagerAdapter(mContext, eventBannerList, mOnEventBannerClickListener);
+        PlaceBannerViewPagerAdapter adapter = new PlaceBannerViewPagerAdapter(mContext, eventBannerList, mOnEventBannerClickListener);
         holder.loopViewPager.setOnPageChangeListener(null);
         holder.loopViewPager.setAdapter(adapter);
         holder.viewpagerCircleIndicator.setTotalCount(eventBannerList.size());

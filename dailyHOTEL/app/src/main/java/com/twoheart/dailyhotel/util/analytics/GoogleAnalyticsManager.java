@@ -23,12 +23,29 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     private Tracker mGoogleAnalyticsTracker;
     private String mClientId;
 
-    public GoogleAnalyticsManager(Context context)
+    interface OnClientIdListener
     {
-        GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
+        void onResponseClientId(String cliendId);
+    }
+
+    public GoogleAnalyticsManager(Context context, final OnClientIdListener listener)
+    {
+        final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
         googleAnalytics.setLocalDispatchPeriod(60);
 
-//        mClientId = googleAnalytics.getClientId();
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mClientId = googleAnalytics.getClientId();
+
+                if (listener != null)
+                {
+                    listener.onResponseClientId(mClientId);
+                }
+            }
+        }).start();
 
         mGoogleAnalyticsTracker = googleAnalytics.newTracker(GA_PROPERTY_ID);
         mGoogleAnalyticsTracker.enableAdvertisingIdCollection(true);

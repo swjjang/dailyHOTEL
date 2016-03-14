@@ -1361,12 +1361,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 break;
 
             case VBANK:
-//                showPaymentResult(mPay, mPlaceImageUrl);
-//
-//                if(true)
-//                {
-//                    return;
-//                }
+                //                showPaymentResult(mPay, mPlaceImageUrl);
+                //
+                //                if(true)
+                //                {
+                //                    return;
+                //                }
 
                 // 가상계좌 입금을 선택했을 경우
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
@@ -1688,6 +1688,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
     private void showInputMobileNumberDialog(String mobileNumber)
     {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
         Intent intent = InputMobileNumberDialogActivity.newInstance(BookingActivity.this, mobileNumber);
         startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
     }
@@ -1893,11 +1898,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 @Override
                 public void onFocusChange(View v, boolean hasFocus)
                 {
-                    if(isFinishing() == true)
+                    if (isFinishing() == true)
                     {
                         return;
                     }
-                    
+
                     if (hasFocus == true)
                     {
                         showInputMobileNumberDialog(etReserverNumber.getText().toString());

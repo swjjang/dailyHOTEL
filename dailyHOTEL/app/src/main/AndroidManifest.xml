@@ -120,7 +120,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.common.detail.ImageDetailListActivity"
+            android:name=".screen.common.ImageDetailListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -233,12 +233,16 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.common.list.SatisfactionActivity"
+            android:name=".screen.common.SatisfactionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.common.list.CalendarActivity"
+            android:name=".screen.hotel.list.HotelCalendarActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.list.GourmetCalendarActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

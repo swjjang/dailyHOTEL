@@ -5,7 +5,7 @@
  * <p>
  * 호텔 만족도 조사를 위한 화면
  */
-package com.twoheart.dailyhotel.screen.common.list;
+package com.twoheart.dailyhotel.screen.common;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -27,7 +27,6 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;

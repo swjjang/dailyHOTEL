@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.util;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -214,6 +216,20 @@ public class Util implements Constants
         Intent intent = new Intent(context, LauncherActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
+    }
+
+    public static void restartExitApp(Context context)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        Intent intent = new Intent(context, LauncherActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 300, pendingIntent);
+        System.exit(0);
     }
 
     public static void finishOutOfMemory(BaseActivity activity)

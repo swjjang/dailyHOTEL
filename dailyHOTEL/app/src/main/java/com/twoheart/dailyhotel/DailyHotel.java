@@ -46,6 +46,15 @@ public class DailyHotel extends Application implements Constants
 
         if (DEBUG == false)
         {
+            Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
+            {
+                @Override
+                public void uncaughtException(Thread thread, Throwable ex)
+                {
+                    Util.restartExitApp(getApplicationContext());
+                }
+            });
+
             io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
         }
 

@@ -551,7 +551,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
                 @Override
                 public void onFocusChange(View v, boolean hasFocus)
                 {
-                    if(mActivity.isFinishing() == true)
+                    if (mActivity.isFinishing() == true)
                     {
                         return;
                     }

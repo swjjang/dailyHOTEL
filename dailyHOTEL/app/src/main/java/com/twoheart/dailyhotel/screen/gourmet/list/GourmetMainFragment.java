@@ -28,7 +28,6 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.BaseFragment;
 import com.twoheart.dailyhotel.screen.eventlist.EventWebActivity;
-import com.twoheart.dailyhotel.screen.filter.CurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.regionlist.RegionListActivity;
@@ -396,7 +395,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    GourmetCurationOption curationOption = data.getParcelableExtra(CurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+                    GourmetCurationOption curationOption = data.getParcelableExtra(GourmetCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
 
                     if (curationOption != null)
                     {

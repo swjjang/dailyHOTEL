@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.list.CalendarActivity;
 
 public class HotelDaysListFragment extends HotelListFragment
 {
@@ -33,7 +32,7 @@ public class HotelDaysListFragment extends HotelListFragment
 
         SaleTime saleTime = mSelectedCheckInSaleTime.getClone(0);
 
-        Intent intent = CalendarActivity.newInstance(getContext(), PlaceType.HOTEL, saleTime);
+        Intent intent = HotelCalendarActivity.newInstance(getContext(), saleTime);
         getParentFragment().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
