@@ -23,7 +23,6 @@ public class GourmetFilter implements Parcelable
     public static final int FLAG_GOURMET_FILTER_TIME_21_06 = 0x10;
 
     public int timeFlag;
-    public boolean isParking;
 
     public GourmetFilter(JSONObject jsonObject) throws JSONException
     {
@@ -31,11 +30,6 @@ public class GourmetFilter implements Parcelable
         long closeTimeInMillis = jsonObject.getLong("endEatingTime");
 
         timeFlag = getTimeFlag(openTimeInMillis, closeTimeInMillis);
-
-        if (jsonObject.has("parking") == true)
-        {
-            isParking = "Y".equalsIgnoreCase(jsonObject.getString("parking")) ? true : false;
-        }
     }
 
     public GourmetFilter(Parcel in)
@@ -51,16 +45,6 @@ public class GourmetFilter implements Parcelable
         }
 
         return (timeFlag & flags) != 0;
-    }
-
-    public boolean isParkingFiltered(boolean isParking)
-    {
-        if (isParking == false)
-        {
-            return true;
-        }
-
-        return this.isParking == isParking;
     }
 
     private int getTimeFlag(long openTimeInMillis, long closeTimeInMillis)
@@ -182,13 +166,11 @@ public class GourmetFilter implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(timeFlag);
-        dest.writeInt(isParking ? 1 : 0);
     }
 
     private void readFromParcel(Parcel in)
     {
         timeFlag = in.readInt();
-        isParking = in.readInt() == 1 ? true : false;
     }
 
     @Override
