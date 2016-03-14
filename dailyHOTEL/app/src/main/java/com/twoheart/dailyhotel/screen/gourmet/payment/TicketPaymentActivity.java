@@ -238,7 +238,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                         activityResulted(requestCode, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, intent);
                     } else
                     {
-                        writeLogPaid(mTicketPayment);
+                        recordPurchaseComplete(mTicketPayment);
                         showPaymentResult(mTicketPayment, mPlaceImageUrl);
                     }
                     return;
@@ -788,7 +788,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
         return params;
     }
 
-    protected void writeLogPaid(TicketPayment ticketPayment)
+    protected void recordPurchaseComplete(TicketPayment ticketPayment)
     {
         try
         {

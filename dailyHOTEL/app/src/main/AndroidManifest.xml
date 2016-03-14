@@ -187,7 +187,7 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".screen.common.PaymentResultActivity"
+            android:name=".screen.common.PaymentThankYouActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

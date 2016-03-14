@@ -66,7 +66,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.PaymentResultActivity;
+import com.twoheart.dailyhotel.screen.common.PaymentThankYouActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
@@ -926,7 +926,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 // 결제가 성공한 경우 GA와 믹스패널에 등록
                 case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
                 case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
-                    writeLogPaid(mPay);
+                    recordPurchaseComplete(mPay);
 
                     showPaymentResult(mPay, mPlaceImageUrl);
                     return;
@@ -1087,7 +1087,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                                 case 1000:
                                 {
-                                    writeLogPaid(mPay);
+                                    recordPurchaseComplete(mPay);
 
                                     posListener = new View.OnClickListener()
                                     {
@@ -1701,7 +1701,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
 
-        Intent intent = PaymentResultActivity.newInstance(this, imageUrl, saleRoomInformation.hotelName//
+        Intent intent = PaymentThankYouActivity.newInstance(this, imageUrl, saleRoomInformation.hotelName//
             , saleRoomInformation.roomName, pay.checkInOutDate);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
@@ -1765,7 +1765,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         return params;
     }
 
-    private void writeLogPaid(Pay pay)
+    private void recordPurchaseComplete(Pay pay)
     {
         try
         {

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
 
-public class PaymentResultActivity extends BaseActivity implements OnClickListener
+public class PaymentThankYouActivity extends BaseActivity implements OnClickListener
 {
     private static final String INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
     private static final String INTENT_EXTRA_DATA_PLACE = "place";
@@ -19,7 +19,7 @@ public class PaymentResultActivity extends BaseActivity implements OnClickListen
 
     public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date)
     {
-        Intent intent = new Intent(context, PaymentResultActivity.class);
+        Intent intent = new Intent(context, PaymentThankYouActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE, place);
