@@ -121,7 +121,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 주소
         TextView addressTextView = (TextView) providerInfoLayout.findViewById(R.id.textView46);
-        addressTextView.setText(address);
+        addressTextView.setText(getString(R.string.label_receipt_address, address));
 
         // 전화번호
         TextView phoneTextView = (TextView) providerInfoLayout.findViewById(R.id.textView47);
