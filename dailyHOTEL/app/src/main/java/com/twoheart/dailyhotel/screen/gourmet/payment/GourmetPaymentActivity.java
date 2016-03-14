@@ -955,13 +955,12 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     {
                         boolean isExistTime = false;
 
-                        for (int i = 0; i < length; i++)
+                        for (long time : times)
                         {
-                            times[i] = timeJSONArray.getLong(i);
-
-                            if (mTicketPayment.ticketTime == times[i])
+                            if (mTicketPayment.ticketTime == time)
                             {
                                 isExistTime = true;
+                                break;
                             }
                         }
 
