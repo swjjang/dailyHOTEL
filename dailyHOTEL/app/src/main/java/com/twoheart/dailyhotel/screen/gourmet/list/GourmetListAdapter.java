@@ -212,9 +212,8 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         final Gourmet gourmet = placeViewItem.<Gourmet>getItem();
 
         DecimalFormat comma = new DecimalFormat("###,##0");
-        int price = gourmet.price;
 
-        String strPrice = comma.format(price);
+        String strPrice = comma.format(gourmet.price);
         String strDiscount = comma.format(gourmet.discountPrice);
 
         String address = gourmet.addressSummary;
@@ -242,7 +241,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
         Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 
-        if (price <= 0)
+        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
         {
             holder.priceView.setVisibility(View.INVISIBLE);
             holder.priceView.setText(null);

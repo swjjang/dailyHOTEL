@@ -212,9 +212,8 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         final Hotel hotel = placeViewItem.<Hotel>getItem();
 
         DecimalFormat comma = new DecimalFormat("###,##0");
-        int price = hotel.price;
 
-        String strPrice = comma.format(price);
+        String strPrice = comma.format(hotel.price);
         String strDiscount = comma.format(hotel.averageDiscountPrice);
 
         String address = hotel.addressSummary;
@@ -233,7 +232,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
         Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 
-        if (price <= 0)
+        if (hotel.price <= 0 || hotel.price <= hotel.averageDiscountPrice)
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
             holder.hotelPriceView.setText(null);
