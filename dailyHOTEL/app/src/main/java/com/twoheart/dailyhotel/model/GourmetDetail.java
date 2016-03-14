@@ -73,7 +73,7 @@ public class GourmetDetail extends PlaceDetail
         JSONArray detailJSONArray = jsonObject.getJSONArray("detail");
         int detailLength = detailJSONArray.length();
 
-        mInformationList = new ArrayList<DetailInformation>(detailLength);
+        mInformationList = new ArrayList<>(detailLength);
 
         for (int i = 0; i < detailLength; i++)
         {
@@ -84,7 +84,7 @@ public class GourmetDetail extends PlaceDetail
         JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("ticket_info");
         int ticketInformationLength = ticketInformationJSONArray.length();
 
-        mTicketInformationList = new ArrayList<TicketInformation>(ticketInformationLength);
+        mTicketInformationList = new ArrayList<>(ticketInformationLength);
 
         for (int i = 0; i < ticketInformationLength; i++)
         {

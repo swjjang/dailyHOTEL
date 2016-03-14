@@ -326,11 +326,11 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelDetailInformation(Object tag, int index, String date, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/hotel/v1/sale/detail" : "ODUkMjUkNTAkMzAkODIk$MzRDNzU3QjM1OEE0MTEyQkJCQIzhDRUEMzOEYyQUQyOTBBMjlERYjJEN0Q0QUNCRUZGNkRGQkE0MUJCOUQOwQkFBROg==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/detail" : "NjUkNDgkODgkOCQyNyQ=$MTc5Q0MyMRkY0N0Y1NkIzNTVCMjDM1OTJBRkY3MjlGNERBM0Q1LM0ZBNjE2QzdDNjlBMMzlCRUFEQzg1MDExMzBCOQQ==$";
 
-        String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", index, date, nights);
+        String params = String.format("?hotelIdx=%d&dateCheckIn=%s&lengthStay=%d", index, date, nights);
 
-        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
+        mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener));
     }
 
     @Override
