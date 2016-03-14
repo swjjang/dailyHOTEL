@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common.list;
+package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,13 +13,13 @@ import com.twoheart.dailyhotel.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventBannerViewPagerAdapter extends PagerAdapter
+public class PlaceBannerViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private List<EventBanner> mEventBannerList;
     private View.OnClickListener mOnClickListener;
 
-    public EventBannerViewPagerAdapter(Context context, List<EventBanner> list, View.OnClickListener listener)
+    public PlaceBannerViewPagerAdapter(Context context, List<EventBanner> list, View.OnClickListener listener)
     {
         mContext = context;
 

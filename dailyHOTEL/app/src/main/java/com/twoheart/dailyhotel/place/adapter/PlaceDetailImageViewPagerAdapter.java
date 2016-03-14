@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common.detail;
+package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Animatable;
@@ -18,12 +18,12 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 
-public class DetailImageViewPagerAdapter extends PagerAdapter
+public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private List<ImageInformation> mImageInformationList;
 
-    public DetailImageViewPagerAdapter(Context context)
+    public PlaceDetailImageViewPagerAdapter(Context context)
     {
         mContext = context;
     }

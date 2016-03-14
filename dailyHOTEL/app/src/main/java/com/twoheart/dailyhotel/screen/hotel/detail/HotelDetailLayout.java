@@ -29,8 +29,8 @@ import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.detail.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -57,7 +57,7 @@ public class HotelDetailLayout
     private LoopViewPager mViewPager;
     private DailyViewPagerIndicator mDailyViewPagerIndicator;
     private DailyPlaceDetailListView mListView;
-    private DetailImageViewPagerAdapter mImageAdapter;
+    private PlaceDetailImageViewPagerAdapter mImageAdapter;
     private HotelDetailListAdapter mListAdapter;
     private SaleRoomInformation mSelectedSaleRoomInformation;
 
@@ -103,7 +103,7 @@ public class HotelDetailLayout
         {
             if (mImageAdapter == null)
             {
-                mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
+                mImageAdapter = new PlaceDetailImageViewPagerAdapter(mActivity);
             }
 
             ArrayList<ImageInformation> arrayList = new ArrayList<>();
@@ -154,7 +154,7 @@ public class HotelDetailLayout
 
         if (mImageAdapter == null)
         {
-            mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
+            mImageAdapter = new PlaceDetailImageViewPagerAdapter(mActivity);
         }
 
         mImageAdapter.setData(hotelDetail.getImageInformationList());

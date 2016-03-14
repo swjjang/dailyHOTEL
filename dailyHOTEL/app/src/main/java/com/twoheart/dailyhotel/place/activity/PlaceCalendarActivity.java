@@ -1,9 +1,7 @@
-package com.twoheart.dailyhotel.screen.common.list;
+package com.twoheart.dailyhotel.place.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -15,10 +13,8 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -27,85 +23,14 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class CalendarActivity extends BaseActivity implements View.OnClickListener
+public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
-    private static final int HOTEL_DAYCOUNT_OF_MAX = 60;
-    private static final int GOURMET_DAYCOUNT_OF_MAX = 30;
-
-    private static final int HOTEL_ENABLE_DAYCOUNT_OF_MAX = 60;
-    private static final int GOURMET_ENABLE_DAYCOUNT_OF_MAX = 14;
-
-    private Constants.PlaceType mPlaceType;
-    private Day mCheckInDay;
-    private Day mCheckOutDay;
-
-    private View[] mDailyTextViews;
+    protected View[] mDailyTextViews;
     private DailyToolbarLayout mDailyToolbarLayout;
 
-    public static Intent newInstance(Context context, Constants.PlaceType placeType, SaleTime dailyTime)
-    {
-        Intent intent = new Intent(context, CalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-
-        return intent;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-
-        mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
-        SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
-
-        switch (mPlaceType)
-        {
-            case HOTEL:
-                initLayout(CalendarActivity.this, dailyTime//
-                    , HOTEL_ENABLE_DAYCOUNT_OF_MAX, HOTEL_DAYCOUNT_OF_MAX);
-                break;
-
-            case FNB:
-                initLayout(CalendarActivity.this, dailyTime//
-                    , GOURMET_ENABLE_DAYCOUNT_OF_MAX, GOURMET_DAYCOUNT_OF_MAX);
-                break;
-        }
-    }
-
-    @Override
-    protected void onStart()
-    {
-        switch (mPlaceType)
-        {
-            case HOTEL:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_CALENDAR, null);
-                break;
-
-            case FNB:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_CALENDAR, null);
-                break;
-        }
-
-        super.onStart();
-    }
-
-    private void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
         setContentView(R.layout.activity_calendar);
-
-        switch (mPlaceType)
-        {
-            case HOTEL:
-                initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
-                break;
-
-            case FNB:
-                initToolbar(getString(R.string.label_calendar_gourmet_select));
-                break;
-        }
 
         ViewGroup calendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
 
@@ -139,11 +64,22 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         mDailyTextViews[dayCountOfMax - 1].setEnabled(false);
     }
 
-    private void initToolbar(String title)
+    protected void initToolbar(String title)
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title);
+    }
+
+    protected void setToolbarText(String title)
+    {
+        if (mDailyToolbarLayout == null)
+        {
+            initToolbar(title);
+        } else
+        {
+            mDailyToolbarLayout.setToolbarText(title);
+        }
     }
 
     private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
@@ -266,107 +202,9 @@ public class CalendarActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onClick(View view)
+    protected static class Day
     {
-        Day day = (Day) view.getTag();
-        DailyTextView dailyTextView = (DailyTextView) view;
-
-        if (day == null)
-        {
-            return;
-        }
-
-        if (isLockUiComponent() == true)
-        {
-            return;
-        }
-
-        if (mCheckInDay == null)
-        {
-            mCheckInDay = day;
-            dailyTextView.setSelected(true);
-            dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
-
-            if (mPlaceType == PlaceType.FNB)
-            {
-                lockUiComponent();
-
-                Intent intent = new Intent();
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInDay.dayTime);
-
-                setResult(RESULT_OK, intent);
-                finish();
-            } else
-            {
-                mDailyToolbarLayout.setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
-
-                for (View textview : mDailyTextViews)
-                {
-                    if (view == textview)
-                    {
-                        break;
-                    } else
-                    {
-                        textview.setEnabled(false);
-                    }
-                }
-
-                mDailyTextViews[mDailyTextViews.length - 1].setEnabled(true);
-            }
-        } else
-        {
-            if (mPlaceType == PlaceType.FNB)
-            {
-                return;
-            }
-
-            if (mCheckInDay.dayTime == day.dayTime)
-            {
-                mCheckInDay = null;
-                view.setSelected(false);
-                dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
-
-                mDailyToolbarLayout.setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
-
-                for (View dailTextView : mDailyTextViews)
-                {
-                    if (view == dailTextView)
-                    {
-                        break;
-                    } else
-                    {
-                        dailTextView.setEnabled(true);
-                    }
-                }
-
-                mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
-                return;
-            }
-
-            if (mCheckInDay.dayTime.getOffsetDailyDay() >= day.dayTime.getOffsetDailyDay())
-            {
-                return;
-            }
-
-            lockUiComponent();
-            mCheckOutDay = day;
-
-            dailyTextView.setSelected(true);
-            dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
-
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInDay.dayTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, mCheckOutDay.dayTime);
-
-            setResult(RESULT_OK, intent);
-            finish();
-        }
-    }
-
-    private static class Day
-    {
-        SaleTime dayTime;
+        public SaleTime dayTime;
         String day;
         int dayOfWeek;
     }
