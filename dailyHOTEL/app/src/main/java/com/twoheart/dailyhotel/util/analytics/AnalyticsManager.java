@@ -219,6 +219,7 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_PAYMENT_AGREEMENT_POPUP = "DailyHotel_PaymentAgreementPopupScreen";
         public static final String DAILYHOTEL_PAYMENT_PROCESS = "DailyHotel_PaymentGateway";
         public static final String DAILYHOTEL_PAYMENT_COMPLETE = "DailyHotel_PaymentComplete";
+        public static final String DAILYHOTEL_PAYMENT_THANKYOU = "DailyHotel_Thankyou";
         //
         //
         public static final String DAILYGOURMET_LIST = "DailyGourmet_GourmetList";
@@ -237,6 +238,7 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_PAYMENT_AGREEMENT_POPUP = "DailyGourmet_PaymentAgreementPopupScreen";
         public static final String DAILYGOURMET_PAYMENT_PROCESS = "DailyGourmet_PaymentGateway";
         public static final String DAILYGOURMET_PAYMENT_COMPLETE = "DailyGourmet_PaymentComplete";
+        public static final String DAILYGOURMET_PAYMENT_THANKYOU = "DailyGourmet_Thankyou";
         //
         //
         public static final String BOOKING_LIST = "Booking_BookingStatusList";
@@ -320,6 +322,7 @@ public class AnalyticsManager
         //
         public static final String SATISFACTION_EVALUATION_POPPEDUP = "SatisfactionEvaluationPoppedup";
         //
+        public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
     }
 
     public static class Category
@@ -357,11 +360,13 @@ public class AnalyticsManager
         public static final String GOURMET_DISSATISFACTION = "GourmetDissatisfaction";
         public static final String GOURMET_CLOSE_BUTTON_CLICKED = "GourmetCloseButtonClicked";
         //
-        public static final String CURATION_MINUS_BUTTON_CLICKED = "MinusButtonClicked";
-        public static final String CURATION_PLUS_BUTTON_CLICKED = "PlusButtonClicked";
-        public static final String CURATION_RESET_BUTTON_CLICKED = "ResetButtonClicked";
-        public static final String CURATION_APPLY_BUTTON_CLICKED = "ApplyButtonClicked";
-        public static final String CURATION_CLOSE_BUTTON_CLICKED = "CloseButtonClicked";
+        public static final String MINUS_BUTTON_CLICKED = "MinusButtonClicked";
+        public static final String PLUS_BUTTON_CLICKED = "PlusButtonClicked";
+        public static final String RESET_BUTTON_CLICKED = "ResetButtonClicked";
+        public static final String APPLY_BUTTON_CLICKED = "ApplyButtonClicked";
+        public static final String CLOSE_BUTTON_CLICKED = "CloseButtonClicked";
+        //
+        public static final String VIEW_BOOKING_STATUS_CLICKED = "ViewBookingStatusClicked";
     }
 
     public static class UserType

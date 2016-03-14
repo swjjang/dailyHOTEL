@@ -527,7 +527,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
     protected void onComplete()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_APPLY_BUTTON_CLICKED, null);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.APPLY_BUTTON_CLICKED, null);
 
         Intent intent = new Intent();
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mHotelCurationOption);
@@ -547,7 +547,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
 
         finish();
     }
@@ -558,6 +558,6 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         resetCuration();
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_RESET_BUTTON_CLICKED, null);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.RESET_BUTTON_CLICKED, null);
     }
 }

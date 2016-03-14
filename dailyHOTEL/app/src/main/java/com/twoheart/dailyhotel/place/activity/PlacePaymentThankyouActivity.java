@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common;
+package com.twoheart.dailyhotel.place.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,26 +8,18 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-public class PaymentThankYouActivity extends BaseActivity implements OnClickListener
+public abstract class PlacePaymentThankyouActivity extends BaseActivity implements OnClickListener
 {
-    private static final String INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
-    private static final String INTENT_EXTRA_DATA_PLACE = "place";
-    private static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
-    private static final String INTENT_EXTRA_DATA_DATEL = "date";
+    protected static final String INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
+    protected static final String INTENT_EXTRA_DATA_PLACE = "place";
+    protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
+    protected static final String INTENT_EXTRA_DATA_DATEL = "date";
 
-    public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date)
-    {
-        Intent intent = new Intent(context, PaymentThankYouActivity.class);
-
-        intent.putExtra(INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_PLACE, place);
-        intent.putExtra(INTENT_EXTRA_DATA_PLACE_TYPE, placeType);
-        intent.putExtra(INTENT_EXTRA_DATA_DATEL, date);
-
-        return intent;
-    }
+    protected abstract void recordEvent(String action, String label);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,7 +90,11 @@ public class PaymentThankYouActivity extends BaseActivity implements OnClickList
         switch (v.getId())
         {
             case R.id.closeView:
+                recordEvent(AnalyticsManager.Action.THANKYOU_SCREEN_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED);
+                finish();
+                break;
             case R.id.confirmView:
+                recordEvent(AnalyticsManager.Action.THANKYOU_SCREEN_BUTTON_CLICKED, AnalyticsManager.Label.VIEW_BOOKING_STATUS_CLICKED);
                 finish();
                 break;
         }

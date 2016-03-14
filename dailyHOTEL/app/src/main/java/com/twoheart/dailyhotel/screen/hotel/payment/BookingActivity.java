@@ -66,7 +66,6 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.PaymentThankYouActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
@@ -1701,7 +1700,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
 
-        Intent intent = PaymentThankYouActivity.newInstance(this, imageUrl, saleRoomInformation.hotelName//
+        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, saleRoomInformation.hotelName//
             , saleRoomInformation.roomName, pay.checkInOutDate);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);

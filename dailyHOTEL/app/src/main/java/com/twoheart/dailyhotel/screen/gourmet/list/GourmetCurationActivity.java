@@ -557,7 +557,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     protected void onComplete()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_APPLY_BUTTON_CLICKED, null);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.APPLY_BUTTON_CLICKED, null);
 
         Intent intent = new Intent();
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mGourmetCurationOption);
@@ -577,7 +577,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_CLOSE_BUTTON_CLICKED, null);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
 
         finish();
     }
@@ -588,6 +588,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         resetCuration();
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CURATION_RESET_BUTTON_CLICKED, null);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.RESET_BUTTON_CLICKED, null);
     }
 }

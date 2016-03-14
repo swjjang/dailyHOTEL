@@ -31,7 +31,6 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.PaymentThankYouActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -439,7 +438,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         String time = formatDay.format(calendarTime.getTime());
         String date = String.format("%s %s", ticketPayment.checkInTime, time);
 
-        Intent intent = PaymentThankYouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
+        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
