@@ -14,7 +14,6 @@ public class HotelDetail
     public Hotel.HotelGrade grade;
     public String hotelName;
     public String address;
-    public String addressNatural;
     public double latitude;
     public double longitude;
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
@@ -41,14 +40,13 @@ public class HotelDetail
             grade = Hotel.HotelGrade.etc;
         }
 
-        hotelName = jsonObject.getString("hotel_name");
+        hotelName = jsonObject.getString("hotelName");
         address = jsonObject.getString("address");
-        addressNatural = jsonObject.getString("address_natural");
 
         longitude = jsonObject.getDouble("longitude");
         latitude = jsonObject.getDouble("latitude");
 
-        isOverseas = jsonObject.getBoolean("is_overseas");
+        isOverseas = jsonObject.getBoolean("isOverseas");
 
         if (jsonObject.has("rating") == true)
         {
@@ -56,8 +54,8 @@ public class HotelDetail
         }
 
         // Image Url
-        String imageUrl = jsonObject.getString("img_url");
-        JSONObject pahtUrlJSONObject = jsonObject.getJSONObject("img_path");
+        String imageUrl = jsonObject.getString("imgUrl");
+        JSONObject pahtUrlJSONObject = jsonObject.getJSONObject("imgPath");
 
         Iterator<String> iterator = pahtUrlJSONObject.keys();
         while (iterator.hasNext())
@@ -85,16 +83,16 @@ public class HotelDetail
             }
         }
 
-        if (jsonObject.has("hotel_benefit") == true)
+        if (jsonObject.has("hotelBenefit") == true)
         {
-            hotelBenefit = jsonObject.getString("hotel_benefit");
+            hotelBenefit = jsonObject.getString("hotelBenefit");
         }
 
         // Detail
         JSONArray detailJSONArray = jsonObject.getJSONArray("detail");
         int detailLength = detailJSONArray.length();
 
-        mInformationList = new ArrayList<DetailInformation>(detailLength);
+        mInformationList = new ArrayList<>(detailLength);
 
         for (int i = 0; i < detailLength; i++)
         {
@@ -102,7 +100,7 @@ public class HotelDetail
         }
 
         // Detail Info
-        JSONArray detailMoreJSONArray = jsonObject.getJSONArray("detail_more");
+        JSONArray detailMoreJSONArray = jsonObject.getJSONArray("detailMore");
         int detailMoreLength = detailMoreJSONArray.length();
 
         if (detailMoreLength == 0)
@@ -119,7 +117,7 @@ public class HotelDetail
         }
 
         // Room Sale Info
-        JSONArray saleRoomJSONArray = jsonObject.getJSONArray("room_sale_info");
+        JSONArray saleRoomJSONArray = jsonObject.getJSONArray("hotelRoomDetail");
         int saleRoomLength = saleRoomJSONArray.length();
 
         mSaleRoomList = new ArrayList<>(saleRoomLength);

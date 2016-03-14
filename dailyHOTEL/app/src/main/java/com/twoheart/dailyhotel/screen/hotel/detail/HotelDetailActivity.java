@@ -33,8 +33,8 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.common.detail.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.BookingActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -643,7 +643,7 @@ public class HotelDetailActivity extends BaseActivity
                 // 5	판매 마감시
                 switch (msgCode)
                 {
-                    case 0:
+                    case 100:
                     {
                         JSONObject dataJSONObject = response.getJSONObject("data");
 

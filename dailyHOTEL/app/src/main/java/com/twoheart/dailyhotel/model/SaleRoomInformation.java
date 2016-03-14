@@ -26,17 +26,17 @@ public class SaleRoomInformation implements Parcelable
 
     public SaleRoomInformation(String hotelName, JSONObject jsonObject, boolean isOverseas, int nights) throws Exception
     {
-        roomIndex = jsonObject.getInt("room_idx");
-        averageDiscount = jsonObject.getInt("discount_avg");
-        //        price = averageDiscount;
-        totalDiscount = jsonObject.getInt("discount_total");
-        roomName = jsonObject.getString("room_name").trim();
-        option = jsonObject.getString("option").trim();
-        //        amenities = option;
+        roomIndex = jsonObject.getInt("roomIdx");
+        averageDiscount = jsonObject.getInt("discountAvg");
+        price = jsonObject.getInt("price");
+        totalDiscount = jsonObject.getInt("discountTotal");
+        roomName = jsonObject.getString("roomName").trim();
+        option = jsonObject.getString("description1").trim();
+        amenities = jsonObject.getString("description2").trim();
 
-        if (jsonObject.has("room_benefit") == true)
+        if (jsonObject.has("roomBenefit") == true)
         {
-            roomBenefit = jsonObject.getString("room_benefit").trim();
+            roomBenefit = jsonObject.getString("roomBenefit").trim();
         }
 
         this.isOverseas = isOverseas;
