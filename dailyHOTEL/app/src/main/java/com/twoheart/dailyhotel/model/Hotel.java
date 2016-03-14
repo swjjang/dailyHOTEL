@@ -178,6 +178,11 @@ public class Hotel implements Parcelable
 
         JSONArray jsonArray = jsonObject.getJSONArray("hotelRoomElementList");
 
+        if (jsonArray == null || jsonArray.length() == 0)
+        {
+            return null;
+        }
+
         int length = jsonArray.length();
         HotelFilters hotelFilters = new HotelFilters(length);
         hotelFilters.categoryCode = categoryCode;

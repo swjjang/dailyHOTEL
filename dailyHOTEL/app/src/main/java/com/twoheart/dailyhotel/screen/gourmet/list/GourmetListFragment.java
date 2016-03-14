@@ -862,10 +862,17 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             ArrayList<GourmetFilters> gourmetFiltersList = new ArrayList<>(gourmetList.size());
 
+            GourmetFilters gourmetFilters;
+
             // 필터 정보 넣기
             for (Gourmet gourmet : gourmetList)
             {
-                gourmetFiltersList.add(gourmet.getFilters());
+                gourmetFilters = gourmet.getFilters();
+
+                if (gourmetFilters != null)
+                {
+                    gourmetFiltersList.add(gourmetFilters);
+                }
 
                 categoryCodeMap.put(gourmet.category, gourmet.categoryCode);
                 categorySequenceMap.put(gourmet.category, gourmet.categorySequence);
