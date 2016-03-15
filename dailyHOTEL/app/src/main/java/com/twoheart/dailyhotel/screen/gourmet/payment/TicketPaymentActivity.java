@@ -990,6 +990,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             }
         }
     };
+
     protected DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override

@@ -24,7 +24,6 @@ public class GourmetCurationOption extends PlaceCurationOption
         mFilterMap = new HashMap<>();
         mCategoryCodeMap = new HashMap<>();
         mCategorySequenceMap = new HashMap<>();
-
         mGourmetFiltersList = new ArrayList<>();
 
         clear();
