@@ -89,6 +89,9 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             contentLayout.addView(filterLayout);
 
             initAmenitiesLayout(filterLayout, mHotelCurationOption);
+        } else
+        {
+            requestUpdateResult();
         }
     }
 
@@ -331,9 +334,9 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
 
             resetLayout(mBedTypeLayout);
             resetLayout(mGridLayout);
-
-            requestUpdateResult();
         }
+
+        requestUpdateResult();
     }
 
     @Override

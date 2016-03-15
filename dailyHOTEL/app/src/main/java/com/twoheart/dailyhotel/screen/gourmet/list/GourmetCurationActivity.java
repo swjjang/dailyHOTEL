@@ -347,9 +347,9 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             resetLayout(mGridLayout);
             resetLayout(mAmenitiesLayout);
             resetLayout(mTimeRangeLayout);
-
-            requestUpdateResult();
         }
+
+        requestUpdateResult();
     }
 
     @Override
