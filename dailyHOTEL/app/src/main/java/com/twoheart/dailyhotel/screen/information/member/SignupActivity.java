@@ -68,7 +68,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private static final int MODE_USERINFO_UPDATE = 2;
 
     private EditText mPhoneTextView, mEmailEditText, mNameEditText, mPasswordEditText, mRecommenderEditText;
-    private TextView mSingupView;
     private View mFakeMobileView;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsCheckBox;
@@ -232,7 +231,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         mPhoneTextView = (EditText) findViewById(R.id.phoneEditText);
         mPhoneTextView.setCursorVisible(false);
 
-        mSingupView = (TextView) findViewById(R.id.btn_signup);
+        TextView singupView = (TextView) findViewById(R.id.btn_signup);
 
         if (user != null)
         {
@@ -260,7 +259,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
 
             mPasswordEditText.setVisibility(View.GONE);
-            mSingupView.setText(R.string.act_signup_btn_update);
+            singupView.setText(R.string.act_signup_btn_update);
 
             if (mRecommender >= 0)
             {
@@ -311,7 +310,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         });
 
-        mSingupView.setOnClickListener(this);
+        singupView.setOnClickListener(this);
 
         if (Util.isOverAPI23() == true)
         {

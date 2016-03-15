@@ -363,7 +363,6 @@ public class RegionListFragment extends BaseFragment
             //
             if (mAdapter.getChildrenCount(groupPosition) == 0)
             {
-                mAdapter.setSelected(mAdapter.getGroup(groupPosition));
                 mAdapter.notifyDataSetChanged();
 
                 if (mOnUserActionListener != null)
