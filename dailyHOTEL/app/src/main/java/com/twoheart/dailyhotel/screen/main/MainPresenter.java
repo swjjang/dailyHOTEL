@@ -279,7 +279,12 @@ public class MainPresenter implements Response.ErrorListener
                     String address = companyJSONObject.getString("address1");
                     String phoneNumber = companyJSONObject.getString("phoneNumber1");
                     String fax = companyJSONObject.getString("fax1");
-                    String privacyEmail = "privacy.korea@dailyhotel.com";//companyJSONObject.getString("privacy");
+                    String privacyEmail = null;
+
+                    if (companyJSONObject.has("privacyManager") == true)
+                    {
+                        privacyEmail = companyJSONObject.getString("privacyManager");
+                    }
 
                     DailyPreference.getInstance(mBaseActivity).setCompanyInformation(companyName//
                         , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax, privacyEmail);
