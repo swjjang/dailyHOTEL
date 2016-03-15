@@ -103,7 +103,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
     protected abstract void showFinalCheckDialog();
 
-    protected abstract void showPaymentResult(TicketPayment ticketPayment, String imageUrl);
+    protected abstract void showPaymentThankyou(TicketPayment ticketPayment, String imageUrl);
 
     protected abstract Dialog getPaymentConfirmDialog(int type);
 
@@ -240,7 +240,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     {
                         recordPurchaseComplete(mTicketPayment);
 
-                        showPaymentResult(mTicketPayment, mPlaceImageUrl);
+                        showPaymentThankyou(mTicketPayment, mPlaceImageUrl);
                     }
                     return;
 

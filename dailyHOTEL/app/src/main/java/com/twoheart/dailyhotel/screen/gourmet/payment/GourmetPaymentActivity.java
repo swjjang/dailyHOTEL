@@ -422,7 +422,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     }
 
     @Override
-    protected void showPaymentResult(TicketPayment ticketPayment, String imageUrl)
+    protected void showPaymentThankyou(TicketPayment ticketPayment, String imageUrl)
     {
         TicketInformation ticketInformation = ticketPayment.getTicketInformation();
 
@@ -1106,7 +1106,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     // 결제 관련 로그 남기기
                     recordPurchaseComplete(mTicketPayment);
 
-                    showPaymentResult(mTicketPayment, mPlaceImageUrl);
+                    showPaymentThankyou(mTicketPayment, mPlaceImageUrl);
                 } else
                 {
                     int resultCode = 0;

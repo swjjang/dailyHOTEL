@@ -927,7 +927,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
                     recordPurchaseComplete(mPay);
 
-                    showPaymentResult(mPay, mPlaceImageUrl);
+                    showPaymentThankyou(mPay, mPlaceImageUrl);
                     return;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
@@ -1088,7 +1088,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                 {
                                     recordPurchaseComplete(mPay);
 
-                                    showPaymentResult(mPay, mPlaceImageUrl);
+                                    showPaymentThankyou(mPay, mPlaceImageUrl);
                                     return;
                                 }
 
@@ -1349,13 +1349,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 break;
 
             case VBANK:
-                //                showPaymentResult(mPay, mPlaceImageUrl);
-                //
-                //                if(true)
-                //                {
-                //                    return;
-                //                }
-
                 // 가상계좌 입금을 선택했을 경우
                 mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
                 break;
@@ -1685,7 +1678,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
     }
 
-    private void showPaymentResult(Pay pay, String imageUrl)
+    private void showPaymentThankyou(Pay pay, String imageUrl)
     {
         SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
 
