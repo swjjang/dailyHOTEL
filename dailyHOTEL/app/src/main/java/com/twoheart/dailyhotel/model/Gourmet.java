@@ -90,7 +90,13 @@ public class Gourmet extends Place implements Parcelable
                 }
             }
 
-            mGourmetFilters = makeGourmetFilters(category, jsonObject.getJSONArray("restaurantTicketList"));
+            boolean isParking = false;
+            if (jsonObject.has("parking") == true)
+            {
+                isParking = "Y".equalsIgnoreCase(jsonObject.getString("parking")) ? true : false;
+            }
+
+            mGourmetFilters = makeGourmetFilters(category, isParking, jsonObject.getJSONArray("restaurantTicketList"));
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -116,7 +122,7 @@ public class Gourmet extends Place implements Parcelable
         return mGourmetFilters;
     }
 
-    private GourmetFilters makeGourmetFilters(String category, JSONArray jsonArray) throws JSONException
+    private GourmetFilters makeGourmetFilters(String category, boolean isParking, JSONArray jsonArray) throws JSONException
     {
         if (jsonArray == null || jsonArray.length() == 0)
         {
@@ -126,6 +132,7 @@ public class Gourmet extends Place implements Parcelable
         int length = jsonArray.length();
         GourmetFilters gourmetFilters = new GourmetFilters(length);
         gourmetFilters.category = category;
+        gourmetFilters.isParking = isParking;
 
         for (int i = 0; i < length; i++)
         {

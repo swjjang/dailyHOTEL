@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.booking;
+package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,11 +9,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
 
-public class NameInfoWindowAdapter implements InfoWindowAdapter
+public class PlaceNameInfoWindowAdapter implements InfoWindowAdapter
 {
     private LayoutInflater mLayoutInflaterinflater = null;
 
-    public NameInfoWindowAdapter(Context context)
+    public PlaceNameInfoWindowAdapter(Context context)
     {
         mLayoutInflaterinflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

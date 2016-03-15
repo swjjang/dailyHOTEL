@@ -86,7 +86,7 @@ public interface Constants
     public static final String URL_WEB_PRIVACY = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/privacy/" : "NzgkNDYkNDkkMzckMTgk$QzkwQkRGODU1ODQ3OTHQ1RUE2NkRENzczRDVEMY0QyOTU2MDQAyHMDJBRDlCMTQzRjhEMzhCNTdGNTUxQjAEyQ0JCQzFDMzQ5RUIyQkJCOEQzQzlGMzhDMjQ1Qjg5MkZGRDBE$";
     public static final String URL_WEB_TERMS = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/terms/" : "MTA3JDk5JDk5JDExNiQ4MCQ=$QjVFNzE2QUQ1QUU4MEEyMEU5MTlBN0NDOUI5MEVBNDIyNjkwNjFENDgxNDQyMkMxNTE5MEYzMjY1RURGYNjQ2NjNEMjQ5MkU2NjFQODQ0YxQkEM2MUFEMZzc5MjI2NjBGMzgy$";
     public static final String URL_WEB_ABOUT = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/about/" : "OTkkMjQkMjQkNjAkNjgk$Mjc3NTgwNDUzNTEwQzdERkM1WYQzMyQkIxNzhENTk0N0M3RjdFMzYyMDJBNDKc2MjM3NJkU1NzhBOERDMzUyRUZDNzZDODUxNDQ5QkMUzQzMwQkJERTZFNDY4NTU1RDJEODFD$";
-    public static final String URL_WEB_LOCATION_TERMS = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/privacy/" : "";
+    public static final String URL_WEB_LOCATION_TERMS = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/location/" : "NDAkNDYkMTA1JDExNiQ1MyQ=$RTZFQTM1NkJCOEQzMEJCNDZFQTYwOUUzMkJEQzEzTMEQzNFjk4NzAA2NjZDNEY5REUxMzAxMTg1QjhFMUU2QzkyRUMwRDFCMDExRjExN0IG5RkFERkY0RBjM0NERBNEIyMjNB$";
 
     // Payment App GoogleStore URL
     public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";

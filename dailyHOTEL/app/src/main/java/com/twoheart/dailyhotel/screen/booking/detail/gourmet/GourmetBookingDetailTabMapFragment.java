@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
-import com.twoheart.dailyhotel.screen.booking.NameInfoWindowAdapter;
+import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -183,7 +183,7 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             LatLng address = new LatLng(lat, lng);
             CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-            mGoogleMap.setInfoWindowAdapter(new NameInfoWindowAdapter(baseActivity));
+            mGoogleMap.setInfoWindowAdapter(new PlaceNameInfoWindowAdapter(baseActivity));
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
             {
                 @Override

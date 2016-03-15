@@ -10,9 +10,9 @@ import java.util.HashMap;
 
 public class GourmetFilters implements Parcelable
 {
-
     private GourmetFilter[] mGourmetFilterArray;
     public String category;
+    public boolean isParking;
 
     public GourmetFilters(int size)
     {
@@ -79,7 +79,7 @@ public class GourmetFilters implements Parcelable
 
         for (GourmetFilter gourmetFilter : mGourmetFilterArray)
         {
-            if (gourmetFilter.isParkingFiltered(isParking) == true)
+            if (this.isParking == isParking)
             {
                 return true;
             }
@@ -93,12 +93,14 @@ public class GourmetFilters implements Parcelable
     {
         dest.writeTypedArray(mGourmetFilterArray, flags);
         dest.writeString(category);
+        dest.writeInt(isParking ? 1 : 0);
     }
 
     private void readFromParcel(Parcel in)
     {
         mGourmetFilterArray = (GourmetFilter[]) in.createTypedArray(GourmetFilter.CREATOR);
         category = in.readString();
+        isParking = in.readInt() == 1 ? true : false;
     }
 
     @Override

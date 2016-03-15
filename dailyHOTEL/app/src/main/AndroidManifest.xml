@@ -187,7 +187,11 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".screen.common.PaymentResultActivity"
+            android:name=".screen.hotel.payment.HotelPaymentThankyouActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.payment.GourmetPaymentThankyouActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

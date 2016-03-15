@@ -103,7 +103,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
     protected abstract void showFinalCheckDialog();
 
-    protected abstract void showPaymentResult(TicketPayment ticketPayment, String imageUrl);
+    protected abstract void showPaymentThankyou(TicketPayment ticketPayment, String imageUrl);
 
     protected abstract Dialog getPaymentConfirmDialog(int type);
 
@@ -238,8 +238,9 @@ public abstract class TicketPaymentActivity extends BaseActivity
                         activityResulted(requestCode, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, intent);
                     } else
                     {
-                        writeLogPaid(mTicketPayment);
-                        showPaymentResult(mTicketPayment, mPlaceImageUrl);
+                        recordPurchaseComplete(mTicketPayment);
+
+                        showPaymentThankyou(mTicketPayment, mPlaceImageUrl);
                     }
                     return;
 
@@ -788,7 +789,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
         return params;
     }
 
-    protected void writeLogPaid(TicketPayment ticketPayment)
+    protected void recordPurchaseComplete(TicketPayment ticketPayment)
     {
         try
         {
