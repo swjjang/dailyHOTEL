@@ -11,7 +11,7 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
 {
     public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date)
     {
-        Intent intent = new Intent(context, PlacePaymentThankyouActivity.class);
+        Intent intent = new Intent(context, HotelPaymentThankyouActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE, place);

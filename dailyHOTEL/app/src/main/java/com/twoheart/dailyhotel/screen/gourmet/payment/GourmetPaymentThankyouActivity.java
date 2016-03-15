@@ -11,7 +11,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
 {
     public static Intent newInstance(Context context, String imageUrl, String place, String placeType, String date)
     {
-        Intent intent = new Intent(context, PlacePaymentThankyouActivity.class);
+        Intent intent = new Intent(context, GourmetPaymentThankyouActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE, place);
