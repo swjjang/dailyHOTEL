@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
-import com.twoheart.dailyhotel.screen.booking.NameInfoWindowAdapter;
+import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -200,7 +200,7 @@ public class ZoomMapActivity extends BaseActivity
             CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-            googleMap.setInfoWindowAdapter(new NameInfoWindowAdapter(this));
+            googleMap.setInfoWindowAdapter(new PlaceNameInfoWindowAdapter(this));
             googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
             {
                 @Override
