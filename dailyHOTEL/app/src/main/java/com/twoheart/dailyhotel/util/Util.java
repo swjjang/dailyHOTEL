@@ -91,7 +91,13 @@ public class Util implements Constants
         Fresco.initialize(context, imagePipelineConfig);
         System.loadLibrary("webp");
 
-        Fresco.getImagePipelineFactory().getMainDiskStorageCache().clearAll();
+        try
+        {
+            Fresco.getImagePipelineFactory().getMainDiskStorageCache().clearAll();
+        } catch (UnsatisfiedLinkError e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     public static void requestImageResize(Context context, com.facebook.drawee.view.SimpleDraweeView simpleDraweeView, String imageUrl)
