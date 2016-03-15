@@ -15,8 +15,7 @@
         android:layout_height="50dp"
         android:layout_above="@+id/contentScrollView"
         android:background="@color/white"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        >
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/resetCurationView"
@@ -26,7 +25,8 @@
             android:paddingRight="10dp"
             android:text="@string/label_reset"
             android:textColor="@color/curation_information_text"
-            android:textSize="13dp"/>
+            android:textSize="13dp"
+            android:paddingLeft="10dp"/>
 
         <ImageView
             android:id="@+id/closeView"
@@ -35,8 +35,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="right"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/navibar_ic_x"/>
+            android:src="@drawable/navibar_ic_x"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/resultCountView"
