@@ -1088,19 +1088,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                 {
                                     recordPurchaseComplete(mPay);
 
-                                    posListener = new View.OnClickListener()
-                                    {
-                                        @Override
-                                        public void onClick(View view)
-                                        {
-                                            mDoReload = true;
-                                            mAliveCallSource = "";
-
-                                            setResult(RESULT_OK);
-                                            finish();
-                                        }
-                                    };
-                                    break;
+                                    showPaymentResult(mPay, mPlaceImageUrl);
+                                    return;
                                 }
 
                                 case 1001:

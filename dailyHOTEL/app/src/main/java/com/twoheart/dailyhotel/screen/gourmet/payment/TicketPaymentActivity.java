@@ -239,6 +239,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     } else
                     {
                         recordPurchaseComplete(mTicketPayment);
+
                         showPaymentResult(mTicketPayment, mPlaceImageUrl);
                     }
                     return;
