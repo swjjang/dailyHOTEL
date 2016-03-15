@@ -18,6 +18,7 @@ public class HotelCurationOption extends PlaceCurationOption
 
     public HotelCurationOption()
     {
+        mCategory = Category.ALL;
         mHotelFiltersList = new ArrayList<>();
 
         clear();
@@ -25,6 +26,7 @@ public class HotelCurationOption extends PlaceCurationOption
 
     public HotelCurationOption(Parcel in)
     {
+        mCategory = Category.ALL;
         mHotelFiltersList = new ArrayList<>();
 
         clear();
@@ -63,7 +65,6 @@ public class HotelCurationOption extends PlaceCurationOption
 
         person = HotelFilter.MIN_PERSON;
         flagBedTypeFilters = HotelFilter.FLAG_HOTEL_FILTER_BED_NONE;
-        mCategory = Category.ALL;
         flagAmenitiesFilters = HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
     }
 
