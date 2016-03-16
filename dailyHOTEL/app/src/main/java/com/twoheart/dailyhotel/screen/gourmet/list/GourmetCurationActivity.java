@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -176,14 +175,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                     filterMap.remove(key);
 
                     AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                        , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCHECKED, key, null);
+                        , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, key, null);
                 } else
                 {
                     dailyTextView.setSelected(true);
                     filterMap.put(key, 0);
 
                     AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                        , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CHECKED, key, null);
+                        , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);
                 }
 
                 requestUpdateResultDelayed();
@@ -226,6 +225,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         mAmenitiesLayout = (ViewGroup) view.findViewById(R.id.amenitiesLayout);
 
         View parkingCheckView = mAmenitiesLayout.findViewById(R.id.parkingCheckView);
+        parkingCheckView.setTag(parkingCheckView.getId(), "ParkingAvailable");
 
         parkingCheckView.setSelected(gourmetCurationOption.isParking);
         parkingCheckView.setOnClickListener(this);
@@ -297,14 +297,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             gourmetCurationOption.isParking = false;
 
             AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCHECKED, ((TextView) view).getText().toString(), null);
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, (String) view.getTag(view.getId()), null);
         } else
         {
             view.setSelected(true);
             gourmetCurationOption.isParking = true;
 
             AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CHECKED, ((TextView) view).getText().toString(), null);
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, (String) view.getTag(view.getId()), null);
         }
 
         requestUpdateResultDelayed();
@@ -318,14 +318,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             mGourmetCurationOption.flagTimeFilter ^= flag;
 
             AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCHECKED, (String) view.getTag(), null);
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, (String) view.getTag(), null);
         } else
         {
             view.setSelected(true);
             mGourmetCurationOption.flagTimeFilter |= flag;
 
             AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CHECKED, (String) view.getTag(), null);
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, (String) view.getTag(), null);
         }
 
         requestUpdateResultDelayed();
@@ -481,7 +481,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             return;
         }
 
-        String label = radioButton.getText().toString();
+        String label = "District";
 
         boolean isChecked = radioButton.isChecked();
 
@@ -494,22 +494,27 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             case R.id.regionCheckView:
                 mGourmetCurationOption.setSortType(SortType.DEFAULT);
+                label = "District";
                 break;
 
             case R.id.distanceCheckView:
                 mGourmetCurationOption.setSortType(SortType.DISTANCE);
+                label = "Distance";
                 break;
 
             case R.id.lowPriceCheckView:
                 mGourmetCurationOption.setSortType(SortType.LOW_PRICE);
+                label = "LowtoHighPrice";
                 break;
 
             case R.id.highPriceCheckView:
                 mGourmetCurationOption.setSortType(SortType.HIGH_PRICE);
+                label = "HightoLowPrice";
                 break;
 
             case R.id.satisfactionCheckView:
                 mGourmetCurationOption.setSortType(SortType.SATISFACTION);
+                label = "Rating";
                 break;
 
             default:
@@ -517,7 +522,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CHECKED, label, null);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, null);
     }
 
     @Override

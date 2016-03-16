@@ -233,8 +233,21 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
+                String viewType = "List";
+
+                switch (mViewType)
+                {
+                    case LIST:
+                        viewType = "List";
+                        break;
+
+                    case MAP:
+                        viewType = "Map";
+                        break;
+                }
+
                 AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, mViewType.name(), null);
+                    , Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, viewType, null);
             }
         });
     }
