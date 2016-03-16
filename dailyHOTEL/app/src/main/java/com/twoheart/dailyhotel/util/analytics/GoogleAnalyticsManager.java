@@ -73,20 +73,16 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         {
             if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
             {
-                checkoutStep(1, null, params);
-                recordScreen(screen, null);
+                checkoutStep(1, screen, null, params);
             } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
             {
-                checkoutStep(2, null, params);
-                recordScreen(screen, null);
+                checkoutStep(2, screen, null, params);
             } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
             {
-                checkoutStep(3, null, params);
-                recordScreen(screen, null);
+                checkoutStep(3, screen, null, params);
             } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
             {
-                checkoutStep(4, null, params);
-                recordScreen(screen, null);
+                checkoutStep(4, screen, null, params);
             }
         }
     }
@@ -362,7 +358,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         return screenViewBuilder;
     }
 
-    private void checkoutStep(int step, String transId, Map<String, String> params)
+    private void checkoutStep(int step, String screen, String transId, Map<String, String> params)
     {
         String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
@@ -389,6 +385,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
         mGoogleAnalyticsTracker.set("&cu", "KRW");
+        mGoogleAnalyticsTracker.setScreenName(screen);
         mGoogleAnalyticsTracker.send(screenViewBuilder.build());
 
         if (DEBUG == true)
