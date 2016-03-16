@@ -392,10 +392,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);
 
-            Dialog shareDialog = new Dialog(PlaceDetailActivity.this);
+            final Dialog shareDialog = new Dialog(PlaceDetailActivity.this);
             shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-            shareDialog.setCanceledOnTouchOutside(false);
+            shareDialog.setCanceledOnTouchOutside(true);
 
             // 버튼
             View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
@@ -405,6 +405,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 @Override
                 public void onClick(View v)
                 {
+                    if (shareDialog.isShowing() == true)
+                    {
+                        shareDialog.dismiss();
+                    }
+
                     if (mDefaultImageUrl == null)
                     {
                         if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)

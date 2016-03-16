@@ -32,8 +32,9 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.Locale;
+
+import io.fabric.sdk.android.Fabric;
 
 public class DailyHotel extends Application implements Constants
 {
