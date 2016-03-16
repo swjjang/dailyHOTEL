@@ -47,6 +47,12 @@ public class HotelClusterRenderer extends DefaultClusterRenderer<HotelClusterIte
     @Override
     protected void onBeforeClusterRendered(Cluster<HotelClusterItem> cluster, MarkerOptions markerOptions)
     {
+        if (cluster == null || cluster.getSize() == 0)
+        {
+            markerOptions.visible(false);
+            return;
+        }
+
         if (mOnClusterRenderedListener != null)
         {
             mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER);
