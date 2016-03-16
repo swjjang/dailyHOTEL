@@ -205,14 +205,14 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
                     mHotelCurationOption.flagAmenitiesFilters ^= flag.intValue();
 
                     AnalyticsManager.getInstance(HotelCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCHECKED, ((TextView) v).getText().toString(), null);
+                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
                     mHotelCurationOption.flagAmenitiesFilters |= flag.intValue();
 
                     AnalyticsManager.getInstance(HotelCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CHECKED, ((TextView) v).getText().toString(), null);
+                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
                 }
 
                 requestUpdateResultDelayed();
@@ -226,6 +226,14 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             , getString(R.string.label_parking)//
             , getString(R.string.label_pool)//
             , getString(R.string.label_fitness)};
+
+        final String[] analytics = new String[]{"Wifi"//
+            , "FreeBreakfast"//
+            , "Kitchen"//
+            , "Bathtub"//
+            , "ParkingAvailable"//
+            , "Pool"//
+            , "Fitness"};
 
         final int[] amenitiesResId = new int[]{R.drawable.selector_filter_amenities_wifi_button//
             , R.drawable.selector_filter_amenities_breakfast_button//
@@ -250,6 +258,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             DailyTextView amenitiesView = getGridLayoutItemView(amenities[i], amenitiesResId[i], false);
             amenitiesView.setOnClickListener(onClickListener);
             amenitiesView.setTag(amenitiesflag[i]);
+            amenitiesView.setTag(amenitiesView.getId(), analytics[i]);
 
             if ((hotelCurationOption.flagAmenitiesFilters & amenitiesflag[i]) == amenitiesflag[i])
             {
@@ -440,7 +449,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             return;
         }
 
-        String label = radioButton.getText().toString();
+        String label = "District";
 
         boolean isChecked = radioButton.isChecked();
 
@@ -453,22 +462,27 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         {
             case R.id.regionCheckView:
                 mHotelCurationOption.setSortType(SortType.DEFAULT);
+                label = "District";
                 break;
 
             case R.id.distanceCheckView:
                 mHotelCurationOption.setSortType(SortType.DISTANCE);
+                label = "Distance";
                 break;
 
             case R.id.lowPriceCheckView:
                 mHotelCurationOption.setSortType(SortType.LOW_PRICE);
+                label = "LowtoHighPrice";
                 break;
 
             case R.id.highPriceCheckView:
                 mHotelCurationOption.setSortType(SortType.HIGH_PRICE);
+                label = "HightoLowPrice";
                 break;
 
             case R.id.satisfactionCheckView:
                 mHotelCurationOption.setSortType(SortType.SATISFACTION);
+                label = "Rating";
                 break;
 
             default:
@@ -476,7 +490,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CHECKED, label, null);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, null);
     }
 
     @Override
@@ -504,24 +518,24 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
                 updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CHECKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCHECKED//
-                    , HotelFilter.DOUBLE, null);
+                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
+                    , "Double", null);
                 break;
 
             case R.id.twinCheckView:
                 updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CHECKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCHECKED//
-                    , HotelFilter.TWIN, null);
+                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
+                    , "Twin", null);
                 break;
 
             case R.id.heatedFloorsCheckView:
                 updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CHECKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCHECKED//
-                    , HotelFilter.HEATEDFLOORS, null);
+                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
+                    , "Ondol", null);
                 break;
         }
     }
