@@ -490,14 +490,14 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
                 updatePersonFilter(mHotelCurationOption.person - 1);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mHotelCurationOption.person), null);
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mHotelCurationOption.person), null);
                 break;
 
             case R.id.plusPersonView:
                 updatePersonFilter(mHotelCurationOption.person + 1);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mHotelCurationOption.person), null);
+                    , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mHotelCurationOption.person), null);
                 break;
 
             case R.id.doubleCheckView:
