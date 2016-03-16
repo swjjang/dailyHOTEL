@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -31,6 +32,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.Locale;
 
 public class DailyHotel extends Application implements Constants
@@ -55,7 +57,7 @@ public class DailyHotel extends Application implements Constants
             //                }
             //            });
 
-            io.fabric.sdk.android.Fabric.with(this, new com.crashlytics.android.Crashlytics());
+            Fabric.with(this, new com.crashlytics.android.Crashlytics(), new Crashlytics());
         }
 
         mInstance = this;
