@@ -34,11 +34,9 @@ public class HotelFilters implements Parcelable
 
     public boolean isFiltered(HotelCurationOption curationOption)
     {
-        for(HotelFilter hotelFilter : mHotelFilterArray)
+        for (HotelFilter hotelFilter : mHotelFilterArray)
         {
-            if(hotelFilter.isPersonFiltered(curationOption.person) == true
-                && hotelFilter.isBedTypeFiltered(curationOption.flagBedTypeFilters) == true
-                && hotelFilter.isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true)
+            if (hotelFilter.isPersonFiltered(curationOption.person) == true && hotelFilter.isBedTypeFiltered(curationOption.flagBedTypeFilters) == true && hotelFilter.isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true)
             {
                 return true;
             }
@@ -46,9 +44,9 @@ public class HotelFilters implements Parcelable
 
         return false;
 
-//        return (isPersonFiltered(curationOption.person) == true//
-//            && isBedTypeFiltered(curationOption.flagBedTypeFilters) == true//
-//            && isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true);
+        //        return (isPersonFiltered(curationOption.person) == true//
+        //            && isBedTypeFiltered(curationOption.flagBedTypeFilters) == true//
+        //            && isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true);
     }
 
     private boolean isPersonFiltered(int person)

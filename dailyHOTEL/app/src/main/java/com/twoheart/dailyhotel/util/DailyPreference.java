@@ -359,7 +359,12 @@ public class DailyPreference
             mEditor.putString(KEY_COMPANY_ADDRESS, address);
             mEditor.putString(KEY_COMPANY_PHONENUMBER, phoneNumber);
             mEditor.putString(KEY_COMPANY_FAX, fax);
-            mEditor.putString(KEY_COMPANY_PRIVACY_EMAIL, email);
+
+            if (Util.isTextEmpty(email) == false)
+            {
+                mEditor.putString(KEY_COMPANY_PRIVACY_EMAIL, email);
+            }
+
             mEditor.apply();
         }
     }

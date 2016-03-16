@@ -108,7 +108,7 @@ public class Hotel implements Parcelable
             }
 
             index = jsonObject.getInt("hotelIdx");
-            isSoldOut = jsonObject.getBoolean("isSoldout");
+            isSoldOut = jsonObject.getBoolean("isSoldOut");
             detailRegion = jsonObject.getString("districtName");
             categoryCode = jsonObject.getString("category");
             latitude = jsonObject.getDouble("latitude");

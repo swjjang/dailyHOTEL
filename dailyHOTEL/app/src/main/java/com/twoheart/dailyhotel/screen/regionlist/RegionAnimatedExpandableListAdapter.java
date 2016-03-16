@@ -24,7 +24,6 @@ import java.util.List;
 public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListAdapter
 {
     private LayoutInflater mInflater;
-    private Province mSelectedProvince;
     private List<RegionViewItem> items;
     private View.OnClickListener mOnItemclickListener;
 
@@ -36,11 +35,6 @@ public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListA
     public void setData(List<RegionViewItem> items)
     {
         this.items = items;
-    }
-
-    public void setSelected(Province province)
-    {
-        mSelectedProvince = province;
     }
 
     public void setOnChildClickListener(View.OnClickListener listener)

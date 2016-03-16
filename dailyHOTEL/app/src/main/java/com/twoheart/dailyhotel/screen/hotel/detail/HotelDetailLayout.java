@@ -52,7 +52,6 @@ public class HotelDetailLayout
     public static final int STATUS_SOLD_OUT = 3;
 
     private HotelDetail mHotelDetail;
-    private SaleTime mCheckInSaleTime;
     private BaseActivity mActivity;
     private LoopViewPager mViewPager;
     private DailyViewPagerIndicator mDailyViewPagerIndicator;
@@ -150,7 +149,6 @@ public class HotelDetailLayout
         }
 
         mHotelDetail = hotelDetail;
-        mCheckInSaleTime = checkInSaleTime;
 
         if (mImageAdapter == null)
         {
@@ -164,7 +162,7 @@ public class HotelDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new HotelDetailListAdapter((FragmentActivity) mActivity, hotelDetail, mCheckInSaleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
+            mListAdapter = new HotelDetailListAdapter((FragmentActivity) mActivity, hotelDetail, checkInSaleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         }
 

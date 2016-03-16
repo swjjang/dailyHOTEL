@@ -49,6 +49,12 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterIte
     @Override
     protected void onBeforeClusterRendered(Cluster<PlaceClusterItem> cluster, MarkerOptions markerOptions)
     {
+        if (cluster == null || cluster.getSize() == 0)
+        {
+            markerOptions.visible(false);
+            return;
+        }
+
         if (mOnClusterRenderedListener != null)
         {
             mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER);
