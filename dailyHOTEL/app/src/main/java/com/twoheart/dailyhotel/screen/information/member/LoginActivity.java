@@ -52,7 +52,6 @@ import com.kakao.util.exception.KakaoException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.ForgotPasswordActivity;
@@ -838,7 +837,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     if (isSignin == true)
                     {
-                        VolleyHttpClient.createCookie();
+                        JSONObject tokenJSONObject = response.getJSONObject("token");
+                        String accessToken = tokenJSONObject.getString("access_token");
+                        String tokenType = tokenJSONObject.getString("token_type");
+
+                        DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", accessToken, tokenType));
                         storeLoginInfo();
 
                         DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
@@ -879,7 +882,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                 if (isSignin == true)
                 {
-                    VolleyHttpClient.createCookie();
+                    JSONObject tokenJSONObject = response.getJSONObject("token");
+                    String accessToken = tokenJSONObject.getString("access_token");
+                    String tokenType = tokenJSONObject.getString("token_type");
+
+                    DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", accessToken, tokenType));
                     storeLoginInfo();
 
                     DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);

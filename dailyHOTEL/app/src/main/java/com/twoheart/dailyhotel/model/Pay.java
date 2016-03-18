@@ -7,7 +7,6 @@ public class Pay implements Parcelable
 {
     public int credit;
     public int hotelIndex;
-    public String checkInOutDate;
     public boolean isDBenefit;
     public Hotel.HotelGrade grade;
     private SaleRoomInformation mSaleRoomInformation;
@@ -16,6 +15,8 @@ public class Pay implements Parcelable
     private boolean isSaleCredit;
     private Type mType;
     private Guest mGuest;
+    //
+    public String checkInOutDate;
 
     public Pay()
     {

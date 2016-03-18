@@ -20,17 +20,21 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.model.Customer;
+import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -39,8 +43,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.FinalCheckLayout;
-import com.twoheart.dailyhotel.view.GourmetPaymentLayout;
-import com.twoheart.dailyhotel.view.GourmetPaymentLayout.UserInformationType;
 import com.twoheart.dailyhotel.view.widget.DailySignatureView;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
@@ -50,19 +52,21 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})
-public class GourmetPaymentActivity extends TicketPaymentActivity
+public class GourmetPaymentActivity extends PlacePaymentActivity
 {
-    private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
-    private static final int REQUEST_CODE_PAYMETRESULT_ACTIVITY = 10001;
-
     private GourmetPaymentLayout mGourmetPaymentLayout;
+    //
     private boolean mIsChangedTime;
+    private boolean mIsChangedPrice; // 가격이 변경된 경우.
+    private String mPlaceImageUrl;
+    private boolean mIsEditMode;
 
     public interface OnUserActionListener
     {
@@ -76,7 +80,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
         void showCreditCardManager();
 
-        void setPaymentType(TicketPayment.PaymentType type);
+        void setPaymentType(PlacePaymentInformation.PaymentType type);
 
         void pay();
 
@@ -105,32 +109,38 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     {
         super.onCreate(savedInstanceState);
 
-        mTicketPayment = new TicketPayment();
-        mGourmetPaymentLayout = new GourmetPaymentLayout(this, mOnUserActionListener);
+        setContentView(R.layout.activity_booking_place);
 
-        setContentView(mGourmetPaymentLayout.getLayout());
+        mPaymentInformation = new GourmetPaymentInformation();
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null)
+        Intent intent = getIntent();
+
+        if (intent == null)
         {
-            mTicketPayment.setTicketInformation((TicketInformation) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
-            mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
-            mPlaceImageUrl = bundle.getString(NAME_INTENT_EXTRA_DATA_URL);
-            mTicketPayment.placeIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_GOURMETIDX);
-            mTicketPayment.category = bundle.getString(NAME_INTENT_EXTRA_DATA_CATEGORY);
-            mTicketPayment.isDBenefit = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DBENEFIT);
+            finish();
+            return;
         }
 
-        if (mTicketPayment.getTicketInformation() == null)
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+        gourmetPaymentInformation.setTicketInformation((TicketInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
+        mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
+        gourmetPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, -1);
+        gourmetPaymentInformation.category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
+        gourmetPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
+
+        if (gourmetPaymentInformation.getTicketInformation() == null)
         {
             finish();
             return;
         }
 
         mIsChangedPrice = false;
-        mDoReload = true;
+        mIsChangedTime = false;
 
-        initToolbar(mTicketPayment.getTicketInformation().placeName);
+        initToolbar(gourmetPaymentInformation.getTicketInformation().placeName);
+        initLayout();
     }
 
     private void initToolbar(String title)
@@ -154,78 +164,48 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+    private void initLayout()
     {
-        unLockUI();
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollLayout);
 
-        switch (requestCode)
-        {
-            case REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY:
-            {
-                if (resultCode == RESULT_OK && intent != null)
-                {
-                    String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
-
-                    mTicketPayment.getGuest().phone = mobileNumber;
-
-                    mGourmetPaymentLayout.updateUserInformationLayout(mobileNumber);
-                }
-                break;
-            }
-
-            case REQUEST_CODE_PAYMETRESULT_ACTIVITY:
-            {
-                mState = STATE_NONE;
-                mDoReload = true;
-
-                setResult(RESULT_OK);
-                finish();
-                return;
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, intent);
+        mGourmetPaymentLayout = new GourmetPaymentLayout(this, scrollView, mOnUserActionListener);
     }
 
     @Override
-    protected void requestValidateTicketPayment(TicketPayment ticketPayment, SaleTime checkInSaleTime)
+    protected void requestUserInformationForPayment()
     {
-        if (ticketPayment == null || checkInSaleTime == null)
+        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
+    }
+
+    @Override
+    protected void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        if (paymentInformation == null || checkInSaleTime == null)
         {
-            onInternalError();
             return;
         }
 
-        DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag//
-            , ticketPayment.getTicketInformation().index//
-            , checkInSaleTime.getDayOfDaysDateFormat("yyMMdd")//
-            , ticketPayment.ticketCount//
-            , Long.toString(ticketPayment.ticketTime), mTicketSellCheckJsonResponseListener, this);
-    }
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
 
-    @Override
-    protected void requestPayEasyPayment(TicketPayment ticketPayment, SaleTime checkInSaleTime)
-    {
         String bonus = "0"; // 적립금
 
-        if (ticketPayment.isEnabledBonus == true)
+        if (gourmetPaymentInformation.isEnabledBonus == true)
         {
-            bonus = String.valueOf(ticketPayment.bonus);
+            bonus = String.valueOf(gourmetPaymentInformation.bonus);
         }
 
         Map<String, String> params = new HashMap<String, String>();
 
-        TicketInformation ticketInformation = ticketPayment.getTicketInformation();
-        Guest guest = ticketPayment.getGuest();
+        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+        Guest guest = gourmetPaymentInformation.getGuest();
 
         params.put("sale_reco_idx", String.valueOf(ticketInformation.index));
         params.put("billkey", mSelectedCreditCard.billingkey);
-        params.put("ticket_count", String.valueOf(ticketPayment.ticketCount));
+        params.put("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
         params.put("customer_name", guest.name);
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
-        params.put("arrival_time", String.valueOf(ticketPayment.ticketTime));
+        params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
 
         //        if (DEBUG == true)
         //        {
@@ -236,77 +216,104 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     }
 
     @Override
-    protected void requestTicketPaymentInfomation(int index)
+    protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
-        if (index < 0)
-        {
-            mDoReload = true;
-
-            onInternalError();
-            return;
-        }
-
-        DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, index, mTicketPaymentInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, //
+            ((GourmetPaymentInformation) paymentInformation).getTicketInformation().index, //
+            mGourmetPaymentInformationJsonResponseListener, this);
     }
 
     @Override
-    protected void updateLayout(TicketPayment ticketPayment, CreditCard creditCard)
+    protected void updatePaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
-        if (mGourmetPaymentLayout == null || ticketPayment == null)
-        {
-            return;
-        }
-
-        mGourmetPaymentLayout.updateTicketPaymentInformation(ticketPayment, creditCard);
+        mGourmetPaymentLayout.updatePaymentInformation((GourmetPaymentInformation) paymentInformation, selectedCreditCard);
     }
 
     @Override
-    protected void updatePaymentInformation(TicketPayment ticketPayment, CreditCard creditCard)
+    protected void updateGuestInformation(String phoneNumber)
     {
-        if (mGourmetPaymentLayout == null || ticketPayment == null)
-        {
-            return;
-        }
-
-        mGourmetPaymentLayout.updatePaymentInformationLayout(this, ticketPayment, creditCard);
+        mPaymentInformation.getGuest().phone = phoneNumber;
+        mGourmetPaymentLayout.updateUserInformationLayout(phoneNumber);
     }
 
     @Override
-    protected void checkPaymentType(TicketPayment.PaymentType type)
+    protected void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard)
     {
-        if (mTicketPayment != null)
-        {
-            mTicketPayment.paymentType = type;
-        }
-
-        if (mGourmetPaymentLayout != null)
-        {
-            mGourmetPaymentLayout.checkPaymentType(type);
-        }
+        mSelectedCreditCard = creditCard;
+        mOnUserActionListener.setPaymentType(paymentType);
     }
 
     @Override
-    protected void showFinalCheckDialog()
+    protected boolean isChangedPrice()
     {
-        if (isFinishing() == true)
-        {
-            return;
-        }
+        return mIsChangedPrice;
+    }
 
-        if (mFinalCheckDialog != null)
-        {
-            mFinalCheckDialog.cancel();
-            mFinalCheckDialog = null;
-        }
+    @Override
+    protected boolean hasWarningMessage()
+    {
+        return false;
+    }
 
-        mFinalCheckDialog = new Dialog(this);
+    @Override
+    protected void showWarningMessageDialog()
+    {
 
-        mFinalCheckDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mFinalCheckDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        mFinalCheckDialog.setCanceledOnTouchOutside(false);
+    }
+
+    @Override
+    protected void checkChangedBonusSwitch()
+    {
+
+    }
+
+    @Override
+    protected void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        Intent intent = new Intent(this, GourmetPaymentWebActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+    }
+
+    @Override
+    protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
+    {
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+
+        String placyType = String.format("%s X %d", ticketInformation.name, gourmetPaymentInformation.ticketCount);
+
+        Calendar calendarTime = DailyCalendar.getInstance();
+        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        SimpleDateFormat formatDay = new SimpleDateFormat("HH시 mm분", Locale.KOREA);
+        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
+        String time = formatDay.format(calendarTime.getTime());
+        String date = String.format("%s %s", gourmetPaymentInformation.checkInTime, time);
+
+        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
+
+        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+    }
+
+    @Override
+    protected Dialog getEasyPaymentConfirmDialog()
+    {
+        final Dialog dialog = new Dialog(this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        Window window = mFinalCheckDialog.getWindow();
+        Window window = dialog.getWindow();
         layoutParams.copyFrom(window.getAttributes());
 
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -315,7 +322,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
         int[] messageResIds = {R.string.dialog_msg_gourmet_payment_message01, R.string.dialog_msg_gourmet_payment_message02, R.string.dialog_msg_gourmet_payment_message03, R.string.dialog_msg_hotel_payment_message08};
 
-        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(GourmetPaymentActivity.this, messageResIds);
+        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this, messageResIds);
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
         final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
 
@@ -372,12 +379,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                             lockUI();
 
-                            mState = STATE_PAYMENT;
-
                             // 1. 세션이 살아있는지 검사 시작.
                             DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, GourmetPaymentActivity.this);
-
-                            mFinalCheckDialog.dismiss();
 
                             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                                 , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
@@ -387,71 +390,13 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             }
         });
 
-        mFinalCheckDialog.setContentView(finalCheckLayout);
-        mFinalCheckDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                releaseUiComponent();
-            }
-        });
+        dialog.setContentView(finalCheckLayout);
 
-        mFinalCheckDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
-        {
-            @Override
-            public void onCancel(DialogInterface dialog)
-            {
-                mDoReload = true;
-
-                AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                    , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
-            }
-        });
-
-        try
-        {
-            mFinalCheckDialog.show();
-
-            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
-                , getMapPaymentInformation(mTicketPayment));
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        return dialog;
     }
 
     @Override
-    protected void showPaymentThankyou(TicketPayment ticketPayment, String imageUrl)
-    {
-        TicketInformation ticketInformation = ticketPayment.getTicketInformation();
-
-        String placyType = String.format("%s X %d", ticketInformation.name, ticketPayment.ticketCount);
-
-        Calendar calendarTime = DailyCalendar.getInstance();
-        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        SimpleDateFormat formatDay = new SimpleDateFormat("HH시 mm분", Locale.KOREA);
-        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        calendarTime.setTimeInMillis(ticketPayment.ticketTime);
-        String time = formatDay.format(calendarTime.getTime());
-        String date = String.format("%s %s", ticketPayment.checkInTime, time);
-
-        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, ticketInformation.placeName, placyType, date);
-
-        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
-    }
-
-    /**
-     * 결제 수단에 알맞은 결제 동의 확인 다이얼로그를 만든다.
-     *
-     * @param type CARD, ACCOUNT, HP 세가지 타입 존재.
-     * @return 타입에 맞는 결제 동의 다이얼로그 반환.
-     */
-
-    protected Dialog getPaymentConfirmDialog(int type)
+    protected Dialog getPaymentConfirmDialog(PlacePaymentInformation.PaymentType paymentType)
     {
         final Dialog dialog = new Dialog(this);
 
@@ -464,10 +409,17 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
         int[] textResIds;
 
-        switch (type)
+        switch (paymentType)
         {
+            // 신용카드 일반 결제
+            case CARD:
+                textResIds = new int[]{R.string.dialog_msg_gourmet_payment_message01//
+                    , R.string.dialog_msg_gourmet_payment_message02//
+                    , R.string.dialog_msg_gourmet_payment_message03};
+                break;
+
             // 핸드폰 결제
-            case DIALOG_CONFIRM_PAYMENT_HP:
+            case PHONE_PAY:
                 textResIds = new int[]{R.string.dialog_msg_gourmet_payment_message01//
                     , R.string.dialog_msg_gourmet_payment_message02//
                     , R.string.dialog_msg_gourmet_payment_message03//
@@ -475,18 +427,11 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 break;
 
             // 계좌 이체
-            case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
+            case VBANK:
                 textResIds = new int[]{R.string.dialog_msg_gourmet_payment_message01//
                     , R.string.dialog_msg_gourmet_payment_message02//
                     , R.string.dialog_msg_gourmet_payment_message03//
                     , R.string.dialog_msg_gourmet_payment_message05};
-                break;
-
-            // 신용카드 일반 결제
-            case DIALOG_CONFIRM_PAYMENT_CARD:
-                textResIds = new int[]{R.string.dialog_msg_gourmet_payment_message01//
-                    , R.string.dialog_msg_gourmet_payment_message02//
-                    , R.string.dialog_msg_gourmet_payment_message03};
                 break;
 
             default:
@@ -503,17 +448,22 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
             String message = getString(textResIds[i]);
 
-            if (i == 0)
+            int startIndex = message.indexOf("<b>");
+
+            if (startIndex >= 0)
             {
+                message = message.replaceAll("<b>", "");
+
+                int endIndex = message.indexOf("</b>");
+
+                message = message.replaceAll("</b>", "");
+
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
 
-                int boldStartIndex = message.indexOf("예약");
-                int boldLength = "예약 취소, 변경 및 환불이 불가".length();
-
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dialog_title_text)), //
-                    boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                    boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 messageTextView.setText(spannableStringBuilder);
             } else
@@ -542,11 +492,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                     lockUI();
 
-                    mState = STATE_PAYMENT;
-                    mDoReload = false;
-
                     // 1. 세션이 살아있는지 검사 시작.
-                    DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, GourmetPaymentActivity.this);
+                    DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, GourmetPaymentActivity.this);
 
                     AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                         , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
@@ -561,9 +508,208 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         return dialog;
     }
 
-    private void recordAnalyticsPayment(TicketPayment ticketPayment)
+    @Override
+    protected void onActivityPaymentResult(int requestCode, int resultCode, Intent intent)
     {
-        if (ticketPayment == null)
+        String title = getString(R.string.dialog_title_payment);
+        String msg = "";
+        String posTitle = getString(R.string.dialog_btn_text_confirm);
+        View.OnClickListener posListener = null;
+
+        switch (resultCode)
+        {
+            // 결제가 성공한 경우 GA와 믹스패널에 등록
+            case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
+            case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
+                // 가상계좌완료후에는 예약화면의 가상계좌 화면까지 이동한다.
+                if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.VBANK)
+                {
+                    onActivityPaymentResult(requestCode, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, intent);
+                } else
+                {
+                    recordAnalyticsPaymentComplete((GourmetPaymentInformation) mPaymentInformation);
+
+                    showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
+                }
+                return;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
+                msg = getString(R.string.act_toast_payment_soldout);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
+                title = getString(R.string.dialog_notice2);
+                msg = getString(R.string.act_toast_payment_not_available);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
+                msg = getString(R.string.act_toast_payment_network_error);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+                restartExpiredSession();
+                return;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
+                msg = getString(R.string.act_toast_payment_invalid_date);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
+                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+                {
+                    msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+                } else
+                {
+                    msg = getString(R.string.act_toast_payment_fail);
+                }
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
+                msg = getString(R.string.act_toast_payment_canceled);
+
+                posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                    }
+                };
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                /**
+                 * 가상계좌선택시 해당 가상계좌 정보를 보기위해 화면 스택을 쌓으면서 들어가야함. 이를 위한 정보를 셋팅.
+                 * 예약 리스트 프래그먼트에서 찾아 들어가기 위해서 필요함. 들어간 후에는 다시 프리퍼런스를 초기화해줌.
+                 * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약
+                 * 리스트 갱신 후 최상단 아이템 인텐트
+                 */
+                DailyPreference.getInstance(this).setVirtuaAccountGourmetInformation((GourmetPaymentInformation) mPaymentInformation, mCheckInSaleTime);
+                DailyPreference.getInstance(this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+
+                if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+                {
+                    msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+                } else
+                {
+                    msg = getString(R.string.dialog_msg_issuing_account);
+                }
+
+                posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                        finish();
+                    }
+                };
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
+                msg = getString(R.string.act_toast_payment_account_time_error);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
+                msg = getString(R.string.act_toast_payment_account_duplicate);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                msg = getString(R.string.act_toast_payment_account_timeover);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR:
+                if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
+                {
+                    msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
+                } else
+                {
+                    msg = getString(R.string.act_toast_payment_fail);
+                }
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_CANCEL:
+            {
+                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+                {
+                    msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+                } else
+                {
+                    msg = getString(R.string.act_toast_payment_fail);
+                }
+
+                posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                    }
+                };
+                break;
+            }
+
+            default:
+                return;
+        }
+
+        if (posListener == null)
+        {
+            posListener = new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    finish();
+                }
+            };
+        }
+
+        showSimpleDialog(title, msg, posTitle, null, posListener, null, false);
+    }
+
+    @Override
+    protected void analyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
+    {
+
+    }
+
+    protected void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime checkInSaleTime)
+    {
+        if (gourmetPaymentInformation == null || checkInSaleTime == null)
+        {
+            onInternalError();
+            return;
+        }
+
+        DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag//
+            , gourmetPaymentInformation.getTicketInformation().index//
+            , checkInSaleTime.getDayOfDaysDateFormat("yyMMdd")//
+            , gourmetPaymentInformation.ticketCount//
+            , Long.toString(gourmetPaymentInformation.ticketTime), mTicketSellCheckJsonResponseListener, this);
+    }
+
+    protected void recordAnalyticsPaymentComplete(GourmetPaymentInformation gourmetPaymentInformation)
+    {
+        try
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
+            Date date = new Date();
+            String strDate = dateFormat.format(date);
+            String userIndex = gourmetPaymentInformation.getCustomer().getUserIdx();
+            String transId = strDate + '_' + userIndex;
+
+            Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation);
+
+            AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteGourmet(transId, params);
+            AnalyticsManager.getInstance(getApplicationContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_COMPLETE, null);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void recordAnalyticsPayment(GourmetPaymentInformation gourmetPaymentInformation)
+    {
+        if (gourmetPaymentInformation == null)
         {
             return;
         }
@@ -571,14 +717,14 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         try
         {
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, ticketPayment.getTicketInformation().placeName);
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketPayment.getTicketInformation().discountPrice));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+            params.put(AnalyticsManager.KeyType.NAME, gourmetPaymentInformation.getTicketInformation().placeName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetPaymentInformation.getTicketInformation().discountPrice));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
             params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketPayment.getTicketInformation().name);
-            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketPayment.getTicketInformation().index));
-            params.put(AnalyticsManager.KeyType.CATEGORY, ticketPayment.category);
-            params.put(AnalyticsManager.KeyType.DBENEFIT, ticketPayment.isDBenefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, gourmetPaymentInformation.getTicketInformation().name);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(gourmetPaymentInformation.getTicketInformation().index));
+            params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
+            params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
 
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, params);
         } catch (Exception e)
@@ -587,32 +733,47 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         }
     }
 
+    protected Map<String, String> getMapPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
+    {
+        Map<String, String> params = new HashMap<>();
+
+        try
+        {
+            TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+
+            params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(gourmetPaymentInformation.ticketCount));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.name);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
+            params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
+            params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+            params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
+            params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, gourmetPaymentInformation.paymentType.getName());
+
+            Calendar calendarTime = DailyCalendar.getInstance();
+            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(gourmetPaymentInformation.ticketTime));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return params;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // User ActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected void checkLastChangedValue()
-    {
-        // 호텔 가격 정보가 변경되었습니다.
-        if (mIsChangedPrice == true && mIsChangedTime == true)
-        {
-            mIsChangedPrice = false;
-            mIsChangedTime = true;
-
-            showChangedValueDialog(R.string.dialog_msg_changed_time_price);
-        } else if (mIsChangedPrice == true)
-        {
-            mIsChangedPrice = false;
-
-            showChangedPayDialog();
-        } else if (mIsChangedTime == true)
-        {
-            mIsChangedTime = false;
-
-            showChangedTimeDialog();
-        }
-    }
 
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
@@ -624,7 +785,11 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 return;
             }
 
-            Dialog dialog = Util.showDatePickerDialog(GourmetPaymentActivity.this, getString(R.string.label_booking_select_ticket_time), mTicketPayment.getTicketTimes(), selectedTime, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+            final GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+            Dialog dialog = Util.showDatePickerDialog(GourmetPaymentActivity.this//
+                , getString(R.string.label_booking_select_ticket_time)//
+                , gourmetPaymentInformation.getTicketTimes(), selectedTime, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -633,8 +798,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                     try
                     {
-                        mTicketPayment.ticketTime = mTicketPayment.ticketTimes[select];
-                        mGourmetPaymentLayout.setTicketTime(mTicketPayment.ticketTime);
+                        gourmetPaymentInformation.ticketTime = gourmetPaymentInformation.ticketTimes[select];
+                        mGourmetPaymentLayout.setTicketTime(gourmetPaymentInformation.ticketTime);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -660,8 +825,10 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         @Override
         public void plusTicketCount()
         {
-            int count = mTicketPayment.ticketCount;
-            int maxCount = mTicketPayment.ticketMaxCount;
+            GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+            int count = gourmetPaymentInformation.ticketCount;
+            int maxCount = gourmetPaymentInformation.ticketMaxCount;
 
             if (count >= maxCount)
             {
@@ -669,31 +836,33 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_LONG);
             } else
             {
-                mTicketPayment.ticketCount = count + 1;
-                mGourmetPaymentLayout.setTicketCount(mTicketPayment.ticketCount);
+                gourmetPaymentInformation.ticketCount = count + 1;
+                mGourmetPaymentLayout.setTicketCount(gourmetPaymentInformation.ticketCount);
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment);
+                mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, gourmetPaymentInformation);
             }
         }
 
         @Override
         public void minusTicketCount()
         {
-            int count = mTicketPayment.ticketCount;
+            GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+            int count = gourmetPaymentInformation.ticketCount;
 
             if (count <= 1)
             {
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(false);
             } else
             {
-                mTicketPayment.ticketCount = count - 1;
-                mGourmetPaymentLayout.setTicketCount(mTicketPayment.ticketCount);
+                gourmetPaymentInformation.ticketCount = count - 1;
+                mGourmetPaymentLayout.setTicketCount(gourmetPaymentInformation.ticketCount);
                 mGourmetPaymentLayout.setTicketCountPlusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment);
+                mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, gourmetPaymentInformation);
             }
         }
 
@@ -725,7 +894,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             {
                 // 현재 수정 사항을 기억한다.
                 Guest editGuest = mGourmetPaymentLayout.getGuest();
-                mTicketPayment.setGuest(editGuest);
+                mPaymentInformation.setGuest(editGuest);
             }
 
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
@@ -740,9 +909,10 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         }
 
         @Override
-        public void setPaymentType(TicketPayment.PaymentType type)
+        public void setPaymentType(PlacePaymentInformation.PaymentType paymentType)
         {
-            checkPaymentType(type);
+            mPaymentInformation.paymentType = paymentType;
+            mGourmetPaymentLayout.checkPaymentType(paymentType);
         }
 
         @Override
@@ -753,7 +923,9 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 return;
             }
 
-            if (mTicketPayment.ticketTime == 0)
+            GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+            if (gourmetPaymentInformation.ticketTime == 0)
             {
                 releaseUiComponent();
                 mGourmetPaymentLayout.scrollTop();
@@ -771,7 +943,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(UserInformationType.NAME);
+                    mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.NAME);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
                     return;
@@ -779,7 +951,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(UserInformationType.PHONE);
+                    mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.PHONE);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
                     return;
@@ -787,7 +959,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(UserInformationType.EMAIL);
+                    mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.EMAIL);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                     return;
@@ -795,16 +967,16 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(UserInformationType.EMAIL);
+                    mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.EMAIL);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
 
-                mTicketPayment.setGuest(guest);
+                gourmetPaymentInformation.setGuest(guest);
             }
 
-            if (mTicketPayment.paymentType == TicketPayment.PaymentType.VBANK && DailyPreference.getInstance(GourmetPaymentActivity.this).getNotificationUid() < 0)
+            if (gourmetPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.VBANK && DailyPreference.getInstance(GourmetPaymentActivity.this).getNotificationUid() < 0)
             {
                 // 가상계좌 결제시 푸쉬를 받지 못하는 경우
                 String title = getString(R.string.dialog_notice2);
@@ -816,7 +988,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     @Override
                     public void onClick(View view)
                     {
-                        processValidatePayment();
+                        processAgreeTermDialog();
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
@@ -828,10 +1000,10 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 });
             } else
             {
-                processValidatePayment();
+                processAgreeTermDialog();
             }
 
-            String label = String.format("%s-%s", mTicketPayment.getTicketInformation().placeName, mTicketPayment.getTicketInformation().name);
+            String label = String.format("%s-%s", gourmetPaymentInformation.getTicketInformation().placeName, gourmetPaymentInformation.getTicketInformation().name);
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , AnalyticsManager.Action.PAYMENT_CLICKED, label, null);
         }
@@ -850,7 +1022,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 return;
             }
 
-            mTicketPayment.setGuest(mGourmetPaymentLayout.getGuest());
+            mPaymentInformation.setGuest(mGourmetPaymentLayout.getGuest());
 
             Intent intent = InputMobileNumberDialogActivity.newInstance(GourmetPaymentActivity.this, mobileNumber);
             startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
@@ -860,6 +1032,362 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+
+                        DailyToast.showToast(GourmetPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                        finish();
+                        return;
+                    } else
+                    {
+                        throw new NullPointerException("response == null");
+                    }
+                }
+
+                JSONObject jsonData = response.getJSONObject("data");
+
+                String name = jsonData.getString("user_name");
+                String phone = jsonData.getString("user_phone");
+                String email = jsonData.getString("user_email");
+                String userIndex = jsonData.getString("user_idx");
+                int bonus = jsonData.getInt("user_bonus");
+
+                if (bonus < 0)
+                {
+                    bonus = 0;
+                }
+
+                GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+                gourmetPaymentInformation.bonus = bonus;
+
+                Customer buyer = new Customer();
+                buyer.setEmail(email);
+                buyer.setName(name);
+                buyer.setPhone(phone);
+                buyer.setUserIdx(userIndex);
+
+                gourmetPaymentInformation.setCustomer(buyer);
+
+                if (mIsEditMode == false)
+                {
+                    Guest guest = new Guest();
+                    guest.name = name;
+                    guest.phone = phone;
+                    guest.email = email;
+
+                    gourmetPaymentInformation.setGuest(guest);
+                }
+
+                // 2. 화면 정보 얻기
+                DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag//
+                    , gourmetPaymentInformation.getTicketInformation().index//
+                    , mGourmetPaymentInformationJsonResponseListener, GourmetPaymentActivity.this);
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mGourmetPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    //					jsonObject.getInt("fnb_sale_reco_idx");
+                    //					jsonObject.getInt("is_sale_time_over");
+                    //					jsonObject.getInt("name");
+                    int discountPrice = jsonObject.getInt("discount");
+                    long sday = jsonObject.getLong("sday");
+                    //					jsonObject.getInt("available_ticket_count");
+                    int maxCount = jsonObject.getInt("max_sale_count");
+
+                    JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
+
+                    int length = timeJSONArray.length();
+                    long[] times = new long[length];
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        times[i] = timeJSONArray.getLong(i);
+                    }
+
+                    if (gourmetPaymentInformation.ticketTime == 0)
+                    {
+
+                    } else
+                    {
+                        boolean isExistTime = false;
+
+                        for (long time : times)
+                        {
+                            if (gourmetPaymentInformation.ticketTime == time)
+                            {
+                                isExistTime = true;
+                                break;
+                            }
+                        }
+
+                        // 시간 값이 없어진 경우
+                        if (isExistTime == false)
+                        {
+                            mIsChangedTime = true;
+                        }
+                    }
+
+                    gourmetPaymentInformation.ticketTimes = times;
+
+                    // 가격이 변동 되었다.
+                    if (gourmetPaymentInformation.getTicketInformation().discountPrice != discountPrice)
+                    {
+                        mIsChangedPrice = true;
+                    }
+
+                    gourmetPaymentInformation.getTicketInformation().discountPrice = discountPrice;
+                    gourmetPaymentInformation.ticketMaxCount = maxCount;
+
+                    Calendar calendarCheckin = DailyCalendar.getInstance();
+                    calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    calendarCheckin.setTimeInMillis(sday);
+
+                    SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
+                    formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                    gourmetPaymentInformation.checkInTime = formatDay.format(calendarCheckin.getTime());
+
+                    if (gourmetPaymentInformation.ticketTime == 0)
+                    {
+                        // 방문시간을 선택하지 않은 경우
+                        DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
+                    } else
+                    {
+                        requestValidateTicketPayment(gourmetPaymentInformation, mCheckInSaleTime);
+                    }
+
+                    recordAnalyticsPayment(gourmetPaymentInformation);
+                } else
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+
+                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                finish();
+                            }
+                        }, null, false);
+                        return;
+                    } else
+                    {
+                        onInternalError();
+                    }
+                }
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
+
+    protected DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+
+                        DailyToast.showToast(GourmetPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                        finish();
+                        return;
+                    } else
+                    {
+                        throw new NullPointerException("response == null");
+                    }
+                }
+
+                JSONObject jsonData = response.getJSONObject("data");
+
+                int bonus = jsonData.getInt("user_bonus");
+
+                if (bonus < 0)
+                {
+                    bonus = 0;
+                }
+
+                if (mPaymentInformation.isEnabledBonus == true && bonus != mPaymentInformation.bonus)
+                {
+                    // 보너스 값이 변경된 경우
+                    mPaymentInformation.bonus = bonus;
+                    showChangedBonusDialog();
+                    return;
+                }
+
+                DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, //
+                    ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().index, //
+                    mFinalCheckPayJsonResponseListener, GourmetPaymentActivity.this);
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mFinalCheckPayJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    //					jsonObject.getInt("fnb_sale_reco_idx");
+                    //					jsonObject.getInt("is_sale_time_over");
+                    //					jsonObject.getInt("name");
+                    int discountPrice = jsonObject.getInt("discount");
+                    long sday = jsonObject.getLong("sday");
+                    //					jsonObject.getInt("available_ticket_count");
+                    int maxCount = jsonObject.getInt("max_sale_count");
+
+                    JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
+
+                    int length = timeJSONArray.length();
+                    long[] times = new long[length];
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        times[i] = timeJSONArray.getLong(i);
+                    }
+
+                    if (gourmetPaymentInformation.ticketTime == 0)
+                    {
+                        mIsChangedTime = true;
+                    } else
+                    {
+                        boolean isExistTime = false;
+
+                        for (long time : times)
+                        {
+                            if (gourmetPaymentInformation.ticketTime == time)
+                            {
+                                isExistTime = true;
+                                break;
+                            }
+                        }
+
+                        // 시간 값이 없어진 경우
+                        if (isExistTime == false)
+                        {
+                            mIsChangedTime = true;
+                        }
+                    }
+
+                    gourmetPaymentInformation.ticketTimes = times;
+
+                    TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+
+                    // 가격이 변동 되었다.
+                    if (ticketInformation.discountPrice != discountPrice)
+                    {
+                        mIsChangedPrice = true;
+                    }
+
+                    ticketInformation.discountPrice = discountPrice;
+
+                    if (mIsChangedPrice == true)
+                    {
+                        mIsChangedPrice = false;
+
+                        // 현재 있는 팝업을 없애도록 한다.
+                        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+                        {
+                            mFinalCheckDialog.cancel();
+                            mFinalCheckDialog = null;
+                        }
+
+                        showChangedPriceDialog();
+                    } else if (mIsChangedTime == true)
+                    {
+                        mIsChangedTime = false;
+
+                        // 현재 있는 팝업을 없애도록 한다.
+                        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+                        {
+                            mFinalCheckDialog.cancel();
+                            mFinalCheckDialog = null;
+                        }
+
+                        showChangedTimeDialog();
+                    } else
+                    {
+                        processPayment(mPaymentInformation, mCheckInSaleTime);
+                    }
+                } else
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+
+                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                finish();
+                            }
+                        }, null, false);
+                        return;
+                    } else
+                    {
+                        onInternalError();
+                    }
+                }
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
 
     private DailyHotelJsonResponseListener mTicketSellCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -876,17 +1404,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                 if (isOnSale == true && msg_code == 0)
                 {
-                    switch (mState)
-                    {
-                        case STATE_REGISTER_CREDIT_CARD:
-                            mState = STATE_NONE;
-                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserRegisterBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
-                            break;
-
-                        default:
-                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
-                            break;
-                    }
+                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
                 } else
                 {
                     if (response.has("msg") == true)
@@ -909,172 +1427,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 }
             } catch (Exception e)
             {
-                onInternalError();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mTicketPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    //					jsonObject.getInt("fnb_sale_reco_idx");
-                    //					jsonObject.getInt("is_sale_time_over");
-                    //					jsonObject.getInt("name");
-                    int discountPrice = jsonObject.getInt("discount");
-                    long sday = jsonObject.getLong("sday");
-                    //					jsonObject.getInt("available_ticket_count");
-                    int maxCount = jsonObject.getInt("max_sale_count");
-
-                    mTicketPayment.startTicketTime = jsonObject.getLong("start_eating_time");
-                    mTicketPayment.endTicketTime = jsonObject.getLong("end_eating_time");
-
-                    JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
-
-                    int length = timeJSONArray.length();
-                    long[] times = new long[length];
-
-                    for (int i = 0; i < length; i++)
-                    {
-                        times[i] = timeJSONArray.getLong(i);
-                    }
-
-                    if (mTicketPayment.ticketTime == 0)
-                    {
-
-                    } else
-                    {
-                        boolean isExistTime = false;
-
-                        for (long time : times)
-                        {
-                            if (mTicketPayment.ticketTime == time)
-                            {
-                                isExistTime = true;
-                                break;
-                            }
-                        }
-
-                        // 시간 값이 없어진 경우
-                        if (isExistTime == false)
-                        {
-                            mIsChangedTime = true;
-                        }
-                    }
-
-                    mTicketPayment.ticketTimes = times;
-
-                    switch (mState)
-                    {
-                        case STATE_PAYMENT:
-                        {
-                            TicketInformation ticketInformation = mTicketPayment.getTicketInformation();
-
-                            // 가격이 변동 되었다.
-                            if (ticketInformation.discountPrice != discountPrice)
-                            {
-                                mIsChangedPrice = true;
-                            }
-
-                            ticketInformation.discountPrice = discountPrice;
-
-                            if (mIsChangedPrice == true)
-                            {
-                                mIsChangedPrice = false;
-
-                                // 현재 있는 팝업을 없애도록 한다.
-                                if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-                                {
-                                    mFinalCheckDialog.cancel();
-                                    mFinalCheckDialog = null;
-                                }
-
-                                showChangedPayDialog();
-                            } else if (mIsChangedTime == true)
-                            {
-                                mIsChangedTime = false;
-
-                                // 현재 있는 팝업을 없애도록 한다.
-                                if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-                                {
-                                    mFinalCheckDialog.cancel();
-                                    mFinalCheckDialog = null;
-                                }
-
-                                showChangedTimeDialog();
-                            } else
-                            {
-                                processPayment();
-                            }
-                            break;
-                        }
-
-                        default:
-                        {
-                            // 가격이 변동 되었다.
-                            if (mTicketPayment.getTicketInformation().discountPrice != discountPrice)
-                            {
-                                mIsChangedPrice = true;
-                            }
-
-                            mTicketPayment.getTicketInformation().discountPrice = discountPrice;
-                            mTicketPayment.ticketMaxCount = maxCount;
-
-                            Calendar calendarCheckin = DailyCalendar.getInstance();
-                            calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
-                            calendarCheckin.setTimeInMillis(sday);
-
-                            SimpleDateFormat formatDay = new SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.KOREA);
-                            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                            mTicketPayment.checkInTime = formatDay.format(calendarCheckin.getTime());
-
-                            if (mTicketPayment.ticketTime == 0)
-                            {
-                                // 방문시간을 선택하지 않은 경우
-                                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this);
-                            } else
-                            {
-                                requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
-                            }
-
-                            recordAnalyticsPayment(mTicketPayment);
-                            break;
-                        }
-                    }
-                } else
-                {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-
-                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, null, false);
-                        return;
-                    } else
-                    {
-                        onInternalError();
-                    }
-                }
-            } catch (Exception e)
-            {
-                mDoReload = true;
-
                 onInternalError();
             }
         }
@@ -1089,24 +1441,20 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             {
                 if (response == null)
                 {
-                    mDoReload = true;
-
                     onInternalError();
                     return;
                 }
 
                 int msg_code = response.getInt("msg_code");
 
-                mState = STATE_NONE;
-
                 hidePorgressDialog();
 
                 if (msg_code == 0)
                 {
                     // 결제 관련 로그 남기기
-                    recordPurchaseComplete(mTicketPayment);
+                    recordAnalyticsPaymentComplete((GourmetPaymentInformation) mPaymentInformation);
 
-                    showPaymentThankyou(mTicketPayment, mPlaceImageUrl);
+                    showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
                 } else
                 {
                     int resultCode = 0;
@@ -1138,12 +1486,10 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                         }
                     }
 
-                    activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, resultCode, intent);
+                    onActivityPaymentResult(CODE_REQUEST_ACTIVITY_PAYMENT, resultCode, intent);
                 }
             } catch (Exception e)
             {
-                mDoReload = true;
-
                 onInternalError();
             }
         }

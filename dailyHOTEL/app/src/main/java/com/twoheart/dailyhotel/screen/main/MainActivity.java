@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.CookieManager;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -99,24 +98,9 @@ public class MainActivity extends BaseActivity implements Constants
         mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
 
-        VolleyHttpClient.cookieManagerCreate();
         //        DailyPreference.getInstance(this).removeDeepLink();
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
-
-        // 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
-        // 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
-        // android.content.pm.PackageManager$NameNotFoundException: com.google.android.webview
-        try
-        {
-            if (CookieManager.getInstance().getCookie(VolleyHttpClient.URL_DAILYHOTEL_SERVER) != null)
-            {
-                VolleyHttpClient.destroyCookie();
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
 
         initLayout();
 
@@ -276,8 +260,6 @@ public class MainActivity extends BaseActivity implements Constants
 
             mSettingNetworkDialog = null;
         }
-
-        VolleyHttpClient.destroyCookie();
 
         super.onDestroy();
     }
@@ -669,7 +651,29 @@ public class MainActivity extends BaseActivity implements Constants
                     }
                 }
 
-                mMainPresenter.requestUserAlive();
+                if (Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false)
+                {
+                    // session alive
+                    // 호텔 평가를 위한 사용자 정보 조회
+                    mMainPresenter.requestUserInformation();
+                } else
+                {
+                    AnalyticsManager.getInstance(MainActivity.this).setUserIndex(null);
+
+                    Util.requestGoogleCloudMessaging(MainActivity.this, new Util.OnGoogleCloudMessagingListener()
+                    {
+                        @Override
+                        public void onResult(String registrationId)
+                        {
+                            if (Util.isTextEmpty(registrationId) == true)
+                            {
+                                return;
+                            }
+
+                            mMainPresenter.registerNotificationId(registrationId, null);
+                        }
+                    });
+                }
             }
         }
     };

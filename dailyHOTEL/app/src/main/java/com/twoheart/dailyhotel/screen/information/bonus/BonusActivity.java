@@ -29,7 +29,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
@@ -52,7 +51,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -117,8 +115,14 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     {
         super.onResume();
 
-        lockUI();
-        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
+        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        {
+            loadLoginProcess(false);
+        } else
+        {
+            lockUI();
+            DailyNetworkAPI.getInstance().requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, this);
+        }
     }
 
     @Override
@@ -298,83 +302,6 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             } catch (Exception e)
             {
                 onError(e);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
-
-                    if (isSignin == true)
-                    {
-                        VolleyHttpClient.createCookie();
-
-                        // credit 요청
-                        DailyNetworkAPI.getInstance().requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, BonusActivity.this);
-                        return;
-                    }
-                }
-
-                // 로그인 실패
-                // data 초기화
-                DailyPreference.getInstance(BonusActivity.this).removeUserInformation();
-
-                unLockUI();
-                loadLoginProcess(false);
-            } catch (Exception e)
-            {
-                onError(e);
-            }
-        }
-    };
-
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-        @Override
-        public void onResponse(String url, String response)
-        {
-            String result = null;
-
-            if (false == Util.isTextEmpty(response))
-            {
-                result = response.trim();
-            }
-
-            if (true == "alive".equalsIgnoreCase(result))
-            {
-                // session alive
-                // credit 요청
-                DailyNetworkAPI.getInstance().requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, BonusActivity.this);
-
-            } else if (true == "dead".equalsIgnoreCase(result))
-            {
-                // session dead
-                // 재로그인
-                if (true == DailyPreference.getInstance(BonusActivity.this).isAutoLogin())
-                {
-                    HashMap<String, String> params = Util.getLoginParams(BonusActivity.this);
-                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, BonusActivity.this);
-                } else
-                {
-                    unLockUI();
-                    loadLoginProcess(false);
-                }
-
-            } else
-            {
-                onError();
             }
         }
     };

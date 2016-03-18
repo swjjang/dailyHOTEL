@@ -75,7 +75,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserAlive(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
+    //    void requestUserAlive(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * user/update

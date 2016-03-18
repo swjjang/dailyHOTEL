@@ -175,7 +175,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.hotel.payment.BookingActivity"
+            android:name=".screen.hotel.payment.HotelPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
@@ -274,7 +274,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoDisplay"/>
         <activity
-            android:name=".screen.hotel.payment.PaymentActivity"
+            android:name=".screen.hotel.payment.HotelPaymentWebActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -282,7 +282,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screen.gourmet.payment.PaymentWebActivity"
+            android:name=".screen.gourmet.payment.GourmetPaymentWebActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>

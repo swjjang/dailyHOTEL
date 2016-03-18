@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
@@ -112,7 +113,8 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    mEventListPresenter.requestUserAlive();
+                    lockUI();
+                    processViewEvent(mSelectedEvent);
                 } else
                 {
                     mSelectedEvent = null;
@@ -133,9 +135,25 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         lockUI();
+        processViewEvent(mEventListAdapter.getItem(position));
+    }
 
-        mSelectedEvent = mEventListAdapter.getItem(position);
-        mEventListPresenter.requestUserAlive();
+    private void processViewEvent(Event selectedEvent)
+    {
+        if (selectedEvent == null)
+        {
+            return;
+        }
+
+        mSelectedEvent = selectedEvent;
+
+        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        {
+            mOnResponsePresenterListener.onSignin();
+        } else
+        {
+            mEventListPresenter.requestUserInformationEx();
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

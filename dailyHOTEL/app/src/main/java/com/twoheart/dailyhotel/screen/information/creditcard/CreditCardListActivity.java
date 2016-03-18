@@ -10,24 +10,19 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.CreditCardLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * 신용카드 등록하기.
@@ -91,8 +86,16 @@ public class CreditCardListActivity extends BaseActivity
     {
         super.onResume();
 
-        lockUI();
-        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
+        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        {
+            mCreditCardLayout.setViewLoginLayout(false);
+        } else
+        {
+            lockUI();
+
+            mCreditCardLayout.setViewLoginLayout(true);
+            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
+        }
     }
 
     @Override
@@ -160,47 +163,22 @@ public class CreditCardListActivity extends BaseActivity
                 return;
             }
 
-            lockUI();
+            Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            // 세션 여부를 판단한다.
-            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, new DailyHotelStringResponseListener()
+            if (mCreditCardLayout != null)
             {
-                @Override
-                public void onResponse(String url, String response)
+                if (mCreditCardLayout.getCreditCardCount() == 0)
                 {
-                    String result = null;
-
-                    unLockUI();
-
-                    if (false == Util.isTextEmpty(response))
-                    {
-                        result = response.trim();
-                    }
-
-                    if (true == "alive".equalsIgnoreCase(result))
-                    {
-                        Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                        if (mCreditCardLayout != null)
-                        {
-                            if (mCreditCardLayout.getCreditCardCount() == 0)
-                            {
-                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                                    , AnalyticsManager.Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.ADDING_CARD_ICON_CLICKED, null);
-                            } else
-                            {
-                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                                    , AnalyticsManager.Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.ADDING_CARD_BUTTON_CLICKED, null);
-                            }
-                        }
-                    } else
-                    {
-                        restartApp();
-                    }
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.ADDING_CARD_ICON_CLICKED, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.ADDING_CARD_BUTTON_CLICKED, null);
                 }
-            }, CreditCardListActivity.this);
+            }
         }
 
         @Override
@@ -213,70 +191,47 @@ public class CreditCardListActivity extends BaseActivity
 
             lockUI();
 
-            // 세션 여부를 판단한다.
-            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, new DailyHotelStringResponseListener()
+            // 신용카드를 삭제하시겠습니까?
+            View.OnClickListener posListener = new View.OnClickListener()
             {
                 @Override
-                public void onResponse(String url, String response)
+                public void onClick(View view)
                 {
-                    String result = null;
+                    lockUI();
 
+                    // 등록된 카드 삭제.
+                    DailyNetworkAPI.getInstance().requestUserDeleteBillingCard(mNetworkTag, card.billingkey, mDeleteCreditCardJsonResponseListener, CreditCardListActivity.this);
+
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.OK, null);
+                }
+            };
+
+            View.OnClickListener negativeListener = new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
                     unLockUI();
 
-                    if (false == Util.isTextEmpty(response))
-                    {
-                        result = response.trim();
-                    }
-
-                    if (true == "alive".equalsIgnoreCase(result))
-                    {
-                        // 신용카드를 삭제하시겠습니까?
-                        View.OnClickListener posListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                lockUI();
-
-                                // 등록된 카드 삭제.
-                                DailyNetworkAPI.getInstance().requestUserDeleteBillingCard(mNetworkTag, card.billingkey, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this);
-
-                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                    , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.OK, null);
-                            }
-                        };
-
-                        View.OnClickListener negativeListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                unLockUI();
-
-                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                    , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
-                            }
-                        };
-
-                        DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
-                        {
-                            @Override
-                            public void onCancel(DialogInterface dialog)
-                            {
-                                unLockUI();
-
-                                AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                    , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
-                            }
-                        };
-
-                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, negativeListener, cancelListener, null, true);
-                    } else
-                    {
-                        restartApp();
-                    }
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
                 }
-            }, CreditCardListActivity.this);
+            };
+
+            DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    unLockUI();
+
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
+                }
+            };
+
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, negativeListener, cancelListener, null, true);
         }
 
         @Override
@@ -303,7 +258,7 @@ public class CreditCardListActivity extends BaseActivity
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserSessionBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mCreditCardListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -314,11 +269,6 @@ public class CreditCardListActivity extends BaseActivity
             {
                 // 해당 화면은 메시지를 넣지 않는다.
                 msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    ExLog.d("msg_code : " + msg_code);
-                }
 
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();
@@ -390,92 +340,7 @@ public class CreditCardListActivity extends BaseActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
-
-                    if (isSignin == true)
-                    {
-                        // credit card 요청
-                        DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
-                        return;
-                    }
-                }
-
-                // 로그인 실패
-                // data 초기화
-                DailyPreference.getInstance(CreditCardListActivity.this).removeUserInformation();
-
-                unLockUI();
-                mCreditCardLayout.setViewLoginLayout(false);
-            } catch (JSONException e)
-            {
-                unLockUI();
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-            String result = null;
-
-            if (false == Util.isTextEmpty(response))
-            {
-                result = response.trim();
-            }
-
-            if (true == "alive".equalsIgnoreCase(result))
-            {
-                VolleyHttpClient.createCookie();
-
-                // session alive
-                // credit card 요청
-                // 목록 요청.
-                mCreditCardLayout.setViewLoginLayout(true);
-
-                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
-
-            } else if (true == "dead".equalsIgnoreCase(result))
-            {
-                // session dead
-                // 재로그인
-
-                if (true == DailyPreference.getInstance(CreditCardListActivity.this).isAutoLogin())
-                {
-                    HashMap<String, String> params = Util.getLoginParams(CreditCardListActivity.this);
-
-                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, CreditCardListActivity.this);
-                } else
-                {
-                    unLockUI();
-                    mCreditCardLayout.setViewLoginLayout(false);
-                }
-
-            } else
-            {
-                mCreditCardLayout.setViewLoginLayout(false);
-                onError();
-                unLockUI();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserSessionBillingCardDelJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDeleteCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -486,11 +351,6 @@ public class CreditCardListActivity extends BaseActivity
             {
                 // 해당 화면은 메시지를 넣지 않는다.
                 msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    ExLog.d("msg_code : " + msg_code);
-                }
 
                 JSONObject jsonObject = response.getJSONObject("data");
 
@@ -505,7 +365,7 @@ public class CreditCardListActivity extends BaseActivity
                 {
                     // 성공
                     // credit card 요청
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
+                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
                 } else
                 {
                     unLockUI();
@@ -524,7 +384,7 @@ public class CreditCardListActivity extends BaseActivity
                             lockUI();
 
                             // credit card 요청
-                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
+                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
                         }
 
                     });
@@ -536,7 +396,7 @@ public class CreditCardListActivity extends BaseActivity
                 lockUI();
 
                 // credit card 요청
-                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this);
+                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
             }
         }
     };

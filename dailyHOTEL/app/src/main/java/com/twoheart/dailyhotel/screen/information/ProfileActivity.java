@@ -25,7 +25,6 @@ import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
@@ -458,8 +457,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         @Override
         public void onResponse(String url, String response)
         {
-            VolleyHttpClient.destroyCookie();
-
             DailyPreference.getInstance(ProfileActivity.this).clear();
 
             try

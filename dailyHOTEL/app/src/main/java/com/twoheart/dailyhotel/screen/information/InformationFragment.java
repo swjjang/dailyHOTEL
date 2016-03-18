@@ -217,9 +217,23 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     {
         super.onResume();
 
-        lockUI();
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, baseActivity);
+        if (Util.isTextEmpty(DailyPreference.getInstance(getActivity()).getAuthorization()) == true)
+        {
+            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN, null);
+
+            setSigninLayout(true);
+        } else
+        {
+            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT, null);
+
+            setSigninLayout(false);
+        }
+
+        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
+        }
     }
 
     @Override

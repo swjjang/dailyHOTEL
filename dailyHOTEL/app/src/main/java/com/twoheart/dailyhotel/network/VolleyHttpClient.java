@@ -13,8 +13,6 @@
 package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
@@ -23,21 +21,16 @@ import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.io.IOException;
-import java.net.CookiePolicy;
-import java.net.CookieStore;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.List;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.OkUrlFactory;
 
@@ -47,12 +40,9 @@ public class VolleyHttpClient implements Constants
     public static final String URL_DAILYHOTEL_SESSION_SERVER = URL_DAILYHOTEL_SESSION_SERVER_DEFAULT;
     public static final int TIME_OUT = 5000;
     public static final int MAX_RETRY = 2;
-    private static final String KEY_DAILYHOTEL_COOKIE = "JSESSIONID";
     private static RequestQueue sRequestQueue;
     private static Context sContext;
     private static OkHttpStack mOkHttpStack;
-
-    private static CookieSyncManager mCookieSyncManager;
 
     public static void init(Context context)
     {
@@ -102,79 +92,10 @@ public class VolleyHttpClient implements Constants
         return AvailableNetwork.getInstance().hasActiveNetwork(sContext);
     }
 
-    /**
-     * 서버 response로부터 cookie를 가져와 기억함. 로그인 요청 후 성공적으로 응답을 받았을 경우 반드시 이 메서드를 사용해야
-     * 함.
-     */
-    public static void createCookie()
-    {
-        cookieManagerCreate();
-
-        List<HttpCookie> cookies = mOkHttpStack.getCookieStore().getCookies();
-
-        if (cookies != null)
-        {
-            for (int i = 0; i < cookies.size(); i++)
-            {
-                HttpCookie newCookie = cookies.get(i);
-
-                if (newCookie.getName().equals(KEY_DAILYHOTEL_COOKIE))
-                {
-                    StringBuilder cookieString = new StringBuilder();
-                    cookieString.append(newCookie.getName()).append("=").append(newCookie.getValue());
-                    CookieManager.getInstance().setAcceptCookie(true);
-
-                    CookieManager.getInstance().setCookie(newCookie.getDomain(), cookieString.toString());
-
-                    cookieManagerSync();
-                }
-            }
-        }
-    }
-
-    public synchronized static void cookieManagerCreate()
-    {
-        if (mCookieSyncManager == null)
-        {
-            mCookieSyncManager = CookieSyncManager.createInstance(sContext);
-        }
-    }
-
-    public static void cookieManagerSync()
-    {
-        cookieManagerCreate();
-
-        mCookieSyncManager.sync();
-    }
-
-    public static void cookieManagerStopSync()
-    {
-        cookieManagerCreate();
-
-        mCookieSyncManager.stopSync();
-    }
-
-    public static void cookieManagerStartSync()
-    {
-        cookieManagerCreate();
-
-        mCookieSyncManager.startSync();
-    }
-
-    // 로그아웃 시 반드시 이 메서드를 사용해야 함.
-    public static void destroyCookie()
-    {
-        cookieManagerCreate();
-
-        CookieManager.getInstance().removeAllCookie();
-        cookieManagerSync();
-    }
-
     private static class OkHttpStack extends HurlStack
     {
         private OkUrlFactory mOkUrlFactory;
         private OkHttpClient mOkHttpClient;
-        private CookieStore mCookieStore;
 
         class HttpsTrustManager implements X509TrustManager
         {
@@ -213,18 +134,9 @@ public class VolleyHttpClient implements Constants
                 throw new AssertionError(); // 시스템이 TLS를 지원하지 않습니다
             }
 
-            java.net.CookieManager cookieManager = new java.net.CookieManager(new PersistentCookieStore(sContext.getApplicationContext()), CookiePolicy.ACCEPT_ALL);
-
-            mOkHttpClient = mOkHttpClient.newBuilder().sslSocketFactory(sslContext.getSocketFactory()).cookieJar(new JavaNetCookieJar(cookieManager)).build();
-
-            mCookieStore = cookieManager.getCookieStore();
+            mOkHttpClient = mOkHttpClient.newBuilder().sslSocketFactory(sslContext.getSocketFactory()).build();
 
             setOkUrlFactory(new OkUrlFactory(mOkHttpClient));
-        }
-
-        public CookieStore getCookieStore()
-        {
-            return mCookieStore;
         }
 
         public void setOkUrlFactory(OkUrlFactory okUrlFactory)

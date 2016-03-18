@@ -159,13 +159,13 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), null, listener, errorListener));
     }
 
-    @Override
-    public void requestUserAlive(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "user/alive" : "MzAkMTQkMzckNDMkMTck$QzNENDQ1NTk0MzEg1GOURFOUYxQkM4MEIZFRjVBEQTU3BQjE=$";
-
-        mQueue.add(new DailyHotelStringRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), null, listener, errorListener));
-    }
+    //    @Override
+    //    public void requestUserAlive(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener)
+    //    {
+    //        final String URL = Constants.UNENCRYPTED_URL ? "user/alive" : "MzAkMTQkMzckNDMkMTck$QzNENDQ1NTk0MzEg1GOURFOUYxQkM4MEIZFRjVBEQTU3BQjE=$";
+    //
+    //        mQueue.add(new DailyHotelStringRequest(tag, Request.Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER).append(URL).toString(), null, listener, errorListener));
+    //    }
 
     @Override
     public void requestUserInformationUpdate(Object tag, String name, String phone, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)

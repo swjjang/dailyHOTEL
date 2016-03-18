@@ -24,7 +24,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -124,7 +123,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         return mNetworkTag;
     }
 
-    public void restartApp()
+    public void restartExpiredSession()
     {
         if (isFinishing() == true)
         {
@@ -165,8 +164,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         try
         {
-            VolleyHttpClient.cookieManagerStopSync();
-
             unLockUI();
 
             super.onPause();
@@ -188,7 +185,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         super.onResume();
 
-        VolleyHttpClient.cookieManagerStartSync();
         AnalyticsManager.getInstance(this).onResume(this);
     }
 

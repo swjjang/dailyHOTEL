@@ -33,6 +33,24 @@
             android:background="@color/white"
             android:orientation="vertical">
 
+            <!-- 상품 정보 넣기 -->
+            <include
+                layout="@layout/layout_booking_gourmet_ticket_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 예약자 정보 -->
+            <include
+                layout="@layout/layout_booking_gourmet_user_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 결제 -->
+            <include
+                layout="@layout/layout_booking_gourmet_payment_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <!-- 결제 버튼 -->
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView

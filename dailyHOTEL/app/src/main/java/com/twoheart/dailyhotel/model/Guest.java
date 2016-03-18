@@ -5,21 +5,6 @@ import android.os.Parcelable;
 
 public class Guest implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Guest createFromParcel(Parcel in)
-        {
-            return new Guest(in);
-        }
-
-        @Override
-        public Guest[] newArray(int size)
-        {
-            return new Guest[size];
-        }
-
-    };
-
     public String email;
     public String name;
     public String phone;
@@ -53,4 +38,20 @@ public class Guest implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Guest createFromParcel(Parcel in)
+        {
+            return new Guest(in);
+        }
+
+        @Override
+        public Guest[] newArray(int size)
+        {
+            return new Guest[size];
+        }
+
+    };
+
 }

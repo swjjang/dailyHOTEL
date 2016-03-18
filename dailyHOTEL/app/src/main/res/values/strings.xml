@@ -166,7 +166,7 @@
     <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
 
-    <string name="dialog_msg_gourmet_payment_message01">예약 취소, 변경 및 환불 불가 상품이에요!</string>
+    <string name="dialog_msg_gourmet_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품이에요!</string>
     <string name="dialog_msg_gourmet_payment_message02">특정 좌석과 뷰를 보장해드리기 어려운 점 양해 부탁드려요.</string>
     <string name="dialog_msg_gourmet_payment_message03">주류 상품을 이용할 시, 신분증 확인이 요구됩니다. </string>
     <string name="dialog_msg_gourmet_payment_message04">휴대폰 결제는 월 30만원이 한도입니다.</string>

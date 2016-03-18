@@ -5,11 +5,10 @@
  * <p>
  * 결제 화면으로 넘어가기 전 예약 정보를 보여주고 결제방식을 선택할 수 있는 화면
  */
-package com.twoheart.dailyhotel.view;
+package com.twoheart.dailyhotel.screen.gourmet.payment;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -28,11 +27,12 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -65,9 +65,10 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
 
     private GourmetPaymentActivity.OnUserActionListener mOnUserActionListener;
 
-    public GourmetPaymentLayout(BaseActivity activity, GourmetPaymentActivity.OnUserActionListener listener)
+    public GourmetPaymentLayout(BaseActivity activity, ScrollView scrollLayout, GourmetPaymentActivity.OnUserActionListener listener)
     {
         mActivity = activity;
+        mScrollLayout = scrollLayout;
         mOnUserActionListener = listener;
 
         initLayout(activity);
@@ -118,16 +119,9 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         return mViewGroupRoot;
     }
 
-    public void updateTicketPaymentInformation(TicketPayment ticketPayment, CreditCard creditCard)
+    public void updatePaymentInformation(GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
     {
-        // 상품정보
-        updateTicketInformationLayout(mActivity, ticketPayment);
-
-        // 예약자 정보
-        updateUserInformationLayout(ticketPayment);
-
-        // 결제 정보
-        updatePaymentInformationLayout(mActivity, ticketPayment, creditCard);
+        updatePaymentInformationLayout(mActivity, gourmetPaymentInformation, selectedCreditCard);
     }
 
     private void initTicketInformationLayout(BaseActivity activity, View viewRoot)
@@ -360,15 +354,15 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         mEasyPaymentButton.setText(R.string.label_booking_easypayment);
     }
 
-    public void updatePaymentInformationLayout(BaseActivity activity, TicketPayment ticketPayment, CreditCard creditCard)
+    public void updatePaymentInformationLayout(BaseActivity activity, GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
     {
-        if (activity == null || ticketPayment == null)
+        if (activity == null || gourmetPaymentInformation == null)
         {
             return;
         }
 
         DecimalFormat comma = new DecimalFormat("###,##0");
-        String price = comma.format(ticketPayment.getPaymentToPay()) + Html.fromHtml(activity.getString(R.string.currency));
+        String price = comma.format(gourmetPaymentInformation.getPaymentToPay()) + activity.getString(R.string.currency);
 
         // 결제금액
         mTicketPaymentTextView.setText(price);
@@ -376,7 +370,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         // 라디오 그룹
 
         // 간편결제 관리
-        if (creditCard == null)
+        if (selectedCreditCard == null)
         {
             // 카드 관리 관련 화면을 보여주지 않는다.
             mCardManagerButton.setVisibility(View.INVISIBLE);
@@ -384,19 +378,19 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         } else
         {
             mCardManagerButton.setVisibility(View.VISIBLE);
-            mEasyPaymentButton.setText(String.format("%s %s", creditCard.name.replace("카드", ""), creditCard.number));
+            mEasyPaymentButton.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
         }
     }
 
-    public void updatePaymentInformationLayout(BaseActivity activity, TicketPayment ticketPayment)
+    public void updatePaymentInformationLayout(BaseActivity activity, GourmetPaymentInformation gourmetPaymentInformation)
     {
-        if (activity == null || ticketPayment == null)
+        if (activity == null || gourmetPaymentInformation == null)
         {
             return;
         }
 
         DecimalFormat comma = new DecimalFormat("###,##0");
-        String price = comma.format(ticketPayment.getPaymentToPay()) + Html.fromHtml(activity.getString(R.string.currency));
+        String price = comma.format(gourmetPaymentInformation.getPaymentToPay()) + activity.getString(R.string.currency);
 
         // 결제금액
         mTicketPaymentTextView.setText(price);
@@ -412,16 +406,16 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
 
         if (checkedId == mEasyPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.EASY_CARD);
+            mOnUserActionListener.setPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
         } else if (checkedId == mCardPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.CARD);
+            mOnUserActionListener.setPaymentType(PlacePaymentInformation.PaymentType.CARD);
         } else if (checkedId == mHpPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.PHONE_PAY);
+            mOnUserActionListener.setPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
         } else if (checkedId == mAccountPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.VBANK);
+            mOnUserActionListener.setPaymentType(PlacePaymentInformation.PaymentType.VBANK);
         }
     }
 
@@ -635,7 +629,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         }
     }
 
-    public void checkPaymentType(TicketPayment.PaymentType type)
+    public void checkPaymentType(PlacePaymentInformation.PaymentType type)
     {
         if (mPaymentGroup == null || type == null)
         {

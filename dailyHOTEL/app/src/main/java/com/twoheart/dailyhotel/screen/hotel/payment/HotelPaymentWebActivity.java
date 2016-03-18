@@ -1,17 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * PaymentActivity (결제화면)
- * <p>
- * 웹서버에서 이용하는 KCP 결제 모듈을 이용하는 화면이다. WebView를 이용
- * 해서 KCP 결제를 진행하는 웹서버 API에 POST 방식으로 요청한다. 요청 시
- * 요청 파라미터에 사용자 정보를 담는다. 이는 서버 사이드에서 Facbook 계정
- * 임인지를 확인하기 위해서이다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.screen.hotel.payment;
 
 import android.annotation.SuppressLint;
@@ -61,7 +47,7 @@ import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
 
 @SuppressLint("NewApi")
-public class PaymentActivity extends BaseActivity implements Constants
+public class HotelPaymentWebActivity extends BaseActivity implements Constants
 {
     public static final int PROGRESS_STAT_NOT_START = 1;
     public static final int PROGRESS_STAT_IN = 2;
@@ -90,7 +76,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
         if (mPay == null)
         {
-            DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
+            DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }
@@ -98,7 +84,7 @@ public class PaymentActivity extends BaseActivity implements Constants
         if (mPay.getSaleRoomInformation().roomIndex == 0)
         {
             // 세션이 만료되어 재시작 요청.
-            restartApp();
+            restartExpiredSession();
             return;
         }
 
@@ -167,7 +153,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
             if (Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
             {
-                restartApp();
+                restartExpiredSession();
                 return;
             }
 
@@ -366,7 +352,7 @@ public class PaymentActivity extends BaseActivity implements Constants
             {
                 if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET))
                 {
-                    DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+                    DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
                     return true;
                 }
@@ -691,8 +677,6 @@ public class PaymentActivity extends BaseActivity implements Constants
             //				view.loadUrl("javascript:(function(){" + "var payImg = (document.getElementsByClassName('space_h_auto'))[0];" + "payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + "'background-size: 150px;' +" + "'background-repeat: no-repeat;' +" + "'background-position: center;';" + "})();");
             //			}
 
-            VolleyHttpClient.cookieManagerSync();
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             {
                 setSupportProgressBarIndeterminateVisibility(false);
@@ -756,7 +740,7 @@ public class PaymentActivity extends BaseActivity implements Constants
                 {
                     //					ExLog.d("[PayDemoActivity] KCPPayPinInfoBridge=[getPaypinInfo]");
 
-                    PackageState ps = new PackageState(PaymentActivity.this);
+                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
 
                     if (!ps.getPackageAllInstallState("com.skp.android.paypin"))
                     {
@@ -794,7 +778,7 @@ public class PaymentActivity extends BaseActivity implements Constants
                 @Override
                 public void onClick(View view)
                 {
-                    DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
                 }
             };
 
@@ -817,7 +801,7 @@ public class PaymentActivity extends BaseActivity implements Constants
                     CARD_CD = card_cd;
                     QUOTA = quota;
 
-                    PackageState ps = new PackageState(PaymentActivity.this);
+                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
 
                     if (!ps.getPackageDownloadInstallState("com.skt.at"))
                     {
@@ -861,7 +845,7 @@ public class PaymentActivity extends BaseActivity implements Constants
             {
                 public void run()
                 {
-                    PackageState ps = new PackageState(PaymentActivity.this);
+                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
 
                     String argUrl = arg;
 
