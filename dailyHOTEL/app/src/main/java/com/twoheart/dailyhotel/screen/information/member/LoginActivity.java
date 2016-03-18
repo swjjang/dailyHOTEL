@@ -841,7 +841,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         String accessToken = tokenJSONObject.getString("access_token");
                         String tokenType = tokenJSONObject.getString("token_type");
 
-                        DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", accessToken, tokenType));
+                        DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                         storeLoginInfo();
 
                         DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
@@ -886,7 +886,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     String accessToken = tokenJSONObject.getString("access_token");
                     String tokenType = tokenJSONObject.getString("token_type");
 
-                    DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", accessToken, tokenType));
+                    DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                     storeLoginInfo();
 
                     DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);

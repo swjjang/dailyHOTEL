@@ -36,7 +36,7 @@ public abstract class PlacePaymentInformation implements Parcelable
         dest.writeParcelable(mGuest, flags);
     }
 
-    private void readFromParcel(Parcel in)
+    protected void readFromParcel(Parcel in)
     {
         placeIndex = in.readInt();
         bonus = in.readInt();

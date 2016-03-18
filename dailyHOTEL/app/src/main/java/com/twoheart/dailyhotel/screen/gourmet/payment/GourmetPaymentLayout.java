@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * BookingActivity (예약 화면)
- * <p>
- * 결제 화면으로 넘어가기 전 예약 정보를 보여주고 결제방식을 선택할 수 있는 화면
- */
 package com.twoheart.dailyhotel.screen.gourmet.payment;
 
 import android.content.Context;
@@ -12,9 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -31,7 +22,6 @@ import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.StringFilter;
@@ -48,9 +38,6 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
 {
     private BaseActivity mActivity;
 
-    private ViewGroup mViewGroupRoot;
-    private View mUserInformation;
-    private View mTicketInformation;
     private TextView mTicketCountTextView, mTicketTimeTextView;
     private EditText mUserNameEditText, mUserPhoneEditText, mUserEmailEditText;
     private Drawable[] mEditTextBackgrounds;
@@ -71,36 +58,16 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         mScrollLayout = scrollLayout;
         mOnUserActionListener = listener;
 
-        initLayout(activity);
+        initLayout(activity, mScrollLayout);
     }
 
-    private void initLayout(BaseActivity activity)
+    private void initLayout(BaseActivity activity, View rootLayout)
     {
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mViewGroupRoot = (ViewGroup) inflater.inflate(R.layout.activity_booking_place, null, false);
+        initTicketInformationLayout(activity, rootLayout);
+        initUserInformationLayout(activity, rootLayout);
+        initPaymentInformationLayout(activity, rootLayout);
 
-        mScrollLayout = (ScrollView) mViewGroupRoot.findViewById(R.id.scrollLayout);
-        ViewGroup bookingLayout = (ViewGroup) mViewGroupRoot.findViewById(R.id.bookingLayout);
-
-        // 결제 정보 넣기
-        View paymentInformation = inflater.inflate(R.layout.layout_booking_gourmet_payment_information, null, false);
-        bookingLayout.addView(paymentInformation, 0);
-
-        initPaymentInformationLayout(activity, paymentInformation);
-
-        // 예약자 정보 넣기
-        mUserInformation = inflater.inflate(R.layout.layout_booking_gourmet_user_information, null, false);
-        bookingLayout.addView(mUserInformation, 0);
-
-        initUserInformationLayout(activity, mUserInformation);
-
-        // 상품 정보 넣기
-        mTicketInformation = inflater.inflate(R.layout.layout_booking_gourmet_ticket_information, null, false);
-        bookingLayout.addView(mTicketInformation, 0);
-
-        initTicketInformationLayout(activity, mTicketInformation);
-
-        View payButton = mViewGroupRoot.findViewById(R.id.payButton);
+        View payButton = rootLayout.findViewById(R.id.payButton);
         payButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -108,15 +75,10 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
             {
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.pay();
+                    mOnUserActionListener.doPayment();
                 }
             }
         });
-    }
-
-    public ViewGroup getLayout()
-    {
-        return mViewGroupRoot;
     }
 
     public void updatePaymentInformation(GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
@@ -197,14 +159,14 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         });
     }
 
-    public void updateTicketInformationLayout(BaseActivity activity, TicketPayment ticketPayment)
+    public void updateTicketInformationLayout(BaseActivity activity, GourmetPaymentInformation gourmetPaymentInformation)
     {
-        if (activity == null || ticketPayment == null)
+        if (activity == null || gourmetPaymentInformation == null)
         {
             return;
         }
 
-        TicketInformation ticketInformation = ticketPayment.getTicketInformation();
+        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
         if (ticketInformation == null)
         {
@@ -212,18 +174,18 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         }
 
         // 타입
-        TextView ticketTypeTextView = (TextView) mTicketInformation.findViewById(R.id.ticketTypeTextView);
+        TextView ticketTypeTextView = (TextView) mScrollLayout.findViewById(R.id.ticketTypeTextView);
         ticketTypeTextView.setText(ticketInformation.name);
 
         // 날짜
-        TextView ticketDateTextView = (TextView) mTicketInformation.findViewById(R.id.ticketDateTextView);
-        ticketDateTextView.setText(ticketPayment.checkInTime);
+        TextView ticketDateTextView = (TextView) mScrollLayout.findViewById(R.id.ticketDateTextView);
+        ticketDateTextView.setText(gourmetPaymentInformation.checkInTime);
 
-        if (ticketPayment.ticketTime != 0)
+        if (gourmetPaymentInformation.ticketTime != 0)
         {
             Calendar calendarTime = DailyCalendar.getInstance();
             calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-            calendarTime.setTimeInMillis(ticketPayment.ticketTime);
+            calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
 
             SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
             formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -233,7 +195,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         }
 
         // 수량
-        mTicketCountTextView.setText(activity.getString(R.string.label_booking_count, ticketPayment.ticketCount));
+        mTicketCountTextView.setText(activity.getString(R.string.label_booking_count, gourmetPaymentInformation.ticketCount));
     }
 
     private void initUserInformationLayout(BaseActivity activity, View viewRoot)
@@ -284,14 +246,14 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         });
     }
 
-    private void updateUserInformationLayout(TicketPayment ticketPayment)
+    protected void updateUserInformationLayout(GourmetPaymentInformation gourmetPaymentInformation)
     {
-        if (ticketPayment == null)
+        if (gourmetPaymentInformation == null)
         {
             return;
         }
 
-        Guest guest = ticketPayment.getGuest();
+        Guest guest = gourmetPaymentInformation.getGuest();
 
         if (guest == null)
         {
@@ -334,8 +296,6 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         mHpPaymentButton = (RadioButton) viewRoot.findViewById(R.id.hpPaymentRadioButton);
         mAccountPaymentButton = (RadioButton) viewRoot.findViewById(R.id.accountPaymentRadioButton);
 
-        mPaymentGroup.setOnCheckedChangeListener(this);
-
         // 간편결제 관리
         mCardManagerButton = viewRoot.findViewById(R.id.cardManagerButton);
         mCardManagerButton.setOnClickListener(new View.OnClickListener()
@@ -352,6 +312,8 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
 
         mPaymentGroup.check(mEasyPaymentButton.getId());
         mEasyPaymentButton.setText(R.string.label_booking_easypayment);
+
+        mPaymentGroup.setOnCheckedChangeListener(this);
     }
 
     public void updatePaymentInformationLayout(BaseActivity activity, GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
@@ -361,11 +323,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
             return;
         }
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
-        String price = comma.format(gourmetPaymentInformation.getPaymentToPay()) + activity.getString(R.string.currency);
-
-        // 결제금액
-        mTicketPaymentTextView.setText(price);
+        updatePaymentInformationLayout(activity, gourmetPaymentInformation);
 
         // 라디오 그룹
 
@@ -406,16 +364,16 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
 
         if (checkedId == mEasyPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
+            mOnUserActionListener.changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
         } else if (checkedId == mCardPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(PlacePaymentInformation.PaymentType.CARD);
+            mOnUserActionListener.changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
         } else if (checkedId == mHpPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
+            mOnUserActionListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
         } else if (checkedId == mAccountPaymentButton.getId())
         {
-            mOnUserActionListener.setPaymentType(PlacePaymentInformation.PaymentType.VBANK);
+            mOnUserActionListener.changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
         }
     }
 
@@ -563,7 +521,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
                 }
             });
 
-            View fakeMobileEditView = mUserInformation.findViewById(R.id.fakeMobileEditView);
+            View fakeMobileEditView = mScrollLayout.findViewById(R.id.fakeMobileEditView);
 
             fakeMobileEditView.setFocusable(true);
             fakeMobileEditView.setOnClickListener(new View.OnClickListener()

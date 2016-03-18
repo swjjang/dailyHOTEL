@@ -124,8 +124,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         setContentView(R.layout.activity_booking);
 
-        mPaymentInformation = new HotelPaymentInformation();
-
         Intent intent = getIntent();
 
         if (intent == null)
@@ -134,6 +132,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             return;
         }
 
+        mPaymentInformation = new HotelPaymentInformation();
         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
         hotelPaymentInformation.setSaleRoomInformation((SaleRoomInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
@@ -331,6 +330,594 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         }
 
         mFinalPaymentTextView.setText(comma.format(payPrice) + getString(R.string.currency));
+    }
+
+
+    @Override
+    protected void requestUserInformationForPayment()
+    {
+        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
+    }
+
+    @Override
+    protected void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        if (paymentInformation == null || checkInSaleTime == null)
+        {
+            return;
+        }
+
+        lockUI();
+
+        Guest guest = paymentInformation.getGuest();
+
+        if (mIsEditMode == true)
+        {
+            guest.name = mReservationName.getText().toString().trim();
+            guest.phone = mReservationPhone.getText().toString().trim();
+            guest.email = mReservationEmail.getText().toString().trim();
+        }
+
+        String bonus = "0"; // 적립금
+
+        if (paymentInformation.isEnabledBonus == true)
+        {
+            bonus = String.valueOf(paymentInformation.bonus);
+        }
+
+        SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("room_idx", String.valueOf(saleRoomInformation.roomIndex));
+        params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+        params.put("nights", String.valueOf(saleRoomInformation.nights));
+        params.put("billkey", mSelectedCreditCard.billingkey);
+        params.put("bonus", bonus);
+        params.put("guest_name", guest.name);
+        params.put("guest_phone", guest.phone.replace("-", ""));
+        params.put("guest_email", guest.email);
+
+        //            if (DEBUG == true)
+        //            {
+        //                showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
+        //            }
+
+        DailyNetworkAPI.getInstance().requestHotelPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener, HotelPaymentActivity.this);
+    }
+
+    @Override
+    protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
+
+        // 호텔 디테일 정보 재 요청
+        DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag//
+            , saleRoomInformation.roomIndex//
+            , checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
+            , saleRoomInformation.nights, mHotelPaymentInformationJsonResponseListener, this);
+    }
+
+    @Override
+    protected void updatePaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
+    {
+        if (selectedCreditCard == null)
+        {
+            mCardManagerButton.setVisibility(View.INVISIBLE);
+            mEasyPaymentButton.setText(R.string.label_booking_easypayment);
+        } else
+        {
+            mCardManagerButton.setVisibility(View.VISIBLE);
+            mEasyPaymentButton.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
+        }
+    }
+
+    @Override
+    protected void updateGuestInformation(String phoneNumber)
+    {
+        mPaymentInformation.getGuest().phone = phoneNumber;
+        mReservationPhone.setText(phoneNumber);
+    }
+
+    @Override
+    protected void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard)
+    {
+        mSelectedCreditCard = creditCard;
+        mPaymentInformation.paymentType = paymentType;
+
+        switch (paymentType)
+        {
+            case EASY_CARD:
+                mPaymentRadioGroup.check(mEasyPaymentButton.getId());
+                break;
+
+            case CARD:
+                mPaymentRadioGroup.check(mCardPaymentButton.getId());
+                break;
+
+            case PHONE_PAY:
+                mPaymentRadioGroup.check(mHpPaymentButton.getId());
+                break;
+
+            case VBANK:
+                mPaymentRadioGroup.check(mAccountPaymentButton.getId());
+                break;
+        }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, paymentType.getName(), null);
+    }
+
+    @Override
+    protected boolean isChangedPrice()
+    {
+        return mIsChangedPrice;
+    }
+
+    @Override
+    protected boolean hasWarningMessage()
+    {
+        return (Util.isTextEmpty(mWarningDialogMessage) == false);
+    }
+
+    @Override
+    protected void showWarningMessageDialog()
+    {
+        showSimpleDialog(getString(R.string.dialog_notice2), mWarningDialogMessage, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                mWarningDialogMessage = "";
+            }
+        });
+    }
+
+    @Override
+    protected void checkChangedBonusSwitch()
+    {
+        onCheckedChanged(mBonusSwitch, mBonusSwitch.isChecked());
+    }
+
+    @Override
+    protected void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        Intent intent = new Intent(this, HotelPaymentWebActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+    }
+
+    @Override
+    protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
+    {
+        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+
+        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+
+        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, saleRoomInformation.hotelName//
+            , saleRoomInformation.roomName, hotelPaymentInformation.checkInOutDate);
+
+        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+    }
+
+    @Override
+    protected Dialog getEasyPaymentConfirmDialog()
+    {
+        final Dialog dialog = new Dialog(this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+        layoutParams.copyFrom(window.getAttributes());
+
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(layoutParams);
+
+        int[] messageResIds = {R.string.dialog_msg_hotel_payment_message01//
+            , R.string.dialog_msg_hotel_payment_message02//
+            , R.string.dialog_msg_hotel_payment_message03//
+            , R.string.dialog_msg_hotel_payment_message08};
+
+        messageResIds = paymentDialogMessage(mPensionPopupMessageType, messageResIds);
+
+        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this, messageResIds);
+        final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
+        final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
+
+        agreeLayout.setEnabled(false);
+
+        finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
+        {
+            @Override
+            public void onConfirmSignature()
+            {
+                agreeLayout.setEnabled(true);
+
+                AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
+                animation.setDuration(500);
+                animation.setFillBefore(true);
+                animation.setFillAfter(true);
+
+                animation.setAnimationListener(new Animation.AnimationListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animation animation)
+                    {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        agreeSinatureTextView.setAnimation(null);
+                        agreeSinatureTextView.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation)
+                    {
+                    }
+                });
+
+                TransitionDrawable transition = (TransitionDrawable) agreeLayout.getBackground();
+                transition.startTransition(500);
+
+                agreeSinatureTextView.startAnimation(animation);
+
+                agreeLayout.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        synchronized (HotelPaymentActivity.this)
+                        {
+                            if (isLockUiComponent() == true)
+                            {
+                                return;
+                            }
+
+                            dialog.dismiss();
+
+                            lockUI();
+
+                            // 1. 세션이 살아있는지 검사 시작.
+                            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
+
+                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                                , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
+                        }
+                    }
+                });
+            }
+        });
+
+        dialog.setContentView(finalCheckLayout);
+
+        return dialog;
+    }
+
+    @Override
+    protected Dialog getPaymentConfirmDialog(PlacePaymentInformation.PaymentType paymentType)
+    {
+        final Dialog dialog = new Dialog(this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
+        ViewGroup messageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
+
+        int[] textResIds;
+
+        switch (paymentType)
+        {
+            // 신용카드 일반 결제
+            case CARD:
+                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message03};
+
+                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
+                break;
+
+            // 핸드폰 결제
+            case PHONE_PAY:
+                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message03//
+                    , R.string.dialog_msg_hotel_payment_message04};
+
+                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
+                break;
+
+            // 계좌 이체
+            case VBANK:
+                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message03//
+                    , R.string.dialog_msg_hotel_payment_message05};
+
+                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
+                break;
+
+            default:
+                return null;
+        }
+
+        int length = textResIds.length;
+
+        for (int i = 0; i < length; i++)
+        {
+            View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, messageLayout, false);
+
+            TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
+
+            String message = getString(textResIds[i]);
+
+            int startIndex = message.indexOf("<b>");
+
+            if (startIndex >= 0)
+            {
+                message = message.replaceAll("<b>", "");
+
+                int endIndex = message.indexOf("</b>");
+
+                message = message.replaceAll("</b>", "");
+
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
+
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                messageTextView.setText(spannableStringBuilder);
+            } else
+            {
+                messageTextView.setText(message);
+            }
+
+            messageLayout.addView(messageRow);
+        }
+
+        View agreeLayout = view.findViewById(R.id.agreeLayout);
+
+        OnClickListener buttonOnClickListener = new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                dialog.dismiss();
+
+                synchronized (HotelPaymentActivity.this)
+                {
+                    if (isLockUiComponent() == true)
+                    {
+                        return;
+                    }
+
+                    lockUI();
+
+                    // 1. 세션이 살아있는지 검사 시작.
+                    DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
+
+                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                        , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
+                }
+            }
+        };
+
+        agreeLayout.setOnClickListener(buttonOnClickListener);
+
+        dialog.setContentView(view);
+
+        return dialog;
+    }
+
+    @Override
+    protected void onActivityPaymentResult(int requestCode, int resultCode, Intent intent)
+    {
+        String title = getString(R.string.dialog_title_payment);
+        String msg = "";
+        String posTitle = getString(R.string.dialog_btn_text_confirm);
+        OnClickListener posListener = null;
+
+        switch (resultCode)
+        {
+            // 결제가 성공한 경우 GA와 믹스패널에 등록
+            case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
+            case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
+                recordAnalyticsPaymentComplete(mPaymentInformation);
+
+                showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
+                return;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
+                msg = getString(R.string.act_toast_payment_soldout);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
+                title = getString(R.string.dialog_notice2);
+                msg = getString(R.string.act_toast_payment_not_available);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
+                msg = getString(R.string.act_toast_payment_network_error);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+                restartExpiredSession();
+                return;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
+                msg = getString(R.string.act_toast_payment_invalid_date);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
+                msg = getString(R.string.act_toast_payment_fail);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
+                msg = getString(R.string.act_toast_payment_canceled);
+
+                posListener = new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                    }
+                };
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                /**
+                 * 가상계좌선택시 해당 가상계좌 정보를 보기위해 화면 스택을 쌓으면서 들어가야함. 이를 위한 정보를 셋팅.
+                 * 예약 리스트 프래그먼트에서 찾아 들어가기 위해서 필요함. 들어간 후에는 다시 프리퍼런스를 초기화해줌.
+                 * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약
+                 * 리스트 갱신 후 최상단 아이템 인텐트
+                 */
+                DailyPreference.getInstance(this).setVirtuaAccountHotelInformation(this, (HotelPaymentInformation) mPaymentInformation, mCheckInSaleTime);
+                DailyPreference.getInstance(HotelPaymentActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+
+                msg = getString(R.string.dialog_msg_issuing_account);
+
+                posListener = new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                        finish();
+                    }
+                };
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
+                msg = getString(R.string.act_toast_payment_account_time_error);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
+                msg = getString(R.string.act_toast_payment_account_duplicate);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                msg = getString(R.string.act_toast_payment_account_timeover);
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR:
+                if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
+                {
+                    msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
+                } else
+                {
+                    msg = getString(R.string.act_toast_payment_fail);
+                }
+                break;
+
+            case CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK:
+            {
+                if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE))
+                {
+                    String result = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
+                    String[] message = result.split("\\^");
+
+                    try
+                    {
+                        int msgCode = Integer.parseInt(message[0]);
+                        msg = message[1];
+
+                        // 5	판매 마감시
+                        // 1000	결제 성공시
+                        // 1001	결제가 취소되었을시 ( 입금전 )
+                        // 1002	예약 실패시 ( 입금 후 )
+                        // 1003	입금 대기중 일시
+                        // 1004	모든 객실이 판매되었을시
+                        // 1005	마지막 상품을 다른 고객님이 결제중 일시
+                        // 1006	이니시스 에러 메시지 일시
+                        switch (msgCode)
+                        {
+                            case 5:
+                            {
+                                posListener = new OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                        finish();
+                                    }
+                                };
+                                break;
+                            }
+
+                            case 1000:
+                            {
+                                recordAnalyticsPaymentComplete(mPaymentInformation);
+
+                                showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
+                                return;
+                            }
+
+                            case 1001:
+                            case 1002:
+                            case 1003:
+                                posListener = new OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                    }
+                                };
+                                break;
+
+                            case 1004:
+                            case 1005:
+                            case 1006:
+                            default:
+                                break;
+                        }
+                    } catch (Exception e)
+                    {
+                        msg = getString(R.string.act_toast_payment_fail);
+                    }
+                } else
+                {
+                    msg = getString(R.string.act_toast_payment_fail);
+                }
+                break;
+            }
+
+            default:
+                return;
+        }
+
+        if (posListener == null)
+        {
+            posListener = new OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    finish();
+                }
+            };
+        }
+
+        showSimpleDialog(title, msg, posTitle, null, posListener, null, false);
+    }
+
+    @Override
+    protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
+    {
+        AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
+            , getMapPaymentInformation((HotelPaymentInformation) paymentInformation));
     }
 
     @Override
@@ -555,585 +1142,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         return messages;
     }
 
-
-    /**
-     * 결제 수단에 알맞은 결제 동의 확인 다이얼로그를 만든다.
-     *
-     * @return 타입에 맞는 결제 동의 다이얼로그 반환.
-     */
-
-    protected Dialog getPaymentConfirmDialog(PlacePaymentInformation.PaymentType paymentType)
-    {
-        final Dialog dialog = new Dialog(this);
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-
-        View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
-        ViewGroup messageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
-
-        int[] textResIds;
-
-        switch (paymentType)
-        {
-            // 신용카드 일반 결제
-            case CARD:
-                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message02//
-                    , R.string.dialog_msg_hotel_payment_message03};
-
-                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
-                break;
-
-            // 핸드폰 결제
-            case PHONE_PAY:
-                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message02//
-                    , R.string.dialog_msg_hotel_payment_message03//
-                    , R.string.dialog_msg_hotel_payment_message04};
-
-                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
-                break;
-
-            // 계좌 이체
-            case VBANK:
-                textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message02//
-                    , R.string.dialog_msg_hotel_payment_message03//
-                    , R.string.dialog_msg_hotel_payment_message05};
-
-                textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
-                break;
-
-            default:
-                return null;
-        }
-
-        int length = textResIds.length;
-
-        for (int i = 0; i < length; i++)
-        {
-            View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, messageLayout, false);
-
-            TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
-
-            String message = getString(textResIds[i]);
-
-            int startIndex = message.indexOf("<b>");
-
-            if (startIndex >= 0)
-            {
-                message = message.replaceAll("<b>", "");
-
-                int endIndex = message.indexOf("</b>");
-
-                message = message.replaceAll("</b>", "");
-
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
-
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
-                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                messageTextView.setText(spannableStringBuilder);
-            } else
-            {
-                messageTextView.setText(message);
-            }
-
-            messageLayout.addView(messageRow);
-        }
-
-        View agreeLayout = view.findViewById(R.id.agreeLayout);
-
-        OnClickListener buttonOnClickListener = new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                dialog.dismiss();
-
-                synchronized (HotelPaymentActivity.this)
-                {
-                    if (isLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    lockUI();
-
-                    // 1. 세션이 살아있는지 검사 시작.
-                    DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
-
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                        , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
-                }
-            }
-        };
-
-        agreeLayout.setOnClickListener(buttonOnClickListener);
-
-        dialog.setContentView(view);
-
-        return dialog;
-    }
-
-    protected Dialog getEasyPaymentConfirmDialog()
-    {
-        final Dialog dialog = new Dialog(this);
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        Window window = dialog.getWindow();
-        layoutParams.copyFrom(window.getAttributes());
-
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(layoutParams);
-
-        int[] messageResIds = {R.string.dialog_msg_hotel_payment_message01//
-            , R.string.dialog_msg_hotel_payment_message02//
-            , R.string.dialog_msg_hotel_payment_message03//
-            , R.string.dialog_msg_hotel_payment_message08};
-
-        messageResIds = paymentDialogMessage(mPensionPopupMessageType, messageResIds);
-
-        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this, messageResIds);
-        final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
-        final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
-
-        agreeLayout.setEnabled(false);
-
-        finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
-        {
-            @Override
-            public void onConfirmSignature()
-            {
-                agreeLayout.setEnabled(true);
-
-                AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
-                animation.setDuration(500);
-                animation.setFillBefore(true);
-                animation.setFillAfter(true);
-
-                animation.setAnimationListener(new Animation.AnimationListener()
-                {
-                    @Override
-                    public void onAnimationStart(Animation animation)
-                    {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation)
-                    {
-                        agreeSinatureTextView.setAnimation(null);
-                        agreeSinatureTextView.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation)
-                    {
-                    }
-                });
-
-                TransitionDrawable transition = (TransitionDrawable) agreeLayout.getBackground();
-                transition.startTransition(500);
-
-                agreeSinatureTextView.startAnimation(animation);
-
-                agreeLayout.setOnClickListener(new OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        synchronized (HotelPaymentActivity.this)
-                        {
-                            if (isLockUiComponent() == true)
-                            {
-                                return;
-                            }
-
-                            dialog.dismiss();
-
-                            lockUI();
-
-                            // 1. 세션이 살아있는지 검사 시작.
-                            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
-
-                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-                                , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
-                        }
-                    }
-                });
-            }
-        });
-
-        dialog.setContentView(finalCheckLayout);
-
-        return dialog;
-    }
-
-    @Override
-    protected void requestUserInformationForPayment()
-    {
-        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
-    }
-
-    @Override
-    protected void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
-    {
-        if (paymentInformation == null || checkInSaleTime == null)
-        {
-            return;
-        }
-
-        unLockUI();
-
-        Guest guest = paymentInformation.getGuest();
-
-        if (mIsEditMode == true)
-        {
-            guest.name = mReservationName.getText().toString().trim();
-            guest.phone = mReservationPhone.getText().toString().trim();
-            guest.email = mReservationEmail.getText().toString().trim();
-        }
-
-        String bonus = "0"; // 적립금
-
-        if (paymentInformation.isEnabledBonus == true)
-        {
-            bonus = String.valueOf(paymentInformation.bonus);
-        }
-
-        SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
-
-        Map<String, String> params = new HashMap<>();
-        params.put("room_idx", String.valueOf(saleRoomInformation.roomIndex));
-        params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        params.put("nights", String.valueOf(saleRoomInformation.nights));
-        params.put("billkey", mSelectedCreditCard.billingkey);
-        params.put("bonus", bonus);
-        params.put("guest_name", guest.name);
-        params.put("guest_phone", guest.phone.replace("-", ""));
-        params.put("guest_email", guest.email);
-
-        //            if (DEBUG == true)
-        //            {
-        //                showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-        //            }
-
-        DailyNetworkAPI.getInstance().requestHotelPayment(mNetworkTag, params, mHotelPaymentSessionEasy, HotelPaymentActivity.this);
-    }
-
-    @Override
-    protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
-    {
-        SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
-
-        // 호텔 디테일 정보 재 요청
-        DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag//
-            , saleRoomInformation.roomIndex//
-            , checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-            , saleRoomInformation.nights, mHotelPaymentInformationJsonResponseListener, this);
-    }
-
-    @Override
-    protected void updatePaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
-    {
-        if (selectedCreditCard == null)
-        {
-            mCardManagerButton.setVisibility(View.INVISIBLE);
-            mEasyPaymentButton.setText(R.string.label_booking_easypayment);
-        } else
-        {
-            mCardManagerButton.setVisibility(View.VISIBLE);
-            mEasyPaymentButton.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
-        }
-    }
-
-    @Override
-    protected void updateGuestInformation(String phoneNumber)
-    {
-        mPaymentInformation.getGuest().phone = phoneNumber;
-        mReservationPhone.setText(phoneNumber);
-    }
-
-    @Override
-    protected void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard)
-    {
-        mSelectedCreditCard = creditCard;
-        mPaymentInformation.paymentType = paymentType;
-
-        switch (paymentType)
-        {
-            case EASY_CARD:
-                mPaymentRadioGroup.check(mEasyPaymentButton.getId());
-                break;
-
-            case CARD:
-                mPaymentRadioGroup.check(mCardPaymentButton.getId());
-                break;
-
-            case PHONE_PAY:
-                mPaymentRadioGroup.check(mHpPaymentButton.getId());
-                break;
-
-            case VBANK:
-                mPaymentRadioGroup.check(mAccountPaymentButton.getId());
-                break;
-        }
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
-            , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, paymentType.getName(), null);
-    }
-
-    @Override
-    protected boolean isChangedPrice()
-    {
-        return mIsChangedPrice;
-    }
-
-    @Override
-    protected boolean hasWarningMessage()
-    {
-        return (Util.isTextEmpty(mWarningDialogMessage) == false);
-    }
-
-    @Override
-    protected void showWarningMessageDialog()
-    {
-        showSimpleDialog(getString(R.string.dialog_notice2), mWarningDialogMessage, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                mWarningDialogMessage = "";
-            }
-        });
-    }
-
-    @Override
-    protected void checkChangedBonusSwitch()
-    {
-        onCheckedChanged(mBonusSwitch, mBonusSwitch.isChecked());
-    }
-
-    @Override
-    protected void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
-    {
-        Intent intent = new Intent(this, HotelPaymentWebActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
-
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-    }
-
-    @Override
-    protected void onActivityPaymentResult(int requestCode, int resultCode, Intent intent)
-    {
-        //결제가 끝난 뒤 호출됨.
-        String title = getString(R.string.dialog_title_payment);
-        String msg = "";
-        String posTitle = getString(R.string.dialog_btn_text_confirm);
-        OnClickListener posListener = null;
-
-        switch (resultCode)
-        {
-            // 결제가 성공한 경우 GA와 믹스패널에 등록
-            case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
-            case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
-                recordAnalyticsPaymentComplete(mPaymentInformation);
-
-                showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
-                return;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
-                msg = getString(R.string.act_toast_payment_soldout);
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
-                title = getString(R.string.dialog_notice2);
-                msg = getString(R.string.act_toast_payment_not_available);
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
-                msg = getString(R.string.act_toast_payment_network_error);
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
-                restartExpiredSession();
-                return;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
-                msg = getString(R.string.act_toast_payment_invalid_date);
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-                msg = getString(R.string.act_toast_payment_fail);
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
-                msg = getString(R.string.act_toast_payment_canceled);
-
-                posListener = new OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                    }
-                };
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
-                /**
-                 * 가상계좌선택시 해당 가상계좌 정보를 보기위해 화면 스택을 쌓으면서 들어가야함. 이를 위한 정보를 셋팅.
-                 * 예약 리스트 프래그먼트에서 찾아 들어가기 위해서 필요함. 들어간 후에는 다시 프리퍼런스를 초기화해줌.
-                 * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약
-                 * 리스트 갱신 후 최상단 아이템 인텐트
-                 */
-                DailyPreference.getInstance(this).setVirtuaAccountHotelInformation(this, (HotelPaymentInformation) mPaymentInformation, mCheckInSaleTime);
-                DailyPreference.getInstance(HotelPaymentActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-
-                msg = getString(R.string.dialog_msg_issuing_account);
-
-                posListener = new OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                        finish();
-                    }
-                };
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
-                msg = getString(R.string.act_toast_payment_account_time_error);
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
-                msg = getString(R.string.act_toast_payment_account_duplicate);
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
-                msg = getString(R.string.act_toast_payment_account_timeover);
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR:
-                if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
-                {
-                    msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
-                } else
-                {
-                    msg = getString(R.string.act_toast_payment_fail);
-                }
-                break;
-
-            case CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK:
-            {
-                if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE))
-                {
-                    String result = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
-                    String[] message = result.split("\\^");
-
-                    try
-                    {
-                        int msgCode = Integer.parseInt(message[0]);
-                        msg = message[1];
-
-                        // 5	판매 마감시
-                        // 1000	결제 성공시
-                        // 1001	결제가 취소되었을시 ( 입금전 )
-                        // 1002	예약 실패시 ( 입금 후 )
-                        // 1003	입금 대기중 일시
-                        // 1004	모든 객실이 판매되었을시
-                        // 1005	마지막 상품을 다른 고객님이 결제중 일시
-                        // 1006	이니시스 에러 메시지 일시
-                        switch (msgCode)
-                        {
-                            case 5:
-                            {
-                                posListener = new OnClickListener()
-                                {
-                                    @Override
-                                    public void onClick(View v)
-                                    {
-                                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
-                                        finish();
-                                    }
-                                };
-                                break;
-                            }
-
-                            case 1000:
-                            {
-                                recordAnalyticsPaymentComplete(mPaymentInformation);
-
-                                showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
-                                return;
-                            }
-
-                            case 1001:
-                            case 1002:
-                            case 1003:
-                                posListener = new OnClickListener()
-                                {
-                                    @Override
-                                    public void onClick(View v)
-                                    {
-                                    }
-                                };
-                                break;
-
-                            case 1004:
-                            case 1005:
-                            case 1006:
-                            default:
-                                break;
-                        }
-                    } catch (Exception e)
-                    {
-                        msg = getString(R.string.act_toast_payment_fail);
-                    }
-                } else
-                {
-                    msg = getString(R.string.act_toast_payment_fail);
-                }
-                break;
-            }
-
-            default:
-                return;
-        }
-
-        if (posListener == null)
-        {
-            posListener = new OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    finish();
-                }
-            };
-        }
-
-        showSimpleDialog(title, msg, posTitle, null, posListener, null, false);
-    }
-
-    @Override
-    protected void analyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
-    {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
-            , getMapPaymentInformation((HotelPaymentInformation) paymentInformation));
-    }
-
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
@@ -1195,18 +1203,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         super.onStart();
     }
 
-    protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
-    {
-        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
-
-        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, saleRoomInformation.hotelName//
-            , saleRoomInformation.roomName, hotelPaymentInformation.checkInOutDate);
-
-        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
-    }
 
     private Map<String, String> getMapPaymentInformation(HotelPaymentInformation hotelPaymentInformation)
     {
@@ -1753,7 +1749,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         }
     };
 
-    private DailyHotelJsonResponseListener mHotelPaymentSessionEasy = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -1891,7 +1887,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             }
         }
     };
-
 
     private DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {

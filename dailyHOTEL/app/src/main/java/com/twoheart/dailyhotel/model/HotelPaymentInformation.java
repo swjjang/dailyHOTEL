@@ -24,13 +24,18 @@ public class HotelPaymentInformation extends PlacePaymentInformation
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        super.writeToParcel(dest, flags);
+
         dest.writeString(grade.name());
         dest.writeInt(originalPrice);
         dest.writeParcelable(mSaleRoomInformation, flags);
     }
 
-    private void readFromParcel(Parcel in)
+    @Override
+    protected void readFromParcel(Parcel in)
     {
+        super.readFromParcel(in);
+
         try
         {
             grade = Hotel.HotelGrade.valueOf(in.readString());

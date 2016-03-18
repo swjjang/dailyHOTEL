@@ -85,7 +85,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void onActivityPaymentResult(int requestCode, int resultCode, Intent intent);
 
-    protected abstract void analyticsAgreeTermDialog(PlacePaymentInformation paymentInformation);
+    protected abstract void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation);
 
     @Override
     protected void onResume()
@@ -129,6 +129,21 @@ public abstract class PlacePaymentActivity extends BaseActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+        {
+            mFinalCheckDialog.dismiss();
+        }
+
+        mFinalCheckDialog = null;
+
+        hidePorgressDialog();
+
+        super.onDestroy();
+    }
+
+    @Override
     public void onErrorResponse(VolleyError error)
     {
         super.onErrorResponse(error);
@@ -142,37 +157,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
         super.onError();
 
         finish();
-    }
-
-    protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
-    {
-        if (paymentInformation == null)
-        {
-            finish();
-            return;
-        }
-
-        unLockUI();
-
-        if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-            {
-                mFinalCheckDialog.dismiss();
-            }
-
-            showProgressDialog();
-
-            requestEasyPayment(paymentInformation, saleTime);
-        } else
-        {
-            showPaymentWeb(paymentInformation, saleTime);
-        }
     }
 
     @Override
@@ -193,6 +177,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
             case REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY:
             {
+                mDontReload = true;
+
                 if (resultCode == RESULT_OK && intent != null)
                 {
                     String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
@@ -212,12 +198,17 @@ public abstract class PlacePaymentActivity extends BaseActivity
                     {
                         changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, creditCard);
                     }
+                } else
+                {
+                    mDontReload = true;
                 }
                 break;
             }
 
             case REQUEST_CODE_PAYMETRESULT_ACTIVITY:
             {
+                mDontReload = true;
+
                 setResult(RESULT_OK);
                 finish();
                 return;
@@ -254,13 +245,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         break;
                 }
 
-                if (msg != null)
+                if (Util.isTextEmpty(msg) == false)
                 {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
                     String title = getString(R.string.dialog_notice2);
                     String positive = getString(R.string.dialog_btn_text_confirm);
 
@@ -271,47 +257,14 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
             case CODE_REQUEST_ACTIVITY_PAYMENT:
             {
+                mDontReload = true;
+
                 onActivityPaymentResult(requestCode, resultCode, intent);
                 break;
             }
 
             default:
                 break;
-        }
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-        {
-            mFinalCheckDialog.dismiss();
-        }
-
-        mFinalCheckDialog = null;
-
-        hidePorgressDialog();
-
-        super.onDestroy();
-    }
-
-    /**
-     * 결제 진행
-     */
-    protected void processAgreeTermDialog()
-    {
-        unLockUI();
-
-        if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
-        {
-            // 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
-            Intent intent = new Intent(this, RegisterCreditCardActivity.class);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-        } else
-        {
-            // 일반 결제 시도
-            showAgreeTermDialog(mPaymentInformation.paymentType);
         }
     }
 
@@ -342,6 +295,58 @@ public abstract class PlacePaymentActivity extends BaseActivity
             }
 
             mProgressDialog = null;
+        }
+    }
+
+    /**
+     * 실제 결제를 진행
+     *
+     * @param paymentInformation
+     * @param saleTime
+     */
+    protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
+    {
+        if (paymentInformation == null || saleTime == null)
+        {
+            finish();
+            return;
+        }
+
+        unLockUI();
+
+        if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+            {
+                mFinalCheckDialog.dismiss();
+            }
+
+            showProgressDialog();
+
+            requestEasyPayment(paymentInformation, saleTime);
+        } else
+        {
+            showPaymentWeb(paymentInformation, saleTime);
+        }
+    }
+
+    protected void processAgreeTermDialog()
+    {
+        unLockUI();
+
+        if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
+        {
+            Intent intent = new Intent(this, RegisterCreditCardActivity.class);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+        } else
+        {
+            showAgreeTermDialog(mPaymentInformation.paymentType);
         }
     }
 
@@ -403,7 +408,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         {
             mFinalCheckDialog.show();
 
-            analyticsAgreeTermDialog(mPaymentInformation);
+            recordAnalyticsAgreeTermDialog(mPaymentInformation);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -452,17 +457,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showStopOnSaleDialog()
     {
-        OnClickListener positiveListener = new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        };
-
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stop_onsale), getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, null, null, false);
+        showChangedValueDialog(R.string.dialog_msg_stop_onsale);
     }
 
     protected void showChangedPriceDialog()

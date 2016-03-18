@@ -80,11 +80,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         void showCreditCardManager();
 
-        void setPaymentType(PlacePaymentInformation.PaymentType type);
+        void changedPaymentType(PlacePaymentInformation.PaymentType type);
 
-        void pay();
-
-        void showCallDialog();
+        void doPayment();
 
         void showInputMobileNumberDialog(String mobileNumber);
     }
@@ -111,8 +109,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         setContentView(R.layout.activity_booking_place);
 
-        mPaymentInformation = new GourmetPaymentInformation();
-
         Intent intent = getIntent();
 
         if (intent == null)
@@ -121,6 +117,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             return;
         }
 
+        mPaymentInformation = new GourmetPaymentInformation();
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
         gourmetPaymentInformation.setTicketInformation((TicketInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
@@ -185,7 +182,18 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             return;
         }
 
+        lockUI();
+
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
+        Guest guest;
+
+        if(mIsEditMode == true)
+        {
+            guest = mGourmetPaymentLayout.getGuest();
+        } else
+        {
+            guest = gourmetPaymentInformation.getGuest();
+        }
 
         String bonus = "0"; // 적립금
 
@@ -194,11 +202,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             bonus = String.valueOf(gourmetPaymentInformation.bonus);
         }
 
-        Map<String, String> params = new HashMap<String, String>();
-
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
-        Guest guest = gourmetPaymentInformation.getGuest();
 
+        Map<String, String> params = new HashMap<>();
         params.put("sale_reco_idx", String.valueOf(ticketInformation.index));
         params.put("billkey", mSelectedCreditCard.billingkey);
         params.put("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
@@ -212,7 +218,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         //            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance().requestGourmetPayment(mNetworkTag, params, mPayEasyPaymentJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestGourmetPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener, this);
     }
 
     @Override
@@ -240,7 +246,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard)
     {
         mSelectedCreditCard = creditCard;
-        mOnUserActionListener.setPaymentType(paymentType);
+        mOnUserActionListener.changedPaymentType(paymentType);
     }
 
     @Override
@@ -275,7 +281,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
@@ -376,6 +381,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                             {
                                 return;
                             }
+
+                            dialog.dismiss();
 
                             lockUI();
 
@@ -667,12 +674,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void analyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
+    protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
     {
-
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
+            , getMapPaymentInformation((GourmetPaymentInformation) paymentInformation));
     }
 
-    protected void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime checkInSaleTime)
+    private void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime checkInSaleTime)
     {
         if (gourmetPaymentInformation == null || checkInSaleTime == null)
         {
@@ -684,10 +692,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             , gourmetPaymentInformation.getTicketInformation().index//
             , checkInSaleTime.getDayOfDaysDateFormat("yyMMdd")//
             , gourmetPaymentInformation.ticketCount//
-            , Long.toString(gourmetPaymentInformation.ticketTime), mTicketSellCheckJsonResponseListener, this);
+            , Long.toString(gourmetPaymentInformation.ticketTime), mCheckAvailableTicketJsonResponseListener, this);
     }
 
-    protected void recordAnalyticsPaymentComplete(GourmetPaymentInformation gourmetPaymentInformation)
+    private void recordAnalyticsPaymentComplete(GourmetPaymentInformation gourmetPaymentInformation)
     {
         try
         {
@@ -733,7 +741,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     }
 
-    protected Map<String, String> getMapPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
+    private Map<String, String> getMapPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
     {
         Map<String, String> params = new HashMap<>();
 
@@ -875,11 +883,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             }
 
             mIsEditMode = true;
-
-            if (mGourmetPaymentLayout != null)
-            {
-                mGourmetPaymentLayout.enabledEditUserInformation();
-            }
+            mGourmetPaymentLayout.enabledEditUserInformation();
         }
 
         @Override
@@ -909,14 +913,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void setPaymentType(PlacePaymentInformation.PaymentType paymentType)
+        public void changedPaymentType(PlacePaymentInformation.PaymentType paymentType)
         {
             mPaymentInformation.paymentType = paymentType;
             mGourmetPaymentLayout.checkPaymentType(paymentType);
         }
 
         @Override
-        public void pay()
+        public void doPayment()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -1006,12 +1010,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             String label = String.format("%s-%s", gourmetPaymentInformation.getTicketInformation().placeName, gourmetPaymentInformation.getTicketInformation().name);
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
                 , AnalyticsManager.Action.PAYMENT_CLICKED, label, null);
-        }
-
-        @Override
-        public void showCallDialog()
-        {
-            GourmetPaymentActivity.this.showCallDialog();
         }
 
         @Override
@@ -1186,6 +1184,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     {
                         requestValidateTicketPayment(gourmetPaymentInformation, mCheckInSaleTime);
                     }
+
+                    mGourmetPaymentLayout.updateTicketInformationLayout(GourmetPaymentActivity.this, gourmetPaymentInformation);
+                    mGourmetPaymentLayout.updateUserInformationLayout(gourmetPaymentInformation);
+                    mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, gourmetPaymentInformation);
 
                     recordAnalyticsPayment(gourmetPaymentInformation);
                 } else
@@ -1389,7 +1391,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mTicketSellCheckJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mCheckAvailableTicketJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -1432,7 +1434,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mPayEasyPaymentJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)

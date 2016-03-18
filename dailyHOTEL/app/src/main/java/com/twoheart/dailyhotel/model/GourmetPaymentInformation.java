@@ -37,6 +37,8 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        super.writeToParcel(dest, flags);
+
         dest.writeString(checkInTime);
         dest.writeString(checkOutTime);
         dest.writeInt(ticketCount);
@@ -47,8 +49,11 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         dest.writeString(category);
     }
 
-    private void readFromParcel(Parcel in)
+    @Override
+    protected void readFromParcel(Parcel in)
     {
+        super.readFromParcel(in);
+
         checkInTime = in.readString();
         checkOutTime = in.readString();
         ticketCount = in.readInt();

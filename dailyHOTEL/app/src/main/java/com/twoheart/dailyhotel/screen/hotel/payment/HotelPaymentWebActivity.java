@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,9 +22,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.model.HotelPaymentInformation;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -38,13 +41,14 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 @SuppressLint("NewApi")
 public class HotelPaymentWebActivity extends BaseActivity implements Constants
@@ -57,9 +61,6 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     public int m_nStat = PROGRESS_STAT_NOT_START;
 
     private WebView mWebView;
-    private Pay mPay;
-    private SaleTime mCheckInSaleTime;
-
     private Handler handler = new Handler();
 
     @Override
@@ -67,21 +68,25 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     {
         super.onCreate(savedInstanceState);
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null)
+        Intent intent = getIntent();
+
+        if (intent == null)
         {
-            mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
-            mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
+            finish();
+            return;
         }
 
-        if (mPay == null)
+        HotelPaymentInformation hotelPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+        SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+        if (hotelPaymentInformation == null)
         {
             DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }
 
-        if (mPay.getSaleRoomInformation().roomIndex == 0)
+        if (hotelPaymentInformation.getSaleRoomInformation().roomIndex == 0)
         {
             // 세션이 만료되어 재시작 요청.
             restartExpiredSession();
@@ -131,8 +136,8 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
         // webView.addJavascriptInterface(new HtmlObserver(), "HtmlObserver");
 
-        mWebView.setWebChromeClient(new mWebChromeClient());
-        mWebView.setWebViewClient(new mWebViewClient());
+        mWebView.setWebChromeClient(new DailyWebChromeClient());
+        mWebView.setWebViewClient(new DailyWebViewClient());
 
         mWebView.setOnLongClickListener(new OnLongClickListener()
         {
@@ -143,35 +148,41 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        if (mPay.getType() == Pay.Type.EASY_CARD)
+        if (hotelPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
         {
             finish();
             return;
-        } else
-        {
-            Guest guest = mPay.getGuest();
-
-            if (Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
-            {
-                restartExpiredSession();
-                return;
-            }
-
-            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON)).toString();
-
-            SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
-
-            ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("room_idx", "payment_type", "checkin_date", "nights", "bonus", "guest_name", "guest_phone", "guest_email"));
-            ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(saleRoomInformation.roomIndex), //
-                mPay.getType().name(), //
-                mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), //
-                String.valueOf(saleRoomInformation.nights), //
-                String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone.replace("-", "").replace("+", "%2B"), guest.email));
-
-            byte[] postParameter = parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()]));
-
-            mWebView.postUrl(url, postParameter);
         }
+
+        requestPostPaymentWebView(mWebView, hotelPaymentInformation, saleTime);
+    }
+
+    private void requestPostPaymentWebView(WebView webView, HotelPaymentInformation hotelPaymentInformation, SaleTime saleTime)
+    {
+        Guest guest = hotelPaymentInformation.getGuest();
+
+        if (Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
+        {
+            restartExpiredSession();
+            return;
+        }
+
+        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("room_idx", String.valueOf(saleRoomInformation.roomIndex));
+        builder.add("payment_type", hotelPaymentInformation.paymentType.name());
+        builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+        builder.add("nights", String.valueOf(saleRoomInformation.nights));
+        builder.add("bonus", String.valueOf(hotelPaymentInformation.isEnabledBonus ? hotelPaymentInformation.bonus : 0));
+        builder.add("guest_name", guest.name);
+        builder.add("guest_phone", guest.phone.replace("-", "").replace("+", "%2B"));
+        builder.add("guest_email", guest.email);
+
+        String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON)).toString();
+
+        WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
+        webViewPostAsyncTask.execute(url);
     }
 
     @Override
@@ -180,69 +191,6 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT_PROCESS, null);
 
         super.onStart();
-    }
-
-    private byte[] parsePostParameter(String[] key, String[] value)
-    {
-        List<byte[]> resultList = new ArrayList<byte[]>();
-        HashMap<String, byte[]> postParameters = new HashMap<String, byte[]>();
-
-        if (key.length != value.length)
-        {
-            throw new IllegalArgumentException("The length of the key arguments and " + "the length of the value arguments must be same.");
-        }
-
-        for (int i = 0; i < key.length; i++)
-        {
-            byte[] base64 = null;
-            try
-            {
-                base64 = value[i].getBytes("BASE64");
-            } catch (Exception e)
-            {
-                base64 = value[i].getBytes();
-            }
-
-            postParameters.put(key[i], base64);
-            //            postParameters.put(key[i], EncodingUtils.getBytes(value[i], "BASE64"));
-        }
-
-        for (int i = 0; i < postParameters.size(); i++)
-        {
-
-            if (resultList.size() != 0)
-            {
-                resultList.add("&".getBytes());
-            }
-
-            resultList.add(key[i].getBytes());
-            resultList.add("=".getBytes());
-            resultList.add(postParameters.get(key[i]));
-        }
-
-        int size = 0;
-        int[] sizeOfResult = new int[resultList.size()];
-
-        for (int i = 0; i < resultList.size(); i++)
-        {
-            sizeOfResult[i] = resultList.get(i).length;
-        }
-
-        for (int i = 0; i < sizeOfResult.length; i++)
-        {
-            size += sizeOfResult[i];
-        }
-
-        byte[] result = new byte[size];
-        int currentSize = 0;
-
-        for (int i = 0; i < resultList.size(); i++)
-        {
-            System.arraycopy(resultList.get(i), 0, result, currentSize, resultList.get(i).length);
-            currentSize += resultList.get(i).length;
-        }
-
-        return result;
     }
 
     @JavascriptInterface
@@ -522,10 +470,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;// RESULT_CANCELED
             }
         }
-        Intent payData = new Intent();
-        payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-
-        setResult(resultCode, payData);
+        setResult(resultCode);
         finish();
     }
 
@@ -556,7 +501,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
     }
 
-    private class mWebChromeClient extends WebChromeClient
+    private class DailyWebChromeClient extends WebChromeClient
     {
         boolean isActionBarProgressBarShowing = false;
 
@@ -587,9 +532,8 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         }
     }
 
-    private class mWebViewClient extends WebViewClient
+    private class DailyWebViewClient extends WebViewClient
     {
-
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url)
         {
@@ -597,7 +541,6 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
             if (url != null && !url.equals("about:blank"))
             {
-
                 if (url.startsWith("http://") || url.startsWith("https://"))
                 {
                     if (url.contains("http://market.android.com") || url.contains("http://m.ahnlab.com/kr/site/download") || url.endsWith(".apk"))
@@ -927,10 +870,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
             }
 
-            Intent payData = new Intent();
-            payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-
-            setResult(resultCode, payData);
+            setResult(resultCode);
             finish();
         }
 
@@ -942,11 +882,67 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             ExLog.e("paymentFeed : " + result);
 
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, result);
 
             setResult(CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
             finish();
+        }
+    }
+
+    class WebViewPostAsyncTask extends AsyncTask<String, Void, Response>
+    {
+        private WebView mWebView;
+        private FormBody.Builder mBuilder;
+
+        public WebViewPostAsyncTask(WebView webView, FormBody.Builder builder)
+        {
+            mWebView = webView;
+            mBuilder = builder;
+        }
+
+        @Override
+        protected Response doInBackground(String... params)
+        {
+            String url = params[0];
+
+            try
+            {
+                OkHttpClient okHttpClient = new OkHttpClient();
+                RequestBody body = mBuilder.build();
+                Request request = new Request.Builder()//
+                    .url(url)//
+                    .post(body).addHeader("Os-Type", "android")//
+                    .addHeader("App-Version", DailyHotel.VERSION)//
+                    .addHeader("Authorization", DailyHotel.AUTHORIZATION).build();
+
+                return okHttpClient.newCall(request).execute();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Response response)
+        {
+            if (response == null)
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                finish();
+                return;
+            }
+
+            try
+            {
+                mWebView.loadDataWithBaseURL(response.request().url().toString(), response.body().string(), "text/html", "utf-8", null);
+            } catch (Exception e)
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                finish();
+                return;
+            }
         }
     }
 }

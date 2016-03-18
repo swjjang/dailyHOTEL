@@ -217,16 +217,18 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     {
         super.onResume();
 
-        if (Util.isTextEmpty(DailyPreference.getInstance(getActivity()).getAuthorization()) == true)
-        {
-            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN, null);
+        unLockUI();
 
-            setSigninLayout(true);
-        } else
+        if (Util.isTextEmpty(DailyPreference.getInstance(getActivity()).getAuthorization()) == true)
         {
             AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT, null);
 
             setSigninLayout(false);
+        } else
+        {
+            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN, null);
+
+            setSigninLayout(true);
         }
 
         if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
@@ -491,36 +493,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-        @Override
-        public void onResponse(String url, String response)
-        {
-            String result = null;
-
-            if (Util.isTextEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            {
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN, null);
-
-                setSigninLayout(true);
-            } else
-            {
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT, null);
-
-                setSigninLayout(false);
-            }
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
-        }
-    };
 
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {

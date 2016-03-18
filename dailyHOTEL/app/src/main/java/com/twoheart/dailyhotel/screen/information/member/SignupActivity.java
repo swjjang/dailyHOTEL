@@ -913,7 +913,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         String accessToken = tokenJSONObject.getString("access_token");
                         String tokenType = tokenJSONObject.getString("token_type");
 
-                        DailyPreference.getInstance(SignupActivity.this).setAuthorization(String.format("%s %s", accessToken, tokenType));
+                        DailyPreference.getInstance(SignupActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                         storeLoginInfo();
 
                         lockUI();
