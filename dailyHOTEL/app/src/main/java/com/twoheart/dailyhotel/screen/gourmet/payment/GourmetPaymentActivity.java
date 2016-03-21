@@ -187,7 +187,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         Guest guest;
 
-        if(mIsEditMode == true)
+        if (mIsEditMode == true)
         {
             guest = mGourmetPaymentLayout.getGuest();
         } else

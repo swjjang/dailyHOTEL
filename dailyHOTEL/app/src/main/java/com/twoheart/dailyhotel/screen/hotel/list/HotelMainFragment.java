@@ -238,16 +238,16 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
-                String viewType = "List";
+                String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
                 switch (mViewType)
                 {
                     case LIST:
-                        viewType = "List";
+                        viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
                         break;
 
                     case MAP:
-                        viewType = "Map";
+                        viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
                         break;
                 }
 

@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
@@ -225,9 +226,13 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         mAmenitiesLayout = (ViewGroup) view.findViewById(R.id.amenitiesLayout);
 
         View parkingCheckView = mAmenitiesLayout.findViewById(R.id.parkingCheckView);
-        parkingCheckView.setTag(parkingCheckView.getId(), "ParkingAvailable");
+        parkingCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
 
-        parkingCheckView.setSelected(gourmetCurationOption.isParking);
+        if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
+        {
+            parkingCheckView.setSelected(true);
+        }
+
         parkingCheckView.setOnClickListener(this);
     }
 
@@ -241,11 +246,11 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         View time1721View = mTimeRangeLayout.findViewById(R.id.time1721View);
         View time2106View = mTimeRangeLayout.findViewById(R.id.time2106View);
 
-        time0611View.setTag("0611");
-        time1115View.setTag("1115");
-        time1517View.setTag("1517");
-        time1721View.setTag("1721");
-        time2106View.setTag("2199");
+        time0611View.setTag(AnalyticsManager.Label.SORTFILTER_0611);
+        time1115View.setTag(AnalyticsManager.Label.SORTFILTER_1115);
+        time1517View.setTag(AnalyticsManager.Label.SORTFILTER_1517);
+        time1721View.setTag(AnalyticsManager.Label.SORTFILTER_1721);
+        time2106View.setTag(AnalyticsManager.Label.SORTFILTER_2106);
 
         time0611View.setOnClickListener(this);
         time1115View.setOnClickListener(this);
@@ -284,9 +289,9 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
     }
 
-    private void updateAmenitiesFilter(View view, GourmetCurationOption gourmetCurationOption)
+    private void updateAmenitiesFilter(View view, int flag)
     {
-        if (view == null || gourmetCurationOption == null)
+        if (view == null)
         {
             return;
         }
@@ -294,14 +299,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         if (view.isSelected() == true)
         {
             view.setSelected(false);
-            gourmetCurationOption.isParking = false;
+            mGourmetCurationOption.flagAmenitiesFilters ^= flag;
 
             AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, (String) view.getTag(view.getId()), null);
         } else
         {
             view.setSelected(true);
-            gourmetCurationOption.isParking = true;
+            mGourmetCurationOption.flagAmenitiesFilters |= flag;
 
             AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, (String) view.getTag(view.getId()), null);
@@ -481,7 +486,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             return;
         }
 
-        String label = "District";
+        String label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
 
         boolean isChecked = radioButton.isChecked();
 
@@ -494,27 +499,27 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             case R.id.regionCheckView:
                 mGourmetCurationOption.setSortType(SortType.DEFAULT);
-                label = "District";
+                label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
                 break;
 
             case R.id.distanceCheckView:
                 mGourmetCurationOption.setSortType(SortType.DISTANCE);
-                label = "Distance";
+                label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
                 break;
 
             case R.id.lowPriceCheckView:
                 mGourmetCurationOption.setSortType(SortType.LOW_PRICE);
-                label = "LowtoHighPrice";
+                label = AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE;
                 break;
 
             case R.id.highPriceCheckView:
                 mGourmetCurationOption.setSortType(SortType.HIGH_PRICE);
-                label = "HightoLowPrice";
+                label = AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE;
                 break;
 
             case R.id.satisfactionCheckView:
                 mGourmetCurationOption.setSortType(SortType.SATISFACTION);
-                label = "Rating";
+                label = AnalyticsManager.Label.SORTFILTER_RATING;
                 break;
 
             default:
@@ -533,7 +538,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         switch (v.getId())
         {
             case R.id.parkingCheckView:
-                updateAmenitiesFilter(v, mGourmetCurationOption);
+                updateAmenitiesFilter(v, GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING);
                 break;
 
             case R.id.time0611View:
@@ -562,7 +567,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     protected void onComplete()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.APPLY_BUTTON_CLICKED, null);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, mGourmetCurationOption.toString(), null);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(mGourmetCurationOption.toString());
+        }
 
         Intent intent = new Intent();
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mGourmetCurationOption);

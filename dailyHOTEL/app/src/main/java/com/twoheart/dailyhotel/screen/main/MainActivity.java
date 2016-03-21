@@ -396,18 +396,13 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onMenuSelected(int index)
         {
-            String name = mMenuBarLayout.getName(mMainFragmentManager.getLastIndexFragment());
-
             switch (index)
             {
                 case 0:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
 
-                    if (Util.isTextEmpty(name) == false)
-                    {
-                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, name, null);
-                    }
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, AnalyticsManager.Label.HOTEL_SCREEN, null);
                     break;
 
                 case 1:
@@ -415,29 +410,22 @@ public class MainActivity extends BaseActivity implements Constants
 
                     String gourmetName = getString(R.string.menu_item_title_fnb);
 
-                    // 같은 이름으로 올경우에는 처음 시작한 경우이다.
-                    if (Util.isTextEmpty(name) == false && name.equalsIgnoreCase(gourmetName) == false)
-                    {
-                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, name, null);
-                    }
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, AnalyticsManager.Label.GOURMET_SCREEN, null);
                     break;
 
                 case 2:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
 
-                    if (Util.isTextEmpty(name) == false)
-                    {
-                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, name, null);
-                    }
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
                     break;
 
                 case 3:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.MENU_CLICKED, name, null);
+                        , AnalyticsManager.Action.MENU_CLICKED, AnalyticsManager.Label.MENU_SCREEN, null);
                     break;
             }
         }
