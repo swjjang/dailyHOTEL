@@ -28,9 +28,7 @@ import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -304,7 +302,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 {
                     if (resultCode == RESULT_OK)
                     {
-                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
+                        mOnUserActionListener.doBooking(mSelectedTicketInformation);
                     }
                     break;
                 }
@@ -481,8 +479,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             mSelectedTicketInformation = ticketInformation;
 
-            lockUI();
-            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, PlaceDetailActivity.this);
+            if (Util.isTextEmpty(DailyPreference.getInstance(PlaceDetailActivity.this).getAuthorization()) == true)
+            {
+                startLoginActivity();
+            } else
+            {
+                lockUI();
+
+                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserSocialInformationJsonResponseListener, PlaceDetailActivity.this);
+            }
 
             String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);
             AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
@@ -665,90 +670,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 }
             } catch (Exception e)
             {
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-
-            unLockUI();
-
-            String result = null;
-
-            if (Util.isTextEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            {
-                // session alive
-                // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserSocialInformationJsonResponseListener, PlaceDetailActivity.this);
-            } else if ("dead".equalsIgnoreCase(result) == true)
-            {
-                // session dead
-                // 재로그인
-                if (DailyPreference.getInstance(PlaceDetailActivity.this).isAutoLogin() == true)
-                {
-                    HashMap<String, String> params = Util.getLoginParams(PlaceDetailActivity.this);
-
-                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, PlaceDetailActivity.this);
-                } else
-                {
-                    startLoginActivity();
-                }
-
-            } else
-            {
-                onError();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null.");
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
-
-                    if (isSignin == true)
-                    {
-                        //로그인 성공
-                        VolleyHttpClient.createCookie();
-                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, PlaceDetailActivity.this);
-                        return;
-                    }
-                }
-
-                // 로그인 실패
-                // data 초기화
-                DailyPreference.getInstance(PlaceDetailActivity.this).removeUserInformation();
-
-                unLockUI();
-                startLoginActivity();
-            } catch (Exception e)
-            {
-                unLockUI();
                 onError(e);
             }
         }

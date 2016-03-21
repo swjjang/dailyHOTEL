@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -76,10 +75,17 @@ public class IssuingReceiptActivity extends BaseActivity
     @Override
     protected void onResume()
     {
-        lockUI();
-        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
-
         super.onResume();
+
+        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        {
+            restartExpiredSession();
+        } else
+        {
+            lockUI();
+
+            DailyNetworkAPI.getInstance().requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener, IssuingReceiptActivity.this);
+        }
     }
 
     @Override
@@ -321,34 +327,6 @@ public class IssuingReceiptActivity extends BaseActivity
             } finally
             {
                 unLockUI();
-            }
-        }
-    };
-
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            String result = null;
-
-            if (Util.isTextEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            {
-                DailyNetworkAPI.getInstance().requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener, IssuingReceiptActivity.this);
-            } else
-            {
-                finish();
             }
         }
     };

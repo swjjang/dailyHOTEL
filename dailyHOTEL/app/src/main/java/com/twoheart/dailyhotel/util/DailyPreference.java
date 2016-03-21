@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
+import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.model.TicketPayment;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.SimpleDateFormat;
@@ -54,6 +56,7 @@ public class DailyPreference
     private static final String KEY_COMPANY_FAX = "106";
     private static final String KEY_COMPANY_PRIVACY_EMAIL = "107";
 
+    private static final String KEY_AUTHORIZATION = "1000";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
@@ -456,6 +459,18 @@ public class DailyPreference
         }
     }
 
+    public String getAuthorization()
+    {
+        return DailyHotelRequest.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+    }
+
+    public void setAuthorization(String value)
+    {
+        DailyHotel.AUTHORIZATION = value;
+
+        setValue(mEditor, KEY_AUTHORIZATION, DailyHotelRequest.urlEncrypt(value));
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -653,6 +668,10 @@ public class DailyPreference
             mOldEditor.remove(KEY_PREFERENCE_USER_TYPE);
             mOldEditor.remove(KEY_PREFERENCE_USER_ACCESS_TOKEN);
             mOldEditor.remove(KEY_PREFERENCE_USER_NAME);
+            mEditor.remove(KEY_AUTHORIZATION);
+
+            DailyHotel.AUTHORIZATION = null;
+
             mOldEditor.apply();
         }
     }
@@ -742,33 +761,33 @@ public class DailyPreference
         return getValue(mVBankPreferences, KEY_PREFERENCE_VBANK_USER_INDEX, null);
     }
 
-    public void setVirtuaAccountHotelInformation(Context context, Pay pay, SaleTime checkInSaleTime)
+    public void setVirtuaAccountHotelInformation(Context context, HotelPaymentInformation hotelPaymentInformation, SaleTime checkInSaleTime)
     {
         if (mVBankEditor != null)
         {
             mVBankEditor.clear();
 
-            SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
+            SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_TYPE, AnalyticsManager.Label.HOTEL);
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_USER_INDEX, pay.getCustomer().getUserIdx());
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_USER_INDEX, hotelPaymentInformation.getCustomer().getUserIdx());
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_NAME, saleRoomInformation.hotelName);
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PRICE, Integer.toString(saleRoomInformation.averageDiscount));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_QUANTITY, Integer.toString(saleRoomInformation.nights));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TOTAL_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_INDEX, Integer.toString(pay.hotelIndex));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_INDEX, Integer.toString(hotelPaymentInformation.placeIndex));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_NAME, saleRoomInformation.roomName);
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_GRADE, pay.grade.getName(context));
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_DBENEFIT, pay.isDBenefit ? "yes" : "no");
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_GRADE, hotelPaymentInformation.grade.getName(context));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
 
             SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + saleRoomInformation.nights);
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKIN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKOUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-            if (pay.isSaleCredit() == true)
+            if (hotelPaymentInformation.isEnabledBonus == true)
             {
-                int payPrice = saleRoomInformation.totalDiscount - pay.credit;
+                int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
                 int bonus = 0;
 
                 if (payPrice <= 0)
@@ -777,7 +796,7 @@ public class DailyPreference
                     bonus = saleRoomInformation.totalDiscount;
                 } else
                 {
-                    bonus = pay.credit;
+                    bonus = hotelPaymentInformation.bonus;
                 }
 
                 mVBankEditor.putString(KEY_PREFERENCE_VBANK_USED_BONUS, Integer.toString(bonus));
@@ -788,7 +807,7 @@ public class DailyPreference
                 mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
             }
 
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_TYPE, pay.getType().name());
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_TYPE, hotelPaymentInformation.paymentType.name());
             mVBankEditor.apply();
         }
     }
@@ -816,29 +835,29 @@ public class DailyPreference
         return params;
     }
 
-    public void setVirtuaAccountGourmetInformation(TicketPayment ticketPayment, SaleTime dateSaleTime)
+    public void setVirtuaAccountGourmetInformation(GourmetPaymentInformation gourmetPaymentInformation, SaleTime dateSaleTime)
     {
         if (mVBankEditor != null)
         {
             mVBankEditor.clear();
 
-            TicketInformation ticketInformation = ticketPayment.getTicketInformation();
+            TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_TYPE, AnalyticsManager.Label.GOURMET);
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_USER_INDEX, ticketPayment.getCustomer().getUserIdx());
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_USER_INDEX, gourmetPaymentInformation.getCustomer().getUserIdx());
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_NAME, ticketInformation.placeName);
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PRICE, Integer.toString(ticketInformation.discountPrice));
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_QUANTITY, Integer.toString(ticketPayment.ticketCount));
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_INDEX, Integer.toString(ticketPayment.placeIndex));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_QUANTITY, Integer.toString(gourmetPaymentInformation.ticketCount));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_NAME, ticketInformation.placeName);
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_INDEX, Integer.toString(ticketInformation.index));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_DATE, dateSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * ticketPayment.ticketCount));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_USED_BONUS, "0");
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_TYPE, ticketPayment.paymentType.name());
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_CATEGORY, ticketPayment.category);
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_DBENEFIT, ticketPayment.isDBenefit ? "yes" : "no");
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_PAYMENT_TYPE, gourmetPaymentInformation.paymentType.name());
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_CATEGORY, gourmetPaymentInformation.category);
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
 
             Calendar calendarTime = DailyCalendar.getInstance();
             calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -846,7 +865,7 @@ public class DailyPreference
             SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
             formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_RESERVATION_TIME, formatDay.format(ticketPayment.ticketTime));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_RESERVATION_TIME, formatDay.format(gourmetPaymentInformation.ticketTime));
             mVBankEditor.apply();
         }
     }

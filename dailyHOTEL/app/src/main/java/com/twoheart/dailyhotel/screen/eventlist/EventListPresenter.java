@@ -5,12 +5,9 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -18,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class EventListPresenter implements Response.ErrorListener
 {
@@ -47,9 +43,9 @@ public class EventListPresenter implements Response.ErrorListener
         DailyNetworkAPI.getInstance().requestEventList(mBaseActivity.getNetworkTag(), mDailyEventListJsonResponseListener, this);
     }
 
-    public void requestUserAlive()
+    public void requestUserInformationEx()
     {
-        DailyNetworkAPI.getInstance().requestUserAlive(mBaseActivity.getNetworkTag(), mUserAliveStringResponseListener, this);
+        DailyNetworkAPI.getInstance().requestUserInformationEx(mBaseActivity.getNetworkTag(), mUserInformationJsonResponseListener, EventListPresenter.this);
     }
 
     public void requestEventPageUrl(Event event, String userIndex)
@@ -133,73 +129,6 @@ public class EventListPresenter implements Response.ErrorListener
             {
                 ExLog.d(e.toString());
                 mListener.onEventListResponse(null);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
-
-                    if (isSignin == true)
-                    {
-                        VolleyHttpClient.createCookie();
-                        requestUserAlive();
-                        return;
-                    }
-                }
-
-                mListener.onSignin();
-            } catch (Exception e)
-            {
-                mListener.onInternalError();
-            }
-        }
-    };
-
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-        @Override
-        public void onResponse(String url, String response)
-        {
-            String result = null;
-
-            if (false == Util.isTextEmpty(response))
-            {
-                result = response.trim();
-            }
-
-            if (true == "alive".equalsIgnoreCase(result))
-            {
-                // session alive
-                // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance().requestUserInformationEx(mBaseActivity.getNetworkTag(), mUserInformationJsonResponseListener, EventListPresenter.this);
-            } else if (true == "dead".equalsIgnoreCase(result))
-            {
-                // session dead
-                // 재로그인
-                if (DailyPreference.getInstance(mBaseActivity).isAutoLogin() == true)
-                {
-                    HashMap<String, String> params = Util.getLoginParams(mBaseActivity);
-                    DailyNetworkAPI.getInstance().requestUserSignin(mBaseActivity.getNetworkTag(), params, mUserLoginJsonResponseListener, EventListPresenter.this);
-                } else
-                {
-                    mListener.onSignin();
-                }
-            } else
-            {
-                mListener.onInternalError();
             }
         }
     };

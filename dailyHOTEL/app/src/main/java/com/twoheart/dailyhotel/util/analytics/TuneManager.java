@@ -62,6 +62,7 @@ public class TuneManager implements IBaseAnalyticsManager
                 if (Util.isTextEmpty(deeplink) == false)
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setData(Uri.parse(deeplink));
 
                     mContext.startActivity(intent);

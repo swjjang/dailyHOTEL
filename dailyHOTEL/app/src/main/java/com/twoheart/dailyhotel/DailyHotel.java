@@ -28,6 +28,7 @@ import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -41,6 +42,7 @@ public class DailyHotel extends Application implements Constants
     private static volatile DailyHotel mInstance = null;
     private static volatile Activity mCurrentActivity = null;
     public static String VERSION;
+    public static String AUTHORIZATION;
 
     @Override
     public void onCreate()
@@ -67,6 +69,8 @@ public class DailyHotel extends Application implements Constants
 
         // 버전 정보 얻기
         VERSION = Util.getAppVersion(getApplicationContext());
+
+        AUTHORIZATION = DailyPreference.getInstance(getApplicationContext()).getAuthorization();
 
         initializeVolley();
         initializeAnalytics();

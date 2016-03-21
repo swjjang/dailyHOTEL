@@ -33,7 +33,6 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
@@ -910,7 +909,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                     if (isSignin == true)
                     {
-                        VolleyHttpClient.createCookie();
+                        JSONObject tokenJSONObject = response.getJSONObject("token");
+                        String accessToken = tokenJSONObject.getString("access_token");
+                        String tokenType = tokenJSONObject.getString("token_type");
+
+                        DailyPreference.getInstance(SignupActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                         storeLoginInfo();
 
                         lockUI();

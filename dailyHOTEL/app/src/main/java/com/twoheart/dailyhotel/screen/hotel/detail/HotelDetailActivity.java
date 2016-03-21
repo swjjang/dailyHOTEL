@@ -29,13 +29,11 @@ import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.hotel.payment.BookingActivity;
+import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -47,7 +45,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -278,7 +275,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, this);
+                    mOnUserActionListener.doBooking(mSelectedSaleRoomInformation);
                 }
                 break;
             }
@@ -310,7 +307,7 @@ public class HotelDetailActivity extends BaseActivity
             imageUrl = mImageInformationList.get(0).url;
         }
 
-        Intent intent = BookingActivity.newInstance(HotelDetailActivity.this, saleRoomInformation//
+        Intent intent = HotelPaymentActivity.newInstance(HotelDetailActivity.this, saleRoomInformation//
             , checkInSaleTime, imageUrl, hotelDetail.grade, hotelDetail.hotelIndex, !Util.isTextEmpty(hotelDetail.hotelBenefit));
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
@@ -528,8 +525,15 @@ public class HotelDetailActivity extends BaseActivity
 
             mSelectedSaleRoomInformation = saleRoomInformation;
 
-            lockUI();
-            DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, HotelDetailActivity.this);
+            if (Util.isTextEmpty(DailyPreference.getInstance(HotelDetailActivity.this).getAuthorization()) == true)
+            {
+                startLoginActivity();
+            } else
+            {
+                lockUI();
+
+                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, HotelDetailActivity.this);
+            }
 
             String label = String.format("%s-%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
             AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
@@ -758,87 +762,6 @@ public class HotelDetailActivity extends BaseActivity
                 }
             } catch (Exception e)
             {
-                onError(e);
-            }
-        }
-    };
-
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-
-            unLockUI();
-
-            String result = null;
-
-            if (Util.isTextEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            {
-                // session alive
-                // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, HotelDetailActivity.this);
-            } else if ("dead".equalsIgnoreCase(result) == true)
-            {
-                // session dead
-                // 재로그인
-                if (DailyPreference.getInstance(HotelDetailActivity.this).isAutoLogin() == true)
-                {
-                    HashMap<String, String> params = Util.getLoginParams(HotelDetailActivity.this);
-
-                    DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, HotelDetailActivity.this);
-                } else
-                {
-                    startLoginActivity();
-                }
-            } else
-            {
-                onError();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
-
-                    if (isSignin == true)
-                    {
-                        //로그인 성공
-                        VolleyHttpClient.createCookie();
-                        DailyNetworkAPI.getInstance().requestUserAlive(mNetworkTag, mUserAliveStringResponseListener, HotelDetailActivity.this);
-                        return;
-                    }
-                }
-
-                // 로그인 실패
-                // data 초기화
-                DailyPreference.getInstance(HotelDetailActivity.this).removeUserInformation();
-
-                unLockUI();
-                startLoginActivity();
-
-            } catch (JSONException e)
-            {
-                unLockUI();
                 onError(e);
             }
         }

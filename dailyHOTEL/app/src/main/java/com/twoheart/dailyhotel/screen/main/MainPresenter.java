@@ -3,9 +3,7 @@ package com.twoheart.dailyhotel.screen.main;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -14,8 +12,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class MainPresenter implements Response.ErrorListener
 {
@@ -47,7 +43,7 @@ public class MainPresenter implements Response.ErrorListener
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                requestSignin();
+                DailyNetworkAPI.getInstance().requestCommonVer(mBaseActivity.getNetworkTag(), mAppVersionJsonResponseListener, this);
             }
         });
     }
@@ -57,16 +53,21 @@ public class MainPresenter implements Response.ErrorListener
         DailyNetworkAPI.getInstance().requestCompanyInformation(mBaseActivity.getNetworkTag(), mCompanyInformationJsonResponseListener, this);
     }
 
-    private void requestSignin()
+    public void requestUserInformation()
     {
-        if (DailyPreference.getInstance(mBaseActivity).isAutoLogin() == true)
-        {
-            HashMap<String, String> params = Util.getLoginParams(mBaseActivity);
-            DailyNetworkAPI.getInstance().requestUserSignin(mBaseActivity.getNetworkTag(), params, mUserLoginJsonResponseListener, this);
-        }
-
-        DailyNetworkAPI.getInstance().requestCommonVer(mBaseActivity.getNetworkTag(), mAppVersionJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestUserInformation(mBaseActivity.getNetworkTag(), mUserInfomationJsonResponseListener, this);
     }
+
+    //    private void requestSignin()
+    //    {
+    //        if (DailyPreference.getInstance(mBaseActivity).isAutoLogin() == true)
+    //        {
+    //            HashMap<String, String> params = Util.getLoginParams(mBaseActivity);
+    //            DailyNetworkAPI.getInstance().requestUserSignin(mBaseActivity.getNetworkTag(), params, mUserLoginJsonResponseListener, this);
+    //        }
+    //
+    //        DailyNetworkAPI.getInstance().requestCommonVer(mBaseActivity.getNetworkTag(), mAppVersionJsonResponseListener, this);
+    //    }
 
     /**
      * 이벤트가 있는지를 요청한다
@@ -100,17 +101,16 @@ public class MainPresenter implements Response.ErrorListener
     /**
      *
      */
-    protected void requestUserAlive()
-    {
-        DailyNetworkAPI.getInstance().requestUserAlive(mBaseActivity.getNetworkTag(), mUserAliveStringResponseListener, this);
-    }
-
+    //    protected void requestUserAlive()
+    //    {
+    //        DailyNetworkAPI.getInstance().requestUserAlive(mBaseActivity.getNetworkTag(), mUserAliveStringResponseListener, this);
+    //    }
     protected void requestGourmetIsExistRating()
     {
         DailyNetworkAPI.getInstance().requestGourmetIsExistRating(mBaseActivity.getNetworkTag(), mGourmetSatisfactionRatingExistJsonResponseListener, null);
     }
 
-    private void registerNotificationId(final String registrationId, String userIndex)
+    public void registerNotificationId(final String registrationId, String userIndex)
     {
         DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
         {
@@ -173,7 +173,7 @@ public class MainPresenter implements Response.ErrorListener
                         mListener.onCheckServerResponse(title, message);
                     } else
                     {
-                        requestSignin();
+                        DailyNetworkAPI.getInstance().requestCommonVer(mBaseActivity.getNetworkTag(), mAppVersionJsonResponseListener, mBaseActivity);
                     }
                 }
             } catch (Exception e)
@@ -183,37 +183,37 @@ public class MainPresenter implements Response.ErrorListener
         }
     };
 
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
-
-                    if (isSignin == true)
-                    {
-                        VolleyHttpClient.createCookie();
-                        return;
-                    }
-                }
-
-                // 로그인 실패
-                // data 초기화
-                DailyPreference.getInstance(mBaseActivity).removeUserInformation();
-            } catch (Exception e)
-            {
-                mListener.onError();
-            }
-        }
-    };
+    //    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onResponse(String url, JSONObject response)
+    //        {
+    //            try
+    //            {
+    //                int msg_code = response.getInt("msg_code");
+    //
+    //                if (msg_code == 0)
+    //                {
+    //                    JSONObject jsonObject = response.getJSONObject("data");
+    //
+    //                    boolean isSignin = jsonObject.getBoolean("is_signin");
+    //
+    //                    if (isSignin == true)
+    //                    {
+    //                        VolleyHttpClient.createCookie();
+    //                        return;
+    //                    }
+    //                }
+    //
+    //                // 로그인 실패
+    //                // data 초기화
+    //                DailyPreference.getInstance(mBaseActivity).removeUserInformation();
+    //            } catch (Exception e)
+    //            {
+    //                mListener.onError();
+    //            }
+    //        }
+    //    };
 
     private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -417,41 +417,41 @@ public class MainPresenter implements Response.ErrorListener
         }
     };
 
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-        @Override
-        public void onResponse(String url, String response)
-        {
-            String result = null;
-
-            if (false == Util.isTextEmpty(response))
-            {
-                result = response.trim();
-            }
-
-            if (true == "alive".equalsIgnoreCase(result))
-            {
-                // session alive
-                // 호텔 평가를 위한 사용자 정보 조회
-                DailyNetworkAPI.getInstance().requestUserInformation(mBaseActivity.getNetworkTag(), mUserInfomationJsonResponseListener, MainPresenter.this);
-            } else
-            {
-                AnalyticsManager.getInstance(mBaseActivity).setUserIndex(null);
-
-                Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
-                {
-                    @Override
-                    public void onResult(String registrationId)
-                    {
-                        if (Util.isTextEmpty(registrationId) == true)
-                        {
-                            return;
-                        }
-
-                        registerNotificationId(registrationId, null);
-                    }
-                });
-            }
-        }
-    };
+    //    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+    //    {
+    //        @Override
+    //        public void onResponse(String url, String response)
+    //        {
+    //            String result = null;
+    //
+    //            if (false == Util.isTextEmpty(response))
+    //            {
+    //                result = response.trim();
+    //            }
+    //
+    //            if (true == "alive".equalsIgnoreCase(result))
+    //            {
+    //                // session alive
+    //                // 호텔 평가를 위한 사용자 정보 조회
+    //                DailyNetworkAPI.getInstance().requestUserInformation(mBaseActivity.getNetworkTag(), mUserInfomationJsonResponseListener, MainPresenter.this);
+    //            } else
+    //            {
+    //                AnalyticsManager.getInstance(mBaseActivity).setUserIndex(null);
+    //
+    //                Util.requestGoogleCloudMessaging(mBaseActivity, new Util.OnGoogleCloudMessagingListener()
+    //                {
+    //                    @Override
+    //                    public void onResult(String registrationId)
+    //                    {
+    //                        if (Util.isTextEmpty(registrationId) == true)
+    //                        {
+    //                            return;
+    //                        }
+    //
+    //                        registerNotificationId(registrationId, null);
+    //                    }
+    //                });
+    //            }
+    //        }
+    //    };
 }

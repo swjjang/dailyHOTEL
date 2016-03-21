@@ -25,7 +25,6 @@ import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
@@ -238,90 +237,113 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == R.id.ll_profile_edit)
+        switch(v.getId())
         {
-            if (mEditButtonView.getText().equals(getString(R.string.act_profile_modify)))
+            case R.id.ll_profile_edit:
             {
-                mInformationProfileLayout.setVisibility(View.GONE);
-                mEditProfileLayout.setVisibility(View.VISIBLE);
-                mEditButtonView.setText(R.string.dialog_btn_text_confirm);
+                if (mEditButtonView.getText().equals(getString(R.string.act_profile_modify)))
+                {
+                    mInformationProfileLayout.setVisibility(View.GONE);
+                    mEditProfileLayout.setVisibility(View.VISIBLE);
+                    mEditButtonView.setText(R.string.dialog_btn_text_confirm);
 
-                toggleKeyboard(true);
+                    toggleKeyboard(true);
 
-            } else if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
+                } else if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
+                {
+                    if (isLockUiComponent() == true)
+                    {
+                        return;
+                    }
+
+                    lockUiComponent();
+
+                    String name = mNameEditText.getText().toString().trim();
+
+                    String phone = mPhoneEditText.getText().toString().trim();
+                    phone = phone.replaceAll("-", "");
+
+                    if (Util.isTextEmpty(phone) == true)
+                    {
+                        // 전화번호는 필수 사항으로 한다.
+                        releaseUiComponent();
+
+                        mPhoneEditText.setText("");
+                        DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
+                    } else if (Util.isTextEmpty(name) == true)
+                    {
+                        // 이름은 필수 사항으로 입력되어야 한다.
+                        releaseUiComponent();
+
+                        mNameEditText.setText("");
+                        DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
+                    } else if (name.equals(prevName) && phone.equals(prevPh))
+                    {
+                        toggleKeyboard(false);
+
+                        releaseUiComponent();
+
+                        // 기존과 동일하여 서버에 요청할 필요가 없음.
+                        mEditProfileLayout.setVisibility(View.GONE);
+                        mInformationProfileLayout.setVisibility(View.VISIBLE);
+                        mEditButtonView.setText(R.string.act_profile_modify);
+
+                        DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_not_changed, Toast.LENGTH_LONG);
+                    } else
+                    {
+                        toggleKeyboard(false);
+
+                        lockUI();
+                        DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, name, phone, mUserUpdateJsonResponseListener, this);
+                    }
+                }
+                break;
+            }
+
+            case R.id.btn_profile_logout:
             {
-                if (isLockUiComponent() == true)
+                if (isLockUiComponent() == true || isFinishing() == true)
                 {
                     return;
                 }
 
-                lockUiComponent();
-
-                String name = mNameEditText.getText().toString().trim();
-
-                String phone = mPhoneEditText.getText().toString().trim();
-                phone = phone.replaceAll("-", "");
-
-                if (Util.isTextEmpty(phone) == true)
+                /**
+                 * 로그 아웃시 내부 저장한 유저정보 초기화
+                 */
+                View.OnClickListener posListener = new View.OnClickListener()
                 {
-                    // 전화번호는 필수 사항으로 한다.
-                    releaseUiComponent();
+                    @Override
+                    public void onClick(View view)
+                    {
+                        DailyPreference.getInstance(ProfileActivity.this).clear();
 
-                    mPhoneEditText.setText("");
-                    DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
-                } else if (Util.isTextEmpty(name) == true)
-                {
-                    // 이름은 필수 사항으로 입력되어야 한다.
-                    releaseUiComponent();
+                        try
+                        {
+                            LoginManager.getInstance().logOut();
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
 
-                    mNameEditText.setText("");
-                    DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
-                } else if (name.equals(prevName) && phone.equals(prevPh))
-                {
-                    toggleKeyboard(false);
+                        try
+                        {
+                            UserManagement.requestLogout(null);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
 
-                    releaseUiComponent();
+                        unLockUI();
+                        DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
+                        finish();
+                    }
+                };
 
-                    // 기존과 동일하여 서버에 요청할 필요가 없음.
-                    mEditProfileLayout.setVisibility(View.GONE);
-                    mInformationProfileLayout.setVisibility(View.VISIBLE);
-                    mEditButtonView.setText(R.string.act_profile_modify);
+                showSimpleDialog(null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null, false);
 
-                    DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_not_changed, Toast.LENGTH_LONG);
-                } else
-                {
-                    toggleKeyboard(false);
-
-                    lockUI();
-                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, name, phone, mUserUpdateJsonResponseListener, this);
-                }
+                releaseUiComponent();
+                break;
             }
-        } else if (v.getId() == R.id.btn_profile_logout)
-        {
-            if (isLockUiComponent() == true || isFinishing() == true)
-            {
-                return;
-            }
-
-            /**
-             * 로그 아웃시 내부 저장한 유저정보 초기화
-             */
-            View.OnClickListener posListener = new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    lockUI();
-                    DailyNetworkAPI.getInstance().requestUserLogout(mNetworkTag, mUserLogoutStringResponseListener, ProfileActivity.this);
-
-                    AnalyticsManager.getInstance(ProfileActivity.this).setUserIndex(null);
-                    //                    AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
-                }
-            };
-
-            showSimpleDialog(null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null, false);
-
-            releaseUiComponent();
         }
     }
 
@@ -450,37 +472,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             {
                 onError(e);
             }
-        }
-    };
-
-    private DailyHotelStringResponseListener mUserLogoutStringResponseListener = new DailyHotelStringResponseListener()
-    {
-        @Override
-        public void onResponse(String url, String response)
-        {
-            VolleyHttpClient.destroyCookie();
-
-            DailyPreference.getInstance(ProfileActivity.this).clear();
-
-            try
-            {
-                LoginManager.getInstance().logOut();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            try
-            {
-                UserManagement.requestLogout(null);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            unLockUI();
-            DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
-            finish();
         }
     };
 }

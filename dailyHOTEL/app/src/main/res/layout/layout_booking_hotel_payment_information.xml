@@ -35,8 +35,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -59,16 +59,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="-3dp"
                 android:background="@null"
                 android:checked="false"
                 android:gravity="center"
                 android:paddingRight="0dp"
                 android:textOff=""
-                android:textOn=""
-                android:layout_marginRight="-3dp"/>
+                android:textOn=""/>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/priceLayout"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_marginLeft="15dp"
@@ -76,9 +77,9 @@
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/tv_hotel_payment_original_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:duplicateParentState="true"
                 android:text="@string/act_booking_price"
                 android:textColor="@drawable/selector_textview_bookingcolor"
                 android:textSize="13dp"/>
@@ -88,23 +89,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:duplicateParentState="true"
                 android:text="@string/act_booking_0won"
                 android:textColor="@drawable/selector_textview_bookingcolor"
                 android:textSize="13dp"/>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/bonusLayout"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="10dp">
+            android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/tv_hotel_payment_credit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:duplicateParentState="true"
                 android:text="@string/act_booking_credit_discount"
                 android:textColor="@drawable/selector_textview_bookingcolor"
                 android:textSize="13dp"/>
@@ -114,6 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:duplicateParentState="true"
                 android:text="@string/act_booking_0won"
                 android:textColor="@drawable/selector_textview_bookingcolor"
                 android:textSize="13dp"/>
@@ -159,10 +163,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginTop="10dp">
 
         <!-- 카드 관리 버튼 -->
 
@@ -171,19 +175,19 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            android:paddingLeft="15dp"
-            android:gravity="center_vertical|right">
+            android:gravity="center_vertical|right"
+            android:paddingLeft="15dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:layout_width="28dp"
                 android:layout_height="15dp"
+                android:layout_alignParentRight="false"
+                android:layout_gravity="center_vertical|right"
                 android:background="@color/dh_theme_color"
+                android:gravity="center"
                 android:text="관리"
                 android:textColor="@color/white"
-                android:textSize="10dp"
-                android:layout_gravity="center_vertical|right"
-                android:layout_alignParentRight="false"
-                android:gravity="center"/>
+                android:textSize="10dp"/>
         </RelativeLayout>
 
         <!-- 결제 종류 선택 -->

@@ -4,6 +4,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -16,7 +17,6 @@ import java.util.Map;
 
 public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
 {
-
     private DailyHotelJsonResponseListener mListener;
 
     public DailyHotelJsonRequest(int method, String url, Map<String, String> parameters, DailyHotelJsonResponseListener listener, ErrorListener errorListener)

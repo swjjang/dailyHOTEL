@@ -285,7 +285,7 @@ public class HotelDetailLayout
 
         if (bookingView == null || soldoutView == null)
         {
-            mActivity.restartApp();
+            mActivity.restartExpiredSession();
             return;
         }
 

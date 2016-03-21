@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.information.creditcard;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,20 +14,27 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class RegisterCreditCardActivity extends BaseActivity implements Constants
 {
-    private WebView webView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -36,7 +44,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
         initToolbar();
 
-        webView = (WebView) findViewById(R.id.webView);
+        WebView webView = (WebView) findViewById(R.id.webView);
 
         // TODO  setWebContentsDebuggingEnabled
         //		WebView.setWebContentsDebuggingEnabled(true);
@@ -55,8 +63,8 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
         webView.addJavascriptInterface(new JavaScriptExtention(), "android");
 
-        webView.setWebChromeClient(new mWebChromeClient());
-        webView.setWebViewClient(new mWebViewClient());
+        webView.setWebChromeClient(new DailyWebChromeClient());
+        webView.setWebViewClient(new DailyWebViewClient());
 
         webView.setOnLongClickListener(new OnLongClickListener()
         {
@@ -69,7 +77,15 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
         String url = DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SESSION_SERVER) + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_REGISTER_CREDIT_CARD);
 
-        webView.postUrl(url, null);
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Os-Type", "android");
+        headerMap.put("App-Version", DailyHotel.VERSION);
+        headerMap.put("Authorization", DailyHotel.AUTHORIZATION);
+
+        webView.loadUrl(url, headerMap);
+        //
+        //        WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView);
+        //        webViewPostAsyncTask.execute(url);
     }
 
     private void initToolbar()
@@ -115,9 +131,8 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_register_creditcard_cancel), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
     }
 
-    private class mWebChromeClient extends WebChromeClient
+    private class DailyWebChromeClient extends WebChromeClient
     {
-
         boolean isActionBarProgressBarShowing = false;
 
         @Override
@@ -147,7 +162,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         }
     }
 
-    private class mWebViewClient extends WebViewClient
+    private class DailyWebViewClient extends WebViewClient
     {
 
         @Override
@@ -163,7 +178,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         {
             super.onReceivedError(view, errorCode, description, failingUrl);
 
-            webView.loadUrl("about:blank");
+            view.loadUrl("about:blank");
 
             if (VolleyHttpClient.isAvailableNetwork())
             {
@@ -242,6 +257,60 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
             setResult(resultCode, payData);
             finish();
+        }
+    }
+
+    class WebViewPostAsyncTask extends AsyncTask<String, Void, Response>
+    {
+        private WebView mWebView;
+
+        public WebViewPostAsyncTask(WebView webView)
+        {
+            mWebView = webView;
+        }
+
+        @Override
+        protected Response doInBackground(String... params)
+        {
+            String url = params[0];
+
+            try
+            {
+                OkHttpClient okHttpClient = new OkHttpClient();
+                Request request = new Request.Builder()//
+                    .url(url)//
+                    .addHeader("Os-Type", "android")//
+                    .addHeader("App-Version", DailyHotel.VERSION)//
+                    .addHeader("Authorization", DailyHotel.AUTHORIZATION).build();
+
+                return okHttpClient.newCall(request).execute();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Response response)
+        {
+            if (response == null)
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                finish();
+                return;
+            }
+
+            try
+            {
+                mWebView.loadDataWithBaseURL(response.request().url().toString(), response.body().string(), "text/html", "utf-8", null);
+            } catch (Exception e)
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                finish();
+                return;
+            }
         }
     }
 }
