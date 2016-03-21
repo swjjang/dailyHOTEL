@@ -55,84 +55,102 @@ public class FacebookManager implements IBaseAnalyticsManager
     {
         if (params == null)
         {
-            return;
-        }
-
-        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
-        {
-            AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
-
-            Bundle parameters = new Bundle();
-            parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.HOTEL);
-            parameters.putString(EventParam.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN));
-            parameters.putString(EventParam.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
-            parameters.putString(EventParam.HOTEL_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PRICE));
-            parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
-
-            appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, parameters);
-
-            if (DEBUG == true)
+            if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
+
+                Bundle parameters = new Bundle();
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, EventParam.HOTEL_LIST);
+
+                appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
+
+            } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
+            {
+                AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
+
+                Bundle parameters = new Bundle();
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, EventParam.GOURMET_LIST);
+
+                appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        } else
         {
-            AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
-
-            Bundle parameters = new Bundle();
-            parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.GOURMET);
-            parameters.putString(EventParam.GOURMET_RESERVATION_DATE, params.get(AnalyticsManager.KeyType.DATE));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
-            parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PRICE));
-
-            appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, parameters);
-
-            if (DEBUG == true)
+            if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
-            }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
-        {
-            AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
+                AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
-            Bundle parameters = new Bundle();
-            parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.HOTEL);
-            parameters.putString(EventParam.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN));
-            parameters.putString(EventParam.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
-            parameters.putString(EventParam.HOTEL_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.TOTAL_PRICE));
-            parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
+                Bundle parameters = new Bundle();
+                parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.HOTEL);
+                parameters.putString(EventParam.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN));
+                parameters.putString(EventParam.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
+                parameters.putString(EventParam.HOTEL_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PRICE));
+                parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
 
-            appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, parameters);
+                appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, parameters);
 
-            if (DEBUG == true)
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                }
+            } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
-            }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
-        {
-            AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
+                AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
-            Bundle parameters = new Bundle();
-            parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.GOURMET);
-            parameters.putString(EventParam.GOURMET_RESERVATION_DATE, params.get(AnalyticsManager.KeyType.DATE));
-            parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
-            parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PRICE));
+                Bundle parameters = new Bundle();
+                parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.GOURMET);
+                parameters.putString(EventParam.GOURMET_RESERVATION_DATE, params.get(AnalyticsManager.KeyType.DATE));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
+                parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PRICE));
 
-            appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, parameters);
+                appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, parameters);
 
-            if (DEBUG == true)
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                }
+            } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
+
+                Bundle parameters = new Bundle();
+                parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.HOTEL);
+                parameters.putString(EventParam.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN));
+                parameters.putString(EventParam.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
+                parameters.putString(EventParam.HOTEL_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.TOTAL_PRICE));
+                parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
+
+                appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, parameters);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                }
+            } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+            {
+                AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
+
+                Bundle parameters = new Bundle();
+                parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.GOURMET);
+                parameters.putString(EventParam.GOURMET_RESERVATION_DATE, params.get(AnalyticsManager.KeyType.DATE));
+                parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
+                parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PRICE));
+
+                appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, parameters);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                }
             }
         }
     }
@@ -148,7 +166,7 @@ public class FacebookManager implements IBaseAnalyticsManager
 
                 Bundle parameters = new Bundle();
 
-                String value = String.format("%s_%s", mContext.getString(R.string.label_hotel), label);
+                String value = String.format("%s_%s", mContext.getString(R.string.label_hotel), label.replaceAll("-", "_"));
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
@@ -163,7 +181,7 @@ public class FacebookManager implements IBaseAnalyticsManager
 
                 Bundle parameters = new Bundle();
 
-                String value = String.format("%s_%s", mContext.getString(R.string.label_fnb), label);
+                String value = String.format("%s_%s", mContext.getString(R.string.label_fnb), label.replaceAll("-", "_"));
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
@@ -310,6 +328,9 @@ public class FacebookManager implements IBaseAnalyticsManager
 
     private static final class EventParam
     {
+        public static final String HOTEL_LIST = "HotelList";
+        public static final String GOURMET_LIST = "GourmetList";
+
         public static final String CHECK_IN_DATE = "Check in Date";
         public static final String CHECK_OUT_DATE = "Check out Date";
         public static final String NUMBER_OF_NIGHTS = "Number of Nights";

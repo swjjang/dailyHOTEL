@@ -233,16 +233,16 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
-                String viewType = "List";
+                String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
                 switch (mViewType)
                 {
                     case LIST:
-                        viewType = "List";
+                        viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
                         break;
 
                     case MAP:
-                        viewType = "Map";
+                        viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
                         break;
                 }
 
@@ -417,7 +417,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         mCurationOption.setSortType(curationOption.getSortType());
                         mCurationOption.setFilterMap(curationOption.getFilterMap());
                         mCurationOption.flagTimeFilter = curationOption.flagTimeFilter;
-                        mCurationOption.isParking = curationOption.isParking;
+                        mCurationOption.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
 
                         if (curationOption.getSortType() == SortType.DISTANCE)
                         {

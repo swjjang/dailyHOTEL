@@ -106,37 +106,37 @@ public class HotelFilter implements Parcelable
 
         if (jsonObject.has("wifi") == true)
         {
-            wifi = "Y".equalsIgnoreCase(jsonObject.getString("wifi")) ? true : false;
+            wifi = "Y".equalsIgnoreCase(jsonObject.getString("wifi"));
         }
 
         if (jsonObject.has("breakfast") == true)
         {
-            breakfast = "Y".equalsIgnoreCase(jsonObject.getString("breakfast")) ? true : false;
+            breakfast = "Y".equalsIgnoreCase(jsonObject.getString("breakfast"));
         }
 
         if (jsonObject.has("cooking") == true)
         {
-            cooking = "Y".equalsIgnoreCase(jsonObject.getString("cooking")) ? true : false;
+            cooking = "Y".equalsIgnoreCase(jsonObject.getString("cooking"));
         }
 
         if (jsonObject.has("bath") == true)
         {
-            bath = "Y".equalsIgnoreCase(jsonObject.getString("bath")) ? true : false;
+            bath = "Y".equalsIgnoreCase(jsonObject.getString("bath"));
         }
 
         if (jsonObject.has("parking") == true)
         {
-            parking = "Y".equalsIgnoreCase(jsonObject.getString("parking")) ? true : false;
+            parking = "Y".equalsIgnoreCase(jsonObject.getString("parking"));
         }
 
         if (jsonObject.has("pool") == true)
         {
-            pool = "Y".equalsIgnoreCase(jsonObject.getString("pool")) ? true : false;
+            pool = "Y".equalsIgnoreCase(jsonObject.getString("pool"));
         }
 
         if (jsonObject.has("fitness") == true)
         {
-            fitness = "Y".equalsIgnoreCase(jsonObject.getString("fitness")) ? true : false;
+            fitness = "Y".equalsIgnoreCase(jsonObject.getString("fitness"));
         }
 
         if (wifi == true)

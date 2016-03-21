@@ -10,9 +10,12 @@ import java.util.HashMap;
 
 public class GourmetFilters implements Parcelable
 {
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_NONE = 0x00;
+    public static final int FLAG_HOTEL_FILTER_AMENITIES_PARKING = 0x01;
+
     private GourmetFilter[] mGourmetFilterArray;
     public String category;
-    public boolean isParking;
+    public int amenitiesFlag;
 
     public GourmetFilters(int size)
     {
@@ -39,7 +42,7 @@ public class GourmetFilters implements Parcelable
     {
         return (isCategoryFiltered(curationOption.getFilterMap()) == true//
             && isTimeFiltered(curationOption.flagTimeFilter) == true//
-            && isParkingFiltered(curationOption.isParking) == true);
+            && isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true);
     }
 
     private boolean isCategoryFiltered(HashMap<String, Integer> categoryMap)
@@ -70,22 +73,14 @@ public class GourmetFilters implements Parcelable
         return false;
     }
 
-    private boolean isParkingFiltered(boolean isParking)
+    private boolean isAmenitiesFiltered(int flagAmenitiesFilters)
     {
-        if (isParking == false)
+        if (flagAmenitiesFilters == FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return true;
         }
 
-        for (GourmetFilter gourmetFilter : mGourmetFilterArray)
-        {
-            if (this.isParking == isParking)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return (amenitiesFlag & flagAmenitiesFilters) == flagAmenitiesFilters;
     }
 
     @Override
@@ -93,14 +88,14 @@ public class GourmetFilters implements Parcelable
     {
         dest.writeTypedArray(mGourmetFilterArray, flags);
         dest.writeString(category);
-        dest.writeInt(isParking ? 1 : 0);
+        dest.writeInt(amenitiesFlag);
     }
 
     private void readFromParcel(Parcel in)
     {
         mGourmetFilterArray = (GourmetFilter[]) in.createTypedArray(GourmetFilter.CREATOR);
         category = in.readString();
-        isParking = in.readInt() == 1 ? true : false;
+        amenitiesFlag = in.readInt();
     }
 
     @Override

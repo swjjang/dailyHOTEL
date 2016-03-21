@@ -90,13 +90,7 @@ public class Gourmet extends Place implements Parcelable
                 }
             }
 
-            boolean isParking = false;
-            if (jsonObject.has("parking") == true)
-            {
-                isParking = "Y".equalsIgnoreCase(jsonObject.getString("parking")) ? true : false;
-            }
-
-            mGourmetFilters = makeGourmetFilters(category, isParking, jsonObject.getJSONArray("restaurantTicketList"));
+            mGourmetFilters = makeGourmetFilters(category, jsonObject);
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -122,24 +116,44 @@ public class Gourmet extends Place implements Parcelable
         return mGourmetFilters;
     }
 
-    private GourmetFilters makeGourmetFilters(String category, boolean isParking, JSONArray jsonArray) throws JSONException
+    private GourmetFilters makeGourmetFilters(String category, JSONObject jsonObject) throws JSONException
     {
-        if (jsonArray == null || jsonArray.length() == 0)
+        if (jsonObject == null)
         {
             return null;
         }
 
+        JSONArray jsonArray = jsonObject.getJSONArray("restaurantTicketList");
         int length = jsonArray.length();
         GourmetFilters gourmetFilters = new GourmetFilters(length);
         gourmetFilters.category = category;
-        gourmetFilters.isParking = isParking;
+
 
         for (int i = 0; i < length; i++)
         {
             gourmetFilters.setGourmetFilter(i, jsonArray.getJSONObject(i));
         }
 
+        setAmenitiesFlag(gourmetFilters, jsonObject);
+
         return gourmetFilters;
+    }
+
+    private void setAmenitiesFlag(GourmetFilters gourmetFilters, JSONObject jsonObject) throws JSONException
+    {
+        gourmetFilters.amenitiesFlag = GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE;
+
+        boolean parking = false;
+
+        if (jsonObject.has("parking") == true)
+        {
+            parking = "Y".equalsIgnoreCase(jsonObject.getString("parking"));
+        }
+
+        if (parking == true)
+        {
+            gourmetFilters.amenitiesFlag |= GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING;
+        }
     }
 
     @Override

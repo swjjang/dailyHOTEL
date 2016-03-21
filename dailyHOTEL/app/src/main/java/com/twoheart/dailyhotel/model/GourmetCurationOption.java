@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class GourmetCurationOption extends PlaceCurationOption
     private HashMap<String, Integer> mCategorySequenceMap;
 
     public int flagTimeFilter;
-    public boolean isParking;
+    public int flagAmenitiesFilters;
 
     private ArrayList<GourmetFilters> mGourmetFiltersList;
 
@@ -64,7 +65,7 @@ public class GourmetCurationOption extends PlaceCurationOption
         }
 
         flagTimeFilter = GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE;
-        isParking = false;
+        flagAmenitiesFilters = GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE;
     }
 
     public boolean isDefaultFilter()
@@ -72,7 +73,7 @@ public class GourmetCurationOption extends PlaceCurationOption
         if (getSortType() != Constants.SortType.DEFAULT//
             || mFilterMap.size() != 0//
             || flagTimeFilter != GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE//
-            || isParking == true)
+            || flagAmenitiesFilters != GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return false;
         }
@@ -113,6 +114,144 @@ public class GourmetCurationOption extends PlaceCurationOption
         return mCategorySequenceMap;
     }
 
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+
+        switch (getSortType())
+        {
+            case DEFAULT:
+                result.append(AnalyticsManager.Label.SORTFILTER_DISTRICT);
+                break;
+
+            case DISTANCE:
+                result.append(AnalyticsManager.Label.SORTFILTER_DISTANCE);
+                break;
+
+            case LOW_PRICE:
+                result.append(AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE);
+                break;
+
+            case HIGH_PRICE:
+                result.append(AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE);
+                break;
+
+            case SATISFACTION:
+                result.append(AnalyticsManager.Label.SORTFILTER_RATING);
+                break;
+        }
+
+        result.append('-');
+
+        if (mCategoryCodeMap.size() == 0)
+        {
+            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+        } else
+        {
+            ArrayList<String> categoryArrayList = new ArrayList(mCategoryCodeMap.keySet());
+
+            int size = categoryArrayList.size();
+
+            for (int i = 0; i < size; i++)
+            {
+                if (i == 0)
+                {
+                    result.append(categoryArrayList.get(i));
+                } else
+                {
+                    result.append(',');
+                    result.append(categoryArrayList.get(i));
+                }
+            }
+        }
+
+        result.append('-');
+
+        if (flagTimeFilter == GourmetFilter.FLAG_GOURMET_FILTER_TIME_NONE)
+        {
+            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+        } else
+        {
+            boolean isFirst = true;
+
+            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_06_11)
+            {
+                isFirst = false;
+                result.append(AnalyticsManager.Label.SORTFILTER_0611);
+            }
+
+            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_11_15)
+            {
+                if (isFirst == true)
+                {
+                    isFirst = false;
+                } else
+                {
+                    result.append(',');
+                }
+
+                result.append(AnalyticsManager.Label.SORTFILTER_1115);
+            }
+
+            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_15_17)
+            {
+                if (isFirst == true)
+                {
+                    isFirst = false;
+                } else
+                {
+                    result.append(',');
+                }
+
+                result.append(AnalyticsManager.Label.SORTFILTER_1517);
+            }
+
+            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_17_21)
+            {
+                if (isFirst == true)
+                {
+                    isFirst = false;
+                } else
+                {
+                    result.append(',');
+                }
+
+                result.append(AnalyticsManager.Label.SORTFILTER_1721);
+            }
+
+            if ((flagTimeFilter & GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06) == GourmetFilter.FLAG_GOURMET_FILTER_TIME_21_06)
+            {
+                if (isFirst == true)
+                {
+                    isFirst = false;
+                } else
+                {
+                    result.append(',');
+                }
+
+                result.append(AnalyticsManager.Label.SORTFILTER_2106);
+            }
+        }
+
+        result.append('-');
+
+        if (flagAmenitiesFilters == GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+        {
+            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+        } else
+        {
+            boolean isFirst = true;
+
+            if ((flagAmenitiesFilters & GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == GourmetFilters.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
+            {
+                isFirst = false;
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABEL);
+            }
+        }
+
+        return result.toString();
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -123,7 +262,7 @@ public class GourmetCurationOption extends PlaceCurationOption
         dest.writeSerializable(mCategorySequenceMap);
         dest.writeTypedList(mGourmetFiltersList);
         dest.writeInt(flagTimeFilter);
-        dest.writeInt(isParking ? 1 : 0);
+        dest.writeInt(flagAmenitiesFilters);
     }
 
     @Override
@@ -136,7 +275,7 @@ public class GourmetCurationOption extends PlaceCurationOption
         mCategorySequenceMap = (HashMap<String, Integer>) in.readSerializable();
         in.readTypedList(mGourmetFiltersList, GourmetFilters.CREATOR);
         flagTimeFilter = in.readInt();
-        isParking = in.readInt() == 1 ? true : false;
+        flagAmenitiesFilters = in.readInt();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

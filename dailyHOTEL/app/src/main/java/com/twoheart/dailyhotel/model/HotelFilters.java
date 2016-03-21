@@ -36,7 +36,9 @@ public class HotelFilters implements Parcelable
     {
         for (HotelFilter hotelFilter : mHotelFilterArray)
         {
-            if (hotelFilter.isPersonFiltered(curationOption.person) == true && hotelFilter.isBedTypeFiltered(curationOption.flagBedTypeFilters) == true && hotelFilter.isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true)
+            if (hotelFilter.isPersonFiltered(curationOption.person) == true//
+                && hotelFilter.isBedTypeFiltered(curationOption.flagBedTypeFilters) == true//
+                && hotelFilter.isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true)
             {
                 return true;
             }
