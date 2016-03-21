@@ -861,10 +861,11 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         }
     }
 
-    class WebViewPostAsyncTask extends AsyncTask<String, Void, Response>
+    class WebViewPostAsyncTask extends AsyncTask<String, Void, String>
     {
         private WebView mWebView;
         private FormBody.Builder mBuilder;
+        private String mUrl;
 
         public WebViewPostAsyncTask(WebView webView, FormBody.Builder builder)
         {
@@ -873,21 +874,24 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         }
 
         @Override
-        protected Response doInBackground(String... params)
+        protected String doInBackground(String... params)
         {
-            String url = params[0];
+            mUrl = params[0];
 
             try
             {
                 OkHttpClient okHttpClient = new OkHttpClient();
                 RequestBody body = mBuilder.build();
                 Request request = new Request.Builder()//
-                    .url(url)//
-                    .post(body).addHeader("Os-Type", "android")//
+                    .url(mUrl)//
+                    .addHeader("Os-Type", "android")//
                     .addHeader("App-Version", DailyHotel.VERSION)//
-                    .addHeader("Authorization", DailyHotel.AUTHORIZATION).build();
+                    .addHeader("Authorization", DailyHotel.AUTHORIZATION)//
+                    .post(mBuilder.build()).build();
 
-                return okHttpClient.newCall(request).execute();
+                Response response = okHttpClient.newCall(request).execute();
+
+                return response.body().string();
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -897,9 +901,9 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         }
 
         @Override
-        protected void onPostExecute(Response response)
+        protected void onPostExecute(String data)
         {
-            if (response == null)
+            if (Util.isTextEmpty(data) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
@@ -908,7 +912,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
             try
             {
-                mWebView.loadDataWithBaseURL(response.request().url().toString(), response.body().string(), "text/html", "utf-8", null);
+                mWebView.loadDataWithBaseURL(mUrl, data, "text/html", "utf-8", null);
             } catch (Exception e)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);

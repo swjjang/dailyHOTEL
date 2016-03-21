@@ -83,9 +83,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         headerMap.put("Authorization", DailyHotel.AUTHORIZATION);
 
         webView.loadUrl(url, headerMap);
-        //
-        //        WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView);
-        //        webViewPostAsyncTask.execute(url);
     }
 
     private void initToolbar()
@@ -257,60 +254,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
             setResult(resultCode, payData);
             finish();
-        }
-    }
-
-    class WebViewPostAsyncTask extends AsyncTask<String, Void, Response>
-    {
-        private WebView mWebView;
-
-        public WebViewPostAsyncTask(WebView webView)
-        {
-            mWebView = webView;
-        }
-
-        @Override
-        protected Response doInBackground(String... params)
-        {
-            String url = params[0];
-
-            try
-            {
-                OkHttpClient okHttpClient = new OkHttpClient();
-                Request request = new Request.Builder()//
-                    .url(url)//
-                    .addHeader("Os-Type", "android")//
-                    .addHeader("App-Version", DailyHotel.VERSION)//
-                    .addHeader("Authorization", DailyHotel.AUTHORIZATION).build();
-
-                return okHttpClient.newCall(request).execute();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Response response)
-        {
-            if (response == null)
-            {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
-                finish();
-                return;
-            }
-
-            try
-            {
-                mWebView.loadDataWithBaseURL(response.request().url().toString(), response.body().string(), "text/html", "utf-8", null);
-            } catch (Exception e)
-            {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
-                finish();
-                return;
-            }
         }
     }
 }
