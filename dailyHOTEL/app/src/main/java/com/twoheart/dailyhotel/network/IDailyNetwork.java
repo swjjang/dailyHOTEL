@@ -44,15 +44,6 @@ interface IDailyNetwork
      */
     void requestCommonDatetime(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
-
-    /**
-     * user/logout/mobile
-     * 로그아웃을 요청한다
-     *
-     * @return
-     */
-    void requestUserLogout(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
-
     /**
      * user/session/myinfo
      * 나의 정보를 요청한다
@@ -68,14 +59,6 @@ interface IDailyNetwork
      * @return
      */
     void requestUserBonus(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
-
-    /**
-     * user/alive
-     * 유저가 로그인되어있고 세션이 살아있는지 확인한다.
-     *
-     * @return
-     */
-    //    void requestUserAlive(Object tag, DailyHotelStringResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * user/update

@@ -8,6 +8,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -27,6 +28,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     private static final int REQUEST_MAX_RETRY = 0;
 
     private Map<String, String> mParameters;
+    private boolean mIsUsedAuthorization;
 
     public DailyHotelRequest(int method, String url, Map<String, String> parameters, ErrorListener errorListener)
     {
@@ -291,12 +293,17 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         map.put("Os-Type", "android");
         map.put("App-Version", DailyHotel.VERSION);
 
-        if (Util.isTextEmpty(DailyHotel.AUTHORIZATION) == false)
+        if (mIsUsedAuthorization == true && Util.isTextEmpty(DailyHotel.AUTHORIZATION) == false)
         {
             map.put("Authorization", DailyHotel.AUTHORIZATION);
         }
 
         return map;
+    }
+
+    public void setUsedAuthorization(boolean isUsed)
+    {
+        mIsUsedAuthorization = isUsed;
     }
 
     public static void makeUrlEncoder()
