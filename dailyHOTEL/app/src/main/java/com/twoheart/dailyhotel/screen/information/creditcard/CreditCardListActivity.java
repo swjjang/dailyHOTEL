@@ -76,7 +76,7 @@ public class CreditCardListActivity extends BaseActivity
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_creditcard_activity));
     }
@@ -115,6 +115,10 @@ public class CreditCardListActivity extends BaseActivity
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
                     msg = getString(R.string.message_billing_duplicate);
                     break;
+
+                case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+                    restartExpiredSession();
+                    return;
 
                 case CODE_RESULT_PAYMENT_BILLING_FAIL:
                     if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)

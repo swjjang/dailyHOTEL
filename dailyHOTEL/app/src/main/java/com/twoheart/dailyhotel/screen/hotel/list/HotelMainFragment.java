@@ -141,7 +141,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height_has_tab);
 
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        View toolbar = view.findViewById(R.id.toolbar);
 
         mAppBarLayout.addOnOffsetChangedListener(this);
 
@@ -475,10 +475,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
+    private void onPrepareOptionsMenu(ViewType viewType)
     {
-        switch (mViewType)
+        switch (viewType)
         {
             case LIST:
                 mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, -1);
@@ -1280,7 +1279,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     {
                         mOnCommunicateListener.toggleViewType();
 
-                        baseActivity.invalidateOptionsMenu();
+                        onPrepareOptionsMenu(mViewType);
                     }
                     break;
                 }
@@ -1293,8 +1292,15 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     {
                         mOnCommunicateListener.toggleViewType();
 
-                        baseActivity.invalidateOptionsMenu();
+                        onPrepareOptionsMenu(mViewType);
                     }
+                    break;
+                }
+
+                case R.drawable.navibar_ic_search:
+                {
+                    Intent intent = HotelSearchActivity.newInstance(baseActivity);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
                     break;
                 }
             }
@@ -1673,7 +1679,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 return;
             }
 
-            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+            View toolbar = mDailyToolbarLayout.getToolbar();
 
             if (toolbar == null)
             {
@@ -1698,7 +1704,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 return;
             }
 
-            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+            View toolbar = mDailyToolbarLayout.getToolbar();
 
             if (toolbar == null)
             {
@@ -1724,7 +1730,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 return;
             }
 
-            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+            View toolbar = mDailyToolbarLayout.getToolbar();
 
             if (toolbar == null)
             {

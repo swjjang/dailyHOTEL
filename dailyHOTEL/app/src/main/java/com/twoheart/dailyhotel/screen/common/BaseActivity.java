@@ -133,15 +133,18 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             return;
         }
 
-        // 세션이 만료되어 재시작 요청.
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Util.restartApp(BaseActivity.this);
-            }
-        }, null, false);
+//        // 세션이 만료되어 재시작 요청.
+//        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                Util.restartApp(BaseActivity.this);
+//            }
+//        }, null, false);
+
+        // 토스트로 수정
+        DailyToast.showToast(this, R.string.dialog_msg_session_expired, Toast.LENGTH_SHORT);
     }
 
     // 메뉴 버튼을 막아버림.

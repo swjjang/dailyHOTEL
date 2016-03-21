@@ -59,7 +59,7 @@ public class IssuingReceiptActivity extends BaseActivity
         mToolbarUnderline = findViewById(R.id.toolbarUnderline);
         mToolbarUnderline.setVisibility(View.VISIBLE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(getString(R.string.frag_issuing_receipt));
     }

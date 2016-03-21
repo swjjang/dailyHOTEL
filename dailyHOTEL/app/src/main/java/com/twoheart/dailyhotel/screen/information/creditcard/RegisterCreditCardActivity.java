@@ -87,7 +87,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_reg_creditcard));
     }
@@ -179,7 +179,13 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
             if (VolleyHttpClient.isAvailableNetwork())
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                if(errorCode == 401)
+                {
+                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
+                } else
+                {
+                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                }
             } else
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);

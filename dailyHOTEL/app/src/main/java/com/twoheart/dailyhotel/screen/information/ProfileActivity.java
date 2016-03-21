@@ -67,7 +67,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_profile_activity));
     }

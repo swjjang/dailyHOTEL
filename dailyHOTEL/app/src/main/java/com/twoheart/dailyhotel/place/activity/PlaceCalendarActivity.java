@@ -66,7 +66,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected void initToolbar(String title)
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title);
     }

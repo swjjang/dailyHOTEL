@@ -268,6 +268,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
         <activity
+            android:name=".screen.hotel.list.HotelSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.list.GourmetSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.common.ExitActivity"
             android:autoRemoveFromRecents="true"
             android:launchMode="singleTop"

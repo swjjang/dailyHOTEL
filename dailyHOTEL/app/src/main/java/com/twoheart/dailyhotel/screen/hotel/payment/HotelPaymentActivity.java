@@ -157,7 +157,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private void initToolbar(String title)
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(title);
         dailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);

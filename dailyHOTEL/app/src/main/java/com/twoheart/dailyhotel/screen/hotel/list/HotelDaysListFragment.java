@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.util.Util;
 
 public class HotelDaysListFragment extends HotelListFragment
 {
@@ -46,6 +47,12 @@ public class HotelDaysListFragment extends HotelListFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if (mHotelRecycleView == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_CALENDAR:

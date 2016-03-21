@@ -198,7 +198,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
     private void initToolbar(String title)
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(title);
     }

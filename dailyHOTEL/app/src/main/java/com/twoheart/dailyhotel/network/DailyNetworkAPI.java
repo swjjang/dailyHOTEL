@@ -99,6 +99,14 @@ public class DailyNetworkAPI implements IDailyNetwork
         });
     }
 
+
+    public void testUrl(String url, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(Request.Method.GET, new StringBuilder(url).toString(), null, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
     @Override
     public void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {

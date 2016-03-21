@@ -219,8 +219,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                     mHotelBookingDetail.setData(jsonObject);
 
-                    invalidateOptionsMenu();
-
                     loadFragments(getViewPager(), mHotelBookingDetail);
                 } else
                 {

@@ -236,6 +236,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         msg = getString(R.string.message_billing_fail);
                         break;
 
+                    case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+                        restartExpiredSession();
+                        return;
+
                     case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
                         msg = getString(R.string.act_toast_payment_fail);
                         break;

@@ -587,7 +587,7 @@ public class DailyPreference
 
     public boolean isAutoLogin()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_AUTO_LOGIN, false);
+        return getValue(mOldPreferences, KEY_PREFERENCE_AUTO_LOGIN, true);
     }
 
     public void setAutoLogin(boolean value)

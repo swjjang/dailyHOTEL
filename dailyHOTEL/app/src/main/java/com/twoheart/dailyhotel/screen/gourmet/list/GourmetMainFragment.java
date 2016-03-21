@@ -139,7 +139,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height_has_tab);
 
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        View toolbar = view.findViewById(R.id.toolbar);
 
         mAppBarLayout.addOnOffsetChangedListener(this);
 
@@ -470,10 +470,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
+    private void onPrepareOptionsMenu(ViewType viewType)
     {
-        switch (mViewType)
+        switch (viewType)
         {
             case LIST:
                 mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, -1);
@@ -1071,7 +1070,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     {
                         mOnCommunicateListener.toggleViewType();
 
-                        baseActivity.invalidateOptionsMenu();
+                        onPrepareOptionsMenu(mViewType);
                     }
                     break;
                 }
@@ -1084,7 +1083,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     {
                         mOnCommunicateListener.toggleViewType();
 
-                        baseActivity.invalidateOptionsMenu();
+                        onPrepareOptionsMenu(mViewType);
                     }
                     break;
                 }
@@ -1435,7 +1434,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 return;
             }
 
-            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+            View toolbar = mDailyToolbarLayout.getToolbar();
 
             if (toolbar == null)
             {
@@ -1460,7 +1459,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 return;
             }
 
-            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+            View toolbar = mDailyToolbarLayout.getToolbar();
 
             if (toolbar == null)
             {
@@ -1486,7 +1485,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 return;
             }
 
-            Toolbar toolbar = mDailyToolbarLayout.getToolbar();
+            View toolbar = mDailyToolbarLayout.getToolbar();
 
             if (toolbar == null)
             {

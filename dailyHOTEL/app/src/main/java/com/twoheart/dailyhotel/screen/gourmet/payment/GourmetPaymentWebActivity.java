@@ -891,6 +891,12 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
                 Response response = okHttpClient.newCall(request).execute();
 
+                // 세션이 만료된 경우
+                if(response.code() == 401)
+                {
+                    return "401";
+                }
+
                 return response.body().string();
             } catch (Exception e)
             {
@@ -906,6 +912,11 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             if (Util.isTextEmpty(data) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                finish();
+                return;
+            } else if ("401".equalsIgnoreCase(data) == true)
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
                 finish();
                 return;
             }

@@ -218,8 +218,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
                     mGourmetBookingDetail.setData(jsonObject);
 
-                    invalidateOptionsMenu();
-
                     loadFragments(getViewPager(), mGourmetBookingDetail);
                 } else
                 {

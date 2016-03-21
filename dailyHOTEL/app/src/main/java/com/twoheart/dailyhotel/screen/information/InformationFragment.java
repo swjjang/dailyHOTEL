@@ -108,7 +108,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
     private void initToolbar(BaseActivity baseActivity, View view)
     {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), false, false);
     }

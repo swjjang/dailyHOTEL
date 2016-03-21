@@ -14,6 +14,7 @@ package com.twoheart.dailyhotel.screen.information.bonus;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -61,7 +62,7 @@ public class BonusListActivity extends BaseActivity
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.act_credit_history));
     }

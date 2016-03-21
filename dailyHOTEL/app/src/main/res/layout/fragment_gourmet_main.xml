@@ -10,17 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height_has_tab"
-            android:background="#ffffff"
-            app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-            <include layout="@layout/toolbar_region"/>
-        </android.support.v7.widget.Toolbar>
+        <include
+            layout="@layout/toolbar_region"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"

@@ -222,7 +222,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         mToolbarUnderline = findViewById(R.id.toolbarUnderline);
         mToolbarUnderline.setVisibility(View.INVISIBLE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title, true);
         mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_share, -1);

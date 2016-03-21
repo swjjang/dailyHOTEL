@@ -70,7 +70,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag));

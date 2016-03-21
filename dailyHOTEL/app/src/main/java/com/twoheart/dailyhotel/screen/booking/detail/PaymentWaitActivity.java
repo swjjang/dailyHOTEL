@@ -105,7 +105,7 @@ public class PaymentWaitActivity extends BaseActivity
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_payment_wait_activity));
         dailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);

@@ -12,9 +12,9 @@ import com.twoheart.dailyhotel.util.Util;
 public class DailyToolbarLayout
 {
     private AppCompatActivity mAppCompatActivity;
-    private Toolbar mToolbar;
+    private View mToolbar;
 
-    public DailyToolbarLayout(AppCompatActivity appCompatActivity, Toolbar toolbar)
+    public DailyToolbarLayout(AppCompatActivity appCompatActivity, View toolbar)
     {
         mAppCompatActivity = appCompatActivity;
         mToolbar = toolbar;
@@ -44,12 +44,11 @@ public class DailyToolbarLayout
         });
 
         mToolbar.setTag(mToolbar.getId(), textView);
-        mAppCompatActivity.setSupportActionBar(mToolbar);
     }
 
     public void initToolbarRegionMenu(View.OnClickListener listener)
     {
-        setToolbarRegionMenu(R.drawable.navibar_ic_map, -1);
+        setToolbarRegionMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_call);
 
         setToolbarMenuClickListener(listener);
 
@@ -68,7 +67,6 @@ public class DailyToolbarLayout
 
     public void initToolbar(String title, boolean isBackPressed, boolean isTransparent)
     {
-        mAppCompatActivity.setSupportActionBar(mToolbar);
         setToolbarTransparent(isTransparent);
 
         FontManager.apply(mToolbar, FontManager.getInstance(mAppCompatActivity).getRegularTypeface());
@@ -199,7 +197,7 @@ public class DailyToolbarLayout
         textView.setText(title);
     }
 
-    public Toolbar getToolbar()
+    public View getToolbar()
     {
         return mToolbar;
     }
