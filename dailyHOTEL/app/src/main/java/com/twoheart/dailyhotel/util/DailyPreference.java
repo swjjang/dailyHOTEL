@@ -47,6 +47,8 @@ public class DailyPreference
 
     private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
 
+    private static final String KEY_AGREE_TERMS_OF_LOCATION = "21"; // 위치 약관 동의 여부
+
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
     private static final String KEY_COMPANY_BIZREGNUMBER = "102";
@@ -56,7 +58,11 @@ public class DailyPreference
     private static final String KEY_COMPANY_FAX = "106";
     private static final String KEY_COMPANY_PRIVACY_EMAIL = "107";
 
+    private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
+    private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
+
     private static final String KEY_AUTHORIZATION = "1000";
+
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
@@ -469,6 +475,26 @@ public class DailyPreference
         DailyHotel.AUTHORIZATION = value;
 
         setValue(mEditor, KEY_AUTHORIZATION, DailyHotelRequest.urlEncrypt(value));
+    }
+
+    public void setHotelRecentSearches(String text)
+    {
+        setValue(mEditor, KEY_HOTEL_SEARCH_RECENTLY, text);
+    }
+
+    public String getHotelRecentSearches()
+    {
+        return getValue(mPreferences, KEY_HOTEL_SEARCH_RECENTLY, null);
+    }
+
+    public void setGourmetRecentSearches(String text)
+    {
+        setValue(mEditor, KEY_GOURMET_SEARCH_RECENTLY, text);
+    }
+
+    public String getGourmetRecentSearches()
+    {
+        return getValue(mPreferences, KEY_GOURMET_SEARCH_RECENTLY, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

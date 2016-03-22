@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -208,7 +207,7 @@ public class HotelDetailActivity extends BaseActivity
         View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title, true);
-        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_share, -1);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelected);
     }
 

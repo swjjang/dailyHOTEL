@@ -1,0 +1,133 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/information_background">
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/backImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/navibar_ic_back"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/searchCancelView"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/backImageView">
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/titleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:text="부산 > 부산전체"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/dateView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:text="2016.02.03 ~ 2016.02.04"/>
+        </LinearLayout>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/searchCancelView"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="10dp"
+            android:text="검색취소"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/emptyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:visibility="gone">
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/searcyEmptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawableTop="@drawable/ic_coin"
+            android:text="검색 결과가 없습니다"
+            android:textSize="30dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/researchView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_below="@+id/searcyEmptyView"
+            android:background="@color/dh_theme_color"
+            android:gravity="center"
+            android:text="다시 검색하기"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/researchUnderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/researchView"
+            android:layout_marginTop="10dp"
+            android:text="정확한 검색어가 맞는지 확인해 보세요."
+            android:textSize="15dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/callView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_below="@+id/researchUnderTextView"
+            android:layout_marginTop="20dp"
+            android:background="@color/dh_theme_color"
+            android:gravity="center"
+            android:text="@string/act_booking_btn_pay"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/callUnderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/callView"
+            android:layout_marginTop="10dp"
+            android:text="찾으시는 호텔 또는 레스토랑이 없으시간요?\n데일리 고객센터로 알려주세요!"
+            android:textSize="15dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/resultCountView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="결과96건"/>
+
+        <RecycleView
+            android:id="@+id/recycleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:scrollbars="vertical"
+            android:layout_below="@+id/resultCountView"/>
+
+    </RelativeLayout>
+</RelativeLayout>

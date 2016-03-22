@@ -70,9 +70,9 @@ public class GourmetDaysListFragment extends GourmetListFragment
                     mOnCommunicateListener.selectDay(mSelectedSaleTime, true);
                 } else
                 {
-                    if (mGourmetRecycleView.getVisibility() == View.VISIBLE && mGourmetRecycleView.getAdapter() != null)
+                    if (mGourmetRecyclerView.getVisibility() == View.VISIBLE && mGourmetRecyclerView.getAdapter() != null)
                     {
-                        if (mGourmetRecycleView.getAdapter().getItemCount() == 0)
+                        if (mGourmetRecyclerView.getAdapter().getItemCount() == 0)
                         {
                             fetchList();
                         }

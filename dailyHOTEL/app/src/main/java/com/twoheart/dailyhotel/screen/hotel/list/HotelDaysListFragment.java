@@ -27,6 +27,12 @@ public class HotelDaysListFragment extends HotelListFragment
     }
 
     @Override
+    public int getNights()
+    {
+        return mSelectedCheckInSaleTime.getOffsetDailyDay() - mSelectedCheckOutSaleTime.getOffsetDailyDay();
+    }
+
+    @Override
     public void onPageSelected()
     {
         super.onPageSelected();
@@ -47,7 +53,7 @@ public class HotelDaysListFragment extends HotelListFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (mHotelRecycleView == null)
+        if (mHotelRecyclerView == null)
         {
             Util.restartApp(getContext());
             return;
@@ -65,9 +71,9 @@ public class HotelDaysListFragment extends HotelListFragment
                     mOnCommunicateListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
                 } else
                 {
-                    if (mHotelRecycleView.getVisibility() == View.VISIBLE && mHotelRecycleView.getAdapter() != null)
+                    if (mHotelRecyclerView.getVisibility() == View.VISIBLE && mHotelRecyclerView.getAdapter() != null)
                     {
-                        if (mHotelRecycleView.getAdapter().getItemCount() == 0)
+                        if (mHotelRecyclerView.getAdapter().getItemCount() == 0)
                         {
                             fetchList();
                         }
@@ -98,7 +104,7 @@ public class HotelDaysListFragment extends HotelListFragment
                 return;
             }
 
-            int position = mHotelRecycleView.getChildAdapterPosition(view);
+            int position = mHotelRecyclerView.getChildAdapterPosition(view);
 
             if (position < 0)
             {

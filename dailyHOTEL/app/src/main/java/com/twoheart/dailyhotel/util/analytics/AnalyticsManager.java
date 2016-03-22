@@ -260,6 +260,7 @@ public class AnalyticsManager
         public static final String TERMSOFPRIVACY = "Menu_TermsofPrivacy";
         public static final String FORGOTPASSWORD = "Menu_LostPassword";
         public static final String PROFILE = "Menu_Profile";
+        public static final String TERMSOFLOCATION = "Menu_TermsofLocation";
         //
         public static final String CREDITCARD_LIST = "Menu_PaymentCardRegistered";
         public static final String CREDITCARD_LIST_EMPTY = "Menu_NoCardRegistered";

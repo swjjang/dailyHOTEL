@@ -171,6 +171,17 @@ interface IDailyNetwork
     void requestHotelList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
+     *
+     * @param tag
+     * @param saleTime
+     * @param nights
+     * @param text
+     * @param listener
+     * @param errorListener
+     */
+    void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
      * api/sale/region/all
      * 호텔 지역 리스트를 요청한다
      *

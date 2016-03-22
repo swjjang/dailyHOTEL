@@ -12,7 +12,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spannable;
@@ -160,7 +159,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(title);
-        dailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new OnClickListener()
         {
             @Override

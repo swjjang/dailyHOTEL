@@ -258,7 +258,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.hotel.list.HotelCurationActivity"
+            android:name=".screen.hotel.filter.HotelCurationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
@@ -268,11 +268,19 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
         <activity
-            android:name=".screen.hotel.list.HotelSearchActivity"
+            android:name=".screen.hotel.search.HotelSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.gourmet.list.GourmetSearchActivity"
+            android:name=".screen.gourmet.search.GourmetSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.hotel.search.HotelSearchResultActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.search.GourmetSearchResultActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

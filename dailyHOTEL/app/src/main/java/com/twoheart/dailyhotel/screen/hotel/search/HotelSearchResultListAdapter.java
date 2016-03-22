@@ -1,9 +1,6 @@
-package com.twoheart.dailyhotel.screen.hotel.list;
+package com.twoheart.dailyhotel.screen.hotel.search;
 
 import android.graphics.Paint;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -12,51 +9,30 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.place.adapter.PlaceBannerViewPagerAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.LoopViewPager;
-import com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class HotelSearchResultListAdapter extends PlaceListAdapter implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
     private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
-    private View.OnClickListener mOnEventBannerClickListener;
-    private int mLastEventBannerPosition;
     private BaseActivity mActivity;
 
-    private Handler mEventBannerHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            EventBannerViewHolder eventBannerViewHolder = (EventBannerViewHolder) msg.obj;
-
-            if (eventBannerViewHolder != null)
-            {
-                eventBannerViewHolder.loopViewPager.setCurrentItem(msg.arg1 + 1);
-            }
-        }
-    };
-
-    public HotelListAdapter(BaseActivity activity, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
+    public HotelSearchResultListAdapter(BaseActivity activity, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
     {
         super(activity, arrayList);
 
         mActivity = activity;
         mOnClickListener = listener;
-        mOnEventBannerClickListener = eventBannerListener;
 
         setSortType(Constants.SortType.DEFAULT);
     }
@@ -80,42 +56,17 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
     }
 
     @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder)
-    {
-        super.onViewRecycled(holder);
-
-        if (holder instanceof EventBannerViewHolder)
-        {
-            mEventBannerHandler.removeMessages(0);
-        }
-    }
-
-    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         try
         {
             switch (viewType)
             {
-                case PlaceViewItem.TYPE_SECTION:
-                {
-                    View view = mInflater.inflate(R.layout.list_row_hotel_section, parent, false);
-
-                    return new SectionViewHolder(view);
-                }
-
                 case PlaceViewItem.TYPE_ENTRY:
                 {
                     View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
 
                     return new HoltelViewHolder(view);
-                }
-
-                case PlaceViewItem.TYPE_EVENT_BANNER:
-                {
-                    View view = mInflater.inflate(R.layout.list_row_eventbanner, parent, false);
-
-                    return new EventBannerViewHolder(view);
                 }
             }
         } catch (OutOfMemoryError e)
@@ -141,70 +92,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((HoltelViewHolder) holder, item);
                 break;
-
-            case PlaceViewItem.TYPE_SECTION:
-                onBindViewHolder((SectionViewHolder) holder, item);
-                break;
-
-            case PlaceViewItem.TYPE_EVENT_BANNER:
-                onBindViewHolder((EventBannerViewHolder) holder, item);
-                break;
         }
-    }
-
-    private void onBindViewHolder(SectionViewHolder holder, PlaceViewItem placeViewItem)
-    {
-        holder.regionDetailName.setText(placeViewItem.<String>getItem());
-    }
-
-    private void onBindViewHolder(final EventBannerViewHolder holder, PlaceViewItem placeViewItem)
-    {
-        ArrayList<EventBanner> eventBannerList = placeViewItem.<ArrayList<EventBanner>>getItem();
-
-        PlaceBannerViewPagerAdapter adapter = new PlaceBannerViewPagerAdapter(mContext, eventBannerList, mOnEventBannerClickListener);
-        holder.loopViewPager.setOnPageChangeListener(null);
-        holder.loopViewPager.setAdapter(adapter);
-        holder.viewpagerCircleIndicator.setTotalCount(eventBannerList.size());
-        holder.loopViewPager.setCurrentItem(mLastEventBannerPosition);
-        holder.loopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-                mLastEventBannerPosition = position;
-
-                holder.viewpagerCircleIndicator.setPosition(position);
-
-                nextEventBannerPosition(holder, position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-                if (state == LoopViewPager.SCROLL_STATE_DRAGGING)
-                {
-                    mEventBannerHandler.removeMessages(0);
-                }
-            }
-        });
-
-        nextEventBannerPosition(holder, mLastEventBannerPosition);
-    }
-
-    private void nextEventBannerPosition(EventBannerViewHolder eventViewHolder, int position)
-    {
-        mEventBannerHandler.removeMessages(0);
-
-        Message message = new Message();
-        message.what = 0;
-        message.arg1 = position;
-        message.obj = eventViewHolder;
-        mEventBannerHandler.sendMessageDelayed(message, 5000);
     }
 
     private void onBindViewHolder(HoltelViewHolder holder, PlaceViewItem placeViewItem)
@@ -338,34 +226,6 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             distanceView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
             itemView.setOnClickListener(mOnClickListener);
-        }
-    }
-
-    private class SectionViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView regionDetailName;
-
-        public SectionViewHolder(View itemView)
-        {
-            super(itemView);
-
-            regionDetailName = (TextView) itemView.findViewById(R.id.hotelListRegionName);
-        }
-    }
-
-    private class EventBannerViewHolder extends RecyclerView.ViewHolder
-    {
-        LoopViewPager loopViewPager;
-        DailyViewPagerCircleIndicator viewpagerCircleIndicator;
-
-        public EventBannerViewHolder(View itemView)
-        {
-            super(itemView);
-
-            loopViewPager = (LoopViewPager) itemView.findViewById(R.id.loopViewPager);
-            viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
-
-            loopViewPager.setSlideTime(4);
         }
     }
 }

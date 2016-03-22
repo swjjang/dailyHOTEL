@@ -22,13 +22,13 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
+import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectionRecycleView.PinnedSectionListAdapter
+public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
     private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
@@ -239,7 +239,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             holder.personsTextView.setVisibility(View.GONE);
         }
 
-        Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
+        String currency = mContext.getResources().getString(R.string.currency);
 
         if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
         {

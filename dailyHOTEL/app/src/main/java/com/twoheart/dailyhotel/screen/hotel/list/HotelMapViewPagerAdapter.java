@@ -90,7 +90,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             dBenefitImageView.setVisibility(View.GONE);
         }
 
-        Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
+        String currency = mContext.getResources().getString(R.string.currency);
 
         if (hotel.price <= 0)
         {

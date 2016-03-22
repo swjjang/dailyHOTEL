@@ -61,21 +61,26 @@ public class GourmetFilter implements Parcelable
 
         for (int i = 0; i < flagCount; i++)
         {
-            if (openFlag == flags[i])
+            if (includeFlag == false)
             {
-                includeFlag = true;
-                flag |= openFlag;
-            }
+                if (openFlag == flags[i])
+                {
+                    includeFlag = true;
+                    flag |= openFlag;
 
-            if (includeFlag == true)
+                    if (closeFlag == flags[i])
+                    {
+                        break;
+                    }
+                }
+            } else
             {
                 flag |= flags[i];
-            }
 
-            if (closeFlag == flags[i])
-            {
-                flag |= closeFlag;
-                break;
+                if (closeFlag == flags[i])
+                {
+                    break;
+                }
             }
         }
 

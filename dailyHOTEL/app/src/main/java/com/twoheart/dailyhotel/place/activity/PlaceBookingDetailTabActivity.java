@@ -11,7 +11,6 @@ package com.twoheart.dailyhotel.place.activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
@@ -84,7 +83,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title);
-        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override

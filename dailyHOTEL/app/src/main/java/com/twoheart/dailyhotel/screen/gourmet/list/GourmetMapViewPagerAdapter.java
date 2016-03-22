@@ -90,7 +90,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             persions.setVisibility(View.GONE);
         }
 
-        Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
+        String currency = mContext.getResources().getString(R.string.currency);
 
         int price = gourmet.price;
 

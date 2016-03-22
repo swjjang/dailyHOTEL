@@ -8,9 +8,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,6 +28,8 @@ import com.twoheart.dailyhotel.screen.common.BaseFragment;
 import com.twoheart.dailyhotel.screen.eventlist.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
+import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.screen.regionlist.RegionListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -480,15 +480,15 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         switch (viewType)
         {
             case LIST:
-                mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, -1);
+                mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_map, -1);
                 break;
 
             case MAP:
-                mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_list, -1);
+                mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_list, -1);
                 break;
 
             default:
-                mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
+                mDailyToolbarLayout.setToolbarMenu(-1, -1);
                 break;
         }
     }
@@ -783,7 +783,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         setProvince(province);
 
         mDailyToolbarLayout.setToolbarRegionText(province.name);
-        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+        mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
@@ -1133,7 +1133,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
-        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+        mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
         Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.HOTEL, selectedProvince);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
@@ -1188,7 +1188,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
-        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+        mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
         // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
         if (Util.isTextEmpty(categoryCode) == false)
@@ -1299,7 +1299,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 case R.drawable.navibar_ic_search:
                 {
-                    Intent intent = HotelSearchActivity.newInstance(baseActivity);
+                    HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+                    Intent intent = HotelSearchActivity.newInstance(baseActivity, currentFragment.getSaleTime(), currentFragment.getNights());
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
                     break;
                 }

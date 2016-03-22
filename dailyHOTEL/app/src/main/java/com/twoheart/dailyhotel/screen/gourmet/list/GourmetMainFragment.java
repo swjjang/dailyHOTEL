@@ -8,9 +8,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -475,15 +473,15 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         switch (viewType)
         {
             case LIST:
-                mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_map, -1);
+                mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_map, -1);
                 break;
 
             case MAP:
-                mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_list, -1);
+                mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_list, -1);
                 break;
 
             default:
-                mDailyToolbarLayout.setToolbarRegionMenu(-1, -1);
+                mDailyToolbarLayout.setToolbarMenu(-1, -1);
                 break;
         }
     }
@@ -603,7 +601,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         setProvince(province);
 
         mDailyToolbarLayout.setToolbarRegionText(province.name);
-        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+        mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
@@ -953,7 +951,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
-        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+        mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
         Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.FNB, selectedProvince);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
@@ -996,7 +994,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
-        mDailyToolbarLayout.setToolbarRegionMenuVisibility(true);
+        mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
