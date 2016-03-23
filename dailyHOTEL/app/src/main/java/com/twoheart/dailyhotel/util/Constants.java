@@ -212,6 +212,8 @@ public interface Constants
     public static final int CODE_RESULT_PAYMENT_BILLING_SUCCSESS = 300;
     public static final int CODE_RESULT_PAYMENT_BILLING_FAIL = 301;
     public static final int CODE_RESULT_PAYMENT_BILLING_DUPLICATE = 302;
+    public static final int CODE_RESULT_ACTVITY_HOME = 303;
+    public static final int CODE_RESULT_ACTVITY_SEARCHRESULT_KEYWORD = 304;
 
     // 예약 리스트에서
     public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;

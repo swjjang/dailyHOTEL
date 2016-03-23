@@ -158,7 +158,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 lockUiComponent();
 
-                Intent intent = RegionListActivity.newInstance(getContext(), PlaceType.HOTEL, mCurationOption.getProvince());
+                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+                Intent intent = RegionListActivity.newInstance(getContext(), PlaceType.HOTEL, mCurationOption.getProvince(), currentFragment.getSaleTime(), currentFragment.getNights());
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
@@ -1135,7 +1137,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
-        Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.HOTEL, selectedProvince);
+        Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.HOTEL, selectedProvince, mTodaySaleTime, 1);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
@@ -1297,7 +1299,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     break;
                 }
 
-                case R.drawable.navibar_ic_search:
+                case R.drawable.navibar_ic_search_black:
                 {
                     HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 

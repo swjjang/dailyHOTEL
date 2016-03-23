@@ -5,27 +5,27 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
+public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray>
 {
-    private DailyHotelJsonResponseListener mListener;
+    private DailyHotelJsonArrayResponseListener mListener;
 
-    public DailyHotelJsonRequest(int method, String url, Map<String, String> parameters, DailyHotelJsonResponseListener listener, ErrorListener errorListener)
+    public DailyHotelJsonArrayRequest(int method, String url, Map<String, String> parameters, DailyHotelJsonArrayResponseListener listener, ErrorListener errorListener)
     {
         super(method, url, parameters, errorListener);
 
         mListener = listener;
     }
 
-    public DailyHotelJsonRequest(Object object, int method, String url, Map<String, String> parameters, DailyHotelJsonResponseListener listener, ErrorListener errorListener)
+    public DailyHotelJsonArrayRequest(Object object, int method, String url, Map<String, String> parameters, DailyHotelJsonArrayResponseListener listener, ErrorListener errorListener)
     {
         super(object, method, url, parameters, errorListener);
 
@@ -33,7 +33,7 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
     }
 
     @Override
-    protected void deliverResponse(JSONObject response)
+    protected void deliverResponse(JSONArray response)
     {
         if (mListener != null)
         {
@@ -42,7 +42,7 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
     }
 
     @Override
-    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response)
+    protected Response<JSONArray> parseNetworkResponse(NetworkResponse response)
     {
         String parsed;
 
@@ -59,7 +59,7 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
         try
         {
             String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(new JSONArray(jsonString), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e)
         {
             return Response.error(new ParseError(e));

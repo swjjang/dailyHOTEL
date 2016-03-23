@@ -154,7 +154,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 lockUiComponent();
 
-                Intent intent = RegionListActivity.newInstance(getContext(), PlaceType.FNB, mCurationOption.getProvince());
+                GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+
+                Intent intent = RegionListActivity.newInstance(getContext(), PlaceType.FNB, mCurationOption.getProvince(), currentFragment.getSaleTime(), 1);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
@@ -953,7 +955,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
-        Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.FNB, selectedProvince);
+        Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.FNB, selectedProvince, mTodaySaleTime, 1);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();

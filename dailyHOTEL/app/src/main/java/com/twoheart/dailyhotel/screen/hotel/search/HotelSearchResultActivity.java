@@ -13,10 +13,8 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
-import com.twoheart.dailyhotel.util.DailyPreference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +26,6 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 {
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
-    private static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
 
     private HotelSearchResultListAdapter mListAdapter;
 
@@ -57,6 +54,14 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
+    protected void initIntent(Intent intent)
+    {
+        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
+        mKeyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
+    }
+
+    @Override
     protected void initLayout()
     {
         super.initLayout();
@@ -66,18 +71,10 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected void initIntent(Intent intent)
-    {
-        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
-        mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
-        mKeyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
-    }
-
-    @Override
     protected void initToolbarLayout(View view)
     {
-        TextView titleView = (TextView)view.findViewById(R.id.titleView);
-        TextView dateView = (TextView)view.findViewById(R.id.dateView);
+        TextView titleView = (TextView) view.findViewById(R.id.titleView);
+        TextView dateView = (TextView) view.findViewById(R.id.dateView);
 
         titleView.setText(mKeyword.name);
 
@@ -92,7 +89,15 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void requestSearch()
     {
+        showEmptyLayout();
+
         DailyNetworkAPI.getInstance().requestHotelSearchList(getNetworkTag(), mSaleTime, mNights, mKeyword.name, mHotelSearchListJsonResponseListener, this);
+    }
+
+    @Override
+    protected Keyword getKeyword()
+    {
+        return mKeyword;
     }
 
     @Override
@@ -100,14 +105,13 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode)
+        switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             {
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
-                    setResult(resultCode);
-                    finish();
+                    finish(resultCode);
                 }
                 break;
             }

@@ -1,43 +1,71 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.LocationFactory;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public abstract class PlaceSearchActivity extends BaseActivity implements View.OnClickListener
 {
-    private static final int REQUEST_AUTO_COMPLETE_MILLIS = 500;
+    protected static final int REQUEST_ACTIVITY_SEARCHRESULT = 100;
+    private static final int DELAY_AUTO_COMPLETE_MILLIS = 500;
+
+    private static final int DEFAULT_ICON = 0;
+    private static final int HOTEL_ICON = 1;
+    private static final int GOURMET_ICON = 2;
 
     private View mToolbar;
 
     private View mSearchLayout;
     private ViewGroup mAutoCompleteLayout;
+    private View mAutoCompleteScrollLayout;
     private View mSearchingView;
+    private View mRecentSearchLayout;
     private ViewGroup mRcentContentsLayout;
 
     private EditText mSearchEditText;
 
-    private DailyRecentSearches mDailyRecentSearches;
+    protected DailyRecentSearches mDailyRecentSearches;
 
     private Handler mHandler = new Handler()
     {
@@ -50,7 +78,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
     protected interface OnAutoCompleteResultListener
     {
-        void onAutoCompleteResultListener(List<Keyword> keywordList);
+        void onAutoCompleteResultListener(String text, List<Keyword> keywordList);
     }
 
     protected abstract void initIntent(Intent intent);
@@ -81,22 +109,6 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         initLayout();
     }
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        writeRecentSearches(mDailyRecentSearches.toString());
-    }
-
-    @Override
-    public void finish()
-    {
-        super.finish();
-
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
-    }
-
     private void initLayout()
     {
         initToolbarLayout();
@@ -108,6 +120,16 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
     {
         mToolbar = findViewById(R.id.toolbar);
 
+        View backView = mToolbar.findViewById(R.id.backImageView);
+        backView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
         mSearchEditText = (EditText) mToolbar.findViewById(R.id.searchEditText);
 
         StringFilter stringFilter = new StringFilter(this);
@@ -116,8 +138,9 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
         mSearchEditText.setFilters(allowAlphanumericHangul);
 
-        View searchView = mToolbar.findViewById(R.id.searchView);
+        final View searchView = mToolbar.findViewById(R.id.searchView);
         searchView.setOnClickListener(this);
+        searchView.setEnabled(false);
 
         final View deleteView = mToolbar.findViewById(R.id.deleteView);
         deleteView.setOnClickListener(this);
@@ -145,22 +168,18 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 if (s.length() == 0)
                 {
                     deleteView.setVisibility(View.INVISIBLE);
+                    searchView.setEnabled(false);
 
                     showRecentSearchesView();
                 } else
                 {
                     deleteView.setVisibility(View.VISIBLE);
+                    searchView.setEnabled(true);
 
-                    if (s.length() >= 2)
-                    {
-                        Message message = mHandler.obtainMessage(0, s.toString());
-                        mHandler.sendMessageDelayed(message, REQUEST_AUTO_COMPLETE_MILLIS);
+                    Message message = mHandler.obtainMessage(0, s.toString());
+                    mHandler.sendMessageDelayed(message, DELAY_AUTO_COMPLETE_MILLIS);
 
-                        showSearchingView();
-                    } else
-                    {
-                        hideSearchView();
-                    }
+                    showSearchingView();
                 }
             }
         });
@@ -190,6 +209,12 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
         TextView text01View = (TextView) searchAroundLayout.findViewById(R.id.text01View);
         text01View.setText(getAroundPlaceString());
+
+        if (DailyPreference.getInstance(this).isAgreeTermsOfLocation() == true)
+        {
+            TextView text02View = (TextView) searchAroundLayout.findViewById(R.id.text02View);
+            text02View.setVisibility(View.GONE);
+        }
     }
 
     private void initSearchLayout()
@@ -213,6 +238,9 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         View deleteRecentlyView = view.findViewById(R.id.deleteAllView);
         deleteRecentlyView.setOnClickListener(this);
 
+        mRecentSearchLayout = findViewById(R.id.recentSearchLayout);
+        mRecentSearchLayout.setVisibility(View.VISIBLE);
+
         // 목록
         mRcentContentsLayout = (ViewGroup) findViewById(R.id.contentsLayout);
 
@@ -233,13 +261,12 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         {
             View view = LayoutInflater.from(this).inflate(R.layout.list_row_search_recently, null, false);
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.iconView);
             TextView textView = (TextView) view.findViewById(R.id.textView);
+            textView.setTextColor(getResources().getColor(R.color.search_hint_text));
+            textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(DEFAULT_ICON), 0, 0, 0);
+            textView.setText(R.string.label_search_recentsearches_none);
 
-            imageView.setImageResource(getRecentlyIcon(0));
-            textView.setText("최근 검색 내용이 없습니다.");
-
-            mRcentContentsLayout.addView(view);
+            viewGroup.addView(view);
         } else
         {
             View.OnClickListener onClickListener = new View.OnClickListener()
@@ -247,22 +274,32 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 @Override
                 public void onClick(View v)
                 {
-                    showSearchResult(((TextView) v).getText().toString());
+                    showSearchResult((String) v.getTag());
                 }
             };
 
-            for (String text : keywordList)
+            int size = keywordList.size();
+            String[] values;
+            TextView textView;
+            View view;
+
+            for (int i = 0; i < size; i++)
             {
-                View view = LayoutInflater.from(this).inflate(R.layout.list_row_search_recently, null, false);
+                values = keywordList.get(i).split("\\:");
+
+                view = LayoutInflater.from(this).inflate(R.layout.list_row_search_recently, viewGroup, false);
                 view.setOnClickListener(onClickListener);
+                view.setTag(values[1]);
 
-                ImageView imageView = (ImageView) view.findViewById(R.id.iconView);
-                TextView textView = (TextView) view.findViewById(R.id.textView);
-
-                String[] values = text.split("\\:");
-
-                imageView.setImageResource(getRecentlyIcon(Integer.parseInt(values[0])));
+                textView = (TextView) view.findViewById(R.id.textView);
+                textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(Integer.parseInt(values[0])), 0, 0, 0);
                 textView.setText(values[1]);
+
+                if (i == size - 1)
+                {
+                    View underLineView = view.findViewById(R.id.underLineView);
+                    underLineView.setVisibility(View.GONE);
+                }
 
                 viewGroup.addView(view);
             }
@@ -271,13 +308,13 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
     private void initAutoCompleteLayout(View view)
     {
-        mAutoCompleteLayout = (ViewGroup) view.findViewById(R.id.autoCompleteLayout);
-        mAutoCompleteLayout.setVisibility(View.GONE);
+        mAutoCompleteScrollLayout = view.findViewById(R.id.autoCompleteScrollLayout);
+        mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollLayout.findViewById(R.id.autoCompleteLayout);
 
-
+        mAutoCompleteScrollLayout.setVisibility(View.GONE);
     }
 
-    private void updateAutoCompleteLayout(ViewGroup viewGroup, List<Keyword> keywordList)
+    private void updateAutoCompleteLayout(ViewGroup viewGroup, String text, List<Keyword> keywordList)
     {
         if (viewGroup == null)
         {
@@ -288,6 +325,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
         if (keywordList == null || keywordList.size() == 0)
         {
+            hideSearchView();
         } else
         {
             View.OnClickListener onClickListener = new View.OnClickListener()
@@ -301,15 +339,33 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
             for (Keyword keyword : keywordList)
             {
-                View view = LayoutInflater.from(this).inflate(R.layout.list_row_search_autocomplete, null, false);
+                View view = LayoutInflater.from(this).inflate(R.layout.list_row_search_autocomplete, viewGroup, false);
                 view.setOnClickListener(onClickListener);
                 view.setTag(keyword);
 
                 TextView textView01 = (TextView) view.findViewById(R.id.textView01);
                 TextView textView02 = (TextView) view.findViewById(R.id.textView02);
 
-                textView01.setText(keyword.name);
-                textView02.setText(keyword.price + getString(R.string.currency));
+                if (keyword.price > 0)
+                {
+                    int startIndex = keyword.name.lastIndexOf(text);
+                    int endIndex = startIndex + text.length();
+
+                    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
+                    spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    textView01.setText(spannableStringBuilder);
+
+                    DecimalFormat comma = new DecimalFormat("###,##0");
+                    String strPrice = comma.format(keyword.price);
+
+                    textView02.setText(strPrice + getString(R.string.currency));
+                } else
+                {
+                    textView01.setText(keyword.name);
+                    textView02.setVisibility(View.INVISIBLE);
+                }
 
                 viewGroup.addView(view);
             }
@@ -319,34 +375,142 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
     private void showRecentSearchesView()
     {
         mSearchingView.setVisibility(View.GONE);
-        mAutoCompleteLayout.setVisibility(View.GONE);
-        mRcentContentsLayout.setVisibility(View.VISIBLE);
+        mAutoCompleteScrollLayout.setVisibility(View.GONE);
+        mRecentSearchLayout.setVisibility(View.VISIBLE);
     }
 
     private void showSearchingView()
     {
         mSearchingView.setVisibility(View.VISIBLE);
-        mAutoCompleteLayout.setVisibility(View.GONE);
-        mRcentContentsLayout.setVisibility(View.GONE);
+        mAutoCompleteScrollLayout.setVisibility(View.GONE);
+        mRecentSearchLayout.setVisibility(View.GONE);
     }
 
     private void showAutoCompleteView()
     {
         mSearchingView.setVisibility(View.GONE);
-        mAutoCompleteLayout.setVisibility(View.VISIBLE);
-        mRcentContentsLayout.setVisibility(View.GONE);
+        mAutoCompleteScrollLayout.setVisibility(View.VISIBLE);
+        mRecentSearchLayout.setVisibility(View.GONE);
     }
 
     private void hideSearchView()
     {
         mSearchingView.setVisibility(View.GONE);
-        mAutoCompleteLayout.setVisibility(View.GONE);
-        mRcentContentsLayout.setVisibility(View.GONE);
+        mAutoCompleteScrollLayout.setVisibility(View.GONE);
+        mRecentSearchLayout.setVisibility(View.GONE);
     }
 
-    private int getRecentlyIcon(int type)
+    private int getRecentSearchesIcon(int type)
     {
-        return 0;
+        switch (type)
+        {
+            case HOTEL_ICON:
+                return R.drawable.search_ic_02_hotel;
+
+            case GOURMET_ICON:
+                return R.drawable.search_ic_02_gourmet;
+
+            default:
+                return R.drawable.search_ic_03_recent;
+        }
+    }
+
+    private void showTermsOfLocationDialog()
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        ImageView titleIconView = (ImageView) dialogView.findViewById(R.id.titleIconView);
+        titleIconView.setImageResource(R.drawable.popup_ic_location);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+        titleTextView.setText(getString(R.string.label_search_agree_termsoflocation));
+
+        // 메시지
+        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+
+        String message = getString(R.string.message_search_agree_termsoflocation);
+
+        int startIndex = message.lastIndexOf('\n') + 1;
+        int endIndex = message.length();
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
+        spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableStringBuilder.setSpan(new UnderlineSpan(), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        messageTextView.setText(spannableStringBuilder);
+        messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
+        messageTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(PlaceSearchActivity.this, LocationTermsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
+
+        twoButtonLayout.setVisibility(View.GONE);
+        oneButtonLayout.setVisibility(View.VISIBLE);
+
+        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+
+        confirmTextView.setText(R.string.label_search_agree_search_location);
+        oneButtonLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+
+                DailyPreference.getInstance(PlaceSearchActivity.this).setTermsOfLocation(true);
+
+                searchMyLocation();
+            }
+        });
+
+        confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
+        confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
@@ -356,16 +520,23 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         {
             case R.id.searchAroundLayout:
             {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
 
+                showTermsOfLocationDialog();
                 break;
             }
 
             case R.id.searchView:
             {
-                showSearchResult(mSearchEditText.getText().toString());
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
 
-                String text = String.format("0:%s", mSearchEditText.getText().toString());
-                mDailyRecentSearches.addString(text);
+                showSearchResult(mSearchEditText.getText().toString());
                 break;
             }
 
@@ -373,17 +544,177 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
             {
                 mDailyRecentSearches.clear();
                 deleteAllRecentSearches();
+
+                updateRecentSearchesLayout(mRcentContentsLayout, null);
+                break;
+            }
+
+            case R.id.deleteView:
+            {
+                mSearchEditText.setText(null);
                 break;
             }
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        unLockUI();
+
+        switch (requestCode)
+        {
+            case REQUEST_ACTIVITY_SEARCHRESULT:
+            {
+                if (data != null)
+                {
+                    Keyword keyword = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_KEYWORD);
+
+                    if (keyword != null && keyword.price > 0)
+                    {
+                        mDailyRecentSearches.addString(String.format("1:%s", keyword.name));
+                    } else
+                    {
+                        mDailyRecentSearches.addString(String.format("0:%s", keyword.name));
+                    }
+
+                    writeRecentSearches(mDailyRecentSearches.toString());
+                    updateRecentSearchesLayout(mRcentContentsLayout, mDailyRecentSearches.getList());
+                }
+
+                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    setResult(resultCode);
+                    finish();
+                } else if (resultCode == CODE_RESULT_ACTVITY_HOME)
+                {
+                    finish();
+                }
+                break;
+            }
+        }
+    }
+
+    private void searchMyLocation()
+    {
+        lockUI();
+
+        LocationFactory.getInstance(this).startLocationMeasure(this, null, new LocationFactory.LocationListenerEx()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                if (Util.isOverAPI23() == true)
+                {
+                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                }
+
+                unLockUI();
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+
+                if (Util.isOverAPI23() == true)
+                {
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps_android6)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                        }
+                    }, null, true);
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                LocationFactory.getInstance(PlaceSearchActivity.this).stopLocationMeasure();
+
+                showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                }, null, false);
+            }
+
+            @Override
+            public void onLocationChanged(Location location)
+            {
+                if (isFinishing() == true)
+                {
+                    unLockUI();
+                    return;
+                }
+
+                LocationFactory.getInstance(PlaceSearchActivity.this).stopLocationMeasure();
+
+                if (location == null)
+                {
+                    DailyToast.showToast(PlaceSearchActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                } else
+                {
+                    // 서버 연동
+                }
+
+                unLockUI();
+            }
+        });
+    }
+
     private OnAutoCompleteResultListener onAutoCompleteResultListener = new OnAutoCompleteResultListener()
     {
         @Override
-        public void onAutoCompleteResultListener(List<Keyword> keywordList)
+        public void onAutoCompleteResultListener(String text, List<Keyword> keywordList)
         {
-            updateAutoCompleteLayout(mAutoCompleteLayout, keywordList);
+            showAutoCompleteView();
+
+            updateAutoCompleteLayout(mAutoCompleteLayout, text, keywordList);
         }
     };
 }

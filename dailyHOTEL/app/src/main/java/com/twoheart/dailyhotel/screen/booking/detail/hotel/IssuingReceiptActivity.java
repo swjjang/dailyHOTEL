@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;

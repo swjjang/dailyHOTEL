@@ -17,13 +17,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
@@ -34,8 +31,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
-
-import org.json.JSONObject;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -101,23 +96,23 @@ public class MainActivity extends BaseActivity implements Constants
         //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
 
-//        {
-//            DailyNetworkAPI.getInstance().testUrl("https://225835.measurementapi.com/serve?action=click&publisher_id=225835&site_id=118823&destination_id=373091&invoke_id=274355&agency_id=1214&my_campaign=서울&my_publisher=naver&my_site=cpc&my_ad=MPL&my_keyword=장용산펜션'", new DailyHotelJsonResponseListener()
-//            {
-//                @Override
-//                public void onResponse(String url, JSONObject response)
-//                {
-//                    ExLog.d("url");
-//                }
-//            }, new Response.ErrorListener()
-//            {
-//                @Override
-//                public void onErrorResponse(VolleyError volleyError)
-//                {
-//                    ExLog.d("url");
-//                }
-//            });
-//        }
+        //        {
+        //            DailyNetworkAPI.getInstance().testUrl("https://225835.measurementapi.com/serve?action=click&publisher_id=225835&site_id=118823&destination_id=373091&invoke_id=274355&agency_id=1214&my_campaign=서울&my_publisher=naver&my_site=cpc&my_ad=MPL&my_keyword=장용산펜션'", new DailyHotelJsonResponseListener()
+        //            {
+        //                @Override
+        //                public void onResponse(String url, JSONObject response)
+        //                {
+        //                    ExLog.d("url");
+        //                }
+        //            }, new Response.ErrorListener()
+        //            {
+        //                @Override
+        //                public void onErrorResponse(VolleyError volleyError)
+        //                {
+        //                    ExLog.d("url");
+        //                }
+        //            });
+        //        }
 
         mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);

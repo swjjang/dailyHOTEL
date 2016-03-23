@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.network;
 import com.android.volley.Response;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 
@@ -171,7 +172,6 @@ interface IDailyNetwork
     void requestHotelList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     *
      * @param tag
      * @param saleTime
      * @param nights
@@ -180,6 +180,14 @@ interface IDailyNetwork
      * @param errorListener
      */
     void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     * @param tag
+     * @param text
+     * @param listener
+     * @param errorListener
+     */
+    void requestHotelSearchAutoCompleteList(Object tag, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/sale/region/all

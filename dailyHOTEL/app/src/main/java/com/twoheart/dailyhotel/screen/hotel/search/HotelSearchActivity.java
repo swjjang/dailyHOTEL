@@ -1,25 +1,31 @@
 package com.twoheart.dailyhotel.screen.hotel.search;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HotelSearchActivity extends PlaceSearchActivity
 {
-    private static final int REQUEST_ACTIVITY_SEARCHRESULT = 100;
-
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
     private SaleTime mSaleTime;
     private int mNights;
-
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights)
     {
@@ -62,9 +68,46 @@ public class HotelSearchActivity extends PlaceSearchActivity
     }
 
     @Override
-    protected void requestAutoComplete(String text, PlaceSearchActivity.OnAutoCompleteResultListener listener)
+    protected void requestAutoComplete(String text, final PlaceSearchActivity.OnAutoCompleteResultListener listener)
     {
+        DailyNetworkAPI.getInstance().requestHotelSearchAutoCompleteList(mNetworkTag, text, new DailyHotelJsonArrayResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONArray response)
+            {
+                if (listener != null)
+                {
+                    int startIndex = url.lastIndexOf('=');
 
+                    int length = response.length();
+
+                    List<Keyword> keywordList = new ArrayList<Keyword>(length);
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        try
+                        {
+                            keywordList.add(new Keyword(response.getString(i)));
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+                    }
+
+                    listener.onAutoCompleteResultListener(url.substring(startIndex + 1), keywordList);
+                }
+            }
+        }, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                if (listener != null)
+                {
+                    listener.onAutoCompleteResultListener(null, null);
+                }
+            }
+        });
     }
 
     @Override
@@ -79,24 +122,5 @@ public class HotelSearchActivity extends PlaceSearchActivity
     {
         Intent intent = HotelSearchResultActivity.newInstance(this, mSaleTime, mNights, keyword);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch(requestCode)
-        {
-            case REQUEST_ACTIVITY_SEARCHRESULT:
-            {
-                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
-                {
-                    setResult(resultCode);
-                    finish();
-                }
-                break;
-            }
-        }
     }
 }

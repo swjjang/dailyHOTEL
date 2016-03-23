@@ -7,7 +7,7 @@ public class Keyword implements Parcelable
 {
     public int index;
     public String name;
-    public String price;
+    public int price;
 
     public Keyword(String text)
     {
@@ -24,14 +24,14 @@ public class Keyword implements Parcelable
     {
         dest.writeInt(index);
         dest.writeString(name);
-        dest.writeString(price);
+        dest.writeInt(price);
     }
 
     private void readFromParcel(Parcel in)
     {
         index = in.readInt();
         name = in.readString();
-        price = in.readString();
+        price = in.readInt();
     }
 
     @Override

@@ -497,6 +497,16 @@ public class DailyPreference
         return getValue(mPreferences, KEY_GOURMET_SEARCH_RECENTLY, null);
     }
 
+    public void setTermsOfLocation(boolean value)
+    {
+        setValue(mEditor, KEY_AGREE_TERMS_OF_LOCATION, value);
+    }
+
+    public boolean isAgreeTermsOfLocation()
+    {
+        return getValue(mPreferences, KEY_AGREE_TERMS_OF_LOCATION, false);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
     /////////////////////////////////////////////////////////////////////////////////////////

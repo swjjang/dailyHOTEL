@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.regionlist;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -24,6 +27,9 @@ import java.util.List;
 
 public class RegionListActivity extends BaseActivity
 {
+    private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
+    private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
+
     private static final int HOTEL_TAB_COUNT = 2;
     private static final int GOURMET_TAB_COUNT = 1;
 
@@ -32,6 +38,8 @@ public class RegionListActivity extends BaseActivity
 
     private Constants.PlaceType mPlaceType;
     private RegionListPresenter mRegionListPresenter;
+    private SaleTime mSaleTime;
+    private int mNights;
 
     public interface OnUserActionListener
     {
@@ -53,11 +61,13 @@ public class RegionListActivity extends BaseActivity
         void onInternalError(String message);
     }
 
-    public static Intent newInstance(Context context, Constants.PlaceType placeType, Province province)
+    public static Intent newInstance(Context context, Constants.PlaceType placeType, Province province, SaleTime saleTime, int nights)
     {
         Intent intent = new Intent(context, RegionListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
 
         return intent;
     }
@@ -80,6 +90,8 @@ public class RegionListActivity extends BaseActivity
         // 호텔 인지 고메인지
         mPlaceType = PlaceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
         Province selectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
 
         if (mPlaceType == null)
         {
@@ -196,12 +208,26 @@ public class RegionListActivity extends BaseActivity
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
-        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search_black, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                    {
+                        Intent intent = HotelSearchActivity.newInstance(RegionListActivity.this, mSaleTime, mNights);
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                        break;
+                    }
+
+                    case FNB:
+                    {
+                        break;
+                    }
+                }
 
             }
         });
@@ -232,6 +258,25 @@ public class RegionListActivity extends BaseActivity
         setResult(RESULT_CANCELED);
 
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_SEARCH:
+            {
+                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+                break;
+            }
+        }
     }
 
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()

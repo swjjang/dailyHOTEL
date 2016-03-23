@@ -22,31 +22,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/deleteView"
+            android:layout_toRightOf="@+id/backImageView"
             android:background="@null"
-            android:hint="업체명/지역명 검색 ex)라마다"
+            android:hint="@string/label_search_hint"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:layout_toRightOf="@+id/backImageView"/>
+            android:textColor="@color/search_text"
+            android:textColorHint="@color/search_hint_text"
+            android:textSize="15dp"/>
 
         <ImageView
             android:id="@+id/deleteView"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentRight="false"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"
-            android:src="@drawable/navibar_ic_x"
             android:layout_toLeftOf="@+id/searchView"
-            android:visibility="invisible"/>
+            android:paddingLeft="5dp"
+            android:paddingRight="2dp"
+            android:src="@drawable/navibar_ic_search_x"
+            android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/searchView"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"
-            android:src="@drawable/navibar_ic_map"/>
+            android:paddingLeft="1dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/selector_search_icon"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -54,47 +59,66 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:visibility="visible">
+        android:visibility="visible"
+        >
 
         <RelativeLayout
             android:id="@+id/searchAroundLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="41dp"
             android:layout_marginTop="10dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
 
             <ImageView
                 android:id="@+id/aroundIconView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="3dp"
-                android:src="@drawable/navibar_ic_map"/>
+                android:layout_marginRight="15dp"
+                android:src="@drawable/search_ic_01_surrounding"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/text01View"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_toRightOf="@+id/aroundIconView"
-                android:text="내 주변 호텔 보기"/>
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/text02View"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text01View"
-                android:layout_toRightOf="@+id/aroundIconView"
-                android:text="위치기반서비스 이용약관 동의 필요"/>
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                    android:id="@+id/text01View"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_view_myaround_hotel"
+                    android:textColor="@color/dh_theme_color"
+                    android:textSize="13dp"/>
+
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                    android:id="@+id/text02View"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:text="@string/label_search_agree_termsoflocation"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="11dp"
+                    android:visibility="visible"/>
+            </LinearLayout>
         </RelativeLayout>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/searchingView"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="41dp"
             android:layout_below="@+id/searchAroundLayout"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:text="검색중..."
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/label_searching"
+            android:textColor="@color/search_hint_text"
+            android:textSize="13dp"
             android:visibility="gone"/>
 
         <RelativeLayout
@@ -104,19 +128,25 @@
             android:layout_below="@+id/searchAroundLayout"
             android:layout_marginTop="10dp"
             android:background="@color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:visibility="visible">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="최근 검색어"/>
+                android:layout_height="36dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_search_recentsearches"
+                android:textColor="@color/search_hint_text"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/deleteAllView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_alignParentRight="true"
-                android:text="전체삭제"/>
+                android:gravity="center_vertical"
+                android:text="@string/label_search_deleteall"
+                android:textColor="@color/search_text"/>
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -132,12 +162,19 @@
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/autoCompleteLayout"
+        <ScrollView
+            android:id="@+id/autoCompleteScrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/searchAroundLayout"
             android:layout_marginTop="10dp"
-            android:orientation="vertical"/>
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/autoCompleteLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+        </ScrollView>
     </RelativeLayout>
 </RelativeLayout>

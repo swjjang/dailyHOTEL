@@ -18,9 +18,16 @@ public class DailyRecentSearches
 
     public void addString(String text)
     {
-        if(Util.isTextEmpty(text) == true)
+        if (Util.isTextEmpty(text) == true)
         {
             return;
+        }
+
+        int size = mKeywordList.size();
+
+        if (size == MAX_KEYWORD)
+        {
+            mKeywordList.remove(size - 1);
         }
 
         boolean result = contains(text);
@@ -72,7 +79,7 @@ public class DailyRecentSearches
 
     private boolean remove(String text)
     {
-        if(Util.isTextEmpty(text) == true)
+        if (Util.isTextEmpty(text) == true)
         {
             return false;
         }
@@ -90,7 +97,7 @@ public class DailyRecentSearches
 
     private boolean contains(String text)
     {
-        if(Util.isTextEmpty(text) == true)
+        if (Util.isTextEmpty(text) == true)
         {
             return false;
         }
@@ -108,7 +115,7 @@ public class DailyRecentSearches
 
     private void paserText(String text)
     {
-        if(Util.isTextEmpty(text) == true)
+        if (Util.isTextEmpty(text) == true)
         {
             return;
         }

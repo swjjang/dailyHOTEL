@@ -47,7 +47,6 @@ import kr.co.kcp.util.PackageState;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 @SuppressLint("NewApi")
@@ -919,7 +918,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 Response response = okHttpClient.newCall(request).execute();
 
                 // 세션이 만료된 경우
-                if(response.code() == 401)
+                if (response.code() == 401)
                 {
                     return "401";
                 }

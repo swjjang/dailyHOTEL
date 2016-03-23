@@ -2,10 +2,8 @@ package com.twoheart.dailyhotel.screen.information.creditcard;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.webkit.JavascriptInterface;
@@ -21,17 +19,12 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class RegisterCreditCardActivity extends BaseActivity implements Constants
 {
@@ -179,7 +172,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
             if (VolleyHttpClient.isAvailableNetwork())
             {
-                if(errorCode == 401)
+                if (errorCode == 401)
                 {
                     setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
                 } else

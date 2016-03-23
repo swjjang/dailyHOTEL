@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.screen.hotel.search;
 
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;

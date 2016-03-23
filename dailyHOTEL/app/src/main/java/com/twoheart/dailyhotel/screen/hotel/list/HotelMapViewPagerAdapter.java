@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
