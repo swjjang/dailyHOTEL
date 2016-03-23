@@ -78,6 +78,7 @@
 
     <color name="booking_subtext">#cc7f7f7f</color>
 
+
     <color name="toast_background">#aa000000</color>
 
     <!-- banner -->
@@ -219,4 +220,6 @@
     <color name="search_hint_text">#c5c5c5</color>
     <color name="search_text">#323232</color>
     <color name="search_autocomplete_pricetext">#929292</color>
+
+    <color name="payment_memo_hint">#d0d0d0</color>
 </resources>

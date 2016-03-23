@@ -3,15 +3,23 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Keyword implements Parcelable
 {
-    public int index;
     public String name;
     public int price;
 
     public Keyword(String text)
     {
         name = text;
+    }
+
+    public Keyword(JSONObject jsonObject) throws JSONException
+    {
+        name = jsonObject.getString("display_text");
+        price = jsonObject.getInt("sale_price");
     }
 
     public Keyword(Parcel in)
@@ -22,14 +30,12 @@ public class Keyword implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(index);
         dest.writeString(name);
         dest.writeInt(price);
     }
 
     private void readFromParcel(Parcel in)
     {
-        index = in.readInt();
         name = in.readString();
         price = in.readInt();
     }

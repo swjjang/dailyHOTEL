@@ -50,6 +50,12 @@ public class HotelSearchActivity extends PlaceSearchActivity
     }
 
     @Override
+    protected String getSearchHintText()
+    {
+        return getString(R.string.label_search_hotel_hint);
+    }
+
+    @Override
     protected String getRecentSearches()
     {
         return DailyPreference.getInstance(this).getHotelRecentSearches();
@@ -87,7 +93,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
                     {
                         try
                         {
-                            keywordList.add(new Keyword(response.getString(i)));
+                            keywordList.add(new Keyword(response.getJSONObject(i)));
                         } catch (Exception e)
                         {
                             ExLog.d(e.toString());

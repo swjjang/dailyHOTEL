@@ -62,6 +62,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
     private View mSearchingView;
     private View mRecentSearchLayout;
     private ViewGroup mRcentContentsLayout;
+    private View mDeleteAllRecentSearchesView;
 
     private EditText mSearchEditText;
 
@@ -84,6 +85,8 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
     protected abstract void initIntent(Intent intent);
 
     protected abstract String getAroundPlaceString();
+
+    protected abstract String getSearchHintText();
 
     protected abstract String getRecentSearches();
 
@@ -131,6 +134,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         });
 
         mSearchEditText = (EditText) mToolbar.findViewById(R.id.searchEditText);
+        mSearchEditText.setHint(getSearchHintText());
 
         StringFilter stringFilter = new StringFilter(this);
         InputFilter[] allowAlphanumericHangul = new InputFilter[1];
@@ -235,8 +239,8 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
     {
         // 최근 검색어
         // 전체 삭제
-        View deleteRecentlyView = view.findViewById(R.id.deleteAllView);
-        deleteRecentlyView.setOnClickListener(this);
+        mDeleteAllRecentSearchesView = view.findViewById(R.id.deleteAllView);
+        mDeleteAllRecentSearchesView.setOnClickListener(this);
 
         mRecentSearchLayout = findViewById(R.id.recentSearchLayout);
         mRecentSearchLayout.setVisibility(View.VISIBLE);
@@ -259,16 +263,23 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
         if (keywordList == null || keywordList.size() == 0)
         {
-            View view = LayoutInflater.from(this).inflate(R.layout.list_row_search_recently, null, false);
+            mDeleteAllRecentSearchesView.setEnabled(false);
+
+            View view = LayoutInflater.from(this).inflate(R.layout.list_row_search_recently, viewGroup, false);
 
             TextView textView = (TextView) view.findViewById(R.id.textView);
             textView.setTextColor(getResources().getColor(R.color.search_hint_text));
             textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(DEFAULT_ICON), 0, 0, 0);
             textView.setText(R.string.label_search_recentsearches_none);
 
+            View underLineView = view.findViewById(R.id.underLineView);
+            underLineView.setVisibility(View.GONE);
+
             viewGroup.addView(view);
         } else
         {
+            mDeleteAllRecentSearchesView.setEnabled(true);
+
             View.OnClickListener onClickListener = new View.OnClickListener()
             {
                 @Override

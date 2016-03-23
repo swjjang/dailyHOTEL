@@ -25,7 +25,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:adjustViewBounds="true"
-                android:src="@drawable/popup_ic_alert_signature"/>
+                android:src="@drawable/popup_ic_alert_signature"
+                android:layout_marginLeft="10dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/titleTextView"

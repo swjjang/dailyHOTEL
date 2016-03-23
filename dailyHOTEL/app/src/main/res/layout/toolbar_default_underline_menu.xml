@@ -34,7 +34,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"/>
+            android:layout_marginLeft="5dp"/>
     </LinearLayout>
 
     <com.twoheart.dailyhotel.view.widget.DailyTextView

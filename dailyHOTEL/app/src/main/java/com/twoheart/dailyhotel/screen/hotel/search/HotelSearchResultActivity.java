@@ -45,12 +45,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String text)
     {
-        Intent intent = new Intent(context, HotelSearchResultActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
-        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, new Keyword(text));
-
-        return intent;
+        return newInstance(context, saleTime, nights, new Keyword(text));
     }
 
     @Override
@@ -98,24 +93,6 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     protected Keyword getKeyword()
     {
         return mKeyword;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode)
-        {
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
-            {
-                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
-                {
-                    finish(resultCode);
-                }
-                break;
-            }
-        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

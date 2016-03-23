@@ -48,7 +48,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"
+            android:layout_marginLeft="5dp"
             android:src="@drawable/navibar_ic_map"/>
     </LinearLayout>
 </RelativeLayout>

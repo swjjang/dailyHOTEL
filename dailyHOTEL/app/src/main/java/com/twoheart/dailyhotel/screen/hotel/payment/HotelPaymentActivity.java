@@ -1557,6 +1557,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             guest.name = "";
                             mReservationName.setText("");
                             mReservationName.setEnabled(true);
+                            mReservationName.requestFocus();
 
                             // 회원 가입시 이름 필터 적용.
                             StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);

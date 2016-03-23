@@ -20,6 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <!-- 상품 정보 넣기 -->
@@ -31,6 +33,11 @@
             <!-- 예약자 정보 -->
             <include
                 layout="@layout/layout_booking_gourmet_user_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <include
+                layout="@layout/layout_booking_memo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,15 +76,15 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected void finish(int resultCode)
     {
-        if (mResultListLayout.getVisibility() == View.VISIBLE)
-        {
+//        if (mResultListLayout.getVisibility() == View.VISIBLE)
+//        {
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
             setResult(resultCode, intent);
-        } else
-        {
-            setResult(resultCode);
-        }
+//        } else
+//        {
+//            setResult(resultCode);
+//        }
 
         finish();
     }
@@ -176,6 +177,24 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     {
         mEmptyLayout.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            {
+                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    finish(resultCode);
+                }
+                break;
+            }
+        }
     }
 
     private void showCallDialog(final BaseActivity baseActivity)
