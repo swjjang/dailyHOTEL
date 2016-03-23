@@ -355,13 +355,13 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelSearchAutoCompleteList(Object tag, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "search" : "";
 
-        String params = String.format("?term=%s", text);
+        String params = String.format("?date=%s&term=%s", date, text);
 
-        DailyHotelJsonArrayRequest dailyHotelJsonRequest = new DailyHotelJsonArrayRequest(tag, Request.Method.GET, new StringBuilder("http://52.193.81.2/").append(URL).append(params).toString(), null, listener, errorListener);
+        DailyHotelJsonArrayRequest dailyHotelJsonRequest = new DailyHotelJsonArrayRequest(tag, Request.Method.GET, new StringBuilder("http://52.196.30.125/").append(URL).append(params).toString(), null, listener, errorListener);
 
         mQueue.add(dailyHotelJsonRequest);
     }

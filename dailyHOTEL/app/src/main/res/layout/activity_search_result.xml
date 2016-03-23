@@ -65,69 +65,89 @@
         android:layout_marginRight="15dp"
         android:visibility="visible">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/searcyEmptyView"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentRight="false"
-            android:layout_alignParentStart="false"
+            android:src="@drawable/no_search_ic"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="75dp"
-            android:drawablePadding="25dp"
-            android:drawableTop="@drawable/no_search_ic"
-            android:text="@string/label_searchresult_empty"
-            android:textColor="@color/search_hint_text"
-            android:textSize="18dp"
-            android:textStyle="bold"/>
+            android:layout_above="@+id/textLayout"
+            android:layout_marginBottom="35dp"/>
+
+        <LinearLayout
+            android:id="@+id/textLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_centerVertical="true"
+            android:paddingBottom="40dp">
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/searcyEmptyView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignParentStart="false"
+                android:layout_centerHorizontal="true"
+                android:text="@string/label_searchresult_empty"
+                android:textColor="@color/search_hint_text"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/researchUnderTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/callView"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="18dp"
+                android:gravity="center_horizontal"
+                android:text="@string/label_searchresult_text01"
+                android:textColor="@color/search_hint_text"
+                android:textSize="16dp"/>
+        </LinearLayout>
+
+
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/researchView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_above="@+id/researchUnderTextView"
             android:background="@drawable/shape_button_common_background"
             android:gravity="center"
             android:text="@string/label_searchresult_research"
             android:textColor="@android:color/white"
-            android:textSize="17dp"/>
+            android:textSize="17dp"
+            android:visibility="visible"
+            android:layout_alignParentBottom="false"
+            android:layout_above="@+id/callUnderTextView"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/researchUnderTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/callView"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:text="@string/label_searchresult_text01"
-            android:textColor="@color/search_hint_text"
-            android:textSize="12dp"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/callView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_above="@+id/callUnderTextView"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/shape_button_common_background"
-            android:gravity="center"
-            android:text="@string/label_searchresult_call_customercenter"
-            android:textColor="@android:color/white"
-            android:textSize="17dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/callUnderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentBottom="false"
             android:layout_alignParentRight="false"
-            android:layout_marginBottom="65dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="25dp"
             android:gravity="center_horizontal"
             android:text="@string/label_searchresult_text02"
             android:textColor="@color/search_hint_text"
-            android:textSize="12dp"/>
+            android:textSize="12dp"
+            android:layout_above="@+id/callTextView"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/callTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_searchresult_call_customercenter"
+            android:textColor="@color/information_title"
+            android:textSize="12dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:paddingBottom="25dp"
+            android:layout_marginTop="1dp"/>
     </RelativeLayout>
 
     <RelativeLayout

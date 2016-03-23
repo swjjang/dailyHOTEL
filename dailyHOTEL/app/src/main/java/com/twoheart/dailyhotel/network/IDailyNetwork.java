@@ -182,12 +182,14 @@ interface IDailyNetwork
     void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
+     *
      * @param tag
+     * @param date
      * @param text
      * @param listener
      * @param errorListener
      */
-    void requestHotelSearchAutoCompleteList(Object tag, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * api/sale/region/all

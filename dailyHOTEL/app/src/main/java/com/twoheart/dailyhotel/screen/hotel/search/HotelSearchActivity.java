@@ -76,7 +76,8 @@ public class HotelSearchActivity extends PlaceSearchActivity
     @Override
     protected void requestAutoComplete(String text, final PlaceSearchActivity.OnAutoCompleteResultListener listener)
     {
-        DailyNetworkAPI.getInstance().requestHotelSearchAutoCompleteList(mNetworkTag, text, new DailyHotelJsonArrayResponseListener()
+        DailyNetworkAPI.getInstance().requestHotelSearchAutoCompleteList(mNetworkTag//
+            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), text, new DailyHotelJsonArrayResponseListener()
         {
             @Override
             public void onResponse(String url, JSONArray response)
@@ -87,7 +88,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
 
                     int length = response.length();
 
-                    List<Keyword> keywordList = new ArrayList<Keyword>(length);
+                    List<Keyword> keywordList = new ArrayList<>(length);
 
                     for (int i = 0; i < length; i++)
                     {

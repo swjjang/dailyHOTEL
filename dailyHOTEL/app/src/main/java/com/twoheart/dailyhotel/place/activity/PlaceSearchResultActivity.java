@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -103,7 +104,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     private void initEmptyLayout(View view)
     {
         View researchView = view.findViewById(R.id.researchView);
-        View callView = view.findViewById(R.id.callView);
+        TextView callTextView = (TextView)view.findViewById(R.id.callTextView);
 
         researchView.setOnClickListener(new View.OnClickListener()
         {
@@ -114,7 +115,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             }
         });
 
-        callView.setOnClickListener(new View.OnClickListener()
+        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        callTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

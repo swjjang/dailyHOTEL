@@ -362,11 +362,17 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                     int startIndex = keyword.name.lastIndexOf(text);
                     int endIndex = startIndex + text.length();
 
-                    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
-                    spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    if (startIndex >= 0)
+                    {
+                        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
+                        spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    textView01.setText(spannableStringBuilder);
+                        textView01.setText(spannableStringBuilder);
+                    } else
+                    {
+                        textView01.setText(keyword.name);
+                    }
 
                     DecimalFormat comma = new DecimalFormat("###,##0");
                     String strPrice = comma.format(keyword.price);
