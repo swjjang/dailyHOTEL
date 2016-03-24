@@ -631,12 +631,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
             case R.id.searchView:
             {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                showSearchResult(mSearchEditText.getText().toString());
+                validateKeyword(mSearchEditText.getText().toString());
                 break;
             }
 
