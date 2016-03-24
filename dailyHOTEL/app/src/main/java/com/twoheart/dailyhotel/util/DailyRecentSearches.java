@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DailyRecentSearches
 {
-    private static final int MAX_KEYWORD = 10;
+    public static final int MAX_KEYWORD = 10;
 
     private List<String> mKeywordList;
 

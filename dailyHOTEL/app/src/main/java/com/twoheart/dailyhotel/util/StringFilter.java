@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.util;
 
+import android.content.Context;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -23,7 +24,7 @@ public class StringFilter
     private static final int ALLOW_ALPHANUMERIC_NAME = 2;
     private static final int ALLOW_NUMERIC = 3;
 
-    private BaseActivity mActivity;
+    private Context mContext;
     // Allows only alphanumeric characters. Filters special and hangul
     // characters.
     public InputFilter allowAlphanumeric = new InputFilter()
@@ -57,9 +58,9 @@ public class StringFilter
         }
     };
 
-    public StringFilter(BaseActivity activity)
+    public StringFilter(Context context)
     {
-        mActivity = activity;
+        mContext = context;
     }
 
     // Returns the string result which is filtered by the given mode
@@ -99,20 +100,20 @@ public class StringFilter
                 switch (mode)
                 {
                     case ALLOW_ALPHANUMERIC_HANGUL:
-                        DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanumeric_hangul), Toast.LENGTH_SHORT);
+                        DailyToast.showToast(mContext, mContext.getString(R.string.toast_msg_input_error_alphanumeric_hangul), Toast.LENGTH_SHORT);
                         break;
 
                     case ALLOW_ALPHANUMERIC_NAME:
-                        DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanum_name), Toast.LENGTH_SHORT);
+                        DailyToast.showToast(mContext, mContext.getString(R.string.toast_msg_input_error_alphanum_name), Toast.LENGTH_SHORT);
                         break;
 
                     case ALLOW_NUMERIC:
-                        DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_numeric), Toast.LENGTH_SHORT);
+                        DailyToast.showToast(mContext, mContext.getString(R.string.toast_msg_input_error_numeric), Toast.LENGTH_SHORT);
                         break;
 
                     case ALLOW_ALPHANUMERIC:
                     default:
-                        DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanum), Toast.LENGTH_SHORT);
+                        DailyToast.showToast(mContext, mContext.getString(R.string.toast_msg_input_error_alphanum), Toast.LENGTH_SHORT);
                         break;
                 }
 

@@ -257,6 +257,24 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         mRcentContentsLayout = (ViewGroup) findViewById(R.id.contentsLayout);
 
         mDailyRecentSearches = new DailyRecentSearches(getRecentSearches());
+
+        View.OnClickListener onClickListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                validateKeyword((String) v.getTag());
+            }
+        };
+
+        for (int i = 0; i < DailyRecentSearches.MAX_KEYWORD; i++)
+        {
+            View keywordView = LayoutInflater.from(this).inflate(R.layout.list_row_search_recently, mRcentContentsLayout, false);
+            keywordView.setOnClickListener(onClickListener);
+
+            mRcentContentsLayout.addView(keywordView);
+        }
+
         updateRecentSearchesLayout(mRcentContentsLayout, mDailyRecentSearches.getList());
     }
 
@@ -267,13 +285,12 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
             return;
         }
 
-        viewGroup.removeAllViews();
-
         if (keywordList == null || keywordList.size() == 0)
         {
             mDeleteAllRecentSearchesView.setEnabled(false);
 
-            View view = LayoutInflater.from(this).inflate(R.layout.list_row_search_recently, viewGroup, false);
+            View view = viewGroup.getChildAt(0);
+            view.setVisibility(View.VISIBLE);
 
             TextView textView = (TextView) view.findViewById(R.id.textView);
             textView.setTextColor(getResources().getColor(R.color.search_hint_text));
@@ -283,31 +300,39 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
             View underLineView = view.findViewById(R.id.underLineView);
             underLineView.setVisibility(View.GONE);
 
-            viewGroup.addView(view);
+            int childCount = viewGroup.getChildCount();
+
+            for (int i = 1; i < childCount; i++)
+            {
+                viewGroup.getChildAt(i).setVisibility(View.GONE);
+            }
         } else
         {
             mDeleteAllRecentSearchesView.setEnabled(true);
-
-            View.OnClickListener onClickListener = new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    validateKeyword((String) v.getTag());
-                }
-            };
 
             int size = keywordList.size();
             String[] values;
             TextView textView;
             View view;
 
-            for (int i = 0; i < size; i++)
+            int childCount = viewGroup.getChildCount();
+
+            for (int i = 0; i < childCount; i++)
             {
+                view = viewGroup.getChildAt(i);
+
+                if (i < size)
+                {
+                    view.setVisibility(View.VISIBLE);
+                } else
+                {
+                    view.setVisibility(View.GONE);
+                    view.setTag(null);
+                    continue;
+                }
+
                 values = keywordList.get(i).split("\\:");
 
-                view = LayoutInflater.from(this).inflate(R.layout.list_row_search_recently, viewGroup, false);
-                view.setOnClickListener(onClickListener);
                 view.setTag(values[1]);
 
                 textView = (TextView) view.findViewById(R.id.textView);
@@ -319,8 +344,6 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                     View underLineView = view.findViewById(R.id.underLineView);
                     underLineView.setVisibility(View.GONE);
                 }
-
-                viewGroup.addView(view);
             }
         }
     }
@@ -340,8 +363,6 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
             return;
         }
 
-        viewGroup.removeAllViews();
-
         if (keywordList == null || keywordList.size() == 0)
         {
             hideSearchView();
@@ -356,43 +377,69 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 }
             };
 
-            for (Keyword keyword : keywordList)
+            int childCount = viewGroup.getChildCount();
+            int size = keywordList.size();
+
+            int length = Math.max(childCount, size);
+            View view;
+            Keyword keyword;
+
+            for (int i = 0; i < length; i++)
             {
-                View view = LayoutInflater.from(this).inflate(R.layout.list_row_search_autocomplete, viewGroup, false);
-                view.setOnClickListener(onClickListener);
-                view.setTag(keyword);
-
-                TextView textView01 = (TextView) view.findViewById(R.id.textView01);
-                TextView textView02 = (TextView) view.findViewById(R.id.textView02);
-
-                if (keyword.price > 0)
+                if (i >= childCount)
                 {
-                    int startIndex = keyword.name.lastIndexOf(text);
-                    int endIndex = startIndex + text.length();
+                    view = LayoutInflater.from(this).inflate(R.layout.list_row_search_autocomplete, viewGroup, false);
+                    view.setOnClickListener(onClickListener);
+                    viewGroup.addView(view);
+                } else
+                {
+                    view = viewGroup.getChildAt(i);
+                }
 
-                    if (startIndex >= 0)
+                if (i >= size)
+                {
+                    view.setVisibility(View.GONE);
+                    view.setTag(null);
+                    continue;
+                } else
+                {
+                    view.setVisibility(View.VISIBLE);
+
+                    keyword = keywordList.get(i);
+
+                    view.setTag(keyword);
+
+                    TextView textView01 = (TextView) view.findViewById(R.id.textView01);
+                    TextView textView02 = (TextView) view.findViewById(R.id.textView02);
+
+                    if (keyword.price > 0)
                     {
-                        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
-                        spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        int startIndex = keyword.name.lastIndexOf(text);
+                        int endIndex = startIndex + text.length();
 
-                        textView01.setText(spannableStringBuilder);
+                        if (startIndex >= 0)
+                        {
+                            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
+                            spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                                startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            textView01.setText(spannableStringBuilder);
+                        } else
+                        {
+                            textView01.setText(keyword.name);
+                        }
+
+                        DecimalFormat comma = new DecimalFormat("###,##0");
+                        String strPrice = comma.format(keyword.price);
+
+                        textView02.setVisibility(View.VISIBLE);
+                        textView02.setText(strPrice + getString(R.string.currency));
                     } else
                     {
                         textView01.setText(keyword.name);
+                        textView02.setVisibility(View.INVISIBLE);
                     }
-
-                    DecimalFormat comma = new DecimalFormat("###,##0");
-                    String strPrice = comma.format(keyword.price);
-
-                    textView02.setText(strPrice + getString(R.string.currency));
-                } else
-                {
-                    textView01.setText(keyword.name);
-                    textView02.setVisibility(View.INVISIBLE);
                 }
-
-                viewGroup.addView(view);
             }
         }
     }
