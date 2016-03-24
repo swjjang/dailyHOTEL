@@ -77,15 +77,15 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected void finish(int resultCode)
     {
-//        if (mResultListLayout.getVisibility() == View.VISIBLE)
-//        {
-            Intent intent = new Intent();
-            intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
-            setResult(resultCode, intent);
-//        } else
-//        {
-//            setResult(resultCode);
-//        }
+        //        if (mResultListLayout.getVisibility() == View.VISIBLE)
+        //        {
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
+        setResult(resultCode, intent);
+        //        } else
+        //        {
+        //            setResult(resultCode);
+        //        }
 
         finish();
     }
@@ -104,7 +104,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     private void initEmptyLayout(View view)
     {
         View researchView = view.findViewById(R.id.researchView);
-        TextView callTextView = (TextView)view.findViewById(R.id.callTextView);
+        TextView callTextView = (TextView) view.findViewById(R.id.callTextView);
 
         researchView.setOnClickListener(new View.OnClickListener()
         {

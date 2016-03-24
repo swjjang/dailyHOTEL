@@ -48,7 +48,7 @@ import java.util.List;
 public abstract class PlaceSearchActivity extends BaseActivity implements View.OnClickListener
 {
     protected static final int REQUEST_ACTIVITY_SEARCHRESULT = 100;
-    private static final int DELAY_AUTO_COMPLETE_MILLIS = 500;
+    private static final int DELAY_AUTO_COMPLETE_MILLIS = 100;
 
     private static final int DEFAULT_ICON = 0;
     private static final int HOTEL_ICON = 1;
@@ -137,8 +137,9 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         mSearchEditText.setHint(getSearchHintText());
 
         StringFilter stringFilter = new StringFilter(this);
-        InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+        InputFilter[] allowAlphanumericHangul = new InputFilter[2];
         allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+        allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
         mSearchEditText.setFilters(allowAlphanumericHangul);
 
@@ -152,10 +153,10 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
         mSearchEditText.addTextChangedListener(new TextWatcher()
         {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
             {
-
             }
 
             @Override
@@ -174,16 +175,24 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                     deleteView.setVisibility(View.INVISIBLE);
                     searchView.setEnabled(false);
 
+                    updateAutoCompleteLayout(mAutoCompleteLayout, null, null);
+
                     showRecentSearchesView();
                 } else
                 {
+                    if(s.length() == 1 && s.charAt(0) == ' ')
+                    {
+                        s.delete(0, 1);
+                        return;
+                    }
+
                     deleteView.setVisibility(View.VISIBLE);
                     searchView.setEnabled(true);
 
                     Message message = mHandler.obtainMessage(0, s.toString());
                     mHandler.sendMessageDelayed(message, DELAY_AUTO_COMPLETE_MILLIS);
 
-                    showSearchingView();
+                    showAutoCompleteView();
                 }
             }
         });
@@ -196,6 +205,11 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 switch (actionId)
                 {
                     case EditorInfo.IME_ACTION_SEARCH:
+                        if(lockUiComponentAndIsLockUiComponent() == true)
+                        {
+                            return false;
+                        }
+
                         showSearchResult(v.getText().toString());
                         return true;
 
@@ -285,6 +299,11 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 @Override
                 public void onClick(View v)
                 {
+                    if(lockUiComponentAndIsLockUiComponent() == true)
+                    {
+                        return;
+                    }
+
                     showSearchResult((String) v.getTag());
                 }
             };
@@ -344,6 +363,11 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 @Override
                 public void onClick(View v)
                 {
+                    if(lockUiComponentAndIsLockUiComponent() == true)
+                    {
+                        return;
+                    }
+
                     showSearchResult((Keyword) v.getTag());
                 }
             };
@@ -729,6 +753,11 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         @Override
         public void onAutoCompleteResultListener(String text, List<Keyword> keywordList)
         {
+            if (mSearchEditText.length() == 0)
+            {
+                return;
+            }
+
             showAutoCompleteView();
 
             updateAutoCompleteLayout(mAutoCompleteLayout, text, keywordList);

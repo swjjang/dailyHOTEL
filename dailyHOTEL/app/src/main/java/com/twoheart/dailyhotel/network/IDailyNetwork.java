@@ -182,7 +182,6 @@ interface IDailyNetwork
     void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     *
      * @param tag
      * @param date
      * @param text

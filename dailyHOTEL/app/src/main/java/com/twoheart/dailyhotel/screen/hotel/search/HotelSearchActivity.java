@@ -77,7 +77,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     protected void requestAutoComplete(String text, final PlaceSearchActivity.OnAutoCompleteResultListener listener)
     {
         DailyNetworkAPI.getInstance().requestHotelSearchAutoCompleteList(mNetworkTag//
-            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), text, new DailyHotelJsonArrayResponseListener()
+            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), text.trim(), new DailyHotelJsonArrayResponseListener()
         {
             @Override
             public void onResponse(String url, JSONArray response)
