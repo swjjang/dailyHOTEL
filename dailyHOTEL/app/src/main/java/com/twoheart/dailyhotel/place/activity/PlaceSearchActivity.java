@@ -153,7 +153,6 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
 
         mSearchEditText.addTextChangedListener(new TextWatcher()
         {
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
             {
@@ -180,7 +179,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                     showRecentSearchesView();
                 } else
                 {
-                    if(s.length() == 1 && s.charAt(0) == ' ')
+                    if (s.length() == 1 && s.charAt(0) == ' ')
                     {
                         s.delete(0, 1);
                         return;
@@ -205,12 +204,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 switch (actionId)
                 {
                     case EditorInfo.IME_ACTION_SEARCH:
-                        if(lockUiComponentAndIsLockUiComponent() == true)
-                        {
-                            return false;
-                        }
-
-                        showSearchResult(v.getText().toString());
+                        validateKeyword(v.getText().toString());
                         return true;
 
                     default:
@@ -299,12 +293,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 @Override
                 public void onClick(View v)
                 {
-                    if(lockUiComponentAndIsLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    showSearchResult((String) v.getTag());
+                    validateKeyword((String) v.getTag());
                 }
             };
 
@@ -363,12 +352,7 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
                 @Override
                 public void onClick(View v)
                 {
-                    if(lockUiComponentAndIsLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    showSearchResult((Keyword) v.getTag());
+                    validateKeyword((Keyword) v.getTag());
                 }
             };
 
@@ -439,6 +423,34 @@ public abstract class PlaceSearchActivity extends BaseActivity implements View.O
         mSearchingView.setVisibility(View.GONE);
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
         mRecentSearchLayout.setVisibility(View.GONE);
+    }
+
+    private void validateKeyword(String keyword)
+    {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        String text = keyword.trim();
+
+        if (Util.isTextEmpty(text) == true)
+        {
+            releaseUiComponent();
+            return;
+        }
+
+        showSearchResult(text);
+    }
+
+    private void validateKeyword(Keyword keyword)
+    {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        showSearchResult(keyword);
     }
 
     private int getRecentSearchesIcon(int type)

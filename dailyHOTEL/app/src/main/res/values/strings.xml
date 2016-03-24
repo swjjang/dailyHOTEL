@@ -120,11 +120,11 @@
     <string name="toast_msg_failed_to_signup">회원가입을 실패하였습니다. 재시도 해주십시오</string>
     <string name="toast_msg_already_latest_version">이미 최신버전입니다</string>
     <string name="toast_msg_thanks_to_your_opinion">좋은 의견 감사합니다.</string>
-    <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다</string>
-    <string name="toast_msg_input_error_alphanum">영문, 숫자만 입력 가능합니다.</string>
-    <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력 가능합니다.</string>
-    <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력 가능합니다.</string>
-    <string name="toast_msg_input_error_numeric">숫자만 입력 가능합니다.</string>
+    <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다.</string>
+    <string name="toast_msg_input_error_alphanum">영문, 숫자만 입력할 수 있습니다.</string>
+    <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력할 수 있습니다.</string>
+    <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력할 수 있습니다.</string>
+    <string name="toast_msg_input_error_numeric">숫자만 입력할 수 있습니다.</string>
     <string name="toast_msg_no_call">전화 기능이 없는 단말입니다.\n고객센터 전화번호는 1800-9120입니다.</string>
     <string name="toast_msg_no_hotel_call">전화 기능이 없는 단말입니다.\n호텔 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_no_gourmet_call">전화 기능이 없는 단말입니다.\n레스토랑 전화번호는 %1$s입니다.</string>
