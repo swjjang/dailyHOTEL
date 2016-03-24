@@ -44,7 +44,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyOkHttpImagePipelineConfigFactory;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;

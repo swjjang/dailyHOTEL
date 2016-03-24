@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;

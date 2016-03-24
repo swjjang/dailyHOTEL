@@ -30,7 +30,7 @@ import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;

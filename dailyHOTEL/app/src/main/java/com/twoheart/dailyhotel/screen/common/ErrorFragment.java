@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;

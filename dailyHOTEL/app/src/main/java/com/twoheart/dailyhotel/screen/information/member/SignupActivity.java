@@ -33,7 +33,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;

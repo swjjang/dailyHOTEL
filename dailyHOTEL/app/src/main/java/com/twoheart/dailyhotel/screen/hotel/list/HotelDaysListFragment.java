@@ -7,7 +7,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 
 public class HotelDaysListFragment extends HotelListFragment

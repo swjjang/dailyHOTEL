@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import java.util.regex.Pattern;

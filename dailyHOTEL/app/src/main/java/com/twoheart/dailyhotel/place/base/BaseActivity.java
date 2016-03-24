@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common;
+package com.twoheart.dailyhotel.place.base;
 
 import android.app.Dialog;
 import android.content.Context;

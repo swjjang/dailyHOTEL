@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common;
+package com.twoheart.dailyhotel.place.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

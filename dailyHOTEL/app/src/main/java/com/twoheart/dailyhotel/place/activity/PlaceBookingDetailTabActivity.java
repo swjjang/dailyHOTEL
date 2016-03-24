@@ -16,7 +16,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;

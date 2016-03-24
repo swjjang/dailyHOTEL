@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 

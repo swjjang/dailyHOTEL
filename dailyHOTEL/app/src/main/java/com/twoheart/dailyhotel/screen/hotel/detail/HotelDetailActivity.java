@@ -29,7 +29,7 @@ import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;

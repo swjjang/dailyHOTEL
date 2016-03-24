@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;

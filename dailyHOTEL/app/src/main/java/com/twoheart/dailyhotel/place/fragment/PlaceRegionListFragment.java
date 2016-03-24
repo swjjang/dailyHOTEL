@@ -17,8 +17,8 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionAnimatedExpandableListAdapter;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
 

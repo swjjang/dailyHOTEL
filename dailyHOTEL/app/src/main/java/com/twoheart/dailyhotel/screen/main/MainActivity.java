@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
 import com.twoheart.dailyhotel.util.Constants;

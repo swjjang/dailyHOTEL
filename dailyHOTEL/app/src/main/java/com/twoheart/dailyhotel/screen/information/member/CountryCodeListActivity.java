@@ -17,7 +17,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.CountryCodeNumber;
 import com.twoheart.dailyhotel.view.CountryCodeListLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;

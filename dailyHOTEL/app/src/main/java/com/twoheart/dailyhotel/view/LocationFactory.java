@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 

@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public abstract class PlaceReceiptActivity extends BaseActivity
