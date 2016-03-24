@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.regionlist;
+package com.twoheart.dailyhotel.place.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,26 +15,26 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
+import com.twoheart.dailyhotel.place.adapter.PlaceRegionAnimatedExpandableListAdapter;
 import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.BaseFragment;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
 
 import java.util.List;
 
-public class RegionListFragment extends BaseFragment
+public abstract class PlaceRegionListFragment extends BaseFragment
 {
-    private RegionListActivity.OnUserActionListener mOnUserActionListener;
+    private PlaceRegionListActivity.OnUserActionListener mOnUserActionListener;
 
     private DailyAnimatedExpandableListView mListView;
-    private RegionAnimatedExpandableListAdapter mAdapter;
-
-    private Constants.PlaceType mPlaceType;
+    private PlaceRegionAnimatedExpandableListAdapter mAdapter;
     private Province mSelectedProvince;
 
-    private RegionListActivity.Region mRegion;
+    private PlaceRegionListActivity.Region mRegion;
+
+    protected abstract void recordAnalyticsScreen(PlaceRegionListActivity.Region region);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -45,35 +45,12 @@ public class RegionListFragment extends BaseFragment
         return mListView;
     }
 
-    private void recordAnalyticsScreen()
-    {
-        switch (mPlaceType)
-        {
-            case HOTEL:
-                switch (mRegion)
-                {
-                    case DOMESTIC:
-                        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
-                        break;
-
-                    case GLOBAL:
-                        AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
-                        break;
-                }
-                break;
-
-            case FNB:
-                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
-                break;
-        }
-    }
-
     @Override
     public void onResume()
     {
         if (mAdapter != null)
         {
-            recordAnalyticsScreen();
+            recordAnalyticsScreen(mRegion);
         }
 
         super.onResume();
@@ -83,7 +60,7 @@ public class RegionListFragment extends BaseFragment
     {
         if (mAdapter == null)
         {
-            mAdapter = new RegionAnimatedExpandableListAdapter(baseActivity);
+            mAdapter = new PlaceRegionAnimatedExpandableListAdapter(baseActivity);
             mAdapter.setOnChildClickListener(mOnChildClickListener);
         }
 
@@ -92,14 +69,13 @@ public class RegionListFragment extends BaseFragment
         selectedPreviousArea(mSelectedProvince, arrayList);
     }
 
-    public void setInformation(Constants.PlaceType type, RegionListActivity.Region region, Province province)
+    public void setInformation(PlaceRegionListActivity.Region region, Province province)
     {
-        mPlaceType = type;
         mRegion = region;
         mSelectedProvince = province;
     }
 
-    public void setOnUserActionListener(RegionListActivity.OnUserActionListener listener)
+    public void setOnUserActionListener(PlaceRegionListActivity.OnUserActionListener listener)
     {
         mOnUserActionListener = listener;
     }

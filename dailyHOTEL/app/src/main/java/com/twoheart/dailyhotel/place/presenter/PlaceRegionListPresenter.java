@@ -1,11 +1,8 @@
-package com.twoheart.dailyhotel.screen.regionlist;
+package com.twoheart.dailyhotel.place.presenter;
 
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -15,33 +12,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegionListPresenter
+public abstract class PlaceRegionListPresenter
 {
     private static final int CHILD_GRID_COLUMN = 2;
-    private BaseActivity mBaseActivity;
 
-    private RegionListActivity.OnResponsePresenterListener mListener;
-
-    public RegionListPresenter(BaseActivity baseActivity, RegionListActivity.OnResponsePresenterListener listener)
-    {
-        if (baseActivity == null || listener == null)
-        {
-            throw new NullPointerException("baseActivity == null || listener == null");
-        }
-
-        mBaseActivity = baseActivity;
-        mListener = listener;
-    }
-
-    public void requestHotelRegionList()
-    {
-        DailyNetworkAPI.getInstance().requestHotelRegionList(mBaseActivity.getNetworkTag(), mHotelRegionListJsonResponseListener, mBaseActivity);
-    }
-
-    public void requestGourmetRegionList()
-    {
-        DailyNetworkAPI.getInstance().requestGourmetRegionList(mBaseActivity.getNetworkTag(), mGourmetRegionListJsonResponseListener, mBaseActivity);
-    }
+    protected abstract void requestRegionList();
 
     /**
      * @param domesticProvinceList in
@@ -50,7 +25,7 @@ public class RegionListPresenter
      * @param domesticRegionList   out
      * @param globalRegionList     out
      */
-    private void makeRegionViewItemList(List<Province> domesticProvinceList, List<Province> globalProvinceList//
+    protected void makeRegionViewItemList(List<Province> domesticProvinceList, List<Province> globalProvinceList//
         , ArrayList<Area> areaList, List<RegionViewItem> domesticRegionList, List<RegionViewItem> globalRegionList)
     {
         if (domesticProvinceList == null || globalProvinceList == null || areaList == null || domesticRegionList == null || globalRegionList == null)
@@ -156,7 +131,7 @@ public class RegionListPresenter
      * @param globalProvinceList   out
      * @throws JSONException
      */
-    private void makeProvinceList(JSONArray jsonArray, String imageUrl, List<Province> domesticProvinceList, List<Province> globalProvinceList) throws JSONException
+    protected void makeProvinceList(JSONArray jsonArray, String imageUrl, List<Province> domesticProvinceList, List<Province> globalProvinceList) throws JSONException
     {
         if (domesticProvinceList == null || globalProvinceList == null)
         {
@@ -187,7 +162,7 @@ public class RegionListPresenter
         }
     }
 
-    private ArrayList<Area> makeAreaList(JSONArray jsonArray)
+    protected ArrayList<Area> makeAreaList(JSONArray jsonArray)
     {
         ArrayList<Area> areaList = new ArrayList<Area>();
 
@@ -216,90 +191,4 @@ public class RegionListPresenter
 
         return areaList;
     }
-
-    private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msg_code = response.getInt("msgCode");
-
-                if (msg_code == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String imageUrl = dataJSONObject.getString("imgUrl");
-
-                    List<Province> domesticProvinceList = new ArrayList<>();
-                    List<Province> globalProvinceList = new ArrayList<>();
-
-                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                    makeProvinceList(provinceArray, imageUrl, domesticProvinceList, globalProvinceList);
-
-                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
-
-                    List<RegionViewItem> domesticRegionViewList = new ArrayList<>();
-                    List<RegionViewItem> globalRegionViewList = new ArrayList<>();
-
-                    makeRegionViewItemList(domesticProvinceList, globalProvinceList, areaList, domesticRegionViewList, globalRegionViewList);
-
-                    mListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
-                } else
-                {
-                    String message = response.getString("msg");
-
-                    mListener.onInternalError(message);
-                }
-            } catch (Exception e)
-            {
-                mListener.onInternalError();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mGourmetRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msg_code = response.getInt("msgCode");
-
-                if (msg_code == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String imageUrl = dataJSONObject.getString("imgUrl");
-
-                    List<Province> domesticProvinceList = new ArrayList<>();
-                    List<Province> globalProvinceList = new ArrayList<>();
-
-                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-                    makeProvinceList(provinceArray, imageUrl, domesticProvinceList, globalProvinceList);
-
-                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-                    ArrayList<Area> areaList = makeAreaList(areaJSONArray);
-
-                    List<RegionViewItem> domesticRegionViewList = new ArrayList<>();
-                    List<RegionViewItem> globalRegionViewList = new ArrayList<>();
-
-                    makeRegionViewItemList(domesticProvinceList, globalProvinceList, areaList, domesticRegionViewList, globalRegionViewList);
-
-                    mListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
-                } else
-                {
-                    String message = response.getString("msg");
-
-                    mListener.onInternalError(message);
-                }
-            } catch (Exception e)
-            {
-                mListener.onInternalError();
-            }
-        }
-    };
 }

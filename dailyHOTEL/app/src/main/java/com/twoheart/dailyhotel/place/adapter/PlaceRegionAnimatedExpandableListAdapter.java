@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.regionlist;
+package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -21,13 +21,13 @@ import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView.AnimatedExpa
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegionAnimatedExpandableListAdapter extends AnimatedExpandableListAdapter
+public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandableListAdapter
 {
     private LayoutInflater mInflater;
     private List<RegionViewItem> items;
     private View.OnClickListener mOnItemclickListener;
 
-    public RegionAnimatedExpandableListAdapter(Context context)
+    public PlaceRegionAnimatedExpandableListAdapter(Context context)
     {
         mInflater = LayoutInflater.from(context);
     }

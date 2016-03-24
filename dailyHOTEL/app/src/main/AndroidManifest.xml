@@ -233,7 +233,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.regionlist.RegionListActivity"
+            android:name=".screen.hotel.region.HotelRegionListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.region.GourmetRegionListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

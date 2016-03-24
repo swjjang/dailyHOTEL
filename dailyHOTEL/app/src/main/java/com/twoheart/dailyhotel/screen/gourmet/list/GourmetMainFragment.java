@@ -27,8 +27,8 @@ import com.twoheart.dailyhotel.screen.common.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.BaseFragment;
 import com.twoheart.dailyhotel.screen.eventlist.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
-import com.twoheart.dailyhotel.screen.regionlist.RegionListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -156,7 +156,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-                Intent intent = RegionListActivity.newInstance(getContext(), PlaceType.FNB, mCurationOption.getProvince(), currentFragment.getSaleTime(), 1);
+                Intent intent = GourmetRegionListActivity.newInstance(getContext(), mCurationOption.getProvince(), currentFragment.getSaleTime());
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
@@ -955,7 +955,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
-        Intent intent = RegionListActivity.newInstance(baseActivity, PlaceType.FNB, selectedProvince, mTodaySaleTime, 1);
+        Intent intent = GourmetRegionListActivity.newInstance(baseActivity, selectedProvince, mTodaySaleTime);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
