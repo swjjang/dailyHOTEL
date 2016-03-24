@@ -1340,8 +1340,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 {
                     // 회원 가입시 이름 필터 적용.
                     StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
-                    InputFilter[] allowAlphanumericName = new InputFilter[1];
+                    InputFilter[] allowAlphanumericName = new InputFilter[2];
                     allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
+                    allowAlphanumericName[1] = new InputFilter.LengthFilter(20);
 
                     mReservationName.setFilters(allowAlphanumericName);
                     mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());
@@ -1351,8 +1352,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                     // 회원 가입시 이름 필터 적용.
                     StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
-                    InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+                    InputFilter[] allowAlphanumericHangul = new InputFilter[2];
                     allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+                    allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
                     mReservationName.setFilters(allowAlphanumericHangul);
                     mReservationName.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -1561,8 +1563,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                             // 회원 가입시 이름 필터 적용.
                             StringFilter stringFilter = new StringFilter(HotelPaymentActivity.this);
-                            InputFilter[] allowAlphanumericName = new InputFilter[1];
+                            InputFilter[] allowAlphanumericName = new InputFilter[2];
                             allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
+                            allowAlphanumericName[1] = new InputFilter.LengthFilter(20);
 
                             mReservationName.setFilters(allowAlphanumericName);
                             mReservationName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mReservationName.getInputType());

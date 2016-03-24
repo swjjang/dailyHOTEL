@@ -216,8 +216,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(SignupActivity.this);
-        InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+        InputFilter[] allowAlphanumericHangul = new InputFilter[2];
         allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+        allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
         mNameEditText.setFilters(allowAlphanumericHangul);
 
