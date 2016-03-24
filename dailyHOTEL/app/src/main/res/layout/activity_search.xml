@@ -97,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-2dp"
-                    android:text="@string/label_search_agree_termsoflocation"
+                    android:text="@string/label_search_need_to_agree_termsoflocation"
                     android:textColor="@color/search_hint_text"
                     android:textSize="11dp"
                     android:visibility="visible"/>
@@ -150,7 +150,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_below="@+id/deleteAllView"
-                android:background="@color/search_hint_text"/>
+                android:background="@color/information_underline"/>
 
             <ScrollView
                 android:layout_width="match_parent"

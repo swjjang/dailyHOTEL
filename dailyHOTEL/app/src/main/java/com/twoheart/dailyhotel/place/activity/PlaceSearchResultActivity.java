@@ -24,7 +24,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected abstract void initIntent(Intent intent);
 
-    protected abstract void requestSearch();
+    protected abstract void requestSearchResultList();
 
     protected abstract Keyword getKeyword();
 
@@ -60,7 +60,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     {
         super.onStart();
 
-        requestSearch();
+        requestSearchResultList();
     }
 
     @Override

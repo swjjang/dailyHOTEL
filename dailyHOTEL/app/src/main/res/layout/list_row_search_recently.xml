@@ -15,12 +15,4 @@
         android:singleLine="true"
         android:textColor="@color/search_text"
         android:textSize="13dp"/>
-
-    <View
-        android:id="@+id/underLineView"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="45dp"
-        android:background="@color/information_underline"/>
 </RelativeLayout>

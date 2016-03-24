@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -54,7 +55,17 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         @Override
         public void handleMessage(Message msg)
         {
-            ((OnEventListener) mOnEventListener).onAutoCompleteKeyword((String) msg.obj);
+            switch(msg.what)
+            {
+                case 0:
+                    ((OnEventListener) mOnEventListener).onAutoCompleteKeyword((String) msg.obj);
+                    break;
+
+                case 1:
+                    hideSearchView();
+                    break;
+            }
+
         }
     };
 
@@ -132,7 +143,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
-
             }
 
             @Override
@@ -140,7 +150,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             {
                 mHandler.removeMessages(0);
 
-                if (s.length() == 0)
+                int length = s.length();
+
+                if (length == 0)
                 {
                     deleteView.setVisibility(View.INVISIBLE);
                     searchView.setEnabled(false);
@@ -150,20 +162,27 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     showRecentSearchesView();
                 } else
                 {
-                    if (s.length() == 1 && s.charAt(0) == ' ')
+                    if (length == 1 && s.charAt(0) == ' ')
                     {
                         s.delete(0, 1);
                         return;
                     }
 
-                    deleteView.setVisibility(View.VISIBLE);
-                    searchView.setEnabled(true);
-
-                    Message message = mHandler.obtainMessage(0, s.toString());
-                    mHandler.sendMessageDelayed(message, DELAY_AUTO_COMPLETE_MILLIS);
-
-                    showAutoCompleteView();
+                    if (length > 1 && s.charAt(length - 1) == ' ')
+                    {
+                        if (s.charAt(length - 2) == ' ')
+                        {
+                            s.delete(length - 1, length);
+                        }
+                        return;
+                    }
                 }
+
+                deleteView.setVisibility(View.VISIBLE);
+                searchView.setEnabled(true);
+
+                Message message = mHandler.obtainMessage(0, s.toString());
+                mHandler.sendMessageDelayed(message, DELAY_AUTO_COMPLETE_MILLIS);
             }
         });
 
@@ -274,9 +293,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(DEFAULT_ICON), 0, 0, 0);
             textView.setText(R.string.label_search_recentsearches_none);
 
-            View underLineView = view.findViewById(R.id.underLineView);
-            underLineView.setVisibility(View.GONE);
-
             int childCount = viewGroup.getChildCount();
 
             for (int i = 1; i < childCount; i++)
@@ -315,16 +331,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 textView = (TextView) view.findViewById(R.id.textView);
                 textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(Integer.parseInt(values[0])), 0, 0, 0);
                 textView.setText(values[1]);
-
-                View underLineView = view.findViewById(R.id.underLineView);
-
-                if (i < size - 1)
-                {
-                    underLineView.setVisibility(View.VISIBLE);
-                } else
-                {
-                    underLineView.setVisibility(View.GONE);
-                }
             }
         }
     }
@@ -356,9 +362,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
+        mHandler.removeMessages(1);
+
         if (keywordList == null || keywordList.size() == 0)
         {
-            hideSearchView();
+            mHandler.sendEmptyMessageDelayed(1, 500);
         } else
         {
             View.OnClickListener onClickListener = new View.OnClickListener()
@@ -431,16 +439,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     {
                         textView01.setText(keyword.name);
                         textView02.setVisibility(View.INVISIBLE);
-                    }
-
-                    View underLineView = view.findViewById(R.id.underLineView);
-
-                    if (i < size - 1)
-                    {
-                        underLineView.setVisibility(View.VISIBLE);
-                    } else
-                    {
-                        underLineView.setVisibility(View.GONE);
                     }
                 }
             }

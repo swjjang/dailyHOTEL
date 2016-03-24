@@ -68,12 +68,11 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
 
         mHotelSearchResultPresenter = new HotelSearchResultPresenter(this, mNetworkTag, mOnPresenterListener);
-
         mHotelSearchResultPresenter.requestCustomerSatisfactionTimeMessage();
     }
 
     @Override
-    protected void requestSearch()
+    protected void requestSearchResultList()
     {
         mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mKeyword.name);
     }
