@@ -316,9 +316,13 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(Integer.parseInt(values[0])), 0, 0, 0);
                 textView.setText(values[1]);
 
-                if (i == size - 1)
+                View underLineView = view.findViewById(R.id.underLineView);
+
+                if (i < size - 1)
                 {
-                    View underLineView = view.findViewById(R.id.underLineView);
+                    underLineView.setVisibility(View.VISIBLE);
+                } else
+                {
                     underLineView.setVisibility(View.GONE);
                 }
             }
@@ -427,6 +431,16 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     {
                         textView01.setText(keyword.name);
                         textView02.setVisibility(View.INVISIBLE);
+                    }
+
+                    View underLineView = view.findViewById(R.id.underLineView);
+
+                    if (i < size - 1)
+                    {
+                        underLineView.setVisibility(View.VISIBLE);
+                    } else
+                    {
+                        underLineView.setVisibility(View.GONE);
                     }
                 }
             }

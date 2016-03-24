@@ -844,7 +844,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     String message = response.getString("msg");
 
-                    onInternalError(message);
+                    onErrorMessage(message);
                 }
             } catch (Exception e)
             {

@@ -379,11 +379,11 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         onError();
     }
 
-    public void onError(Exception error)
+    public void onError(Exception e)
     {
         releaseUiComponent();
 
-        ExLog.e(error.toString());
+        ExLog.e(e.toString());
 
         onError();
     }
@@ -409,21 +409,12 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     /**
      * 기본적으로 내부오류가 발생하였을 경우 사용
      */
-    public void onInternalError()
+    public void onErrorMessage()
     {
-        unLockUI();
-
-        showSimpleDialog(null, getString(R.string.dialog_msg_internal_error), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                finish();
-            }
-        }, null, false);
+        onErrorMessage(getString(R.string.dialog_msg_internal_error));
     }
 
-    public void onInternalError(String message)
+    public void onErrorMessage(String message)
     {
         unLockUI();
 

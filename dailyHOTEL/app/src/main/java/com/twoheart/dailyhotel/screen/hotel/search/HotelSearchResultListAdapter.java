@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.search;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,26 +11,24 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class HotelSearchResultListAdapter extends PlaceListAdapter implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class HotelSearchResultListAdapter extends PlaceListAdapter
 {
     private Constants.SortType mSortType;
     private View.OnClickListener mOnClickListener;
-    private BaseActivity mActivity;
+    private Context mContext;
 
-    public HotelSearchResultListAdapter(BaseActivity activity, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
+    public HotelSearchResultListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
     {
-        super(activity, arrayList);
+        super(context, arrayList);
 
-        mActivity = activity;
+        mContext = context;
         mOnClickListener = listener;
 
         setSortType(Constants.SortType.DEFAULT);
@@ -48,28 +47,16 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter implements Pi
     }
 
     @Override
-    public boolean isItemViewTypePinned(int viewType)
-    {
-        return viewType == PlaceViewItem.TYPE_SECTION;
-    }
-
-    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        try
+        switch (viewType)
         {
-            switch (viewType)
+            case PlaceViewItem.TYPE_ENTRY:
             {
-                case PlaceViewItem.TYPE_ENTRY:
-                {
-                    View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
 
-                    return new HoltelViewHolder(view);
-                }
+                return new HoltelViewHolder(view);
             }
-        } catch (OutOfMemoryError e)
-        {
-            Util.finishOutOfMemory(mActivity);
         }
 
         return null;

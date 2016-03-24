@@ -68,25 +68,6 @@ public class MainActivity extends BaseActivity implements Constants
         }
     };
 
-    public interface OnResponsePresenterListener
-    {
-        void updateNewEvent();
-
-        void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime);
-
-        void onSatisfactionHotel(String hotelName, int reservationIndex, long checkInTime, long checkOutTime);
-
-        void onCheckServerResponse(String title, String message);
-
-        void onAppVersionResponse(int maxVersion, int minVersion);
-
-        void onConfigurationResponse();
-
-        void onError();
-
-        void onErrorResponse(VolleyError volleyError);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -115,7 +96,7 @@ public class MainActivity extends BaseActivity implements Constants
         //        }
 
         mIsInitialization = true;
-        mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
+        mMainPresenter = new MainPresenter(this, mNetworkTag, mOnResponsePresenterListener);
 
         //        DailyPreference.getInstance(this).removeDeepLink();
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
@@ -462,7 +443,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
     };
 
-    private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
+    private MainPresenter.OnPresenterListener mOnResponsePresenterListener = new MainPresenter.OnPresenterListener()
     {
         @Override
         public void updateNewEvent()
@@ -491,19 +472,27 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onError()
-        {
-            mDelayTimeHandler.removeMessages(0);
-
-            MainActivity.this.onError();
-        }
-
-        @Override
         public void onErrorResponse(VolleyError volleyError)
         {
             mDelayTimeHandler.removeMessages(0);
 
             MainActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            mDelayTimeHandler.removeMessages(0);
+
+            MainActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorMessage(String message)
+        {
+            mDelayTimeHandler.removeMessages(0);
+
+            MainActivity.this.onErrorMessage(message);
         }
 
         @Override

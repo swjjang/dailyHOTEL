@@ -683,7 +683,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         if (gourmetPaymentInformation == null || checkInSaleTime == null)
         {
-            onInternalError();
+            onErrorMessage();
             return;
         }
 
@@ -811,7 +811,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     {
                         ExLog.d(e.toString());
 
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             });
@@ -1094,7 +1094,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     , mGourmetPaymentInformationJsonResponseListener, GourmetPaymentActivity.this);
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1206,12 +1206,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         return;
                     } else
                     {
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1262,7 +1262,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     mFinalCheckPayJsonResponseListener, GourmetPaymentActivity.this);
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1380,12 +1380,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         return;
                     } else
                     {
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1423,12 +1423,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         return;
                     } else
                     {
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1442,7 +1442,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             {
                 if (response == null)
                 {
-                    onInternalError();
+                    onErrorMessage();
                     return;
                 }
 
@@ -1491,7 +1491,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };

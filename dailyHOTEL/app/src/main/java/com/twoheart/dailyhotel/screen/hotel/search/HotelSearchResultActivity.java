@@ -1,23 +1,17 @@
 package com.twoheart.dailyhotel.screen.hotel.search;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
-import android.widget.TextView;
 
-import com.twoheart.dailyhotel.R;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
+import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -26,11 +20,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
-    private HotelSearchResultListAdapter mListAdapter;
-
     private SaleTime mSaleTime;
     private int mNights;
     private Keyword mKeyword;
+    private String mCustomerSatisfactionTimeMessage;
+
+    private HotelSearchResultPresenter mHotelSearchResultPresenter;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, Keyword keyword)
     {
@@ -48,6 +43,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
+    protected PlaceSearchResultLayout getLayout()
+    {
+        return new HotelSearchResultLayout(this, mOnEventListener);
+    }
+
+    @Override
     protected void initIntent(Intent intent)
     {
         mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
@@ -56,36 +57,25 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
-    protected void initLayout()
+    protected void initContents()
     {
-        super.initLayout();
-
-        mListAdapter = new HotelSearchResultListAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
-        mRecyclerView.setAdapter(mListAdapter);
-    }
-
-    @Override
-    protected void initToolbarLayout(View view)
-    {
-        TextView titleView = (TextView) view.findViewById(R.id.titleView);
-        TextView dateView = (TextView) view.findViewById(R.id.dateView);
-
-        titleView.setText(mKeyword.name);
+        super.initContents();
 
         String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd");
-
         SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
         String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd");
 
-        dateView.setText(String.format("%s - %s", checkInDate, checkOutDate));
+        mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
+
+        mHotelSearchResultPresenter = new HotelSearchResultPresenter(this, mNetworkTag, mOnPresenterListener);
+
+        mHotelSearchResultPresenter.requestCustomerSatisfactionTimeMessage();
     }
 
     @Override
     protected void requestSearch()
     {
-        showEmptyLayout();
-
-        DailyNetworkAPI.getInstance().requestHotelSearchList(getNetworkTag(), mSaleTime, mNights, mKeyword.name, mHotelSearchListJsonResponseListener, this);
+        mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mKeyword.name);
     }
 
     @Override
@@ -94,25 +84,28 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         return mKeyword;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // mOnEventListener
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
+    private PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
     {
         @Override
-        public void onClick(View v)
+        public void finish()
         {
-            int position = mRecyclerView.getChildAdapterPosition(v);
+            HotelSearchResultActivity.this.finish(Activity.RESULT_CANCELED);
+        }
 
-            if (position < 0)
-            {
-                return;
-            }
+        @Override
+        public void finish(int resultCode)
+        {
+            HotelSearchResultActivity.this.finish(resultCode);
+        }
 
-            PlaceViewItem placeViewItem = mListAdapter.getItem(position);
-
-            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+        @Override
+        public void onItemClick(PlaceViewItem placeViewItem)
+        {
+            if (placeViewItem == null || placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
             {
                 return;
             }
@@ -128,95 +121,56 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         }
+
+        @Override
+        public void onShowCallDialog()
+        {
+            showCallDialog(mCustomerSatisfactionTimeMessage);
+        }
     };
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Network Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // mOnPresenterListener
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mHotelSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private HotelSearchResultPresenter.OnPresenterListener mOnPresenterListener = new HotelSearchResultPresenter.OnPresenterListener()
     {
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onResponseSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
         {
-            try
+            if (placeViewItemList == null || placeViewItemList.size() == 0)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String imageUrl = dataJSONObject.getString("imgUrl");
-                    int nights = dataJSONObject.getInt("lengthStay");
-                    JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
-
-                    int length;
-
-                    if (hotelJSONArray == null)
-                    {
-                        length = 0;
-                    } else
-                    {
-                        length = hotelJSONArray.length();
-                    }
-
-                    mListAdapter.clear();
-
-                    if (length == 0)
-                    {
-                        showEmptyLayout();
-                        mListAdapter.notifyDataSetChanged();
-                    } else
-                    {
-                        showListLayout();
-
-                        ArrayList<PlaceViewItem> placeViewItemList = makeHotelList(hotelJSONArray, imageUrl, nights);
-                        mListAdapter.addAll(placeViewItemList);
-                        mListAdapter.notifyDataSetChanged();
-
-                        updateResultCount(placeViewItemList.size());
-                    }
-                } else
-                {
-                    String message = response.getString("msg");
-
-                    onInternalError(message);
-                }
-            } catch (Exception e)
+                ((HotelSearchResultLayout) mPlaceSearchResultLayout).setSearchResultList(null);
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                ((HotelSearchResultLayout) mPlaceSearchResultLayout).setSearchResultList(placeViewItemList);
             }
+
+            unLockUI();
         }
 
-        private ArrayList<PlaceViewItem> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        @Override
+        public void onResponseCustomerSatisfactionTimeMessage(String message)
         {
-            if (jsonArray == null)
-            {
-                return new ArrayList<>();
-            }
+            mCustomerSatisfactionTimeMessage = message;
+        }
 
-            int length = jsonArray.length();
-            ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>(length);
-            JSONObject jsonObject;
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            HotelSearchResultActivity.this.onErrorResponse(volleyError);
+        }
 
-            for (int i = 0; i < length; i++)
-            {
-                jsonObject = jsonArray.getJSONObject(i);
+        @Override
+        public void onError(Exception e)
+        {
+            HotelSearchResultActivity.this.onError(e);
+        }
 
-                Hotel hotel = new Hotel();
-
-                if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
-                {
-                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel);
-                    placeViewItemList.add(placeViewItem);
-                }
-            }
-
-            return placeViewItemList;
+        @Override
+        public void onErrorMessage(String message)
+        {
+            HotelSearchResultActivity.this.onErrorMessage(message);
         }
     };
 }

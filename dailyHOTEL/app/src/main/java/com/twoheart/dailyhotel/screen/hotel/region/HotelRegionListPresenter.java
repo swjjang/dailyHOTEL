@@ -6,8 +6,8 @@ import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
-import com.twoheart.dailyhotel.place.presenter.PlaceRegionListPresenter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.presenter.PlaceRegionListPresenter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

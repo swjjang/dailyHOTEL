@@ -63,7 +63,7 @@
         <RelativeLayout
             android:id="@+id/searchAroundLayout"
             android:layout_width="match_parent"
-            android:layout_height="41dp"
+            android:layout_height="@dimen/toolbar_height"
             android:layout_marginTop="10dp"
             android:background="@color/white"
             android:paddingLeft="15dp"
@@ -73,9 +73,9 @@
                 android:id="@+id/aroundIconView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:src="@drawable/search_ic_01_surrounding"
-                android:layout_centerVertical="true"/>
+                android:src="@drawable/search_ic_01_surrounding"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -126,14 +126,13 @@
             android:layout_below="@+id/searchAroundLayout"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
             android:visibility="visible">
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:gravity="center_vertical"
+                android:paddingLeft="15dp"
                 android:text="@string/label_search_recentsearches"
                 android:textColor="@color/search_hint_text"/>
 
@@ -143,15 +142,24 @@
                 android:layout_height="36dp"
                 android:layout_alignParentRight="true"
                 android:gravity="center_vertical"
+                android:paddingRight="15dp"
                 android:text="@string/label_search_deleteall"
                 android:textColor="@drawable/selector_search_deleteall_textcolor"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/deleteAllView"
+                android:background="@color/search_hint_text"/>
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/deleteAllView"
                 android:fadingEdge="none"
                 android:overScrollMode="never"
-                android:layout_below="@+id/deleteAllView">
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
 
                 <LinearLayout
                     android:id="@+id/contentsLayout"
@@ -159,7 +167,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"/>
             </ScrollView>
-
         </RelativeLayout>
 
         <ScrollView

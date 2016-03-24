@@ -51,14 +51,27 @@ public class DailyHotel extends Application implements Constants
 
         if (DEBUG == false)
         {
-            //            Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
-            //            {
-            //                @Override
-            //                public void uncaughtException(Thread thread, Throwable ex)
-            //                {
-            //                    Util.restartExitApp(getApplicationContext());
-            //                }
-            //            });
+            final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+
+            Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
+            {
+                @Override
+                public void uncaughtException(Thread thread, Throwable ex)
+                {
+                    if (ex.getClass().equals(OutOfMemoryError.class) == true)
+                    {
+                        Util.finishOutOfMemory(getApplicationContext());
+                    } else
+                    {
+                        if (uncaughtExceptionHandler != null)
+                        {
+                            uncaughtExceptionHandler.uncaughtException(thread, ex);
+                        }
+                    }
+
+                    //                    Util.restartExitApp(getApplicationContext());
+                }
+            });
 
             Fabric.with(this, new com.crashlytics.android.Crashlytics(), new Crashlytics());
         }

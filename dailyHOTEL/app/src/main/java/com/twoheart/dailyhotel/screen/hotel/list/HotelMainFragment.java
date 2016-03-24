@@ -1944,7 +1944,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     String message = response.getString("msg");
 
-                    onInternalError(message);
+                    onErrorMessage(message);
                 }
             } catch (Exception e)
             {

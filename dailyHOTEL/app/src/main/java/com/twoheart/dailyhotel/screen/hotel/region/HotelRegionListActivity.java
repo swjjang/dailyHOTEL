@@ -249,14 +249,14 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         public void onInternalError()
         {
             unLockUI();
-            HotelRegionListActivity.this.onInternalError();
+            HotelRegionListActivity.this.onErrorMessage();
         }
 
         @Override
         public void onInternalError(String message)
         {
             unLockUI();
-            HotelRegionListActivity.this.onInternalError(message);
+            HotelRegionListActivity.this.onErrorMessage(message);
         }
     };
 }

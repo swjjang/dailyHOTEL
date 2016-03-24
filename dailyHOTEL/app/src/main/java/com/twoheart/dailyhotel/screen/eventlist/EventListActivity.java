@@ -228,13 +228,13 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void onInternalError()
         {
-            EventListActivity.this.onInternalError();
+            EventListActivity.this.onErrorMessage();
         }
 
         @Override
         public void onInternalError(String message)
         {
-            EventListActivity.this.onInternalError(message);
+            EventListActivity.this.onErrorMessage(message);
         }
 
         @Override

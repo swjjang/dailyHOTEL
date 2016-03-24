@@ -1693,7 +1693,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 {
                     String message = response.getString("msg");
 
-                    onInternalError(message);
+                    onErrorMessage(message);
                 }
             } catch (Exception e)
             {

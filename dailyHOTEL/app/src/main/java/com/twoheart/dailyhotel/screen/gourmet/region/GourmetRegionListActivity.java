@@ -164,14 +164,14 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         public void onInternalError()
         {
             unLockUI();
-            GourmetRegionListActivity.this.onInternalError();
+            GourmetRegionListActivity.this.onErrorMessage();
         }
 
         @Override
         public void onInternalError(String message)
         {
             unLockUI();
-            GourmetRegionListActivity.this.onInternalError(message);
+            GourmetRegionListActivity.this.onErrorMessage(message);
         }
     };
 }

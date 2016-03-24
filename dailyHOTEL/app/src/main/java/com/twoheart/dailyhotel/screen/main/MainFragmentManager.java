@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.HotelMainFragment;

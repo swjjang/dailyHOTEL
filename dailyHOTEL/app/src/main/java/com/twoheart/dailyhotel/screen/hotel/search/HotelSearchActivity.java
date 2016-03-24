@@ -3,20 +3,13 @@ package com.twoheart.dailyhotel.screen.hotel.search;
 import android.content.Context;
 import android.content.Intent;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
 
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class HotelSearchActivity extends PlaceSearchActivity
@@ -24,6 +17,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
+    private HotelSearchPresenter mHotelSearchPresenter;
     private SaleTime mSaleTime;
     private int mNights;
 
@@ -44,6 +38,14 @@ public class HotelSearchActivity extends PlaceSearchActivity
     }
 
     @Override
+    protected void initContents()
+    {
+        super.initContents();
+
+        mHotelSearchPresenter = new HotelSearchPresenter(this, mNetworkTag, mOnPresenterListener);
+    }
+
+    @Override
     protected String getRecentSearches()
     {
         return DailyPreference.getInstance(this).getHotelRecentSearches();
@@ -61,42 +63,9 @@ public class HotelSearchActivity extends PlaceSearchActivity
         return new HotelSearchLayout(this, mOnEventListener);
     }
 
-    private void requestAutoComplete(String text)
-    {
-        DailyNetworkAPI.getInstance().requestHotelSearchAutoCompleteList(mNetworkTag//
-            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), text.trim(), new DailyHotelJsonArrayResponseListener()
-        {
-            @Override
-            public void onResponse(String url, JSONArray response)
-            {
-                int startIndex = url.lastIndexOf('=');
-
-                int length = response.length();
-
-                List<Keyword> keywordList = new ArrayList<>(length);
-
-                for (int i = 0; i < length; i++)
-                {
-                    try
-                    {
-                        keywordList.add(new Keyword(response.getJSONObject(i)));
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-
-                mPlaceSearchLayout.updateAutoCompleteLayout(url.substring(startIndex + 1), keywordList);
-            }
-        }, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                mPlaceSearchLayout.updateAutoCompleteLayout(null, null);
-            }
-        });
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // OnEventListener
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private PlaceSearchLayout.OnEventListener mOnEventListener = new PlaceSearchLayout.OnEventListener()
     {
@@ -127,7 +96,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onAutoCompleteKeyword(String keyword)
         {
-            requestAutoComplete(keyword);
+            mHotelSearchPresenter.requestAutoComplete(mSaleTime, keyword);
         }
 
         @Override
@@ -148,6 +117,37 @@ public class HotelSearchActivity extends PlaceSearchActivity
         public void finish()
         {
             HotelSearchActivity.this.finish();
+        }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // OnPresenterListener
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private HotelSearchPresenter.OnPresenterListener mOnPresenterListener = new HotelSearchPresenter.OnPresenterListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            HotelSearchActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            HotelSearchActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorMessage(String message)
+        {
+            HotelSearchActivity.this.onErrorMessage(message);
+        }
+
+        @Override
+        public void onResponseAutoComplete(String keyword, List<Keyword> list)
+        {
+            mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
         }
     };
 }
