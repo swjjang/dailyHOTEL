@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.eventlist;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -12,7 +11,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -70,7 +69,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag));
@@ -229,13 +228,13 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void onInternalError()
         {
-            EventListActivity.this.onInternalError();
+            EventListActivity.this.onErrorMessage();
         }
 
         @Override
         public void onInternalError(String message)
         {
-            EventListActivity.this.onInternalError(message);
+            EventListActivity.this.onErrorMessage(message);
         }
 
         @Override

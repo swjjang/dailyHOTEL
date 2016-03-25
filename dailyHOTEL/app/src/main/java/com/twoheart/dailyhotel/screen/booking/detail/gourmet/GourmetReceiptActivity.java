@@ -205,12 +205,12 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
                         return;
                     } else
                     {
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             } finally
             {
                 unLockUI();

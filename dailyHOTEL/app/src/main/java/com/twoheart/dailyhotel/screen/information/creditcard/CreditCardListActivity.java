@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -76,7 +75,7 @@ public class CreditCardListActivity extends BaseActivity
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_creditcard_activity));
     }
@@ -115,6 +114,10 @@ public class CreditCardListActivity extends BaseActivity
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
                     msg = getString(R.string.message_billing_duplicate);
                     break;
+
+                case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+                    restartExpiredSession();
+                    return;
 
                 case CODE_RESULT_PAYMENT_BILLING_FAIL:
                     if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)

@@ -120,11 +120,11 @@
     <string name="toast_msg_failed_to_signup">회원가입을 실패하였습니다. 재시도 해주십시오</string>
     <string name="toast_msg_already_latest_version">이미 최신버전입니다</string>
     <string name="toast_msg_thanks_to_your_opinion">좋은 의견 감사합니다.</string>
-    <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다</string>
-    <string name="toast_msg_input_error_alphanum">영문, 숫자만 입력 가능합니다.</string>
-    <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력 가능합니다.</string>
-    <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력 가능합니다.</string>
-    <string name="toast_msg_input_error_numeric">숫자만 입력 가능합니다.</string>
+    <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다.</string>
+    <string name="toast_msg_input_error_alphanum">영문, 숫자만 입력할 수 있습니다.</string>
+    <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력할 수 있습니다.</string>
+    <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력할 수 있습니다.</string>
+    <string name="toast_msg_input_error_numeric">숫자만 입력할 수 있습니다.</string>
     <string name="toast_msg_no_call">전화 기능이 없는 단말입니다.\n고객센터 전화번호는 1800-9120입니다.</string>
     <string name="toast_msg_no_hotel_call">전화 기능이 없는 단말입니다.\n호텔 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_no_gourmet_call">전화 기능이 없는 단말입니다.\n레스토랑 전화번호는 %1$s입니다.</string>
@@ -215,7 +215,7 @@
     <string name="dialog_msg_stop_onsale">해당 호텔의 모든 객실에 대해 판매가 완료 되었습니다.\n전화 문의 부탁 드립니다.</string>
     <string name="dialog_title_googleplayservice">Google Play Services</string>
     <string name="dialog_msg_install_update_googleplayservice">맵을 사용하기 위한 Google Play Services의 설치 혹은 업데이트가 필요합니다.</string>
-    <string name="dialog_msg_outofmemory">앱 실행에 필요한 메모리가 부족하여 종료됩니다. 메모리 정리 후에 재 실행 부탁드립니다.</string>
+    <string name="dialog_msg_outofmemory">앱 실행에 필요한 메모리가 부족하여 종료됩니다.\n메모리 정리 후에 재 실행 부탁드립니다.</string>
     <string name="dialog_msg_facebook_update">진행을 위해 회원정보 추가 입력이 필요합니다.</string>
     <string name="dialog_msg_none_gcmid">Google Play Service(업데이트 혹은 미설치)를 사용할 수 없어 결제 알림을 받지 못할 수 있으므로, 결제 뒤 예약 내역을 통해 확인해주세요.</string>
     <string name="dialog_msg_internal_error">세션이 만료되었습니다. 종료 후 재시도 하십시오.\n사용상에 불편함이 있으신 경우 고객센터 1800-9120 연락 부탁드립니다.</string>
@@ -387,6 +387,8 @@
     <string name="label_booking_count">%1$d개</string>
     <string name="label_booking_select">선택하세요</string>
     <string name="label_booking_corporate_card">(법인카드 가능)</string>
+    <string name="label_booking_memo">예약시 요청사항</string>
+    <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -660,5 +662,29 @@
     <string name="label_use_day">이용일</string>
     <string name="label_check_booking_history">예약내역 확인하기</string>
     <string name="message_completed_payment">결제가 완료되었습니다.</string>
+
+    <!-- Search -->
+    <string name="label_view_myaround_hotel">내 주변 호텔 보기</string>
+    <string name="label_view_myaround_gourmet">내 주변 레스토랑 보기</string>
+    <string name="label_search_need_to_agree_termsoflocation">위치기반서비스 이용약관 동의 필요</string>
+    <string name="label_search_agree_termsoflocation">위치기반서비스 이용동의</string>
+    <string name="label_search_hotel_hint">검색어 입력(호텔명 또는 지역명)</string>
+    <string name="label_search_gourmet_hint">검색어 입력(레스토랑명 또는 지역명)</string>
+    <string name="label_search_recentsearches">최근 검색어</string>
+    <string name="label_search_deleteall">전체삭제</string>
+    <string name="label_search_recentsearches_none">최근 검색 내용이 없습니다.</string>
+    <string name="label_search_agree_search_location">동의하고 검색</string>
+    <string name="message_search_agree_termsoflocation">고객님 주변에 위차한 업체 검색을 위해\n위치 정보 이용 동의가 필요합니다.\n이용약관 상세보기</string>
+    //
+    <string name="label_searchresult_resultcount">결과 %1$d건</string>
+    <string name="label_searchresult_cancelsearch">검색취소</string>
+    <string name="label_searchresult_empty">검색 결과가 없습니다.</string>
+    <string name="label_searchresult_text01">정확한 검색어가 맞는지\n확인해 보세요.</string>
+    <string name="label_searchresult_text02">찾으시는 호텔 또는 레스토랑이 없으신가요?\n데일리 고객센터로 알려주세요!</string>
+    <string name="label_searchresult_research">다시 검색하기</string>
+    <string name="label_searchresult_call_customercenter">고객센터로 전화하기</string>
+
+
+
 
 </resources>

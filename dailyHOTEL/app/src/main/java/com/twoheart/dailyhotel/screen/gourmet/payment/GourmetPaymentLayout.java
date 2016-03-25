@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -471,8 +471,9 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
 
             // 회원 가입시 이름 필터 적용.
             StringFilter stringFilter = new StringFilter(mActivity);
-            InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+            InputFilter[] allowAlphanumericHangul = new InputFilter[2];
             allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+            allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
             mUserNameEditText.setFilters(allowAlphanumericHangul);
             mUserNameEditText.setInputType(InputType.TYPE_CLASS_TEXT);

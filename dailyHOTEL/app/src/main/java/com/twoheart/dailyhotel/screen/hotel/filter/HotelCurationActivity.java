@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.list;
+package com.twoheart.dailyhotel.screen.hotel.filter;
 
 import android.content.Context;
 import android.content.Intent;

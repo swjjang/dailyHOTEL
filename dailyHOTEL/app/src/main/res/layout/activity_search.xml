@@ -1,0 +1,195 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/information_background">
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/backImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/navibar_ic_back"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyEditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/deleteView"
+            android:layout_toRightOf="@+id/backImageView"
+            android:background="@null"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:textColor="@color/search_text"
+            android:textColorHint="@color/search_hint_text"
+            android:textSize="15dp"/>
+
+        <ImageView
+            android:id="@+id/deleteView"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="false"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/searchView"
+            android:paddingLeft="5dp"
+            android:paddingRight="3dp"
+            android:src="@drawable/navibar_ic_search_x"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/searchView"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="2dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/selector_search_icon"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/searchAroundLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <ImageView
+                android:id="@+id/aroundIconView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/search_ic_01_surrounding"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/aroundIconView"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                    android:id="@+id/text01View"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_view_myaround_hotel"
+                    android:textColor="@color/dh_theme_color"
+                    android:textSize="13dp"/>
+
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                    android:id="@+id/text02View"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:text="@string/label_search_need_to_agree_termsoflocation"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="11dp"
+                    android:visibility="visible"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/searchingView"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_below="@+id/searchAroundLayout"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/label_searching"
+            android:textColor="@color/search_hint_text"
+            android:textSize="13dp"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/recentSearchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/searchAroundLayout"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:visibility="visible">
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="@string/label_search_recentsearches"
+                android:textColor="@color/search_hint_text"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/deleteAllView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/label_search_deleteall"
+                android:textColor="@drawable/selector_search_deleteall_textcolor"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/deleteAllView"
+                android:background="@color/information_underline"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/deleteAllView"
+                android:fadingEdge="none"
+                android:overScrollMode="never"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+                <LinearLayout
+                    android:id="@+id/contentsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </ScrollView>
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/autoCompleteScrollLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/searchAroundLayout"
+            android:layout_marginTop="10dp"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/autoCompleteLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+        </ScrollView>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
+</RelativeLayout>

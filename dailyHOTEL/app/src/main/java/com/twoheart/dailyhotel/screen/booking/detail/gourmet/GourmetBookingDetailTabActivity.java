@@ -25,8 +25,8 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
-import com.twoheart.dailyhotel.screen.common.BaseFragment;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -218,8 +218,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
                     mGourmetBookingDetail.setData(jsonObject);
 
-                    invalidateOptionsMenu();
-
                     loadFragments(getViewPager(), mGourmetBookingDetail);
                 } else
                 {
@@ -238,12 +236,12 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                         return;
                     } else
                     {
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             } finally
             {
                 unLockUI();

@@ -41,15 +41,15 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
+import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,7 +64,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 {
     private static final int APPBARLAYOUT_DRAG_DISTANCE = 200;
 
-    protected PinnedSectionRecycleView mHotelRecycleView;
+    protected PinnedSectionRecyclerView mHotelRecyclerView;
     protected HotelListAdapter mHotelAdapter;
     protected SaleTime mSaleTime;
 
@@ -88,15 +88,15 @@ public class HotelListFragment extends BaseFragment implements Constants
     {
         View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 
-        mHotelRecycleView = (PinnedSectionRecycleView) view.findViewById(R.id.recycleView);
-        mHotelRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mHotelRecycleView.setTag("HotelListFragment");
+        mHotelRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
+        mHotelRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mHotelRecyclerView.setTag("HotelListFragment");
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         mHotelAdapter = new HotelListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), getOnItemClickListener(), mOnEventBannerItemClickListener);
-        mHotelRecycleView.setAdapter(mHotelAdapter);
-        mHotelRecycleView.setOnScrollListener(mOnScrollListener);
+        mHotelRecyclerView.setAdapter(mHotelAdapter);
+        mHotelRecyclerView.setOnScrollListener(mOnScrollListener);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
@@ -119,7 +119,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         setVisibility(mViewType, true);
 
-        mHotelRecycleView.setShadowVisible(false);
+        mHotelRecyclerView.setShadowVisible(false);
 
         return view;
     }
@@ -271,6 +271,11 @@ public class HotelListFragment extends BaseFragment implements Constants
     public void setSaleTime(SaleTime saleTime)
     {
         mSaleTime = saleTime;
+    }
+
+    public int getNights()
+    {
+        return 1;
     }
 
     public void setOnCommunicateListener(HotelMainFragment.OnCommunicateListener listener)
@@ -630,7 +635,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             if (mScrollListTop == true)
             {
                 mScrollListTop = false;
-                mHotelRecycleView.scrollToPosition(0);
+                mHotelRecyclerView.scrollToPosition(0);
             }
         }
     }
@@ -697,7 +702,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 return;
             }
 
-            int position = mHotelRecycleView.getChildAdapterPosition(view);
+            int position = mHotelRecyclerView.getChildAdapterPosition(view);
 
             if (position < 0)
             {
@@ -855,7 +860,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     String message = response.getString("msg");
 
-                    onInternalError(message);
+                    onErrorMessage(message);
                 }
             } catch (Exception e)
             {

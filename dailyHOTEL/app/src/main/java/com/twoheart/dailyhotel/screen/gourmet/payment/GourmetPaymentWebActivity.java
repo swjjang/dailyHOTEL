@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -861,10 +861,11 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         }
     }
 
-    class WebViewPostAsyncTask extends AsyncTask<String, Void, Response>
+    class WebViewPostAsyncTask extends AsyncTask<String, Void, String>
     {
         private WebView mWebView;
         private FormBody.Builder mBuilder;
+        private String mUrl;
 
         public WebViewPostAsyncTask(WebView webView, FormBody.Builder builder)
         {
@@ -873,21 +874,30 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         }
 
         @Override
-        protected Response doInBackground(String... params)
+        protected String doInBackground(String... params)
         {
-            String url = params[0];
+            mUrl = params[0];
 
             try
             {
                 OkHttpClient okHttpClient = new OkHttpClient();
                 RequestBody body = mBuilder.build();
                 Request request = new Request.Builder()//
-                    .url(url)//
-                    .post(body).addHeader("Os-Type", "android")//
+                    .url(mUrl)//
+                    .addHeader("Os-Type", "android")//
                     .addHeader("App-Version", DailyHotel.VERSION)//
-                    .addHeader("Authorization", DailyHotel.AUTHORIZATION).build();
+                    .addHeader("Authorization", DailyHotel.AUTHORIZATION)//
+                    .post(mBuilder.build()).build();
 
-                return okHttpClient.newCall(request).execute();
+                Response response = okHttpClient.newCall(request).execute();
+
+                // 세션이 만료된 경우
+                if (response.code() == 401)
+                {
+                    return "401";
+                }
+
+                return response.body().string();
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -897,18 +907,23 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         }
 
         @Override
-        protected void onPostExecute(Response response)
+        protected void onPostExecute(String data)
         {
-            if (response == null)
+            if (Util.isTextEmpty(data) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                finish();
+                return;
+            } else if ("401".equalsIgnoreCase(data) == true)
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
                 finish();
                 return;
             }
 
             try
             {
-                mWebView.loadDataWithBaseURL(response.request().url().toString(), response.body().string(), "text/html", "utf-8", null);
+                mWebView.loadDataWithBaseURL(mUrl, data, "text/html", "utf-8", null);
             } catch (Exception e)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);

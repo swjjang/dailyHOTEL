@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -142,10 +141,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private void initToolbar(String title)
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(title);
-        dailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_call, -1);
+        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override
@@ -684,7 +683,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         if (gourmetPaymentInformation == null || checkInSaleTime == null)
         {
-            onInternalError();
+            onErrorMessage();
             return;
         }
 
@@ -812,7 +811,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     {
                         ExLog.d(e.toString());
 
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             });
@@ -1095,7 +1094,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     , mGourmetPaymentInformationJsonResponseListener, GourmetPaymentActivity.this);
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1207,12 +1206,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         return;
                     } else
                     {
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1263,7 +1262,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     mFinalCheckPayJsonResponseListener, GourmetPaymentActivity.this);
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1381,12 +1380,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         return;
                     } else
                     {
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1424,12 +1423,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         return;
                     } else
                     {
-                        onInternalError();
+                        onErrorMessage();
                     }
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };
@@ -1443,7 +1442,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             {
                 if (response == null)
                 {
-                    onInternalError();
+                    onErrorMessage();
                     return;
                 }
 
@@ -1492,7 +1491,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 }
             } catch (Exception e)
             {
-                onInternalError();
+                onErrorMessage();
             }
         }
     };

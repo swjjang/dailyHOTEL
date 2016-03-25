@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -44,7 +45,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyOkHttpImagePipelineConfigFactory;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
@@ -242,7 +244,6 @@ public class Util implements Constants
             return;
         }
 
-        // 세션이 만료되어 재시작 요청.
         activity.showSimpleDialog(activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
         {
             @Override
@@ -251,6 +252,17 @@ public class Util implements Constants
                 System.exit(0);
             }
         }, null, false);
+    }
+
+    public static void finishOutOfMemory(Context context)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        DailyToast.showToast(context, R.string.dialog_msg_outofmemory, Toast.LENGTH_LONG);
+        System.exit(0);
     }
 
     public static String getDeviceUUID(final Context context)
@@ -374,11 +386,11 @@ public class Util implements Constants
         return version;
     }
 
-    public static boolean isGooglePlayServicesAvailable(Activity activity)
+    public static boolean isGooglePlayServicesAvailable(Context context)
     {
         try
         {
-            return (GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity) == ConnectionResult.SUCCESS);
+            return (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS);
         } catch (Exception e)
         {
             return false;
@@ -472,9 +484,9 @@ public class Util implements Constants
         void onResult(String registrationId);
     }
 
-    public static void requestGoogleCloudMessaging(final BaseActivity baseActivity, final OnGoogleCloudMessagingListener listener)
+    public static void requestGoogleCloudMessaging(final Context context, final OnGoogleCloudMessagingListener listener)
     {
-        if (Util.isGooglePlayServicesAvailable(baseActivity) == false)
+        if (Util.isGooglePlayServicesAvailable(context) == false)
         {
             if (listener != null)
             {
@@ -492,7 +504,7 @@ public class Util implements Constants
 
                 try
                 {
-                    GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(baseActivity);
+                    GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(context);
 
                     registrationId = instance.register(GCM_PROJECT_NUMBER);
                 } catch (Exception e)

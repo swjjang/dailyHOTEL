@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.SectionIndexer;
 
-public class PinnedSectionRecycleView extends RecyclerView
+public class PinnedSectionRecyclerView extends RecyclerView
 {
     //-- inner classes
 
@@ -127,13 +127,13 @@ public class PinnedSectionRecycleView extends RecyclerView
     };
     private int mShadowHeight;
 
-    public PinnedSectionRecycleView(Context context, AttributeSet attrs)
+    public PinnedSectionRecyclerView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         initView();
     }
 
-    public PinnedSectionRecycleView(Context context, AttributeSet attrs, int defStyle)
+    public PinnedSectionRecyclerView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
         initView();

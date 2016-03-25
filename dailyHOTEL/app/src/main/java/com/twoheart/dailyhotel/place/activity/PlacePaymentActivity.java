@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
@@ -235,6 +235,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
                     case CODE_RESULT_PAYMENT_BILLING_FAIL:
                         msg = getString(R.string.message_billing_fail);
                         break;
+
+                    case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+                        restartExpiredSession();
+                        return;
 
                     case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
                         msg = getString(R.string.act_toast_payment_fail);

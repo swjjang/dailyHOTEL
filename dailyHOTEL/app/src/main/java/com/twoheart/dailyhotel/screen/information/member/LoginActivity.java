@@ -21,14 +21,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -53,7 +50,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.ForgotPasswordActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -77,11 +74,10 @@ import java.util.Locale;
 import java.util.Map;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener, CompoundButton.OnCheckedChangeListener
+public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
 {
     public CallbackManager mCallbackManager;
     private EditText mEmailEditText, mPasswordEditText;
-    private CheckBox mAutoSigninView;
     private TextView mLoginView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
 
@@ -116,7 +112,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
     }
@@ -137,7 +133,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         mEmailEditText = (EditText) findViewById(R.id.emailEditText);
         mPasswordEditText = (EditText) findViewById(R.id.passowrdEditText);
-        mAutoSigninView = (CheckBox) findViewById(R.id.autoSigninView);
 
         mEmailEditText.requestFocus();
 
@@ -157,9 +152,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 return false;
             }
         });
-
-        mAutoSigninView.setChecked(true);
-        mAutoSigninView.setOnCheckedChangeListener(this);
     }
 
     private void initButtonsLayout()
@@ -411,7 +403,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         params.put("pw", passwordEncrypt);
         params.put("social_id", "0");
         params.put("user_type", "normal");
-        params.put("is_auto", mAutoSigninView.isChecked() ? "true" : "false");
+        params.put("is_auto", "true");
 
         if (mStoreParams == null)
         {
@@ -429,12 +421,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     public void storeLoginInfo()
     {
-        // 자동 로그인 체크시
-        if (mAutoSigninView.isChecked() == false)
-        {
-            return;
-        }
-
         String id = mStoreParams.get("email");
         String pwd = mStoreParams.get("pw");
         String accessToken = mStoreParams.get("social_id");
@@ -575,13 +561,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 }
             }
         });
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-    {
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , Action.LOGIN_CLICKED, isChecked ? Label.AUTO_LOGIN_ON : Label.AUTO_LOGIN_OFF, null);
     }
 
     private class SessionCallback implements ISessionCallback
@@ -733,8 +712,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         {
                             params.put("is_auto", mStoreParams.get("is_auto"));
                         }
-
-                        mAutoSigninView.setChecked(true);
 
                         mStoreParams.put("new_user", "1");
 

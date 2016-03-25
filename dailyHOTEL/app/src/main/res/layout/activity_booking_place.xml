@@ -4,18 +4,7 @@
                 android:layout_height="match_parent"
                 xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="#ffffff"
-        app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-        <include layout="@layout/toolbar_default_menu"/>
-
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/toolbar_default_menu"/>
 
     <ScrollView
         android:id="@+id/scrollLayout"
@@ -31,6 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <!-- 상품 정보 넣기 -->
@@ -42,6 +33,11 @@
             <!-- 예약자 정보 -->
             <include
                 layout="@layout/layout_booking_gourmet_user_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <include
+                layout="@layout/layout_booking_memo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

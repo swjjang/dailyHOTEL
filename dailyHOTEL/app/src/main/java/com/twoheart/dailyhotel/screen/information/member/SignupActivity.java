@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.view.View;
@@ -34,7 +33,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -198,7 +197,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
     private void initToolbar(String title)
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(title);
     }
@@ -217,8 +216,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(SignupActivity.this);
-        InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+        InputFilter[] allowAlphanumericHangul = new InputFilter[2];
         allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+        allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
         mNameEditText.setFilters(allowAlphanumericHangul);
 
@@ -937,7 +937,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             } catch (Exception e)
             {
                 unLockUI();
-                onInternalError();
+                onErrorMessage();
             }
         }
     };

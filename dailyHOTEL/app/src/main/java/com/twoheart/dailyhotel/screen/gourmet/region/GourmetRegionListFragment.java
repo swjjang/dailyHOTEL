@@ -1,0 +1,22 @@
+package com.twoheart.dailyhotel.screen.gourmet.region;
+
+import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
+import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+public class GourmetRegionListFragment extends PlaceRegionListFragment
+{
+    @Override
+    protected void recordAnalyticsScreen(PlaceRegionListActivity.Region region)
+    {
+        switch (region)
+        {
+            case DOMESTIC:
+                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
+                break;
+
+            case GLOBAL:
+                break;
+        }
+    }
+}

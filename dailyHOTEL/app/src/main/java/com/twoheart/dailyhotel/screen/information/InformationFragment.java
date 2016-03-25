@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,8 +16,8 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.eventlist.EventListActivity;
 import com.twoheart.dailyhotel.screen.information.bonus.BonusActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
@@ -108,7 +107,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
     private void initToolbar(BaseActivity baseActivity, View view)
     {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), false, false);
     }

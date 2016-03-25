@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * VolleyHttpClient
- * <p/>
+ * <p>
  * 네트워크 이미지 처리 및 네트워크 처리 작업을 담당하는 외부 라이브러리 Vol
  * ley를 네트워크 처리 작업을 목적으로 사용하기 위해 설정하는 유틸 클래스이다.
  *
@@ -18,8 +18,10 @@ import com.android.volley.Response;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -97,6 +99,14 @@ public class DailyNetworkAPI implements IDailyNetwork
                 return false;
             }
         });
+    }
+
+
+    public void testUrl(String url, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(Request.Method.GET, new StringBuilder(url).toString(), null, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
     }
 
     @Override
@@ -330,6 +340,30 @@ public class DailyNetworkAPI implements IDailyNetwork
         }
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/list" : "MTQkNDUkODQkMzUkMjIk$NDA3MDMzRUNFQkYQ5NTA3MUjg5MDEzNjU1QkVQ1NTlGNTZEVMDgyREY2NkQ4Njc4Njk4NThBMTQ5RkUzRDFDQTJA4MQ==$";
+
+        String params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", 5, 1, saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestHotelSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "search" : "";
+
+        String params = String.format("?date=%s&term=%s", date, text);
+
+        DailyHotelJsonArrayRequest dailyHotelJsonRequest = new DailyHotelJsonArrayRequest(tag, Request.Method.GET, new StringBuilder("http://52.196.30.125/").append(URL).append(params).toString(), null, listener, errorListener);
 
         mQueue.add(dailyHotelJsonRequest);
     }

@@ -1,16 +1,18 @@
-package com.twoheart.dailyhotel.screen.regionlist;
+package com.twoheart.dailyhotel.place.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
+
 import java.util.ArrayList;
 
-public class RegionFragmentPagerAdapter extends FragmentPagerAdapter
+public class PlaceRegionFragmentPagerAdapter extends FragmentPagerAdapter
 {
-    private ArrayList<RegionListFragment> mFragmentList;
+    private ArrayList<PlaceRegionListFragment> mFragmentList;
 
-    public RegionFragmentPagerAdapter(FragmentManager fragmentManager, ArrayList<RegionListFragment> arrayList)
+    public PlaceRegionFragmentPagerAdapter(FragmentManager fragmentManager, ArrayList<PlaceRegionListFragment> arrayList)
     {
         super(fragmentManager);
 
@@ -24,7 +26,7 @@ public class RegionFragmentPagerAdapter extends FragmentPagerAdapter
         return mFragmentList.get(position);
     }
 
-    public ArrayList<RegionListFragment> getFragmentList()
+    public ArrayList<PlaceRegionListFragment> getFragmentList()
     {
         return mFragmentList;
     }

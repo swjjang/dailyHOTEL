@@ -32,18 +32,12 @@ public class PlaceRenderer
     {
         Bitmap icon = null;
 
-        try
+        if (isSelected == false)
         {
-            if (isSelected == false)
-            {
-                icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
-            } else
-            {
-                icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
-            }
-        } catch (OutOfMemoryError e)
+            icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
+        } else
         {
-            ExLog.d(e.toString());
+            icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
         }
 
         if (icon == null)

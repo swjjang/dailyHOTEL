@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common;
+package com.twoheart.dailyhotel.place.base;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -112,13 +112,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     @Override
     public void setContentView(int layoutResID)
     {
-        try
-        {
-            super.setContentView(layoutResID);
-        } catch (OutOfMemoryError errror)
-        {
-            Util.finishOutOfMemory(BaseActivity.this);
-        }
+        super.setContentView(layoutResID);
     }
 
     public String getNetworkTag()
@@ -133,15 +127,18 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             return;
         }
 
-        // 세션이 만료되어 재시작 요청.
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Util.restartApp(BaseActivity.this);
-            }
-        }, null, false);
+        //        // 세션이 만료되어 재시작 요청.
+        //        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                Util.restartApp(BaseActivity.this);
+        //            }
+        //        }, null, false);
+
+        // 토스트로 수정
+        DailyToast.showToast(this, R.string.dialog_msg_session_expired, Toast.LENGTH_SHORT);
     }
 
     // 메뉴 버튼을 막아버림.
@@ -347,7 +344,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         unLockUI();
 
-        if(error.networkResponse != null && error.networkResponse.statusCode == 401)
+        if (error.networkResponse != null && error.networkResponse.statusCode == 401)
         {
             DailyPreference.getInstance(this).clear();
 
@@ -376,11 +373,11 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         onError();
     }
 
-    public void onError(Exception error)
+    public void onError(Exception e)
     {
         releaseUiComponent();
 
-        ExLog.e(error.toString());
+        ExLog.e(e.toString());
 
         onError();
     }
@@ -406,21 +403,12 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     /**
      * 기본적으로 내부오류가 발생하였을 경우 사용
      */
-    public void onInternalError()
+    public void onErrorMessage()
     {
-        unLockUI();
-
-        showSimpleDialog(null, getString(R.string.dialog_msg_internal_error), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                finish();
-            }
-        }, null, false);
+        onErrorMessage(getString(R.string.dialog_msg_internal_error));
     }
 
-    public void onInternalError(String message)
+    public void onErrorMessage(String message)
     {
         unLockUI();
 
@@ -567,7 +555,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
 
             confirmTextView.setText(positive);
-            confirmTextView.setOnClickListener(new View.OnClickListener()
+            oneButtonLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -715,7 +703,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
             TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
 
             confirmTextView.setText(positive);
-            confirmTextView.setOnClickListener(new View.OnClickListener()
+            oneButtonLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)

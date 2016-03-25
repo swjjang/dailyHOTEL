@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
 
 import java.text.DecimalFormat;
 
@@ -32,18 +31,12 @@ public class HotelRenderer
     {
         Bitmap icon = null;
 
-        try
+        if (isSelected == false)
         {
-            if (isSelected == false)
-            {
-                icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
-            } else
-            {
-                icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
-            }
-        } catch (OutOfMemoryError e)
+            icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
+        } else
         {
-            ExLog.d(e.toString());
+            icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
         }
 
         if (icon == null)

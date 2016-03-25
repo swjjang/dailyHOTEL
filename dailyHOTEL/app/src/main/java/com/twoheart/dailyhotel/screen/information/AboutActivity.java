@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
@@ -23,7 +23,7 @@ public class AboutActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_about_activity));
     }

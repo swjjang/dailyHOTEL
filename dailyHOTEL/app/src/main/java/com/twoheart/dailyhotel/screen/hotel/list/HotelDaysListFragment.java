@@ -7,7 +7,8 @@ import android.view.View;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Util;
 
 public class HotelDaysListFragment extends HotelListFragment
 {
@@ -23,6 +24,12 @@ public class HotelDaysListFragment extends HotelListFragment
     public SaleTime getSelectedCheckInSaleTime()
     {
         return mSelectedCheckInSaleTime;
+    }
+
+    @Override
+    public int getNights()
+    {
+        return mSelectedCheckInSaleTime.getOffsetDailyDay() - mSelectedCheckOutSaleTime.getOffsetDailyDay();
     }
 
     @Override
@@ -46,6 +53,12 @@ public class HotelDaysListFragment extends HotelListFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if (mHotelRecyclerView == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_CALENDAR:
@@ -58,9 +71,9 @@ public class HotelDaysListFragment extends HotelListFragment
                     mOnCommunicateListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
                 } else
                 {
-                    if (mHotelRecycleView.getVisibility() == View.VISIBLE && mHotelRecycleView.getAdapter() != null)
+                    if (mHotelRecyclerView.getVisibility() == View.VISIBLE && mHotelRecyclerView.getAdapter() != null)
                     {
-                        if (mHotelRecycleView.getAdapter().getItemCount() == 0)
+                        if (mHotelRecyclerView.getAdapter().getItemCount() == 0)
                         {
                             fetchList();
                         }
@@ -91,7 +104,7 @@ public class HotelDaysListFragment extends HotelListFragment
                 return;
             }
 
-            int position = mHotelRecycleView.getChildAdapterPosition(view);
+            int position = mHotelRecyclerView.getChildAdapterPosition(view);
 
             if (position < 0)
             {

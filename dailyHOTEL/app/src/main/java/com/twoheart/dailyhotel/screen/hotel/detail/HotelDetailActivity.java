@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -30,7 +29,7 @@ import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
@@ -205,10 +204,10 @@ public class HotelDetailActivity extends BaseActivity
         mToolbarUnderline = findViewById(R.id.toolbarUnderline);
         mToolbarUnderline.setVisibility(View.INVISIBLE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title, true);
-        mDailyToolbarLayout.setToolbarRegionMenu(R.drawable.navibar_ic_share, -1);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelected);
     }
 

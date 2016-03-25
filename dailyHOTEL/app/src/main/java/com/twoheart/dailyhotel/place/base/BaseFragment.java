@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common;
+package com.twoheart.dailyhotel.place.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -82,7 +82,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
         baseActivity.onErrorResponse(error);
     }
 
-    protected void onInternalError(String message)
+    protected void onErrorMessage(String message)
     {
         unLockUI();
 
@@ -95,10 +95,10 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
         if (Util.isTextEmpty(message) == true)
         {
-            baseActivity.onInternalError();
+            baseActivity.onErrorMessage();
         } else
         {
-            baseActivity.onInternalError(message);
+            baseActivity.onErrorMessage(message);
         }
     }
 

@@ -25,15 +25,15 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionRecycleView;
+import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +50,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 {
     private static final int APPBARLAYOUT_DRAG_DISTANCE = 200;
 
-    protected PinnedSectionRecycleView mGourmetRecycleView;
+    protected PinnedSectionRecyclerView mGourmetRecyclerView;
     protected GourmetListAdapter mGourmetAdapter;
     protected SaleTime mSaleTime;
 
@@ -74,15 +74,15 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         View view = inflater.inflate(R.layout.fragment_gourmet_list, container, false);
 
-        mGourmetRecycleView = (PinnedSectionRecycleView) view.findViewById(R.id.recycleView);
-        mGourmetRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mGourmetRecycleView.setTag("GourmetListFragment");
+        mGourmetRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
+        mGourmetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mGourmetRecyclerView.setTag("GourmetListFragment");
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         mGourmetAdapter = new GourmetListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
-        mGourmetRecycleView.setAdapter(mGourmetAdapter);
-        mGourmetRecycleView.setOnScrollListener(mOnScrollListener);
+        mGourmetRecyclerView.setAdapter(mGourmetAdapter);
+        mGourmetRecyclerView.setOnScrollListener(mOnScrollListener);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
@@ -105,7 +105,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         setVisibility(mViewType, true);
 
-        mGourmetRecycleView.setShadowVisible(false);
+        mGourmetRecyclerView.setShadowVisible(false);
 
         return view;
     }
@@ -593,7 +593,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             if (mScrollListTop == true)
             {
                 mScrollListTop = false;
-                mGourmetRecycleView.scrollToPosition(0);
+                mGourmetRecyclerView.scrollToPosition(0);
             }
         }
     }
@@ -687,7 +687,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 return;
             }
 
-            int position = mGourmetRecycleView.getChildAdapterPosition(view);
+            int position = mGourmetRecyclerView.getChildAdapterPosition(view);
 
             if (position < 0)
             {
@@ -844,7 +844,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     String message = response.getString("msg");
 
-                    onInternalError(message);
+                    onErrorMessage(message);
                 }
             } catch (Exception e)
             {

@@ -13,7 +13,6 @@ package com.twoheart.dailyhotel.screen.booking.list;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,11 +26,11 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetBookingDetailTabActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.HotelBookingDetailTabActivity;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.BaseFragment;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -71,25 +70,17 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        View view = null;
+        View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
 
-        try
-        {
-            view = inflater.inflate(R.layout.fragment_booking_list, container, false);
-
-            initToolbar(baseActivity, view);
-            initLayout(view);
-        } catch (OutOfMemoryError e)
-        {
-            Util.finishOutOfMemory(baseActivity);
-        }
+        initToolbar(baseActivity, view);
+        initLayout(view);
 
         return view;
     }
 
     private void initToolbar(BaseActivity baseActivity, View view)
     {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_booking_list_frag), false, false);
     }

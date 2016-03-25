@@ -1,11 +1,12 @@
 package com.twoheart.dailyhotel.screen.information.terms;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class LocationTermsActivity extends WebViewActivity
@@ -22,7 +23,7 @@ public class LocationTermsActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_locationterms_activity));
     }
@@ -30,7 +31,7 @@ public class LocationTermsActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        //        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFPRIVACY, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFLOCATION, null);
 
         super.onStart();
     }

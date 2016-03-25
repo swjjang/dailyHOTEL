@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+<RelativeLayout
+    android:id="@+id/toolbar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_height"
+    android:background="@color/white">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/backImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/navibar_ic_back"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"/>
 
-        <ImageView
-            android:id="@+id/backImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/navibar_ic_back"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:layout_centerVertical="true"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@color/actionbar_title"
-            android:textSize="18dp"
-            android:layout_toRightOf="@+id/backImageView"/>
-    </RelativeLayout>
-</merge>
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_centerVertical="true"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/actionbar_title"
+        android:textSize="18dp"
+        android:layout_toRightOf="@+id/backImageView"/>
+</RelativeLayout>

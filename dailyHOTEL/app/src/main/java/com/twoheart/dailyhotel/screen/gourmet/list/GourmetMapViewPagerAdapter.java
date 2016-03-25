@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +88,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             persions.setVisibility(View.GONE);
         }
 
-        Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
+        String currency = mContext.getResources().getString(R.string.currency);
 
         int price = gourmet.price;
 

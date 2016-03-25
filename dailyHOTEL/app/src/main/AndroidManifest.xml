@@ -233,7 +233,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.regionlist.RegionListActivity"
+            android:name=".screen.hotel.region.HotelRegionListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.region.GourmetRegionListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -258,7 +262,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.hotel.list.HotelCurationActivity"
+            android:name=".screen.hotel.filter.HotelCurationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
@@ -267,6 +271,22 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
+        <activity
+            android:name=".screen.hotel.search.HotelSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.search.GourmetSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.hotel.search.HotelSearchResultActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.search.GourmetSearchResultActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".screen.common.ExitActivity"
             android:autoRemoveFromRecents="true"

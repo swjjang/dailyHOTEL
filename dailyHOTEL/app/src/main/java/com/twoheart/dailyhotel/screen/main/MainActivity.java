@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.screen.common.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -68,25 +68,6 @@ public class MainActivity extends BaseActivity implements Constants
         }
     };
 
-    public interface OnResponsePresenterListener
-    {
-        void updateNewEvent();
-
-        void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime);
-
-        void onSatisfactionHotel(String hotelName, int reservationIndex, long checkInTime, long checkOutTime);
-
-        void onCheckServerResponse(String title, String message);
-
-        void onAppVersionResponse(int maxVersion, int minVersion);
-
-        void onConfigurationResponse();
-
-        void onError();
-
-        void onErrorResponse(VolleyError volleyError);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -95,8 +76,27 @@ public class MainActivity extends BaseActivity implements Constants
         // URL 만들때 사용
         //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
+
+        //        {
+        //            DailyNetworkAPI.getInstance().testUrl("https://225835.measurementapi.com/serve?action=click&publisher_id=225835&site_id=118823&destination_id=373091&invoke_id=274355&agency_id=1214&my_campaign=서울&my_publisher=naver&my_site=cpc&my_ad=MPL&my_keyword=장용산펜션'", new DailyHotelJsonResponseListener()
+        //            {
+        //                @Override
+        //                public void onResponse(String url, JSONObject response)
+        //                {
+        //                    ExLog.d("url");
+        //                }
+        //            }, new Response.ErrorListener()
+        //            {
+        //                @Override
+        //                public void onErrorResponse(VolleyError volleyError)
+        //                {
+        //                    ExLog.d("url");
+        //                }
+        //            });
+        //        }
+
         mIsInitialization = true;
-        mMainPresenter = new MainPresenter(this, mOnResponsePresenterListener);
+        mMainPresenter = new MainPresenter(this, mNetworkTag, mOnResponsePresenterListener);
 
         //        DailyPreference.getInstance(this).removeDeepLink();
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
@@ -188,6 +188,7 @@ public class MainActivity extends BaseActivity implements Constants
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_SEARCH:
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
@@ -442,7 +443,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
     };
 
-    private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
+    private MainPresenter.OnPresenterListener mOnResponsePresenterListener = new MainPresenter.OnPresenterListener()
     {
         @Override
         public void updateNewEvent()
@@ -471,19 +472,27 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onError()
-        {
-            mDelayTimeHandler.removeMessages(0);
-
-            MainActivity.this.onError();
-        }
-
-        @Override
         public void onErrorResponse(VolleyError volleyError)
         {
             mDelayTimeHandler.removeMessages(0);
 
             MainActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            mDelayTimeHandler.removeMessages(0);
+
+            MainActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorMessage(String message)
+        {
+            mDelayTimeHandler.removeMessages(0);
+
+            MainActivity.this.onErrorMessage(message);
         }
 
         @Override

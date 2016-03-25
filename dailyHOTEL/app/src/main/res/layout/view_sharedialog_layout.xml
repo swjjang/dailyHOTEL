@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
-            android:src="@drawable/popup_ic_share"/>
+            android:src="@drawable/popup_ic_share"
+            android:layout_marginLeft="10dp"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:layout_width="wrap_content"

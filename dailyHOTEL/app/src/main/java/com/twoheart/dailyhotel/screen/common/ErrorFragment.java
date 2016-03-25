@@ -13,7 +13,6 @@
 package com.twoheart.dailyhotel.screen.common;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +22,8 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -69,7 +70,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 
     private void initToolbar(BaseActivity baseActivity, View view, String title)
     {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_error_frag));
     }
