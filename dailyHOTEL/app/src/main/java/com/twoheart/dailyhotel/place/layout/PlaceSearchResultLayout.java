@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.ArrayList;
 
@@ -24,10 +25,11 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     protected TextView mResultTextView;
     private View mEmptyLayout;
     private View mResultListLayout;
+    protected boolean mIsLoading;
 
     protected abstract PlaceListAdapter getListAdapter();
 
-    protected abstract void setSearchResultList(ArrayList<PlaceViewItem> placeViewItemList);
+    protected abstract void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList);
 
     public PlaceSearchResultLayout(Context context, OnBaseEventListener listener)
     {
@@ -41,6 +43,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         void onItemClick(PlaceViewItem placeViewItem);
 
         void onShowCallDialog();
+
+        void onLoadMoreList();
+
+        void onShowProgressBar();
     }
 
     @Override
@@ -119,11 +125,42 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycleView);
         mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(getListAdapter());
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (dy > 0)
+                {
+                    if (mIsLoading == false)
+                    {
+                        int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+
+                        // 2/3위치에 오면 로딩한다.
+                        if (firstVisibleItemPosition > linearLayoutManager.getItemCount() * 2 / 3)
+                        {
+                            mIsLoading = true;
+
+                            ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onLoadMoreList();
+                        }
+                    } else
+                    {
+                        int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+
+                        if (lastVisibleItemPosition == linearLayoutManager.getItemCount())
+                        {
+                            ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onShowProgressBar();
+                        }
+                    }
+                }
+            }
+        });
     }
 
-    protected void updateResultCount(int count)
+    public void updateResultCount(int count)
     {
         if (mResultTextView == null)
         {
@@ -133,13 +170,13 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
     }
 
-    protected void showEmptyLayout()
+    public void showEmptyLayout()
     {
         mEmptyLayout.setVisibility(View.VISIBLE);
         mResultListLayout.setVisibility(View.GONE);
     }
 
-    protected void showListLayout()
+    public void showListLayout()
     {
         mEmptyLayout.setVisibility(View.GONE);
         mResultListLayout.setVisibility(View.VISIBLE);

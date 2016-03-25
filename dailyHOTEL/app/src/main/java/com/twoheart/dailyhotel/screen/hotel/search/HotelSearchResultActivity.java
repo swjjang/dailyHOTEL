@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.hotel.search;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -19,11 +20,17 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 {
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
+    private static final String INTENT_EXTRA_DATA_LOCATION = "location";
+
+    private static final int COUNT_PER_TIMES = 15;
 
     private SaleTime mSaleTime;
     private int mNights;
     private Keyword mKeyword;
+    private Location mLocation;
     private String mCustomerSatisfactionTimeMessage;
+
+    private int mOffset;
 
     private HotelSearchResultPresenter mHotelSearchResultPresenter;
 
@@ -42,6 +49,16 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         return newInstance(context, saleTime, nights, new Keyword(0, text));
     }
 
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location)
+    {
+        Intent intent = new Intent(context, HotelSearchResultActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
+
+        return intent;
+    }
+
     @Override
     protected PlaceSearchResultLayout getLayout()
     {
@@ -54,6 +71,9 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
         mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
         mKeyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
+        mLocation = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+
+        mOffset = 0;
     }
 
     @Override
@@ -74,9 +94,18 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void requestSearchResultList()
     {
-        lockUI();
+        if (mOffset == 0)
+        {
+            lockUI();
+        }
 
-        mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mKeyword.name);
+        if (mKeyword != null)
+        {
+            mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
+        } else if (mLocation != null)
+        {
+
+        }
     }
 
     @Override
@@ -128,6 +157,18 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         {
             showCallDialog(mCustomerSatisfactionTimeMessage);
         }
+
+        @Override
+        public void onLoadMoreList()
+        {
+            requestSearchResultList();
+        }
+
+        @Override
+        public void onShowProgressBar()
+        {
+            lockUI();
+        }
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,16 +178,23 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private HotelSearchResultPresenter.OnPresenterListener mOnPresenterListener = new HotelSearchResultPresenter.OnPresenterListener()
     {
         @Override
-        public void onResponseSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
+        public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
-            if (placeViewItemList == null || placeViewItemList.size() == 0)
+            if (totalCount == 0)
             {
-                ((HotelSearchResultLayout) mPlaceSearchResultLayout).setSearchResultList(null);
+                mPlaceSearchResultLayout.showEmptyLayout();
             } else
             {
-                ((HotelSearchResultLayout) mPlaceSearchResultLayout).setSearchResultList(placeViewItemList);
+                if (placeViewItemList == null)
+                {
+                    mOffset += placeViewItemList.size();
+                }
+
+                mPlaceSearchResultLayout.showListLayout();
+                ((HotelSearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
             }
 
+            mPlaceSearchResultLayout.updateResultCount(totalCount);
             unLockUI();
         }
 

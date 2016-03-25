@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
+import android.location.Location;
+
 import com.android.volley.Response;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -179,7 +181,9 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, int offset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int offset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * @param tag

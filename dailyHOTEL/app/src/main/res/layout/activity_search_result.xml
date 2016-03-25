@@ -56,7 +56,7 @@
             android:gravity="center_vertical"
             android:paddingRight="15dp"
             android:text="@string/label_searchresult_cancelsearch"
-            android:textColor="@color/search_text"/>
+            android:textColor="@color/dh_theme_color"/>
     </RelativeLayout>
 
     <RelativeLayout

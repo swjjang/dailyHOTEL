@@ -34,6 +34,17 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
         setSortType(Constants.SortType.DEFAULT);
     }
 
+    @Override
+    public void addAll(Collection<? extends PlaceViewItem> collection)
+    {
+        if (collection == null || collection.size() == 0)
+        {
+            return;
+        }
+
+        mPlaceViewItemList.addAll(collection);
+    }
+
     public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
         addAll(collection);

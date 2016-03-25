@@ -12,6 +12,8 @@
  */
 package com.twoheart.dailyhotel.network;
 
+import android.location.Location;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -345,13 +347,27 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/list" : "MTQkNDUkODQkMzUkMjIk$NDA3MDMzRUNFQkYQ5NTA3MUjg5MDEzNjU1QkVQ1NTlGNTZEVMDgyREY2NkQ4Njc4Njk4NThBMTQ5RkUzRDFDQTJA4MQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "";
+
+        String params = String.format("?dateCheckIn=%s&lengthStay=%d&offset=%d&count=%d&term=%s"//
+            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights, offeset, count, text);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder("http://52.196.30.125/").append(URL).append(params).toString(), null, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        //        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/list" : "";
 
         String params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", 5, 1, saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL).append(params).toString(), null, listener, errorListener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder("http://52.196.30.125/").append(URL).append(params).toString(), null, listener, errorListener);
 
         mQueue.add(dailyHotelJsonRequest);
     }
