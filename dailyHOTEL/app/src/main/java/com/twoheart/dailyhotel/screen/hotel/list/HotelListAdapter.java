@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +16,6 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceBannerViewPagerAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -32,7 +32,6 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
     private View.OnClickListener mOnClickListener;
     private View.OnClickListener mOnEventBannerClickListener;
     private int mLastEventBannerPosition;
-    private BaseActivity mActivity;
 
     private Handler mEventBannerHandler = new Handler()
     {
@@ -48,11 +47,10 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         }
     };
 
-    public HotelListAdapter(BaseActivity activity, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
+    public HotelListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
-        super(activity, arrayList);
+        super(context, arrayList);
 
-        mActivity = activity;
         mOnClickListener = listener;
         mOnEventBannerClickListener = eventBannerListener;
 
@@ -91,34 +89,28 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        try
+        switch (viewType)
         {
-            switch (viewType)
+            case PlaceViewItem.TYPE_SECTION:
             {
-                case PlaceViewItem.TYPE_SECTION:
-                {
-                    View view = mInflater.inflate(R.layout.list_row_hotel_section, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_hotel_section, parent, false);
 
-                    return new SectionViewHolder(view);
-                }
-
-                case PlaceViewItem.TYPE_ENTRY:
-                {
-                    View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
-
-                    return new HoltelViewHolder(view);
-                }
-
-                case PlaceViewItem.TYPE_EVENT_BANNER:
-                {
-                    View view = mInflater.inflate(R.layout.list_row_eventbanner, parent, false);
-
-                    return new EventBannerViewHolder(view);
-                }
+                return new SectionViewHolder(view);
             }
-        } catch (OutOfMemoryError e)
-        {
-            Util.finishOutOfMemory(mActivity);
+
+            case PlaceViewItem.TYPE_ENTRY:
+            {
+                View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
+
+                return new HoltelViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_EVENT_BANNER:
+            {
+                View view = mInflater.inflate(R.layout.list_row_eventbanner, parent, false);
+
+                return new EventBannerViewHolder(view);
+            }
         }
 
         return null;

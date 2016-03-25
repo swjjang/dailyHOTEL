@@ -70,18 +70,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        View view = null;
+        View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
 
-        try
-        {
-            view = inflater.inflate(R.layout.fragment_booking_list, container, false);
-
-            initToolbar(baseActivity, view);
-            initLayout(view);
-        } catch (OutOfMemoryError e)
-        {
-            Util.finishOutOfMemory(baseActivity);
-        }
+        initToolbar(baseActivity, view);
+        initLayout(view);
 
         return view;
     }

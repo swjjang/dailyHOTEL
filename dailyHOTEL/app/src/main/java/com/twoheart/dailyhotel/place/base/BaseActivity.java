@@ -112,13 +112,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     @Override
     public void setContentView(int layoutResID)
     {
-        try
-        {
-            super.setContentView(layoutResID);
-        } catch (OutOfMemoryError errror)
-        {
-            Util.finishOutOfMemory(BaseActivity.this);
-        }
+        super.setContentView(layoutResID);
     }
 
     public String getNetworkTag()
