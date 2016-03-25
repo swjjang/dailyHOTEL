@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -33,10 +32,14 @@ import java.util.List;
 public abstract class PlaceSearchLayout extends BaseLayout implements View.OnClickListener
 {
     private static final int DELAY_AUTO_COMPLETE_MILLIS = 100;
+    private static final int DELAY_HIDE_AUTO_COMPLETE_MILLIS = 500;
 
     private static final int DEFAULT_ICON = 0;
     private static final int HOTEL_ICON = 1;
     private static final int GOURMET_ICON = 2;
+
+    private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
+    private static final int HANDLER_MESSAGE_HIDE_AUTOCOMPLETE = 1;
 
     private View mToolbar;
 
@@ -55,14 +58,14 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         @Override
         public void handleMessage(Message msg)
         {
-            switch(msg.what)
+            switch (msg.what)
             {
-                case 0:
+                case HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE:
                     ((OnEventListener) mOnEventListener).onAutoCompleteKeyword((String) msg.obj);
                     break;
 
-                case 1:
-                    hideSearchView();
+                case HANDLER_MESSAGE_HIDE_AUTOCOMPLETE:
+                    hideAutoCompleteView();
                     break;
             }
 
@@ -148,7 +151,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             @Override
             public void afterTextChanged(Editable s)
             {
-                mHandler.removeMessages(0);
+                mHandler.removeMessages(HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE);
+                mHandler.removeMessages(HANDLER_MESSAGE_HIDE_AUTOCOMPLETE);
 
                 int length = s.length();
 
@@ -176,13 +180,13 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                         }
                         return;
                     }
+
+                    deleteView.setVisibility(View.VISIBLE);
+                    searchView.setEnabled(true);
+
+                    Message message = mHandler.obtainMessage(HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE, s.toString());
+                    mHandler.sendMessageDelayed(message, DELAY_AUTO_COMPLETE_MILLIS);
                 }
-
-                deleteView.setVisibility(View.VISIBLE);
-                searchView.setEnabled(true);
-
-                Message message = mHandler.obtainMessage(0, s.toString());
-                mHandler.sendMessageDelayed(message, DELAY_AUTO_COMPLETE_MILLIS);
             }
         });
 
@@ -362,11 +366,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
-        mHandler.removeMessages(1);
+        mHandler.removeMessages(HANDLER_MESSAGE_HIDE_AUTOCOMPLETE);
 
         if (keywordList == null || keywordList.size() == 0)
         {
-            mHandler.sendEmptyMessageDelayed(1, 500);
+            mHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE_AUTOCOMPLETE, DELAY_HIDE_AUTO_COMPLETE_MILLIS);
         } else
         {
             View.OnClickListener onClickListener = new View.OnClickListener()
@@ -471,6 +475,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mSearchingView.setVisibility(View.GONE);
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
         mRecentSearchLayout.setVisibility(View.GONE);
+    }
+
+    private void hideAutoCompleteView()
+    {
+        mAutoCompleteScrollLayout.setVisibility(View.GONE);
     }
 
     private void validateKeyword(String keyword)
