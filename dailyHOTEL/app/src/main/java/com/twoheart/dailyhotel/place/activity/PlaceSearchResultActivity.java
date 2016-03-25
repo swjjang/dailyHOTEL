@@ -89,6 +89,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
+        unLockUI();
+
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:

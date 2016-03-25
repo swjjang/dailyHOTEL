@@ -187,14 +187,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
                 if (data != null)
                 {
                     Keyword keyword = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_KEYWORD);
-
-                    if (keyword != null && keyword.price > 0)
-                    {
-                        mDailyRecentSearches.addString(String.format("1:%s", keyword.name));
-                    } else
-                    {
-                        mDailyRecentSearches.addString(String.format("0:%s", keyword.name));
-                    }
+                    mDailyRecentSearches.addString(keyword);
 
                     writeRecentSearches(mDailyRecentSearches.toString());
                     mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());

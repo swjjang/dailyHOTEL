@@ -91,6 +91,8 @@ public class HotelSearchActivity extends PlaceSearchActivity
         {
             mDailyRecentSearches.clear();
             DailyPreference.getInstance(HotelSearchActivity.this).setHotelRecentSearches("");
+
+            mPlaceSearchLayout.updateRecentSearchesLayout(null);
         }
 
         @Override

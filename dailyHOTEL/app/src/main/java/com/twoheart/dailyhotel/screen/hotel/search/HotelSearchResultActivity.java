@@ -39,7 +39,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String text)
     {
-        return newInstance(context, saleTime, nights, new Keyword(text));
+        return newInstance(context, saleTime, nights, new Keyword(0, text));
     }
 
     @Override
@@ -74,6 +74,8 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void requestSearchResultList()
     {
+        lockUI();
+
         mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mKeyword.name);
     }
 

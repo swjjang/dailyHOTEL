@@ -8,18 +8,28 @@ import org.json.JSONObject;
 
 public class Keyword implements Parcelable
 {
+    public int icon;
     public String name;
     public int price;
 
-    public Keyword(String text)
+    public Keyword(int icon, String name)
     {
-        name = text;
+        this.icon = icon;
+        this.name = name;
     }
 
     public Keyword(JSONObject jsonObject) throws JSONException
     {
         name = jsonObject.getString("display_text");
         price = jsonObject.getInt("sale_price");
+
+        if(price > 0)
+        {
+            icon = 1;
+        } else
+        {
+            icon = 0;
+        }
     }
 
     public Keyword(Parcel in)
@@ -30,12 +40,14 @@ public class Keyword implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        dest.writeInt(icon);
         dest.writeString(name);
         dest.writeInt(price);
     }
 
     private void readFromParcel(Parcel in)
     {
+        icon = in.readInt();
         name = in.readString();
         price = in.readInt();
     }

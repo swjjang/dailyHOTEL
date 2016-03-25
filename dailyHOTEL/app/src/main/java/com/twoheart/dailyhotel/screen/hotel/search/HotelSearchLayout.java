@@ -23,4 +23,17 @@ public class HotelSearchLayout extends PlaceSearchLayout
     {
         return mContext.getString(R.string.label_search_hotel_hint);
     }
+
+    @Override
+    protected int getRecentSearchesIcon(int type)
+    {
+        switch (type)
+        {
+            case HOTEL_ICON:
+                return R.drawable.search_ic_02_hotel;
+
+            default:
+                return R.drawable.search_ic_03_recent;
+        }
+    }
 }

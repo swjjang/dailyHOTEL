@@ -34,9 +34,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private static final int DELAY_AUTO_COMPLETE_MILLIS = 100;
     private static final int DELAY_HIDE_AUTO_COMPLETE_MILLIS = 500;
 
-    private static final int DEFAULT_ICON = 0;
-    private static final int HOTEL_ICON = 1;
-    private static final int GOURMET_ICON = 2;
+    protected static final int DEFAULT_ICON = 0;
+    protected static final int HOTEL_ICON = 1;
+    protected static final int GOURMET_ICON = 2;
 
     private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
     private static final int HANDLER_MESSAGE_HIDE_AUTOCOMPLETE = 1;
@@ -90,6 +90,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     protected abstract String getAroundPlaceString();
 
     protected abstract String getSearchHintText();
+
+    protected abstract int getRecentSearchesIcon(int type);
 
     public PlaceSearchLayout(Context context, OnBaseEventListener listener)
     {
@@ -260,7 +262,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             @Override
             public void onClick(View v)
             {
-                validateKeyword((String) v.getTag());
+                validateKeyword((Keyword) v.getTag());
             }
         };
 
@@ -273,12 +275,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         }
     }
 
-    public void updateRecentSearchesLayout(List<String> keywordList)
+    public void updateRecentSearchesLayout(List<Keyword> keywordList)
     {
         updateRecentSearchesLayout(mRcentContentsLayout, keywordList);
     }
 
-    private void updateRecentSearchesLayout(ViewGroup viewGroup, List<String> keywordList)
+    private void updateRecentSearchesLayout(ViewGroup viewGroup, List<Keyword> keywordList)
     {
         if (viewGroup == null)
         {
@@ -308,7 +310,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             mDeleteAllRecentSearchesView.setEnabled(true);
 
             int size = keywordList.size();
-            String[] values;
+            Keyword recentKeyword;
             TextView textView;
             View view;
 
@@ -328,13 +330,14 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     continue;
                 }
 
-                values = keywordList.get(i).split("\\:");
+                recentKeyword = keywordList.get(i);
 
-                view.setTag(values[1]);
+                view.setTag(recentKeyword);
 
                 textView = (TextView) view.findViewById(R.id.textView);
-                textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(Integer.parseInt(values[0])), 0, 0, 0);
-                textView.setText(values[1]);
+                textView.setTextColor(mContext.getResources().getColor(R.color.search_text));
+                textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(recentKeyword.icon), 0, 0, 0);
+                textView.setText(recentKeyword.name);
             }
         }
     }
@@ -497,21 +500,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private void validateKeyword(Keyword keyword)
     {
         ((OnEventListener) mOnEventListener).onSearchResult(keyword);
-    }
-
-    private int getRecentSearchesIcon(int type)
-    {
-        switch (type)
-        {
-            case HOTEL_ICON:
-                return R.drawable.search_ic_02_hotel;
-
-            case GOURMET_ICON:
-                return R.drawable.search_ic_02_gourmet;
-
-            default:
-                return R.drawable.search_ic_03_recent;
-        }
     }
 
     @Override

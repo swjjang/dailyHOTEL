@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.hotel.search;
 import android.content.Context;
 import android.view.View;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;

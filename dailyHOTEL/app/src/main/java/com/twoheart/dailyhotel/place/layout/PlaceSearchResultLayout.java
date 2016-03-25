@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.place.layout;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -52,8 +53,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
 
         initEmptyLayout(mEmptyLayout);
         initListLayout(mResultListLayout);
-
-        mRecyclerView.setAdapter(getListAdapter());
     }
 
     private void initToolbarLayout(View view)
@@ -119,6 +118,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycleView);
         mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setAdapter(getListAdapter());
     }
 
     protected void updateResultCount(int count)
@@ -134,12 +136,12 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     protected void showEmptyLayout()
     {
         mEmptyLayout.setVisibility(View.VISIBLE);
-        mRecyclerView.setVisibility(View.GONE);
+        mResultListLayout.setVisibility(View.GONE);
     }
 
     protected void showListLayout()
     {
         mEmptyLayout.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        mResultListLayout.setVisibility(View.VISIBLE);
     }
 }

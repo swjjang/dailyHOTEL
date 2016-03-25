@@ -1,13 +1,17 @@
 package com.twoheart.dailyhotel.util;
 
+import com.twoheart.dailyhotel.model.Keyword;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class DailyRecentSearches
 {
     public static final int MAX_KEYWORD = 10;
+    private static final char ICON_DELIMITER = ':';
+    private static final char KEYWORD_DELIMITER = '_';
 
-    private List<String> mKeywordList;
+    private List<Keyword> mKeywordList;
 
     public DailyRecentSearches(String text)
     {
@@ -16,9 +20,9 @@ public class DailyRecentSearches
         paserText(text);
     }
 
-    public void addString(String text)
+    public void addString(Keyword recentKeyword)
     {
-        if (Util.isTextEmpty(text) == true)
+        if (recentKeyword == null || Util.isTextEmpty(recentKeyword.name) == true)
         {
             return;
         }
@@ -30,17 +34,17 @@ public class DailyRecentSearches
             mKeywordList.remove(size - 1);
         }
 
-        boolean result = contains(text);
+        boolean result = contains(recentKeyword);
 
         if (result == true)
         {
-            remove(text);
+            remove(recentKeyword);
         }
 
-        mKeywordList.add(0, text);
+        mKeywordList.add(0, recentKeyword);
     }
 
-    public List<String> getList()
+    public List<Keyword> getList()
     {
         return mKeywordList;
     }
@@ -64,29 +68,29 @@ public class DailyRecentSearches
 
         StringBuilder result = new StringBuilder();
 
-        for (String keyword : mKeywordList)
+        for (Keyword keyword : mKeywordList)
         {
             if (result.length() != 0)
             {
-                result.append('_');
+                result.append(KEYWORD_DELIMITER);
             }
 
-            result.append(keyword);
+            result.append(String.format("%d%c%s", keyword.icon, ICON_DELIMITER, keyword.name));
         }
 
         return result.toString();
     }
 
-    private boolean remove(String text)
+    private boolean remove(Keyword recentKeyword)
     {
-        if (Util.isTextEmpty(text) == true)
+        if (recentKeyword == null || Util.isTextEmpty(recentKeyword.name) == true)
         {
             return false;
         }
 
-        for (String keyword : mKeywordList)
+        for (Keyword keyword : mKeywordList)
         {
-            if (keyword.equalsIgnoreCase(text) == true)
+            if (recentKeyword.icon == keyword.icon && recentKeyword.name.equalsIgnoreCase(keyword.name) == true)
             {
                 return mKeywordList.remove(keyword);
             }
@@ -95,16 +99,16 @@ public class DailyRecentSearches
         return false;
     }
 
-    private boolean contains(String text)
+    private boolean contains(Keyword recentKeyword)
     {
-        if (Util.isTextEmpty(text) == true)
+        if (recentKeyword == null || Util.isTextEmpty(recentKeyword.name) == true)
         {
             return false;
         }
 
-        for (String keyword : mKeywordList)
+        for (Keyword keyword : mKeywordList)
         {
-            if (keyword.equalsIgnoreCase(text) == true)
+            if (recentKeyword.icon == keyword.icon && recentKeyword.name.equalsIgnoreCase(keyword.name) == true)
             {
                 return true;
             }
@@ -120,11 +124,14 @@ public class DailyRecentSearches
             return;
         }
 
-        String[] keywords = text.split("\\_");
+        String[] keywords = text.split(String.format("\\%c", KEYWORD_DELIMITER));
+        String[] values;
 
         for (String keyword : keywords)
         {
-            mKeywordList.add(keyword);
+            values = keyword.split(String.format("\\%c", ICON_DELIMITER));
+
+            mKeywordList.add(new Keyword(Integer.parseInt(values[0]), values[1]));
         }
     }
 }
