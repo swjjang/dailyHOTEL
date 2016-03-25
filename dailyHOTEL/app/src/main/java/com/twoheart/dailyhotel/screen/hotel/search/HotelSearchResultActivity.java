@@ -30,7 +30,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private Location mLocation;
     private String mCustomerSatisfactionTimeMessage;
 
-    private int mOffset;
+    private int mOffset, mTotalCount;
 
     private HotelSearchResultPresenter mHotelSearchResultPresenter;
 
@@ -161,7 +161,10 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onLoadMoreList()
         {
-            requestSearchResultList();
+            if(mOffset < mTotalCount)
+            {
+                requestSearchResultList();
+            }
         }
 
         @Override
@@ -180,12 +183,14 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
+            mTotalCount = totalCount;
+
             if (totalCount == 0)
             {
                 mPlaceSearchResultLayout.showEmptyLayout();
             } else
             {
-                if (placeViewItemList == null)
+                if (placeViewItemList != null)
                 {
                     mOffset += placeViewItemList.size();
                 }
