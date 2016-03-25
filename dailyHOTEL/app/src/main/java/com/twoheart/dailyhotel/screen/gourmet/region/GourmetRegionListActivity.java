@@ -131,14 +131,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
                 setResult(RESULT_CANCELED, intent);
             } else
             {
-                if (province instanceof Area)
-                {
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, province);
-                } else
-                {
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-                }
-
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
                 setResult(RESULT_OK, intent);
 
                 recordEvent(province);

@@ -409,8 +409,6 @@ public class MainActivity extends BaseActivity implements Constants
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
 
-                    String gourmetName = getString(R.string.menu_item_title_fnb);
-
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, AnalyticsManager.Label.GOURMET_SCREEN, null);
                     break;
