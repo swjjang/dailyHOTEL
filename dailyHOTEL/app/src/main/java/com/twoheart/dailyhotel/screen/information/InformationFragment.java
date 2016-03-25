@@ -259,7 +259,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     baseActivity.startActivityForResult(new Intent(baseActivity, LoginActivity.class), CODE_REQUEST_ACTIVITY_LOGIN);
                     baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, "", null);
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
                 } else
                 {
                     startActivity(new Intent(baseActivity, ProfileActivity.class));
@@ -276,7 +276,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , Action.CARD_MANAGEMENT_CLICKED, "", null);
+                    , Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.CARD_MANAGEMENT_CLICKED, null);
                 break;
             }
 
@@ -286,7 +286,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , Action.CREDIT_MANAGEMENT_CLICKED, "", null);
+                    , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
                 break;
             }
 
@@ -296,7 +296,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , Action.EVENT_CLICKED, "", null);
+                    , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
                 break;
             }
 

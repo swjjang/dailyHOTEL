@@ -384,13 +384,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         setProvince(province);
 
                         mOnCommunicateListener.refreshAll(true);
-                    } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
-                    {
-                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
-
-                        setProvince(province);
-
-                        mOnCommunicateListener.refreshAll(true);
                     }
                 }
 

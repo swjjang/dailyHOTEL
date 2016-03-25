@@ -126,7 +126,6 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_CREDITCARD = "creditcard";
     public static final String NAME_INTENT_EXTRA_DATA_MESSAGE = "message";
     public static final String NAME_INTENT_EXTRA_DATA_PROVINCE = "province";
-    public static final String NAME_INTENT_EXTRA_DATA_AREA = "area";
     public static final String NAME_INTENT_EXTRA_DATA_AREAITEMLIST = "areaItemlist";
     public static final String NAME_INTENT_EXTRA_DATA_CUSTOMER = "customer";
     public static final String NAME_INTENT_EXTRA_DATA_IMAGEURLLIST = "imageUrlList";

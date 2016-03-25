@@ -369,7 +369,6 @@ public class AnalyticsManager
         public static final String MINUS_BUTTON_CLICKED = "MinusButtonClicked";
         public static final String PLUS_BUTTON_CLICKED = "PlusButtonClicked";
         public static final String RESET_BUTTON_CLICKED = "ResetButtonClicked";
-        public static final String APPLY_BUTTON_CLICKED = "ApplyButtonClicked";
         public static final String CLOSE_BUTTON_CLICKED = "CloseButtonClicked";
         //
         public static final String VIEW_BOOKING_STATUS_CLICKED = "ViewBookingStatusClicked";
@@ -401,7 +400,10 @@ public class AnalyticsManager
         public static final String VIEWTYPE_LIST = "List";
         public static final String VIEWTYPE_MAP = "Map";
         //
-
+        public static final String LOGIN_CLICKED = "LoginClicked";
+        public static final String CARD_MANAGEMENT_CLICKED = "CardManagementClicked";
+        public static final String CREDIT_MANAGEMENT_CLICKED = "CreditManagementClicked";
+        public static final String EVENT_CLICKED = "EventClicked";
     }
 
     public static class UserType
