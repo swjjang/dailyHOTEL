@@ -109,7 +109,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onAutoCompleteKeyword(String keyword)
         {
-            mHotelSearchPresenter.requestAutoComplete(mSaleTime, keyword);
+            mHotelSearchPresenter.requestAutoComplete(mSaleTime, mNights, keyword);
         }
 
         @Override

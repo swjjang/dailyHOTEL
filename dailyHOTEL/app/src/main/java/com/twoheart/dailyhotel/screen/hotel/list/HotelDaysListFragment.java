@@ -29,7 +29,7 @@ public class HotelDaysListFragment extends HotelListFragment
     @Override
     public int getNights()
     {
-        return mSelectedCheckInSaleTime.getOffsetDailyDay() - mSelectedCheckOutSaleTime.getOffsetDailyDay();
+        return mSelectedCheckOutSaleTime.getOffsetDailyDay() - mSelectedCheckInSaleTime.getOffsetDailyDay();
     }
 
     @Override
