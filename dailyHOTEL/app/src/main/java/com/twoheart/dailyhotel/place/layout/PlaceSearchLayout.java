@@ -44,6 +44,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private View mToolbar;
 
     private View mSearchLayout;
+    private View mTermsOfLocationView;
     private ViewGroup mAutoCompleteLayout;
     private View mAutoCompleteScrollLayout;
     private View mSearchingView;
@@ -223,11 +224,25 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         TextView text01View = (TextView) searchAroundLayout.findViewById(R.id.text01View);
         text01View.setText(getAroundPlaceString());
 
+        mTermsOfLocationView = searchAroundLayout.findViewById(R.id.text02View);
+
+        updateTermsOfLocationLayout(mTermsOfLocationView);
+    }
+
+    private void updateTermsOfLocationLayout(View view)
+    {
         if (DailyPreference.getInstance(mContext).isAgreeTermsOfLocation() == true)
         {
-            TextView text02View = (TextView) searchAroundLayout.findViewById(R.id.text02View);
-            text02View.setVisibility(View.GONE);
+            view.setVisibility(View.GONE);
+        } else
+        {
+            view.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void updateTermsOfLocationLayout()
+    {
+        updateTermsOfLocationLayout(mTermsOfLocationView);
     }
 
     private void initSearchLayout(View view)

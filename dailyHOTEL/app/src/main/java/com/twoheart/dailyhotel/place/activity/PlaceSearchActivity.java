@@ -147,6 +147,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
 
                 DailyPreference.getInstance(PlaceSearchActivity.this).setTermsOfLocation(true);
 
+                mPlaceSearchLayout.updateTermsOfLocationLayout();
+
                 searchMyLocation();
             }
         });
