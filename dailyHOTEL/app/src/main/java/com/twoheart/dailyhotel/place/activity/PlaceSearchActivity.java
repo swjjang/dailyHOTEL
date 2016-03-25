@@ -208,7 +208,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
         }
     }
 
-    private void searchMyLocation()
+    protected void searchMyLocation()
     {
         lockUI();
 

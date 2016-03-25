@@ -79,6 +79,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onShowTermsOfLocationDialog();
 
+        void onSearchMyLocation();
+
         void onDeleteRecentSearches();
 
         void onAutoCompleteKeyword(String keyword);
@@ -524,7 +526,13 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         {
             case R.id.searchAroundLayout:
             {
-                ((OnEventListener) mOnEventListener).onShowTermsOfLocationDialog();
+                if (DailyPreference.getInstance(mContext).isAgreeTermsOfLocation() == true)
+                {
+                    ((OnEventListener) mOnEventListener).onSearchMyLocation();
+                } else
+                {
+                    ((OnEventListener) mOnEventListener).onShowTermsOfLocationDialog();
+                }
                 break;
             }
 

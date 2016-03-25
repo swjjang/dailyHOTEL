@@ -87,6 +87,17 @@ public class HotelSearchActivity extends PlaceSearchActivity
         }
 
         @Override
+        public void onSearchMyLocation()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            searchMyLocation();
+        }
+
+        @Override
         public void onDeleteRecentSearches()
         {
             mDailyRecentSearches.clear();
