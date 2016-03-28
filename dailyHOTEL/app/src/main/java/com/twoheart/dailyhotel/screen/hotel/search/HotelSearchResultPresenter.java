@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelSearch;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -26,7 +27,7 @@ public class HotelSearchResultPresenter extends BasePresenter
 {
     protected interface OnPresenterListener extends OnBasePresenterListener
     {
-        void onResponseSearchResultList(ArrayList<PlaceViewItem> placeViewItemList);
+        void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
 
         void onResponseCustomerSatisfactionTimeMessage(String message);
     }
@@ -48,9 +49,9 @@ public class HotelSearchResultPresenter extends BasePresenter
         mOnPresenterListener.onErrorMessage(message);
     }
 
-    public void requestSearchResultList(SaleTime saleTime, int nights, String keword)
+    public void requestSearchResultList(SaleTime saleTime, int nights, String keword, int offset, int count)
     {
-        DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, keword, mHotelSearchListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, keword, offset, count, mHotelSearchListJsonResponseListener, this);
     }
 
     public void requestCustomerSatisfactionTimeMessage()
@@ -101,6 +102,7 @@ public class HotelSearchResultPresenter extends BasePresenter
                     String imageUrl = dataJSONObject.getString("imgUrl");
                     int nights = dataJSONObject.getInt("lengthStay");
                     JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+                    int totalCount = dataJSONObject.getInt("totalCount");
 
                     int length;
 
@@ -114,11 +116,11 @@ public class HotelSearchResultPresenter extends BasePresenter
 
                     if (length == 0)
                     {
-                        ((OnPresenterListener) mOnPresenterListener).onResponseSearchResultList(null);
+                        ((OnPresenterListener) mOnPresenterListener).onResponseSearchResultList(0, null);
                     } else
                     {
                         ArrayList<PlaceViewItem> placeViewItemList = makeHotelList(hotelJSONArray, imageUrl, nights);
-                        ((OnPresenterListener) mOnPresenterListener).onResponseSearchResultList(placeViewItemList);
+                        ((OnPresenterListener) mOnPresenterListener).onResponseSearchResultList(totalCount, placeViewItemList);
                     }
                 } else
                 {
@@ -147,7 +149,7 @@ public class HotelSearchResultPresenter extends BasePresenter
             {
                 jsonObject = jsonArray.getJSONObject(i);
 
-                Hotel hotel = new Hotel();
+                HotelSearch hotel = new HotelSearch();
 
                 if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
                 {

@@ -124,6 +124,12 @@ public class Gourmet extends Place implements Parcelable
         }
 
         JSONArray jsonArray = jsonObject.getJSONArray("restaurantTicketList");
+
+        if (jsonArray == null || jsonArray.length() == 0)
+        {
+            return null;
+        }
+
         int length = jsonArray.length();
         GourmetFilters gourmetFilters = new GourmetFilters(length);
         gourmetFilters.category = category;

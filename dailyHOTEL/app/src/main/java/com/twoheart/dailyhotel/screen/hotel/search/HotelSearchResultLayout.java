@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.hotel.search;
 import android.content.Context;
 import android.view.View;
 
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -28,23 +27,18 @@ public class HotelSearchResultLayout extends PlaceSearchResultLayout
         super(context, listener);
     }
 
-    public void setSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
+    @Override
+    public void addSearchResultList(ArrayList<PlaceViewItem> placeViewItemList)
     {
-        mListAdapter.clear();
+        mIsLoading = false;
 
-        if (placeViewItemList == null || placeViewItemList.size() == 0)
+        if (placeViewItemList == null)
         {
-            showEmptyLayout();
-            mListAdapter.notifyDataSetChanged();
-        } else
-        {
-            showListLayout();
-
-            mListAdapter.addAll(placeViewItemList);
-            mListAdapter.notifyDataSetChanged();
-
-            updateResultCount(placeViewItemList.size());
+            return;
         }
+
+        mListAdapter.addAll(placeViewItemList);
+        mListAdapter.notifyDataSetChanged();
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()

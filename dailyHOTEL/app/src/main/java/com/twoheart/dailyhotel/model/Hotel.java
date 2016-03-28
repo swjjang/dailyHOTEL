@@ -33,8 +33,8 @@ public class Hotel implements Parcelable
     public float distance; // 정렬시에 보여주는 내용
     public String categoryCode;
 
-    private HotelGrade mGrade;
-    private HotelFilters mHotelFilters;
+    protected HotelGrade mGrade;
+    protected HotelFilters mHotelFilters;
 
     public Hotel()
     {
@@ -65,7 +65,7 @@ public class Hotel implements Parcelable
         dest.writeString(categoryCode);
     }
 
-    private void readFromParcel(Parcel in)
+    protected void readFromParcel(Parcel in)
     {
         imageUrl = in.readString();
         name = in.readString();

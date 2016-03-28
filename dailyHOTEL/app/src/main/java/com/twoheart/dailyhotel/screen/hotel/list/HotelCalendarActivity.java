@@ -58,7 +58,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                 break;
             } else
             {
-                textview.setEnabled(false);
+                textview.setEnabled(enable);
             }
         }
     }

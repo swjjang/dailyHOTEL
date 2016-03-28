@@ -41,10 +41,10 @@ public class HotelSearchPresenter extends BasePresenter
         mOnPresenterListener.onErrorMessage(message);
     }
 
-    public void requestAutoComplete(SaleTime saleTime, String keyword)
+    public void requestAutoComplete(SaleTime saleTime, int lengthStay, String keyword)
     {
         DailyNetworkAPI.getInstance().requestHotelSearchAutoCompleteList(mNetworkTag//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mHotelSearchAutoCompleteListener, mHotelSearchAutoCompleteErrorListener);
+            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), lengthStay, keyword, mHotelSearchAutoCompleteListener, mHotelSearchAutoCompleteErrorListener);
     }
 
     private DailyHotelJsonArrayResponseListener mHotelSearchAutoCompleteListener = new DailyHotelJsonArrayResponseListener()
