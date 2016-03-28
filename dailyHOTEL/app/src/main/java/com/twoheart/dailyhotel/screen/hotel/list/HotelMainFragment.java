@@ -1298,6 +1298,19 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     Intent intent = HotelSearchActivity.newInstance(baseActivity, currentFragment.getSaleTime(), currentFragment.getNights());
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+
+                    switch (mViewType)
+                    {
+                        case LIST:
+                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , Action.HOTEL_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_LIST, null);
+                            break;
+
+                        case MAP:
+                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , Action.HOTEL_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_MAP, null);
+                            break;
+                    }
                     break;
                 }
             }

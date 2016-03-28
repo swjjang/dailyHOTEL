@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelSearch;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -28,6 +27,8 @@ public class HotelSearchResultPresenter extends BasePresenter
     protected interface OnPresenterListener extends OnBasePresenterListener
     {
         void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
+
+        void onResponseSearchResultList(String address, int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
 
         void onResponseCustomerSatisfactionTimeMessage(String message);
     }

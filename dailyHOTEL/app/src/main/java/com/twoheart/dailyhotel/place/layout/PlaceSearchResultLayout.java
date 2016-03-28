@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.ArrayList;
 
@@ -39,6 +38,8 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     public interface OnEventListener extends OnBaseEventListener
     {
         void finish(int resultCode);
+
+        void research(int resultCode);
 
         void onItemClick(PlaceViewItem placeViewItem);
 
@@ -81,7 +82,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTVITY_HOME);
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTIVITY_HOME);
             }
         });
     }
@@ -105,7 +106,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED);
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).research(Activity.RESULT_CANCELED);
             }
         });
 

@@ -210,6 +210,9 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_LIST_CALENDAR = "DailyHotel_HotelBookingWindow";
         public static final String DAILYHOTEL_BANNER_DETAIL = "DailyHotel_EventBannerDetailView";
         public static final String DAILYHOTEL_CURATION = "DailyHotel_SortFilterSelectView";
+        public static final String DAILYHOTEL_SEARCH = "DailyHotel_SearchScreenView";
+        public static final String DAILYHOTEL_SEARCH_RESULT = "DailyHotel_SearchResultView";
+        public static final String DAILYHOTEL_SEARCH_RESULT_EMPTY = "DailyHotel_EmptySearchResultView";
         //
         public static final String DAILYHOTEL_DETAIL = "DailyHotel_HotelDetailView";
         public static final String DAILYHOTEL_DETAIL_ROOMTYPE = " DailyHotel_HotelRoomTypeList";
@@ -229,6 +232,9 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_LIST_CALENDAR = "DailyGourmet_GourmetBookingWindow";
         public static final String DAILYGOURMET_BANNER_DETAIL = "DailyGourmet_EventBannerDetailView";
         public static final String DAILYGOURMET_CURATION = "DailyGourmet_SortFilterSelectView";
+        public static final String DAILYGOURMET_SEARCH = "DailyGourmet_SearchScreenView";
+        public static final String DAILYGOURMET_SEARCH_RESULT = "DailyGourmet_SearchResultView";
+        public static final String DAILYGOURMET_SEARCH_RESULT_EMPTY = "DailyGourmet_EmptySearchResultView";
         //
         public static final String DAILYGOURMET_DETAIL = "DailyGourmet_GourmetDetailView";
         public static final String DAILYGOURMET_DETAIL_TICKETTYPE = " DailyGourmet_GourmetMenuTypeList";
@@ -273,6 +279,7 @@ public class AnalyticsManager
         public static final String EVENT_DETAIL = "Menu_EventDetailView";
         public static final String ABOUT = "Menu_ServiceIntro";
         public static final String NETWORK_ERROR = "Error_NetworkDisconnected";
+        //
     }
 
     public static class Action
@@ -324,14 +331,45 @@ public class AnalyticsManager
         public static final String SATISFACTION_EVALUATION_POPPEDUP = "SatisfactionEvaluationPoppedup";
         //
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
+        //
+        public static final String HOTEL_SEARCH_BUTTON_CLICKED = "HotelSearchButtonClicked";
+        public static final String HOTEL_KEYWORD_SEARCH_CLICKED = "HotelKeywordSearchClicked";
+        public static final String HOTEL_SEARCH_BACK_BUTTON_CLICKED = "HotelSearchBackButtonClicked";
+        public static final String HOTEL_KEYWORD_RESET_CLICKED = "HotelKeywordResetClicked";
+        public static final String HOTEL_AROUND_SEARCH_CLICKED = "HotelAroundSearchClicked";
+        public static final String HOTEL_KEYWORD_HISTORY_DELETED = "HotelKeywordsHistoryDeleted";
+        public static final String HOTEL_RECENT_KEYWORD_SEARCH_CLICKED = "HotelRecentKeywordSearchClicked";
+        public static final String HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED = "HotelAutoCompletedKeywordClicked";
+        public static final String HOTEL_AROUND_NOT_FOUND = "HotelAroundNotFound";
+        public static final String HOTEL_SEARCH_NOT_FOUND = "HotelSearchNotFound";
+        public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
+        public static final String HOTEL_SEARCH_RESULT_CANCELED = "HotelSearchResultCanceled";
+        //
+        public static final String GOURMET_SEARCH_BUTTON_CLICKED = "GourmetSearchButtonClicked";
+        public static final String GOURMET_KEYWORD_SEARCH_CLICKED = "GourmetKeywordSearchClicked";
+        public static final String GOUREMT_SEARCH_BACK_BUTTON_CLICKED = "GourmetSearchBackButtonClicked";
+        public static final String GOURMET_KEYWORD_RESET_CLICKED = "GourmetKeywordResetClicked";
+        public static final String GOURMET_AROUND_SEARCH_CLICKED = "GourmetAroundSearchClicked";
+        public static final String GOURMET_KEYWORD_HISTORY_DELETED = "GourmetKeywordsHistoryDeleted";
+        public static final String GOURMET_RECENT_KEYWORD_SEARCH_CLICKED = "GourmetRecentKeywordSearchClicked";
+        public static final String GOURMET_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED = "GourmetAutoCompletedKeywordClicked";
+        public static final String GOURMET_AROUND_NOT_FOUND = "GourmetAroundNotFound";
+        public static final String GOURMET_SEARCH_NOT_FOUND = "GourmetSearchNotFound";
+        public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
+        public static final String GOURMET_SEARCH_RESULT_CANCELED = "GourmetSearchResultCanceled";
+        //
+        public static final String LOCATION_AGREEMENT_POPPEDUP = "LocationAgreementPoppedup";
+        public static final String CALL_INQUIRY_CLICKED = "CallInquiryClicked";
     }
 
     public static class Category
     {
         public static final String NAVIGATION = "Navigation";
-        public static final String HOTELBOOKINGS = "HotelBookings";
-        public static final String GOURMETBOOKINGS = "GourmetBookings";
-        public static final String POPUPBOXES = "PopupBoxes";
+        public static final String HOTEL_BOOKINGS = "HotelBookings";
+        public static final String GOURMET_BOOKINGS = "GourmetBookings";
+        public static final String POPUP_BOXES = "PopupBoxes";
+        public static final String HOTEL_SEARCH = "HotelSearches";
+        public static final String GOURMET_SEARCH_ = "GourmetSearches";
     }
 
     public static class Label
@@ -404,6 +442,24 @@ public class AnalyticsManager
         public static final String CARD_MANAGEMENT_CLICKED = "CardManagementClicked";
         public static final String CREDIT_MANAGEMENT_CLICKED = "CreditManagementClicked";
         public static final String EVENT_CLICKED = "EventClicked";
+        //
+        public static final String HOTEL_LIST = "HotelList";
+        public static final String HOTEL_LOCATION_LIST = "HotelLocationList";
+        public static final String HOTEL_MAP = "HotelMap";
+        public static final String GOURMET_LIST = "GourmetList";
+        public static final String GOURMET_LOCATION_LIST = "GourmetLocationList";
+        public static final String GOURMET_MAP = "GourmetMap";
+        //
+        public static final String KEYWORD_BACK_BUTTON_CLICKED = "KeywordBackButtonClicked";
+        public static final String RESULT_BACK_BUTTON_CLICKED = "ResultBackButtonClicked";
+        public static final String SEARCH_RESULT_CANCELED = "SearchResultCanceled";
+        public static final String SEARCH_KEYWORD_RESET = "SearchKeywordReset";
+        public static final String TERMSOF_LOCATION = "TermsofLocation";
+        public static final String AGREE_AND_SEARCH = "AgreeAndSearch";
+        public static final String DELETE_ALL_KEYWORDS = "DeleteAllKeywords";
+        public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
+        public static final String CALL_KEYWORD_HOTEL = "Call-KeywordHotel";
+        public static final String CALL_KEYWORD_GOURMET = "Call-KeywordGourmet";
     }
 
     public static class UserType

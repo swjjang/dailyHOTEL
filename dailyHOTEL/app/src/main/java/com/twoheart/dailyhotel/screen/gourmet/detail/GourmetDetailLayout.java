@@ -260,7 +260,7 @@ public class GourmetDetailLayout
                     mTicketTypeListAdapter.setSelected(position);
                     mTicketTypeListAdapter.notifyDataSetChanged();
 
-                    AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+                    AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                         , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, null);
                 }
             });
@@ -589,7 +589,7 @@ public class GourmetDetailLayout
         }
 
         AnalyticsManager.getInstance(mActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, null);
-        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
     }
 

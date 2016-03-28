@@ -248,7 +248,7 @@ public class HotelDetailLayout
                     mRoomTypeListAdapter.setSelected(position);
                     mRoomTypeListAdapter.notifyDataSetChanged();
 
-                    AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                    AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                         , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedSaleRoomInformation.roomName, null);
                 }
             });
@@ -581,7 +581,7 @@ public class HotelDetailLayout
         }
 
         AnalyticsManager.getInstance(mActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DETAIL, null);
-        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mHotelDetail.hotelName, null);
     }
 

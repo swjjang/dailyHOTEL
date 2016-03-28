@@ -403,7 +403,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             @Override
             public void onCancel(DialogInterface dialog)
             {
-                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
             }
         });
@@ -523,7 +523,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.EDIT_BUTTON_CLICKED, Label.PAYMENT_CARD_EDIT, null);
     }
 

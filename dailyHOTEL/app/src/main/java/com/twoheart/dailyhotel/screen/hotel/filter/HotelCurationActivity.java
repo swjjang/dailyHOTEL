@@ -205,14 +205,14 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
                     v.setSelected(false);
                     mHotelCurationOption.flagAmenitiesFilters ^= flag.intValue();
 
-                    AnalyticsManager.getInstance(HotelCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    AnalyticsManager.getInstance(HotelCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
                     mHotelCurationOption.flagAmenitiesFilters |= flag.intValue();
 
-                    AnalyticsManager.getInstance(HotelCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    AnalyticsManager.getInstance(HotelCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
                 }
 
@@ -490,7 +490,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
                 return;
         }
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, null);
     }
 
@@ -504,21 +504,21 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             case R.id.minusPersonView:
                 updatePersonFilter(mHotelCurationOption.person - 1);
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mHotelCurationOption.person), null);
                 break;
 
             case R.id.plusPersonView:
                 updatePersonFilter(mHotelCurationOption.person + 1);
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, Integer.toString(mHotelCurationOption.person), null);
                 break;
 
             case R.id.doubleCheckView:
                 updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
                     , AnalyticsManager.Label.SORTFILTER_DOUBLE, null);
                 break;
@@ -526,7 +526,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             case R.id.twinCheckView:
                 updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_TWIN);
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
                     , AnalyticsManager.Label.SORTFILTER_TWIN, null);
                 break;
@@ -534,7 +534,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             case R.id.heatedFloorsCheckView:
                 updateBedTypeFilter(v, HotelFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
                     , AnalyticsManager.Label.SORTFILTER_ONDOL, null);
                 break;
@@ -544,7 +544,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
     @Override
     protected void onComplete()
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mHotelCurationOption.toString(), null);
 
         if (DEBUG == true)
@@ -569,7 +569,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             setResult(RESULT_OK, intent);
         }
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
 
         finish();
@@ -580,7 +580,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
     {
         resetCuration();
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.RESET_BUTTON_CLICKED, null);
     }
 }

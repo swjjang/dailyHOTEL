@@ -31,6 +31,7 @@ public class TuneManager implements IBaseAnalyticsManager
 
     private MobileAppTracker mMobileAppTracker;
     private Context mContext;
+    private String mUserIndex;
 
     public TuneManager(Context context)
     {
@@ -94,6 +95,8 @@ public class TuneManager implements IBaseAnalyticsManager
             list.add(matEventItem);
             matEvent.withEventItems(list);
 
+            setUserIndex(mUserIndex);
+
             mMobileAppTracker.measureEvent(matEvent);
 
             if (DEBUG == true)
@@ -109,6 +112,8 @@ public class TuneManager implements IBaseAnalyticsManager
             List<MATEventItem> list = new ArrayList<>();
             list.add(matEventItem);
             matEvent.withEventItems(list);
+
+            setUserIndex(mUserIndex);
 
             mMobileAppTracker.measureEvent(matEvent);
 
@@ -126,6 +131,8 @@ public class TuneManager implements IBaseAnalyticsManager
             list.add(matEventItem);
             matEvent.withEventItems(list);
 
+            setUserIndex(mUserIndex);
+
             mMobileAppTracker.measureEvent(matEvent);
 
             if (DEBUG == true)
@@ -142,6 +149,8 @@ public class TuneManager implements IBaseAnalyticsManager
             list.add(matEventItem);
             matEvent.withEventItems(list);
 
+            setUserIndex(mUserIndex);
+
             mMobileAppTracker.measureEvent(matEvent);
 
             if (DEBUG == true)
@@ -154,7 +163,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (AnalyticsManager.Category.HOTELBOOKINGS.equalsIgnoreCase(category) == true)
+        if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
             {
@@ -166,6 +175,8 @@ public class TuneManager implements IBaseAnalyticsManager
                 list.add(matEventItem);
                 matEvent.withEventItems(list);
 
+                setUserIndex(mUserIndex);
+
                 mMobileAppTracker.measureEvent(matEvent);
 
                 if (DEBUG == true)
@@ -173,7 +184,7 @@ public class TuneManager implements IBaseAnalyticsManager
                     ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + params.toString());
                 }
             }
-        } else if (AnalyticsManager.Category.GOURMETBOOKINGS.equalsIgnoreCase(category) == true)
+        } else if (AnalyticsManager.Category.GOURMET_BOOKINGS.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
             {
@@ -184,6 +195,8 @@ public class TuneManager implements IBaseAnalyticsManager
                 List<MATEventItem> list = new ArrayList<>();
                 list.add(matEventItem);
                 matEvent.withEventItems(list);
+
+                setUserIndex(mUserIndex);
 
                 mMobileAppTracker.measureEvent(matEvent);
 
@@ -197,6 +210,9 @@ public class TuneManager implements IBaseAnalyticsManager
             if (AnalyticsManager.Action.DAILY_GOURMET_CLICKED.equalsIgnoreCase(action) == true)
             {
                 MATEvent matEvent = new MATEvent(TuneEventId.MENU_GOURMET);
+
+                setUserIndex(mUserIndex);
+
                 mMobileAppTracker.measureEvent(matEvent);
 
                 if (DEBUG == true)
@@ -206,6 +222,9 @@ public class TuneManager implements IBaseAnalyticsManager
             } else if (AnalyticsManager.Action.INVITE_FRIEND_CLICKED.equalsIgnoreCase(action) == true)
             {
                 MATEvent matEvent = new MATEvent(TuneEventId.INVITE_FRIEND);
+
+                setUserIndex(mUserIndex);
+
                 mMobileAppTracker.measureEvent(matEvent);
 
                 if (DEBUG == true)
@@ -223,6 +242,8 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
+        mUserIndex = index;
+
         if (Util.isTextEmpty(index) == true)
         {
             mMobileAppTracker.setUserId("");
@@ -252,6 +273,8 @@ public class TuneManager implements IBaseAnalyticsManager
     {
         MATEvent matEvent = new MATEvent(TuneEventId.CARDLIST_ADDED_CARD);
         matEvent.withAttribute1(cardType);
+
+        setUserIndex(mUserIndex);
 
         mMobileAppTracker.measureEvent(matEvent);
 
@@ -350,6 +373,9 @@ public class TuneManager implements IBaseAnalyticsManager
         if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
         {
             setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+        } else
+        {
+            setUserIndex(mUserIndex);
         }
 
         mMobileAppTracker.measureEvent(matEvent);
@@ -389,6 +415,9 @@ public class TuneManager implements IBaseAnalyticsManager
         if (params.containsKey(AnalyticsManager.KeyType.USER_INDEX) == true)
         {
             setUserIndex(params.get(AnalyticsManager.KeyType.USER_INDEX));
+        } else
+        {
+            setUserIndex(mUserIndex);
         }
 
         mMobileAppTracker.measureEvent(matEvent);

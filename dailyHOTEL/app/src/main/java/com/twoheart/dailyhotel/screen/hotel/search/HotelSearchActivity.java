@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 
@@ -63,6 +64,14 @@ public class HotelSearchActivity extends PlaceSearchActivity
         return new HotelSearchLayout(this, mOnEventListener);
     }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH, null);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +82,9 @@ public class HotelSearchActivity extends PlaceSearchActivity
         public void onResetKeyword()
         {
             mPlaceSearchLayout.resetSearchKeyword();
+
+            //            AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+            //                , AnalyticsManager.Action.HOTEL_KEYWORD_RESET_CLICKED, AnalyticsManager.Label.SEARCH_KEYWORD_RESET, null);
         }
 
         @Override
@@ -104,6 +116,9 @@ public class HotelSearchActivity extends PlaceSearchActivity
             DailyPreference.getInstance(HotelSearchActivity.this).setHotelRecentSearches("");
 
             mPlaceSearchLayout.updateRecentSearchesLayout(null);
+
+            AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                , AnalyticsManager.Action.HOTEL_KEYWORD_HISTORY_DELETED, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
         }
 
         @Override
@@ -120,16 +135,32 @@ public class HotelSearchActivity extends PlaceSearchActivity
         }
 
         @Override
-        public void onSearchResult(Keyword keyword)
+        public void onSearchResult(String text, Keyword keyword)
         {
             Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, keyword);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+
+            if (keyword.price < 0)
+            {
+                // 최근 검색어로 검색
+                AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED, keyword.name, null);
+            } else
+            {
+                // 자동 완성으로 검색
+                String label = String.format("%s-%s", text, keyword.name);
+                AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED, label, null);
+            }
         }
 
         @Override
         public void finish()
         {
             HotelSearchActivity.this.finish();
+
+            AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                , AnalyticsManager.Action.HOTEL_SEARCH_BACK_BUTTON_CLICKED, AnalyticsManager.Label.KEYWORD_BACK_BUTTON_CLICKED, null);
         }
     };
 

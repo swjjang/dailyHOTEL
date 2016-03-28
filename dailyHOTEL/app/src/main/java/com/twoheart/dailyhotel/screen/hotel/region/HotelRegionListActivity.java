@@ -131,6 +131,9 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     {
         Intent intent = HotelSearchActivity.newInstance(this, mSaleTime, mNights);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.HOTEL_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_LOCATION_LIST, null);
     }
 
     @Override

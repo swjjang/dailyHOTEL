@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.twoheart.dailyhotel.util.ExLog;
 
 import java.text.DecimalFormat;
 
