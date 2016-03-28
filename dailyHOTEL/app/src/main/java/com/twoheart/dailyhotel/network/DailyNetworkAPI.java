@@ -377,7 +377,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/auto_complete" : "";
 
-        String params = String.format("?date=%s&lengthStay=%d&term=%s", date, lengthStay, text);
+        String params = String.format("?dateCheckIn=%s&lengthStay=%d&term=%s", date, lengthStay, text);
 
         DailyHotelJsonArrayRequest dailyHotelJsonRequest = new DailyHotelJsonArrayRequest(tag, Request.Method.GET, new StringBuilder("http://52.196.30.125/").append(URL).append(params).toString(), null, listener, errorListener);
 

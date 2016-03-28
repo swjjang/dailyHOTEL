@@ -76,25 +76,6 @@ public class MainActivity extends BaseActivity implements Constants
         // URL 만들때 사용
         //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
-
-        //        {
-        //            DailyNetworkAPI.getInstance().testUrl("https://225835.measurementapi.com/serve?action=click&publisher_id=225835&site_id=118823&destination_id=373091&invoke_id=274355&agency_id=1214&my_campaign=서울&my_publisher=naver&my_site=cpc&my_ad=MPL&my_keyword=장용산펜션'", new DailyHotelJsonResponseListener()
-        //            {
-        //                @Override
-        //                public void onResponse(String url, JSONObject response)
-        //                {
-        //                    ExLog.d("url");
-        //                }
-        //            }, new Response.ErrorListener()
-        //            {
-        //                @Override
-        //                public void onErrorResponse(VolleyError volleyError)
-        //                {
-        //                    ExLog.d("url");
-        //                }
-        //            });
-        //        }
-
         mIsInitialization = true;
         mMainPresenter = new MainPresenter(this, mNetworkTag, mOnResponsePresenterListener);
 
