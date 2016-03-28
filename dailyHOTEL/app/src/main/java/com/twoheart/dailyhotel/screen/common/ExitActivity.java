@@ -7,6 +7,9 @@ import android.os.Bundle;
 
 import com.twoheart.dailyhotel.util.Util;
 
+/**
+ * 앱 종료 후에 흔적을 남기지 히스토리 및 최근 실행 앱을 남기지 않기 위해서
+ */
 public class ExitActivity extends Activity
 {
     public static void exitApplication(Context context)

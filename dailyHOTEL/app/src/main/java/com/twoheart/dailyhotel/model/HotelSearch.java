@@ -67,7 +67,7 @@ public class HotelSearch extends Hotel
             }
         } catch (JSONException e)
         {
-            ExLog.d(e.toString());
+            ExLog.e(e.toString());
 
             return false;
         }
