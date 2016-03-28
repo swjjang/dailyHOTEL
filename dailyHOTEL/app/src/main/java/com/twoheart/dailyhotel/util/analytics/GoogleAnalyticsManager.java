@@ -181,7 +181,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
         String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
 
-        recordEvent(AnalyticsManager.Category.HOTELBOOKINGS, AnalyticsManager.Action.HOTEL_PAYMENT_COMPLETED, placeName + "-" + ticketName, null);
+        recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_PAYMENT_COMPLETED, placeName + "-" + ticketName, null);
 
         if (DEBUG == true)
         {
@@ -224,7 +224,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         String ticketCount = params.get(AnalyticsManager.KeyType.QUANTITY);
 
         String label = String.format("%s-%s(%s)", placeName, ticketName, ticketCount);
-        recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS, AnalyticsManager.Action.GOURMET_PAYMENT_COMPLETED, label, null);
+        recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_PAYMENT_COMPLETED, label, null);
 
         if (DEBUG == true)
         {

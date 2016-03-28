@@ -32,6 +32,6 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
     @Override
     protected void recordEvent(String action, String label)
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS, action, label, null);
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, action, label, null);
     }
 }

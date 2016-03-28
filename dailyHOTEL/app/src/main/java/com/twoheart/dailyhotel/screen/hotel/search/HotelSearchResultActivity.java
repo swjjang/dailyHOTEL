@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.hotel.search;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -13,6 +12,8 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -70,8 +71,14 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     {
         mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
         mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
-        mKeyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
-        mLocation = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+
+        if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
+        {
+            mKeyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
+        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
+        {
+            mLocation = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+        }
 
         mOffset = 0;
     }
@@ -123,13 +130,32 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void finish()
         {
-            HotelSearchResultActivity.this.finish(Activity.RESULT_CANCELED);
+            // 사용하지 않음
         }
 
         @Override
         public void finish(int resultCode)
         {
             HotelSearchResultActivity.this.finish(resultCode);
+
+            if (resultCode == Constants.CODE_RESULT_ACTIVITY_HOME)
+            {
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_SEARCH_RESULT_CANCELED, AnalyticsManager.Label.SEARCH_RESULT_CANCELED, null);
+            } else
+            {
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_SEARCH_BACK_BUTTON_CLICKED, AnalyticsManager.Label.RESULT_BACK_BUTTON_CLICKED, null);
+            }
+        }
+
+        @Override
+        public void research(int resultCode)
+        {
+            HotelSearchResultActivity.this.finish(resultCode);
+
+            AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                , AnalyticsManager.Action.HOTEL_SEARCH_AGAIN_CLICKED, AnalyticsManager.Label.HOTEL_SEARCH_AGAIN_CLICKED, null);
         }
 
         @Override
@@ -156,12 +182,15 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         public void onShowCallDialog()
         {
             showCallDialog(mCustomerSatisfactionTimeMessage);
+
+            AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                , AnalyticsManager.Action.CALL_INQUIRY_CLICKED, AnalyticsManager.Label.CALL_KEYWORD_HOTEL, null);
         }
 
         @Override
         public void onLoadMoreList()
         {
-            if(mOffset < mTotalCount)
+            if (mOffset < mTotalCount)
             {
                 requestSearchResultList();
             }
@@ -180,6 +209,42 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
     private HotelSearchResultPresenter.OnPresenterListener mOnPresenterListener = new HotelSearchResultPresenter.OnPresenterListener()
     {
+        private void analyticsOnResponseSearchResultListForSearches(String keyword, int totalCount)
+        {
+            if (totalCount == 0)
+            {
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_SEARCH_NOT_FOUND, keyword, null);
+
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, null);
+            } else
+            {
+                String label = String.format("%s-%d", keyword, totalCount);
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED, label, null);
+
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+            }
+        }
+
+        private void analyticsOnResponseSearchResultListForLocation(String keyword, int totalCount)
+        {
+            if (totalCount == 0)
+            {
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_AROUND_NOT_FOUND, keyword, null);
+
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, null);
+            } else
+            {
+                String label = String.format("%s-%d", keyword, totalCount);
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
+
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+            }
+        }
+
         @Override
         public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
@@ -188,6 +253,8 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             if (totalCount == 0)
             {
                 mPlaceSearchResultLayout.showEmptyLayout();
+
+
             } else
             {
                 if (placeViewItemList != null)
@@ -201,6 +268,35 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             mPlaceSearchResultLayout.updateResultCount(totalCount);
             unLockUI();
+
+            analyticsOnResponseSearchResultListForSearches(mKeyword.name, totalCount);
+        }
+
+        @Override
+        public void onResponseSearchResultList(String address, int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+        {
+            mTotalCount = totalCount;
+
+            if (totalCount == 0)
+            {
+                mPlaceSearchResultLayout.showEmptyLayout();
+
+
+            } else
+            {
+                if (placeViewItemList != null)
+                {
+                    mOffset += placeViewItemList.size();
+                }
+
+                mPlaceSearchResultLayout.showListLayout();
+                ((HotelSearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
+            }
+
+            mPlaceSearchResultLayout.updateResultCount(totalCount);
+            unLockUI();
+
+            analyticsOnResponseSearchResultListForLocation(address, totalCount);
         }
 
         @Override

@@ -32,6 +32,6 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
     @Override
     protected void recordEvent(String action, String label)
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS, action, label, null);
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, action, label, null);
     }
 }

@@ -80,7 +80,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
         params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
 
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.SOCIAL_SHARE_CLICKED, placeDetail.name, params);
     }
 

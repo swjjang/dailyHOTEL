@@ -238,11 +238,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             {
                 if (mBonusSwitch.isChecked() == true)
                 {
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                         , Action.USING_CREDIT_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
                 } else
                 {
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                         , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
                 }
             }
@@ -268,7 +268,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             @Override
             public void onClick(View v)
             {
-                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                     , Action.PAYMENT_TYPE_ITEM_CLICKED, mPaymentInformation.paymentType.getName(), null);
             }
         };
@@ -442,7 +442,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 break;
         }
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, paymentType.getName(), null);
     }
 
@@ -588,7 +588,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             // 1. 세션이 살아있는지 검사 시작.
                             DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
 
-                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
                         }
                     }
@@ -707,7 +707,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     // 1. 세션이 살아있는지 검사 시작.
                     DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
 
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUPBOXES//
+                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
                 }
             }
@@ -1093,7 +1093,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
         String label = String.format("%s-%s", hotelPaymentInformation.getSaleRoomInformation().hotelName, hotelPaymentInformation.getSaleRoomInformation().roomName);
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.PAYMENT_CLICKED, label, null);
     }
 

@@ -87,7 +87,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onSearchResult(String text);
 
-        void onSearchResult(Keyword keyword);
+        void onSearchResult(String text, Keyword keyword);
     }
 
     protected abstract String getAroundPlaceString();
@@ -516,7 +516,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void validateKeyword(Keyword keyword)
     {
-        ((OnEventListener) mOnEventListener).onSearchResult(keyword);
+        ((OnEventListener) mOnEventListener).onSearchResult(mSearchEditText.getText().toString().trim(), keyword);
     }
 
     @Override

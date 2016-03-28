@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -121,6 +122,9 @@ public abstract class PlaceSearchActivity extends BaseActivity
             {
                 Intent intent = new Intent(PlaceSearchActivity.this, LocationTermsActivity.class);
                 startActivity(intent);
+
+                //                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                //                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.TERMSOF_LOCATION, null);
             }
         });
 
@@ -150,11 +154,24 @@ public abstract class PlaceSearchActivity extends BaseActivity
                 mPlaceSearchLayout.updateTermsOfLocationLayout();
 
                 searchMyLocation();
+
+                //                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                //                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE_AND_SEARCH, null);
             }
         });
 
         confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
         confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+            }
+        });
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
         {
@@ -199,7 +216,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
                 {
                     setResult(resultCode);
                     finish();
-                } else if (resultCode == CODE_RESULT_ACTVITY_HOME)
+                } else if (resultCode == CODE_RESULT_ACTIVITY_HOME)
                 {
                     finish();
                 }

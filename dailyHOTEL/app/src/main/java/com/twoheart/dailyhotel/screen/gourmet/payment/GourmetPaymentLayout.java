@@ -614,7 +614,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
                 break;
         }
 
-        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMETBOOKINGS//
+        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, type.getName(), null);
     }
 

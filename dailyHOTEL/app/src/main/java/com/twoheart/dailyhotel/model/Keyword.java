@@ -16,6 +16,7 @@ public class Keyword implements Parcelable
     {
         this.icon = icon;
         this.name = name;
+        this.price = -1;
     }
 
     public Keyword(JSONObject jsonObject) throws JSONException
@@ -25,6 +26,9 @@ public class Keyword implements Parcelable
         if (jsonObject.has("sale_price") == true)
         {
             price = jsonObject.getInt("sale_price");
+        } else
+        {
+            price = 0;
         }
 
         if (price > 0)

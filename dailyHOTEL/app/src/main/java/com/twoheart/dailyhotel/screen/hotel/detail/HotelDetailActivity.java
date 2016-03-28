@@ -402,7 +402,7 @@ public class HotelDetailActivity extends BaseActivity
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
         params.put(AnalyticsManager.KeyType.CURRENT_TIME, dateFormat2.format(new Date()));
 
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.SOCIAL_SHARE_CLICKED, mHotelDetail.hotelName, params);
     }
 
@@ -535,7 +535,7 @@ public class HotelDetailActivity extends BaseActivity
             }
 
             String label = String.format("%s-%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
-            AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.BOOKING_CLICKED, label, null);
         }
 
@@ -565,7 +565,7 @@ public class HotelDetailActivity extends BaseActivity
                 }
             }
 
-            AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.KAKAO_INQUIRY_CLICKED, mHotelDetail.hotelName, null);
         }
 
@@ -587,7 +587,7 @@ public class HotelDetailActivity extends BaseActivity
             releaseUiComponent();
 
             recordAnalyticsHotelDetail(Screen.DAILYHOTEL_DETAIL_ROOMTYPE, mHotelDetail);
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTELBOOKINGS//
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.ROOM_TYPE_CLICKED, mHotelDetail.hotelName, null);
         }
 
