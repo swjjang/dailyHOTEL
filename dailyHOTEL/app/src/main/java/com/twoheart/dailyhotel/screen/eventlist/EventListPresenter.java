@@ -7,6 +7,7 @@ import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.OnBasePresenterListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -15,13 +16,27 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EventListPresenter implements Response.ErrorListener
 {
     private BaseActivity mBaseActivity;
-    private EventListActivity.OnResponsePresenterListener mListener;
+    private OnResponsePresenterListener mListener;
 
-    public EventListPresenter(BaseActivity baseActivity, EventListActivity.OnResponsePresenterListener listener)
+    public interface OnResponsePresenterListener extends OnBasePresenterListener
+    {
+        void onRequestEvent(String userIndex);
+
+        void onUpdateUserInformation(Customer user, int recommender, boolean isDailyUser);
+
+        void processEventPage(String eventUrl);
+
+        void onSignin();
+
+        void onEventListResponse(List<Event> eventList);
+    }
+
+    public EventListPresenter(BaseActivity baseActivity, OnResponsePresenterListener listener)
     {
         if (baseActivity == null || listener == null)
         {
@@ -87,14 +102,15 @@ public class EventListPresenter implements Response.ErrorListener
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code != 0)
+                if (msgCode != 0)
                 {
                     if (response.has("msg") == true)
                     {
                         String message = response.getString("msg");
-                        mListener.onInternalError(message);
+
+                        mListener.onErrorMessage(msgCode, message);
                     }
 
                     mListener.onEventListResponse(null);
@@ -140,14 +156,14 @@ public class EventListPresenter implements Response.ErrorListener
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code != 0)
+                if (msgCode != 0)
                 {
                     if (response.has("msg") == true)
                     {
                         String message = response.getString("msg");
-                        mListener.onInternalError(message);
+                        mListener.onErrorMessage(msgCode, message);
                     }
                 } else
                 {
@@ -156,7 +172,7 @@ public class EventListPresenter implements Response.ErrorListener
                 }
             } catch (Exception e)
             {
-                mListener.onInternalError();
+                mListener.onError(e);
             }
         }
     };
@@ -190,7 +206,7 @@ public class EventListPresenter implements Response.ErrorListener
                 }
             } catch (Exception e)
             {
-                mListener.onInternalError();
+                mListener.onError(e);
             }
         }
     };

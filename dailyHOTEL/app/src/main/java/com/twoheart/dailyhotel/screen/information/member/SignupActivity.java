@@ -937,7 +937,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             } catch (Exception e)
             {
                 unLockUI();
-                onErrorMessage();
+                onError(e);
             }
         }
     };

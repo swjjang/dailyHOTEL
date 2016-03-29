@@ -49,6 +49,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
 
     protected abstract PlaceSearchLayout getLayout();
 
+    protected abstract void onSearch(Location location);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -222,6 +224,12 @@ public abstract class PlaceSearchActivity extends BaseActivity
                 }
                 break;
             }
+
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                searchMyLocation();
+                break;
+            }
         }
     }
 
@@ -327,7 +335,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
                     DailyToast.showToast(PlaceSearchActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
                 } else
                 {
-                    // 서버 연동
+                    // 서버
+                    onSearch(location);
                 }
 
                 unLockUI();

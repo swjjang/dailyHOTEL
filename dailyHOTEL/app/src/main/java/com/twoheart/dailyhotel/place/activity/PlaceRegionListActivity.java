@@ -8,11 +8,8 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
-
-import java.util.List;
 
 public abstract class PlaceRegionListActivity extends BaseActivity
 {
@@ -31,15 +28,6 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     public interface OnUserActionListener
     {
         void onRegionClick(Province province);
-    }
-
-    public interface OnResponsePresenterListener
-    {
-        void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList);
-
-        void onInternalError();
-
-        void onInternalError(String message);
     }
 
     public enum Region

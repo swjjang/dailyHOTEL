@@ -31,27 +31,6 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     private EventListAdapter mEventListAdapter;
     private EventListPresenter mEventListPresenter;
 
-    public interface OnResponsePresenterListener
-    {
-        void onRequestEvent(String userIndex);
-
-        void onUpdateUserInformation(Customer user, int recommender, boolean isDailyUser);
-
-        void processEventPage(String eventUrl);
-
-        void onSignin();
-
-        void onEventListResponse(List<Event> eventList);
-
-        void onInternalError();
-
-        void onInternalError(String message);
-
-        void onError();
-
-        void onErrorResponse(VolleyError volleyError);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -159,7 +138,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     // User Action Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
+    private EventListPresenter.OnResponsePresenterListener mOnResponsePresenterListener = new EventListPresenter.OnResponsePresenterListener()
     {
         @Override
         public void onRequestEvent(String userIndex)
@@ -226,27 +205,24 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         @Override
-        public void onInternalError()
-        {
-            EventListActivity.this.onErrorMessage();
-        }
-
-        @Override
-        public void onInternalError(String message)
-        {
-            EventListActivity.this.onErrorMessage(message);
-        }
-
-        @Override
-        public void onError()
-        {
-            EventListActivity.this.onError();
-        }
-
-        @Override
         public void onErrorResponse(VolleyError volleyError)
         {
+            unLockUI();
             EventListActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            unLockUI();
+            EventListActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorMessage(int msgCode, String message)
+        {
+            unLockUI();
+            EventListActivity.this.onErrorMessage(msgCode, message);
         }
     };
 }

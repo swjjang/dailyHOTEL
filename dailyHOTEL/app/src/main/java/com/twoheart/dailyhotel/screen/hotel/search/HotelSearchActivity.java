@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.hotel.search;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -62,6 +63,13 @@ public class HotelSearchActivity extends PlaceSearchActivity
     protected PlaceSearchLayout getLayout()
     {
         return new HotelSearchLayout(this, mOnEventListener);
+    }
+
+    @Override
+    protected void onSearch(Location location)
+    {
+        Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, location);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
     @Override
@@ -128,14 +136,14 @@ public class HotelSearchActivity extends PlaceSearchActivity
         }
 
         @Override
-        public void onSearchResult(String text)
+        public void onSearch(String text)
         {
             Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
 
         @Override
-        public void onSearchResult(String text, Keyword keyword)
+        public void onSearch(String text, Keyword keyword)
         {
             Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, keyword);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
@@ -171,27 +179,33 @@ public class HotelSearchActivity extends PlaceSearchActivity
     private HotelSearchPresenter.OnPresenterListener mOnPresenterListener = new HotelSearchPresenter.OnPresenterListener()
     {
         @Override
+        public void onResponseAutoComplete(String keyword, List<Keyword> list)
+        {
+            mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
+        }
+
+        @Override
         public void onErrorResponse(VolleyError volleyError)
         {
+            unLockUI();
+
             HotelSearchActivity.this.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
+            unLockUI();
+
             HotelSearchActivity.this.onError(e);
         }
 
         @Override
-        public void onErrorMessage(String message)
+        public void onErrorMessage(int msgCode, String message)
         {
-            HotelSearchActivity.this.onErrorMessage(message);
-        }
+            unLockUI();
 
-        @Override
-        public void onResponseAutoComplete(String keyword, List<Keyword> list)
-        {
-            mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
+            HotelSearchActivity.this.onErrorMessage(msgCode, message);
         }
     };
 }

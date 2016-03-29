@@ -35,12 +35,6 @@ public class HotelSearchPresenter extends BasePresenter
         mOnPresenterListener.onErrorResponse(volleyError);
     }
 
-    @Override
-    protected void onErrorMessage(String message)
-    {
-        mOnPresenterListener.onErrorMessage(message);
-    }
-
     public void requestAutoComplete(SaleTime saleTime, int lengthStay, String keyword)
     {
         DailyNetworkAPI.getInstance().requestHotelSearchAutoCompleteList(mNetworkTag//

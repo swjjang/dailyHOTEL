@@ -44,12 +44,6 @@ public class MainPresenter extends BasePresenter
         mOnPresenterListener.onErrorResponse(volleyError);
     }
 
-    @Override
-    protected void onErrorMessage(String message)
-    {
-        mOnPresenterListener.onErrorMessage(message);
-    }
-
     protected void requestCheckServer()
     {
         // 서버 상태 체크

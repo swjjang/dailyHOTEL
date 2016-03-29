@@ -7,7 +7,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.OnLoadListener;
 
 public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener
@@ -82,7 +81,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
         baseActivity.onErrorResponse(error);
     }
 
-    protected void onErrorMessage(String message)
+    protected void onErrorMessage(int msgCode, String message)
     {
         unLockUI();
 
@@ -93,13 +92,13 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
             return;
         }
 
-        if (Util.isTextEmpty(message) == true)
-        {
-            baseActivity.onErrorMessage();
-        } else
-        {
-            baseActivity.onErrorMessage(message);
-        }
+        //        if (Util.isTextEmpty(message) == true)
+        //        {
+        //            baseActivity.onErrorMessage();
+        //        } else
+        //        {
+        baseActivity.onErrorMessage(msgCode, message);
+        //        }
     }
 
     public void lockUI()

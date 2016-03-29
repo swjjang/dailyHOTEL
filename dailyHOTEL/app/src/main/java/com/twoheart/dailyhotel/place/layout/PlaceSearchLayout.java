@@ -85,9 +85,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onAutoCompleteKeyword(String keyword);
 
-        void onSearchResult(String text);
+        void onSearch(String text);
 
-        void onSearchResult(String text, Keyword keyword);
+        void onSearch(String text, Keyword keyword);
     }
 
     protected abstract String getAroundPlaceString();
@@ -511,12 +511,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
-        ((OnEventListener) mOnEventListener).onSearchResult(text);
+        ((OnEventListener) mOnEventListener).onSearch(text);
     }
 
     private void validateKeyword(Keyword keyword)
     {
-        ((OnEventListener) mOnEventListener).onSearchResult(mSearchEditText.getText().toString().trim(), keyword);
+        ((OnEventListener) mOnEventListener).onSearch(mSearchEditText.getText().toString().trim(), keyword);
     }
 
     @Override

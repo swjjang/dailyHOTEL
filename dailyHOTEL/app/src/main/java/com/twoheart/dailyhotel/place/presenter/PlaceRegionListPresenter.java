@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.place.presenter;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.place.base.OnBasePresenterListener;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -17,6 +18,11 @@ public abstract class PlaceRegionListPresenter
     private static final int CHILD_GRID_COLUMN = 2;
 
     protected abstract void requestRegionList();
+
+    public interface OnResponsePresenterListener extends OnBasePresenterListener
+    {
+        void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList);
+    }
 
     /**
      * @param domesticProvinceList in

@@ -859,8 +859,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 } else
                 {
                     String message = response.getString("msg");
-
-                    onErrorMessage(message);
+                    onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

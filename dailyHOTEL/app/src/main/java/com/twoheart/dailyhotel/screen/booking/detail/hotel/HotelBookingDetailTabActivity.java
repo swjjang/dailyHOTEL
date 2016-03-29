@@ -224,25 +224,17 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 {
                     if (response.has("msg") == true)
                     {
-                        String msg = response.getString("msg");
+                        String message = response.getString("msg");
 
-                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, null, false);
-                        return;
+                        onErrorMessage(msgCode, message);
                     } else
                     {
-                        onErrorMessage();
+                        onError();
                     }
                 }
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             } finally
             {
                 unLockUI();

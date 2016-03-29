@@ -225,23 +225,15 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     {
                         String msg = response.getString("msg");
 
-                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, null, false);
-                        return;
+                        onErrorMessage(msgCode, msg);
                     } else
                     {
-                        onErrorMessage();
+                        onError();
                     }
                 }
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             } finally
             {
                 unLockUI();

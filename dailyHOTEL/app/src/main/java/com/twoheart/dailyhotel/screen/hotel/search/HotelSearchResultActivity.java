@@ -23,7 +23,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
     private static final String INTENT_EXTRA_DATA_LOCATION = "location";
 
-    private static final int COUNT_PER_TIMES = 15;
+    private static final int COUNT_PER_TIMES = 30;
 
     private SaleTime mSaleTime;
     private int mNights;
@@ -92,7 +92,13 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
         String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd");
 
-        mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
+        if (mKeyword != null)
+        {
+            mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
+        } else if (mLocation != null)
+        {
+            mPlaceSearchResultLayout.setToolbarText("" + mLocation.getLatitude() + mLocation.getLongitude(), String.format("%s - %s", checkInDate, checkOutDate));
+        }
 
         mHotelSearchResultPresenter = new HotelSearchResultPresenter(this, mNetworkTag, mOnPresenterListener);
         mHotelSearchResultPresenter.requestCustomerSatisfactionTimeMessage();
@@ -101,6 +107,11 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void requestSearchResultList()
     {
+        if (mOffset != 0 && mOffset >= mTotalCount)
+        {
+            return;
+        }
+
         if (mOffset == 0)
         {
             lockUI();
@@ -111,7 +122,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
         } else if (mLocation != null)
         {
-
+            //            mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mLocation, mOffset, COUNT_PER_TIMES);
         }
     }
 
@@ -190,10 +201,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onLoadMoreList()
         {
-            if (mOffset < mTotalCount)
-            {
-                requestSearchResultList();
-            }
+            requestSearchResultList();
         }
 
         @Override
@@ -308,19 +316,25 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
+            unLockUI();
+
             HotelSearchResultActivity.this.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
+            unLockUI();
+
             HotelSearchResultActivity.this.onError(e);
         }
 
         @Override
-        public void onErrorMessage(String message)
+        public void onErrorMessage(int msgCode, String message)
         {
-            HotelSearchResultActivity.this.onErrorMessage(message);
+            unLockUI();
+
+            HotelSearchResultActivity.this.onErrorMessage(msgCode, message);
         }
     };
 }

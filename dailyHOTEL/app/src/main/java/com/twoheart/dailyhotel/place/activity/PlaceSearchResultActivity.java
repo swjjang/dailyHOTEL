@@ -56,11 +56,17 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     }
 
     @Override
+    public void onAttachedToWindow()
+    {
+        super.onAttachedToWindow();
+
+        requestSearchResultList();
+    }
+
+    @Override
     protected void onStart()
     {
         super.onStart();
-
-        requestSearchResultList();
     }
 
     @Override

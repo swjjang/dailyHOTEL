@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
@@ -377,7 +378,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         releaseUiComponent();
 
-        ExLog.e(e.toString());
+        Crashlytics.logException(e);
 
         onError();
     }
@@ -403,16 +404,15 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     /**
      * 기본적으로 내부오류가 발생하였을 경우 사용
      */
-    public void onErrorMessage()
-    {
-        onErrorMessage(getString(R.string.dialog_msg_internal_error));
-    }
-
-    public void onErrorMessage(String message)
+    //    public void onErrorMessage()
+    //    {
+    //        onErrorMessage(getString(R.string.dialog_msg_internal_error));
+    //    }
+    public void onErrorMessage(int msgCode, String message)
     {
         unLockUI();
 
-        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+        showSimpleDialog(null, String.format("%s(%d)", message, msgCode), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -228,7 +229,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         }
     };
 
-    private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
+    private HotelRegionListPresenter.OnResponsePresenterListener mOnResponsePresenterListener = new HotelRegionListPresenter.OnResponsePresenterListener()
     {
         @Override
         public void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList)
@@ -242,17 +243,24 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onInternalError()
+        public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
-            HotelRegionListActivity.this.onErrorMessage();
+            HotelRegionListActivity.this.onError(volleyError);
         }
 
         @Override
-        public void onInternalError(String message)
+        public void onError(Exception e)
         {
             unLockUI();
-            HotelRegionListActivity.this.onErrorMessage(message);
+            HotelRegionListActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorMessage(int msgCode, String message)
+        {
+            unLockUI();
+            HotelRegionListActivity.this.onErrorMessage(msgCode, message);
         }
     };
 }
