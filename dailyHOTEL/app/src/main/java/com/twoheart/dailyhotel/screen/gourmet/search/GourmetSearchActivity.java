@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.gourmet.search;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -53,6 +54,12 @@ public class GourmetSearchActivity extends PlaceSearchActivity
     protected PlaceSearchLayout getLayout()
     {
         return new HotelSearchLayout(this, mOnEventListener);
+    }
+
+    @Override
+    protected void onSearch(Location location)
+    {
+
     }
 
     @Override
@@ -112,12 +119,12 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         }
 
         @Override
-        public void onSearchResult(String text)
+        public void onSearch(String text)
         {
         }
 
         @Override
-        public void onSearchResult(String text, Keyword keyword)
+        public void onSearch(String text, Keyword keyword)
         {
 
         }

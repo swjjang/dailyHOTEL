@@ -8,5 +8,5 @@ public interface OnBasePresenterListener
 
     void onError(Exception e);
 
-    void onErrorMessage(String message);
+    void onErrorMessage(int msgCode, String message);
 }

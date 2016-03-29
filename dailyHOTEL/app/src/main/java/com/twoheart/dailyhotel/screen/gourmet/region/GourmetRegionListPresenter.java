@@ -5,7 +5,6 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.presenter.PlaceRegionListPresenter;
 
@@ -19,9 +18,9 @@ public class GourmetRegionListPresenter extends PlaceRegionListPresenter
 {
     private BaseActivity mBaseActivity;
 
-    private PlaceRegionListActivity.OnResponsePresenterListener mListener;
+    private OnResponsePresenterListener mListener;
 
-    public GourmetRegionListPresenter(BaseActivity baseActivity, PlaceRegionListActivity.OnResponsePresenterListener listener)
+    public GourmetRegionListPresenter(BaseActivity baseActivity, OnResponsePresenterListener listener)
     {
         if (baseActivity == null || listener == null)
         {
@@ -45,9 +44,9 @@ public class GourmetRegionListPresenter extends PlaceRegionListPresenter
         {
             try
             {
-                int msg_code = response.getInt("msgCode");
+                int msgCode = response.getInt("msgCode");
 
-                if (msg_code == 100)
+                if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
@@ -72,11 +71,11 @@ public class GourmetRegionListPresenter extends PlaceRegionListPresenter
                 {
                     String message = response.getString("msg");
 
-                    mListener.onInternalError(message);
+                    mListener.onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
-                mListener.onInternalError();
+                mListener.onError(e);
             }
         }
     };

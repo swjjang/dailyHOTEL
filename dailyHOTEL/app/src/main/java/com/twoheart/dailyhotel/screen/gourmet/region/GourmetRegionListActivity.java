@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -13,6 +14,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
+import com.twoheart.dailyhotel.place.presenter.PlaceRegionListPresenter;
 import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -147,7 +149,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         }
     };
 
-    private OnResponsePresenterListener mOnResponsePresenterListener = new OnResponsePresenterListener()
+    private PlaceRegionListPresenter.OnResponsePresenterListener mOnResponsePresenterListener = new PlaceRegionListPresenter.OnResponsePresenterListener()
     {
         @Override
         public void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList)
@@ -160,17 +162,24 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onInternalError()
+        public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
-            GourmetRegionListActivity.this.onErrorMessage();
+            GourmetRegionListActivity.this.onErrorResponse(volleyError);
         }
 
         @Override
-        public void onInternalError(String message)
+        public void onError(Exception e)
         {
             unLockUI();
-            GourmetRegionListActivity.this.onErrorMessage(message);
+            GourmetRegionListActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorMessage(int msgCode, String message)
+        {
+            unLockUI();
+            GourmetRegionListActivity.this.onErrorMessage(msgCode, message);
         }
     };
 }

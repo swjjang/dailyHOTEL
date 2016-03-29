@@ -683,7 +683,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         if (gourmetPaymentInformation == null || checkInSaleTime == null)
         {
-            onErrorMessage();
+            Util.restartApp(this);
             return;
         }
 
@@ -811,7 +811,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     {
                         ExLog.d(e.toString());
 
-                        onErrorMessage();
+                        onError(e);
                     }
                 }
             });
@@ -1094,7 +1094,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     , mGourmetPaymentInformationJsonResponseListener, GourmetPaymentActivity.this);
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             }
         }
     };
@@ -1108,9 +1108,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             {
                 GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -1193,25 +1193,17 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     if (response.has("msg") == true)
                     {
-                        String msg = response.getString("msg");
+                        String message = response.getString("msg");
 
-                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, null, false);
-                        return;
+                        onErrorMessage(msgCode, message);
                     } else
                     {
-                        onErrorMessage();
+                        onError();
                     }
                 }
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             }
         }
     };
@@ -1223,46 +1215,45 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code != 0)
+                if (msgCode == 0)
+                {
+                    JSONObject jsonData = response.getJSONObject("data");
+
+                    int bonus = jsonData.getInt("user_bonus");
+
+                    if (bonus < 0)
+                    {
+                        bonus = 0;
+                    }
+
+                    if (mPaymentInformation.isEnabledBonus == true && bonus != mPaymentInformation.bonus)
+                    {
+                        // 보너스 값이 변경된 경우
+                        mPaymentInformation.bonus = bonus;
+                        showChangedBonusDialog();
+                        return;
+                    }
+
+                    DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, //
+                        ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().index, //
+                        mFinalCheckPayJsonResponseListener, GourmetPaymentActivity.this);
+                } else
                 {
                     if (response.has("msg") == true)
                     {
-                        String msg = response.getString("msg");
+                        String message = response.getString("msg");
 
-                        DailyToast.showToast(GourmetPaymentActivity.this, msg, Toast.LENGTH_SHORT);
-                        finish();
-                        return;
+                        onErrorMessage(msgCode, message);
                     } else
                     {
-                        throw new NullPointerException("response == null");
+                        onError();
                     }
                 }
-
-                JSONObject jsonData = response.getJSONObject("data");
-
-                int bonus = jsonData.getInt("user_bonus");
-
-                if (bonus < 0)
-                {
-                    bonus = 0;
-                }
-
-                if (mPaymentInformation.isEnabledBonus == true && bonus != mPaymentInformation.bonus)
-                {
-                    // 보너스 값이 변경된 경우
-                    mPaymentInformation.bonus = bonus;
-                    showChangedBonusDialog();
-                    return;
-                }
-
-                DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, //
-                    ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().index, //
-                    mFinalCheckPayJsonResponseListener, GourmetPaymentActivity.this);
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             }
         }
     };
@@ -1276,9 +1267,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             {
                 GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -1367,25 +1358,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     if (response.has("msg") == true)
                     {
-                        String msg = response.getString("msg");
-
-                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, null, false);
-                        return;
+                        String message = response.getString("msg");
+                        onErrorMessage(msgCode, message);
                     } else
                     {
-                        onErrorMessage();
+                        onError();
                     }
                 }
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             }
         }
     };
@@ -1401,34 +1383,26 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                 boolean isOnSale = jsonObject.getBoolean("on_sale");
 
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (isOnSale == true && msg_code == 0)
+                if (isOnSale == true && msgCode == 0)
                 {
                     DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
                 } else
                 {
                     if (response.has("msg") == true)
                     {
-                        String msg = response.getString("msg");
+                        String message = response.getString("msg");
 
-                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, null, false);
-                        return;
+                        onErrorMessage(msgCode, message);
                     } else
                     {
-                        onErrorMessage();
+                        onError();
                     }
                 }
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             }
         }
     };
@@ -1440,17 +1414,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         {
             try
             {
-                if (response == null)
-                {
-                    onErrorMessage();
-                    return;
-                }
-
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 hidePorgressDialog();
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     // 결제 관련 로그 남기기
                     recordAnalyticsPaymentComplete((GourmetPaymentInformation) mPaymentInformation);
@@ -1491,7 +1459,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 }
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             }
         }
     };

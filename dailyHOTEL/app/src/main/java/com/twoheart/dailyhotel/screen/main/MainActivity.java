@@ -467,11 +467,11 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onErrorMessage(String message)
+        public void onErrorMessage(int magCode, String message)
         {
             mDelayTimeHandler.removeMessages(0);
 
-            MainActivity.this.onErrorMessage(message);
+            MainActivity.this.onErrorMessage(magCode, message);
         }
 
         @Override

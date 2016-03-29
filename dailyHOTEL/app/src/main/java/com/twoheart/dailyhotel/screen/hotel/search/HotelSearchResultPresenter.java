@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.hotel.search;
 
 import android.content.Context;
+import android.location.Location;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -44,15 +45,14 @@ public class HotelSearchResultPresenter extends BasePresenter
         mOnPresenterListener.onErrorResponse(volleyError);
     }
 
-    @Override
-    protected void onErrorMessage(String message)
-    {
-        mOnPresenterListener.onErrorMessage(message);
-    }
-
     public void requestSearchResultList(SaleTime saleTime, int nights, String keword, int offset, int count)
     {
         DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, keword, offset, count, mHotelSearchListJsonResponseListener, this);
+    }
+
+    public void requestSearchResultList(SaleTime saleTime, int nights, Location location, int offset, int count)
+    {
+        DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, location, offset, count, mHotelSearchListJsonResponseListener, this);
     }
 
     public void requestCustomerSatisfactionTimeMessage()
@@ -126,8 +126,7 @@ public class HotelSearchResultPresenter extends BasePresenter
                 } else
                 {
                     String message = response.getString("msg");
-
-                    onErrorMessage(message);
+                    mOnPresenterListener.onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

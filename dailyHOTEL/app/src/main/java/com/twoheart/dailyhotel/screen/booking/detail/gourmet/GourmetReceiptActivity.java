@@ -183,9 +183,9 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     makeLayout(response.getJSONObject("data"));
                 } else
@@ -194,23 +194,15 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
                     {
                         String msg = response.getString("msg");
 
-                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, null, false);
-                        return;
+                        onErrorMessage(msgCode, msg);
                     } else
                     {
-                        onErrorMessage();
+                        onError();
                     }
                 }
             } catch (Exception e)
             {
-                onErrorMessage();
+                onError(e);
             } finally
             {
                 unLockUI();
