@@ -38,7 +38,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
         super.onDestroy();
     }
 
-    public void onError(Exception error)
+    public void onError(Exception e)
     {
         unLockUI();
 
@@ -49,21 +49,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
             return;
         }
 
-        baseActivity.onError(error);
-    }
-
-    public void onError()
-    {
-        unLockUI();
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        baseActivity.onError();
+        baseActivity.onError(e);
     }
 
     @Override
@@ -92,13 +78,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
             return;
         }
 
-        //        if (Util.isTextEmpty(message) == true)
-        //        {
-        //            baseActivity.onErrorMessage();
-        //        } else
-        //        {
         baseActivity.onErrorMessage(msgCode, message);
-        //        }
     }
 
     public void lockUI()

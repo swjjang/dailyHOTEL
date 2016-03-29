@@ -221,15 +221,8 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     loadFragments(getViewPager(), mGourmetBookingDetail);
                 } else
                 {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-
-                        onErrorMessage(msgCode, msg);
-                    } else
-                    {
-                        onError();
-                    }
+                    String message = response.getString("msg");
+                    onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

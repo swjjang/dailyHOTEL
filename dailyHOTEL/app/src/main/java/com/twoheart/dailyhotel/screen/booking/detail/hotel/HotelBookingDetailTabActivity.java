@@ -222,15 +222,8 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     loadFragments(getViewPager(), mHotelBookingDetail);
                 } else
                 {
-                    if (response.has("msg") == true)
-                    {
-                        String message = response.getString("msg");
-
-                        onErrorMessage(msgCode, message);
-                    } else
-                    {
-                        onError();
-                    }
+                    String message = response.getString("msg");
+                    onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

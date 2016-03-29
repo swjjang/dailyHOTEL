@@ -190,15 +190,8 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
                     makeLayout(response.getJSONObject("data"));
                 } else
                 {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-
-                        onErrorMessage(msgCode, msg);
-                    } else
-                    {
-                        onError();
-                    }
+                    String message = response.getString("msg");
+                    onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

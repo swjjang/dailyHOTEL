@@ -140,7 +140,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 Date date = new Date();
 
                 String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode);
-                KakaoLinkManager.newInstance(this).sendInviteMsgKakaoLink(msg);
+                KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
             } catch (Exception e)

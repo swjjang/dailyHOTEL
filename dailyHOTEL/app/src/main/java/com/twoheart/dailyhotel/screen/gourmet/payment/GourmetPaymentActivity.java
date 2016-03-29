@@ -1191,15 +1191,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     recordAnalyticsPayment(gourmetPaymentInformation);
                 } else
                 {
-                    if (response.has("msg") == true)
-                    {
-                        String message = response.getString("msg");
-
-                        onErrorMessage(msgCode, message);
-                    } else
-                    {
-                        onError();
-                    }
+                    String message = response.getString("msg");
+                    onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
@@ -1241,15 +1234,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         mFinalCheckPayJsonResponseListener, GourmetPaymentActivity.this);
                 } else
                 {
-                    if (response.has("msg") == true)
-                    {
-                        String message = response.getString("msg");
-
-                        onErrorMessage(msgCode, message);
-                    } else
-                    {
-                        onError();
-                    }
+                    String message = response.getString("msg");
+                    onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
@@ -1356,14 +1342,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     }
                 } else
                 {
-                    if (response.has("msg") == true)
-                    {
-                        String message = response.getString("msg");
-                        onErrorMessage(msgCode, message);
-                    } else
-                    {
-                        onError();
-                    }
+                    String message = response.getString("msg");
+                    onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
@@ -1390,15 +1370,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
                 } else
                 {
-                    if (response.has("msg") == true)
-                    {
-                        String message = response.getString("msg");
-
-                        onErrorMessage(msgCode, message);
-                    } else
-                    {
-                        onError();
-                    }
+                    String message = response.getString("msg");
+                    onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
