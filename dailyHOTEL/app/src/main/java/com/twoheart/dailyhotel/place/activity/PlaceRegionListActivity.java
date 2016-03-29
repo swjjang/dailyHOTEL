@@ -19,6 +19,8 @@ public abstract class PlaceRegionListActivity extends BaseActivity
 
     protected abstract void initTabLayout(TabLayout tabLayout);
 
+    protected abstract void initToolbar(View toolbar);
+
     protected abstract void initViewPager(TabLayout tabLayout);
 
     protected abstract void showSearch();
@@ -65,17 +67,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     {
         View toolbar = findViewById(R.id.toolbar);
 
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
-        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search_black, -1);
-        dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                showSearch();
-            }
-        });
+        initToolbar(toolbar);
     }
 
     @Override

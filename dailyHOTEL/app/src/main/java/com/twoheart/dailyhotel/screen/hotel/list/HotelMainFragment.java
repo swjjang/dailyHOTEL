@@ -166,6 +166,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         });
 
         mDailyToolbarLayout.initToolbarRegionMenu(mToolbarOptionsItemSelected);
+        onPrepareOptionsMenu(mViewType);
     }
 
     private void initDateTabLayout(View view)
