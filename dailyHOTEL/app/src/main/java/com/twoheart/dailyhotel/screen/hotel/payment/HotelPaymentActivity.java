@@ -212,6 +212,22 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mReservationPhone.setEnabled(false);
         mReservationEmail.setEnabled(false);
 
+        TextView guideNameMemo = (TextView)findViewById(R.id.guideNameMemoView);
+
+        if (((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().isOverseas == true)
+        {
+            guideNameMemo.setVisibility(View.VISIBLE);
+
+            if (Util.getLCDWidth(this) > 480)
+            {
+                guideNameMemo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_payment_name, 0, 0, 0);
+                guideNameMemo.setCompoundDrawablePadding(Util.dpToPx(this, 4));
+            }
+        } else
+        {
+            guideNameMemo.setVisibility(View.GONE);
+        }
+
         // 수정.
         View editLinearLayout = findViewById(R.id.editLinearLayout);
         editLinearLayout.setOnClickListener(mOnEditInfoOnClickListener);
