@@ -279,7 +279,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             @Override
             public void onClick(View v)
             {
-                validateKeyword((Keyword) v.getTag());
+                Keyword keyword = (Keyword) v.getTag();
+
+                if(keyword != null)
+                {
+                    validateKeyword(keyword);
+                }
             }
         };
 
@@ -310,6 +315,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
             View view = viewGroup.getChildAt(0);
             view.setVisibility(View.VISIBLE);
+            view.setTag(null);
 
             TextView textView = (TextView) view.findViewById(R.id.textView);
             textView.setTextColor(mContext.getResources().getColor(R.color.search_hint_text));

@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
@@ -138,6 +139,11 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onSearch(String text)
         {
+            if (Util.isTextEmpty(text) == true)
+            {
+                return;
+            }
+
             Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
@@ -145,6 +151,11 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onSearch(String text, Keyword keyword)
         {
+            if (keyword == null)
+            {
+                return;
+            }
+
             Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, keyword);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
 
