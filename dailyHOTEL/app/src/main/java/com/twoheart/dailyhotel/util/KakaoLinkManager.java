@@ -1,13 +1,11 @@
 package com.twoheart.dailyhotel.util;
 
 import android.content.Context;
-import android.os.Handler;
 
 import com.kakao.kakaolink.AppActionBuilder;
 import com.kakao.kakaolink.AppActionInfoBuilder;
 import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
-import com.kakao.kakaolink.internal.LinkObject;
 import com.kakao.util.KakaoParameterException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;

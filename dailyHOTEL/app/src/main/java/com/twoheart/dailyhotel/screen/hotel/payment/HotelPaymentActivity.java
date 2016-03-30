@@ -212,7 +212,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mReservationPhone.setEnabled(false);
         mReservationEmail.setEnabled(false);
 
-        TextView guideNameMemo = (TextView)findViewById(R.id.guideNameMemoView);
+        TextView guideNameMemo = (TextView) findViewById(R.id.guideNameMemoView);
 
         if (((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().isOverseas == true)
         {

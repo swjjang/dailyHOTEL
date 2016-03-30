@@ -9,7 +9,6 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public abstract class PlaceRegionListActivity extends BaseActivity
 {
