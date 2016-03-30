@@ -587,7 +587,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 }
             } else if (size < tabCount)
             {
-                for (int i = tabCount - 1; i <= size - 1; i--)
+                for (int i = tabCount - 1; i > size - 1; i--)
                 {
                     mCategoryTabLayout.removeTabAt(i);
                 }
