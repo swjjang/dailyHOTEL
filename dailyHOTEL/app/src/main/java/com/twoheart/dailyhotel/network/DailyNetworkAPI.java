@@ -349,7 +349,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "ODUkMjEkNjYkNCQ3JA==$NTMxCQzTM3OTVEQUU3NTg3NYUQxMzVDMURERjk5QjE3QkFGOEMxRTIxOUMzNEQ1OEUxNGkUyMEM5Q0UxQUY1RTAxOTA==$";
 
         String params = String.format("?dateCheckIn=%s&lengthStay=%d&offset=%d&count=%d&term=%s"//
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights, offeset, count, text);
@@ -360,12 +360,14 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int distance, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        //        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "";
-        final String URL = Constants.UNENCRYPTED_URL ? "hotel/sale/v2/list" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "ODUkMjEkNjYkNCQ3JA==$NTMxCQzTM3OTVEQUU3NTg3NYUQxMzVDMURERjk5QjE3QkFGOEMxRTIxOUMzNEQ1OEUxNGkUyMEM5Q0UxQUY1RTAxOTA==$";
 
-        String params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", 5, 1, saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+        String params = String.format("?dateCheckIn=%s&lengthStay=%d&userLatitude=%s&userLongitude=%s&distanceKm=%d&offset=%d&count=%d"//
+            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights//
+            , Double.toString(location.getLatitude()), Double.toString(location.getLongitude())//
+            , distance, offeset, count);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder("http://52.196.30.125/").append(URL).append(params).toString(), null, listener, errorListener);
 
@@ -375,7 +377,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelSearchAutoCompleteList(Object tag, String date, int lengthStay, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/auto_complete" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/auto_complete" : "NDYkNTIkNTYkMjQkNSQ=$NTQ3MFzUwNzVDMDNGMEU2OTlERNTZEQUNDMzM5NDBFNkQzNUEQ5MzhICNDElGMjI5NkZGMjNDRjFDRjY1REE1RjAxQg==$";
 
         String params = String.format("?dateCheckIn=%s&lengthStay=%d&term=%s", date, lengthStay, text);
 

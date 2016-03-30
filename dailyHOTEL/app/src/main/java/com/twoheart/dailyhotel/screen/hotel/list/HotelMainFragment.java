@@ -1297,7 +1297,17 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-                    Intent intent = HotelSearchActivity.newInstance(baseActivity, currentFragment.getSaleTime(), currentFragment.getNights());
+                    SaleTime saleTime;
+
+                    if (currentFragment instanceof HotelDaysListFragment)
+                    {
+                        saleTime = ((HotelDaysListFragment) currentFragment).getSelectedCheckInSaleTime();
+                    } else
+                    {
+                        saleTime = currentFragment.getSaleTime();
+                    }
+
+                    Intent intent = HotelSearchActivity.newInstance(baseActivity, saleTime, currentFragment.getNights());
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
                     switch (mViewType)

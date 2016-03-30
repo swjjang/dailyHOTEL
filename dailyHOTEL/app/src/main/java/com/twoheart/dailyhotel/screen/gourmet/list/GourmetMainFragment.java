@@ -28,7 +28,6 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.eventlist.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
-import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -1087,23 +1086,23 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 case R.drawable.navibar_ic_search_black:
                 {
-                    GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-                    Intent intent = GourmetSearchActivity.newInstance(baseActivity, currentFragment.getSaleTime());
-                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
-
-                    switch (mViewType)
-                    {
-                        case LIST:
-                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                                , Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LIST, null);
-                            break;
-
-                        case MAP:
-                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                                , Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_MAP, null);
-                            break;
-                    }
+                    //                    GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    //
+                    //                    Intent intent = GourmetSearchActivity.newInstance(baseActivity, currentFragment.getSaleTime());
+                    //                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                    //
+                    //                    switch (mViewType)
+                    //                    {
+                    //                        case LIST:
+                    //                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    //                                , Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LIST, null);
+                    //                            break;
+                    //
+                    //                        case MAP:
+                    //                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    //                                , Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_MAP, null);
+                    //                            break;
+                    //                    }
                     break;
                 }
             }

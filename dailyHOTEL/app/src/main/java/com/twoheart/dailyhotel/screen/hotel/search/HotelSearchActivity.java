@@ -23,6 +23,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     private HotelSearchNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private int mNights;
+    private int mDistance;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights)
     {
@@ -69,7 +70,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     @Override
     protected void onSearch(Location location)
     {
-        Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, location);
+        Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, location, mDistance);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
@@ -97,23 +98,27 @@ public class HotelSearchActivity extends PlaceSearchActivity
         }
 
         @Override
-        public void onShowTermsOfLocationDialog()
+        public void onShowTermsOfLocationDialog(int distance)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
+
+            mDistance = distance;
 
             showTermsOfLocationDialog();
         }
 
         @Override
-        public void onSearchMyLocation()
+        public void onSearchMyLocation(int distance)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
+
+            mDistance = distance;
 
             searchMyLocation();
         }
