@@ -464,6 +464,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             return bookingArrayList;
         }
     };
+
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.deprecated;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;

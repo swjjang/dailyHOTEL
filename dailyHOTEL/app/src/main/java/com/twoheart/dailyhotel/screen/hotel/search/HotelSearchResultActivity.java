@@ -33,7 +33,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
     private int mOffset, mTotalCount;
 
-    private HotelSearchResultPresenter mHotelSearchResultPresenter;
+    private HotelSearchResultNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, Keyword keyword)
     {
@@ -100,8 +100,8 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setToolbarText("", String.format("%s - %s", checkInDate, checkOutDate));
         }
 
-        mHotelSearchResultPresenter = new HotelSearchResultPresenter(this, mNetworkTag, mOnPresenterListener);
-        mHotelSearchResultPresenter.requestCustomerSatisfactionTimeMessage();
+        mNetworkController = new HotelSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mNetworkController.requestCustomerSatisfactionTimeMessage();
     }
 
     @Override
@@ -119,10 +119,10 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
         if (mKeyword != null)
         {
-            mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
+            mNetworkController.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
         } else if (mLocation != null)
         {
-            mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mLocation, mOffset, COUNT_PER_TIMES);
+            mNetworkController.requestSearchResultList(mSaleTime, mNights, mLocation, mOffset, COUNT_PER_TIMES);
         }
     }
 
@@ -212,10 +212,10 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // mOnPresenterListener
+    // mOnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private HotelSearchResultPresenter.OnPresenterListener mOnPresenterListener = new HotelSearchResultPresenter.OnPresenterListener()
+    private HotelSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new HotelSearchResultNetworkController.OnNetworkControllerListener()
     {
         private void analyticsOnResponseSearchResultListForSearches(String keyword, int totalCount)
         {

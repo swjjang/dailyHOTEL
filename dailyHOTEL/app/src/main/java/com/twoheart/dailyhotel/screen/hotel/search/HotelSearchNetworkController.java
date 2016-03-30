@@ -8,8 +8,8 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
-import com.twoheart.dailyhotel.place.base.BasePresenter;
-import com.twoheart.dailyhotel.place.base.OnBasePresenterListener;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -17,14 +17,14 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelSearchPresenter extends BasePresenter
+public class HotelSearchNetworkController extends BaseNetworkController
 {
-    protected interface OnPresenterListener extends OnBasePresenterListener
+    protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onResponseAutoComplete(String keyword, List<Keyword> list);
     }
 
-    public HotelSearchPresenter(Context context, String networkTag, OnBasePresenterListener listener)
+    public HotelSearchNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
@@ -32,7 +32,7 @@ public class HotelSearchPresenter extends BasePresenter
     @Override
     public void onErrorResponse(VolleyError volleyError)
     {
-        mOnPresenterListener.onErrorResponse(volleyError);
+        mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
     public void requestAutoComplete(SaleTime saleTime, int lengthStay, String keyword)
@@ -63,7 +63,7 @@ public class HotelSearchPresenter extends BasePresenter
                 }
             }
 
-            ((OnPresenterListener) mOnPresenterListener).onResponseAutoComplete(url.substring(startIndex + 1), keywordList);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(url.substring(startIndex + 1), keywordList);
         }
     };
 
@@ -72,7 +72,7 @@ public class HotelSearchPresenter extends BasePresenter
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            ((OnPresenterListener) mOnPresenterListener).onResponseAutoComplete(null, null);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(null, null);
         }
     };
 }

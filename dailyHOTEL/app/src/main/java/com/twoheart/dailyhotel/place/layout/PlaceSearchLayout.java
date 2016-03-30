@@ -281,7 +281,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             {
                 Keyword keyword = (Keyword) v.getTag();
 
-                if(keyword != null)
+                if (keyword != null)
                 {
                     validateKeyword(keyword);
                 }

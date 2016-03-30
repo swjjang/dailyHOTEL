@@ -471,12 +471,12 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         {
             case LIST:
                 mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_map, -1);
-//                mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_search_black);
+                //                mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_search_black);
                 break;
 
             case MAP:
                 mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_list, -1);
-//                mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_list, R.drawable.navibar_ic_search_black);
+                //                mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_list, R.drawable.navibar_ic_search_black);
                 break;
 
             default:

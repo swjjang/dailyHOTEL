@@ -6,7 +6,7 @@ import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.presenter.PlaceRegionListPresenter;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,13 +14,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelRegionListPresenter extends PlaceRegionListPresenter
+public class HotelRegionListNetworkController extends PlaceRegionListNetworkController
 {
     private BaseActivity mBaseActivity;
 
-    private OnResponsePresenterListener mListener;
+    private OnNetworkControllerListener mOnNetworkControllerListener;
 
-    public HotelRegionListPresenter(BaseActivity baseActivity, OnResponsePresenterListener listener)
+    public HotelRegionListNetworkController(BaseActivity baseActivity, OnNetworkControllerListener listener)
     {
         if (baseActivity == null || listener == null)
         {
@@ -28,7 +28,7 @@ public class HotelRegionListPresenter extends PlaceRegionListPresenter
         }
 
         mBaseActivity = baseActivity;
-        mListener = listener;
+        mOnNetworkControllerListener = listener;
     }
 
     public void requestRegionList()
@@ -65,15 +65,15 @@ public class HotelRegionListPresenter extends PlaceRegionListPresenter
 
                     makeRegionViewItemList(domesticProvinceList, globalProvinceList, areaList, domesticRegionViewList, globalRegionViewList);
 
-                    mListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
+                    mOnNetworkControllerListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
                 } else
                 {
                     String message = response.getString("msg");
-                    mListener.onErrorMessage(msgCode, message);
+                    mOnNetworkControllerListener.onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
-                mListener.onError(e);
+                mOnNetworkControllerListener.onError(e);
             }
         }
     };

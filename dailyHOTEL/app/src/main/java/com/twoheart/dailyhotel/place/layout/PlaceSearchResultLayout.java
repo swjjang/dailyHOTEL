@@ -174,7 +174,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
             return;
         }
 
-        if(count < 0)
+        if (count < 0)
         {
             mResultTextView.setVisibility(View.GONE);
         } else

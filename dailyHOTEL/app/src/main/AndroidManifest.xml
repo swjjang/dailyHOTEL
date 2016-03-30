@@ -140,11 +140,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.deprecated.NoticeActivity"
+            android:name=".deprecated.NoticeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.deprecated.FAQActivity"
+            android:name=".deprecated.FAQActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

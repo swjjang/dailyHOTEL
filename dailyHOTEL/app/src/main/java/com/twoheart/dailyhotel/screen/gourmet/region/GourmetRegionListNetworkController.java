@@ -6,7 +6,7 @@ import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.presenter.PlaceRegionListPresenter;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,13 +14,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GourmetRegionListPresenter extends PlaceRegionListPresenter
+public class GourmetRegionListNetworkController extends PlaceRegionListNetworkController
 {
     private BaseActivity mBaseActivity;
 
-    private OnResponsePresenterListener mListener;
+    private OnNetworkControllerListener mListener;
 
-    public GourmetRegionListPresenter(BaseActivity baseActivity, OnResponsePresenterListener listener)
+    public GourmetRegionListNetworkController(BaseActivity baseActivity, OnNetworkControllerListener listener)
     {
         if (baseActivity == null || listener == null)
         {

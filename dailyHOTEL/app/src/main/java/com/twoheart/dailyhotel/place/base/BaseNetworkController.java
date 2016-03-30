@@ -4,13 +4,13 @@ import android.content.Context;
 
 import com.android.volley.Response;
 
-public abstract class BasePresenter implements Response.ErrorListener
+public abstract class BaseNetworkController implements Response.ErrorListener
 {
     protected String mNetworkTag;
     protected Context mContext;
-    protected OnBasePresenterListener mOnPresenterListener;
+    protected OnBaseNetworkControllerListener mOnNetworkControllerListener;
 
-    public BasePresenter(Context context, String networkTag, OnBasePresenterListener listener)
+    public BaseNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         if (context == null || networkTag == null || listener == null)
         {
@@ -19,6 +19,6 @@ public abstract class BasePresenter implements Response.ErrorListener
 
         mContext = context;
         mNetworkTag = networkTag;
-        mOnPresenterListener = listener;
+        mOnNetworkControllerListener = listener;
     }
 }

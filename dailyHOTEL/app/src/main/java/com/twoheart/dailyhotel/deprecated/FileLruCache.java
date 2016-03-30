@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.twoheart.dailyhotel.util;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.support.v4.util.LruCache;
 

@@ -6,8 +6,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.place.base.BasePresenter;
-import com.twoheart.dailyhotel.place.base.OnBasePresenterListener;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -16,9 +16,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
-public class MainPresenter extends BasePresenter
+public class MainNetworkController extends BaseNetworkController
 {
-    public interface OnPresenterListener extends OnBasePresenterListener
+    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void updateNewEvent();
 
@@ -33,7 +33,7 @@ public class MainPresenter extends BasePresenter
         void onConfigurationResponse();
     }
 
-    public MainPresenter(Context context, String networkTag, OnPresenterListener listener)
+    public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
@@ -41,7 +41,7 @@ public class MainPresenter extends BasePresenter
     @Override
     public void onErrorResponse(VolleyError volleyError)
     {
-        mOnPresenterListener.onErrorResponse(volleyError);
+        mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
     protected void requestCheckServer()
@@ -161,10 +161,10 @@ public class MainPresenter extends BasePresenter
                         String title = jsonObject.getString("messageTitle");
                         String message = jsonObject.getString("messageBody");
 
-                        ((OnPresenterListener) mOnPresenterListener).onCheckServerResponse(title, message);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
                     } else
                     {
-                        DailyNetworkAPI.getInstance().requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, MainPresenter.this);
+                        DailyNetworkAPI.getInstance().requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, MainNetworkController.this);
                     }
                 }
             } catch (Exception e)
@@ -209,10 +209,10 @@ public class MainPresenter extends BasePresenter
                 int maxVersion = Integer.parseInt(maxVersionName.replace(".", ""));
                 int minVersion = Integer.parseInt(minVersionName.replace(".", ""));
 
-                ((OnPresenterListener) mOnPresenterListener).onAppVersionResponse(maxVersion, minVersion);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersion, minVersion);
             } catch (Exception e)
             {
-                ((OnPresenterListener) mOnPresenterListener).onError(e);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onError(e);
             }
         }
     };
@@ -244,10 +244,10 @@ public class MainPresenter extends BasePresenter
                         , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax, privacyEmail);
                 }
 
-                ((OnPresenterListener) mOnPresenterListener).onConfigurationResponse();
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfigurationResponse();
             } catch (Exception e)
             {
-                ((OnPresenterListener) mOnPresenterListener).onError(e);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onError(e);
             }
         }
     };
@@ -276,7 +276,7 @@ public class MainPresenter extends BasePresenter
                     }
                 }
 
-                ((OnPresenterListener) mOnPresenterListener).updateNewEvent();
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent();
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -301,7 +301,7 @@ public class MainPresenter extends BasePresenter
                     String ticketName = jsonObject.getString("ticket_name");
                     int reservationIndex = jsonObject.getInt("reservation_rec_idx");
 
-                    ((OnPresenterListener) mOnPresenterListener).onSatisfactionGourmet(ticketName, reservationIndex, checkInTime);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onSatisfactionGourmet(ticketName, reservationIndex, checkInTime);
                 }
             } catch (Exception e)
             {
@@ -330,7 +330,7 @@ public class MainPresenter extends BasePresenter
                     String hotelName = jsonObject.getString("hotel_name");
                     int reservationIndex = jsonObject.getInt("reserv_idx");
 
-                    ((OnPresenterListener) mOnPresenterListener).onSatisfactionHotel(hotelName, reservationIndex, checkInDate, checkOutDate);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onSatisfactionHotel(hotelName, reservationIndex, checkInDate, checkOutDate);
                 } else
                 {
                     requestGourmetIsExistRating();
@@ -371,7 +371,7 @@ public class MainPresenter extends BasePresenter
                 DailyNetworkAPI.getInstance().requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener, null);
             } catch (Exception e)
             {
-                ((OnPresenterListener) mOnPresenterListener).onError(e);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onError(e);
             }
         }
     };

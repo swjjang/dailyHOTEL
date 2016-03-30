@@ -29,7 +29,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     private ListView mListView;
     private Event mSelectedEvent;
     private EventListAdapter mEventListAdapter;
-    private EventListPresenter mEventListPresenter;
+    private EventListNetworkController mEventListNetworkController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,7 +38,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         setContentView(R.layout.activity_eventlist);
 
-        mEventListPresenter = new EventListPresenter(this, mOnResponsePresenterListener);
+        mEventListNetworkController = new EventListNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         DailyPreference.getInstance(this).setNewEvent(false);
 
@@ -76,7 +76,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         super.onResume();
 
         lockUI();
-        mEventListPresenter.requestEventList();
+        mEventListNetworkController.requestEventList();
     }
 
     @Override
@@ -127,10 +127,10 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
         {
-            mOnResponsePresenterListener.onSignin();
+            mOnNetworkControllerListener.onSignin();
         } else
         {
-            mEventListPresenter.requestUserInformationEx();
+            mEventListNetworkController.requestUserInformationEx();
         }
     }
 
@@ -138,14 +138,14 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     // User Action Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private EventListPresenter.OnResponsePresenterListener mOnResponsePresenterListener = new EventListPresenter.OnResponsePresenterListener()
+    private EventListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new EventListNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onRequestEvent(String userIndex)
         {
             lockUI();
 
-            mEventListPresenter.requestEventPageUrl(mSelectedEvent, userIndex);
+            mEventListNetworkController.requestEventPageUrl(mSelectedEvent, userIndex);
         }
 
         @Override

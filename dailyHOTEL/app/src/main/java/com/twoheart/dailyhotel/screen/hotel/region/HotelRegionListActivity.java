@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -34,7 +35,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     private ViewPager mViewPager;
     private PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
 
-    private HotelRegionListPresenter mRegionListPresenter;
+    private HotelRegionListNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private int mNights;
     private Province mSelectedProvince;
@@ -52,7 +53,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void initPrepare()
     {
-        mRegionListPresenter = new HotelRegionListPresenter(this, mOnResponsePresenterListener);
+        mNetworkController = new HotelRegionListNetworkController(this, mOnNetworkControllerListener);
     }
 
     @Override
@@ -158,7 +159,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void requestRegionList()
     {
-        mRegionListPresenter.requestRegionList();
+        mNetworkController.requestRegionList();
     }
 
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
@@ -247,7 +248,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         }
     };
 
-    private HotelRegionListPresenter.OnResponsePresenterListener mOnResponsePresenterListener = new HotelRegionListPresenter.OnResponsePresenterListener()
+    private PlaceRegionListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceRegionListNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList)
