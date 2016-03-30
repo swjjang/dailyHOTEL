@@ -153,11 +153,11 @@
                 android:background="@color/information_underline"/>
 
             <ScrollView
+                android:id="@+id/recentSearchesScrollLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/deleteAllView"
                 android:fadingEdge="none"
-                android:overScrollMode="never"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp">
 
@@ -176,7 +176,6 @@
             android:layout_below="@+id/searchAroundLayout"
             android:layout_marginTop="10dp"
             android:fadingEdge="none"
-            android:overScrollMode="never"
             android:visibility="gone">
 
             <LinearLayout

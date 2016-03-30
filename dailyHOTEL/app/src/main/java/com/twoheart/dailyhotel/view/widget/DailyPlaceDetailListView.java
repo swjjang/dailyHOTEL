@@ -5,6 +5,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ListView;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
+
 public class DailyPlaceDetailListView extends ListView
 {
     private boolean mScrollable = true;
@@ -39,6 +42,7 @@ public class DailyPlaceDetailListView extends ListView
 
     private void initLayout(Context context)
     {
+        EdgeEffectColor.setEdgeGlowColor(this, getResources().getColor(R.color.over_scroll_edge));
     }
 
     public void setScrollEnabled(boolean enable)

@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -77,6 +78,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
         mGourmetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mGourmetRecyclerView.setTag("GourmetListFragment");
+        EdgeEffectColor.setEdgeGlowColor(mGourmetRecyclerView, getResources().getColor(R.color.over_scroll_edge));
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 

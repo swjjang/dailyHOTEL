@@ -7,12 +7,11 @@
     <include layout="@layout/toolbar_default_menu"/>
 
     <ScrollView
-        android:id="@+id/sv_booking"
+        android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:fadingEdge="none"
-        android:overScrollMode="never"
         android:background="@color/white">
 
         <LinearLayout

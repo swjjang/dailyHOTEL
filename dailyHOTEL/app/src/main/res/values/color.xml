@@ -222,4 +222,6 @@
     <color name="search_autocomplete_pricetext">#929292</color>
 
     <color name="payment_memo_hint">#d0d0d0</color>
+
+    <color name="over_scroll_edge">#dcdcdc</color>
 </resources>

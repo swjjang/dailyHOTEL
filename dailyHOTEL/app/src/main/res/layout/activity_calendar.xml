@@ -91,11 +91,11 @@
         android:background="@color/calendar_month_line"/>
 
     <ScrollView
+        android:id="@+id/calendarScrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/lineView"
         android:fadingEdge="none"
-        android:overScrollMode="never"
         android:orientation="vertical">
 
         <LinearLayout

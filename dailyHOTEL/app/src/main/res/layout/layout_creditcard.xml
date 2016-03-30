@@ -28,8 +28,7 @@
             android:layout_above="@id/addCreditCardButton"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@null"
-            android:paddingBottom="10dp"
-            />
+            android:paddingBottom="10dp"/>
 
         <RelativeLayout
             android:id="@+id/introductionLayout"

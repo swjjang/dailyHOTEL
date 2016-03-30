@@ -55,7 +55,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fadingEdge="none"
-        android:overScrollMode="never"
         android:layout_above="@+id/confirmView">
 
         <LinearLayout
