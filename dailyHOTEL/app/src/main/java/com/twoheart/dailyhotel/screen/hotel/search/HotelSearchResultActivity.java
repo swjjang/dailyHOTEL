@@ -97,7 +97,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
         } else if (mLocation != null)
         {
-            mPlaceSearchResultLayout.setToolbarText("" + mLocation.getLatitude() + mLocation.getLongitude(), String.format("%s - %s", checkInDate, checkOutDate));
+            mPlaceSearchResultLayout.setToolbarText("", String.format("%s - %s", checkInDate, checkOutDate));
         }
 
         mHotelSearchResultPresenter = new HotelSearchResultPresenter(this, mNetworkTag, mOnPresenterListener);
@@ -107,7 +107,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void requestSearchResultList()
     {
-        if (mOffset != 0 && mOffset >= mTotalCount)
+        if ((mOffset > 0 && mOffset >= mTotalCount) || mOffset == -1)
         {
             return;
         }
@@ -122,7 +122,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
         } else if (mLocation != null)
         {
-            //            mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mLocation, mOffset, COUNT_PER_TIMES);
+            mHotelSearchResultPresenter.requestSearchResultList(mSaleTime, mNights, mLocation, mOffset, COUNT_PER_TIMES);
         }
     }
 
@@ -253,21 +253,28 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-        @Override
-        public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+        private void responseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
             mTotalCount = totalCount;
 
             if (totalCount == 0)
             {
                 mPlaceSearchResultLayout.showEmptyLayout();
-
-
             } else
             {
                 if (placeViewItemList != null)
                 {
-                    mOffset += placeViewItemList.size();
+                    int size = placeViewItemList.size();
+                    if (size < COUNT_PER_TIMES)
+                    {
+                        mOffset = -1;
+                    } else
+                    {
+                        mOffset += placeViewItemList.size();
+                    }
+                } else
+                {
+                    mOffset = -1;
                 }
 
                 mPlaceSearchResultLayout.showListLayout();
@@ -276,6 +283,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             mPlaceSearchResultLayout.updateResultCount(totalCount);
             unLockUI();
+        }
+
+        @Override
+        public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+        {
+            responseSearchResultList(totalCount, placeViewItemList);
 
             analyticsOnResponseSearchResultListForSearches(mKeyword.name, totalCount);
         }
@@ -283,26 +296,9 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResponseSearchResultList(String address, int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
-            mTotalCount = totalCount;
+            responseSearchResultList(totalCount, placeViewItemList);
 
-            if (totalCount == 0)
-            {
-                mPlaceSearchResultLayout.showEmptyLayout();
-
-
-            } else
-            {
-                if (placeViewItemList != null)
-                {
-                    mOffset += placeViewItemList.size();
-                }
-
-                mPlaceSearchResultLayout.showListLayout();
-                ((HotelSearchResultLayout) mPlaceSearchResultLayout).addSearchResultList(placeViewItemList);
-            }
-
-            mPlaceSearchResultLayout.updateResultCount(totalCount);
-            unLockUI();
+            mPlaceSearchResultLayout.setToolbarTitle(address);
 
             analyticsOnResponseSearchResultListForLocation(address, totalCount);
         }

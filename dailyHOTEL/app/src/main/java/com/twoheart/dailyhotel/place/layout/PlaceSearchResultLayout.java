@@ -89,11 +89,17 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
 
     public void setToolbarText(String title, String date)
     {
-        TextView titleView = (TextView) mToolbar.findViewById(R.id.titleView);
+        setToolbarTitle(title);
+
         TextView dateView = (TextView) mToolbar.findViewById(R.id.dateView);
+        dateView.setText(date);
+    }
+
+    public void setToolbarTitle(String title)
+    {
+        TextView titleView = (TextView) mToolbar.findViewById(R.id.titleView);
 
         titleView.setText(title);
-        dateView.setText(date);
     }
 
     private void initEmptyLayout(View view)
@@ -168,7 +174,14 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
             return;
         }
 
-        mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
+        if(count < 0)
+        {
+            mResultTextView.setVisibility(View.GONE);
+        } else
+        {
+            mResultTextView.setVisibility(View.VISIBLE);
+            mResultTextView.setText(mContext.getString(R.string.label_searchresult_resultcount, count));
+        }
     }
 
     public void showEmptyLayout()
