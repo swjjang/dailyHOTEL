@@ -31,7 +31,6 @@ public class HotelSearch extends Hotel
             }
 
             index = jsonObject.getInt("hotel_idx");
-            isSoldOut = jsonObject.getInt("is_sold_out") == 1 ? true : false;
             detailRegion = jsonObject.getString("district_name");
             categoryCode = jsonObject.getString("category");
             latitude = jsonObject.getDouble("latitude");
