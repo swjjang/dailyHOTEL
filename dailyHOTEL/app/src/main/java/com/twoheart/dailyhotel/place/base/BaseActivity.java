@@ -381,33 +381,25 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         Crashlytics.logException(e);
 
         onError();
+
+        finish();
     }
 
-    /**
-     * Error 발생 시 분기되는 메서드
-     */
-    public void onError()
+    protected void onError()
     {
         releaseUiComponent();
 
+        // 혹시나 스레드 상태에서 호출이 될경우를 대비해서
         handler.post(new Runnable()
         {
             @Override
             public void run()
             {
-                // 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
                 DailyToast.showToast(BaseActivity.this, getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG);
             }
         });
     }
 
-    /**
-     * 기본적으로 내부오류가 발생하였을 경우 사용
-     */
-    //    public void onErrorMessage()
-    //    {
-    //        onErrorMessage(getString(R.string.dialog_msg_internal_error));
-    //    }
     public void onErrorMessage(int msgCode, String message)
     {
         unLockUI();

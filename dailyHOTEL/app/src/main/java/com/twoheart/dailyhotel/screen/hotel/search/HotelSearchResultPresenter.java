@@ -105,6 +105,9 @@ public class HotelSearchResultPresenter extends BasePresenter
                     JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
                     int totalCount = dataJSONObject.getInt("totalCount");
 
+                    // totalCount == -1 인경우에는 연박으로 호텔의 개수를 알수가 없다.
+                    // 이슈 사항은 연박인 경우 더이상 로딩 하지 않는 경우에 발생할수 있다.
+
                     int length;
 
                     if (hotelJSONArray == null)
@@ -115,7 +118,7 @@ public class HotelSearchResultPresenter extends BasePresenter
                         length = hotelJSONArray.length();
                     }
 
-                    if (length == 0)
+                    if (length == 0 && totalCount != -1)
                     {
                         ((OnPresenterListener) mOnPresenterListener).onResponseSearchResultList(0, null);
                     } else
@@ -136,7 +139,7 @@ public class HotelSearchResultPresenter extends BasePresenter
 
         private ArrayList<PlaceViewItem> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
         {
-            if (jsonArray == null)
+            if (jsonArray == null || jsonArray.length() == 0)
             {
                 return new ArrayList<>();
             }

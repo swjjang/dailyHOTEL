@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.presenter.PlaceRegionListPresenter;
 import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,13 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     protected void initTabLayout(TabLayout tabLayout)
     {
         tabLayout.setVisibility(ViewPager.GONE);
+    }
+
+    @Override
+    protected void initToolbar(View toolbar)
+    {
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
     }
 
     @Override

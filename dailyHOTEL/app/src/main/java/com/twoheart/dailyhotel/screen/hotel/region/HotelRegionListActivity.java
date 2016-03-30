@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.util.ArrayList;
@@ -69,6 +71,22 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         FontManager.apply(tabLayout, FontManager.getInstance(this).getRegularTypeface());
+    }
+
+    @Override
+    protected void initToolbar(View toolbar)
+    {
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
+        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
+        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search_black, -1);
+        dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showSearch();
+            }
+        });
     }
 
     @Override

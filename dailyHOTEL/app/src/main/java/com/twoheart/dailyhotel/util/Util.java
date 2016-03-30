@@ -873,4 +873,102 @@ public class Util implements Constants
 
         return null;
     }
+
+    public static boolean isInstalledPackage(Context context, String packageName)
+    {
+        if (context == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            PackageManager packageManager = context.getPackageManager();
+            return (packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES) != null);
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            return false;
+        }
+    }
+
+    public static void shareDaumMap(Context context, String latitude, String longitude)
+    {
+        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        {
+            return;
+        }
+
+        final String packageName = "net.daum.android.map";
+
+        if (isInstalledPackage(context, packageName) == true)
+        {
+            String url = String.format("daummaps://look?p=%s,%s", latitude, longitude);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            context.startActivity(intent);
+        } else
+        {
+            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(downloadUrl));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void shareNaverMap(Context context, String name, String latitude, String longitude)
+    {
+        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        {
+            return;
+        }
+
+        final String packageName = "com.nhn.android.nmap";
+
+        if (isInstalledPackage(context, packageName) == true)
+        {
+            String url = String.format("navermaps://?menu=location&lat=%s&lng=%s&title=%s", latitude, longitude, name);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            context.startActivity(intent);
+        } else
+        {
+            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(downloadUrl));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void shareKakaoNavi(Context context, String name, String latitude, String longitude)
+    {
+        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        {
+            return;
+        }
+
+        final String packageName = "com.nhn.android.nmap";
+
+        if (isInstalledPackage(context, packageName) == true)
+        {
+            String url = String.format("kimgisa://navigate?name=%s&coord_type=wgs84&pos_x=%s&pos_y=%s", name, longitude, latitude);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            context.startActivity(intent);
+        } else
+        {
+            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(downloadUrl));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
 }

@@ -1,11 +1,13 @@
 package com.twoheart.dailyhotel.util;
 
 import android.content.Context;
+import android.os.Handler;
 
 import com.kakao.kakaolink.AppActionBuilder;
 import com.kakao.kakaolink.AppActionInfoBuilder;
 import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
+import com.kakao.kakaolink.internal.LinkObject;
 import com.kakao.util.KakaoParameterException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -17,8 +19,7 @@ import java.util.TimeZone;
 
 public class KakaoLinkManager implements Constants
 {
-    private KakaoLink kkLink;
-    private KakaoTalkLinkMessageBuilder kkMsgBuilder;
+    private KakaoLink mKakaoLink;
     private Context mContext;
 
     private KakaoLinkManager(Context context)
@@ -26,8 +27,7 @@ public class KakaoLinkManager implements Constants
         try
         {
             mContext = context;
-            kkLink = KakaoLink.getKakaoLink(mContext);
-            kkMsgBuilder = kkLink.createKakaoTalkLinkMessageBuilder();
+            mKakaoLink = KakaoLink.getKakaoLink(mContext);
         } catch (KakaoParameterException e)
         {
             ExLog.e(e.toString());
@@ -39,14 +39,15 @@ public class KakaoLinkManager implements Constants
         return new KakaoLinkManager(context);
     }
 
-    public void sendInviteMsgKakaoLink(String text)
+    public void sendInviteKakaoLink(String text)
     {
         try
         {
-            kkMsgBuilder.addImage("http://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao.jpg", 300, 200);
-            kkMsgBuilder.addText(text);
-            kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
-            kkLink.sendMessage(kkMsgBuilder, mContext);
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            messageBuilder.addImage("http://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao.jpg", 300, 200);
+            messageBuilder.addText(text);
+            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
+            mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (KakaoParameterException e)
         {
             ExLog.e(e.toString());
@@ -57,10 +58,12 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+
             String date = checkInSaleTime.getDailyDateFormat("yyyyMMdd");
             String schemeParams = String.format("view=hotel&idx=%d&date=%s&nights=%d", hotelIndex, date, nights);
 
-            kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -74,12 +77,12 @@ public class KakaoLinkManager implements Constants
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
-                kkMsgBuilder.addImage(imageUrl, 300, 200);
+                messageBuilder.addImage(imageUrl, 300, 200);
             }
 
-            kkMsgBuilder.addText(text);
+            messageBuilder.addText(text);
 
-            kkLink.sendMessage(kkMsgBuilder, mContext);
+            mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -90,10 +93,12 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+
             String date = saleTime.getDailyDateFormat("yyyyMMdd");
             String schemeParams = String.format("view=gourmet&idx=%d&date=%s&nights=1", index, date);
 
-            kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -105,16 +110,15 @@ public class KakaoLinkManager implements Constants
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
-                kkMsgBuilder.addImage(imageUrl, 300, 200);
+                messageBuilder.addImage(imageUrl, 300, 200);
             }
 
-            kkMsgBuilder.addText(text);
+            messageBuilder.addText(text);
 
-            kkLink.sendMessage(kkMsgBuilder, mContext);
+            mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
-
 }
