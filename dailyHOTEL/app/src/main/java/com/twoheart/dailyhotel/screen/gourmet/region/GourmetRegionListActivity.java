@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
-import com.twoheart.dailyhotel.place.presenter.PlaceRegionListPresenter;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
@@ -26,14 +26,13 @@ import java.util.List;
 public class GourmetRegionListActivity extends PlaceRegionListActivity
 {
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
-    private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
     private static final int GOURMET_TAB_COUNT = 1;
 
     private ViewPager mViewPager;
     private PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
 
-    private GourmetRegionListPresenter mRegionListPresenter;
+    private GourmetRegionListNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private Province mSelectedProvince;
 
@@ -49,7 +48,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void initPrepare()
     {
-        mRegionListPresenter = new GourmetRegionListPresenter(this, mOnResponsePresenterListener);
+        mNetworkController = new GourmetRegionListNetworkController(this, mOnNetworkControllerListener);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void requestRegionList()
     {
-        mRegionListPresenter.requestRegionList();
+        mNetworkController.requestRegionList();
     }
 
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
@@ -158,7 +157,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         }
     };
 
-    private PlaceRegionListPresenter.OnResponsePresenterListener mOnResponsePresenterListener = new PlaceRegionListPresenter.OnResponsePresenterListener()
+    private PlaceRegionListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceRegionListNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList)

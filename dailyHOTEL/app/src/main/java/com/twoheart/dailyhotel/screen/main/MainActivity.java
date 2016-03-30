@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity implements Constants
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed mBackButtonHandler;
 
-    private MainPresenter mMainPresenter;
+    private MainNetworkController mNetworkController;
     private MainFragmentManager mMainFragmentManager;
     private MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
@@ -77,7 +77,7 @@ public class MainActivity extends BaseActivity implements Constants
         //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
-        mMainPresenter = new MainPresenter(this, mNetworkTag, mOnResponsePresenterListener);
+        mNetworkController = new MainNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         //        DailyPreference.getInstance(this).removeDeepLink();
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity implements Constants
             @Override
             public void run()
             {
-                mMainPresenter.requestCheckServer();
+                mNetworkController.requestCheckServer();
 
                 // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
                 mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity implements Constants
     {
         super.onNewIntent(intent);
 
-        mOnResponsePresenterListener.onConfigurationResponse();
+        mOnNetworkControllerListener.onConfigurationResponse();
     }
 
     private void initLayout()
@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             if (mIsInitialization == false)
             {
-                mMainPresenter.requestEvent();
+                mNetworkController.requestEvent();
             }
         }
     }
@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity implements Constants
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
-                mMainPresenter.requestGourmetIsExistRating();
+                mNetworkController.requestGourmetIsExistRating();
                 break;
 
             case CODE_REQUEST_ACTIVITY_LOGIN:
@@ -284,7 +284,7 @@ public class MainActivity extends BaseActivity implements Constants
                 if (VolleyHttpClient.isAvailableNetwork() == true)
                 {
                     lockUI();
-                    mMainPresenter.requestCheckServer();
+                    mNetworkController.requestCheckServer();
                 } else
                 {
                     mDelayTimeHandler.postDelayed(new Runnable()
@@ -370,7 +370,7 @@ public class MainActivity extends BaseActivity implements Constants
         mDelayTimeHandler.removeMessages(0);
         mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
         mIsInitialization = false;
-        mMainPresenter.requestEvent();
+        mNetworkController.requestEvent();
     }
 
     private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
@@ -422,7 +422,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
     };
 
-    private MainPresenter.OnPresenterListener mOnResponsePresenterListener = new MainPresenter.OnPresenterListener()
+    private MainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new MainNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void updateNewEvent()
@@ -556,7 +556,7 @@ public class MainActivity extends BaseActivity implements Constants
                         String maxVersion = DailyPreference.getInstance(MainActivity.this).getMaxVersion();
                         DailyPreference.getInstance(MainActivity.this).setSkipVersion(maxVersion);
 
-                        mMainPresenter.requestConfiguration();
+                        mNetworkController.requestConfiguration();
                     }
                 };
 
@@ -576,7 +576,7 @@ public class MainActivity extends BaseActivity implements Constants
                     , posListener, negListener, cancelListener, null, false);
             } else
             {
-                mMainPresenter.requestConfiguration();
+                mNetworkController.requestConfiguration();
             }
         }
 
@@ -631,7 +631,7 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     // session alive
                     // 호텔 평가를 위한 사용자 정보 조회
-                    mMainPresenter.requestUserInformation();
+                    mNetworkController.requestUserInformation();
                 } else
                 {
                     AnalyticsManager.getInstance(MainActivity.this).setUserIndex(null);
@@ -646,7 +646,7 @@ public class MainActivity extends BaseActivity implements Constants
                                 return;
                             }
 
-                            mMainPresenter.registerNotificationId(registrationId, null);
+                            mNetworkController.registerNotificationId(registrationId, null);
                         }
                     });
                 }

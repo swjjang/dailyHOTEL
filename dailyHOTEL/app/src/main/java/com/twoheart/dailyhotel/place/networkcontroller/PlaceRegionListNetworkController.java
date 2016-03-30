@@ -1,9 +1,9 @@
-package com.twoheart.dailyhotel.place.presenter;
+package com.twoheart.dailyhotel.place.networkcontroller;
 
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.place.base.OnBasePresenterListener;
+import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -13,13 +13,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PlaceRegionListPresenter
+public abstract class PlaceRegionListNetworkController
 {
     private static final int CHILD_GRID_COLUMN = 2;
 
     protected abstract void requestRegionList();
 
-    public interface OnResponsePresenterListener extends OnBasePresenterListener
+    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList);
     }

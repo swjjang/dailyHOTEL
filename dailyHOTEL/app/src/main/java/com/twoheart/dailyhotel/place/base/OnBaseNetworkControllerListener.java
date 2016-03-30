@@ -2,7 +2,7 @@ package com.twoheart.dailyhotel.place.base;
 
 import com.android.volley.VolleyError;
 
-public interface OnBasePresenterListener
+public interface OnBaseNetworkControllerListener
 {
     void onErrorResponse(VolleyError volleyError);
 

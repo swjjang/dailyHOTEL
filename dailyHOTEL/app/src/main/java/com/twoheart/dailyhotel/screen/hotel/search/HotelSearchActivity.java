@@ -20,7 +20,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
-    private HotelSearchPresenter mHotelSearchPresenter;
+    private HotelSearchNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private int mNights;
 
@@ -45,7 +45,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     {
         super.initContents();
 
-        mHotelSearchPresenter = new HotelSearchPresenter(this, mNetworkTag, mOnPresenterListener);
+        mNetworkController = new HotelSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onAutoCompleteKeyword(String keyword)
         {
-            mHotelSearchPresenter.requestAutoComplete(mSaleTime, mNights, keyword);
+            mNetworkController.requestAutoComplete(mSaleTime, mNights, keyword);
         }
 
         @Override
@@ -184,10 +184,10 @@ public class HotelSearchActivity extends PlaceSearchActivity
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // OnPresenterListener
+    // OnNetworkControllerListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private HotelSearchPresenter.OnPresenterListener mOnPresenterListener = new HotelSearchPresenter.OnPresenterListener()
+    private HotelSearchNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new HotelSearchNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onResponseAutoComplete(String keyword, List<Keyword> list)

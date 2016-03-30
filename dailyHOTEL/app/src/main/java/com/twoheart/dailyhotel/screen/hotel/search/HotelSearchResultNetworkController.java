@@ -10,8 +10,8 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.place.base.BasePresenter;
-import com.twoheart.dailyhotel.place.base.OnBasePresenterListener;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,9 +23,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class HotelSearchResultPresenter extends BasePresenter
+public class HotelSearchResultNetworkController extends BaseNetworkController
 {
-    protected interface OnPresenterListener extends OnBasePresenterListener
+    protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
 
@@ -34,7 +34,7 @@ public class HotelSearchResultPresenter extends BasePresenter
         void onResponseCustomerSatisfactionTimeMessage(String message);
     }
 
-    public HotelSearchResultPresenter(Context context, String networkTag, OnPresenterListener listener)
+    public HotelSearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
@@ -42,7 +42,7 @@ public class HotelSearchResultPresenter extends BasePresenter
     @Override
     public void onErrorResponse(VolleyError volleyError)
     {
-        mOnPresenterListener.onErrorResponse(volleyError);
+        mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
     public void requestSearchResultList(SaleTime saleTime, int nights, String keword, int offset, int count)
@@ -79,10 +79,10 @@ public class HotelSearchResultPresenter extends BasePresenter
                     , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
 
 
-                ((OnPresenterListener) mOnPresenterListener).onResponseCustomerSatisfactionTimeMessage(message);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseCustomerSatisfactionTimeMessage(message);
             } catch (Exception e)
             {
-                mOnPresenterListener.onError(e);
+                mOnNetworkControllerListener.onError(e);
             }
         }
     };
@@ -120,20 +120,20 @@ public class HotelSearchResultPresenter extends BasePresenter
 
                     if (length == 0 && totalCount != -1)
                     {
-                        ((OnPresenterListener) mOnPresenterListener).onResponseSearchResultList(0, null);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseSearchResultList(0, null);
                     } else
                     {
                         ArrayList<PlaceViewItem> placeViewItemList = makeHotelList(hotelJSONArray, imageUrl, nights);
-                        ((OnPresenterListener) mOnPresenterListener).onResponseSearchResultList(totalCount, placeViewItemList);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseSearchResultList(totalCount, placeViewItemList);
                     }
                 } else
                 {
                     String message = response.getString("msg");
-                    mOnPresenterListener.onErrorMessage(msgCode, message);
+                    mOnNetworkControllerListener.onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
-                mOnPresenterListener.onError(e);
+                mOnNetworkControllerListener.onError(e);
             }
         }
 

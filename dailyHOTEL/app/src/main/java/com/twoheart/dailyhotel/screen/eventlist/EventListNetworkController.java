@@ -1,13 +1,14 @@
 package com.twoheart.dailyhotel.screen.eventlist;
 
-import com.android.volley.Response;
+import android.content.Context;
+
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.OnBasePresenterListener;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -18,12 +19,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventListPresenter implements Response.ErrorListener
+public class EventListNetworkController extends BaseNetworkController
 {
-    private BaseActivity mBaseActivity;
-    private OnResponsePresenterListener mListener;
+    private OnNetworkControllerListener mListener;
 
-    public interface OnResponsePresenterListener extends OnBasePresenterListener
+    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onRequestEvent(String userIndex);
 
@@ -36,14 +36,10 @@ public class EventListPresenter implements Response.ErrorListener
         void onEventListResponse(List<Event> eventList);
     }
 
-    public EventListPresenter(BaseActivity baseActivity, OnResponsePresenterListener listener)
+    public EventListNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
     {
-        if (baseActivity == null || listener == null)
-        {
-            throw new NullPointerException("baseActivity == null || listener == null");
-        }
+        super(context, networkTag, listener);
 
-        mBaseActivity = baseActivity;
         mListener = listener;
     }
 
@@ -55,12 +51,12 @@ public class EventListPresenter implements Response.ErrorListener
 
     public void requestEventList()
     {
-        DailyNetworkAPI.getInstance().requestEventList(mBaseActivity.getNetworkTag(), mDailyEventListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, this);
     }
 
     public void requestUserInformationEx()
     {
-        DailyNetworkAPI.getInstance().requestUserInformationEx(mBaseActivity.getNetworkTag(), mUserInformationJsonResponseListener, EventListPresenter.this);
+        DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, EventListNetworkController.this);
     }
 
     public void requestEventPageUrl(Event event, String userIndex)
@@ -75,7 +71,7 @@ public class EventListPresenter implements Response.ErrorListener
             store = "skt";
         }
 
-        DailyNetworkAPI.getInstance().requestEventPageUrl(mBaseActivity.getNetworkTag(), userIndex, event.index, store, mDailyEventPageJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestEventPageUrl(mNetworkTag, userIndex, event.index, store, mDailyEventPageJsonResponseListener, this);
     }
 
     private boolean isEmptyTextField(String... fieldText)
