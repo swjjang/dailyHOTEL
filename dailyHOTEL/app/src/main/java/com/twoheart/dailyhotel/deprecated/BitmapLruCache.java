@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.twoheart.dailyhotel.util;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.twoheart.dailyhotel.util.ExLog;
 
 public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCache
 {

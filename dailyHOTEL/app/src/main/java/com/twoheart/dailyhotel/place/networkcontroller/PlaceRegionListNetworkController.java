@@ -104,7 +104,7 @@ public abstract class PlaceRegionListNetworkController
                     area.isOverseas = province.isOverseas;
                     area.setProvince(province);
 
-                    if (i != 0 && i % CHILD_GRID_COLUMN == 1)
+                    if (i > 0 && i % CHILD_GRID_COLUMN == 1)
                     {
                         areas[i++] = area;
                         areaArrayList.add(areas);

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.util;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.graphics.Bitmap;
 

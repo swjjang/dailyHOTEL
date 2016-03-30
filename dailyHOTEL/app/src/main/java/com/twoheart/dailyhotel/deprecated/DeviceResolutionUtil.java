@@ -1,7 +1,9 @@
-package com.twoheart.dailyhotel.util;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;
+
+import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.HashMap;
 
