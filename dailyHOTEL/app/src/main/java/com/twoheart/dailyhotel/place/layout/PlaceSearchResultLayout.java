@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
 
@@ -135,6 +136,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(getListAdapter());
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override

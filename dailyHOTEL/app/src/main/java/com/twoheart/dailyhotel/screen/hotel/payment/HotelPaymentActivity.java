@@ -36,6 +36,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -177,6 +179,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private void initLayout()
     {
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.over_scroll_edge));
+
         initHotelInformation();
         initGuestInformation();
         initPaymentInformation();
@@ -1694,7 +1699,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                                 , checkInOutFormat.format(calendarCheckout.getTime()));
                         } else
                         {
-                            hotelPaymentInformation.checkInOutDate = String.format("%s\n- %s"//
+                            hotelPaymentInformation.checkInOutDate = String.format("%s%n- %s"//
                                 , checkInOutFormat.format(calendarCheckin.getTime())//
                                 , checkInOutFormat.format(calendarCheckout.getTime()));
                         }

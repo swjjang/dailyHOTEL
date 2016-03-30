@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -23,6 +24,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -263,6 +265,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initRecentSearchesLayout(View view)
     {
+        ScrollView recentSearchesScrollLayout = (ScrollView) view.findViewById(R.id.recentSearchesScrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(recentSearchesScrollLayout, mContext.getResources().getColor(R.color.over_scroll_edge));
+
         // 최근 검색어
         // 전체 삭제
         mDeleteAllRecentSearchesView = view.findViewById(R.id.deleteAllView);
@@ -371,6 +376,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollLayout.findViewById(R.id.autoCompleteLayout);
 
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
+
+        EdgeEffectColor.setEdgeGlowColor((ScrollView) mAutoCompleteScrollLayout, mContext.getResources().getColor(R.color.over_scroll_edge));
     }
 
     public void updateAutoCompleteLayout(String text, List<Keyword> keywordList)

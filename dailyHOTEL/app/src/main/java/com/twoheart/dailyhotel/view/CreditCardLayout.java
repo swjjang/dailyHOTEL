@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,6 +87,8 @@ public class CreditCardLayout extends FrameLayout
         mAddCreditCardButton = (TextView) view.findViewById(R.id.addCreditCardButton);
 
         mListView = (ListView) view.findViewById(R.id.creditcardListView);
+        EdgeEffectColor.setEdgeGlowColor(mListView, context.getResources().getColor(R.color.over_scroll_edge));
+
         mAddCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
 
         View emptyCardLayout = view.findViewById(R.id.emptyCardLayout);

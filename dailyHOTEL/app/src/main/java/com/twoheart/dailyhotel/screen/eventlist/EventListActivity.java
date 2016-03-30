@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -59,6 +60,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         mEmptyView = findViewById(R.id.emptyLayout);
 
         mListView = (ListView) findViewById(R.id.listView);
+        EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.over_scroll_edge));
         mListView.setOnItemClickListener(this);
     }
 

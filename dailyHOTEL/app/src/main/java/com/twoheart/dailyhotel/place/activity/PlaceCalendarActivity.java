@@ -7,12 +7,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
@@ -32,6 +34,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         setContentView(R.layout.activity_calendar);
 
         ViewGroup calendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
+        ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.over_scroll_edge));
 
         mDailyTextViews = new DailyTextView[dayCountOfMax];
 

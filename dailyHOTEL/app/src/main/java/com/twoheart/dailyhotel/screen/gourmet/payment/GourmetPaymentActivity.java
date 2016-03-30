@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActiv
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -163,6 +164,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private void initLayout()
     {
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.over_scroll_edge));
 
         mGourmetPaymentLayout = new GourmetPaymentLayout(this, scrollView, mOnUserActionListener);
     }
