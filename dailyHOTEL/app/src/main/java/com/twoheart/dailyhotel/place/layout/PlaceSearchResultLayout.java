@@ -197,4 +197,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         mEmptyLayout.setVisibility(View.GONE);
         mResultListLayout.setVisibility(View.VISIBLE);
     }
+
+    public boolean isEmtpyLayout()
+    {
+        return mResultListLayout.getVisibility() != View.VISIBLE;
+    }
 }

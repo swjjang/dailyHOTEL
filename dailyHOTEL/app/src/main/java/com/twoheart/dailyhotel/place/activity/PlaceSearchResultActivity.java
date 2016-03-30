@@ -77,15 +77,15 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected void finish(int resultCode)
     {
-        //        if (mResultListLayout.getVisibility() == View.VISIBLE)
-        //        {
-        Intent intent = new Intent();
-        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
-        setResult(resultCode, intent);
-        //        } else
-        //        {
-        //            setResult(resultCode);
-        //        }
+        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmtpyLayout() == false)
+        {
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
+            setResult(resultCode, intent);
+        } else
+        {
+            setResult(resultCode);
+        }
 
         finish();
     }
