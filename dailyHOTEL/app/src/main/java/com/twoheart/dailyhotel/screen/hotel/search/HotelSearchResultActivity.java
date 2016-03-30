@@ -257,7 +257,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         {
             mTotalCount = totalCount;
 
-            if (totalCount == 0)
+            if (totalCount == 0 || (mOffset == 0 && (placeViewItemList == null || placeViewItemList.size() == 0)))
             {
                 mPlaceSearchResultLayout.showEmptyLayout();
             } else

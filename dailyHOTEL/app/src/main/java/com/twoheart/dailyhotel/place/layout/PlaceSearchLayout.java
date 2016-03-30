@@ -452,10 +452,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                     if (keyword.price > 0)
                     {
+                        int separatorIndex = keyword.name.indexOf('>');
                         int startIndex = keyword.name.lastIndexOf(text);
                         int endIndex = startIndex + text.length();
 
-                        if (startIndex >= 0)
+                        if (startIndex > separatorIndex)
                         {
                             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
                             spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
