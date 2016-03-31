@@ -160,7 +160,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-                Intent intent = HotelRegionListActivity.newInstance(getContext(), mCurationOption.getProvince(), currentFragment.getSaleTime(), currentFragment.getNights());
+                Intent intent = HotelRegionListActivity.newInstance(getContext(), mCurationOption.getProvince(), currentFragment.getCheckInSaleTime(), currentFragment.getNights());
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
@@ -500,17 +500,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(i);
 
-            if (i == 2)
-            {
-                saleTime = mTodaySaleTime.getClone(0);
-                tabSaleTime[i] = saleTime;
-            } else
-            {
-                saleTime = mTodaySaleTime.getClone(i);
-                tabSaleTime[i] = saleTime;
-            }
+            saleTime = mTodaySaleTime.getClone(i);
+            tabSaleTime[i] = saleTime;
 
-            hotelListFragment.setSaleTime(saleTime);
+            hotelListFragment.setCheckInSaleTime(saleTime);
+            hotelListFragment.setCheckOutSaleTime(saleTime.getClone(saleTime.getOffsetDailyDay() + 1));
         }
 
         // 임시로 여기서 날짜를 넣는다.
@@ -557,7 +551,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(2);
-            fragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
+            fragment.setCheckInSaleTime(checkInSaleTime);
+            fragment.setCheckOutSaleTime(checkOutSaleTime);
 
             dayList.add(days);
         } else
@@ -1222,7 +1217,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     SaleTime checkOutSaleTime = mTodaySaleTime.getClone(dailyDayOfDays + night);
 
                     HotelDaysListFragment hotelListFragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-                    hotelListFragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
+                    hotelListFragment.setCheckInSaleTime(checkInSaleTime);
+                    hotelListFragment.setCheckOutSaleTime(checkOutSaleTime);
                     mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
                 }
             } catch (Exception e)
@@ -1297,17 +1293,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 {
                     HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-                    SaleTime saleTime;
-
-                    if (currentFragment instanceof HotelDaysListFragment)
-                    {
-                        saleTime = ((HotelDaysListFragment) currentFragment).getSelectedCheckInSaleTime();
-                    } else
-                    {
-                        saleTime = currentFragment.getSaleTime();
-                    }
-
-                    Intent intent = HotelSearchActivity.newInstance(baseActivity, saleTime, currentFragment.getNights());
+                    Intent intent = HotelSearchActivity.newInstance(baseActivity//
+                        , currentFragment.getCheckInSaleTime(), currentFragment.getNights());
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
                     switch (mViewType)

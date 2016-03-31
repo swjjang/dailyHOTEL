@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -221,6 +222,9 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
     private HotelSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new HotelSearchResultNetworkController.OnNetworkControllerListener()
     {
+        private String mAddress;
+        private int mSize = -1;
+
         private void analyticsOnResponseSearchResultListForSearches(String keyword, int totalCount)
         {
             if (totalCount == 0)
@@ -239,17 +243,22 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-        private void analyticsOnResponseSearchResultListForLocation(String keyword, int totalCount)
+        private void analyticsOnResponseSearchResultListForLocation()
         {
-            if (totalCount == 0)
+            if (Util.isTextEmpty(mAddress) == true || mSize == -1)
+            {
+                return;
+            }
+
+            if (mSize == 0)
             {
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_AROUND_NOT_FOUND, keyword, null);
+                    , AnalyticsManager.Action.HOTEL_AROUND_NOT_FOUND, mAddress, null);
 
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, null);
             } else
             {
-                String label = String.format("%s-%d", keyword, totalCount);
+                String label = String.format("%s-LoS", mAddress);
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
 
@@ -314,25 +323,47 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
-            responseSearchResultList(totalCount, placeViewItemList);
+            if (mOffset == 0)
+            {
+                analyticsOnResponseSearchResultListForSearches(mKeyword.name, totalCount);
+            }
 
-            analyticsOnResponseSearchResultListForSearches(mKeyword.name, totalCount);
+            responseSearchResultList(totalCount, placeViewItemList);
         }
 
         @Override
-        public void onResponseSearchResultList(String address, int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
+        public void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
+            if (mOffset == 0)
+            {
+                if (placeViewItemList != null)
+                {
+                    mSize = placeViewItemList.size();
+                } else
+                {
+                    mSize = 0;
+                }
+
+                analyticsOnResponseSearchResultListForLocation();
+            }
+
             responseSearchResultList(totalCount, placeViewItemList);
-
-            mPlaceSearchResultLayout.setToolbarTitle(address);
-
-            analyticsOnResponseSearchResultListForLocation(address, totalCount);
         }
 
         @Override
         public void onResponseCustomerSatisfactionTimeMessage(String message)
         {
             mCustomerSatisfactionTimeMessage = message;
+        }
+
+        @Override
+        public void onResponseAddress(String address)
+        {
+            mAddress = address;
+
+            mPlaceSearchResultLayout.setToolbarTitle(address);
+
+            analyticsOnResponseSearchResultListForLocation();
         }
 
         @Override

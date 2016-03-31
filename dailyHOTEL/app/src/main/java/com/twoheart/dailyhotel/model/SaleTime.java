@@ -3,30 +3,14 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Constants;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class SaleTime implements Constants, Parcelable
+public class SaleTime implements Parcelable
 {
     public static final long MILLISECOND_IN_A_DAY = 3600 * 24 * 1000;
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public SaleTime createFromParcel(Parcel in)
-        {
-            return new SaleTime(in);
-        }
-
-        @Override
-        public SaleTime[] newArray(int size)
-        {
-            return new SaleTime[size];
-        }
-
-    };
 
     private Date mCurrentTime;
     private Date mDailyTime;
@@ -148,4 +132,19 @@ public class SaleTime implements Constants, Parcelable
         mDailyTime = (Date) in.readValue(Date.class.getClassLoader());
         mDayOfDays = in.readInt();
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public SaleTime createFromParcel(Parcel in)
+        {
+            return new SaleTime(in);
+        }
+
+        @Override
+        public SaleTime[] newArray(int size)
+        {
+            return new SaleTime[size];
+        }
+
+    };
 }
