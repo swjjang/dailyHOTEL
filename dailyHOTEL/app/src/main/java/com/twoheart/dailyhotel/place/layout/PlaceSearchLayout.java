@@ -37,7 +37,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private static final int DELAY_HIDE_AUTO_COMPLETE_MILLIS = 500;
 
     protected static final int DEFAULT_ICON = 0;
-    protected static final int HOTEL_ICON = 1;
+    public static final int HOTEL_ICON = 1;
     protected static final int GOURMET_ICON = 2;
 
     private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
