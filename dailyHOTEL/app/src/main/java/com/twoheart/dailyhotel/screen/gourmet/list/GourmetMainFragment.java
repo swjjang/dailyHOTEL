@@ -497,11 +497,21 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             saleTime = mTodaySaleTime.getClone(i);
             tabSaleTime[i] = saleTime;
 
+            if(i == 2)
+            {
+                String text = (String) mTabLayout.getTabAt(2).getTag();
+
+                if (Util.isTextEmpty(text) == false)
+                {
+                    continue;
+                }
+            }
+
             gourmetListFragment.setSaleTime(saleTime);
         }
 
         // 임시로 여기서 날짜를 넣는다.
-        ArrayList<String> dayList = new ArrayList<String>();
+        ArrayList<String> dayList = new ArrayList<>();
 
         dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_today), tabSaleTime[0].getDailyDay()));
         dayList.add(getString(R.string.label_format_tabday, getString(R.string.label_tomorrow), tabSaleTime[1].getDailyDay()));
