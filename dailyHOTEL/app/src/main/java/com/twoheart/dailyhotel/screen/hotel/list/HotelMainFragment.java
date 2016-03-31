@@ -503,6 +503,16 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             saleTime = mTodaySaleTime.getClone(i);
             tabSaleTime[i] = saleTime;
 
+            if (i == 2)
+            {
+                String text = (String) mTabLayout.getTabAt(2).getTag();
+
+                if (Util.isTextEmpty(text) == false)
+                {
+                    continue;
+                }
+            }
+
             hotelListFragment.setCheckInSaleTime(saleTime);
             hotelListFragment.setCheckOutSaleTime(saleTime.getClone(saleTime.getOffsetDailyDay() + 1));
         }

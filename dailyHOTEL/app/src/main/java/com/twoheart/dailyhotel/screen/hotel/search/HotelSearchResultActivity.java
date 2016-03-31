@@ -323,6 +323,11 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
             if (mOffset == 0)
             {
                 analyticsOnResponseSearchResultListForSearches(mKeyword.name, totalCount);
@@ -334,6 +339,11 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
             if (mOffset == 0)
             {
                 if (placeViewItemList != null)
@@ -359,6 +369,11 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResponseAddress(String address)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
             mAddress = address;
 
             mPlaceSearchResultLayout.setToolbarTitle(address);

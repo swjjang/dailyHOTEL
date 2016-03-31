@@ -35,11 +35,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <include
-                layout="@layout/layout_booking_memo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <!-- 결제 -->
             <include
                 layout="@layout/layout_booking_gourmet_payment_information"

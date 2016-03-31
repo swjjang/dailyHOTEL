@@ -1,7 +1,5 @@
 package kr.co.kcp.android.payment.standard;
 
-import com.twoheart.dailyhotel.util.ExLog;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,32 +8,32 @@ import android.os.Bundle;
 public class ResultRcvActivity extends Activity
 {
 
-	public static Uri m_uriResult;
-	public static boolean b_type = false;
+    public static Uri m_uriResult;
+    public static boolean b_type = false;
 
-	public static final String m_strLogTag = "PaySample";
-	public static final String s_strLogTag = "PayACNTSample";
-	public static Activity activity; //
+    public static final String m_strLogTag = "PaySample";
+    public static final String s_strLogTag = "PayACNTSample";
 
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		ExLog.d("[ResultRcvActivity] called__onCreate");
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		super.onCreate(savedInstanceState);
-		Intent myIntent = getIntent();
+        Intent intent = getIntent();
 
-		activity = ResultRcvActivity.this;
+        if (intent == null || intent.getData() == null)
+        {
+            finish();
+        }
 
-		ExLog.d("[ResultRcvActivity] launch_uri=[" + myIntent.getData().toString() + "]");
+        if ("dailyHOTEL".equals(intent.getData().getScheme()) == true)
+        {
+            m_uriResult = intent.getData();
+        } else
+        {
+            m_uriResult = null;
+        }
 
-		if (myIntent.getData().getScheme().equals("dailyHOTEL") == true)
-		{
-			m_uriResult = myIntent.getData();
-		} else
-		{
-			m_uriResult = null;
-		}
-		finish();
-	}
+        finish();
+    }
 }

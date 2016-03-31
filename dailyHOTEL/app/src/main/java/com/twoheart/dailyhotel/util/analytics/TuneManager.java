@@ -87,7 +87,7 @@ public class TuneManager implements IBaseAnalyticsManager
 
         if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
         {
-            MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_DETAIL, params);
+            MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_DETAIL, params, false);
 
             MATEventItem matEventItem = getMATEventItem(params);
 
@@ -105,7 +105,7 @@ public class TuneManager implements IBaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
         {
-            MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_DETAIL, params);
+            MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_DETAIL, params, false);
 
             MATEventItem matEventItem = getMATEventItem(params);
 
@@ -123,7 +123,7 @@ public class TuneManager implements IBaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
         {
-            MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PAYMENT, params);
+            MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PAYMENT, params, true);
 
             MATEventItem matEventItem = getMATEventItem(params);
 
@@ -141,7 +141,7 @@ public class TuneManager implements IBaseAnalyticsManager
             }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
         {
-            MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PAYMENT, params);
+            MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PAYMENT, params, true);
 
             MATEventItem matEventItem = getMATEventItem(params);
 
@@ -167,7 +167,7 @@ public class TuneManager implements IBaseAnalyticsManager
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
             {
-                MATEvent matEvent = getMATEvent(TuneEventId.SOCIAL_SHARE_HOTEL, params);
+                MATEvent matEvent = getMATEvent(TuneEventId.SOCIAL_SHARE_HOTEL, params, false);
 
                 MATEventItem matEventItem = getMATEventItem(params);
 
@@ -188,7 +188,7 @@ public class TuneManager implements IBaseAnalyticsManager
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
             {
-                MATEvent matEvent = getMATEvent(TuneEventId.SOCIAL_SHARE_GOURMET, params);
+                MATEvent matEvent = getMATEvent(TuneEventId.SOCIAL_SHARE_GOURMET, params, false);
 
                 MATEventItem matEventItem = getMATEventItem(params);
 
@@ -352,7 +352,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PURCHASE_COMPLETE, params);
+        MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PURCHASE_COMPLETE, params, true);
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
         {
@@ -389,7 +389,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PURCHASE_COMPLETE, params);
+        MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PURCHASE_COMPLETE, params, true);
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)
         {
@@ -465,7 +465,7 @@ public class TuneManager implements IBaseAnalyticsManager
         return matEventItem;
     }
 
-    private MATEvent getMATEvent(int eventId, Map<String, String> params)
+    private MATEvent getMATEvent(int eventId, Map<String, String> params, boolean usedRevenue)
     {
         MATEvent matEvent = new MATEvent(eventId);
         matEvent.withCurrencyCode("KRW");
@@ -488,7 +488,7 @@ public class TuneManager implements IBaseAnalyticsManager
             matEvent.withDate1(new GregorianCalendar(Integer.parseInt(checkInDate[0]), Integer.parseInt(checkInDate[1]), Integer.parseInt(checkInDate[2])).getTime());
         }
 
-        if (params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
+        if (usedRevenue == true && params.containsKey(AnalyticsManager.KeyType.PAYMENT_PRICE) == true)
         {
             matEvent.withRevenue(Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
         }

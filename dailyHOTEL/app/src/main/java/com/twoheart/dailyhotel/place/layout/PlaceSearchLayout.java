@@ -9,11 +9,13 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -37,7 +39,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private static final int DELAY_HIDE_AUTO_COMPLETE_MILLIS = 500;
 
     protected static final int DEFAULT_ICON = 0;
-    protected static final int HOTEL_ICON = 1;
+    public static final int HOTEL_ICON = 1;
     protected static final int GOURMET_ICON = 2;
 
     private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
@@ -127,6 +129,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         mSearchEditText = (EditText) mToolbar.findViewById(R.id.searchEditText);
         mSearchEditText.setHint(getSearchHintText());
+
+        if (Util.getLCDWidth(mContext) < 720)
+        {
+            mSearchEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+        }
 
         StringFilter stringFilter = new StringFilter(mContext);
         InputFilter[] allowAlphanumericHangul = new InputFilter[2];
@@ -218,6 +225,20 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void resetSearchKeyword()
     {
         mSearchEditText.setText(null);
+    }
+
+    public void showSearchKeyboard()
+    {
+        mSearchEditText.requestFocus();
+        mSearchEditText.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(mSearchEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 500);
     }
 
     private void initAroundLayout(View view)
@@ -392,6 +413,24 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         updateAutoCompleteLayout(mAutoCompleteLayout, text, keywordList);
     }
 
+    private void resetAutoCompleteLayout(ViewGroup viewGroup)
+    {
+        if (viewGroup == null)
+        {
+            return;
+        }
+
+        View view;
+        int childCount = viewGroup.getChildCount();
+
+        for (int i = 0; i < childCount; i++)
+        {
+            view = viewGroup.getChildAt(i);
+            view.setVisibility(View.GONE);
+            view.setTag(null);
+        }
+    }
+
     private void updateAutoCompleteLayout(ViewGroup viewGroup, String text, List<Keyword> keywordList)
     {
         if (viewGroup == null)
@@ -514,6 +553,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private void hideAutoCompleteView()
     {
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
+
+        resetAutoCompleteLayout(mAutoCompleteLayout);
     }
 
     private void validateKeyword(String keyword)

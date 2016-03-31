@@ -251,11 +251,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
         }
     }
 
-    protected SaleTime getSelectedSaleTime()
-    {
-        return mSaleTime;
-    }
-
     protected SaleTime getSaleTime()
     {
         return mSaleTime;
@@ -296,7 +291,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
     public void fetchList()
     {
         GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
-        fetchList(gourmetCurationOption.getProvince(), getSelectedSaleTime(), null);
+        fetchList(gourmetCurationOption.getProvince(), mSaleTime, null);
     }
 
     public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
@@ -572,7 +567,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 }
 
                 mGourmetMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-                mGourmetMapFragment.setPlaceViewItemList(gourmetListViewItemList, getSelectedSaleTime(), mScrollListTop);
+                mGourmetMapFragment.setPlaceViewItemList(gourmetListViewItemList, mSaleTime, mScrollListTop);
 
                 AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
             } else
@@ -701,7 +696,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             if (gourmetViewItem.getType() == PlaceViewItem.TYPE_ENTRY)
             {
-                mOnCommunicateListener.selectPlace(gourmetViewItem, getSelectedSaleTime());
+                mOnCommunicateListener.selectPlace(gourmetViewItem, mSaleTime);
             }
         }
     };
