@@ -150,7 +150,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_below="@+id/deleteAllView"
-                android:background="@color/information_underline"/>
+                android:background="@color/information_underline"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"/>
 
             <ScrollView
                 android:id="@+id/recentSearchesScrollLayout"
