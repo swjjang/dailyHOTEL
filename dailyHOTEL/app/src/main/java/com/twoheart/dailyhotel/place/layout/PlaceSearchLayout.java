@@ -9,6 +9,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,6 +129,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         mSearchEditText = (EditText) mToolbar.findViewById(R.id.searchEditText);
         mSearchEditText.setHint(getSearchHintText());
+
+        if (Util.getLCDWidth(mContext) < 720)
+        {
+            mSearchEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+        }
 
         StringFilter stringFilter = new StringFilter(mContext);
         InputFilter[] allowAlphanumericHangul = new InputFilter[2];
