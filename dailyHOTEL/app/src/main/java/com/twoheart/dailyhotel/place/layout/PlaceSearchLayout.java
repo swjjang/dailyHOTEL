@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -218,6 +219,20 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void resetSearchKeyword()
     {
         mSearchEditText.setText(null);
+    }
+
+    public void showSearchKeyboard()
+    {
+        mSearchEditText.requestFocus();
+        mSearchEditText.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(mSearchEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 500);
     }
 
     private void initAroundLayout(View view)

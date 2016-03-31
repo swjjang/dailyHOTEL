@@ -36,6 +36,8 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 public abstract class PlaceSearchActivity extends BaseActivity
 {
+    private boolean mShowSearchKeyboard;
+
     protected static final int REQUEST_ACTIVITY_SEARCHRESULT = 100;
 
     protected DailyRecentSearches mDailyRecentSearches;
@@ -76,6 +78,18 @@ public abstract class PlaceSearchActivity extends BaseActivity
         mDailyRecentSearches = new DailyRecentSearches(getRecentSearches());
 
         mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mShowSearchKeyboard == true)
+        {
+            mShowSearchKeyboard = false;
+            mPlaceSearchLayout.showSearchKeyboard();
+        }
     }
 
     protected void showTermsOfLocationDialog()
@@ -221,6 +235,9 @@ public abstract class PlaceSearchActivity extends BaseActivity
                 } else if (resultCode == CODE_RESULT_ACTIVITY_HOME)
                 {
                     finish();
+                } else
+                {
+                    mShowSearchKeyboard = true;
                 }
                 break;
             }
