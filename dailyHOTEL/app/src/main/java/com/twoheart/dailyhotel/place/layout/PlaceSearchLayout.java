@@ -407,6 +407,24 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         updateAutoCompleteLayout(mAutoCompleteLayout, text, keywordList);
     }
 
+    private void resetAutoCompleteLayout(ViewGroup viewGroup)
+    {
+        if (viewGroup == null)
+        {
+            return;
+        }
+
+        View view;
+        int childCount = viewGroup.getChildCount();
+
+        for (int i = 0; i < childCount; i++)
+        {
+            view = viewGroup.getChildAt(i);
+            view.setVisibility(View.GONE);
+            view.setTag(null);
+        }
+    }
+
     private void updateAutoCompleteLayout(ViewGroup viewGroup, String text, List<Keyword> keywordList)
     {
         if (viewGroup == null)
@@ -529,6 +547,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private void hideAutoCompleteView()
     {
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
+
+        resetAutoCompleteLayout(mAutoCompleteLayout);
     }
 
     private void validateKeyword(String keyword)

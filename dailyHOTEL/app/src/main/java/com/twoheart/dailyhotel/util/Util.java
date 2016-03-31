@@ -13,12 +13,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -76,7 +72,7 @@ public class Util implements Constants
     {
         ImagePipelineConfig imagePipelineConfig;
 
-        if (Util.isOverAPI11() == true && Util.getLCDWidth(context) > 720)
+        if (Util.isOverAPI11() == true && Util.getLCDWidth(context) >= 720)
         {
             imagePipelineConfig = DailyOkHttpImagePipelineConfigFactory//
                 .newBuilder(context, new OkHttpClient()).build();
@@ -142,41 +138,6 @@ public class Util implements Constants
         {
             return URL_STORE_T_DAILYHOTEL;
         }
-    }
-
-    public static String storeReleaseAddress(String newUrl)
-    {
-
-        if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
-        {
-            return URL_STORE_GOOGLE_DAILYHOTEL;
-        } else
-        {
-            return newUrl;
-        }
-    }
-
-    public static Bitmap drawableToBitmap(Drawable drawable)
-    {
-        if (drawable instanceof BitmapDrawable)
-        {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-
-    public static View getActionBarView(Activity activity)
-    {
-        Window window = activity.getWindow();
-        View v = window.getDecorView();
-        int resId = activity.getResources().getIdentifier("action_bar_container", "id", "android");
-        return v.findViewById(resId);
     }
 
     public static String dailyHotelTimeConvert(String dailyHotelTime)
@@ -827,53 +788,6 @@ public class Util implements Constants
         }
     }
 
-    private static boolean isValidateNumber(String number)
-    {
-        int length = number.length();
-        final int value = number.charAt(0) - number.charAt(1);
-
-        switch (value)
-        {
-            case -1:
-            case 0:
-            case 1:
-                for (int i = 2; i < length; i++)
-                {
-                    if (number.charAt(i - 1) - number.charAt(i) != value)
-                    {
-                        return false;
-                    }
-                }
-                break;
-
-            default:
-                return false;
-        }
-
-        return true;
-    }
-
-    public static String getValueForLinkUrl(String linkUrl, String key)
-    {
-        if (Util.isTextEmpty(linkUrl) == true || Util.isTextEmpty(key) == true)
-        {
-            return null;
-        }
-
-        // view=hotel&idx=131&date=20151109&nights=1
-        String[] keyValue = linkUrl.split("\\&|\\=");
-
-        for (int i = 0; i < keyValue.length; i += 2)
-        {
-            if (key.equalsIgnoreCase(keyValue[i]) == true)
-            {
-                return keyValue[i + 1];
-            }
-        }
-
-        return null;
-    }
-
     public static boolean isInstalledPackage(Context context, String packageName)
     {
         if (context == null)
@@ -945,30 +859,30 @@ public class Util implements Constants
         }
     }
 
-    public static void shareKakaoNavi(Context context, String name, String latitude, String longitude)
-    {
-        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
-        {
-            return;
-        }
-
-        final String packageName = "com.nhn.android.nmap";
-
-        if (isInstalledPackage(context, packageName) == true)
-        {
-            String url = String.format("kimgisa://navigate?name=%s&coord_type=wgs84&pos_x=%s&pos_y=%s", name, longitude, latitude);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            context.startActivity(intent);
-        } else
-        {
-            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(downloadUrl));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
-    }
+    //    public static void shareKakaoNavi(Context context, String name, String latitude, String longitude)
+    //    {
+    //        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+    //        {
+    //            return;
+    //        }
+    //
+    //        final String packageName = "com.nhn.android.nmap";
+    //
+    //        if (isInstalledPackage(context, packageName) == true)
+    //        {
+    //            String url = String.format("kimgisa://navigate?name=%s&coord_type=wgs84&pos_x=%s&pos_y=%s", name, longitude, latitude);
+    //
+    //            Intent intent = new Intent(Intent.ACTION_VIEW);
+    //            intent.setData(Uri.parse(url));
+    //            context.startActivity(intent);
+    //        } else
+    //        {
+    //            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
+    //
+    //            Intent intent = new Intent(Intent.ACTION_VIEW);
+    //            intent.setData(Uri.parse(downloadUrl));
+    //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    //            context.startActivity(intent);
+    //        }
+    //    }
 }
