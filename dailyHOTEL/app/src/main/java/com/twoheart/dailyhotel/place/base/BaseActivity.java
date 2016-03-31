@@ -378,7 +378,10 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         releaseUiComponent();
 
-        Crashlytics.logException(e);
+        if (DEBUG == false)
+        {
+            Crashlytics.logException(e);
+        }
 
         onError();
 

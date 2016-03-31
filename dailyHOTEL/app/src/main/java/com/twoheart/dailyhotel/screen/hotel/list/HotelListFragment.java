@@ -67,7 +67,9 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     protected PinnedSectionRecyclerView mHotelRecyclerView;
     protected HotelListAdapter mHotelAdapter;
-    protected SaleTime mSaleTime;
+
+    protected SaleTime mCheckInSaleTime;
+    protected SaleTime mCheckOutSaleTime;
 
     private View mEmptyView;
     private ViewGroup mMapLayout;
@@ -96,7 +98,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        mHotelAdapter = new HotelListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), getOnItemClickListener(), mOnEventBannerItemClickListener);
+        mHotelAdapter = new HotelListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
         mHotelRecyclerView.setAdapter(mHotelAdapter);
         mHotelRecyclerView.setOnScrollListener(mOnScrollListener);
 
@@ -265,29 +267,34 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
     }
 
-    public SaleTime getSaleTime()
+    public SaleTime getCheckInSaleTime()
     {
-        return mSaleTime;
+        return mCheckInSaleTime;
     }
 
-    public void setSaleTime(SaleTime saleTime)
+    public SaleTime getCheckOutSaleTime()
     {
-        mSaleTime = saleTime;
+        return mCheckOutSaleTime;
+    }
+
+    public void setCheckInSaleTime(SaleTime saleTime)
+    {
+        mCheckInSaleTime = saleTime;
+    }
+
+    public void setCheckOutSaleTime(SaleTime saleTime)
+    {
+        mCheckOutSaleTime = saleTime;
     }
 
     public int getNights()
     {
-        return 1;
+        return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
     }
 
     public void setOnCommunicateListener(HotelMainFragment.OnCommunicateListener listener)
     {
         mOnCommunicateListener = listener;
-    }
-
-    public View.OnClickListener getOnItemClickListener()
-    {
-        return mOnItemClickListener;
     }
 
     public boolean isShowInformationAtMapView()
@@ -315,14 +322,14 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected void fetchList()
     {
         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-        fetchList(hotelCurationOption.getProvince(), mSaleTime, null);
+        fetchList(hotelCurationOption.getProvince(), mCheckInSaleTime, mCheckOutSaleTime);
     }
 
     protected void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (province == null || checkInSaleTime == null)
+        if (province == null || checkInSaleTime == null || checkOutSaleTime == null)
         {
             Util.restartApp(baseActivity);
             return;
@@ -330,17 +337,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         lockUI();
 
-        int nights = 0;
-
-        if (checkOutSaleTime == null)
-        {
-            // 오늘, 내일인 경우
-            nights = 1;
-        } else
-        {
-            // 연박인 경우
-            nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-        }
+        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
 
         if (nights <= 0)
         {
@@ -607,14 +604,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             if (viewType == ViewType.MAP)
             {
                 mHotelMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-
-                if (HotelListFragment.this instanceof HotelDaysListFragment)
-                {
-                    mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), mScrollListTop);
-                } else
-                {
-                    mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, mSaleTime, mScrollListTop);
-                }
+                mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, mCheckInSaleTime, mScrollListTop);
 
                 AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST_MAP, null);
             } else
@@ -716,7 +706,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             if (placeViewItem.getType() == PlaceViewItem.TYPE_ENTRY)
             {
-                mOnCommunicateListener.selectHotel(placeViewItem, mSaleTime);
+                mOnCommunicateListener.selectHotel(placeViewItem, mCheckInSaleTime);
             }
         }
     };

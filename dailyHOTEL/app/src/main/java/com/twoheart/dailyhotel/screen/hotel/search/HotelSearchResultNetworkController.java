@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.hotel.search;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.AsyncTask;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -9,9 +10,13 @@ import com.twoheart.dailyhotel.model.HotelSearch;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,15 +28,21 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class HotelSearchResultNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
 
-        void onResponseSearchResultList(String address, int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
+        void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
 
         void onResponseCustomerSatisfactionTimeMessage(String message);
+
+        void onResponseAddress(String address);
     }
 
     public HotelSearchResultNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -50,15 +61,100 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, keword, offset, count, mHotelSearchListJsonResponseListener, this);
     }
 
-    public void requestSearchResultList(SaleTime saleTime, int nights, Location location, int offset, int count)
+    public void requestSearchResultList(SaleTime saleTime, int nights, Location location, int distance, int offset, int count)
     {
-        DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, location, offset, count, mHotelSearchListJsonResponseListener, this);
+        requestAddress(location, mLocationToAddressListener);
+
+        DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, location, distance, offset, count, mHotelLocationSearchListJsonResponseListener, this);
     }
 
     public void requestCustomerSatisfactionTimeMessage()
     {
         DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, null);
     }
+
+    private ArrayList<PlaceViewItem> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+    {
+        if (jsonArray == null || jsonArray.length() == 0)
+        {
+            return new ArrayList<>();
+        }
+
+        int length = jsonArray.length();
+        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>(length);
+        JSONObject jsonObject;
+
+        for (int i = 0; i < length; i++)
+        {
+            jsonObject = jsonArray.getJSONObject(i);
+
+            HotelSearch hotel = new HotelSearch();
+
+            if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
+            {
+                PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel);
+                placeViewItemList.add(placeViewItem);
+            }
+        }
+
+        return placeViewItemList;
+    }
+
+    private void requestAddress(Location location, final DailyHotelJsonResponseListener listener)
+    {
+        final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko", Double.toString(location.getLatitude()), Double.toString(location.getLongitude()), DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
+
+        new AsyncTask<Void, Void, String>()
+        {
+            @Override
+            protected String doInBackground(Void... params)
+            {
+                OkHttpClient okHttpClient = new OkHttpClient();
+                Request request = new Request.Builder()//
+                    .url(url).build();
+
+                String data = null;
+
+                try
+                {
+                    Response response = okHttpClient.newCall(request).execute();
+
+                    if (response.isSuccessful() == true)
+                    {
+                        data = response.body().string();
+                    }
+                } catch (Exception e)
+                {
+                    data = null;
+                }
+
+                return data;
+            }
+
+            @Override
+            protected void onPostExecute(String data)
+            {
+                if (listener != null)
+                {
+                    JSONObject jsonObject = null;
+
+                    if (Util.isTextEmpty(data) == false)
+                    {
+                        try
+                        {
+                            jsonObject = new JSONObject(data);
+                        } catch (JSONException e)
+                        {
+                            jsonObject = null;
+                        }
+                    }
+
+                    listener.onResponse(url, jsonObject);
+                }
+            }
+        }.execute();
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
@@ -136,32 +232,146 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
                 mOnNetworkControllerListener.onError(e);
             }
         }
+    };
 
-        private ArrayList<PlaceViewItem> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+    private DailyHotelJsonResponseListener mHotelLocationSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
         {
-            if (jsonArray == null || jsonArray.length() == 0)
+            try
             {
-                return new ArrayList<>();
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String imageUrl = dataJSONObject.getString("imgUrl");
+                    int nights = dataJSONObject.getInt("lengthStay");
+                    JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+                    int totalCount = dataJSONObject.getInt("totalCount");
+
+                    // totalCount == -1 인경우에는 연박으로 호텔의 개수를 알수가 없다.
+                    // 이슈 사항은 연박인 경우 더이상 로딩 하지 않는 경우에 발생할수 있다.
+
+                    int length;
+
+                    if (hotelJSONArray == null)
+                    {
+                        length = 0;
+                    } else
+                    {
+                        length = hotelJSONArray.length();
+                    }
+
+                    if (length == 0 && totalCount != -1)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseLocationSearchResultList(0, null);
+                    } else
+                    {
+                        ArrayList<PlaceViewItem> placeViewItemList = makeHotelList(hotelJSONArray, imageUrl, nights);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseLocationSearchResultList(totalCount, placeViewItemList);
+                    }
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorMessage(msgCode, message);
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mLocationToAddressListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (response == null)
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
+                return;
+            }
+
+            try
+            {
+                JSONArray jsonArray = response.getJSONArray("results");
+                JSONObject searchJSONObject = getSearchTypes(jsonArray, "country");
+
+                String shortName = searchJSONObject.getString("short_name");
+                String searchKeyword = "KR".equalsIgnoreCase(shortName) ? "sublocality_level_2" : "administrative_area_level_1";
+
+                JSONObject addressJSONObject = getSearchTypes(jsonArray, searchKeyword);
+
+                if (addressJSONObject != null)
+                {
+                    String address = addressJSONObject.getString("short_name");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address);
+                }
+            } catch (JSONException e)
+            {
+                ExLog.e(e.toString());
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
+            }
+        }
+
+        private JSONObject getSearchTypes(JSONArray jsonArray, String searchType) throws JSONException
+        {
+            if (jsonArray == null || Util.isTextEmpty(searchType) == true)
+            {
+                return null;
             }
 
             int length = jsonArray.length();
-            ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>(length);
-            JSONObject jsonObject;
 
             for (int i = 0; i < length; i++)
             {
-                jsonObject = jsonArray.getJSONObject(i);
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONArray addressComponentsJSONArray = jsonObject.getJSONArray("address_components");
 
-                HotelSearch hotel = new HotelSearch();
+                int addressLength = addressComponentsJSONArray.length();
 
-                if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
+                for (int j = 0; j < addressLength; j++)
                 {
-                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel);
-                    placeViewItemList.add(placeViewItem);
+                    JSONObject addressJSONObject = addressComponentsJSONArray.getJSONObject(j);
+                    JSONArray typesJSONArray = addressJSONObject.getJSONArray("types");
+
+                    boolean hasType = hasType(typesJSONArray, searchType);
+
+                    if (hasType == true)
+                    {
+                        return addressJSONObject;
+                    }
                 }
             }
 
-            return placeViewItemList;
+            return null;
+        }
+
+        private boolean hasType(JSONArray jsonArray, String searchType) throws JSONException
+        {
+            if (jsonArray == null || Util.isTextEmpty(searchType) == true)
+            {
+                return false;
+            }
+
+            int length = jsonArray.length();
+
+            for (int i = 0; i < length; i++)
+            {
+                String type = jsonArray.getString(i);
+
+                if (searchType.equalsIgnoreCase(type) == true)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     };
 }

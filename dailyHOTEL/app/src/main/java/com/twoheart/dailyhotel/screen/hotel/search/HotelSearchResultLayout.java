@@ -7,6 +7,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
+import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,16 @@ public class HotelSearchResultLayout extends PlaceSearchResultLayout
     public HotelSearchResultLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
+    }
+
+    public void setSortType(Constants.SortType sortType)
+    {
+        if (mListAdapter == null)
+        {
+            return;
+        }
+
+        mListAdapter.setSortType(sortType);
     }
 
     @Override

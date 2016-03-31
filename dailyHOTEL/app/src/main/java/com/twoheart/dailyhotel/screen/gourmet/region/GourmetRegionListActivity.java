@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
-import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
@@ -95,11 +94,11 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void showSearch()
     {
-        Intent intent = GourmetSearchActivity.newInstance(this, mSaleTime);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
+        //        Intent intent = GourmetSearchActivity.newInstance(this, mSaleTime);
+        //        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+        //
+        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        //            , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
     }
 
     @Override

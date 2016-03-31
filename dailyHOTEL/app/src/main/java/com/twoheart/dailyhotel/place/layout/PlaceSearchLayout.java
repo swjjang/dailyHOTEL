@@ -79,9 +79,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     {
         void onResetKeyword();
 
-        void onShowTermsOfLocationDialog();
+        void onShowTermsOfLocationDialog(int distance);
 
-        void onSearchMyLocation();
+        void onSearchMyLocation(int distance);
 
         void onDeleteRecentSearches();
 
@@ -540,12 +540,22 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         {
             case R.id.searchAroundLayout:
             {
+                int distance = 10;
+
+                try
+                {
+                    distance = Integer.parseInt(mSearchEditText.getText().toString().trim());
+                } catch (Exception e)
+                {
+                    distance = 10;
+                }
+
                 if (DailyPreference.getInstance(mContext).isAgreeTermsOfLocation() == true)
                 {
-                    ((OnEventListener) mOnEventListener).onSearchMyLocation();
+                    ((OnEventListener) mOnEventListener).onSearchMyLocation(distance);
                 } else
                 {
-                    ((OnEventListener) mOnEventListener).onShowTermsOfLocationDialog();
+                    ((OnEventListener) mOnEventListener).onShowTermsOfLocationDialog(distance);
                 }
                 break;
             }
