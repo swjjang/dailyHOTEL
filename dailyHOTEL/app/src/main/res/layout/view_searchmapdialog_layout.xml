@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/label_kakao_map"
+            android:text="@string/label_share_kakao_map"
             android:textColor="@color/white"
             android:textSize="15dp"/>
     </FrameLayout>
@@ -65,7 +65,26 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/label_naver_map"
+            android:text="@string/label_share_naver_map"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/googleMapLayout"
+        android:layout_width="280dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/dh_theme_color">
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/label_share_google_map"
             android:textColor="@color/white"
             android:textSize="15dp"/>
     </FrameLayout>

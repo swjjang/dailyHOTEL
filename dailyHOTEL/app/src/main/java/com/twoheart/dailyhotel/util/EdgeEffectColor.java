@@ -82,8 +82,10 @@ public class EdgeEffectColor
             }
         }
 
-        for (Method m : CLASS_RECYCLER_VIEW.getDeclaredMethods()) {
-            switch (m.getName()) {
+        for (Method m : CLASS_RECYCLER_VIEW.getDeclaredMethods())
+        {
+            switch (m.getName())
+            {
                 case "ensureTopGlow":
                     m.setAccessible(true);
                     ensureGlowTop = m;
@@ -142,8 +144,10 @@ public class EdgeEffectColor
             }
         }
 
-        for (Method m : CLASS_NESTED_SCROLL_VIEW.getDeclaredMethods()) {
-            switch (m.getName()) {
+        for (Method m : CLASS_NESTED_SCROLL_VIEW.getDeclaredMethods())
+        {
+            switch (m.getName())
+            {
                 case "ensureGlows":
                     m.setAccessible(true);
                     ensureGlowTop = m;

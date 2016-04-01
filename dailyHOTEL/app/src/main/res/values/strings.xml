@@ -31,8 +31,9 @@
     <string name="label_on">ON</string>
     <string name="label_off">OFF</string>
     <string name="label_version">Version %1$s</string>
-    <string name="label_kakao_map">다음 지도에서 보기</string>
-    <string name="label_naver_map">네이버 지도에서 보기</string>
+    <string name="label_share_kakao_map">다음 지도에서 보기</string>
+    <string name="label_share_naver_map">네이버 지도에서 보기</string>
+    <string name="label_share_google_map">구글 지도에서 보기</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>

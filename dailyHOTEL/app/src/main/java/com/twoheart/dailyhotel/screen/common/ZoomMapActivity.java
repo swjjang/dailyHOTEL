@@ -1,16 +1,11 @@
 package com.twoheart.dailyhotel.screen.common;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,7 +23,6 @@ import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LocationFactory;
@@ -137,30 +131,23 @@ public class ZoomMapActivity extends BaseActivity
         dailyToolbarLayout.initToolbar(title);
     }
 
-    private void initLayout(final String placeName, final double latitude, final double longitude, boolean isOverseas)
+    private void initLayout(final String placeName, final double latitude, final double longitude, final boolean isOverseas)
     {
         View searchMapView = findViewById(R.id.searchMapView);
-
-        if(isOverseas == true)
+        searchMapView.setOnClickListener(new View.OnClickListener()
         {
-            searchMapView.setVisibility(View.GONE);
-        } else
-        {
-            searchMapView.setVisibility(View.VISIBLE);
-            searchMapView.setOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
-                    if (lockUiComponentAndIsLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    showSearchMap(placeName, latitude, longitude);
+                    return;
                 }
-            });
-        }
+
+                Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas);
+            }
+        });
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
 
@@ -256,67 +243,6 @@ public class ZoomMapActivity extends BaseActivity
                     marker.showInfoWindow();
                 }
             });
-        }
-    }
-
-    private void showSearchMap(final String placeName, final double latitude, final double longitude)
-    {
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_searchmapdialog_layout, null, false);
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(true);
-
-        // 버튼
-        View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
-        View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
-
-        kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                Util.shareDaumMap(ZoomMapActivity.this, Double.toString(latitude), Double.toString(longitude));
-            }
-        });
-
-        naverMapLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                Util.shareNaverMap(ZoomMapActivity.this, placeName, Double.toString(latitude), Double.toString(longitude));
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                unLockUI();
-            }
-        });
-
-        try
-        {
-            dialog.setContentView(dialogView);
-            dialog.show();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
         }
     }
 
