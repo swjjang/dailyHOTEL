@@ -23,6 +23,8 @@ public class HotelDetail
     private ArrayList<DetailInformation> mInformationList;
     private ArrayList<DetailInformation> mMoreInformationList;
     private ArrayList<SaleRoomInformation> mSaleRoomList;
+    //
+    public String categoryCode;
 
     public HotelDetail(int hotelIndex, int nights)
     {
@@ -124,7 +126,10 @@ public class HotelDetail
 
         for (int i = 0; i < saleRoomLength; i++)
         {
-            mSaleRoomList.add(new SaleRoomInformation(hotelName, saleRoomJSONArray.getJSONObject(i), isOverseas, nights));
+            SaleRoomInformation saleRoomInformation = new SaleRoomInformation(hotelName, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
+            saleRoomInformation.grade = grade;
+            saleRoomInformation.address = address;
+            mSaleRoomList.add(saleRoomInformation);
         }
     }
 

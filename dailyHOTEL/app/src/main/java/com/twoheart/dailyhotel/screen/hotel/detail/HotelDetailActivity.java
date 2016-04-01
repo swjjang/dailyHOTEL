@@ -173,6 +173,9 @@ public class HotelDetailActivity extends BaseActivity
             String hotelImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
             mDefaultImageUrl = hotelImageUrl;
 
+            String categoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
+            mHotelDetail.categoryCode = categoryCode;
+
             if (mCheckInSaleTime == null || hotelIndex == -1 || hotelName == null || nights <= 0)
             {
                 Util.restartApp(this);
@@ -306,8 +309,10 @@ public class HotelDetailActivity extends BaseActivity
             imageUrl = mImageInformationList.get(0).url;
         }
 
+        saleRoomInformation.categoryCode = hotelDetail.categoryCode;
+
         Intent intent = HotelPaymentActivity.newInstance(HotelDetailActivity.this, saleRoomInformation//
-            , checkInSaleTime, imageUrl, hotelDetail.grade, hotelDetail.hotelIndex, !Util.isTextEmpty(hotelDetail.hotelBenefit));
+            , checkInSaleTime, imageUrl, hotelDetail.hotelIndex, !Util.isTextEmpty(hotelDetail.hotelBenefit));
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -362,6 +367,9 @@ public class HotelDetailActivity extends BaseActivity
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+
+            params.put(AnalyticsManager.KeyType.ADDRESS, mHotelDetail.address);
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mHotelDetail.categoryCode);
 
             AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(screen, params);
         } catch (Exception e)
@@ -659,6 +667,8 @@ public class HotelDetailActivity extends BaseActivity
 
                         if (mIsStartByShare == true)
                         {
+                            mHotelDetail.categoryCode = mHotelDetail.grade.getName(HotelDetailActivity.this);
+
                             mIsStartByShare = false;
                             mDailyToolbarLayout.setToolbarText(mHotelDetail.hotelName);
                         }

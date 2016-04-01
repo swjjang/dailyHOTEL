@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 public class HotelPaymentInformation extends PlacePaymentInformation
 {
-    public Hotel.HotelGrade grade;
     public int originalPrice;
     private SaleRoomInformation mSaleRoomInformation;
     //
@@ -26,23 +25,15 @@ public class HotelPaymentInformation extends PlacePaymentInformation
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeString(grade.name());
         dest.writeInt(originalPrice);
         dest.writeParcelable(mSaleRoomInformation, flags);
+
     }
 
     @Override
     protected void readFromParcel(Parcel in)
     {
         super.readFromParcel(in);
-
-        try
-        {
-            grade = Hotel.HotelGrade.valueOf(in.readString());
-        } catch (Exception e)
-        {
-            grade = Hotel.HotelGrade.etc;
-        }
 
         originalPrice = in.readInt();
         mSaleRoomInformation = in.readParcelable(SaleRoomInformation.class.getClassLoader());

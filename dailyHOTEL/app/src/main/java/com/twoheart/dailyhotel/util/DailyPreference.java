@@ -814,7 +814,7 @@ public class DailyPreference
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_PLACE_INDEX, Integer.toString(hotelPaymentInformation.placeIndex));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_NAME, saleRoomInformation.roomName);
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
-            mVBankEditor.putString(KEY_PREFERENCE_VBANK_GRADE, hotelPaymentInformation.grade.getName(context));
+            mVBankEditor.putString(KEY_PREFERENCE_VBANK_GRADE, hotelPaymentInformation.getSaleRoomInformation().grade.getName(context));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
 
             SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + saleRoomInformation.nights);
