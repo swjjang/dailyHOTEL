@@ -563,7 +563,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+                if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
                 {
                     msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
                 } else
