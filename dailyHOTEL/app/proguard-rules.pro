@@ -90,6 +90,14 @@
 -keep public class com.mobileapptracker.** { public *; }
 -keep public class com.google.android.gms.ads.identifier.** { *; }
 
+-keepnames class android.widget.ScrollView { *; }
+-keepnames class android.widget.AbsListView { *; }
+-keepnames class android.support.v4.widget.NestedScrollView { *; }
+-keepnames class android.support.v7.widget.RecyclerView { *; }
+-keepnames class android.support.v4.view.ViewPager { *; }
+-keepnames class android.widget.EdgeEffect { *; }
+-keepnames class android.support.v4.widget.EdgeEffectCompat { *; }
+
 -dontwarn okhttp3.**
 -dontwarn okio.**
 -dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**, org.jboss.netty.**

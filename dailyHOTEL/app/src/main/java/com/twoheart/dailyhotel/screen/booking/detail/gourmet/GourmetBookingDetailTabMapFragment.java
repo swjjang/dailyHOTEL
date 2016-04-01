@@ -1,12 +1,16 @@
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -90,6 +94,22 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             hotelGradeTextView.setTextColor(getResources().getColor(R.color.black));
             hotelGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
         }
+
+        final View searchMapView = view.findViewById(R.id.searchMapView);
+        searchMapView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (isLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUiComponent();
+                showSearchMap(mPlaceBookingDetail.placeName, mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
+            }
+        });
 
         return view;
     }
@@ -281,5 +301,68 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
                 });
             }
         }, 500);
+    }
+
+    private void showSearchMap(final String placeName, final double latitude, final double longitude)
+    {
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_searchmapdialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(baseActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
+        View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
+
+        kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
+            }
+        });
+
+        naverMapLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 }
