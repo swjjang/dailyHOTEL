@@ -1463,6 +1463,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, hotel.nights);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotel.name);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, hotel.imageUrl);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, hotel.categoryCode);
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 

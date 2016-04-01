@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.screen.hotel.search;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Handler;
+import android.os.Message;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -24,6 +26,16 @@ public class HotelSearchActivity extends PlaceSearchActivity
     private SaleTime mSaleTime;
     private int mNights;
     private int mDistance;
+
+    private Handler mAnalyticsHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED, (String) msg.obj, null);
+        }
+    };
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights)
     {
@@ -167,14 +179,33 @@ public class HotelSearchActivity extends PlaceSearchActivity
             if (keyword.price < 0)
             {
                 // 최근 검색어로 검색
-                AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED, keyword.name, null);
+                if (keyword.icon == PlaceSearchLayout.HOTEL_ICON)
+                {
+                    // 호텔인 경우
+                    AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                        , AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED, keyword.name, null);
+                } else
+                {
+                    // 그외
+                    AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                        , AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED, keyword.name, null);
+                }
             } else
             {
                 // 자동 완성으로 검색
-                String label = String.format("%s-%s", text, keyword.name);
-                AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED, label, null);
+                if (keyword.price == 0)
+                {
+                    // 지역인 경우
+                    String label = String.format("지역-%s-%s", text, keyword.name);
+                    AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                        , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED, label, null);
+                } else
+                {
+                    // 호텔인 경우
+                    String label = String.format("호텔-%s-%s", text, keyword.name);
+                    AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                        , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED, label, null);
+                }
             }
         }
 
@@ -197,6 +228,19 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onResponseAutoComplete(String keyword, List<Keyword> list)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            mAnalyticsHandler.removeMessages(0);
+
+            if (list != null && list.size() == 0)
+            {
+                Message message = mAnalyticsHandler.obtainMessage(0, keyword);
+                mAnalyticsHandler.sendMessageDelayed(message, 1000);
+            }
+
             mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
         }
 

@@ -336,6 +336,8 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
         String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT);
         String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
+        String address = params.get(AnalyticsManager.KeyType.ADDRESS);
+        String hotelCategory = params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY);
 
         if (Util.isTextEmpty(checkIn) == false)
         {
@@ -355,6 +357,16 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         if (Util.isTextEmpty(paymentType) == false)
         {
             screenViewBuilder.setCustomDimension(4, paymentType);
+        }
+
+        if (Util.isTextEmpty(address) == false)
+        {
+            screenViewBuilder.setCustomDimension(9, address);
+        }
+
+        if (Util.isTextEmpty(hotelCategory) == false)
+        {
+            screenViewBuilder.setCustomDimension(10, hotelCategory);
         }
 
         return screenViewBuilder;

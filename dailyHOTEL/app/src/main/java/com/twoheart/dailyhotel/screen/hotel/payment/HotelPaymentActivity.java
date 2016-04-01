@@ -104,14 +104,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     private String mWarningDialogMessage;
 
     public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation//
-        , SaleTime checkInSaleTime, String imageUrl, Hotel.HotelGrade hotelGrade, int hotelIndex, boolean isDBenefit)
+        , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION, saleRoomInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELGRADE, hotelGrade.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
 
@@ -139,7 +138,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         hotelPaymentInformation.setSaleRoomInformation((SaleRoomInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
         mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
-        hotelPaymentInformation.grade = Hotel.HotelGrade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELGRADE));
         hotelPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
         hotelPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
 
@@ -1051,7 +1049,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             {
                                 HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-                                if (Hotel.HotelGrade.pension.compareTo(hotelPaymentInformation.grade) == 0 || Hotel.HotelGrade.fullvilla.compareTo(hotelPaymentInformation.grade) == 0)
+                                Hotel.HotelGrade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
+                                if (Hotel.HotelGrade.pension == hotelGrade || Hotel.HotelGrade.fullvilla == hotelGrade)
                                 {
                                     lockUI();
 
@@ -1072,7 +1071,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         });
                     } else
                     {
-                        if (Hotel.HotelGrade.pension.compareTo(hotelPaymentInformation.grade) == 0 || Hotel.HotelGrade.fullvilla.compareTo(hotelPaymentInformation.grade) == 0)
+                        Hotel.HotelGrade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
+                        if (Hotel.HotelGrade.pension == hotelGrade | Hotel.HotelGrade.fullvilla == hotelGrade)
                         {
                             lockUI();
 
@@ -1244,7 +1244,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, saleRoomInformation.roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(saleRoomInformation.roomIndex));
-            params.put(AnalyticsManager.KeyType.GRADE, hotelPaymentInformation.grade.getName(this));
+            params.put(AnalyticsManager.KeyType.GRADE, hotelPaymentInformation.getSaleRoomInformation().grade.getName(this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
 
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + hotelPaymentInformation.getSaleRoomInformation().nights);
@@ -1276,6 +1276,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             }
 
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, hotelPaymentInformation.paymentType.getName());
+            params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1328,8 +1330,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, hotelPaymentInformation.getSaleRoomInformation().roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().roomIndex));
-            params.put(AnalyticsManager.KeyType.GRADE, hotelPaymentInformation.grade.getName(HotelPaymentActivity.this));
+            params.put(AnalyticsManager.KeyType.GRADE, hotelPaymentInformation.getSaleRoomInformation().grade.getName(HotelPaymentActivity.this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
 
             AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_PAYMENT, params);
         } catch (Exception e)

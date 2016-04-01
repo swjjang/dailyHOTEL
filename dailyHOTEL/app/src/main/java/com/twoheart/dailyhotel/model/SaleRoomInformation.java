@@ -18,6 +18,10 @@ public class SaleRoomInformation implements Parcelable
     public int averageDiscount;
     public int totalDiscount;
     public int nights;
+    public Hotel.HotelGrade grade;
+    public String address;
+    //
+    public String categoryCode; // GA를 위해서 payment로 진행시에 값을 넣는다
 
     public SaleRoomInformation(Parcel in)
     {
@@ -58,6 +62,9 @@ public class SaleRoomInformation implements Parcelable
         dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(hotelName);
         dest.writeInt(nights);
+        dest.writeString(grade.name());
+        dest.writeString(address);
+        dest.writeString(categoryCode);
     }
 
     protected void readFromParcel(Parcel in)
@@ -73,6 +80,17 @@ public class SaleRoomInformation implements Parcelable
         isOverseas = in.readInt() == 1 ? true : false;
         hotelName = in.readString();
         nights = in.readInt();
+
+        try
+        {
+            grade = Hotel.HotelGrade.valueOf(in.readString());
+        } catch (Exception e)
+        {
+            grade = Hotel.HotelGrade.etc;
+        }
+
+        address = in.readString();
+        categoryCode = in.readString();
     }
 
     @Override

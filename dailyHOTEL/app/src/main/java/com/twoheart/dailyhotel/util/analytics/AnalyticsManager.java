@@ -340,6 +340,7 @@ public class AnalyticsManager
         public static final String HOTEL_KEYWORD_HISTORY_DELETED = "HotelKeywordsHistoryDeleted";
         public static final String HOTEL_RECENT_KEYWORD_SEARCH_CLICKED = "HotelRecentKeywordSearchClicked";
         public static final String HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED = "HotelAutoCompletedKeywordClicked";
+        public static final String HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED = "HotelAutoCompletedKeywordNotMatched";
         public static final String HOTEL_AROUND_NOT_FOUND = "HotelAroundNotFound";
         public static final String HOTEL_SEARCH_NOT_FOUND = "HotelSearchNotFound";
         public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
@@ -490,5 +491,7 @@ public class AnalyticsManager
         public static final String GRADE = "grade";
         public static final String DBENEFIT = "dBenefit";
         public static final String CATEGORY = "category";
+        public static final String ADDRESS = "address";
+        public static final String HOTEL_CATEGORY = "hotelCategory";
     }
 }
