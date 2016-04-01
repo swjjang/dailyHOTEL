@@ -93,21 +93,29 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         hotelGradeTextView.setText(mBookingDetail.grade.getName(getActivity()));
         hotelGradeTextView.setBackgroundResource(mBookingDetail.grade.getColorResId());
 
-        final View searchMapView = view.findViewById(R.id.searchMapView);
-        searchMapView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (isLockUiComponent() == true)
-                {
-                    return;
-                }
+        View searchMapView = view.findViewById(R.id.searchMapView);
 
-                lockUiComponent();
-                showSearchMap(mBookingDetail.placeName, mBookingDetail.latitude, mBookingDetail.longitude);
-            }
-        });
+        if(mBookingDetail.isOverseas != 0)
+        {
+            searchMapView.setVisibility(View.GONE);
+        } else
+        {
+            searchMapView.setVisibility(View.VISIBLE);
+            searchMapView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (isLockUiComponent() == true)
+                    {
+                        return;
+                    }
+
+                    lockUiComponent();
+                    showSearchMap(mBookingDetail.placeName, mBookingDetail.latitude, mBookingDetail.longitude);
+                }
+            });
+        }
 
         return view;
     }
@@ -124,7 +132,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
 
         Intent intent = ZoomMapActivity.newInstance(baseActivity//
             , ZoomMapActivity.SourceType.BOOKING, mBookingDetail.placeName//
-            , mBookingDetail.latitude, mBookingDetail.longitude);
+            , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
 
         startActivity(intent);
     }

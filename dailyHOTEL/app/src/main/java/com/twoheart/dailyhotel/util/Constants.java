@@ -134,6 +134,7 @@ public interface Constants
     public static final String NAME_INTENT_EXTRA_DATA_MOREINFORMATION = "moreInformation";
     public static final String NAME_INTENT_EXTRA_DATA_LATITUDE = "latitude";
     public static final String NAME_INTENT_EXTRA_DATA_LONGITUDE = "longitude";
+    public static final String NAME_INTENT_EXTRA_DATA_ISOVERSEAS = "isOverseas";
     public static final String NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION = "saleRoomInformation";
     public static final String NAME_INTENT_EXTRA_DATA_TICKETINFORMATION = "ticketInformation";
     public static final String NAME_INTENT_EXTRA_DATA_SALEINDEX = "saleIndex";

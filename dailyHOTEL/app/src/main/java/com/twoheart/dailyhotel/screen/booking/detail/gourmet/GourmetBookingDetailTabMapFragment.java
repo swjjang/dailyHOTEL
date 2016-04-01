@@ -95,7 +95,8 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             hotelGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
         }
 
-        final View searchMapView = view.findViewById(R.id.searchMapView);
+        View searchMapView = view.findViewById(R.id.searchMapView);
+        searchMapView.setVisibility(View.VISIBLE);
         searchMapView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -126,7 +127,7 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
 
         Intent intent = ZoomMapActivity.newInstance(baseActivity//
             , ZoomMapActivity.SourceType.BOOKING, mPlaceBookingDetail.placeName//
-            , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
+            , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false);
 
         startActivity(intent);
     }

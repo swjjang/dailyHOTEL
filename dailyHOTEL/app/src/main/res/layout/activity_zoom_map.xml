@@ -23,7 +23,8 @@
         android:gravity="center"
         android:text="@string/label_map_searchmap"
         android:textColor="@android:color/white"
-        android:textSize="20dp"/>
+        android:textSize="20dp"
+        android:visibility="gone"/>
 
     <View
         android:layout_width="match_parent"

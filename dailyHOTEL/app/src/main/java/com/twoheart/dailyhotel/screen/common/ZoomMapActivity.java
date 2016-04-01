@@ -50,7 +50,7 @@ public class ZoomMapActivity extends BaseActivity
         BOOKING,
     }
 
-    public static Intent newInstance(Context context, SourceType sourceType, String name, double latitude, double longitude)
+    public static Intent newInstance(Context context, SourceType sourceType, String name, double latitude, double longitude, boolean isOverseas)
     {
         Intent intent = new Intent(context, ZoomMapActivity.class);
 
@@ -58,6 +58,7 @@ public class ZoomMapActivity extends BaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, latitude);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, longitude);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, isOverseas);
 
         return intent;
     }
@@ -74,6 +75,7 @@ public class ZoomMapActivity extends BaseActivity
         String placeName;
         double latitude;
         double longitude;
+        boolean isOverseas = false;
 
         if (intent != null)
         {
@@ -89,6 +91,7 @@ public class ZoomMapActivity extends BaseActivity
             longitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, 0);
 
             mSourceType = SourceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
+            isOverseas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
         } else
         {
             latitude = 0;
@@ -103,7 +106,7 @@ public class ZoomMapActivity extends BaseActivity
         }
 
         initToolbar(getString(R.string.frag_tab_map_title));
-        initLayout(placeName, latitude, longitude);
+        initLayout(placeName, latitude, longitude, isOverseas);
     }
 
     @Override
@@ -134,22 +137,30 @@ public class ZoomMapActivity extends BaseActivity
         dailyToolbarLayout.initToolbar(title);
     }
 
-    private void initLayout(final String placeName, final double latitude, final double longitude)
+    private void initLayout(final String placeName, final double latitude, final double longitude, boolean isOverseas)
     {
         View searchMapView = findViewById(R.id.searchMapView);
-        searchMapView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
 
-                showSearchMap(placeName, latitude, longitude);
-            }
-        });
+        if(isOverseas == true)
+        {
+            searchMapView.setVisibility(View.GONE);
+        } else
+        {
+            searchMapView.setVisibility(View.VISIBLE);
+            searchMapView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (lockUiComponentAndIsLockUiComponent() == true)
+                    {
+                        return;
+                    }
+
+                    showSearchMap(placeName, latitude, longitude);
+                }
+            });
+        }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
 
