@@ -497,7 +497,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             saleTime = mTodaySaleTime.getClone(i);
             tabSaleTime[i] = saleTime;
 
-            if(i == 2)
+            if (i == 2)
             {
                 String text = (String) mTabLayout.getTabAt(2).getTag();
 

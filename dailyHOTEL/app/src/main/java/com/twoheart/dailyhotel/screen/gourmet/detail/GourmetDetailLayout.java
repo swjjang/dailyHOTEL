@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -134,6 +135,7 @@ public class GourmetDetailLayout
         mTicketTypeLayout = activity.findViewById(R.id.ticketTypeLayout);
         mTicketTypeRecyclerView = (RecyclerView) mTicketTypeLayout.findViewById(R.id.ticketTypeRecyclerView);
         mTicketTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        EdgeEffectColor.setEdgeGlowColor(mTicketTypeRecyclerView, activity.getResources().getColor(R.color.over_scroll_edge));
         mTicketTypeLayout.setVisibility(View.INVISIBLE);
 
         mBottomLayout = activity.findViewById(R.id.bottomLayout);

@@ -30,7 +30,6 @@ public class PlaceNameInfoWindowAdapter implements InfoWindowAdapter
         View view = mLayoutInflaterinflater.inflate(R.layout.fragment_tabmap_popup, null);
 
         DailyTextView textView = (DailyTextView) view.findViewById(R.id.titleTextView);
-
         textView.setText(marker.getTitle());
 
         return view;

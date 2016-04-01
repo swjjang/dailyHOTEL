@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.LoopViewPager;
@@ -122,6 +123,7 @@ public class HotelDetailLayout
         mRoomTypeLayout = activity.findViewById(R.id.roomTypeLayout);
         mRoomTypeRecyclerView = (RecyclerView) mRoomTypeLayout.findViewById(R.id.roomTypeRecyclerView);
         mRoomTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        EdgeEffectColor.setEdgeGlowColor(mRoomTypeRecyclerView, mActivity.getResources().getColor(R.color.over_scroll_edge));
         mRoomTypeLayout.setVisibility(View.INVISIBLE);
 
         mBottomLayout = activity.findViewById(R.id.bottomLayout);
