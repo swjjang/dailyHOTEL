@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -258,14 +259,8 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
                 String shortName = searchJSONObject.getString("short_name");
                 String searchKeyword = "KR".equalsIgnoreCase(shortName) ? "sublocality_level_2" : "administrative_area_level_1";
 
-                JSONObject addressJSONObject = getSearchTypes(jsonArray, searchKeyword);
-
-                if (addressJSONObject != null)
-                {
-                    String address = addressJSONObject.getString("long_name");
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address);
-                }
+                String address = getSearchTypes(jsonArray, searchKeyword, "long_name");
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address);
             } catch (JSONException e)
             {
                 ExLog.e(e.toString());
@@ -304,6 +299,75 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
             }
 
             return null;
+        }
+
+        private String getSearchTypes(JSONArray jsonArray, String searchType, String key) throws JSONException
+        {
+            if (jsonArray == null || Util.isTextEmpty(searchType) == true)
+            {
+                return null;
+            }
+
+            int length = jsonArray.length();
+            String firstAddress = null;
+
+            for (int i = 0; i < length; i++)
+            {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONArray addressComponentsJSONArray = jsonObject.getJSONArray("address_components");
+
+                int addressLength = addressComponentsJSONArray.length();
+
+                for (int j = 0; j < addressLength; j++)
+                {
+                    JSONObject addressJSONObject = addressComponentsJSONArray.getJSONObject(j);
+                    JSONArray typesJSONArray = addressJSONObject.getJSONArray("types");
+
+                    boolean hasType = hasType(typesJSONArray, searchType);
+
+                    if (hasType == true)
+                    {
+                        String address = addressJSONObject.getString(key);
+
+
+                        if (Util.isTextEmpty(firstAddress) == true)
+                        {
+                            firstAddress = address;
+                        }
+
+                        if (isKoreanAddress(address) == true)
+                        {
+                            return address;
+                        }
+                    }
+                }
+            }
+
+            return firstAddress;
+        }
+
+        private boolean isKoreanAddress(String address)
+        {
+            if (Util.isTextEmpty(address) == true)
+            {
+                return false;
+            }
+
+            Pattern pattern = Pattern.compile("^[0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]+$");
+
+            int length = address.length();
+
+            for (int i = 0; i < length; i++)
+            {
+                char c = address.charAt(i);
+
+                if (pattern.matcher(Character.toString(c)).matches() == false)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private boolean hasType(JSONArray jsonArray, String searchType) throws JSONException
