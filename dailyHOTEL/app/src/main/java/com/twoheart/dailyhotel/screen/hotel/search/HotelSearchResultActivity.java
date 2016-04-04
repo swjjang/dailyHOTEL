@@ -219,7 +219,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private HotelSearchResultNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new HotelSearchResultNetworkController.OnNetworkControllerListener()
     {
         private String mAddress;
-        private int mSize = -1;
+        private int mSize = -100;
 
         private void analyticsOnResponseSearchResultListForSearches(String keyword, int totalCount)
         {
@@ -231,17 +231,27 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, null);
             } else
             {
-                String label = String.format("%s-%d", keyword, totalCount);
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED, label, null);
+                if (totalCount == -1)
+                {
+                    String label = String.format("%s-Los", keyword);
+                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                        , AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED, label, null);
 
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                } else
+                {
+                    String label = String.format("%s-%d", keyword, totalCount);
+                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                        , AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED, label, null);
+
+                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                }
             }
         }
 
         private void analyticsOnResponseSearchResultListForLocation()
         {
-            if (Util.isTextEmpty(mAddress) == true || mSize == -1)
+            if (Util.isTextEmpty(mAddress) == true || mSize == -100)
             {
                 return;
             }
@@ -254,11 +264,21 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, null);
             } else
             {
-                String label = String.format("%s-LoS", mAddress);
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
+                if (mSize == -1)
+                {
+                    String label = String.format("%s-Los", mAddress);
+                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                        , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
 
-                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                } else
+                {
+                    String label = String.format("%s-%d", mAddress, mSize);
+                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                        , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
+
+                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                }
             }
         }
 
@@ -344,7 +364,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             {
                 if (placeViewItemList != null)
                 {
-                    mSize = placeViewItemList.size();
+                    mSize = totalCount;
                 } else
                 {
                     mSize = 0;
