@@ -200,7 +200,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                     }
                 } else
                 {
-                    mDontReload = true;
+                    mDontReload = false;
                 }
                 break;
             }
