@@ -356,7 +356,10 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         // 하나 SK 모듈로 결제 이후 해당 카드 정보를 가지고 오기위해 사용
         if (ResultRcvActivity.m_uriResult != null)
         {// ResultRcvActivity
-            if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null && ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null && ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null && ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null)
+            if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null//
+                && ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null//
+                && ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null//
+                && ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null)
             {
                 //				ExLog.d("[PayDemoActivity] HANA SK Result = javascript:hanaSK('" + ResultRcvActivity.m_uriResult.getQueryParameter("realPan") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci") + "', '" + CARD_CD + "', '" + QUOTA + "');");
 
@@ -395,7 +398,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
     {
         try
         {
-
             if (ResultRcvActivity.m_uriResult != null)
             {
                 m_nStat = PROGRESS_DONE;
@@ -413,7 +415,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
                 if (strResCD.equals("0000") == true)
                 {
-
                     String strApprovalKey = "";
 
                     strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
