@@ -35,10 +35,10 @@
     <com.twoheart.dailyhotel.view.widget.DailyEditText
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:maxLines="3"
         android:maxLength="100"
         android:textColor="@color/curation_information_text"

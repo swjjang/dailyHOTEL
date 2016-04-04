@@ -360,14 +360,16 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int distance, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "ODUkMjEkNjYkNCQ3JA==$NTMxCQzTM3OTVEQUU3NTg3NYUQxMzVDMURERjk5QjE3QkFGOEMxRTIxOUMzNEQ1OEUxNGkUyMEM5Q0UxQUY1RTAxOTA==$";
+        final int DISTANCE = 10;
+
 
         String params = String.format("?dateCheckIn=%s&lengthStay=%d&userLatitude=%s&userLongitude=%s&distanceKm=%d&offset=%d&count=%d"//
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights//
             , Double.toString(location.getLatitude()), Double.toString(location.getLongitude())//
-            , distance, offeset, count);
+            , DISTANCE, offeset, count);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, new StringBuilder("http://52.196.30.125/").append(URL).append(params).toString(), null, listener, errorListener);
 

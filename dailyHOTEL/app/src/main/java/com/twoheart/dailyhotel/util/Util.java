@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -885,4 +886,121 @@ public class Util implements Constants
     //            context.startActivity(intent);
     //        }
     //    }
+
+    public static void shareGoogleMap(Context context, String placeName, String latitude, String longitude)
+    {
+        if (context == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        {
+            return;
+        }
+
+        final String packageName = "com.google.android.apps.maps";
+
+        if (isInstalledPackage(context, packageName) == true)
+        {
+            //            String url = String.format("http://maps.google.com/maps?q=%s&ll=%s,%s&z=14", placeName, latitude, longitude);
+            String url = String.format("http://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, placeName);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            intent.setPackage(packageName);
+            context.startActivity(intent);
+        } else
+        {
+            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(downloadUrl));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName, final double latitude, final double longitude, boolean isOverseas)
+    {
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_searchmapdialog_layout, null, false);
+
+        final Dialog dialog = new Dialog(baseActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
+        View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
+        View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+
+        if (isOverseas == true)
+        {
+            // 해외
+            kakaoMapLayoutLayout.setVisibility(View.GONE);
+            naverMapLayout.setVisibility(View.GONE);
+        }
+
+        kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
+            }
+        });
+
+        naverMapLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+            }
+        });
+
+        googleMapLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                baseActivity.unLockUI();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
 }

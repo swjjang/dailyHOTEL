@@ -183,7 +183,7 @@ interface IDailyNetwork
      */
     void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, int offset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
-    void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int distance, int offset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, Location location, int offset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * @param tag

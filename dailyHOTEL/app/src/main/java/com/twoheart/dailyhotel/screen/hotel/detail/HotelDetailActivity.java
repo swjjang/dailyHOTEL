@@ -629,7 +629,7 @@ public class HotelDetailActivity extends BaseActivity
 
             Intent intent = ZoomMapActivity.newInstance(HotelDetailActivity.this//
                 , ZoomMapActivity.SourceType.HOTEL, mHotelDetail.hotelName//
-                , mHotelDetail.latitude, mHotelDetail.longitude);
+                , mHotelDetail.latitude, mHotelDetail.longitude, mHotelDetail.isOverseas);
 
             startActivity(intent);
 

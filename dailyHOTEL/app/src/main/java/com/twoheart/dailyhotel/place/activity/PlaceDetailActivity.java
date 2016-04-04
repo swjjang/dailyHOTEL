@@ -575,7 +575,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             Intent intent = ZoomMapActivity.newInstance(PlaceDetailActivity.this//
                 , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name//
-                , mPlaceDetail.latitude, mPlaceDetail.longitude);
+                , mPlaceDetail.latitude, mPlaceDetail.longitude, false);
 
             startActivity(intent);
 

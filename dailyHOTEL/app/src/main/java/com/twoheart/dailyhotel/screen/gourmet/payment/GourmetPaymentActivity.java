@@ -388,7 +388,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                             lockUI();
 
                             // 1. 세션이 살아있는지 검사 시작.
-                            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, GourmetPaymentActivity.this);
+                            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, GourmetPaymentActivity.this);
 
                             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
@@ -563,7 +563,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+                if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
                 {
                     msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
                 } else
@@ -1435,6 +1435,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             } catch (Exception e)
             {
                 onError(e);
+            } finally
+            {
+                unLockUI();
             }
         }
     };
