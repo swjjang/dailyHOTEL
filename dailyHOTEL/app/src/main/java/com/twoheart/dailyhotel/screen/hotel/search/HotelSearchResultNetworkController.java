@@ -100,61 +100,15 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
         return placeViewItemList;
     }
 
-    private void requestAddress(Location location, final DailyHotelJsonResponseListener listener)
+    private void requestAddress(Location location, DailyHotelJsonResponseListener listener)
     {
-        final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko", Double.toString(location.getLatitude()), Double.toString(location.getLongitude()), DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
+        final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
+            , Double.toString(location.getLatitude())//
+            , Double.toString(location.getLongitude())//
+            , DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
-        new AsyncTask<Void, Void, String>()
-        {
-            @Override
-            protected String doInBackground(Void... params)
-            {
-                OkHttpClient okHttpClient = new OkHttpClient();
-                Request request = new Request.Builder()//
-                    .url(url).build();
-
-                String data = null;
-
-                try
-                {
-                    Response response = okHttpClient.newCall(request).execute();
-
-                    if (response.isSuccessful() == true)
-                    {
-                        data = response.body().string();
-                    }
-                } catch (Exception e)
-                {
-                    data = null;
-                }
-
-                return data;
-            }
-
-            @Override
-            protected void onPostExecute(String data)
-            {
-                if (listener != null)
-                {
-                    JSONObject jsonObject = null;
-
-                    if (Util.isTextEmpty(data) == false)
-                    {
-                        try
-                        {
-                            jsonObject = new JSONObject(data);
-                        } catch (JSONException e)
-                        {
-                            jsonObject = null;
-                        }
-                    }
-
-                    listener.onResponse(url, jsonObject);
-                }
-            }
-        }.execute();
+        new SearchAddressAsyncTask(url, listener).execute();
     }
-
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
@@ -374,4 +328,55 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
             return false;
         }
     };
+
+    private class SearchAddressAsyncTask extends AsyncTask<Void, Void, JSONObject>
+    {
+        private String mUrl;
+        private DailyHotelJsonResponseListener mListener;
+
+        public SearchAddressAsyncTask(String url, DailyHotelJsonResponseListener listener)
+        {
+            mUrl = url;
+            mListener = listener;
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params)
+        {
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder()//
+                .url(mUrl).build();
+
+            JSONObject jsonObject = null;
+
+            try
+            {
+                Response response = okHttpClient.newCall(request).execute();
+
+                if (response.isSuccessful() == true)
+                {
+                    String data = response.body().string();
+
+                    if (Util.isTextEmpty(data) == false)
+                    {
+                        jsonObject = new JSONObject(data);
+                    }
+                }
+            } catch (Exception e)
+            {
+                jsonObject = null;
+            }
+
+            return jsonObject;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject)
+        {
+            if (mListener != null)
+            {
+                mListener.onResponse(mUrl, jsonObject);
+            }
+        }
+    }
 }
