@@ -262,7 +262,7 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
 
                 if (addressJSONObject != null)
                 {
-                    String address = addressJSONObject.getString("short_name");
+                    String address = addressJSONObject.getString("long_name");
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address);
                 }
