@@ -23,7 +23,6 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
     private static final String INTENT_EXTRA_DATA_LOCATION = "location";
-    private static final String INTENT_EXTRA_DATA_DISTANCE = "distance";
 
     private static final int COUNT_PER_TIMES = 30;
 
@@ -34,7 +33,6 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private String mCustomerSatisfactionTimeMessage;
 
     private int mOffset, mTotalCount;
-    private int mDistance;
 
     private HotelSearchResultNetworkController mNetworkController;
 
@@ -53,13 +51,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         return newInstance(context, saleTime, nights, new Keyword(0, text));
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location, int distance)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location)
     {
         Intent intent = new Intent(context, HotelSearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-        intent.putExtra(INTENT_EXTRA_DATA_DISTANCE, distance);
 
         return intent;
     }
@@ -82,7 +79,6 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
         {
             mLocation = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
-            mDistance = intent.getIntExtra(INTENT_EXTRA_DATA_DISTANCE, 10);
         }
 
         mOffset = 0;
@@ -127,7 +123,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             mNetworkController.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
         } else if (mLocation != null)
         {
-            mNetworkController.requestSearchResultList(mSaleTime, mNights, mLocation, mDistance, mOffset, COUNT_PER_TIMES);
+            mNetworkController.requestSearchResultList(mSaleTime, mNights, mLocation, mOffset, COUNT_PER_TIMES);
         }
     }
 

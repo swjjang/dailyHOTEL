@@ -61,11 +61,11 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, keword, offset, count, mHotelSearchListJsonResponseListener, this);
     }
 
-    public void requestSearchResultList(SaleTime saleTime, int nights, Location location, int distance, int offset, int count)
+    public void requestSearchResultList(SaleTime saleTime, int nights, Location location, int offset, int count)
     {
         requestAddress(location, mLocationToAddressListener);
 
-        DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, location, distance, offset, count, mHotelLocationSearchListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestHotelSearchList(mNetworkTag, saleTime, nights, location, offset, count, mHotelLocationSearchListJsonResponseListener, this);
     }
 
     public void requestCustomerSatisfactionTimeMessage()
