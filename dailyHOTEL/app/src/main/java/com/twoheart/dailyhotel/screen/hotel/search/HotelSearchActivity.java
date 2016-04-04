@@ -15,6 +15,8 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class HotelSearchActivity extends PlaceSearchActivity
@@ -28,11 +30,24 @@ public class HotelSearchActivity extends PlaceSearchActivity
 
     private Handler mAnalyticsHandler = new Handler()
     {
+        private String getSearchDate()
+        {
+            String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyMMdd");
+            SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
+            String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
+
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+
+            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
+        }
+
         @Override
         public void handleMessage(Message msg)
         {
+            String label = String.format("%s-%s", (String) msg.obj, getSearchDate());
             AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED, (String) msg.obj, null);
+                , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED, label, null);
         }
     };
 
@@ -168,39 +183,14 @@ public class HotelSearchActivity extends PlaceSearchActivity
                 return;
             }
 
-            Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, keyword);
-            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
-
             if (keyword.price < 0)
             {
-                // 최근 검색어로 검색
-                if (keyword.icon == PlaceSearchLayout.HOTEL_ICON)
-                {
-                    // 호텔인 경우
-                    AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED, keyword.name, null);
-                } else
-                {
-                    // 그외
-                    AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED, keyword.name, null);
-                }
+                Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, keyword, HotelSearchResultActivity.SEARCHTYPE_RECENT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                // 자동 완성으로 검색
-                if (keyword.price == 0)
-                {
-                    // 지역인 경우
-                    String label = String.format("지역-%s-%s", text, keyword.name);
-                    AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED, label, null);
-                } else
-                {
-                    // 호텔인 경우
-                    String label = String.format("호텔-%s-%s", text, keyword.name);
-                    AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED, label, null);
-                }
+                Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, keyword, HotelSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }
 

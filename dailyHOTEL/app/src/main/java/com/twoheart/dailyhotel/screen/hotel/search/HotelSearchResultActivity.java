@@ -16,15 +16,23 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HotelSearchResultActivity extends PlaceSearchResultActivity
 {
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
     private static final String INTENT_EXTRA_DATA_LOCATION = "location";
+    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searcyType";
 
     private static final int COUNT_PER_TIMES = 30;
+
+    public static final int SEARCHTYPE_SEARCHES = 0;
+    public static final int SEARCHTYPE_AUTOCOMPLETE = 1;
+    public static final int SEARCHTYPE_RECENT = 2;
+    public static final int SEARCHTYPE_LOCATION = 3;
 
     private SaleTime mSaleTime;
     private int mNights;
@@ -33,22 +41,23 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private String mCustomerSatisfactionTimeMessage;
 
     private int mOffset, mTotalCount;
-
+    private int mSearchType;
     private HotelSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Keyword keyword)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Keyword keyword, int searchType)
     {
         Intent intent = new Intent(context, HotelSearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType);
 
         return intent;
     }
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String text)
     {
-        return newInstance(context, saleTime, nights, new Keyword(0, text));
+        return newInstance(context, saleTime, nights, new Keyword(0, text), SEARCHTYPE_SEARCHES);
     }
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location)
@@ -57,6 +66,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_LOCATION);
 
         return intent;
     }
@@ -81,6 +91,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             mLocation = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
         }
 
+        mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
         mOffset = 0;
     }
 
@@ -93,12 +104,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
         String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd");
 
-        if (mKeyword != null)
-        {
-            mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
-        } else if (mLocation != null)
+        if (mSearchType == SEARCHTYPE_LOCATION)
         {
             mPlaceSearchResultLayout.setToolbarText("", String.format("%s - %s", checkInDate, checkOutDate));
+        } else
+        {
+            mPlaceSearchResultLayout.setToolbarText(mKeyword.name, String.format("%s - %s", checkInDate, checkOutDate));
         }
 
         mNetworkController = new HotelSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
@@ -118,12 +129,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             lockUI();
         }
 
-        if (mKeyword != null)
-        {
-            mNetworkController.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
-        } else if (mLocation != null)
+        if (mSearchType == SEARCHTYPE_LOCATION)
         {
             mNetworkController.requestSearchResultList(mSaleTime, mNights, mLocation, mOffset, COUNT_PER_TIMES);
+        } else
+        {
+            mNetworkController.requestSearchResultList(mSaleTime, mNights, mKeyword.name, mOffset, COUNT_PER_TIMES);
         }
     }
 
@@ -221,31 +232,83 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         private String mAddress;
         private int mSize = -100;
 
+        private String getSearchDate()
+        {
+            String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyMMdd");
+            SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
+            String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
+
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+
+            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
+        }
+
         private void analyticsOnResponseSearchResultListForSearches(String keyword, int totalCount)
         {
+            String action;
+
             if (totalCount == 0)
             {
+                switch (mSearchType)
+                {
+                    case SEARCHTYPE_SEARCHES:
+                        action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND;
+                        break;
+
+                    case SEARCHTYPE_AUTOCOMPLETE:
+                        action = AnalyticsManager.Action.HOTEL_AUTOCOMPLETE_KEYWORD_NOT_FOUND;
+                        break;
+
+                    case SEARCHTYPE_RECENT:
+                        action = AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_NOT_FOUND;
+                        break;
+
+                    default:
+                        action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_NOT_FOUND;
+                        break;
+                }
+
+                String label = String.format("%s-%s", keyword, getSearchDate());
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_SEARCH_NOT_FOUND, keyword, null);
+                    , action, label, null);
 
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, null);
             } else
             {
+                switch (mSearchType)
+                {
+                    case SEARCHTYPE_SEARCHES:
+                        action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED;
+                        break;
+
+                    case SEARCHTYPE_AUTOCOMPLETE:
+                        action = AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED;
+                        break;
+
+                    case SEARCHTYPE_RECENT:
+                        action = AnalyticsManager.Action.HOTEL_RECENT_KEYWORD_SEARCH_CLICKED;
+                        break;
+
+                    default:
+                        action = AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED;
+                        break;
+                }
+
+                String label;
+
                 if (totalCount == -1)
                 {
-                    String label = String.format("%s-Los", keyword);
-                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED, label, null);
-
-                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                    label = String.format("%s-Los-%s", keyword, getSearchDate());
                 } else
                 {
-                    String label = String.format("%s-%d", keyword, totalCount);
-                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_KEYWORD_SEARCH_CLICKED, label, null);
-
-                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                    label = String.format("%s-%d-%s", keyword, totalCount, getSearchDate());
                 }
+
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , action, label, null);
+
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
             }
         }
 
@@ -258,27 +321,27 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             if (mSize == 0)
             {
+                String label = String.format("%s-%s", mAddress, getSearchDate());
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                    , AnalyticsManager.Action.HOTEL_AROUND_NOT_FOUND, mAddress, null);
+                    , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_NOT_FOUND, label, null);
 
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, null);
             } else
             {
+                String label;
+
                 if (mSize == -1)
                 {
-                    String label = String.format("%s-Los", mAddress);
-                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
-
-                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                    label = String.format("%s-Los-%s", mAddress, getSearchDate());
                 } else
                 {
-                    String label = String.format("%s-%d", mAddress, mSize);
-                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
-
-                    AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
+                    label = String.format("%s-%d-%s", mAddress, mSize, getSearchDate());
                 }
+
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                    , AnalyticsManager.Action.HOTEL_AROUND_SEARCH_CLICKED, label, null);
+
+                AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT, null);
             }
         }
 
