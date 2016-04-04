@@ -193,13 +193,13 @@ public class HotelSearchActivity extends PlaceSearchActivity
                     // 지역인 경우
                     String label = String.format("지역-%s-%s", text, keyword.name);
                     AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED, label, null);
+                        , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED, label, null);
                 } else
                 {
                     // 호텔인 경우
                     String label = String.format("호텔-%s-%s", text, keyword.name);
                     AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                        , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED, label, null);
+                        , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED, label, null);
                 }
             }
         }
