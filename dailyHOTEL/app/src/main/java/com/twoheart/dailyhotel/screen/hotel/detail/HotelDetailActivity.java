@@ -93,6 +93,8 @@ public class HotelDetailActivity extends BaseActivity
         void hideRoomType();
 
         void showMap();
+
+        void clipAddress(String address);
     }
 
     private Handler mImageHandler = new Handler()
@@ -637,6 +639,14 @@ public class HotelDetailActivity extends BaseActivity
             //            String label = String.format("%s (%s-%s)", mHotelDetail.hotelName, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
             //
             //            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYHOTEL_DETAIL, Action.CLICK, label, (long) mHotelDetail.hotelIndex);
+        }
+
+        @Override
+        public void clipAddress(String address)
+        {
+            Util.clipText(HotelDetailActivity.this, address);
+
+            DailyToast.showToast(HotelDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
         }
     };
 
