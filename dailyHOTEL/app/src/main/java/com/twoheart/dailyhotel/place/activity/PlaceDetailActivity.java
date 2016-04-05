@@ -87,6 +87,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
         void showMap();
 
         void finish();
+
+        void clipAddress(String address);
     }
 
     public interface OnImageActionListener
@@ -589,6 +591,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
         public void finish()
         {
             PlaceDetailActivity.super.finish();
+        }
+
+        @Override
+        public void clipAddress(String address)
+        {
+            Util.clipText(PlaceDetailActivity.this, address);
+
+            DailyToast.showToast(PlaceDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
         }
     };
 

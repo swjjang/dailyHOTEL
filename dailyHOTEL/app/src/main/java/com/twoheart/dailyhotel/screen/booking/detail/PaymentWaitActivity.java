@@ -14,7 +14,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,8 +45,7 @@ public class PaymentWaitActivity extends BaseActivity
     private TextView tvName;
     private TextView tvPrice;
     private TextView tvDeadline;
-    private TextView tvGuide1;
-    private TextView tvGuide2;
+    private ViewGroup mGuide1Layout, mGuide2Layout;
     private String mCSoperatingTimeMessage;
 
     @Override
@@ -73,33 +74,7 @@ public class PaymentWaitActivity extends BaseActivity
         setContentView(R.layout.activity_payment_wait);
 
         initToolbar();
-
-        TextView tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
-        tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
-        tvName = (TextView) findViewById(R.id.tv_payment_wait_name);
-        tvPrice = (TextView) findViewById(R.id.tv_payment_wait_price);
-        tvDeadline = (TextView) findViewById(R.id.tv_payment_wait_deadline);
-        tvGuide1 = (TextView) findViewById(R.id.tv_payment_wait_guide1);
-        tvGuide2 = (TextView) findViewById(R.id.tv_payment_wait_guide2);
-
-        tvHotelName.setText(booking.placeName);
-
-        lockUI();
-
-        switch (booking.placeType)
-        {
-            case HOTEL:
-            {
-                DailyNetworkAPI.getInstance().requestDepositWaitDetailInformation(mNetworkTag, booking.payType, booking.tid, mHotelReservationJsonResponseListener, this);
-                break;
-            }
-
-            case FNB:
-            {
-                DailyNetworkAPI.getInstance().requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener, this);
-                break;
-            }
-        }
+        initLayout(booking);
     }
 
     private void initToolbar()
@@ -116,6 +91,67 @@ public class PaymentWaitActivity extends BaseActivity
                 showCallDialog();
             }
         });
+    }
+
+    private void initLayout(Booking booking)
+    {
+        if (booking == null)
+        {
+            return;
+        }
+
+        TextView tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
+        tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
+        tvName = (TextView) findViewById(R.id.tv_payment_wait_name);
+        tvPrice = (TextView) findViewById(R.id.tv_payment_wait_price);
+        tvDeadline = (TextView) findViewById(R.id.tv_payment_wait_deadline);
+        mGuide1Layout = (ViewGroup) findViewById(R.id.guide1Layout);
+        mGuide2Layout = (ViewGroup) findViewById(R.id.guide2Layout);
+
+        View view = findViewById(R.id.editLinearLayout);
+        view.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (tvAccount == null)
+                {
+                    return;
+                }
+
+                Util.clipText(PaymentWaitActivity.this, (String) tvAccount.getTag());
+
+                DailyToast.showToast(PaymentWaitActivity.this, R.string.message_detail_copy_account_number, Toast.LENGTH_SHORT);
+            }
+        });
+
+        tvHotelName.setText(booking.placeName);
+
+        lockUI();
+
+        TextView placeInformationView = (TextView) findViewById(R.id.placeInformationView);
+        TextView placeNameView = (TextView) findViewById(R.id.placeNameView);
+
+        switch (booking.placeType)
+        {
+            case HOTEL:
+            {
+                placeInformationView.setText(R.string.actionbar_title_hoteldetailinfo_activity);
+                placeNameView.setText(R.string.label_receipt_hotelname);
+
+                DailyNetworkAPI.getInstance().requestDepositWaitDetailInformation(mNetworkTag, booking.payType, booking.tid, mHotelReservationJsonResponseListener, this);
+                break;
+            }
+
+            case FNB:
+            {
+                placeInformationView.setText(R.string.label_restaurant_information);
+                placeNameView.setText(R.string.label_receipt_restaurantname);
+
+                DailyNetworkAPI.getInstance().requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener, this);
+                break;
+            }
+        }
     }
 
     private void showCallDialog()
@@ -163,6 +199,25 @@ public class PaymentWaitActivity extends BaseActivity
         }, true);
     }
 
+    private void setGuideText(ViewGroup viewGroups, String[] guides)
+    {
+        if (guides == null)
+        {
+            return;
+        }
+
+        int length = guides.length;
+
+        for (String guide : guides)
+        {
+            View textLayout = LayoutInflater.from(this).inflate(R.layout.list_row_detail_text, viewGroups, false);
+            TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+            textView.setText(guide.replace("\n", " ").trim() + ".");
+
+            viewGroups.addView(textLayout);
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,7 +240,10 @@ public class PaymentWaitActivity extends BaseActivity
                     return;
                 } else
                 {
-                    tvAccount.setText(response.getString("bank_name") + ", " + response.getString("account_num"));
+                    String accountNumber = response.getString("account_num");
+                    tvAccount.setText(response.getString("bank_name") + ", " + accountNumber);
+                    tvAccount.setTag(accountNumber);
+
                     tvName.setText(response.getString("name"));
 
                     DecimalFormat comma = new DecimalFormat("###,##0");
@@ -196,8 +254,11 @@ public class PaymentWaitActivity extends BaseActivity
 
                     tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
 
-                    tvGuide1.setText(response.getString("msg1"));
-                    tvGuide2.setText(response.getString("msg2"));
+                    String msg1 = response.getString("msg1");
+                    setGuideText(mGuide1Layout, msg1.split("\\."));
+
+                    String msg2 = response.getString("msg2");
+                    setGuideText(mGuide2Layout, msg2.split("\\."));
                 }
 
                 DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, PaymentWaitActivity.this);
@@ -233,8 +294,11 @@ public class PaymentWaitActivity extends BaseActivity
 
                     tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
 
-                    tvGuide1.setText(jsonObject.getString("msg1"));
-                    tvGuide2.setText(jsonObject.getString("msg2"));
+                    String msg1 = jsonObject.getString("msg1");
+                    setGuideText(mGuide1Layout, msg1.split("\\."));
+
+                    String msg2 = jsonObject.getString("msg2");
+                    setGuideText(mGuide2Layout, msg2.split("\\."));
                 } else
                 {
                     unLockUI();

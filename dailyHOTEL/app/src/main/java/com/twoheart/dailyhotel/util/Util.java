@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -1001,6 +1002,19 @@ public class Util implements Constants
         } catch (Exception e)
         {
             ExLog.d(e.toString());
+        }
+    }
+
+    public static void clipText(Context context, String text)
+    {
+        if (Util.isOverAPI11() == true)
+        {
+            android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboardManager.setPrimaryClip(ClipData.newPlainText(null, text));
+        } else
+        {
+            android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboardManager.setText(text);
         }
     }
 }

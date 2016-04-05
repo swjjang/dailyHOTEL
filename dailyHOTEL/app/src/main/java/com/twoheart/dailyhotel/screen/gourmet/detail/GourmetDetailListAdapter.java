@@ -427,6 +427,21 @@ public class GourmetDetailListAdapter extends BaseAdapter
             }
         });
 
+        View clipAddress = view.findViewById(R.id.copyAddressView);
+        clipAddress.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener == null)
+                {
+                    return;
+                }
+
+                mOnUserActionListener.clipAddress(address);
+            }
+        });
+
         final com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
 
         mapImageView.post(new Runnable()

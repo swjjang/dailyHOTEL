@@ -7,17 +7,13 @@
  */
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -106,7 +102,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                 }
 
                 lockUiComponent();
-                Util.showShareMapDialog((BaseActivity)getActivity(), mBookingDetail.placeName//
+                Util.showShareMapDialog((BaseActivity) getActivity(), mBookingDetail.placeName//
                     , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
             }
         });
