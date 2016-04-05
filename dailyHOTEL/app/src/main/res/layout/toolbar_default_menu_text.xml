@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/toolbar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_height"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/backImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/navibar_ic_back"/>
+
+    <LinearLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical">
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/menu2View"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@drawable/selector_calendar_confirm_color"
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/menu1View"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@drawable/selector_calendar_confirm_color"
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/menuLayout"
+        android:layout_toRightOf="@+id/backImageView"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/actionbar_title"
+        android:textSize="18dp"/>
+</RelativeLayout>

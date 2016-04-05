@@ -2,15 +2,16 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class HotelCalendarActivity extends PlaceCalendarActivity
 {
@@ -49,9 +50,114 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         super.onStart();
     }
 
-    private void setRangeDaysEnable(View view, boolean enable)
+    @Override
+    protected void initToolbar(DailyToolbarLayout dailyToolbarLayout)
     {
-        for (View textview : mDailyTextViews)
+        dailyToolbarLayout.setToolbarMenu(getString(R.string.label_completed), null);
+        dailyToolbarLayout.setToolbarMenuEnable(false, false);
+        dailyToolbarLayout.setToolbarMenuClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.menu1View:
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                Intent intent = new Intent();
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInDay.dayTime);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, mCheckOutDay.dayTime);
+
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+            }
+
+            case R.id.cancelView:
+            {
+                if (mCheckInDay == null)
+                {
+                    return;
+                }
+
+                reset();
+                break;
+            }
+
+            default:
+            {
+                Day day = (Day) view.getTag();
+                DailyTextView dailyTextView = (DailyTextView) view;
+
+                if (day == null)
+                {
+                    return;
+                }
+
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                if (mCheckInDay == null)
+                {
+                    mCheckInDay = day;
+                    dailyTextView.setSelected(true);
+                    setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
+                    setRangePreviousDaysEnable(view, false);
+                    mDailyTextViews[mDailyTextViews.length - 1].setEnabled(true);
+                } else
+                {
+                    //                    if (mCheckInDay.dayTime == day.dayTime)
+                    //                    {
+                    //                        mCheckInDay = null;
+                    //                        view.setSelected(false);
+                    //                        dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
+                    //
+                    //                        setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
+                    //                        setRangePreviousDaysEnable(view, true);
+                    //                        mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
+                    //                        releaseUiComponent();
+                    //                        return;
+                    //                    }
+
+                    if (mCheckInDay.dayTime.getOffsetDailyDay() >= day.dayTime.getOffsetDailyDay())
+                    {
+                        releaseUiComponent();
+                        return;
+                    }
+
+                    mCheckOutDay = day;
+
+                    dailyTextView.setSelected(true);
+
+                    String checkInDate = mCheckInDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd");
+                    String checkOutDate = mCheckOutDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd");
+                    String title = String.format("%s-%s", checkInDate, checkOutDate);
+                    setToolbarText(title);
+
+                    setRangeDaysAlpha(view);
+                    setRangeNextDaysEnable(view, false);
+                    setCancelViewVisibility(View.VISIBLE);
+                    setToolbarMenuEnable(true, false);
+                    setToastVisibility(View.VISIBLE);
+                }
+
+                releaseUiComponent();
+                break;
+            }
+        }
+    }
+
+    private void setRangePreviousDaysEnable(View view, boolean enable)
+    {
+        for (TextView textview : mDailyTextViews)
         {
             if (view == textview)
             {
@@ -63,62 +169,68 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    @Override
-    public void onClick(View view)
+    private void setRangeNextDaysEnable(View view, boolean enable)
     {
-        Day day = (Day) view.getTag();
-        DailyTextView dailyTextView = (DailyTextView) view;
+        boolean isStart = false;
 
-        if (day == null)
+        for (TextView textview : mDailyTextViews)
         {
-            return;
-        }
-
-        if (isLockUiComponent() == true)
-        {
-            return;
-        }
-
-        if (mCheckInDay == null)
-        {
-            mCheckInDay = day;
-            dailyTextView.setSelected(true);
-            dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
-
-            setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
-            setRangeDaysEnable(view, false);
-            mDailyTextViews[mDailyTextViews.length - 1].setEnabled(true);
-        } else
-        {
-            if (mCheckInDay.dayTime == day.dayTime)
+            if (isStart == false)
             {
-                mCheckInDay = null;
-                view.setSelected(false);
-                dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
-
-                setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
-                setRangeDaysEnable(view, true);
-                mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
-                return;
-            }
-
-            if (mCheckInDay.dayTime.getOffsetDailyDay() >= day.dayTime.getOffsetDailyDay())
+                if (view == textview)
+                {
+                    isStart = true;
+                }
+            } else
             {
-                return;
+                textview.setEnabled(enable);
             }
-
-            lockUiComponent();
-            mCheckOutDay = day;
-
-            dailyTextView.setSelected(true);
-            dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
-
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInDay.dayTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, mCheckOutDay.dayTime);
-
-            setResult(RESULT_OK, intent);
-            finish();
         }
+    }
+
+    private void setRangeDaysAlpha(View view)
+    {
+        boolean isStartPosition = false;
+
+        for (TextView textview : mDailyTextViews)
+        {
+            if (isStartPosition == false)
+            {
+                if (textview.isSelected() == true)
+                {
+                    isStartPosition = true;
+                }
+
+                continue;
+            } else
+            {
+                if (view == textview)
+                {
+                    break;
+                }
+
+                textview.setSelected(true);
+                textview.setEnabled(false);
+            }
+        }
+    }
+
+    private void reset()
+    {
+        mCheckInDay = null;
+
+        for (TextView textview : mDailyTextViews)
+        {
+            textview.setEnabled(true);
+            textview.setSelected(false);
+        }
+
+        setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
+        setToolbarMenuEnable(false, false);
+
+        setCancelViewVisibility(View.GONE);
+        mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
+
+        setToastVisibility(View.GONE);
     }
 }
