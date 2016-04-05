@@ -382,7 +382,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     public int compare(Gourmet gourmet1, Gourmet gourmet2)
                     {
-                        return gourmet1.discountPrice - gourmet2.discountPrice;
+                        int price1 = gourmet1.persons > 1 ? gourmet1.discountPrice / gourmet1.persons : gourmet1.discountPrice;
+                        int price2 = gourmet2.persons > 1 ? gourmet2.discountPrice / gourmet2.persons : gourmet2.discountPrice;
+
+                        return price1 - price2;
                     }
                 };
 
@@ -397,7 +400,10 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 {
                     public int compare(Gourmet gourmet1, Gourmet gourmet2)
                     {
-                        return gourmet2.discountPrice - gourmet1.discountPrice;
+                        int price1 = gourmet1.persons > 1 ? gourmet1.discountPrice / gourmet1.persons : gourmet1.discountPrice;
+                        int price2 = gourmet2.persons > 1 ? gourmet2.discountPrice / gourmet2.persons : gourmet2.discountPrice;
+
+                        return price2 - price1;
                     }
                 };
 
