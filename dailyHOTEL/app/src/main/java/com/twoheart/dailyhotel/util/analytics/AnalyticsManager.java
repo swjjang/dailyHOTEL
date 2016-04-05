@@ -339,10 +339,12 @@ public class AnalyticsManager
         public static final String HOTEL_AROUND_SEARCH_CLICKED = "HotelAroundSearchClicked";
         public static final String HOTEL_KEYWORD_HISTORY_DELETED = "HotelKeywordsHistoryDeleted";
         public static final String HOTEL_RECENT_KEYWORD_SEARCH_CLICKED = "HotelRecentKeywordSearchClicked";
-        public static final String HOTEL_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED = "HotelAutoCompletedKeywordClicked";
+        public static final String HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED = "HotelAutoCompletedKeywordClicked";
         public static final String HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED = "HotelAutoCompletedKeywordNotMatched";
-        public static final String HOTEL_AROUND_NOT_FOUND = "HotelAroundNotFound";
-        public static final String HOTEL_SEARCH_NOT_FOUND = "HotelSearchNotFound";
+        public static final String HOTEL_AROUND_SEARCH_NOT_FOUND = "HotelAroundSearchNotFound";
+        public static final String HOTEL_KEYWORD_SEARCH_NOT_FOUND = "HotelKeywordSearchNotFound";
+        public static final String HOTEL_AUTOCOMPLETE_KEYWORD_NOT_FOUND = "HotelAutoCompletedKeywordNotFound";
+        public static final String HOTEL_RECENT_KEYWORD_NOT_FOUND = "HotelRecentKeywordSearchNotFound";
         public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
         public static final String HOTEL_SEARCH_RESULT_CANCELED = "HotelSearchResultCanceled";
         //
