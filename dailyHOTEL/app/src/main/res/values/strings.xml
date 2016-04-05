@@ -34,6 +34,9 @@
     <string name="label_share_kakao_map">다음 지도에서 보기</string>
     <string name="label_share_naver_map">네이버 지도에서 보기</string>
     <string name="label_share_google_map">구글 지도에서 보기</string>
+    <string name="label_completed">완료</string>
+    <string name="label_copy_address">주소복사 ></string>
+    <string name="label_copy_account_number">계좌정보 복사 ></string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
@@ -613,6 +616,8 @@
     <string name="label_calendar_hotel_select_checkin">체크인 날짜 선택</string>
     <string name="label_calendar_hotel_select_checkout">체크아웃 날짜 선택</string>
     <string name="label_calendar_gourmet_select">날짜 선택</string>
+    <string name="message_calendar_reset">재설정 하시려면 다른 날짜를 선택해 주세요.</string>
+
 
     <string name="label_monday">월</string>
     <string name="label_tuesday">화</string>
@@ -637,7 +642,7 @@
     <string name="label_sort_by_high_price">높은 가격순</string>
     <string name="label_sort_by_area">지역별</string>
     <string name="label_sort_by_satisfaction">만족도</string>
-    <string name="label_completed">적용완료</string>
+    <string name="label_apply_completed">적용완료</string>
     <string name="label_personnel">인원</string>
     <string name="label_bedtype">베드타입</string>
     <string name="label_foodtype">음식종류</string>
@@ -656,7 +661,6 @@
     <string name="label_time_1517">15-17시</string>
     <string name="label_time_1721">17-21시</string>
     <string name="label_time_2106">21시 이후</string>
-    <string name="label_searching">검색중...</string>
 
     <!-- PaymentResult Activity -->
     <string name="label_booking_information">예약정보</string>

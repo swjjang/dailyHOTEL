@@ -140,6 +140,47 @@ public class DailyToolbarLayout
         }
     }
 
+    public void setToolbarMenuEnable(boolean enableMenu1, boolean enableMenu2)
+    {
+        View menu1 = mToolbar.findViewById(R.id.menu1View);
+        View menu2 = mToolbar.findViewById(R.id.menu2View);
+
+        menu1.setEnabled(enableMenu1);
+        menu2.setEnabled(enableMenu2);
+    }
+
+    public void setToolbarMenu(String menu1Text, String menu2Text)
+    {
+        TextView menu1 = (TextView) mToolbar.findViewById(R.id.menu1View);
+        TextView menu2 = (TextView) mToolbar.findViewById(R.id.menu2View);
+
+        if (menu1 == null || menu2 == null)
+        {
+            Util.restartApp(mAppCompatActivity);
+            return;
+        }
+
+        if (Util.isTextEmpty(menu1Text) == false)
+        {
+            menu1.setVisibility(View.VISIBLE);
+            menu1.setText(menu1Text);
+        } else
+        {
+            menu1.setVisibility(View.GONE);
+            menu1.setText(null);
+        }
+
+        if (Util.isTextEmpty(menu2Text) == false)
+        {
+            menu2.setVisibility(View.VISIBLE);
+            menu2.setText(menu2Text);
+        } else
+        {
+            menu2.setVisibility(View.GONE);
+            menu2.setText(null);
+        }
+    }
+
     public void setToolbarMenu(int menu1ResId, int menu2ResId)
     {
         ImageView menu1 = (ImageView) mToolbar.findViewById(R.id.menu1View);

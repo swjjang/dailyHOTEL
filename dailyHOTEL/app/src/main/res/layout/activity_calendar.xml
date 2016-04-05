@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+    >
 
-    <include layout="@layout/toolbar_default"/>
+    <include layout="@layout/toolbar_default_menu_text"/>
 
     <LinearLayout
         android:id="@+id/weekLayout"
@@ -110,4 +110,34 @@
         android:layout_height="6px"
         android:layout_below="@+id/toolbar"
         android:background="@drawable/navibar_gradation"/>
+
+    <FrameLayout
+        android:id="@+id/toastLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/shape_toast_background"
+        android:padding="15dp"
+        android:visibility="gone">
+
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/message_calendar_reset"
+            android:textColor="@color/white"
+            android:textSize="15dp"/>
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/cancelView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:visibility="gone"/>
 </RelativeLayout>

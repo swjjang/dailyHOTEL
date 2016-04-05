@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dh_theme_color">#900034</color>
+    <color name="dh_theme_color_a10">#1A900034</color>
 
     <color name="actionbar_border">#7f7f7f</color>
 

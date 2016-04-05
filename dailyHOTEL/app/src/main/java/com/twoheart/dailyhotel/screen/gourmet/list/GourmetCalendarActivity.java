@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,6 +10,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
+import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 public class GourmetCalendarActivity extends PlaceCalendarActivity
 {
@@ -47,6 +47,12 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     }
 
     @Override
+    protected void initToolbar(DailyToolbarLayout dailyToolbarLayout)
+    {
+
+    }
+
+    @Override
     public void onClick(View view)
     {
         Day day = (Day) view.getTag();
@@ -63,7 +69,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         }
 
         dailyTextView.setSelected(true);
-        dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.BOLD);
 
         lockUiComponent();
 

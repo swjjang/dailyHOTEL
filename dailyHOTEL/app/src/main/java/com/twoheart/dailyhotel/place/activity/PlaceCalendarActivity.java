@@ -26,8 +26,11 @@ import java.util.TimeZone;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
-    protected View[] mDailyTextViews;
+    protected View mCancelView, mToastView;
+    protected TextView[] mDailyTextViews;
     private DailyToolbarLayout mDailyToolbarLayout;
+
+    protected abstract void initToolbar(DailyToolbarLayout dailyToolbarLayout);
 
     protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
@@ -36,6 +39,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         ViewGroup calendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
         ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.over_scroll_edge));
+
+        mCancelView = findViewById(R.id.cancelView);
+        mCancelView.setVisibility(View.GONE);
+        mCancelView.setOnClickListener(this);
+
+        mToastView = findViewById(R.id.toastLayout);
+        mToastView.setVisibility(View.GONE);
 
         mDailyTextViews = new DailyTextView[dayCountOfMax];
 
@@ -72,6 +82,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title);
+
+        initToolbar(mDailyToolbarLayout);
     }
 
     protected void setToolbarText(String title)
@@ -83,6 +95,36 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             mDailyToolbarLayout.setToolbarText(title);
         }
+    }
+
+    protected void setToolbarMenuEnable(boolean enableMenu1, boolean enableMenu2)
+    {
+        if (mDailyToolbarLayout == null)
+        {
+            return;
+        }
+
+        mDailyToolbarLayout.setToolbarMenuEnable(enableMenu1, enableMenu2);
+    }
+
+    protected void setCancelViewVisibility(int visibility)
+    {
+        if (mCancelView == null)
+        {
+            return;
+        }
+
+        mCancelView.setVisibility(visibility);
+    }
+
+    protected void setToastVisibility(int visibility)
+    {
+        if (mToastView == null)
+        {
+            return;
+        }
+
+        mToastView.setVisibility(visibility);
     }
 
     private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth, final int enableDayCountMax)
@@ -124,28 +166,29 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         int enableDayCount = enableDayCountMax < 0 ? 0 : enableDayCountMax;
+        TextView textView;
 
         for (Day dayClass : days)
         {
-            View view = getDayView(context, dayClass);
+            textView = getDayView(context, dayClass);
 
             if (dayClass != null)
             {
-                mDailyTextViews[dayClass.dayTime.getOffsetDailyDay()] = view;
+                mDailyTextViews[dayClass.dayTime.getOffsetDailyDay()] = textView;
 
                 if (enableDayCount-- <= 0)
                 {
-                    view.setEnabled(false);
+                    textView.setEnabled(false);
                 }
             }
 
-            calendarGridLayout.addView(view);
+            calendarGridLayout.addView(textView);
         }
 
         return calendarLayout;
     }
 
-    public View getDayView(Context context, Day day)
+    public TextView getDayView(Context context, Day day)
     {
         DailyTextView dayTextView = new DailyTextView(context);
         dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
