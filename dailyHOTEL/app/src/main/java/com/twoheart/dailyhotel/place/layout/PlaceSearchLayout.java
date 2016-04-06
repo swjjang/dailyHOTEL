@@ -51,7 +51,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private View mTermsOfLocationView;
     private ViewGroup mAutoCompleteLayout;
     private View mAutoCompleteScrollLayout;
-    private View mSearchingView;
     private View mRecentSearchLayout;
     private ViewGroup mRcentContentsLayout;
     private View mDeleteAllRecentSearchesView;
@@ -273,8 +272,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private void initSearchLayout(View view)
     {
         mSearchLayout = view.findViewById(R.id.searchLayout);
-        mSearchingView = mSearchLayout.findViewById(R.id.searchingView);
-        mSearchingView.setVisibility(View.GONE);
 
         // 내주변 호텔 보기
         View searchAroundLayout = mSearchLayout.findViewById(R.id.searchAroundLayout);
@@ -524,29 +521,13 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void showRecentSearchesView()
     {
-        mSearchingView.setVisibility(View.GONE);
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
         mRecentSearchLayout.setVisibility(View.VISIBLE);
     }
 
-    private void showSearchingView()
-    {
-        mSearchingView.setVisibility(View.VISIBLE);
-        mAutoCompleteScrollLayout.setVisibility(View.GONE);
-        mRecentSearchLayout.setVisibility(View.GONE);
-    }
-
     private void showAutoCompleteView()
     {
-        mSearchingView.setVisibility(View.GONE);
         mAutoCompleteScrollLayout.setVisibility(View.VISIBLE);
-        mRecentSearchLayout.setVisibility(View.GONE);
-    }
-
-    private void hideSearchView()
-    {
-        mSearchingView.setVisibility(View.GONE);
-        mAutoCompleteScrollLayout.setVisibility(View.GONE);
         mRecentSearchLayout.setVisibility(View.GONE);
     }
 

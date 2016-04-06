@@ -159,7 +159,7 @@
     <string name="dialog_msg_chk_cancel_payment_progress">결제가 진행중입니다.\n취소하시겠습니까?</string>
     <string name="dialog_msg_not_installed_kakaotalk">카카오톡이 설치되어 있지 않습니다.</string>
     <string name="dialog_msg_network_please_off_airplain">에어플레인 모드를 끄거나 WIFI를 사용해주세요.</string>
-    <string name="dialog_msg_network_unstable_retry_or_set_wifi">인터넷 연결을 할 수 없습니다.\n재시도 혹은 와이파이 설정을 확인해주세요.</string>
+    <string name="dialog_msg_network_unstable_retry_or_set_wifi">인터넷 연결을 할 수 없습니다.\n재시도 혹은 네트워크 설정을 확인해주세요.</string>
     <string name="dialog_msg_please_update_new_version">DAILYHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
@@ -535,6 +535,7 @@
     <string name="act_wait_payment_confirm">확인사항</string>
     <string name="act_wait_payment_msg1">입금이 완료되면</string>
     <string name="act_wait_payment_msg2">10분이내에 예약완료 문자가 도착합니다.</string>
+    <string name="message__wait_payment03">입금이 완료되면 자동으로 예약이 완료됩니다.</string>
 
     <!-- Facebook -->
     <string name="com_facebook_dialogloginactivity_ok_button">확인</string>

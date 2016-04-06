@@ -137,7 +137,6 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     protected void requestUpdateResultDelayed()
     {
-        setResultMessage(getString(R.string.label_searching));
         setConfirmOnClickListener(null);
 
         mHandler.removeMessages(HANDLE_MESSAGE_RESULT);

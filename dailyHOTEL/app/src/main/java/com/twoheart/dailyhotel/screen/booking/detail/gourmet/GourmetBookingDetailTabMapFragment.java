@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +30,7 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 public class GourmetBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
@@ -68,27 +70,27 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
 
         mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
 
-        GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) mPlaceBookingDetail;
+        final GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) mPlaceBookingDetail;
 
-        TextView hotelNameTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
-        TextView hotelAddressTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
+        TextView placeNameTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
+        TextView placeAddressTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
 
-        hotelNameTextView.setText(gourmetBookingDetail.placeName);
-        hotelNameTextView.setSelected(true);
-        hotelAddressTextView.setText(gourmetBookingDetail.address);
-        hotelAddressTextView.setSelected(true);
+        placeNameTextView.setText(gourmetBookingDetail.placeName);
+        placeNameTextView.setSelected(true);
+        placeAddressTextView.setText(gourmetBookingDetail.address);
+        placeAddressTextView.setSelected(true);
 
-        TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
+        TextView placeCateogryTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
         if (Util.isTextEmpty(gourmetBookingDetail.category) == true)
         {
-            hotelGradeTextView.setVisibility(View.GONE);
+            placeCateogryTextView.setVisibility(View.GONE);
         } else
         {
-            hotelGradeTextView.setVisibility(View.VISIBLE);
-            hotelGradeTextView.setText(gourmetBookingDetail.category);
-            hotelGradeTextView.setTextColor(getResources().getColor(R.color.black));
-            hotelGradeTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
+            placeCateogryTextView.setVisibility(View.VISIBLE);
+            placeCateogryTextView.setText(gourmetBookingDetail.category);
+            placeCateogryTextView.setTextColor(getResources().getColor(R.color.black));
+            placeCateogryTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
         }
 
         View searchMapView = view.findViewById(R.id.searchMapView);
@@ -106,6 +108,20 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
                 lockUiComponent();
                 Util.showShareMapDialog((BaseActivity) getActivity(), mPlaceBookingDetail.placeName//
                     , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false);
+            }
+        });
+
+        View copyAddressView = view.findViewById(R.id.copyAddressView);
+        copyAddressView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                Util.clipText(baseActivity, gourmetBookingDetail.address);
+
+                DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
             }
         });
 

@@ -72,7 +72,7 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/selector_curation_confirm_background_color"
         android:gravity="center"
-        android:text="@string/label_completed"
+        android:text="@string/label_apply_completed"
         android:textColor="@drawable/selector_curation_confirm_text_color"
         android:textSize="20dp"/>
 </RelativeLayout>

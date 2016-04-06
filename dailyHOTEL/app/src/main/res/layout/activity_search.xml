@@ -106,21 +106,6 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/searchingView"
-            android:layout_width="match_parent"
-            android:layout_height="41dp"
-            android:layout_below="@+id/searchAroundLayout"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="@string/label_searching"
-            android:textColor="@color/search_hint_text"
-            android:textSize="13dp"
-            android:visibility="gone"/>
-
         <RelativeLayout
             android:id="@+id/recentSearchLayout"
             android:layout_width="match_parent"

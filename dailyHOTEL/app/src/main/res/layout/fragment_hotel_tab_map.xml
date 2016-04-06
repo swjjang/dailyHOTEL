@@ -88,7 +88,24 @@
                 android:freezesText="true"
                 android:textColor="@color/black"
                 android:textSize="13dp"
-                dailyFont:style="DemiLight"/>
+                dailyFont:style="DemiLight"
+                android:layout_toLeftOf="@+id/copyAddressView"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
+                android:id="@+id/copyAddressView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:freezesText="true"
+                android:maxLines="1"
+                android:text="@string/label_copy_address"
+                android:textColor="@color/menu_text_default"
+                android:drawableRight="@drawable/ic_copy"
+                android:textSize="12dp"
+                android:drawablePadding="5dp"
+                android:layout_gravity="top"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/rl_hotel_upper"
+                android:layout_marginLeft="5dp"/>
         </RelativeLayout>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
