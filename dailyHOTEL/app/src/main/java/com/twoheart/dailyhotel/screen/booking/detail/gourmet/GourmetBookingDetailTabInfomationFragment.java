@@ -7,18 +7,18 @@
  */
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
@@ -28,9 +28,6 @@ public class GourmetBookingDetailTabInfomationFragment extends BaseFragment
     private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
 
     private PlaceBookingDetail mPlaceBookingDetail;
-    private LinearLayout mLayout;
-
-    private int mInfoViewCount;
 
     public static GourmetBookingDetailTabInfomationFragment newInstance(PlaceBookingDetail placeBookingDetail)
     {
@@ -48,56 +45,64 @@ public class GourmetBookingDetailTabInfomationFragment extends BaseFragment
     {
         super.onCreate(savedInstanceState);
 
-        mPlaceBookingDetail = (PlaceBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+        mPlaceBookingDetail = getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_hotel_tab_info, container, false);
-        mLayout = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
 
-        mInfoViewCount = 1;
+        ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
+
+        ViewGroup viewGroup = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
 
         if (mPlaceBookingDetail != null)
         {
             for (String key : mPlaceBookingDetail.getSpecification().keySet())
             {
-                addView(view, key, mPlaceBookingDetail.getSpecification().get(key));
+                addView(inflater, viewGroup, key, mPlaceBookingDetail.getSpecification().get(key));
             }
         }
 
         return view;
     }
 
-    private void addView(View view, String subject, List<String> contentList)
+    private void addView(LayoutInflater inflater, ViewGroup viewGroup, String subject, List<String> contentList)
     {
-        View line = new View(view.getContext());
-        line.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 1)));
-        line.setPadding(0, Util.dpToPx(view.getContext(), 1), 0, 0);
-        line.setBackgroundResource(R.color.common_border);
-        mLayout.addView(line);
+        View sectionView = inflater.inflate(R.layout.list_row_booking_information_section, viewGroup, false);
+        TextView sectionTitleView = (TextView) sectionView.findViewById(R.id.sectionTextView);
+        sectionTitleView.setText(subject);
 
-        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout layout_view = (LinearLayout) inflater.inflate(R.layout.list_row_hotel_tab_info, mLayout, false);
+        viewGroup.addView(sectionView);
 
-        TextView tvInfoNumber = (TextView) layout_view.findViewById(R.id.tv_list_row_hotel_tab_info_number);
-        TextView tv_subject = (TextView) layout_view.findViewById(R.id.tv_hotel_tab_info_subject);
+        addTextView(inflater, viewGroup, contentList);
+    }
 
-        tvInfoNumber.setText(Integer.toString(mInfoViewCount++));
-
-        tv_subject.setText(subject);
-        LinearLayout content_view = (LinearLayout) layout_view.findViewById(R.id.layout_hotel_tab_info_content);
-        LinearLayout content_listview = (LinearLayout) layout_view.findViewById(R.id.layout_hotel_tab_info_content_list);
-
-        for (int i = 0; i < contentList.size(); i++)
+    private void addTextView(LayoutInflater inflater, ViewGroup viewGroups, List<String> contentList)
+    {
+        if (viewGroups == null || contentList == null || contentList.size() == 0)
         {
-            LinearLayout rowLayout = (LinearLayout) inflater.inflate(R.layout.list_row_hotel_tab_info_content, layout_view, false);
-            TextView tv_content = (TextView) rowLayout.findViewById(R.id.tv_hotel_tab_info_content);
-            tv_content.setText(contentList.get(i));
-            content_listview.addView(rowLayout);
+            return;
         }
 
-        mLayout.addView(layout_view);
+        int size = contentList.size();
+
+        for (int i = 0; i < size; i++)
+        {
+            View textLayout = inflater.inflate(R.layout.list_row_detail_text, viewGroups, false);
+            TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+            textView.setText(contentList.get(i));
+
+            if (i == size - 1)
+            {
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.bottomMargin = Util.dpToPx(getContext(), 12);
+                textLayout.setLayoutParams(layoutParams);
+            }
+
+            viewGroups.addView(textLayout);
+        }
     }
 }

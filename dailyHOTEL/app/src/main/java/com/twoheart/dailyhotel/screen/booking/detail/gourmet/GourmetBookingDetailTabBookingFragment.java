@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
@@ -54,9 +56,14 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
     {
         super.onCreate(savedInstanceState);
 
-        mBookingDetail = (GourmetBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
-        mReservationIndex = getArguments().getInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX);
-        mIsUsed = getArguments().getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
+        Bundle bundle = getArguments();
+
+        if (bundle != null)
+        {
+            mBookingDetail = bundle.getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
+            mReservationIndex = bundle.getInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX);
+            mIsUsed = bundle.getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
+        }
     }
 
     @Override
@@ -70,6 +77,10 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         }
 
         View view = inflater.inflate(R.layout.fragment_courmetbooking_tab_booking, container, false);
+
+        ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
+
         TextView ticketNameTextView = (TextView) view.findViewById(R.id.ticketNameTextView);
         TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
         TextView ticketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
