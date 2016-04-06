@@ -100,13 +100,13 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             @Override
             public void onClick(View v)
             {
-                if (isLockUiComponent() == true)
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+                if (baseActivity.lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return;
                 }
 
-                lockUiComponent();
-                Util.showShareMapDialog((BaseActivity) getActivity(), mPlaceBookingDetail.placeName//
+                Util.showShareMapDialog(baseActivity, mPlaceBookingDetail.placeName//
                     , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false);
             }
         });

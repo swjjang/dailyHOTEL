@@ -98,13 +98,13 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
             @Override
             public void onClick(View v)
             {
-                if (isLockUiComponent() == true)
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+                if (baseActivity.lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return;
                 }
 
-                lockUiComponent();
-                Util.showShareMapDialog((BaseActivity) getActivity(), mBookingDetail.placeName//
+                Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
                     , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
             }
         });

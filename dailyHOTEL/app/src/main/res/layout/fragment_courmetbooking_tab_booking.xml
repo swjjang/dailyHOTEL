@@ -16,6 +16,7 @@
         android:textSize="20dp"/>
 
     <ScrollView
+        android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/viewReceiptTextView"
@@ -86,7 +87,6 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -113,7 +113,6 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -140,7 +139,6 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -167,7 +165,6 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
@@ -228,7 +225,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:text="@string/label_booking_user"
+                    android:text="@string/label_booking_reservation_name"
                     android:textColor="@color/curation_title_text"
                     android:textSize="13dp"/>
 
@@ -248,14 +245,14 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:text="@string/act_profile_contact"
+                    android:text="@string/label_reservation_contact"
                     android:textColor="@color/curation_title_text"
                     android:textSize="13dp"/>
 

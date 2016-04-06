@@ -63,7 +63,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         long checkin = jsonObject.getLong("checkin_date");
         long checkout = jsonObject.getLong("checkout_date");
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시", Locale.KOREA);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         // Check In

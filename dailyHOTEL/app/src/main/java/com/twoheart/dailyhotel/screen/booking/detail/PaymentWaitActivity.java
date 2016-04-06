@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -98,6 +100,9 @@ public class PaymentWaitActivity extends BaseActivity
         {
             return;
         }
+
+        ScrollView scrollLayout = (ScrollView) findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
 
         TextView placeNameTextView = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
         mAccountTextView = (TextView) findViewById(R.id.tv_payment_wait_account);
