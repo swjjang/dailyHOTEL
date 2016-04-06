@@ -535,6 +535,7 @@
     <string name="act_wait_payment_confirm">확인사항</string>
     <string name="act_wait_payment_msg1">입금이 완료되면</string>
     <string name="act_wait_payment_msg2">10분이내에 예약완료 문자가 도착합니다.</string>
+    <string name="message__wait_payment03">입금이 완료되면 자동으로 예약이 완료됩니다.</string>
 
     <!-- Facebook -->
     <string name="com_facebook_dialogloginactivity_ok_button">확인</string>

@@ -131,7 +131,8 @@
                     android:layout_height="35dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp">
 
                     <com.twoheart.dailyhotel.view.widget.DailyTextView
                         android:layout_width="0dp"
@@ -149,7 +150,6 @@
                         android:gravity="right|center_vertical"
                         android:lineSpacingExtra="-2dp"
                         android:textColor="@color/curation_information_text"
-                        android:textIsSelectable="true"
                         android:textSize="13dp"/>
                 </LinearLayout>
 
@@ -210,7 +210,8 @@
                     android:layout_height="35dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
 
                     <com.twoheart.dailyhotel.view.widget.DailyTextView
                         android:layout_width="0dp"
@@ -242,7 +243,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="18dp">
 
                     <com.twoheart.dailyhotel.view.widget.DailyTextView
                         android:layout_width="match_parent"
@@ -250,42 +251,7 @@
                         android:background="@color/calendar_month_line"
                         android:gravity="left|center_vertical"
                         android:paddingLeft="15dp"
-                        android:text="@string/act_wait_payment_confirm"
-                        android:textColor="@color/curation_title_text"
-                        android:textSize="13dp"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:background="@color/curation_information_line"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/curation_information_line"/>
-                </RelativeLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/guide2Layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="10dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="10dp">
-
-                    <com.twoheart.dailyhotel.view.widget.DailyTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:background="@color/calendar_month_line"
-                        android:gravity="left|center_vertical"
-                        android:paddingLeft="15dp"
-                        android:text="@string/act_wait_payment_msg1"
+                        android:text="@string/dialog_title_payment_confirm"
                         android:textColor="@color/curation_title_text"
                         android:textSize="13dp"/>
 

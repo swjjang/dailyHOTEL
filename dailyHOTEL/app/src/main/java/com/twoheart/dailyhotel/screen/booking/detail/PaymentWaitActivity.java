@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +40,11 @@ import java.util.TimeZone;
 
 public class PaymentWaitActivity extends BaseActivity
 {
-    private TextView tvAccount;
-    private TextView tvName;
-    private TextView tvPrice;
-    private TextView tvDeadline;
-    private ViewGroup mGuide1Layout, mGuide2Layout;
+    private TextView mAccountTextView;
+    private TextView mDailyTextView;
+    private TextView mPriceTextView;
+    private TextView mDeadlineTextView;
+    private ViewGroup mGuide1Layout;
     private String mCSoperatingTimeMessage;
 
     @Override
@@ -100,13 +99,12 @@ public class PaymentWaitActivity extends BaseActivity
             return;
         }
 
-        TextView tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
-        tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
-        tvName = (TextView) findViewById(R.id.tv_payment_wait_name);
-        tvPrice = (TextView) findViewById(R.id.tv_payment_wait_price);
-        tvDeadline = (TextView) findViewById(R.id.tv_payment_wait_deadline);
+        TextView placeNameTextView = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
+        mAccountTextView = (TextView) findViewById(R.id.tv_payment_wait_account);
+        mDailyTextView = (TextView) findViewById(R.id.tv_payment_wait_name);
+        mPriceTextView = (TextView) findViewById(R.id.tv_payment_wait_price);
+        mDeadlineTextView = (TextView) findViewById(R.id.tv_payment_wait_deadline);
         mGuide1Layout = (ViewGroup) findViewById(R.id.guide1Layout);
-        mGuide2Layout = (ViewGroup) findViewById(R.id.guide2Layout);
 
         View view = findViewById(R.id.editLinearLayout);
         view.setOnClickListener(new View.OnClickListener()
@@ -114,18 +112,18 @@ public class PaymentWaitActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (tvAccount == null)
+                if (mAccountTextView == null)
                 {
                     return;
                 }
 
-                Util.clipText(PaymentWaitActivity.this, (String) tvAccount.getTag());
+                Util.clipText(PaymentWaitActivity.this, (String) mAccountTextView.getTag());
 
                 DailyToast.showToast(PaymentWaitActivity.this, R.string.message_detail_copy_account_number, Toast.LENGTH_SHORT);
             }
         });
 
-        tvHotelName.setText(booking.placeName);
+        placeNameTextView.setText(booking.placeName);
 
         lockUI();
 
@@ -199,7 +197,7 @@ public class PaymentWaitActivity extends BaseActivity
         }, true);
     }
 
-    private void setGuideText(ViewGroup viewGroups, String[] guides)
+    private void setGuideText(ViewGroup viewGroups, String[] guides, boolean isImportant)
     {
         if (guides == null)
         {
@@ -214,8 +212,36 @@ public class PaymentWaitActivity extends BaseActivity
             TextView textView = (TextView) textLayout.findViewById(R.id.textView);
             textView.setText(guide.replace("\n", " ").trim() + ".");
 
+            if (isImportant == true)
+            {
+                textView.setTextColor(getResources().getColor(R.color.dh_theme_color));
+            }
+
             viewGroups.addView(textLayout);
         }
+    }
+
+    private void setReservationData(JSONObject jsonObject) throws JSONException
+    {
+        String accountNumber = jsonObject.getString("account_num");
+        mAccountTextView.setText(jsonObject.getString("bank_name") + ", " + accountNumber);
+        mAccountTextView.setTag(accountNumber);
+
+        mDailyTextView.setText(jsonObject.getString("name"));
+
+        DecimalFormat comma = new DecimalFormat("###,##0");
+        mPriceTextView.setText(comma.format(jsonObject.getInt("amt")) + getString(R.string.currency));
+
+        String date = jsonObject.getString("date").replaceAll("/", ".");
+        String[] timeSlice = jsonObject.getString("time").split(":");
+
+        mDeadlineTextView.setText(String.format("%s %s:%s까지", date, timeSlice[0], timeSlice[1]));
+
+        String msg1 = jsonObject.getString("msg1");
+        setGuideText(mGuide1Layout, msg1.split("\\."), false);
+
+        String msg2 = getString(R.string.message__wait_payment03);
+        setGuideText(mGuide1Layout, msg2.split("\\."), true);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,8 +257,6 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 if (response.getBoolean("result") == false)
                 {
-                    unLockUI();
-
                     Intent intent = new Intent();
                     intent.putExtra("msg", response.getString("msg"));
                     setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
@@ -240,31 +264,17 @@ public class PaymentWaitActivity extends BaseActivity
                     return;
                 } else
                 {
-                    String accountNumber = response.getString("account_num");
-                    tvAccount.setText(response.getString("bank_name") + ", " + accountNumber);
-                    tvAccount.setTag(accountNumber);
-
-                    tvName.setText(response.getString("name"));
-
-                    DecimalFormat comma = new DecimalFormat("###,##0");
-                    tvPrice.setText(comma.format(response.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
-
-                    String[] dateSlice = response.getString("date").split("/");
-                    String[] timeSlice = response.getString("time").split(":");
-
-                    tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
-
-                    String msg1 = response.getString("msg1");
-                    setGuideText(mGuide1Layout, msg1.split("\\."));
-
-                    String msg2 = response.getString("msg2");
-                    setGuideText(mGuide2Layout, msg2.split("\\."));
+                    setReservationData(response);
                 }
 
                 DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, PaymentWaitActivity.this);
             } catch (JSONException e)
             {
                 ExLog.e(e.toString());
+                finish();
+            } finally
+            {
+                unLockUI();
             }
         }
     };
@@ -283,26 +293,9 @@ public class PaymentWaitActivity extends BaseActivity
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
-                    tvAccount.setText(jsonObject.getString("bank_name") + ", " + jsonObject.getString("account_num"));
-                    tvName.setText(jsonObject.getString("name"));
-
-                    DecimalFormat comma = new DecimalFormat("###,##0");
-                    tvPrice.setText(comma.format(jsonObject.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
-
-                    String[] dateSlice = jsonObject.getString("date").split("/");
-                    String[] timeSlice = jsonObject.getString("time").split(":");
-
-                    tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
-
-                    String msg1 = jsonObject.getString("msg1");
-                    setGuideText(mGuide1Layout, msg1.split("\\."));
-
-                    String msg2 = jsonObject.getString("msg2");
-                    setGuideText(mGuide2Layout, msg2.split("\\."));
+                    setReservationData(jsonObject);
                 } else
                 {
-                    unLockUI();
-
                     Intent intent = new Intent();
                     intent.putExtra("msg", response.getString("msg"));
                     setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
@@ -315,6 +308,9 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 onError(e);
                 finish();
+            } finally
+            {
+                unLockUI();
             }
         }
     };
@@ -345,7 +341,6 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 unLockUI();
             }
-
         }
     };
 }
