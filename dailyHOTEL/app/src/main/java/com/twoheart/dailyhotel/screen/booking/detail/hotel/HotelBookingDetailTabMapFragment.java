@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,6 +38,7 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 public class HotelBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
@@ -104,6 +106,20 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                 lockUiComponent();
                 Util.showShareMapDialog((BaseActivity) getActivity(), mBookingDetail.placeName//
                     , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
+            }
+        });
+
+        View copyAddressView = view.findViewById(R.id.copyAddressView);
+        copyAddressView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                Util.clipText(baseActivity, mBookingDetail.address);
+
+                DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
             }
         });
 
