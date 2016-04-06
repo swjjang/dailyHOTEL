@@ -438,6 +438,7 @@
     <string name="frag_booking_tab_chkin">체크인</string>
     <string name="frag_booking_tab_chkout">체크아웃</string>
     <string name="frag_booking_tab_name">투숙자명</string>
+    <string name="label_booking_guest_information">투숙자 정보</string>
     <string name="frag_booking_tab_mobile">투숙자 전화번호</string>
     <string name="frag_hotel_tab_add">주소</string>
     <string name="frag_hotel_tab_bed_type">베드타입</string>
