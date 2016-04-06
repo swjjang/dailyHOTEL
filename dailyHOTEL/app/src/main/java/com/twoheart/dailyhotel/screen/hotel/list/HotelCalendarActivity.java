@@ -139,7 +139,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
 
                     String checkInDate = mCheckInDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd");
                     String checkOutDate = mCheckOutDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd");
-                    String title = String.format("%s-%s", checkInDate, checkOutDate);
+                    String title = String.format("%s-%s(%d박)", checkInDate, checkOutDate, (mCheckOutDay.dayTime.getOffsetDailyDay() - mCheckInDay.dayTime.getOffsetDailyDay()));
                     setToolbarText(title);
 
                     setRangeDaysAlpha(view);
