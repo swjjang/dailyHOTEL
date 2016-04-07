@@ -140,6 +140,8 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         // 토스트로 수정
         DailyToast.showToast(this, R.string.dialog_msg_session_expired, Toast.LENGTH_SHORT);
+
+        Util.restartApp(this);
     }
 
     // 메뉴 버튼을 막아버림.
