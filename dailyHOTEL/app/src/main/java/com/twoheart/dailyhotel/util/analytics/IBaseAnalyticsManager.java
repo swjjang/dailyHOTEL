@@ -6,6 +6,8 @@ import java.util.Map;
 
 public interface IBaseAnalyticsManager
 {
+    void setEnabled(boolean enabled);
+
     void recordScreen(String screen, Map<String, String> params);
 
     void recordEvent(String category, String action, String label, Map<String, String> params);

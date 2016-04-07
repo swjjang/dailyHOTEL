@@ -39,7 +39,7 @@ import com.twoheart.dailyhotel.view.OnLoadListener;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
-public class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
+public abstract class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
     protected boolean mIsShowStatusBar = true;
 

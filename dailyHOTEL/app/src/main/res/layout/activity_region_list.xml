@@ -18,13 +18,14 @@
         app:tabTextColor="@color/tab_text"
         android:layout_below="@+id/toolbar"/>
 
-    <android.support.v4.view.ViewPager
+    <com.twoheart.dailyhotel.view.widget.DailyViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tabLayout"/>
 
     <View
+        android:id="@+id/toolbarUnderline"
         android:layout_width="match_parent"
         android:layout_height="6px"
         android:background="@drawable/navibar_gradation"

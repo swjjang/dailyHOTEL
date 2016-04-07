@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.hotel.region;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.android.volley.VolleyError;
@@ -20,6 +19,7 @@ import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.view.widget.DailyViewPager;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import java.util.ArrayList;
@@ -32,13 +32,15 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
 
     private static final int HOTEL_TAB_COUNT = 2;
 
-    private ViewPager mViewPager;
+    private DailyViewPager mViewPager;
     private PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
 
     private HotelRegionListNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private int mNights;
     private Province mSelectedProvince;
+    private TabLayout mTabLayout;
+    private View mToolbarUnderline;
 
     public static Intent newInstance(Context context, Province province, SaleTime saleTime, int nights)
     {
@@ -67,9 +69,20 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void initTabLayout(TabLayout tabLayout)
     {
+        if (tabLayout == null)
+        {
+            return;
+        }
+
+        mTabLayout = tabLayout;
+
         tabLayout.addTab(tabLayout.newTab().setText(R.string.label_domestic));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+
+        mToolbarUnderline = findViewById(R.id.toolbarUnderline);
+
+        hideTabLayout();
 
         FontManager.apply(tabLayout, FontManager.getInstance(this).getRegularTypeface());
     }
@@ -93,7 +106,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void initViewPager(TabLayout tabLayout)
     {
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
 
         ArrayList<PlaceRegionListFragment> fragmentList = new ArrayList<>(HOTEL_TAB_COUNT);
         HotelRegionListFragment regionListFragment01 = new HotelRegionListFragment();
@@ -211,6 +224,31 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         }
     };
 
+    private void removeGlobalRegion()
+    {
+        mTabLayout.setVisibility(View.GONE);
+        mTabLayout.removeTabAt(1);
+        mToolbarUnderline.setVisibility(View.GONE);
+        mViewPager.setCurrentItem(0);
+        mViewPager.clearOnPageChangeListeners();
+        mViewPager.setPagingEnabled(false);
+
+        mFragmentPagerAdapter.removeItem(1);
+        mFragmentPagerAdapter.notifyDataSetChanged();
+    }
+
+    private void showTabLayout()
+    {
+        mTabLayout.setVisibility(View.VISIBLE);
+        mToolbarUnderline.setVisibility(View.VISIBLE);
+    }
+
+    private void hideTabLayout()
+    {
+        mTabLayout.setVisibility(View.INVISIBLE);
+        mToolbarUnderline.setVisibility(View.INVISIBLE);
+    }
+
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
         private void recordAnalytics(int position)
@@ -256,7 +294,16 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
             ArrayList<PlaceRegionListFragment> arrayList = mFragmentPagerAdapter.getFragmentList();
 
             arrayList.get(0).setRegionViewList(HotelRegionListActivity.this, domesticList);
-            arrayList.get(1).setRegionViewList(HotelRegionListActivity.this, globalList);
+
+            if (globalList == null || globalList.size() == 0)
+            {
+                removeGlobalRegion();
+            } else
+            {
+                showTabLayout();
+
+                arrayList.get(1).setRegionViewList(HotelRegionListActivity.this, globalList);
+            }
 
             unLockUI();
         }

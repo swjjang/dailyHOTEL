@@ -17,6 +17,7 @@ public class AnalyticsManager
     private GoogleAnalyticsManager mGoogleAnalyticsManager;
     private TuneManager mTuneManager;
     private FacebookManager mFacebookManager;
+    private boolean mEnabled;
 
     public synchronized static AnalyticsManager getInstance(Context context)
     {
@@ -29,6 +30,7 @@ public class AnalyticsManager
 
     private AnalyticsManager(Context context)
     {
+        setEnabled(true);
         initAnalytics(context);
     }
 
@@ -56,8 +58,18 @@ public class AnalyticsManager
         }
     }
 
+    private void setEnabled(boolean enabled)
+    {
+        mEnabled = enabled;
+    }
+
     public void setUserIndex(String index)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.setUserIndex(index);
@@ -71,6 +83,11 @@ public class AnalyticsManager
 
     public void onResume(Activity activity)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.onResume(activity);
@@ -84,6 +101,11 @@ public class AnalyticsManager
 
     public void onPause(Activity activity)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.onPause(activity);
@@ -97,6 +119,11 @@ public class AnalyticsManager
 
     public void recordScreen(String screen, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.recordScreen(screen, params);
@@ -110,6 +137,11 @@ public class AnalyticsManager
 
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.recordEvent(category, action, label, params);
@@ -127,6 +159,11 @@ public class AnalyticsManager
 
     public void addCreditCard(String cardType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.addCreditCard(cardType);
@@ -140,6 +177,11 @@ public class AnalyticsManager
 
     public void singUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
@@ -153,6 +195,11 @@ public class AnalyticsManager
 
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
@@ -166,6 +213,11 @@ public class AnalyticsManager
 
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.purchaseCompleteHotel(transId, params);
@@ -182,6 +234,11 @@ public class AnalyticsManager
 
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         try
         {
             mGoogleAnalyticsManager.purchaseCompleteGourmet(transId, params);

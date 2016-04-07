@@ -32,9 +32,12 @@ public class TuneManager implements IBaseAnalyticsManager
     private MobileAppTracker mMobileAppTracker;
     private Context mContext;
     private String mUserIndex;
+    private boolean mEnabled;
 
     public TuneManager(Context context)
     {
+        setEnabled(true);
+
         mContext = context;
         mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), ADVERTISE_ID, CONVERSION_KEY);
         mMobileAppTracker.setCurrencyCode("KRW");
@@ -60,6 +63,11 @@ public class TuneManager implements IBaseAnalyticsManager
             @Override
             public void didReceiveDeeplink(String deeplink)
             {
+                if (mEnabled == false)
+                {
+                    return;
+                }
+
                 if (Util.isTextEmpty(deeplink) == false)
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
@@ -78,8 +86,19 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
+    public void setEnabled(boolean enabled)
+    {
+        mEnabled = enabled;
+    }
+
+    @Override
     public void recordScreen(String screen, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         if (params == null)
         {
             return;
@@ -163,6 +182,11 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
@@ -242,6 +266,11 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         mUserIndex = index;
 
         if (Util.isTextEmpty(index) == true)
@@ -256,21 +285,32 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void onResume(Activity activity)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         mMobileAppTracker.setReferralSources(activity);
         mMobileAppTracker.measureSession();
-
-
     }
 
     @Override
     public void onPause(Activity activity)
     {
-
+        if (mEnabled == false)
+        {
+            return;
+        }
     }
 
     @Override
     public void addCreditCard(String cardType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         MATEvent matEvent = new MATEvent(TuneEventId.CARDLIST_ADDED_CARD);
         matEvent.withAttribute1(cardType);
 
@@ -287,6 +327,11 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         mMobileAppTracker.setUserId(userIndex);
 
         if (Util.isTextEmpty(email) == false)
@@ -331,6 +376,11 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         // Tune
         mMobileAppTracker.setUserId(userIndex);
         mMobileAppTracker.setUserEmail(email);
@@ -389,6 +439,11 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PURCHASE_COMPLETE, params, true);
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)

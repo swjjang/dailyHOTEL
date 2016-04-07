@@ -22,6 +22,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
     private Tracker mGoogleAnalyticsTracker;
     private String mClientId;
+    private boolean mEnabled;
 
     interface OnClientIdListener
     {
@@ -30,6 +31,8 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
     public GoogleAnalyticsManager(Context context, final OnClientIdListener listener)
     {
+        setEnabled(true);
+
         final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
         googleAnalytics.setLocalDispatchPeriod(60);
 
@@ -58,8 +61,19 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
+    public void setEnabled(boolean enabled)
+    {
+        mEnabled = enabled;
+    }
+
+    @Override
     public void recordScreen(String screen, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         if (params == null)
         {
             mGoogleAnalyticsTracker.setScreenName(screen);
@@ -90,6 +104,11 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         long value = 0L;
 
         if (params != null)
@@ -114,6 +133,11 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         if (Util.isTextEmpty(index) == true)
         {
             mGoogleAnalyticsTracker.set("&uid", "");
@@ -126,31 +150,56 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void onResume(Activity activity)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
     }
 
     @Override
     public void onPause(Activity activity)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
     }
 
     @Override
     public void addCreditCard(String cardType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
     }
 
     @Override
     public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
     }
 
     @Override
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
     }
 
     @Override
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
@@ -192,6 +241,11 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
+        if (mEnabled == false)
+        {
+            return;
+        }
+
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
 

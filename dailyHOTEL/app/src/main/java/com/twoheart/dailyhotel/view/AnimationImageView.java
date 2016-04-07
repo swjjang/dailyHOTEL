@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 
+import java.lang.ref.WeakReference;
+
 public class AnimationImageView extends ImageView
 {
     private static final int ANIMATION_DURATION = 10000;
@@ -36,124 +38,7 @@ public class AnimationImageView extends ImageView
     private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
     private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
-    private Handler mAnimationHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            final int width = msg.arg1;
-            final int height = msg.arg2;
-            final Matrix matrix = (Matrix) msg.obj;
-
-            final boolean isVerticalTranslate;
-            int moveDistance = 0;
-
-            if (width > height)
-            {
-                isVerticalTranslate = false;
-                moveDistance = width - mWidth;
-            } else if (width < height)
-            {
-                isVerticalTranslate = true;
-                moveDistance = height - mHeight;
-            } else
-            {
-                return;
-            }
-
-            if (mValueAnimator == null)
-            {
-                mValueAnimator = ValueAnimator.ofInt(mTranslateDistance, moveDistance);
-            } else
-            {
-                stopAnimation(true);
-            }
-
-            mAnimationPlayTime = ANIMATION_DURATION - mAnimationPlayTime;
-
-            if (mAnimationPlayTime <= 0)
-            {
-                mAnimationPlayTime = ANIMATION_DURATION;
-            }
-
-            mValueAnimator.setDuration(mAnimationPlayTime).addUpdateListener(new AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    int translateValue;
-
-                    mAnimationPlayTime = animation.getCurrentPlayTime();
-
-                    if (mTranslateDistance == 0)
-                    {
-                        translateValue = value;
-                    } else
-                    {
-                        translateValue = value - mTranslateDistance;
-                    }
-
-                    mTranslateDistance = value;
-
-                    if (mIsRightAnimation == false)
-                    {
-                        if (isVerticalTranslate == true)
-                        {
-                            matrix.postTranslate(0, -translateValue);
-                        } else
-                        {
-                            matrix.postTranslate(-translateValue, 0);
-                        }
-                    } else
-                    {
-                        if (isVerticalTranslate == true)
-                        {
-                            matrix.postTranslate(0, translateValue);
-                        } else
-                        {
-                            matrix.postTranslate(translateValue, 0);
-                        }
-                    }
-
-                    setImageMatrix(matrix);
-                    invalidate();
-                }
-            });
-
-            mValueAnimator.addListener(new AnimatorListener()
-            {
-                private boolean mIsCancel;
-
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mIsCancel == false)
-                    {
-                        requestNextImage();
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mIsCancel = true;
-                }
-            });
-
-            mValueAnimator.start();
-        }
-    };
+    private Handler mAnimationHandler;
 
     public AnimationImageView(Context context, int height, int width, boolean isRightAnimation)
     {
@@ -162,6 +47,7 @@ public class AnimationImageView extends ImageView
         mHeight = height;
         mWidth = width;
         mIsRightAnimation = isRightAnimation;
+        mAnimationHandler = new AnimationHandler(this);
 
         initLayout(context);
     }
@@ -374,5 +260,152 @@ public class AnimationImageView extends ImageView
     public void setOnImageActionListener(PlaceDetailActivity.OnImageActionListener listener)
     {
         mOnImageActionListener = listener;
+    }
+
+    private static class AnimationHandler extends Handler
+    {
+        private final WeakReference<AnimationImageView> mWeakReference;
+
+        public AnimationHandler(AnimationImageView animationImageView)
+        {
+            mWeakReference = new WeakReference<>(animationImageView);
+        }
+
+        @Override
+        public void handleMessage(Message msg)
+        {
+            AnimationImageView animationImageView = mWeakReference.get();
+
+            if (animationImageView == null)
+            {
+                return;
+            }
+
+            final int width = msg.arg1;
+            final int height = msg.arg2;
+            final Matrix matrix = (Matrix) msg.obj;
+
+            final boolean isVerticalTranslate;
+            int moveDistance = 0;
+
+            if (width > height)
+            {
+                isVerticalTranslate = false;
+                moveDistance = width - animationImageView.mWidth;
+            } else if (width < height)
+            {
+                isVerticalTranslate = true;
+                moveDistance = height - animationImageView.mHeight;
+            } else
+            {
+                return;
+            }
+
+            if (animationImageView.mValueAnimator == null)
+            {
+                animationImageView.mValueAnimator = ValueAnimator.ofInt(animationImageView.mTranslateDistance, moveDistance);
+            } else
+            {
+                animationImageView.stopAnimation(true);
+            }
+
+            animationImageView.mAnimationPlayTime = ANIMATION_DURATION - animationImageView.mAnimationPlayTime;
+
+            if (animationImageView.mAnimationPlayTime <= 0)
+            {
+                animationImageView.mAnimationPlayTime = ANIMATION_DURATION;
+            }
+
+            animationImageView.mValueAnimator.setDuration(animationImageView.mAnimationPlayTime).addUpdateListener(new AnimatorUpdateListener()
+            {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation)
+                {
+                    AnimationImageView animationImageView = mWeakReference.get();
+
+                    if (animationImageView == null)
+                    {
+                        return;
+                    }
+
+                    int value = (Integer) animation.getAnimatedValue();
+                    int translateValue;
+
+                    animationImageView.mAnimationPlayTime = animation.getCurrentPlayTime();
+
+                    if (animationImageView.mTranslateDistance == 0)
+                    {
+                        translateValue = value;
+                    } else
+                    {
+                        translateValue = value - animationImageView.mTranslateDistance;
+                    }
+
+                    animationImageView.mTranslateDistance = value;
+
+                    if (animationImageView.mIsRightAnimation == false)
+                    {
+                        if (isVerticalTranslate == true)
+                        {
+                            matrix.postTranslate(0, -translateValue);
+                        } else
+                        {
+                            matrix.postTranslate(-translateValue, 0);
+                        }
+                    } else
+                    {
+                        if (isVerticalTranslate == true)
+                        {
+                            matrix.postTranslate(0, translateValue);
+                        } else
+                        {
+                            matrix.postTranslate(translateValue, 0);
+                        }
+                    }
+
+                    animationImageView.setImageMatrix(matrix);
+                    animationImageView.invalidate();
+                }
+            });
+
+            animationImageView.mValueAnimator.addListener(new AnimatorListener()
+            {
+                private boolean mIsCancel;
+
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    AnimationImageView animationImageView = mWeakReference.get();
+
+                    if (animationImageView == null)
+                    {
+                        return;
+                    }
+
+                    if (mIsCancel == false)
+                    {
+                        animationImageView.requestNextImage();
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mIsCancel = true;
+                }
+            });
+
+            animationImageView.mValueAnimator.start();
+        }
     }
 }

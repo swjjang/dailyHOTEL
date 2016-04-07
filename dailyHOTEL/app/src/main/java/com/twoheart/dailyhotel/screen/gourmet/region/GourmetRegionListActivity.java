@@ -61,6 +61,9 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     protected void initTabLayout(TabLayout tabLayout)
     {
         tabLayout.setVisibility(ViewPager.GONE);
+
+        View toolbarUnderline = findViewById(R.id.toolbarUnderline);
+        toolbarUnderline.setVisibility(View.GONE);
     }
 
     @Override

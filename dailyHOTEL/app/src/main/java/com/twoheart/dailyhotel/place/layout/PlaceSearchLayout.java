@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -57,24 +58,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private EditText mSearchEditText;
 
-    private Handler mHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch (msg.what)
-            {
-                case HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE:
-                    ((OnEventListener) mOnEventListener).onAutoCompleteKeyword((String) msg.obj);
-                    break;
-
-                case HANDLER_MESSAGE_HIDE_AUTOCOMPLETE:
-                    hideAutoCompleteView();
-                    break;
-            }
-
-        }
-    };
+    private Handler mHandler;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -102,6 +86,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public PlaceSearchLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
+
+        mHandler = new SearchHandler(this);
     }
 
     @Override
@@ -588,6 +574,38 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             {
                 ((OnEventListener) mOnEventListener).onResetKeyword();
                 break;
+            }
+        }
+    }
+
+    private static class SearchHandler extends Handler
+    {
+        private final WeakReference<PlaceSearchLayout> mWeakReference;
+
+        public SearchHandler(PlaceSearchLayout placeSearchLayout)
+        {
+            mWeakReference = new WeakReference<>(placeSearchLayout);
+        }
+
+        @Override
+        public void handleMessage(Message msg)
+        {
+            PlaceSearchLayout placeSearchLayout = mWeakReference.get();
+
+            if (placeSearchLayout == null)
+            {
+                return;
+            }
+
+            switch (msg.what)
+            {
+                case HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE:
+                    ((OnEventListener) placeSearchLayout.mOnEventListener).onAutoCompleteKeyword((String) msg.obj);
+                    break;
+
+                case HANDLER_MESSAGE_HIDE_AUTOCOMPLETE:
+                    placeSearchLayout.hideAutoCompleteView();
+                    break;
             }
         }
     }

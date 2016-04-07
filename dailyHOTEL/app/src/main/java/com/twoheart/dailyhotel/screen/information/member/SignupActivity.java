@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -311,12 +310,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         singupView.setOnClickListener(this);
 
-        if (Util.isOverAPI23() == true)
+        if (Util.isOverAPI23() == true && hasPermission() == false)
         {
-            if (hasPermission() == false)
-            {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
-            }
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
         }
 
         initLayoutCheckBox();
@@ -375,8 +371,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     {
         if (Util.isOverAPI23() == true)
         {
-            TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-            String deviceId = telephonyManager.getDeviceId();
+            String deviceId = Util.getDeviceId(this);
 
             if (deviceId == null)
             {
@@ -468,8 +463,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         mSignupParams.put("phone", phoneNumber);
 
-        TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mSignupParams.put("device", tManager.getDeviceId());
+        mSignupParams.put("device", Util.getDeviceId(this));
         mSignupParams.put("market_type", RELEASE_STORE.getName());
 
         String recommender = mRecommenderEditText.getText().toString().trim();
