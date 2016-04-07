@@ -182,7 +182,6 @@
                         android:id="@+id/tv_credit_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="￦0"
                         android:textColor="@color/textView_textColor_main"
                         android:textSize="16.5dp"/>
 
@@ -260,7 +259,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:gravity="right"
-                    android:text="0000"
                     android:textColor="@color/textView_textColor_main"
                     android:textSize="16.5dp"/>
             </RelativeLayout>
