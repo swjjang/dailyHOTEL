@@ -15,13 +15,11 @@ package com.twoheart.dailyhotel.screen.information.member;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -235,10 +233,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         if (Util.isOverAPI23() == true)
         {
-            TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-            String deviceId = telephonyManager.getDeviceId();
+            String deviceId = Util.getDeviceId(this);
 
-            // 참고로 태블릿, 웨어러블 기기에서는 값이 null이 나온다.
             if (deviceId == null)
             {
                 return false;
@@ -250,10 +246,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void registerFacebookUser(String id, String name, String email, String gender)
     {
-        TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-
         String encryptedId = Crypto.encrypt(id).replace("\n", "");
-        String deviceId = telephonyManager.getDeviceId();
+        String deviceId = Util.getDeviceId(this);
 
         if (mStoreParams == null)
         {
@@ -305,11 +299,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void registerKakaokUser(long id)
     {
-        TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-
         String index = String.valueOf(id);
         String encryptedId = Crypto.encrypt(index).replace("\n", "");
-        String deviceId = telephonyManager.getDeviceId();
+        String deviceId = Util.getDeviceId(this);
 
         if (mStoreParams == null)
         {

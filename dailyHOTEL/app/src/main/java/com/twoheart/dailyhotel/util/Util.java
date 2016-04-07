@@ -239,7 +239,21 @@ public class Util implements Constants
         System.exit(0);
     }
 
-    public static String getDeviceUUID(final Context context)
+    public static String getDeviceId(Context context)
+    {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String deviceId = telephonyManager.getDeviceId();
+
+        // // 참고로 태블릿, 웨어러블 기기에서는 값이 null이 나온다.
+        if (Util.isTelephonyEnabled(context) == false && deviceId == null)
+        {
+            return getDeviceUUID(context);
+        }
+
+        return deviceId;
+    }
+
+    public static String getDeviceUUID(Context context)
     {
         UUID uuid = null;
 
