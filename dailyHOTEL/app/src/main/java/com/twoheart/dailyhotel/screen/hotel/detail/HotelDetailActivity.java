@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +70,8 @@ public class HotelDetailActivity extends BaseActivity
     private HotelDetailLayout mHotelDetailLayout;
     private DailyToolbarLayout mDailyToolbarLayout;
     private View mToolbarUnderline;
+
+    private Handler mImageHandler;
 
     public interface OnUserActionListener
     {
@@ -97,39 +100,6 @@ public class HotelDetailActivity extends BaseActivity
         void clipAddress(String address);
     }
 
-    private Handler mImageHandler = new Handler()
-    {
-        public void handleMessage(Message msg)
-        {
-            if (isFinishing() == true || mHotelDetailLayout == null)
-            {
-                return;
-            }
-
-            int direction = msg.arg1;
-
-            mCurrentImage = mHotelDetailLayout.getCurrentImage();
-
-            if (direction > 0)
-            {
-                mCurrentImage++;
-            } else if (direction < 0)
-            {
-                mCurrentImage--;
-            }
-
-            mHotelDetailLayout.setCurrentImage(mCurrentImage);
-
-            int autoSlide = msg.arg2;
-
-            if (autoSlide == 1)
-            {
-                sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
-            }
-        }
-    };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -142,6 +112,8 @@ public class HotelDetailActivity extends BaseActivity
             finish();
             return;
         }
+
+        mImageHandler = new ImageHandler(this);
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
@@ -834,4 +806,50 @@ public class HotelDetailActivity extends BaseActivity
             }
         }
     };
+
+    private static class ImageHandler extends Handler
+    {
+        private final WeakReference<HotelDetailActivity> mWeakReference;
+
+        public ImageHandler(HotelDetailActivity activity)
+        {
+            mWeakReference = new WeakReference<>(activity);
+        }
+
+        public void handleMessage(Message msg)
+        {
+            HotelDetailActivity hotelDetailActivity = mWeakReference.get();
+
+            if (hotelDetailActivity == null)
+            {
+                return;
+            }
+
+            if (hotelDetailActivity.isFinishing() == true || hotelDetailActivity.mHotelDetailLayout == null)
+            {
+                return;
+            }
+
+            int direction = msg.arg1;
+
+            hotelDetailActivity.mCurrentImage = hotelDetailActivity.mHotelDetailLayout.getCurrentImage();
+
+            if (direction > 0)
+            {
+                hotelDetailActivity.mCurrentImage++;
+            } else if (direction < 0)
+            {
+                hotelDetailActivity.mCurrentImage--;
+            }
+
+            hotelDetailActivity.mHotelDetailLayout.setCurrentImage(hotelDetailActivity.mCurrentImage);
+
+            int autoSlide = msg.arg2;
+
+            if (autoSlide == 1)
+            {
+                sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+            }
+        }
+    }
 }

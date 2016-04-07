@@ -47,6 +47,11 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     {
         super(method, getUrlDecoderEx(url), listener);
 
+        //        if (DEBUG == true)
+        //        {
+        //            ExLog.d("Request Url : " + getUrl());
+        //        }
+
         setTag(tag);
 
         setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

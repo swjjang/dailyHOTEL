@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,19 +34,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
     private View.OnClickListener mOnEventBannerClickListener;
     private int mLastEventBannerPosition;
 
-    private Handler mEventBannerHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            EventBannerViewHolder eventBannerViewHolder = (EventBannerViewHolder) msg.obj;
-
-            if (eventBannerViewHolder != null)
-            {
-                eventBannerViewHolder.loopViewPager.setCurrentItem(msg.arg1 + 1);
-            }
-        }
-    };
+    private Handler mEventBannerHandler;
 
     public HotelListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
@@ -53,6 +42,8 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
         mOnClickListener = listener;
         mOnEventBannerClickListener = eventBannerListener;
+
+        mEventBannerHandler = new EventBannerHandler(this);
 
         setSortType(Constants.SortType.DEFAULT);
     }
@@ -356,6 +347,34 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
 
             loopViewPager.setSlideTime(4);
+        }
+    }
+
+    private static class EventBannerHandler extends Handler
+    {
+        private final WeakReference<HotelListAdapter> mWeakReference;
+
+        public EventBannerHandler(HotelListAdapter adapter)
+        {
+            mWeakReference = new WeakReference<>(adapter);
+        }
+
+        @Override
+        public void handleMessage(Message msg)
+        {
+            HotelListAdapter hotelListAdapter = mWeakReference.get();
+
+            if (hotelListAdapter == null)
+            {
+                return;
+            }
+
+            EventBannerViewHolder eventBannerViewHolder = (EventBannerViewHolder) msg.obj;
+
+            if (eventBannerViewHolder != null)
+            {
+                eventBannerViewHolder.loopViewPager.setCurrentItem(msg.arg1 + 1);
+            }
         }
     }
 }

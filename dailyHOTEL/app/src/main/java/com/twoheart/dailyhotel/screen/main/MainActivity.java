@@ -52,6 +52,11 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void handleMessage(Message msg)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
             switch (msg.what)
             {
                 case 0:

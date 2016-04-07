@@ -80,5 +80,5 @@
         android:textColor="@color/black"
         android:textSize="13dp"
         android:layout_marginRight="15dp"
-        dailyFont:style="DemiLight"/>/>
+        dailyFont:style="DemiLight"/>
 </LinearLayout>

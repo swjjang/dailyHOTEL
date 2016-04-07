@@ -35,7 +35,7 @@ import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import java.net.URISyntaxException;
 
-public class WebViewActivity extends BaseActivity implements OnLongClickListener
+public abstract class WebViewActivity extends BaseActivity implements OnLongClickListener
 {
     protected DailyHotelWebChromeClient webChromeClient;
     protected DailyHotelWebViewClient webViewClient;

@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -28,28 +29,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     private SaleTime mSaleTime;
     private int mNights;
 
-    private Handler mAnalyticsHandler = new Handler()
-    {
-        private String getSearchDate()
-        {
-            String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyMMdd");
-            SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
-            String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
-
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
-
-            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
-        }
-
-        @Override
-        public void handleMessage(Message msg)
-        {
-            String label = String.format("%s-%s", (String) msg.obj, getSearchDate());
-            AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
-                , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED, label, null);
-        }
-    };
+    private Handler mAnalyticsHandler;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights)
     {
@@ -65,6 +45,8 @@ public class HotelSearchActivity extends PlaceSearchActivity
     {
         mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
         mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
+
+        mAnalyticsHandler = new AnalyticsHandler(this);
     }
 
     @Override
@@ -253,4 +235,41 @@ public class HotelSearchActivity extends PlaceSearchActivity
             HotelSearchActivity.this.onErrorMessage(msgCode, message);
         }
     };
+
+    private static class AnalyticsHandler extends Handler
+    {
+        private final WeakReference<HotelSearchActivity> mWeakReference;
+
+        public AnalyticsHandler(HotelSearchActivity activity)
+        {
+            mWeakReference = new WeakReference<>(activity);
+        }
+
+        private String getSearchDate(HotelSearchActivity hotelSearchActivity)
+        {
+            String checkInDate = hotelSearchActivity.mSaleTime.getDayOfDaysDateFormat("yyMMdd");
+            SaleTime checkOutSaleTime = hotelSearchActivity.mSaleTime.getClone(hotelSearchActivity.mSaleTime.getOffsetDailyDay() + hotelSearchActivity.mNights);
+            String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
+
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+
+            return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
+        }
+
+        @Override
+        public void handleMessage(Message msg)
+        {
+            HotelSearchActivity hotelSearchActivity = mWeakReference.get();
+
+            if (hotelSearchActivity == null)
+            {
+                return;
+            }
+
+            String label = String.format("%s-%s", (String) msg.obj, getSearchDate(hotelSearchActivity));
+            AnalyticsManager.getInstance(hotelSearchActivity).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
+                , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED, label, null);
+        }
+    }
 }

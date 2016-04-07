@@ -26,7 +26,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     public FacebookManager(Context context)
     {
         setEnabled(true);
-        
+
         mContext = context;
 
         setDeferredDeepLink();

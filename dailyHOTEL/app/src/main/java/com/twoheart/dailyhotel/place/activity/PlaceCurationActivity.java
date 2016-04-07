@@ -16,6 +16,8 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyTextView;
 
+import java.lang.ref.WeakReference;
+
 public abstract class PlaceCurationActivity extends BaseActivity implements View.OnClickListener
 {
     private static final int HANDLE_MESSAGE_RESULT = 1;
@@ -24,20 +26,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     private TextView mResultCountView;
     private View mConfirmView;
 
-    private Handler mHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch (msg.what)
-            {
-                case HANDLE_MESSAGE_RESULT:
-                    updateResultMessage();
-                    break;
-            }
-
-        }
-    };
+    private Handler mHandler;
 
     protected abstract void initContentLayout(ViewGroup contentLayout);
 
@@ -60,6 +49,8 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     protected void initLayout()
     {
         setContentView(R.layout.activity_curation);
+
+        mHandler = new UpdateHandler(this);
 
         mResultCountView = (TextView) findViewById(R.id.resultCountView);
         mConfirmView = findViewById(R.id.confirmView);
@@ -205,5 +196,34 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         dailyTextView.setLayoutParams(layoutParams);
 
         return dailyTextView;
+    }
+
+    private static class UpdateHandler extends Handler
+    {
+        private final WeakReference<PlaceCurationActivity> mWeakReference;
+
+        public UpdateHandler(PlaceCurationActivity activity)
+        {
+            mWeakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg)
+        {
+            PlaceCurationActivity placeCurationActivity = mWeakReference.get();
+
+            if (placeCurationActivity == null)
+            {
+                return;
+            }
+
+            switch (msg.what)
+            {
+                case HANDLE_MESSAGE_RESULT:
+                    placeCurationActivity.updateResultMessage();
+                    break;
+            }
+
+        }
     }
 }
