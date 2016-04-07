@@ -10,9 +10,10 @@ package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -43,11 +44,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
 
     private InputMethodManager mInputMethodManager;
-    private String prevName;
-    private String prevPh;
+    private String mProfileName;
+    private String mProfilePhone;
+    private Drawable[] mEditTextBackground;
     private EditText mNameEditText, mPhoneEditText;
-    private View mEditProfileLayout, mInformationProfileLayout;
     private TextView mEditButtonView;
+    private boolean mIsEditMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -72,34 +74,17 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
     private void initLayout()
     {
-        final View profileEditLayout = findViewById(R.id.ll_profile_edit);
-        mEditButtonView = (TextView) findViewById(R.id.tv_profile_edit);
+        mEditButtonView = (TextView) findViewById(R.id.modifyView);
 
-        // 수정시에 인터페이스 편의를 위해 [사용자 정보] 바를 터치하면 완료되도록 수정.
-        findViewById(R.id.profileSectionBarLayout).setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
-                {
-                    profileEditLayout.performClick();
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
+        View profileEditLayout = findViewById(R.id.modifyLayout);
         profileEditLayout.setOnClickListener(this);
 
         View logoutView = findViewById(R.id.btn_profile_logout);
         logoutView.setOnClickListener(this);
 
-        mNameEditText = (EditText) findViewById(R.id.et_profile_name);
-        mPhoneEditText = (EditText) findViewById(R.id.et_profile_phone);
+        mNameEditText = (EditText) findViewById(R.id.profileNameEditText);
+        mPhoneEditText = (EditText) findViewById(R.id.profilePhoneEditText);
 
-        mPhoneEditText.setCursorVisible(false);
         mPhoneEditText.setOnFocusChangeListener(new View.OnFocusChangeListener()
         {
             @Override
@@ -134,8 +119,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             }
         });
 
-        mEditProfileLayout = findViewById(R.id.ll_profile_info_editable);
-        mInformationProfileLayout = findViewById(R.id.ll_profile_info_label);
+        mEditTextBackground = new Drawable[2];
+        mEditTextBackground[0] = mNameEditText.getBackground();
+        mEditTextBackground[1] = mPhoneEditText.getBackground();
+
+        setEditEnabled(false);
     }
 
 
@@ -153,7 +141,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         super.onResume();
 
         // 수정 중에는 업데이트 하지 않음
-        if (mEditButtonView.getText().equals(getString(R.string.act_profile_modify)))
+        if (mIsEditMode == false)
         {
             updateTextField();
         }
@@ -173,15 +161,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     @Override
     public void onBackPressed()
     {
-        if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
+        if (mIsEditMode == true)
         {
-
-            mEditProfileLayout.setVisibility(View.GONE);
-            mInformationProfileLayout.setVisibility(View.VISIBLE);
+            setEditEnabled(false);
             mEditButtonView.setText(R.string.act_profile_modify);
 
-            mNameEditText.setText(prevName);
-            mPhoneEditText.setText(prevPh);
+            mNameEditText.setText(mProfileName);
+            mPhoneEditText.setText(mProfilePhone);
 
             toggleKeyboard(false);
         } else
@@ -206,6 +192,31 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 mPhoneEditText.setText(mobileNumber);
             }
         }
+    }
+
+    private void setEditEnabled(boolean enabled)
+    {
+        mIsEditMode = enabled;
+
+        if (enabled == true)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            {
+                mNameEditText.setBackground(mEditTextBackground[0]);
+                mPhoneEditText.setBackground(mEditTextBackground[1]);
+            } else
+            {
+                mNameEditText.setBackgroundDrawable(mEditTextBackground[0]);
+                mPhoneEditText.setBackgroundDrawable(mEditTextBackground[1]);
+            }
+        } else
+        {
+            mNameEditText.setBackgroundResource(0);
+            mPhoneEditText.setBackgroundResource(0);
+        }
+
+        mNameEditText.setEnabled(enabled);
+        mPhoneEditText.setEnabled(enabled);
     }
 
     private void toggleKeyboard(boolean show)
@@ -237,17 +248,16 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     {
         switch (v.getId())
         {
-            case R.id.ll_profile_edit:
+            case R.id.modifyLayout:
             {
-                if (mEditButtonView.getText().equals(getString(R.string.act_profile_modify)))
+                if (mIsEditMode == false)
                 {
-                    mInformationProfileLayout.setVisibility(View.GONE);
-                    mEditProfileLayout.setVisibility(View.VISIBLE);
+                    setEditEnabled(true);
                     mEditButtonView.setText(R.string.dialog_btn_text_confirm);
 
                     toggleKeyboard(true);
 
-                } else if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
+                } else
                 {
                     if (isLockUiComponent() == true)
                     {
@@ -275,15 +285,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
                         mNameEditText.setText("");
                         DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
-                    } else if (name.equals(prevName) && phone.equals(prevPh))
+                    } else if (name.equals(mProfileName) && phone.equals(mProfilePhone))
                     {
                         toggleKeyboard(false);
 
                         releaseUiComponent();
 
                         // 기존과 동일하여 서버에 요청할 필요가 없음.
-                        mEditProfileLayout.setVisibility(View.GONE);
-                        mInformationProfileLayout.setVisibility(View.VISIBLE);
+                        setEditEnabled(false);
                         mEditButtonView.setText(R.string.act_profile_modify);
 
                         DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_not_changed, Toast.LENGTH_LONG);
@@ -394,42 +403,35 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 if (Util.isTextEmpty(userName) == true)
                 {
                     userName = getString(R.string.act_profile_input_name);
-                    prevName = "";
+                    mProfileName = "";
                 } else
                 {
-                    prevName = userName;
+                    mProfileName = userName;
                 }
 
                 if (Util.isTextEmpty(userPhone) == true)
                 {
-                    prevPh = "";
+                    mProfilePhone = "";
                 } else
                 {
-                    prevPh = userPhone;
+                    mProfilePhone = userPhone;
                 }
 
-                if (Util.isValidatePhoneNumber(prevPh) == false)
+                if (Util.isValidatePhoneNumber(mProfilePhone) == false)
                 {
-                    prevPh = "";
+                    mProfilePhone = "";
                 } else
                 {
-                    prevPh = Util.addHippenMobileNumber(ProfileActivity.this, prevPh);
+                    mProfilePhone = Util.addHippenMobileNumber(ProfileActivity.this, mProfilePhone);
                 }
 
                 TextView emailTextView = (TextView) findViewById(R.id.tv_profile_email);
                 emailTextView.setText(userEmail);
 
-                TextView nameTextView = (TextView) findViewById(R.id.tv_profile_name);
-                nameTextView.setText(userName);
+                mPhoneEditText.setText(mProfilePhone);
+                mNameEditText.setText(mProfileName);
 
-                TextView phoneTextView = (TextView) findViewById(R.id.tv_profile_phone);
-                phoneTextView.setText(prevPh);
-                mPhoneEditText.setText(prevPh);
-
-                mNameEditText.setText(prevName);
-
-                mEditProfileLayout.setVisibility(View.GONE);
-                mInformationProfileLayout.setVisibility(View.VISIBLE);
+                setEditEnabled(false);
                 mEditButtonView.setText(R.string.act_profile_modify);
             } catch (Exception e)
             {
