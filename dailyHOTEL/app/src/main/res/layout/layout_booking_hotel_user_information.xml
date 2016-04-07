@@ -124,7 +124,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="right|center_vertical"
                     android:inputType="phone"
-                    android:lines="1"
                     android:maxLength="20"
                     android:maxLines="1"
                     android:singleLine="true"
