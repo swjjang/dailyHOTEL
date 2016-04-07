@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.view.widget;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,18 @@ public class DailyToolbarLayout
         mToolbar = toolbar;
     }
 
+    private TextView getTitleTextView(Context context)
+    {
+        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+
+        if (Util.getLCDWidth(context) <= 480)
+        {
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        }
+
+        return textView;
+    }
+
     public void initToolbarRegion(View.OnClickListener listener)
     {
         if (mToolbar.getTag() != null)
@@ -26,7 +40,7 @@ public class DailyToolbarLayout
             return;
         }
 
-        final TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+        final TextView textView = getTitleTextView(mAppCompatActivity);
         textView.setText(null);
         textView.setCompoundDrawables(null, null, null, null);
         textView.setOnClickListener(listener);
@@ -70,7 +84,7 @@ public class DailyToolbarLayout
 
         FontManager.apply(mToolbar, FontManager.getInstance(mAppCompatActivity).getRegularTypeface());
 
-        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+        TextView textView = getTitleTextView(mAppCompatActivity);
         textView.setText(title);
 
         View backView = mToolbar.findViewById(R.id.backImageView);
@@ -226,14 +240,14 @@ public class DailyToolbarLayout
     public void setToolbarRegionText(String title)
     {
         // 인덱스 번호는 나중에 바뀜
-        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+        TextView textView = getTitleTextView(mAppCompatActivity);
         textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_region_v, 0);
         textView.setText(title);
     }
 
     public void setToolbarText(String title)
     {
-        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+        TextView textView = getTitleTextView(mAppCompatActivity);
         textView.setText(title);
     }
 
@@ -244,7 +258,7 @@ public class DailyToolbarLayout
 
     public void setToolbarTransparent(boolean isTransparent)
     {
-        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+        TextView textView = getTitleTextView(mAppCompatActivity);
 
         if (isTransparent == true)
         {

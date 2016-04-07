@@ -244,12 +244,14 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
         }
 
-        private void analyticsOnResponseSearchResultListForSearches(String keyword, int totalCount)
+        private void analyticsOnResponseSearchResultListForSearches(Keyword keyword, int totalCount)
         {
             String action;
 
             if (totalCount == 0)
             {
+                String prefix = null;
+
                 switch (mSearchType)
                 {
                     case SEARCHTYPE_SEARCHES:
@@ -258,6 +260,14 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
                     case SEARCHTYPE_AUTOCOMPLETE:
                         action = AnalyticsManager.Action.HOTEL_AUTOCOMPLETE_KEYWORD_NOT_FOUND;
+
+                        if (keyword.price == 0)
+                        {
+                            prefix = "지역";
+                        } else
+                        {
+                            prefix = "호텔";
+                        }
                         break;
 
                     case SEARCHTYPE_RECENT:
@@ -269,13 +279,24 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
                         break;
                 }
 
-                String label = String.format("%s-%s", keyword, getSearchDate());
+                String label;
+
+                if (Util.isTextEmpty(prefix) == true)
+                {
+                    label = String.format("%s-%s", keyword.name, getSearchDate());
+                } else
+                {
+                    label = String.format("%s-%s-%s", prefix, keyword.name, getSearchDate());
+                }
+
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                     , action, label, null);
 
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH_RESULT_EMPTY, null);
             } else
             {
+                String prefix = null;
+
                 switch (mSearchType)
                 {
                     case SEARCHTYPE_SEARCHES:
@@ -284,6 +305,14 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
                     case SEARCHTYPE_AUTOCOMPLETE:
                         action = AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_CLICKED;
+
+                        if (keyword.price == 0)
+                        {
+                            prefix = "지역";
+                        } else
+                        {
+                            prefix = "호텔";
+                        }
                         break;
 
                     case SEARCHTYPE_RECENT:
@@ -299,10 +328,15 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
                 if (totalCount == -1)
                 {
-                    label = String.format("%s-Los-%s", keyword, getSearchDate());
+                    label = String.format("%s-Los-%s", keyword.name, getSearchDate());
                 } else
                 {
-                    label = String.format("%s-%d-%s", keyword, totalCount, getSearchDate());
+                    label = String.format("%s-%d-%s", keyword.name, totalCount, getSearchDate());
+                }
+
+                if (Util.isTextEmpty(prefix) == false)
+                {
+                    label = String.format("%s-%s", prefix, label);
                 }
 
                 AnalyticsManager.getInstance(HotelSearchResultActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
@@ -409,7 +443,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             if (mOffset == 0)
             {
-                analyticsOnResponseSearchResultListForSearches(mKeyword.name, totalCount);
+                analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
             }
 
             responseSearchResultList(totalCount, placeViewItemList);

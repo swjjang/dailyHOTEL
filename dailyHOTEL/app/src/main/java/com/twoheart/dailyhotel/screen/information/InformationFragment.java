@@ -1,10 +1,14 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +29,7 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -47,6 +52,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private View mProfileLayout, mCreditcardLayout;
     private View mNewEventIconView;
     private String mCSoperatingTimeMessage;
+    private BroadcastReceiver mNewEventBroadcastReceiver;
     //    private View mInformationScrollView, mInformationLayout, mDailyInformationView;
 
     @Override
@@ -234,6 +240,16 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             BaseActivity baseActivity = (BaseActivity) getActivity();
             DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
+
+        registerReceiver();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        unregisterReceiver();
     }
 
     @Override
@@ -437,9 +453,14 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         }
     }
 
-    private void updateNewIconView(BaseActivity baseActivity)
+    private void updateNewIconView(Context context)
     {
-        if (DailyPreference.getInstance(baseActivity).hasNewEvent() == true)
+        if (mNewEventIconView == null)
+        {
+            return;
+        }
+
+        if (DailyPreference.getInstance(context).hasNewEvent() == true)
         {
             mNewEventIconView.setVisibility(View.VISIBLE);
         } else
@@ -488,6 +509,44 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         }, true);
     }
 
+    private void registerReceiver()
+    {
+        if (mNewEventBroadcastReceiver != null)
+        {
+            return;
+        }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MainActivity.BROADCAST_EVENT_UPDATE);
+
+        mNewEventBroadcastReceiver = new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                if (context == null)
+                {
+                    return;
+                }
+
+                updateNewIconView(context);
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mNewEventBroadcastReceiver, intentFilter);
+    }
+
+    private void unregisterReceiver()
+    {
+        if (mNewEventBroadcastReceiver == null)
+        {
+            return;
+        }
+
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mNewEventBroadcastReceiver);
+        mNewEventBroadcastReceiver = null;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -506,9 +565,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
                     , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
 
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                updateNewIconView(baseActivity);
+                updateNewIconView(getContext());
             } catch (Exception e)
             {
                 onError(e);

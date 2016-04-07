@@ -31,6 +31,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -70,6 +71,17 @@ public class Util implements Constants
         return Util.isTextEmpty(MEMORY_CLEAR);
     }
 
+    static
+    {
+        try
+        {
+            SoLoaderShim.loadLibrary("webp");
+        } catch (UnsatisfiedLinkError e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     public static void initializeFresco(Context context)
     {
         ImagePipelineConfig imagePipelineConfig;
@@ -86,7 +98,6 @@ public class Util implements Constants
         }
 
         Fresco.initialize(context, imagePipelineConfig);
-        System.loadLibrary("webp");
 
         try
         {

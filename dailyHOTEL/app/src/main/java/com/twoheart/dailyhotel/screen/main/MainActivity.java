@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ import com.twoheart.dailyhotel.view.CloseOnBackPressed;
 
 public class MainActivity extends BaseActivity implements Constants
 {
+    public static final String BROADCAST_EVENT_UPDATE = " com.twoheart.dailyhotel.broadcastreceiver.EVENT_UPDATE";
+
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed mBackButtonHandler;
 
@@ -434,6 +437,8 @@ public class MainActivity extends BaseActivity implements Constants
             {
                 mMenuBarLayout.setNewIconVisible(false);
             }
+
+            LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(BROADCAST_EVENT_UPDATE));
         }
 
         @Override
