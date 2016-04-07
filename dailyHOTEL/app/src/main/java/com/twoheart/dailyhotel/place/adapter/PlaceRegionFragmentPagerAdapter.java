@@ -20,6 +20,11 @@ public class PlaceRegionFragmentPagerAdapter extends FragmentPagerAdapter
         mFragmentList.addAll(arrayList);
     }
 
+    public void removeItem(int position)
+    {
+        mFragmentList.remove(position);
+    }
+
     @Override
     public Fragment getItem(int position)
     {
