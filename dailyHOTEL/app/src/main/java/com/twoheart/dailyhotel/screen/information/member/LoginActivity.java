@@ -101,12 +101,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         initEditTextsLayout();
         initButtonsLayout();
 
-        if (Util.isOverAPI23() == true)
+        if (Util.isOverAPI23() == true && hasPermission() == false)
         {
-            if (hasPermission() == false)
-            {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
-            }
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
         }
     }
 
@@ -241,6 +238,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
             String deviceId = telephonyManager.getDeviceId();
 
+            // 참고로 태블릿, 웨어러블 기기에서는 값이 null이 나온다.
             if (deviceId == null)
             {
                 return false;
