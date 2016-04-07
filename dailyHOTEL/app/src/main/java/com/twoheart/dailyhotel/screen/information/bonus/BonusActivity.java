@@ -16,7 +16,6 @@ package com.twoheart.dailyhotel.screen.information.bonus;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -24,6 +23,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
@@ -61,10 +62,8 @@ import java.util.Locale;
 public class BonusActivity extends BaseActivity implements View.OnClickListener
 {
     private RelativeLayout rlCreditNotLoggedIn;
-    private LinearLayout llCreditLoggedIn, btnInvite;
-    private View btnLogin, btnSignup;
+    private LinearLayout llCreditLoggedIn;
     private TextView tvBonus, tvRecommenderCode;
-    private TextView tvCredit;
     private String mRecommendCode;
     private List<Credit> mCreditList;
     private String mUserName;
@@ -93,20 +92,23 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     {
         rlCreditNotLoggedIn = (RelativeLayout) findViewById(R.id.rl_credit_not_logged_in);
         llCreditLoggedIn = (LinearLayout) findViewById(R.id.ll_credit_logged_in);
-
-        btnInvite = (LinearLayout) findViewById(R.id.btn_credit_invite_frd);
-        tvCredit = (TextView) findViewById(R.id.tv_credit_history);
         tvRecommenderCode = (TextView) findViewById(R.id.tv_credit_recommender_code);
         tvBonus = (TextView) findViewById(R.id.tv_credit_money);
-        btnLogin = findViewById(R.id.btn_no_login_login);
-        btnSignup = findViewById(R.id.btn_no_login_signup);
 
-        btnLogin.setOnClickListener(this);
-        btnSignup.setOnClickListener(this);
-        btnInvite.setOnClickListener(this);
-        tvCredit.setOnClickListener(this);
+        View inviteFriend = findViewById(R.id.btn_credit_invite_frd);
+        inviteFriend.setOnClickListener(this);
 
-        tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
+        View historyLayout = findViewById(R.id.historyLayout);
+        historyLayout.setOnClickListener(this);
+
+        View recommenderLayout = findViewById(R.id.recommenderLayout);
+        recommenderLayout.setOnClickListener(this);
+
+        View loginView = findViewById(R.id.btn_no_login_login);
+        loginView.setOnClickListener(this);
+
+        View signUpView = findViewById(R.id.btn_no_login_signup);
+        signUpView.setOnClickListener(this);
     }
 
     @Override
@@ -127,58 +129,79 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == btnInvite.getId())
+        switch (v.getId())
         {
-            try
+            case R.id.btn_credit_invite_frd:
             {
-                // 카카오톡 패키지 설치 여부
-                getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
-                String userIdxStr = idx;
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                Date date = new Date();
-
-                String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode);
-                KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-
                 try
                 {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-                } catch (ActivityNotFoundException e1)
+                    // 카카오톡 패키지 설치 여부
+                    getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+                    String userIdxStr = idx;
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+                    Date date = new Date();
+
+                    String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode);
+                    KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
+
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
+                } catch (Exception e)
                 {
-                    Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                    marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                    startActivity(marketLaunch);
+                    ExLog.d(e.toString());
+
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+                    } catch (ActivityNotFoundException e1)
+                    {
+                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                        startActivity(marketLaunch);
+                    }
                 }
+                break;
             }
-        } else if (v.getId() == tvCredit.getId())
-        {
-            Intent intent = new Intent(this, BonusListActivity.class);
-            intent.putParcelableArrayListExtra(BonusListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CREDIT_MANAGEMENT_CLICKED, Label.CREDIT_HISTORY_VIEW, null);
-        } else if (v.getId() == btnLogin.getId())
-        {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            case R.id.historyLayout:
+            {
+                Intent intent = new Intent(this, BonusListActivity.class);
+                intent.putParcelableArrayListExtra(BonusListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN, 0L);
-        } else if (v.getId() == btnSignup.getId())
-        {
-            Intent intent = SignupActivity.newInstance(BonusActivity.this);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CREDIT_MANAGEMENT_CLICKED, Label.CREDIT_HISTORY_VIEW, null);
+                break;
+            }
 
-            //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.SIGNUP, 0L);
+            case R.id.btn_no_login_login:
+            {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+                //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN, 0L);
+                break;
+            }
+
+            case R.id.btn_no_login_signup:
+            {
+                Intent intent = SignupActivity.newInstance(BonusActivity.this);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+                //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.SIGNUP, 0L);
+                break;
+            }
+
+            case R.id.recommenderLayout:
+            {
+                Util.clipText(this, mRecommendCode);
+
+                DailyToast.showToast(this, R.string.message_copy_recommendar_code, Toast.LENGTH_SHORT);
+                break;
+            }
         }
     }
 
