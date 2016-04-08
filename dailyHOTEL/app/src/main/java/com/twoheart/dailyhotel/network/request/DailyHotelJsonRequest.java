@@ -56,11 +56,7 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
 
         try
         {
-            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException e)
-        {
-            return Response.error(new ParseError(e));
+            return Response.success(new JSONObject(parsed), HttpHeaderParser.parseCacheHeaders(response));
         } catch (JSONException je)
         {
             ExLog.e(parsed);

@@ -49,11 +49,7 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray>
 
         try
         {
-            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(new JSONArray(jsonString), HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException e)
-        {
-            return Response.error(new ParseError(e));
+            return Response.success(new JSONArray(parsed), HttpHeaderParser.parseCacheHeaders(response));
         } catch (JSONException je)
         {
             ExLog.e(parsed);

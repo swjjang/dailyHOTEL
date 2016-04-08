@@ -34,6 +34,7 @@ public class DailyHotelStringRequest extends DailyHotelRequest<String>
     {
 
         String parsed;
+
         try
         {
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
@@ -41,6 +42,7 @@ public class DailyHotelStringRequest extends DailyHotelRequest<String>
         {
             parsed = new String(response.data);
         }
+
         return Response.success(parsed.trim(), HttpHeaderParser.parseCacheHeaders(response));
     }
 
