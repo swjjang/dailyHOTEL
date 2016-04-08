@@ -1467,8 +1467,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
+                    String label = String.format("%s-%s", hotel.categoryCode, hotel.name);
                     AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , Action.HOTEL_ITEM_CLICKED, hotel.name, null);
+                        , Action.HOTEL_ITEM_CLICKED, label, null);
                     break;
                 }
 
