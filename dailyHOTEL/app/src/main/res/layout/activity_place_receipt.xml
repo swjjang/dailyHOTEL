@@ -29,7 +29,6 @@
                 android:id="@+id/paymentInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="165dp"
-                android:layout_below="@+id/bookingInfoLayout"
                 android:background="@drawable/receipt_bg_middle"
                 android:paddingLeft="11dp"
                 android:paddingRight="11dp">
@@ -177,7 +176,6 @@
                 android:id="@+id/providerInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/paymentInfoLayout"
                 android:background="@drawable/receipt_bg_bottom"
                 android:paddingBottom="15dp"
                 android:paddingLeft="11dp"

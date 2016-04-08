@@ -38,9 +38,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:layout_alignParentBottom="false"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentEnd="true">
+            android:layout_marginBottom="10dp">
 
             <RelativeLayout
                 android:id="@+id/rl_hotel_upper"

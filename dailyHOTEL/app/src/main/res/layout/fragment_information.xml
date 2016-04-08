@@ -302,7 +302,6 @@
                 android:id="@+id/dailyInformationView"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
-                android:layout_centerVertical="true"
                 android:background="@color/information_background"
                 android:gravity="center"
                 android:orientation="vertical"

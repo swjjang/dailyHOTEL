@@ -40,7 +40,6 @@
             android:id="@+id/updownArrowImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/provinceEnglishTextView"
             android:src="@drawable/region_ic_sub_v"
             android:layout_marginTop="7dp"/>
     </LinearLayout>
