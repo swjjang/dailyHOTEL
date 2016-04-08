@@ -309,18 +309,16 @@ public class CountryCodeNumber
 
     public ArrayList<String[]> getCountryValue()
     {
-        int length = CODE_NUMBER.length;
+        ArrayList<String[]> values = new ArrayList<String[]>(CODE_NUMBER.length);
 
-        ArrayList<String[]> values = new ArrayList<String[]>(length);
-
-        for (int i = 0; i < length; i++)
+        for (String[] codeNumber : CODE_NUMBER)
         {
-            if (Util.isTextEmpty(CODE_NUMBER[i][1]) == true)
+            if (Util.isTextEmpty(codeNumber[1]) == true)
             {
-                values.add(new String[]{CODE_NUMBER[i][3], null});
+                values.add(new String[]{codeNumber[3], null});
             } else
             {
-                values.add(new String[]{CODE_NUMBER[i][3], "+" + CODE_NUMBER[i][1]});
+                values.add(new String[]{codeNumber[3], "+" + codeNumber[1]});
             }
         }
 
@@ -335,11 +333,11 @@ public class CountryCodeNumber
     {
         String result = "";
 
-        for (int i = 0; i < CODE_NUMBER.length; i++)
+        for (String[] codeNumber : CODE_NUMBER)
         {
-            if (isoString.equals(CODE_NUMBER[i][0]))
+            if (isoString.equals(codeNumber[0]))
             {
-                result = this.CODE_NUMBER[i][1];
+                result = codeNumber[1];
                 break;
             }
         }
@@ -355,11 +353,11 @@ public class CountryCodeNumber
     {
         String result = "";
 
-        for (int i = 0; i < CODE_NUMBER.length; i++)
+        for (String[] codeNumber : CODE_NUMBER)
         {
-            if (CODE_NUMBER[i][0].equals(isoString) && CODE_NUMBER[i].length > 3)
+            if (codeNumber[0].equals(isoString) && codeNumber.length > 3)
             {
-                result = CODE_NUMBER[i][3];
+                result = codeNumber[3];
                 break;
             }
         }
@@ -375,11 +373,11 @@ public class CountryCodeNumber
     {
         String result = "";
 
-        for (int i = 0; i < CODE_NUMBER.length; i++)
+        for (String[] codeNumber : CODE_NUMBER)
         {
-            if (CODE_NUMBER[i][0].equals(isoString))
+            if (codeNumber[0].equals(isoString))
             {
-                result = CODE_NUMBER[i][2];
+                result = codeNumber[2];
                 break;
             }
         }
@@ -418,9 +416,9 @@ public class CountryCodeNumber
 
         countryCode = countryCode.replace("+", "").trim();
 
-        for (int i = 0; i < CODE_NUMBER.length; i++)
+        for (String[] codeNumber : CODE_NUMBER)
         {
-            if (CODE_NUMBER[i][1].equals(countryCode))
+            if (codeNumber[1].equals(countryCode))
             {
                 return true;
             }
@@ -438,11 +436,11 @@ public class CountryCodeNumber
 
         countryCode = countryCode.replace("+", "").trim();
 
-        for (int i = 0; i < CODE_NUMBER.length; i++)
+        for (String[] codeNumber : CODE_NUMBER)
         {
-            if (CODE_NUMBER[i][1].equals(countryCode))
+            if (codeNumber[1].equals(countryCode))
             {
-                return CODE_NUMBER[i][3];
+                return codeNumber[3];
             }
         }
 

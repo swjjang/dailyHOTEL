@@ -26,11 +26,6 @@ public class BookingDetailFragmentPagerAdapter extends FragmentPagerAdapter
         return mFragmentList.get(position);
     }
 
-    public ArrayList<BaseFragment> getFragmentList()
-    {
-        return mFragmentList;
-    }
-
     @Override
     public int getCount()
     {

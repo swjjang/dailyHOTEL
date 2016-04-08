@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.model;
+package com.twoheart.dailyhotel.deprecated;
 
 public class Board
 {

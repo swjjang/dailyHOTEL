@@ -62,7 +62,6 @@ public class GourmetDetailLayout
     protected int mImageHeight;
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
     protected PlaceDetailActivity.OnUserActionListener mOnUserActionListener;
-    protected PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
     private RecyclerView mTicketTypeRecyclerView;
     private GourmetDetailRoomTypeListAdapter mTicketTypeListAdapter;
@@ -374,11 +373,6 @@ public class GourmetDetailLayout
     public void setUserActionListener(PlaceDetailActivity.OnUserActionListener listener)
     {
         mOnUserActionListener = listener;
-    }
-
-    public void setImageActionListener(PlaceDetailActivity.OnImageActionListener listener)
-    {
-        mOnImageActionListener = listener;
     }
 
     private void setTicketInformationLayoutEnabled(boolean enabled)

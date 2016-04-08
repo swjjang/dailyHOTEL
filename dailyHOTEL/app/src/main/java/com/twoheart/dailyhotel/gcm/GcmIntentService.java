@@ -311,7 +311,7 @@ public class GcmIntentService extends IntentService implements Constants
                 .setColor(getResources().getColor(R.color.dh_theme_color))//
                 .setContentIntent(contentIntent);
 
-            if (msg.indexOf("\\n") < 0)
+            if (msg.contains("\\n") == false)
             {
                 builder.setContentText(msg);
                 builder.setStyle(new NotificationCompat.BigTextStyle().bigText(msg));

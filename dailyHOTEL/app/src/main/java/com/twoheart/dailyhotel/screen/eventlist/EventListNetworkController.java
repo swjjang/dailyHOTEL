@@ -74,19 +74,6 @@ public class EventListNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance().requestEventPageUrl(mNetworkTag, userIndex, event.index, store, mDailyEventPageJsonResponseListener, this);
     }
 
-    private boolean isEmptyTextField(String... fieldText)
-    {
-        for (int i = 0; i < fieldText.length; i++)
-        {
-            if (Util.isTextEmpty(fieldText[i]) == true)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,7 +179,7 @@ public class EventListNetworkController extends BaseNetworkController
                 int recommender = jsonObject.getInt("recommender_code");
                 boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
+                if (Util.isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                 {
                     mListener.onRequestEvent(user.getUserIdx());
                 } else

@@ -18,13 +18,6 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray>
 {
     private DailyHotelJsonArrayResponseListener mListener;
 
-    public DailyHotelJsonArrayRequest(int method, String url, Map<String, String> parameters, DailyHotelJsonArrayResponseListener listener, ErrorListener errorListener)
-    {
-        super(method, url, parameters, errorListener);
-
-        mListener = listener;
-    }
-
     public DailyHotelJsonArrayRequest(Object object, int method, String url, Map<String, String> parameters, DailyHotelJsonArrayResponseListener listener, ErrorListener errorListener)
     {
         super(object, method, url, parameters, errorListener);

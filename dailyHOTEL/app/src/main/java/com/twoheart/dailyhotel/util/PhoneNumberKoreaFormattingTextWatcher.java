@@ -76,7 +76,7 @@ public class PhoneNumberKoreaFormattingTextWatcher implements TextWatcher
             return;
         }
 
-        StringBuffer number = new StringBuffer(s.toString().replace("-", ""));
+        StringBuilder number = new StringBuilder(s.toString().replace("-", ""));
 
         if (number.length() == 1 || number.charAt(0) == '0' || number.charAt(0) == '1')
         {

@@ -62,8 +62,8 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
                 {
                     // [호텔이름 [조식 포함]] 예약되었습니다. 과 같은 경우 마지막 ] 다음에서 개행하여 보기 좋도록 표시
                     int index = message.lastIndexOf(']');
-                    StringBuffer sb = new StringBuffer(message);
-                    result = sb.replace(index, index + 1, "]\n").toString();
+                    StringBuilder stringBuilder = new StringBuilder(message);
+                    result = stringBuilder.replace(index, index + 1, "]\n").toString();
                 }
 
                 messageTextView.setText(result);

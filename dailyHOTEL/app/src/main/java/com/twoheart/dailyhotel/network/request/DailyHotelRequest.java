@@ -134,10 +134,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         for (int i = 0; i < count; i++)
         {
             String locatinoNumber = new String(Base64.decode(seperateUrl[i * 2], Base64.NO_WRAP));
-            StringBuilder encodeUrl = new StringBuilder(locatinoNumber);
-            encodeUrl.append(seperateUrl[i * 2 + 1]);
-
-            decodeUrl.append(getUrlDecoder(encodeUrl.toString()));
+            decodeUrl.append(getUrlDecoder(locatinoNumber + seperateUrl[i * 2 + 1]));
         }
 
         if (param != null)
@@ -264,10 +261,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         for (int i = 0; i < count; i++)
         {
             String locatinoNumber = new String(Base64.decode(seperateUrl[i * 2], Base64.NO_WRAP));
-            StringBuilder encodeUrl = new StringBuilder(locatinoNumber);
-            encodeUrl.append(seperateUrl[i * 2 + 1]);
-
-            decodeUrl.append(getUrlDecoder(encodeUrl.toString()));
+            decodeUrl.append(getUrlDecoder(locatinoNumber + seperateUrl[i * 2 + 1]));
         }
 
         if (param != null)

@@ -344,6 +344,24 @@ public class Util implements Constants
         return (TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true || text.trim().length() == 0);
     }
 
+    public static boolean isEmptyTextField(String... texts)
+    {
+        if (texts == null)
+        {
+            return false;
+        }
+
+        for (String text : texts)
+        {
+            if (Util.isTextEmpty(text) == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static String getAppVersion(Context context)
     {
         String version = null;

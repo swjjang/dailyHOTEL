@@ -439,15 +439,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 return null;
         }
 
-        int length = textResIds.length;
-
-        for (int i = 0; i < length; i++)
+        for (int resId : textResIds)
         {
             View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, messageLayout, false);
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
 
-            String message = getString(textResIds[i]);
+            String message = getString(resId);
 
             int startIndex = message.indexOf("<b>");
 

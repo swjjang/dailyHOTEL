@@ -31,7 +31,6 @@ public class LocationFactory
     private static LocationFactory mInstance;
     protected PendingIntent mUpdatePendingIntent;
     private LocationManager mLocationManager = null;
-    private Location mLocation = null;
     private boolean mIsMeasuringLocation = false;
     private LocationListenerEx mLocationListener;
     private View mMyLocationView;
@@ -111,8 +110,6 @@ public class LocationFactory
             String key = LocationManager.KEY_LOCATION_CHANGED;
             Location location = (Location) intent.getExtras().get(key);
 
-            mLocation = location;
-
             if (mLocationListener != null && location != null)
             {
                 mLocationListener.onLocationChanged(location);
@@ -180,8 +177,6 @@ public class LocationFactory
         {
             mMyLocationDrawable = mMyLocationView.getBackground();
         }
-
-        mLocation = null;
 
         boolean isGpsProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean isNetworkProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);

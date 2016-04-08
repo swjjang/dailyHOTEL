@@ -49,7 +49,7 @@ public class GourmetFilter implements Parcelable
 
     private int getTimeFlag(long openTimeInMillis, long closeTimeInMillis)
     {
-        int flag = FLAG_GOURMET_FILTER_TIME_NONE;
+        int timeFlag = FLAG_GOURMET_FILTER_TIME_NONE;
 
         int openFlag = getOpenTimeFlag(openTimeInMillis);
         int closeFlag = getCloseTimeFlag(closeTimeInMillis);
@@ -59,32 +59,32 @@ public class GourmetFilter implements Parcelable
 
         boolean includeFlag = false;
 
-        for (int i = 0; i < flagCount; i++)
+        for (int flag : flags)
         {
             if (includeFlag == false)
             {
-                if (openFlag == flags[i])
+                if (openFlag == flag)
                 {
                     includeFlag = true;
-                    flag |= openFlag;
+                    timeFlag |= openFlag;
 
-                    if (closeFlag == flags[i])
+                    if (closeFlag == flag)
                     {
                         break;
                     }
                 }
             } else
             {
-                flag |= flags[i];
+                timeFlag |= flag;
 
-                if (closeFlag == flags[i])
+                if (closeFlag == flag)
                 {
                     break;
                 }
             }
         }
 
-        return flag;
+        return timeFlag;
     }
 
     private int getOpenTimeFlag(long openTimeInMillis)

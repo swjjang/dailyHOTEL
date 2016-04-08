@@ -64,7 +64,6 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     private String mRecommendCode;
     private List<Credit> mCreditList;
     private String mUserName;
-    private String idx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -269,8 +268,6 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 mRecommendCode = response.getString("rndnum");
                 tvRecommenderCode.setText(mRecommendCode);
                 mUserName = response.getString("name");
-
-                idx = response.getString("idx");
 
                 // 적립금 목록 요청.
                 DailyNetworkAPI.getInstance().requestUserBonus(mNetworkTag, mUserBonusAllResponseListener, BonusActivity.this);

@@ -5,27 +5,9 @@ import android.os.Parcelable;
 
 public class Credit implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Credit createFromParcel(Parcel in)
-        {
-            return new Credit(in);
-        }
-
-        @Override
-        public Credit[] newArray(int size)
-        {
-            return new Credit[size];
-        }
-
-    };
     private String content;
     private int bonus;
     private String expires;
-
-    public Credit()
-    {
-    }
 
     public Credit(Parcel in)
     {
@@ -90,4 +72,18 @@ public class Credit implements Parcelable
         return 0;
     }
 
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Credit createFromParcel(Parcel in)
+        {
+            return new Credit(in);
+        }
+
+        @Override
+        public Credit[] newArray(int size)
+        {
+            return new Credit[size];
+        }
+
+    };
 }

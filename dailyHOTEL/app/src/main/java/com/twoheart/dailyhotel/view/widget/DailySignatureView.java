@@ -274,7 +274,6 @@ public class DailySignatureView extends View
 
     public class BCurveTask extends AsyncTask<ArrayList<Point>, Integer, ArrayList<Point>>
     {
-
         @Override
         protected ArrayList<Point> doInBackground(ArrayList<Point>... params)
         {

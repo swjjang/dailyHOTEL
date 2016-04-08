@@ -20,10 +20,6 @@ import java.lang.reflect.Method;
 
 public class EdgeEffectColor
 {
-    protected EdgeEffectColor()
-    {
-    }
-
     private static final Class<ScrollView> CLASS_SCROLL_VIEW = ScrollView.class;
     private static final Field SCROLL_VIEW_FIELD_EDGE_GLOW_TOP;
     private static final Field SCROLL_VIEW_FIELD_EDGE_GLOW_BOTTOM;

@@ -5,24 +5,9 @@ import android.os.Parcelable;
 
 public class Customer implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Customer createFromParcel(Parcel in)
-        {
-            return new Customer(in);
-        }
-
-        @Override
-        public Customer[] newArray(int size)
-        {
-            return new Customer[size];
-        }
-
-    };
     private String mEmail;
     private String mName;
     private String mPhone;
-    private String mAccessToken;
     private String mUserIdx;
 
     public Customer()
@@ -40,7 +25,6 @@ public class Customer implements Parcelable
         dest.writeString(mEmail);
         dest.writeString(mName);
         dest.writeString(mPhone);
-        dest.writeString(mAccessToken);
         dest.writeString(mUserIdx);
     }
 
@@ -49,7 +33,6 @@ public class Customer implements Parcelable
         mEmail = in.readString();
         mName = in.readString();
         mPhone = in.readString();
-        mAccessToken = in.readString();
         mUserIdx = in.readString();
     }
 
@@ -93,19 +76,24 @@ public class Customer implements Parcelable
         this.mUserIdx = userIdx;
     }
 
-    public String getAccessToken()
-    {
-        return mAccessToken;
-    }
-
-    public void setAccessToken(String accessToken)
-    {
-        this.mAccessToken = accessToken;
-    }
-
     @Override
     public int describeContents()
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Customer createFromParcel(Parcel in)
+        {
+            return new Customer(in);
+        }
+
+        @Override
+        public Customer[] newArray(int size)
+        {
+            return new Customer[size];
+        }
+
+    };
 }

@@ -11,15 +11,7 @@ import java.util.Map;
 
 public class DailyHotelStringRequest extends DailyHotelRequest<String>
 {
-
     private DailyHotelStringResponseListener mListener;
-
-    public DailyHotelStringRequest(int method, String url, Map<String, String> parameters, DailyHotelStringResponseListener listener, ErrorListener errorListener)
-    {
-
-        super(method, url, parameters, errorListener);
-        this.mListener = listener;
-    }
 
     public DailyHotelStringRequest(Object tag, int method, String url, Map<String, String> parameters, DailyHotelStringResponseListener listener, ErrorListener errorListener)
     {
