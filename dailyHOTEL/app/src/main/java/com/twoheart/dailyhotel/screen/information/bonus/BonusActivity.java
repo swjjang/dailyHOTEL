@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Credit;
+import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
@@ -42,7 +42,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
     private View mSigninLayout;
     private TextView mBonusTextView, mRecommenderCodeTextView;
     private String mRecommendCode;
-    private List<Credit> mCreditList;
+    private List<Bonus> mBonusList;
     private String mUserName;
 
     @Override
@@ -137,14 +137,14 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             {
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CREDIT_MANAGEMENT_CLICKED, Label.CREDIT_HISTORY_VIEW, null);
 
-                if (mCreditList == null || mCreditList.size() == 0)
+                if (mBonusList == null || mBonusList.size() == 0)
                 {
                     DailyToast.showToast(this, R.string.act_history_no_details, Toast.LENGTH_SHORT);
                     return;
                 }
 
                 Intent intent = new Intent(this, BonusListActivity.class);
-                intent.putParcelableArrayListExtra(BonusListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
+                intent.putParcelableArrayListExtra(BonusListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mBonusList);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
                 break;
@@ -210,12 +210,12 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             //적립금 내역리스트
             try
             {
-                if (null == mCreditList)
+                if (null == mBonusList)
                 {
-                    mCreditList = new ArrayList<>();
+                    mBonusList = new ArrayList<>();
                 }
 
-                mCreditList.clear();
+                mBonusList.clear();
 
                 JSONArray jsonArray = response.getJSONArray("history");
                 int length = jsonArray.length();
@@ -228,7 +228,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                     String expires = historyObj.getString("expires");
                     int bonus = historyObj.getInt("bonus");
 
-                    mCreditList.add(new Credit(content, bonus, expires));
+                    mBonusList.add(new Bonus(content, bonus, expires));
                 }
 
                 loadLoginProcess(true);
