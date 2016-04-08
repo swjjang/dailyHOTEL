@@ -5,7 +5,6 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -117,7 +116,7 @@ public class HotelDetailLayout
         mImageViewBlur.setVisibility(View.INVISIBLE);
 
         mImageHeight = Util.getLCDWidth(activity);
-        ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
         mRoomTypeLayout = activity.findViewById(R.id.roomTypeLayout);
@@ -164,7 +163,7 @@ public class HotelDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new HotelDetailListAdapter((FragmentActivity) mActivity, hotelDetail, checkInSaleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
+            mListAdapter = new HotelDetailListAdapter(mActivity, hotelDetail, checkInSaleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         }
 

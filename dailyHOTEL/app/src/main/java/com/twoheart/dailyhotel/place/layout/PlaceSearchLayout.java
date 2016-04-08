@@ -108,7 +108,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).finish();
+                mOnEventListener.finish();
             }
         });
 

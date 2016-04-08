@@ -1693,7 +1693,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
                     if (mIsProvinceSetting == false && selectedProvince instanceof Area)
                     {
-                        int provinceIndex = ((Area) selectedProvince).getProvinceIndex();
+                        int provinceIndex = selectedProvince.getProvinceIndex();
 
                         for (Province province : provinceList)
                         {

@@ -59,7 +59,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         if (bundle != null)
         {
-            booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+            booking = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
         } else
         {
             Util.restartApp(this);
@@ -175,7 +175,7 @@ public class PaymentWaitActivity extends BaseActivity
                 {
                     try
                     {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);

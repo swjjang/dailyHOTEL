@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -129,7 +128,7 @@ public class GourmetDetailLayout
         mImageViewBlur.setVisibility(View.INVISIBLE);
 
         mImageHeight = Util.getLCDWidth(activity);
-        ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
         mTicketTypeLayout = activity.findViewById(R.id.ticketTypeLayout);
@@ -176,7 +175,7 @@ public class GourmetDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new GourmetDetailListAdapter((FragmentActivity) mActivity, (GourmetDetail) mPlaceDetail, saleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
+            mListAdapter = new GourmetDetailListAdapter(mActivity, (GourmetDetail) mPlaceDetail, saleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         }
 

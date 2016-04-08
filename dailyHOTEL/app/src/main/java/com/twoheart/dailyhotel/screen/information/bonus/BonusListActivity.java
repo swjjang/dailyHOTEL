@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
@@ -69,7 +68,7 @@ public class BonusListActivity extends BaseActivity
     private void initLayout()
     {
         ListView listView = (ListView) findViewById(R.id.listview_credit);
-        listView.setEmptyView((TextView) findViewById(R.id.empty_listview_credit));
+        listView.setEmptyView(findViewById(R.id.empty_listview_credit));
 
         if (mCreditList != null && mCreditList.size() != 0)
         {

@@ -101,7 +101,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
 
         if (Util.isTextEmpty(countryCode[1]) == true)
         {
-            if (convertView == null || ((Integer) convertView.getTag()).equals(R.layout.list_row_countrycode_section) == false)
+            if (convertView == null || convertView.getTag().equals(R.layout.list_row_countrycode_section) == false)
             {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.list_row_countrycode_section, parent, false);
@@ -117,7 +117,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
             sectionTextView.setText(countryCode[0]);
         } else
         {
-            if (convertView == null || ((Integer) convertView.getTag()).equals(R.layout.list_row_countrycode) == false)
+            if (convertView == null || convertView.getTag().equals(R.layout.list_row_countrycode) == false)
             {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.list_row_countrycode, parent, false);

@@ -264,7 +264,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     if (mGoogleMapLayout == null)
                     {
                         LayoutInflater inflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+                        mGoogleMapLayout = inflater.inflate(R.layout.view_map, null, false);
                     }
 
                     googleMapLayout.addView(mGoogleMapLayout);

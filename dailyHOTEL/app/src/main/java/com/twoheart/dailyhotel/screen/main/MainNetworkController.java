@@ -212,7 +212,7 @@ public class MainNetworkController extends BaseNetworkController
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onAppVersionResponse(maxVersion, minVersion);
             } catch (Exception e)
             {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onError(e);
+                mOnNetworkControllerListener.onError(e);
             }
         }
     };
@@ -247,7 +247,7 @@ public class MainNetworkController extends BaseNetworkController
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfigurationResponse();
             } catch (Exception e)
             {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onError(e);
+                mOnNetworkControllerListener.onError(e);
             }
         }
     };
@@ -371,7 +371,7 @@ public class MainNetworkController extends BaseNetworkController
                 DailyNetworkAPI.getInstance().requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener, null);
             } catch (Exception e)
             {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onError(e);
+                mOnNetworkControllerListener.onError(e);
             }
         }
     };
