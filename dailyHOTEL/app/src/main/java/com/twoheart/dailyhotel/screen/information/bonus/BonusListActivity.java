@@ -19,6 +19,7 @@ import android.widget.ListView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -68,11 +69,11 @@ public class BonusListActivity extends BaseActivity
     private void initLayout()
     {
         ListView listView = (ListView) findViewById(R.id.listview_credit);
-        listView.setEmptyView(findViewById(R.id.empty_listview_credit));
+        EdgeEffectColor.setEdgeGlowColor(listView, getResources().getColor(R.color.over_scroll_edge));
 
         if (mCreditList != null && mCreditList.size() != 0)
         {
-            CreditListAdapter adapter = new CreditListAdapter(BonusListActivity.this, R.layout.list_row_credit, mCreditList);
+            BonusListAdapter adapter = new BonusListAdapter(BonusListActivity.this, R.layout.list_row_bonus, mCreditList);
             listView.setAdapter(adapter);
         }
     }

@@ -13,49 +13,49 @@ import com.twoheart.dailyhotel.model.Credit;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class CreditListAdapter extends ArrayAdapter<Credit>
+public class BonusListAdapter extends ArrayAdapter<Credit>
 {
     private List<Credit> mItems;
     private Context mContext;
     private int mResourceId;
 
-    public CreditListAdapter(Context context, int resourceId, List<Credit> mCreditList)
+    public BonusListAdapter(Context context, int resourceId, List<Credit> mCreditList)
     {
         super(context, resourceId, mCreditList);
-        this.mItems = mCreditList;
-        this.mContext = context;
-        this.mResourceId = resourceId;
+        mItems = mCreditList;
+        mContext = context;
+        mResourceId = resourceId;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View v = convertView;
+        View view;
 
-        if (v == null)
+        if (convertView == null)
         {
-            LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(mResourceId, null);
-            v.setTag(position);
+            view = LayoutInflater.from(mContext).inflate(mResourceId, parent, false);
+        } else
+        {
+            view = convertView;
         }
 
         Credit element = mItems.get(position);
 
         if (element != null)
         {
-            TextView bonus = (TextView) v.findViewById(R.id.list_row_credit_bonus);
-            TextView content = (TextView) v.findViewById(R.id.list_row_credit_content);
-            TextView expires = (TextView) v.findViewById(R.id.list_row_credit_expires);
+            TextView bonus = (TextView) view.findViewById(R.id.bonusTextView);
+            TextView content = (TextView) view.findViewById(R.id.contentTextView);
+            TextView expires = (TextView) view.findViewById(R.id.expireTextView);
 
             DecimalFormat comma = new DecimalFormat("###,##0");
             String strBonus = comma.format(element.getBonus());
 
-            bonus.setText("₩" + strBonus);
+            bonus.setText(strBonus + mContext.getString(R.string.currency));
             content.setText(element.getContent());
-            expires.setText(mContext.getString(R.string.prefix_expire_time) + ", " + element.getExpires() + "");
+            expires.setText(mContext.getString(R.string.prefix_expire_time) + " : " + element.getExpires());
         }
 
-        return v;
+        return view;
     }
-
 }

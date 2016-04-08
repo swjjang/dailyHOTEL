@@ -6,29 +6,20 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <FrameLayout
+    <ListView
+        android:id="@+id/listview_credit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
-
-        <ListView
-            android:id="@+id/listview_credit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="@android:color/transparent"
-            android:fadingEdge="none"
-            android:listSelector="@android:color/transparent"
-            android:scrollbars="vertical">
-        </ListView>
-
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/empty_listview_credit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/act_history_no_details"
-            android:visibility="gone"/>
-    </FrameLayout>
+        android:layout_below="@+id/toolbar"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@color/curation_information_line"
+        android:dividerHeight="1px"
+        android:fadingEdge="none"
+        android:listSelector="@android:color/transparent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"/>
 
     <View
         android:layout_width="match_parent"

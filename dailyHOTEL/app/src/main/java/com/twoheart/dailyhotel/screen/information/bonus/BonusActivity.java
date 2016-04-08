@@ -157,12 +157,18 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
             case R.id.historyLayout:
             {
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CREDIT_MANAGEMENT_CLICKED, Label.CREDIT_HISTORY_VIEW, null);
+
+                if (mCreditList == null || mCreditList.size() == 0)
+                {
+                    DailyToast.showToast(this, R.string.act_history_no_details, Toast.LENGTH_SHORT);
+                    return;
+                }
+
                 Intent intent = new Intent(this, BonusListActivity.class);
                 intent.putParcelableArrayListExtra(BonusListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CREDIT_MANAGEMENT_CLICKED, Label.CREDIT_HISTORY_VIEW, null);
                 break;
             }
 
