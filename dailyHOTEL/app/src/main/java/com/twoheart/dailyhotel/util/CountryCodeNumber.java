@@ -396,7 +396,7 @@ public class CountryCodeNumber
      */
     public String insertCountryNumber(String phoneNumber, String isoCode)
     {
-        String result = "";
+        String result;
 
         if (!phoneNumber.substring(0, 1).equals("+"))
         {

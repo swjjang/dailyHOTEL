@@ -824,7 +824,7 @@ public class DailyPreference
             if (hotelPaymentInformation.isEnabledBonus == true)
             {
                 int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
-                int bonus = 0;
+                int bonus;
 
                 if (payPrice <= 0)
                 {

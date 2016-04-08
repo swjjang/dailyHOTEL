@@ -26,7 +26,7 @@ import java.util.List;
 public class LocationFactory
 {
     private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final int TEN_MINUTES = 1000 * 60 * 1;
+    private static final int TEN_MINUTES = 1000 * 60;
     protected static final String SINGLE_LOCATION_UPDATE_ACTION = "com.twoheart.dailyhotel.places.SINGLE_LOCATION_UPDATE_ACTION";
     private static LocationFactory mInstance;
     protected PendingIntent mUpdatePendingIntent;
@@ -101,8 +101,6 @@ public class LocationFactory
                 }
             }
         }
-
-        ;
     };
 
     protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
@@ -214,8 +212,6 @@ public class LocationFactory
 
         if (location != null && mLocationListener != null)
         {
-            hasLastLocation = true;
-
             mLocationListener.onLocationChanged(location);
             stopLocationMeasure();
             return;

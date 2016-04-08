@@ -224,7 +224,6 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         englishTextView.setText(getInsertSpaceName(province.englishName));
 
         boolean hasChildren = getRealChildrenCount(groupPosition) > 0;
-        boolean isSelected = false;
 
         // 우측 위아래 화살펴 표시 여부.
         if (hasChildren == true)

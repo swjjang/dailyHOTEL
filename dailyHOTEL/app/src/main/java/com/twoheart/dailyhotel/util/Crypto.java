@@ -98,7 +98,7 @@ public class Crypto
     private static byte[] getRawKey(byte[] seed) throws Exception
     {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom sr = null;
+        SecureRandom sr;
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
         {

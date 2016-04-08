@@ -276,13 +276,13 @@ public class CreditCardListActivity extends BaseActivity
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();
 
-                ArrayList<CreditCard> arrayList = null;
+                ArrayList<CreditCard> arrayList;
 
                 if (length == 0)
                 {
                     AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST_EMPTY, null);
 
-                    arrayList = new ArrayList<CreditCard>();
+                    arrayList = new ArrayList<>();
 
                     if (mIsPickMode == true)
                     {

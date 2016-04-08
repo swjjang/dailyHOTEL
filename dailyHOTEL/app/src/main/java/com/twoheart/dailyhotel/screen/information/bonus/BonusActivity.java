@@ -48,11 +48,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * 적립금 확인 페이지.
@@ -137,11 +134,6 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 {
                     // 카카오톡 패키지 설치 여부
                     getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
-                    String userIdxStr = idx;
-
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                    Date date = new Date();
 
                     String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode);
                     KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
@@ -237,7 +229,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             {
                 if (null == mCreditList)
                 {
-                    mCreditList = new ArrayList<Credit>();
+                    mCreditList = new ArrayList<>();
                 }
 
                 mCreditList.clear();

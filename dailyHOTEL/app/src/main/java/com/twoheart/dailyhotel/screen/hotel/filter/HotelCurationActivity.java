@@ -450,7 +450,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
             return;
         }
 
-        String label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
+        String label;
 
         boolean isChecked = radioButton.isChecked();
 

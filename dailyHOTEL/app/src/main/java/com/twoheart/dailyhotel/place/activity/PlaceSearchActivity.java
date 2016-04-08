@@ -284,13 +284,13 @@ public abstract class PlaceSearchActivity extends BaseActivity
                         , getString(R.string.dialog_btn_text_dosetting)//
                         , getString(R.string.dialog_btn_text_cancel)//
                         , new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
                         {
-                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                        }
-                    }, null, true);
+                            @Override
+                            public void onClick(View v)
+                            {
+                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                            }
+                        }, null, true);
                 }
             }
 
@@ -326,14 +326,14 @@ public abstract class PlaceSearchActivity extends BaseActivity
                     , getString(R.string.dialog_btn_text_dosetting)//
                     , getString(R.string.dialog_btn_text_cancel)//
                     , new View.OnClickListener()//
-                {
-                    @Override
-                    public void onClick(View v)
                     {
-                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                    }
-                }, null, false);
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, false);
             }
 
             @Override

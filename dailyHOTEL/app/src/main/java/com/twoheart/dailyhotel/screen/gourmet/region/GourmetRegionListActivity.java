@@ -81,7 +81,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         ArrayList<PlaceRegionListFragment> fragmentList = new ArrayList<>(GOURMET_TAB_COUNT);
 
         GourmetRegionListFragment regionListFragment01 = new GourmetRegionListFragment();
-        regionListFragment01.setInformation(Region.DOMESTIC, false ? null : mSelectedProvince);
+        regionListFragment01.setInformation(Region.DOMESTIC, mSelectedProvince);
         regionListFragment01.setOnUserActionListener(mOnUserActionListener);
         fragmentList.add(regionListFragment01);
 

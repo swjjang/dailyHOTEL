@@ -96,7 +96,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view = null;
+        View view;
         String[] countryCode = getItem(position);
 
         if (Util.isTextEmpty(countryCode[1]) == true)

@@ -65,7 +65,7 @@ public class StringFilter
     // Returns the string result which is filtered by the given mode
     private CharSequence filteredString(CharSequence source, int start, int end, int mode)
     {
-        Pattern pattern = null;
+        Pattern pattern;
         switch (mode)
         {
             case ALLOW_ALPHANUMERIC_HANGUL:

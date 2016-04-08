@@ -39,7 +39,7 @@ public class LineBreakByWordTextView extends DailyTextView
             mAvailableWidth = textWidth - this.getPaddingLeft() - this.getPaddingRight();
 
             mCutStr.clear();
-            int end = 0;
+            int end;
             do
             {
                 // 글자가 width 보다 넘어가는지 체크

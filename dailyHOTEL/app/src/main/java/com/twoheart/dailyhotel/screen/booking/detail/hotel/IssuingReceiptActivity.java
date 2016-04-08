@@ -300,7 +300,6 @@ public class IssuingReceiptActivity extends BaseActivity
                     if (makeLayout(response.getJSONObject("data")) == false)
                     {
                         finish();
-                        return;
                     }
                 } else
                 {

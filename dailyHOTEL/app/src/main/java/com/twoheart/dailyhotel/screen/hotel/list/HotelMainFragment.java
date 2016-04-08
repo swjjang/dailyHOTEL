@@ -843,21 +843,21 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         , getString(R.string.dialog_btn_text_dosetting)//
                         , getString(R.string.dialog_btn_text_cancel)//
                         , new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
                         {
-                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                        }
-                    }, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
+                            @Override
+                            public void onClick(View v)
+                            {
+                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                            }
+                        }, new View.OnClickListener()
                         {
-                            mCurationOption.setSortType(SortType.DEFAULT);
-                            curationCurrentFragment();
-                        }
-                    }, true);
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mCurationOption.setSortType(SortType.DEFAULT);
+                                curationCurrentFragment();
+                            }
+                        }, true);
                 } else
                 {
                     mCurationOption.setSortType(SortType.DEFAULT);
@@ -899,24 +899,24 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     , getString(R.string.dialog_btn_text_dosetting)//
                     , getString(R.string.dialog_btn_text_cancel)//
                     , new View.OnClickListener()//
-                {
-                    @Override
-                    public void onClick(View v)
                     {
-                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                    }
-                }, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, new View.OnClickListener()
                     {
-                        mCurationOption.setSortType(SortType.DEFAULT);
-                        curationCurrentFragment();
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mCurationOption.setSortType(SortType.DEFAULT);
+                            curationCurrentFragment();
 
-                        //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
-                    }
-                }, false);
+                            //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
+                        }
+                    }, false);
             }
 
             @Override
@@ -1146,7 +1146,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     {
         String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
         String date = DailyDeepLink.getInstance().getDate();
-        int night = 1;
+        int night;
 
         try
         {
@@ -1156,8 +1156,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             night = 1;
         }
 
-        int provinceIndex = -1;
-        int areaIndex = -1;
+        int provinceIndex;
+        int areaIndex;
 
         try
         {

@@ -578,7 +578,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             public void onCancel(DialogInterface dialog)
             {
                 finish();
-                return;
             }
         });
 

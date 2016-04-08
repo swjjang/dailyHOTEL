@@ -54,7 +54,7 @@ public class PaymentWaitActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
 
-        Booking booking = null;
+        Booking booking;
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null)
@@ -208,8 +208,6 @@ public class PaymentWaitActivity extends BaseActivity
         {
             return;
         }
-
-        int length = guides.length;
 
         for (String guide : guides)
         {

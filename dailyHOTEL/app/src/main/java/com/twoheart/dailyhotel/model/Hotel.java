@@ -228,7 +228,7 @@ public class Hotel implements Parcelable
         private int mColorResId;
         private int mMarkerResId;
 
-        private HotelGrade(int nameResId, int colorResId, int markerResId)
+        HotelGrade(int nameResId, int colorResId, int markerResId)
         {
             mNameResId = nameResId;
             mColorResId = colorResId;

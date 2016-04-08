@@ -54,7 +54,6 @@ public class CountryCodeListActivity extends BaseActivity
         } else
         {
             finish();
-            return;
         }
     }
 

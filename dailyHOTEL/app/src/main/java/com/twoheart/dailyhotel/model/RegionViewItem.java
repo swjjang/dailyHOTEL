@@ -51,7 +51,7 @@ public class RegionViewItem implements Parcelable
     private void readFromParcel(Parcel in)
     {
         province = in.readParcelable(Province.class.getClassLoader());
-        areaList = in.readArrayList(Area.class.getClassLoader());
+        areaList = (ArrayList<Area[]>) in.readArrayList(Area.class.getClassLoader());
     }
 
     @Override

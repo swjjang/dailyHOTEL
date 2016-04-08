@@ -196,13 +196,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             guest = gourmetPaymentInformation.getGuest();
         }
 
-        String bonus = "0"; // 적립금
-
-        if (gourmetPaymentInformation.isEnabledBonus == true)
-        {
-            bonus = String.valueOf(gourmetPaymentInformation.bonus);
-        }
-
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
         Map<String, String> params = new HashMap<>();
@@ -520,7 +513,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected void onActivityPaymentResult(int requestCode, int resultCode, Intent intent)
     {
         String title = getString(R.string.dialog_title_payment);
-        String msg = "";
+        String msg;
         String posTitle = getString(R.string.dialog_btn_text_confirm);
         View.OnClickListener posListener = null;
 
@@ -799,24 +792,24 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             Dialog dialog = Util.showDatePickerDialog(GourmetPaymentActivity.this//
                 , getString(R.string.label_booking_select_ticket_time)//
                 , gourmetPaymentInformation.getTicketTimes(), selectedTime, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
                 {
-                    int select = (Integer) v.getTag();
-
-                    try
+                    @Override
+                    public void onClick(View v)
                     {
-                        gourmetPaymentInformation.ticketTime = gourmetPaymentInformation.ticketTimes[select];
-                        mGourmetPaymentLayout.setTicketTime(gourmetPaymentInformation.ticketTime);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
+                        int select = (Integer) v.getTag();
 
-                        onError(e);
+                        try
+                        {
+                            gourmetPaymentInformation.ticketTime = gourmetPaymentInformation.ticketTimes[select];
+                            mGourmetPaymentLayout.setTicketTime(gourmetPaymentInformation.ticketTime);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+
+                            onError(e);
+                        }
                     }
-                }
-            });
+                });
 
             if (dialog != null)
             {
@@ -1265,9 +1258,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     //					jsonObject.getInt("is_sale_time_over");
                     //					jsonObject.getInt("name");
                     int discountPrice = jsonObject.getInt("discount");
-                    long sday = jsonObject.getLong("sday");
+                    //                    long sday = jsonObject.getLong("sday");
                     //					jsonObject.getInt("available_ticket_count");
-                    int maxCount = jsonObject.getInt("max_sale_count");
+                    //                    int maxCount = jsonObject.getInt("max_sale_count");
 
                     JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
 
@@ -1401,7 +1394,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
                 } else
                 {
-                    int resultCode = 0;
+                    int resultCode;
                     Intent intent = new Intent();
 
                     if (response.has("msg") == false)

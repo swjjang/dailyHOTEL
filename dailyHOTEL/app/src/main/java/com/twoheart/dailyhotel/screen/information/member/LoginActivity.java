@@ -65,10 +65,8 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -755,8 +753,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 {
                     DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(false);
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-
                     if (mStoreParams.containsKey("new_user") == true)
                     {
                         // user_type : kakao_talk. facebook
@@ -843,7 +839,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
                 JSONObject jsonObject = response.getJSONObject("data");
                 boolean isSignin = jsonObject.getBoolean("is_signin");
 

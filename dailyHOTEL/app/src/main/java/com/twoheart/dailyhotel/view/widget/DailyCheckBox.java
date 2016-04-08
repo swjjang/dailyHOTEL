@@ -36,11 +36,10 @@ public class DailyCheckBox extends AppCompatCheckBox
         int fontStyle = 3;
 
         Typeface typeface = getTypeface();
-        boolean isBold = false;
 
         if (typeface != null)
         {
-            isBold = getTypeface().isBold();
+            boolean isBold = getTypeface().isBold();
 
             if (isBold == true)
             {

@@ -29,7 +29,7 @@ public class PlaceRenderer
 
     public BitmapDescriptor getBitmap(boolean isSelected)
     {
-        Bitmap icon = null;
+        Bitmap icon;
 
         if (isSelected == false)
         {

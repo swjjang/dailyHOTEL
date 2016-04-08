@@ -126,7 +126,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private void initUpdateUser(Intent intent)
     {
         boolean isVisibleRecommender = true;
-        String phoneNumber = null;
+        String phoneNumber;
         Customer customer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
         mRecommender = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, -1);

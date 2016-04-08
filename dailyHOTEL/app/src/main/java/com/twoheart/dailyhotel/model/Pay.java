@@ -139,7 +139,7 @@ public class Pay implements Parcelable
 
         private String mName;
 
-        private Type(String name)
+        Type(String name)
         {
             mName = name;
         }

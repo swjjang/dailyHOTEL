@@ -239,7 +239,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             // 폴라리스 용
             else
             {
-                Intent intent = null;
+                Intent intent;
 
                 try
                 {
@@ -414,7 +414,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 if (strResCD.equals("0000") == true)
                 {
 
-                    String strApprovalKey = "";
+                    String strApprovalKey;
 
                     strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
 
@@ -826,8 +826,8 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         @JavascriptInterface
         public void feed(final String msg)
         {
-            int resultCode = 0;
-            ExLog.e("FEED : " + msg);
+            int resultCode;
+
             if (msg == null)
             {
                 resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
@@ -954,7 +954,6 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
-                return;
             }
         }
     }

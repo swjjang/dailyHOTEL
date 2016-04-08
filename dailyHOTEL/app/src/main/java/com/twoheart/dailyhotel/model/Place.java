@@ -77,7 +77,7 @@ public abstract class Place implements Parcelable
         private int mColorResId;
         private int mMarkerResId;
 
-        private Grade(int nameResId, int colorResId, int markerResId)
+        Grade(int nameResId, int colorResId, int markerResId)
         {
             mNameResId = nameResId;
             mColorResId = colorResId;

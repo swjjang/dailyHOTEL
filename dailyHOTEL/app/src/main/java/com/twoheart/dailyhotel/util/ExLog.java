@@ -423,7 +423,7 @@ public class ExLog
         StringBuffer prettyJsonSb = new StringBuffer();
 
         int indentDepth = 0;
-        String targetString = null;
+        String targetString;
         for (int i = 0; i < jsonString.length(); i++)
         {
             targetString = jsonString.substring(i, i + 1);

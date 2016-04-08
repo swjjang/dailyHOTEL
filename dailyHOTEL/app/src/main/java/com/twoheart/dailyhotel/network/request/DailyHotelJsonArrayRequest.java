@@ -48,8 +48,6 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray>
 
         try
         {
-            String test = new String(response.data, "UTF-8");
-
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
         } catch (UnsupportedEncodingException e)
         {

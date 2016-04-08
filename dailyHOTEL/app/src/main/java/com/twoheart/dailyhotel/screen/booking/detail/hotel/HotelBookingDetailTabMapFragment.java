@@ -257,7 +257,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     return;
                 }
 
-                SupportMapFragment mapFragment = null;
+                SupportMapFragment mapFragment;
 
                 try
                 {

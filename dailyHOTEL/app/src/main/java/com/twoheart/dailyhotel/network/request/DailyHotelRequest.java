@@ -108,7 +108,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         }
 
         String param = null;
-        String encoderUrl = null;
+        String encoderUrl;
 
         if (url.contains("/") == true)
         {
@@ -238,7 +238,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         }
 
         String param = null;
-        String encoderUrl = null;
+        String encoderUrl;
 
         if (url.contains("/") == true)
         {
