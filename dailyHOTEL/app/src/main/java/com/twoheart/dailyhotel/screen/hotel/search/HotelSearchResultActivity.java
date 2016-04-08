@@ -443,7 +443,20 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             if (mOffset == 0)
             {
-                analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
+                // 연박인 경우 사이즈가 0이면 검색개수가 없음
+                if (totalCount == -1)
+                {
+                    if (placeViewItemList == null || placeViewItemList.size() == 0)
+                    {
+                        analyticsOnResponseSearchResultListForSearches(mKeyword, 0);
+                    } else
+                    {
+                        analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
+                    }
+                } else
+                {
+                    analyticsOnResponseSearchResultListForSearches(mKeyword, totalCount);
+                }
             }
 
             responseSearchResultList(totalCount, placeViewItemList);
@@ -459,12 +472,18 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             if (mOffset == 0)
             {
-                if (placeViewItemList != null)
+                if (totalCount == -1)
                 {
-                    mSize = totalCount;
+                    if (placeViewItemList == null || placeViewItemList.size() == 0)
+                    {
+                        mSize = 0;
+                    } else
+                    {
+                        mSize = totalCount;
+                    }
                 } else
                 {
-                    mSize = 0;
+                    mSize = totalCount;
                 }
 
                 analyticsOnResponseSearchResultListForLocation();
