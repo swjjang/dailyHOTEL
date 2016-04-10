@@ -38,10 +38,6 @@ public class Booking implements Parcelable
     public boolean isUsed;
     public Constants.PlaceType placeType;
 
-    public Booking()
-    {
-    }
-
     public Booking(String sectionName)
     {
         placeName = sectionName;

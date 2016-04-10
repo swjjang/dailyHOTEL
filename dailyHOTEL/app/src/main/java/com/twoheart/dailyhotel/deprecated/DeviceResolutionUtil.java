@@ -40,7 +40,7 @@ public class DeviceResolutionUtil
         int width = hm.get(KEY_WIDTH);
         int height = hm.get(KEY_HEIGHT);
 
-        int resoultion = -1;
+        int resoultion;
 
         if (height >= 1920 && width >= 1080)
         {

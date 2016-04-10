@@ -1,9 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
- * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
- */
 package com.twoheart.dailyhotel.place.activity;
 
 import android.app.Dialog;
@@ -13,8 +7,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -45,7 +37,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,8 +46,6 @@ import java.util.TimeZone;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
-    private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
-
     protected GourmetDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;
     protected int mCurrentImage;
@@ -66,8 +55,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
     private View mToolbarUnderline;
-
-    private Handler mImageHandler;
 
     public interface OnUserActionListener
     {
@@ -123,8 +110,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             finish();
             return;
         }
-
-        mImageHandler = new ImageHandler(this);
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
@@ -182,7 +167,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             mPlaceDetailLayout = getLayout(this, imageUrl);
             mPlaceDetailLayout.setUserActionListener(mOnUserActionListener);
-            mPlaceDetailLayout.setImageActionListener(mOnImageActionListener);
         }
 
         setLockUICancelable(true);
@@ -304,20 +288,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
         Intent intent = SignupActivity.newInstance(this, user, recommender, isDailyUser);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-    }
-
-    private boolean isEmptyTextField(String... fieldText)
-    {
-
-        for (int i = 0; i < fieldText.length; i++)
-        {
-            if (Util.isTextEmpty(fieldText[i]) == true)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     protected void recordAnalyticsGourmetDetail(String screen, PlaceDetail placeDetail)
@@ -575,33 +545,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
     };
 
-    private OnImageActionListener mOnImageActionListener = new OnImageActionListener()
-    {
-        @Override
-        public void nextSlide()
-        {
-            Message message = mImageHandler.obtainMessage();
-            message.what = 0;
-            message.arg1 = 1; // 오른쪽으로 이동.
-            message.arg2 = 0; // 수동
-
-            mImageHandler.removeMessages(0);
-            mImageHandler.sendMessage(message);
-        }
-
-        @Override
-        public void prevSlide()
-        {
-            Message message = mImageHandler.obtainMessage();
-            message.what = 0;
-            message.arg1 = -1; // 왼쪽으로 이동.
-            message.arg2 = 0; // 수동
-
-            mImageHandler.removeMessages(0);
-            mImageHandler.sendMessage(message);
-        }
-    };
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -634,7 +577,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                    if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
+                    if (Util.isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
                         processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
                     } else
@@ -735,45 +678,4 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         }
     };
-
-    private static class ImageHandler extends Handler
-    {
-        private final WeakReference<PlaceDetailActivity> mWeakReference;
-
-        public ImageHandler(PlaceDetailActivity activity)
-        {
-            mWeakReference = new WeakReference<>(activity);
-        }
-
-        public void handleMessage(Message msg)
-        {
-            PlaceDetailActivity placeDetailActivity = mWeakReference.get();
-
-            if (placeDetailActivity == null)
-            {
-                return;
-            }
-
-            int direction = msg.arg1;
-
-            placeDetailActivity.mCurrentImage = placeDetailActivity.mPlaceDetailLayout.getCurrentImage();
-
-            if (direction > 0)
-            {
-                placeDetailActivity.mCurrentImage++;
-            } else if (direction < 0)
-            {
-                placeDetailActivity.mCurrentImage--;
-            }
-
-            placeDetailActivity.mPlaceDetailLayout.setCurrentImage(placeDetailActivity.mCurrentImage);
-
-            int autoSlide = msg.arg2;
-
-            if (autoSlide == 1)
-            {
-                sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
-            }
-        }
-    }
 }

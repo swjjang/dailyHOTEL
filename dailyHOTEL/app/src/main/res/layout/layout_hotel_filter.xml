@@ -27,7 +27,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_alignParentRight="true"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
@@ -117,7 +116,6 @@
         android:id="@+id/bedTypeLayout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_alignParentRight="true"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

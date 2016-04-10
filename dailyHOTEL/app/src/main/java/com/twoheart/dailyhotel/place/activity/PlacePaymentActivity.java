@@ -429,7 +429,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 {
                     try
                     {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(PlacePaymentActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
@@ -580,12 +580,12 @@ public abstract class PlacePaymentActivity extends BaseActivity
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int msg_code = -1;
+            int msgCode = -1;
 
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
+                msgCode = response.getInt("msg_code");
 
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();
@@ -657,12 +657,12 @@ public abstract class PlacePaymentActivity extends BaseActivity
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int msg_code = -1;
+            int msgCode = -1;
 
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
+                msgCode = response.getInt("msg_code");
 
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();

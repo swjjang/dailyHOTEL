@@ -402,7 +402,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
                 if (Util.isTextEmpty(userName) == true)
                 {
-                    userName = getString(R.string.act_profile_input_name);
                     mProfileName = "";
                 } else
                 {

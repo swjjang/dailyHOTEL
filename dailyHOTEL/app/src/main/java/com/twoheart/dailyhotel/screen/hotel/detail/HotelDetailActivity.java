@@ -299,19 +299,6 @@ public class HotelDetailActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
-    private boolean isEmptyTextField(String... fieldText)
-    {
-        for (int i = 0; i < fieldText.length; i++)
-        {
-            if (Util.isTextEmpty(fieldText[i]) == true)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private void recordAnalyticsHotelDetail(String screen, HotelDetail hotelDetail)
     {
         if (hotelDetail == null)
@@ -735,7 +722,7 @@ public class HotelDetailActivity extends BaseActivity
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                    if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
+                    if (Util.isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
                         moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
                     } else

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.view;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;

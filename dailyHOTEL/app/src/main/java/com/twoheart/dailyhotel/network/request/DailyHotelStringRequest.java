@@ -11,15 +11,7 @@ import java.util.Map;
 
 public class DailyHotelStringRequest extends DailyHotelRequest<String>
 {
-
     private DailyHotelStringResponseListener mListener;
-
-    public DailyHotelStringRequest(int method, String url, Map<String, String> parameters, DailyHotelStringResponseListener listener, ErrorListener errorListener)
-    {
-
-        super(method, url, parameters, errorListener);
-        this.mListener = listener;
-    }
 
     public DailyHotelStringRequest(Object tag, int method, String url, Map<String, String> parameters, DailyHotelStringResponseListener listener, ErrorListener errorListener)
     {
@@ -42,6 +34,7 @@ public class DailyHotelStringRequest extends DailyHotelRequest<String>
     {
 
         String parsed;
+
         try
         {
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
@@ -49,6 +42,7 @@ public class DailyHotelStringRequest extends DailyHotelRequest<String>
         {
             parsed = new String(response.data);
         }
+
         return Response.success(parsed.trim(), HttpHeaderParser.parseCacheHeaders(response));
     }
 

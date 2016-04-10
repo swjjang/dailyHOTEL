@@ -153,29 +153,6 @@ public class Util implements Constants
         }
     }
 
-    public static String dailyHotelTimeConvert(String dailyHotelTime)
-    {
-        final int positionOfDashPreviousHour = 8; // yy-MM-dd-hh이므로
-        String correctTime = null;
-
-        char checkOut[] = dailyHotelTime.toCharArray();
-        StringBuilder parsedCheckOutTime = new StringBuilder();
-        for (int i = 0; i < checkOut.length; i++)
-        {
-            if (i == positionOfDashPreviousHour)
-            {
-                parsedCheckOutTime.append(" ");
-            } else
-            {
-                parsedCheckOutTime.append(checkOut[i]);
-            }
-        }
-        parsedCheckOutTime.append(":00:00");
-        correctTime = parsedCheckOutTime.toString();
-
-        return correctTime;
-    }
-
     public static void setLocale(Context context, Locale locale)
     {
         Resources res = context.getResources();
@@ -367,6 +344,24 @@ public class Util implements Constants
         return (TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true || text.trim().length() == 0);
     }
 
+    public static boolean isEmptyTextField(String... texts)
+    {
+        if (texts == null)
+        {
+            return false;
+        }
+
+        for (String text : texts)
+        {
+            if (Util.isTextEmpty(text) == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static String getAppVersion(Context context)
     {
         String version = null;
@@ -400,7 +395,7 @@ public class Util implements Constants
             return false;
         }
 
-        boolean isInstalled = false;
+        boolean isInstalled;
 
         try
         {
@@ -803,7 +798,6 @@ public class Util implements Constants
         if (Util.isValidatePhoneNumber(mobileNumber) == true)
         {
             String[] countryCode = Util.getValidatePhoneNumber(mobileNumber);
-            String result;
 
             TextView textView = new TextView(context);
 

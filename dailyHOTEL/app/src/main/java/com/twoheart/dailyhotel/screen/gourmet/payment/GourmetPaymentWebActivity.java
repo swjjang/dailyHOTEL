@@ -46,7 +46,6 @@ import kr.co.kcp.util.PackageState;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 @SuppressLint("NewApi")
@@ -177,7 +176,8 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         builder.add("customer_email", guest.email);
         builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
 
-        String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON)).toString();
+        String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)//
+            + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
 
         WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
         webViewPostAsyncTask.execute(url);
@@ -238,7 +238,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             // 폴라리스 용
             else
             {
-                Intent intent = null;
+                Intent intent;
 
                 try
                 {
@@ -415,9 +415,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
                 if (strResCD.equals("0000") == true)
                 {
-                    String strApprovalKey = "";
-
-                    strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
+                    String strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
 
                     //					ExLog.d("[PayDemoActivity] approval_key=[" + strApprovalKey + "]");
 
@@ -829,7 +827,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         @JavascriptInterface
         public void feed(final String msg)
         {
-            int resultCode = 0;
+            int resultCode;
 
             Intent intent = new Intent();
 
@@ -882,7 +880,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             try
             {
                 OkHttpClient okHttpClient = new OkHttpClient();
-                RequestBody body = mBuilder.build();
                 Request request = new Request.Builder()//
                     .url(mUrl)//
                     .addHeader("Os-Type", "android")//
@@ -929,7 +926,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
-                return;
             }
         }
     }

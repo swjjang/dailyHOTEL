@@ -43,7 +43,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         final int position;
 
         Bundle bundle = getIntent().getExtras();
-        ArrayList<ImageInformation> arrayList = null;
+        ArrayList<ImageInformation> arrayList;
 
         if (bundle != null)
         {

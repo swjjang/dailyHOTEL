@@ -108,7 +108,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).finish();
+                mOnEventListener.finish();
             }
         });
 
@@ -460,7 +460,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 {
                     view.setVisibility(View.GONE);
                     view.setTag(null);
-                    continue;
                 } else
                 {
                     view.setVisibility(View.VISIBLE);

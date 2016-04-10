@@ -36,15 +36,13 @@ public class FinalCheckLayout extends FrameLayout
         View view = inflater.inflate(R.layout.layout_finalcheck, this, true);
         ViewGroup messageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
 
-        int length = textResIds.length;
-
-        for (int i = 0; i < length; i++)
+        for (int resId : textResIds)
         {
             View messageRow = inflater.inflate(R.layout.row_payment_agreedialog, messageLayout, false);
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
 
-            String message = context.getString(textResIds[i]);
+            String message = context.getString(resId);
 
             int startIndex = message.indexOf("<b>");
 

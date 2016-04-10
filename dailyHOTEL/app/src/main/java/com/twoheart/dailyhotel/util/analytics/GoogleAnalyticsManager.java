@@ -303,7 +303,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
-        String id = null;
+        String id;
 
         if (Util.isTextEmpty(placeIndex) == false && Util.isTextEmpty(ticketIndex) == false)
         {

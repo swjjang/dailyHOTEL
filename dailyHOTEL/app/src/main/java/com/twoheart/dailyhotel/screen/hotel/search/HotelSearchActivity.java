@@ -267,7 +267,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
                 return;
             }
 
-            String label = String.format("%s-%s", (String) msg.obj, getSearchDate(hotelSearchActivity));
+            String label = String.format("%s-%s", msg.obj, getSearchDate(hotelSearchActivity));
             AnalyticsManager.getInstance(hotelSearchActivity).recordEvent(AnalyticsManager.Category.HOTEL_SEARCH//
                 , AnalyticsManager.Action.HOTEL_AUTOCOMPLETED_KEYWORD_NOTMATCHED, label, null);
         }

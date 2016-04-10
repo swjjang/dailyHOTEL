@@ -669,15 +669,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 return null;
         }
 
-        int length = textResIds.length;
-
-        for (int i = 0; i < length; i++)
+        for (int resId : textResIds)
         {
             View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, messageLayout, false);
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
 
-            String message = getString(textResIds[i]);
+            String message = getString(resId);
 
             int startIndex = message.indexOf("<b>");
 
@@ -743,7 +741,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     protected void onActivityPaymentResult(int requestCode, int resultCode, Intent intent)
     {
         String title = getString(R.string.dialog_title_payment);
-        String msg = "";
+        String msg;
         String posTitle = getString(R.string.dialog_btn_text_confirm);
         OnClickListener posListener = null;
 
@@ -1120,7 +1118,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private int[] paymentDialogMessage(int messageType, int[] currentMessages)
     {
-        int[] messages = null;
+        int[] messages;
 
         switch (mPensionPopupMessageType)
         {
@@ -1255,7 +1253,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             if (hotelPaymentInformation.isEnabledBonus == true)
             {
                 int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
-                int bonus = 0;
+                int bonus;
 
                 if (payPrice <= 0)
                 {

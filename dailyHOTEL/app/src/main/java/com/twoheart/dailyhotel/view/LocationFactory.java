@@ -26,12 +26,11 @@ import java.util.List;
 public class LocationFactory
 {
     private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final int TEN_MINUTES = 1000 * 60 * 1;
+    private static final int TEN_MINUTES = 1000 * 60;
     protected static final String SINGLE_LOCATION_UPDATE_ACTION = "com.twoheart.dailyhotel.places.SINGLE_LOCATION_UPDATE_ACTION";
     private static LocationFactory mInstance;
     protected PendingIntent mUpdatePendingIntent;
     private LocationManager mLocationManager = null;
-    private Location mLocation = null;
     private boolean mIsMeasuringLocation = false;
     private LocationListenerEx mLocationListener;
     private View mMyLocationView;
@@ -101,8 +100,6 @@ public class LocationFactory
                 }
             }
         }
-
-        ;
     };
 
     protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
@@ -112,8 +109,6 @@ public class LocationFactory
         {
             String key = LocationManager.KEY_LOCATION_CHANGED;
             Location location = (Location) intent.getExtras().get(key);
-
-            mLocation = location;
 
             if (mLocationListener != null && location != null)
             {
@@ -183,8 +178,6 @@ public class LocationFactory
             mMyLocationDrawable = mMyLocationView.getBackground();
         }
 
-        mLocation = null;
-
         boolean isGpsProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean isNetworkProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
@@ -214,8 +207,6 @@ public class LocationFactory
 
         if (location != null && mLocationListener != null)
         {
-            hasLastLocation = true;
-
             mLocationListener.onLocationChanged(location);
             stopLocationMeasure();
             return;

@@ -668,21 +668,21 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         , getString(R.string.dialog_btn_text_dosetting)//
                         , getString(R.string.dialog_btn_text_cancel)//
                         , new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
                         {
-                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                        }
-                    }, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
+                            @Override
+                            public void onClick(View v)
+                            {
+                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                            }
+                        }, new View.OnClickListener()
                         {
-                            mCurationOption.setSortType(SortType.DEFAULT);
-                            curationCurrentFragment();
-                        }
-                    }, true);
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mCurationOption.setSortType(SortType.DEFAULT);
+                                curationCurrentFragment();
+                            }
+                        }, true);
                 } else
                 {
                     mCurationOption.setSortType(SortType.DEFAULT);
@@ -724,24 +724,24 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     , getString(R.string.dialog_btn_text_dosetting)//
                     , getString(R.string.dialog_btn_text_cancel)//
                     , new View.OnClickListener()//
-                {
-                    @Override
-                    public void onClick(View v)
                     {
-                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                    }
-                }, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, new View.OnClickListener()
                     {
-                        mCurationOption.setSortType(SortType.DEFAULT);
-                        curationCurrentFragment();
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mCurationOption.setSortType(SortType.DEFAULT);
+                            curationCurrentFragment();
 
-                        //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
-                    }
-                }, false);
+                            //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
+                        }
+                    }, false);
             }
 
             @Override
@@ -852,8 +852,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             } catch (Exception e)
             {
             }
-
-            boolean isOverseas = DailyDeepLink.getInstance().getIsOverseas();
 
             if (areaIndex == -1)
             {
@@ -971,8 +969,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     {
         String date = DailyDeepLink.getInstance().getDate();
 
-        int provinceIndex = -1;
-        int areaIndex = -1;
+        int provinceIndex;
+        int areaIndex;
 
         try
         {
@@ -1695,7 +1693,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
                     if (mIsProvinceSetting == false && selectedProvince instanceof Area)
                     {
-                        int provinceIndex = ((Area) selectedProvince).getProvinceIndex();
+                        int provinceIndex = selectedProvince.getProvinceIndex();
 
                         for (Province province : provinceList)
                         {

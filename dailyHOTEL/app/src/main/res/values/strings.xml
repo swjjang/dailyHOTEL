@@ -321,7 +321,7 @@
     <string name="message_copy_recommendar_code">추천코드가 복사되었습니다.</string>
 
     <!-- Credit List Activity -->
-    <string name="act_history_no_details">내역이 없습니다.</string>
+    <string name="act_history_no_details">적립금 내역이 없습니다.</string>
 
     <!-- Booking List Fragment -->
     <string name="frag_booking_no_hotels">예약된 내역이 없습니다!</string>

@@ -110,12 +110,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
     }
 
-    @Override
-    public void setContentView(int layoutResID)
-    {
-        super.setContentView(layoutResID);
-    }
-
     public String getNetworkTag()
     {
         return mNetworkTag;
@@ -454,9 +448,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         {
             ((ImageView) root).setImageDrawable(null);
         }
-
-        root = null;
-        return;
     }
 
     public Dialog createSimpleDialog(String titleText, String message, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener)

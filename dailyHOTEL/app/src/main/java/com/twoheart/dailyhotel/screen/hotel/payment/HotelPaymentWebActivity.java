@@ -178,7 +178,8 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("guest_phone", guest.phone.replace("-", "").replace("+", "%2B"));
         builder.add("guest_email", guest.email);
 
-        String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON)).toString();
+        String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)//
+            + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
 
         WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
         webViewPostAsyncTask.execute(url);
@@ -239,7 +240,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             // 폴라리스 용
             else
             {
-                Intent intent = null;
+                Intent intent;
 
                 try
                 {
@@ -414,7 +415,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 if (strResCD.equals("0000") == true)
                 {
 
-                    String strApprovalKey = "";
+                    String strApprovalKey;
 
                     strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
 
@@ -826,8 +827,8 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         @JavascriptInterface
         public void feed(final String msg)
         {
-            int resultCode = 0;
-            ExLog.e("FEED : " + msg);
+            int resultCode;
+
             if (msg == null)
             {
                 resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
@@ -954,7 +955,6 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
-                return;
             }
         }
     }

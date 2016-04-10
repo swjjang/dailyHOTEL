@@ -614,8 +614,8 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         // 중복된 호텔들은 낮은 가격을 노출하도록 한다.
         if (size > 1)
         {
-            Hotel item01 = null;
-            Hotel item02 = null;
+            Hotel item01;
+            Hotel item02;
 
             for (int i = size - 1; i > 0; i--)
             {
@@ -847,13 +847,13 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                         , getString(R.string.dialog_btn_text_dosetting)//
                         , getString(R.string.dialog_btn_text_cancel)//
                         , new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
                         {
-                            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                        }
-                    }, null, true);
+                            @Override
+                            public void onClick(View v)
+                            {
+                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                            }
+                        }, null, true);
                 }
             }
 

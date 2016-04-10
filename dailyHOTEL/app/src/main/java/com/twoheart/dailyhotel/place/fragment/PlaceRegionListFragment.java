@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.place.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -410,8 +409,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             }
 
             view.setSelected(true);
-
-            Intent intent = new Intent();
 
             if (area.index == -1)
             {

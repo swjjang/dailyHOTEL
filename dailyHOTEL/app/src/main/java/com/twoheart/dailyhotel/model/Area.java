@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class Area extends Province
 {
-    private static String PROVINCE_INDEXKEY = "provinceIdx";
+    private static final String PROVINCE_INDEXKEY = "provinceIdx";
 
     public String tag;
 

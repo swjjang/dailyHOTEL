@@ -46,7 +46,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
         if (bundle != null)
         {
-            mBooking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+            mBooking = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
         }
 
         if (mBooking == null)

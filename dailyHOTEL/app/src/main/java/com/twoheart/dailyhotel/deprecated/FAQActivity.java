@@ -6,7 +6,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Board;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 

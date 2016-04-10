@@ -482,7 +482,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 {
                     try
                     {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString())));
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);

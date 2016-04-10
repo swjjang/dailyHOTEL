@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -63,7 +62,6 @@ public class GourmetDetailLayout
     protected int mImageHeight;
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
     protected PlaceDetailActivity.OnUserActionListener mOnUserActionListener;
-    protected PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
     private RecyclerView mTicketTypeRecyclerView;
     private GourmetDetailRoomTypeListAdapter mTicketTypeListAdapter;
@@ -129,7 +127,7 @@ public class GourmetDetailLayout
         mImageViewBlur.setVisibility(View.INVISIBLE);
 
         mImageHeight = Util.getLCDWidth(activity);
-        ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mViewPager.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
 
         mTicketTypeLayout = activity.findViewById(R.id.ticketTypeLayout);
@@ -176,7 +174,7 @@ public class GourmetDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new GourmetDetailListAdapter((FragmentActivity) mActivity, (GourmetDetail) mPlaceDetail, saleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
+            mListAdapter = new GourmetDetailListAdapter(mActivity, (GourmetDetail) mPlaceDetail, saleTime, mOnUserActionListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         }
 
@@ -375,11 +373,6 @@ public class GourmetDetailLayout
     public void setUserActionListener(PlaceDetailActivity.OnUserActionListener listener)
     {
         mOnUserActionListener = listener;
-    }
-
-    public void setImageActionListener(PlaceDetailActivity.OnImageActionListener listener)
-    {
-        mOnImageActionListener = listener;
     }
 
     private void setTicketInformationLayoutEnabled(boolean enabled)

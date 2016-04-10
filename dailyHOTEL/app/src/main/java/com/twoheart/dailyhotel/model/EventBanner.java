@@ -14,11 +14,6 @@ public class EventBanner
     public String webLink;
     public String name;
 
-    public EventBanner()
-    {
-
-    }
-
     public EventBanner(JSONObject jsonObject, String url) throws Exception
     {
         name = jsonObject.getString("name");

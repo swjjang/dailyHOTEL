@@ -486,7 +486,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             return;
         }
 
-        String label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
+        String label;
 
         boolean isChecked = radioButton.isChecked();
 

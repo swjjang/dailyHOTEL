@@ -67,6 +67,16 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     {
         mToolbar = view.findViewById(R.id.toolbar);
 
+        View titleLayout = mToolbar.findViewById(R.id.titleLayout);
+        titleLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED);
+            }
+        });
+
         View backView = mToolbar.findViewById(R.id.backImageView);
         backView.setOnClickListener(new View.OnClickListener()
         {

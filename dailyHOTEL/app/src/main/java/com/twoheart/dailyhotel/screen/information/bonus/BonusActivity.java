@@ -1,16 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * BonusActivity (적립금 화면)
- * <p>
- * 로그인 여부에 따라 적립금을 안내하는 화면이다. 적립금을 표시하며 카카오톡
- * 친구 초대 버튼이 있다. 세부 내역을 따로 표시해주는 버튼을 가지고 있어
- * 해당 화면을 띄워주기도 한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.screen.information.bonus;
 
 import android.content.ActivityNotFoundException;
@@ -20,13 +7,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Credit;
+import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
@@ -48,26 +33,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-/**
- * 적립금 확인 페이지.
- *
- * @author jangjunho
- */
 public class BonusActivity extends BaseActivity implements View.OnClickListener
 {
-    private RelativeLayout rlCreditNotLoggedIn;
-    private LinearLayout llCreditLoggedIn;
-    private TextView tvBonus, tvRecommenderCode;
+    private View mBeforeSigninLayout;
+    private View mSigninLayout;
+    private TextView mBonusTextView, mRecommenderCodeTextView;
     private String mRecommendCode;
-    private List<Credit> mCreditList;
+    private List<Bonus> mBonusList;
     private String mUserName;
-    private String idx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -90,10 +66,10 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
     private void initLayout()
     {
-        rlCreditNotLoggedIn = (RelativeLayout) findViewById(R.id.rl_credit_not_logged_in);
-        llCreditLoggedIn = (LinearLayout) findViewById(R.id.ll_credit_logged_in);
-        tvRecommenderCode = (TextView) findViewById(R.id.tv_credit_recommender_code);
-        tvBonus = (TextView) findViewById(R.id.tv_credit_money);
+        mBeforeSigninLayout = findViewById(R.id.rl_credit_not_logged_in);
+        mSigninLayout = findViewById(R.id.ll_credit_logged_in);
+        mRecommenderCodeTextView = (TextView) findViewById(R.id.tv_credit_recommender_code);
+        mBonusTextView = (TextView) findViewById(R.id.tv_credit_money);
 
         View inviteFriend = findViewById(R.id.btn_credit_invite_frd);
         inviteFriend.setOnClickListener(this);
@@ -138,19 +114,12 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                     // 카카오톡 패키지 설치 여부
                     getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-                    String userIdxStr = idx;
-
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                    Date date = new Date();
-
                     String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode);
                     KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
 
                     AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
                 } catch (Exception e)
                 {
-                    ExLog.d(e.toString());
-
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
@@ -166,12 +135,18 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
             case R.id.historyLayout:
             {
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CREDIT_MANAGEMENT_CLICKED, Label.CREDIT_HISTORY_VIEW, null);
+
+                if (mBonusList == null || mBonusList.size() == 0)
+                {
+                    DailyToast.showToast(this, R.string.act_history_no_details, Toast.LENGTH_SHORT);
+                    return;
+                }
+
                 Intent intent = new Intent(this, BonusListActivity.class);
-                intent.putParcelableArrayListExtra(BonusListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mCreditList);
+                intent.putParcelableArrayListExtra(BonusListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList) mBonusList);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CREDIT_MANAGEMENT_CLICKED, Label.CREDIT_HISTORY_VIEW, null);
                 break;
             }
 
@@ -207,16 +182,16 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
     private void loadLoginProcess(boolean loginSuccess)
     {
-        if (loginSuccess)
+        if (loginSuccess == true)
         {
-            rlCreditNotLoggedIn.setVisibility(View.GONE);
-            llCreditLoggedIn.setVisibility(View.VISIBLE);
+            mBeforeSigninLayout.setVisibility(View.GONE);
+            mSigninLayout.setVisibility(View.VISIBLE);
 
             AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS, null);
         } else
         {
-            rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
-            llCreditLoggedIn.setVisibility(View.GONE);
+            mBeforeSigninLayout.setVisibility(View.VISIBLE);
+            mSigninLayout.setVisibility(View.GONE);
 
             AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS_BEFORE_LOGIN, null);
         }
@@ -235,12 +210,12 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             //적립금 내역리스트
             try
             {
-                if (null == mCreditList)
+                if (null == mBonusList)
                 {
-                    mCreditList = new ArrayList<Credit>();
+                    mBonusList = new ArrayList<>();
                 }
 
-                mCreditList.clear();
+                mBonusList.clear();
 
                 JSONArray jsonArray = response.getJSONArray("history");
                 int length = jsonArray.length();
@@ -253,7 +228,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                     String expires = historyObj.getString("expires");
                     int bonus = historyObj.getInt("bonus");
 
-                    mCreditList.add(new Credit(content, bonus, expires));
+                    mBonusList.add(new Bonus(content, bonus, expires));
                 }
 
                 loadLoginProcess(true);
@@ -275,10 +250,8 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             try
             {
                 mRecommendCode = response.getString("rndnum");
-                tvRecommenderCode.setText(mRecommendCode);
+                mRecommenderCodeTextView.setText(mRecommendCode);
                 mUserName = response.getString("name");
-
-                idx = response.getString("idx");
 
                 // 적립금 목록 요청.
                 DailyNetworkAPI.getInstance().requestUserBonus(mNetworkTag, mUserBonusAllResponseListener, BonusActivity.this);
@@ -317,7 +290,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
                 String str = comma.format(bonus);
 
-                tvBonus.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
+                mBonusTextView.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
 
                 // 사용자 정보 요청.
                 DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, BonusActivity.this);

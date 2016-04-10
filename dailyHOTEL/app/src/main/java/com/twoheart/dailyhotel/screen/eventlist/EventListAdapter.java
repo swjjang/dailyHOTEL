@@ -79,7 +79,7 @@ public class EventListAdapter extends ArrayAdapter<Event>
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view = null;
+        View view;
 
         if (convertView == null)
         {

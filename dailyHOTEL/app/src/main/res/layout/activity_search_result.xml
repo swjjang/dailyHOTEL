@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/information_background">
@@ -20,6 +19,7 @@
             android:src="@drawable/navibar_ic_back"/>
 
         <LinearLayout
+            android:id="@+id/titleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -31,7 +31,6 @@
                 android:id="@+id/titleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -42,7 +41,6 @@
                 android:id="@+id/dateView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:textColor="@color/search_autocomplete_pricetext"
                 android:textSize="11dp"/>
         </LinearLayout>
@@ -90,10 +88,6 @@
                 android:id="@+id/searcyEmptyView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentRight="false"
-                android:layout_alignParentStart="false"
-                android:layout_centerHorizontal="true"
                 android:text="@string/label_searchresult_empty"
                 android:textColor="@color/search_hint_text"
                 android:textSize="18dp"
@@ -103,8 +97,6 @@
                 android:id="@+id/researchUnderTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/callView"
-                android:layout_alignParentRight="true"
                 android:layout_marginTop="18dp"
                 android:gravity="center_horizontal"
                 android:text="@string/label_searchresult_text01"

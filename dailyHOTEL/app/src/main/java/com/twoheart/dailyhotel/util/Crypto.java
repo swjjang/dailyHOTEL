@@ -98,7 +98,7 @@ public class Crypto
     private static byte[] getRawKey(byte[] seed) throws Exception
     {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom sr = null;
+        SecureRandom sr;
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
         {
@@ -155,18 +155,18 @@ public class Crypto
         return result;
     }
 
-    private static String toHex(byte[] buf)
+    private static String toHex(byte[] buffers)
     {
-        if (buf == null)
+        if (buffers == null)
         {
             return "";
         }
 
-        StringBuffer result = new StringBuffer(2 * buf.length);
+        StringBuffer result = new StringBuffer(2 * buffers.length);
 
-        for (int i = 0; i < buf.length; i++)
+        for (byte buffer : buffers)
         {
-            appendHex(result, buf[i]);
+            appendHex(result, buffer);
         }
         return result.toString();
     }

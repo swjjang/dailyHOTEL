@@ -26,18 +26,18 @@ public class SaleTime implements Parcelable
         readFromParcel(in);
     }
 
-    public String toString()
-    {
-        SimpleDateFormat sFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss", Locale.KOREA);
-        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append("currentTime : " + sFormat.format(mCurrentTime));
-        stringBuilder.append("\ndailyTime : " + sFormat.format(mDailyTime));
-
-        return stringBuilder.toString();
-    }
+    //    public String toString()
+    //    {
+    //        SimpleDateFormat sFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss", Locale.KOREA);
+    //        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+    //
+    //        StringBuilder stringBuilder = new StringBuilder();
+    //
+    //        stringBuilder.append("currentTime : " + sFormat.format(mCurrentTime));
+    //        stringBuilder.append("\ndailyTime : " + sFormat.format(mDailyTime));
+    //
+    //        return stringBuilder.toString();
+    //    }
 
     public String getDailyDayOftheWeek()
     {

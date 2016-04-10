@@ -3,10 +3,6 @@
     package="com.twoheart.dailyhotel"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="23"/>
-
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -288,19 +284,11 @@
         <activity
             android:name=".screen.hotel.payment.HotelPaymentWebActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".screen.gourmet.payment.GourmetPaymentWebActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait"/>
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

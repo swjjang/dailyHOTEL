@@ -14,10 +14,6 @@ public class Event implements Parcelable
     public String imageUrl;
     public String name;
 
-    public Event()
-    {
-    }
-
     public Event(Parcel in)
     {
         readFromParcel(in);

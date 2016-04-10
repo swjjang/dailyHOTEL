@@ -18,13 +18,6 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray>
 {
     private DailyHotelJsonArrayResponseListener mListener;
 
-    public DailyHotelJsonArrayRequest(int method, String url, Map<String, String> parameters, DailyHotelJsonArrayResponseListener listener, ErrorListener errorListener)
-    {
-        super(method, url, parameters, errorListener);
-
-        mListener = listener;
-    }
-
     public DailyHotelJsonArrayRequest(Object object, int method, String url, Map<String, String> parameters, DailyHotelJsonArrayResponseListener listener, ErrorListener errorListener)
     {
         super(object, method, url, parameters, errorListener);
@@ -48,8 +41,6 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray>
 
         try
         {
-            String test = new String(response.data, "UTF-8");
-
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
         } catch (UnsupportedEncodingException e)
         {
@@ -58,11 +49,7 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray>
 
         try
         {
-            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(new JSONArray(jsonString), HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException e)
-        {
-            return Response.error(new ParseError(e));
+            return Response.success(new JSONArray(parsed), HttpHeaderParser.parseCacheHeaders(response));
         } catch (JSONException je)
         {
             ExLog.e(parsed);

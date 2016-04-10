@@ -57,7 +57,6 @@ public class InputMobileNumberDialogActivity extends BaseActivity
         } else
         {
             finish();
-            return;
         }
     }
 
@@ -104,7 +103,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 
     private void setMobileNumber(String number)
     {
-        String[] countryMobile = null;
+        String[] countryMobile;
 
         if (number == null)
         {

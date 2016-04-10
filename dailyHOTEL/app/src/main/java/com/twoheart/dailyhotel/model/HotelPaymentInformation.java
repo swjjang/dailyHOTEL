@@ -79,7 +79,7 @@ public class HotelPaymentInformation extends PlacePaymentInformation
 
         private String mName;
 
-        private PaymentType(String name)
+        PaymentType(String name)
         {
             mName = name;
         }

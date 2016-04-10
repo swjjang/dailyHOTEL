@@ -226,7 +226,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         @JavascriptInterface
         public void feed(String msg)
         {
-            int resultCode = 0;
+            int resultCode;
             Intent payData = new Intent();
 
             if ("PAYMENT_BILLING_SUCCSESS".equals(msg) == true)

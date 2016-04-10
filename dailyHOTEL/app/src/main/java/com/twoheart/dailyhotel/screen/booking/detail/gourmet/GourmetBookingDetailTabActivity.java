@@ -131,7 +131,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     {
                         String phone = DailyPreference.getInstance(GourmetBookingDetailTabActivity.this).getCompanyPhoneNumber();
 
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(GourmetBookingDetailTabActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
@@ -172,7 +172,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
                     try
                     {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(phone).toString())));
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
                     } catch (ActivityNotFoundException e)
                     {
                         String message = getString(R.string.toast_msg_no_gourmet_call, mGourmetBookingDetail.gourmetPhone);

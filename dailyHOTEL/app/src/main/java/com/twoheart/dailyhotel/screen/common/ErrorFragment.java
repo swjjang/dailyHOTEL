@@ -89,7 +89,6 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         if (VolleyHttpClient.isAvailableNetwork() == false)
         {
             DailyToast.showToast(baseActivity, getString(R.string.toast_msg_please_chk_network_status), Toast.LENGTH_SHORT);
-            return;
         } else
         {
             if (mMainFragmentManager != null)

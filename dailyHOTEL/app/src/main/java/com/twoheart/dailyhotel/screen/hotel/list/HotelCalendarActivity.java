@@ -200,8 +200,6 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                 {
                     isStartPosition = true;
                 }
-
-                continue;
             } else
             {
                 if (view == textview)
