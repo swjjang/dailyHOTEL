@@ -45,6 +45,7 @@ import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyOkHttpImagePipelineConfigFactory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
@@ -944,7 +945,7 @@ public class Util implements Constants
         }
     }
 
-    public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName, final double latitude, final double longitude, boolean isOverseas)
+    public static void showShareMapDialog(final BaseActivity baseActivity, final PlaceType placeType, final String placeName, final double latitude, final double longitude, boolean isOverseas)
     {
         if (baseActivity == null || baseActivity.isFinishing() == true)
         {
@@ -982,6 +983,17 @@ public class Util implements Constants
                 }
 
                 Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED, "Daum", null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED, "Daum", null);
+                        break;
+                }
             }
         });
 
@@ -996,6 +1008,17 @@ public class Util implements Constants
                 }
 
                 Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED, "Naver", null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED, "Naver", null);
+                        break;
+                }
             }
         });
 
@@ -1010,6 +1033,17 @@ public class Util implements Constants
                 }
 
                 Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED, "Google", null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED, "Google", null);
+                        break;
+                }
             }
         });
 

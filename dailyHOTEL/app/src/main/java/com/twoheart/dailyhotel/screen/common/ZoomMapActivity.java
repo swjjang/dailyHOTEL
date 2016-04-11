@@ -41,7 +41,8 @@ public class ZoomMapActivity extends BaseActivity
     {
         HOTEL,
         GOURMET,
-        BOOKING,
+        HOTEL_BOOKING,
+        GOURMET_BOOKING
     }
 
     public static Intent newInstance(Context context, SourceType sourceType, String name, double latitude, double longitude, boolean isOverseas)
@@ -116,7 +117,8 @@ public class ZoomMapActivity extends BaseActivity
                 AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_MAP, null);
                 break;
 
-            case BOOKING:
+            case HOTEL_BOOKING:
+            case GOURMET_BOOKING:
                 //                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
                 break;
         }
@@ -144,7 +146,18 @@ public class ZoomMapActivity extends BaseActivity
                     return;
                 }
 
-                Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas);
+                switch (mSourceType)
+                {
+                    case HOTEL:
+                    case HOTEL_BOOKING:
+                        Util.showShareMapDialog(ZoomMapActivity.this, PlaceType.HOTEL, placeName, latitude, longitude, isOverseas);
+                        break;
+
+                    case GOURMET:
+                    case GOURMET_BOOKING:
+                        Util.showShareMapDialog(ZoomMapActivity.this, PlaceType.FNB, placeName, latitude, longitude, isOverseas);
+                        break;
+                }
             }
         });
 

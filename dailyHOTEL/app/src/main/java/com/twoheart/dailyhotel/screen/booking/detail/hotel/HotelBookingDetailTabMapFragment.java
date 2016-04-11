@@ -104,7 +104,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     return;
                 }
 
-                Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
+                Util.showShareMapDialog(baseActivity, PlaceType.HOTEL, mBookingDetail.placeName//
                     , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
             }
         });
@@ -137,7 +137,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         }
 
         Intent intent = ZoomMapActivity.newInstance(baseActivity//
-            , ZoomMapActivity.SourceType.BOOKING, mBookingDetail.placeName//
+            , ZoomMapActivity.SourceType.HOTEL_BOOKING, mBookingDetail.placeName//
             , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
 
         startActivity(intent);

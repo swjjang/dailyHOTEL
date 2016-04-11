@@ -594,10 +594,7 @@ public class HotelDetailActivity extends BaseActivity
 
             startActivity(intent);
 
-            //            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
-            //            String label = String.format("%s (%s-%s)", mHotelDetail.hotelName, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-            //
-            //            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYHOTEL_DETAIL, Action.CLICK, label, (long) mHotelDetail.hotelIndex);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_MAP_CLICKED, mHotelDetail.hotelName, null);
         }
 
         @Override
@@ -606,6 +603,8 @@ public class HotelDetailActivity extends BaseActivity
             Util.clipText(HotelDetailActivity.this, address);
 
             DailyToast.showToast(HotelDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, mHotelDetail.hotelName, null);
         }
     };
 
