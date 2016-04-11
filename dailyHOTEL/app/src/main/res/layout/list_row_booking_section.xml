@@ -6,7 +6,7 @@
               android:gravity="center_vertical"
               android:orientation="horizontal">
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/bookingSectionName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

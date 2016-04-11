@@ -37,11 +37,11 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.view.LocationFactory;
-import com.twoheart.dailyhotel.view.widget.DailyFloatingActionButtonBehavior;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.widget.DailyFloatingActionButtonBehavior;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -634,7 +634,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         lockUI();
 
-        LocationFactory.getInstance(baseActivity).startLocationMeasure(baseActivity, null, new LocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance(baseActivity).startLocationMeasure(baseActivity, null, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
@@ -717,7 +717,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+                DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
                 baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                     , getString(R.string.dialog_msg_used_gps)//
@@ -755,7 +755,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     return;
                 }
 
-                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+                DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
                 if (location == null)
                 {
@@ -1802,7 +1802,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         private ArrayList<Area> makeAreaList(JSONArray jsonArray) throws JSONException
         {
-            ArrayList<Area> areaList = new ArrayList<Area>();
+            ArrayList<Area> areaList = new ArrayList<>();
 
             int length = jsonArray.length();
 
@@ -1826,7 +1826,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
         {
-            ArrayList<Province> provinceList = new ArrayList<Province>();
+            ArrayList<Province> provinceList = new ArrayList<>();
 
             try
             {

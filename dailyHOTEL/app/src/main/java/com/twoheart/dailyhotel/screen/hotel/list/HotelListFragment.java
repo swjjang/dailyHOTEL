@@ -49,8 +49,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -727,7 +727,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             if (index != null)
             {
-                EventBanner eventBanner = mEventBannerList.get(index.intValue());
+                EventBanner eventBanner = mEventBannerList.get(index);
 
                 mOnCommunicateListener.selectEventBanner(eventBanner);
             }

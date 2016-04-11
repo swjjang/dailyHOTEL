@@ -37,9 +37,9 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -435,7 +435,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 }
             }
 
-            ArrayList<Booking> bookingArrayList = new ArrayList<Booking>(length + 3);
+            ArrayList<Booking> bookingArrayList = new ArrayList<>(length + 3);
 
             // 입금 대기가 있는 경우.
             if (waitBookingList.size() > 0)

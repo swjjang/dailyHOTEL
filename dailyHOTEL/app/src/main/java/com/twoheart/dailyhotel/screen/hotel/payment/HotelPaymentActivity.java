@@ -63,10 +63,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.FinalCheckLayout;
-import com.twoheart.dailyhotel.view.widget.DailySignatureView;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
+import com.twoheart.dailyhotel.widget.DailySignatureView;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 

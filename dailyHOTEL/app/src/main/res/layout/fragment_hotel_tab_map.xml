@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomLayout">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/placeholderMapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/hv_hotel_grade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="11.5dp"/>
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/tv_hotel_tab_map_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                     android:textSize="18dp"/>
             </RelativeLayout>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_hotel_tab_map_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                 dailyFont:style="DemiLight"
                 android:layout_toLeftOf="@+id/copyAddressView"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/copyAddressView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                 android:layout_marginLeft="5dp"/>
         </RelativeLayout>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/searchMapView"
             android:layout_width="match_parent"
             android:layout_height="55dp"

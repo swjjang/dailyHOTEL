@@ -85,7 +85,7 @@ public class NoticeActivity extends BaseActivity
         public void onResponse(String url, JSONObject response)
         {
 
-            mList = new ArrayList<Board>();
+            mList = new ArrayList<>();
 
             try
             {

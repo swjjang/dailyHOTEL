@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.WakeLock;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 /**
  * 새벽 2시가 지났을때 호텔 리스트가 아닌 타이머 화면이 나오는데 거기서 타이머를 설정할 경우 시간이되면 이 다이얼로그형 엑티비티가

@@ -10,7 +10,7 @@
         android:layout_height="1px"
         android:background="@color/curation_information_line"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="22dp"
         android:background="@color/calendar_month_line"
@@ -57,7 +57,7 @@
                 android:visibility="gone"/>
         </FrameLayout>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/personCountView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -98,7 +98,7 @@
         android:layout_height="1px"
         android:background="@color/curation_information_line"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="22dp"
         android:background="@color/calendar_month_line"
@@ -121,7 +121,7 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/doubleCheckView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
             android:textColor="@drawable/selector_curation_textcolor"
             android:textSize="11dp"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/twinCheckView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -143,7 +143,7 @@
             android:textColor="@drawable/selector_curation_textcolor"
             android:textSize="11dp"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/heatedFloorsCheckView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -170,7 +170,7 @@
         android:layout_height="1px"
         android:background="@color/curation_information_line"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="22dp"
         android:background="@color/calendar_month_line"

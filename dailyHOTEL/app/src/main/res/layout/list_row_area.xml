@@ -18,14 +18,14 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/areaTextView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@drawable/selector_selectarea_titlecolor"
                 android:textSize="15dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/areaSubTextView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,14 +52,14 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/areaTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@drawable/selector_selectarea_titlecolor"
                 android:textSize="15dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/areaSubTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

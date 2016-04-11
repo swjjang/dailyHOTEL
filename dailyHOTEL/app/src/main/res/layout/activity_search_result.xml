@@ -27,7 +27,7 @@
             android:layout_toRightOf="@+id/backImageView"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/titleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                 android:textColor="@color/search_text"
                 android:textSize="15dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/dateView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 android:textSize="11dp"/>
         </LinearLayout>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/searchCancelView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -84,7 +84,7 @@
             android:layout_centerVertical="true"
             android:paddingBottom="40dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/searcyEmptyView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                 android:textSize="18dp"
                 android:textStyle="bold"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/researchUnderTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
 
 
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/researchView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -120,7 +120,7 @@
             android:layout_above="@+id/callUnderTextView"/>
 
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/callUnderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
             android:textSize="12dp"
             android:layout_above="@+id/callTextView"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/callTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
         android:layout_below="@+id/toolbar"
         android:visibility="gone">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/resultCountView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

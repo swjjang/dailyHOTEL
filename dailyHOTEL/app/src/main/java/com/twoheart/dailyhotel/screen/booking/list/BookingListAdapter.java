@@ -14,7 +14,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionListView.PinnedSectionListAdapter;
+import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

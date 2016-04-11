@@ -18,9 +18,9 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkCon
 import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.view.widget.DailyViewPager;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.DailyViewPager;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.ArrayList;
 import java.util.List;

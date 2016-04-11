@@ -25,8 +25,8 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.LocationFactory;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ZoomMapActivity extends BaseActivity
 {
@@ -269,7 +269,7 @@ public class ZoomMapActivity extends BaseActivity
 
     private void searchMyLocation(BaseActivity baseActivity)
     {
-        LocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new LocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
@@ -309,7 +309,7 @@ public class ZoomMapActivity extends BaseActivity
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+                DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
 
                 showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
                 {
@@ -330,7 +330,7 @@ public class ZoomMapActivity extends BaseActivity
                     return;
                 }
 
-                LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+                DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
 
                 if (mMyLocationMarkerOptions == null)
                 {

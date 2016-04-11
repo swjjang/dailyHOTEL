@@ -171,7 +171,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, keyword, HotelSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
+                Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, text, keyword, HotelSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }

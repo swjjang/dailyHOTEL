@@ -14,7 +14,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

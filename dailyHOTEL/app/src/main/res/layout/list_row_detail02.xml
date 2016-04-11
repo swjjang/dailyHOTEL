@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:gravity="center_vertical">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/hotelGradeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:textSize="11.5dp"
             android:visibility="invisible"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/hotelNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         android:background="@color/selectarea_underline"
         android:layout_marginBottom="10dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/satisfactionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
         android:layout_marginRight="15dp"
         dailyFont:style="DemiLight"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/dateView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

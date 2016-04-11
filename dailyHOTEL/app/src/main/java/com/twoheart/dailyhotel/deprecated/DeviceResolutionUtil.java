@@ -26,7 +26,7 @@ public class DeviceResolutionUtil
         DisplayMetrics displayMetrics = new DisplayMetrics();
         act.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> hm = new HashMap<>();
         hm.put(KEY_WIDTH, displayMetrics.widthPixels);
         hm.put(KEY_HEIGHT, displayMetrics.heightPixels);
         //		hm.put(KEY_DENSITY, displayMetrics.density);

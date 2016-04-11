@@ -4,7 +4,7 @@
                 android:layout_height="49dp"
                 android:gravity="center_vertical">
 
-    <com.twoheart.dailyhotel.view.widget.DailyButton
+    <com.twoheart.dailyhotel.widget.DailyButton
         android:id="@+id/radioButton"
         android:layout_width="21dp"
         android:layout_height="21dp"
@@ -14,7 +14,7 @@
         android:duplicateParentState="true"
         android:focusable="false"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCountryCodeTextView
+    <com.twoheart.dailyhotel.widget.DailyCountryCodeTextView
         android:id="@+id/codeTextView"
         android:layout_width="64dp"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         android:textColor="@drawable/selector_countrycode_code_textview_color"
         android:textSize="17dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCountryCodeTextView
+    <com.twoheart.dailyhotel.widget.DailyCountryCodeTextView
         android:id="@+id/countryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

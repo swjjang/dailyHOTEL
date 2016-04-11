@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.CloseOnBackPressed;
+import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 
 public class MainActivity extends BaseActivity implements Constants
 {

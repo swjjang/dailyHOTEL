@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/calendar_month_line"
@@ -44,7 +44,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -53,7 +53,7 @@
                 android:textColor="@color/curation_information_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailySwitchCompat
+            <com.twoheart.dailyhotel.widget.DailySwitchCompat
                 android:id="@+id/btn_on_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             android:layout_marginRight="15dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:duplicateParentState="true"
@@ -84,7 +84,7 @@
                 android:textColor="@drawable/selector_textview_bookingcolor"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_hotel_payment_original_price_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
             android:layout_marginRight="15dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:duplicateParentState="true"
@@ -112,7 +112,7 @@
                 android:textColor="@drawable/selector_textview_bookingcolor"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_hotel_payment_credit_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
             android:layout_marginRight="15dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -143,7 +143,7 @@
                 android:textColor="@color/curation_information_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_hotel_payment_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
             android:paddingLeft="15dp"
             android:visibility="invisible">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="28dp"
                 android:layout_height="15dp"
                 android:layout_alignParentRight="false"
@@ -200,7 +200,7 @@
             android:layout_toLeftOf="@id/cardManagerButton"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/easyPaymentRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
@@ -210,7 +210,7 @@
                 android:textColor="@color/curation_information_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_card_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -220,7 +220,7 @@
                 android:textColor="@color/curation_title_text"
                 android:textSize="12dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/rb_payment_card"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
@@ -230,7 +230,7 @@
                 android:textColor="@color/curation_information_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/rb_payment_hp"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
@@ -240,7 +240,7 @@
                 android:textColor="@color/curation_information_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/rb_payment_account"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"

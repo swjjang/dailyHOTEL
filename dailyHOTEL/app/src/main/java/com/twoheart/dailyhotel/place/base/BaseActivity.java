@@ -34,12 +34,11 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.LoadingDialog;
-import com.twoheart.dailyhotel.view.OnLoadListener;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.screen.common.LoadingDialog;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
-public abstract class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
+public abstract class BaseActivity extends AppCompatActivity implements Constants, ErrorListener
 {
     protected boolean mIsShowStatusBar = true;
 

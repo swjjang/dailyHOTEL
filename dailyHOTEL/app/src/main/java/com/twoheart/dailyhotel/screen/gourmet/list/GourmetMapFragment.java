@@ -38,9 +38,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.LoadingDialog;
-import com.twoheart.dailyhotel.view.LocationFactory;
-import com.twoheart.dailyhotel.view.LoopViewPager;
+import com.twoheart.dailyhotel.screen.common.LoadingDialog;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +69,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
     private PlaceClusterRenderer mPlaceClusterRenderer;
     private Marker mSelectedMarker;
     private View mMyLocationView;
-    private LoopViewPager mViewPager;
+    private DailyLoopViewPager mViewPager;
     private GourmetMapViewPagerAdapter mGourmetMapViewPagerAdapter;
 
     public interface OnUserActionListener
@@ -159,7 +159,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
             return;
         }
 
-        mViewPager = new LoopViewPager(baseActivity);
+        mViewPager = new DailyLoopViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
@@ -186,7 +186,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
             mGoogleMap.clear();
         }
 
-        LocationFactory.getInstance((BaseActivity) getActivity()).clear();
+        DailyLocationFactory.getInstance((BaseActivity) getActivity()).clear();
 
         super.onDestroyView();
     }
@@ -813,7 +813,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
 
     private void searchMyLocation(BaseActivity baseActivity)
     {
-        LocationFactory.getInstance(baseActivity).startLocationMeasure(this, mMyLocationView, new LocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance(baseActivity).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
@@ -884,7 +884,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+                DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
                 baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
                 {
@@ -907,7 +907,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                     return;
                 }
 
-                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+                DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
                 if (mMyLocationMarkerOptions == null)
                 {

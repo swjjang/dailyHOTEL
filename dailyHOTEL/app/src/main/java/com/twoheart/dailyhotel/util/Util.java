@@ -46,8 +46,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyOkHttpImagePipelineConfigFactory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
 

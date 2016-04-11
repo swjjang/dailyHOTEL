@@ -16,7 +16,7 @@
             android:layout_marginTop="5dp"
             android:src="@drawable/info_ic_text_dot"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -16,7 +16,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
+import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         {
             Integer resourceId = (Integer) convertView.getTag(parent.getId());
 
-            if (resourceId == null || resourceId.intValue() != R.layout.list_row_area)
+            if (resourceId == null || resourceId != R.layout.list_row_area)
             {
                 convertView = mInflater.inflate(R.layout.list_row_area, parent, false);
             }
@@ -196,7 +196,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         {
             Integer resourceId = (Integer) convertView.getTag(parent.getId());
 
-            if (resourceId == null || resourceId.intValue() != R.layout.list_row_province)
+            if (resourceId == null || resourceId != R.layout.list_row_province)
             {
                 convertView = mInflater.inflate(R.layout.list_row_province, parent, false);
             }

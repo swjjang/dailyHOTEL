@@ -5,7 +5,7 @@
              android:background="@drawable/shape_region_circle"
              android:gravity="center">
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -42,7 +42,7 @@
 
             <!-- 결제 버튼 -->
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/payButton"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"

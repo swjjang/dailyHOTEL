@@ -39,7 +39,7 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -202,12 +202,9 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
             try
             {
                 googleMapSetting(mMapLayout);
-            } catch (Exception e)
+            } catch (Exception | Error e)
             {
                 ExLog.d(e.toString());
-            } catch (Error error)
-            {
-                ExLog.d(error.toString());
             }
         }
     }
@@ -303,20 +300,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     googleMapLayout.addView(mGoogleMapLayout);
 
                     mapFragment = (SupportMapFragment) baseActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-
-                    googleMapLayout.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            onMapClick(new LatLng(mBookingDetail.latitude, mBookingDetail.longitude));
-                        }
-                    });
-                    return;
-                } catch (Error e)
+                } catch (Exception | Error e)
                 {
                     ExLog.e(e.toString());
 

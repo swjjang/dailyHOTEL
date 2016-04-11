@@ -32,9 +32,9 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.widget.DailyEditText;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -492,7 +492,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
                 lockUI();
 
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
 
                 if (isSatisfaction == true)
                 {
@@ -729,7 +729,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
                     if (mReviewCodeList == null)
                     {
-                        mReviewCodeList = new ArrayList<ReviewCode>(5);
+                        mReviewCodeList = new ArrayList<>(5);
                     }
 
                     mReviewCodeList.clear();

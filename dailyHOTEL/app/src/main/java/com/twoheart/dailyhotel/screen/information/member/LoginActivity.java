@@ -59,9 +59,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONObject;
 
@@ -253,7 +253,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
 
         mStoreParams.clear();
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
 
         if (Util.isTextEmpty(email) == false)
         {
@@ -386,7 +386,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         String passwordEncrypt = Crypto.encrypt(password.replace("\n", ""));
 
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("pw", passwordEncrypt);
         params.put("social_id", "0");
@@ -674,7 +674,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         // 회원가입에 성공하면 이제 로그인 절차
                         DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(true);
 
-                        HashMap<String, String> params = new HashMap<String, String>();
+                        HashMap<String, String> params = new HashMap<>();
 
                         if (mStoreParams.containsKey("email") == true)
                         {

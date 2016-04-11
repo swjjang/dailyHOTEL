@@ -9,7 +9,7 @@
         android:layout_height="1px"
         android:background="@color/curation_information_line"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="22dp"
         android:background="@color/calendar_month_line"
@@ -36,7 +36,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/regionCheckView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                 android:textColor="@drawable/selector_curation_textcolor"
                 android:textSize="11dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/distanceCheckView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                 android:textColor="@drawable/selector_curation_textcolor"
                 android:textSize="11dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/lowPriceCheckView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:textColor="@drawable/selector_curation_textcolor"
                 android:textSize="11dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/highPriceCheckView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

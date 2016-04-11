@@ -34,9 +34,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.LoopViewPager;
-import com.twoheart.dailyhotel.view.widget.DailyPlaceDetailListView;
-import com.twoheart.dailyhotel.view.widget.DailyViewPagerIndicator;
+import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
+import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
+import com.twoheart.dailyhotel.widget.DailyViewPagerIndicator;
 
 import java.util.ArrayList;
 
@@ -51,7 +51,7 @@ public class GourmetDetailLayout
 
     protected PlaceDetail mPlaceDetail;
     protected BaseActivity mActivity;
-    protected LoopViewPager mViewPager;
+    protected DailyLoopViewPager mViewPager;
     protected DailyViewPagerIndicator mDailyViewPagerIndicator;
 
     protected DailyPlaceDetailListView mListView;
@@ -106,7 +106,7 @@ public class GourmetDetailLayout
         // 이미지 ViewPage 넣기.
         mDailyViewPagerIndicator = (DailyViewPagerIndicator) activity.findViewById(R.id.viewpagerIndicator);
 
-        mViewPager = (LoopViewPager) activity.findViewById(R.id.defaultHotelImageView);
+        mViewPager = (DailyLoopViewPager) activity.findViewById(R.id.defaultHotelImageView);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
         if (defaultImageUrl != null)
@@ -116,7 +116,7 @@ public class GourmetDetailLayout
                 mImageAdapter = new PlaceDetailImageViewPagerAdapter(mActivity);
             }
 
-            ArrayList<ImageInformation> arrayList = new ArrayList<ImageInformation>();
+            ArrayList<ImageInformation> arrayList = new ArrayList<>();
             arrayList.add(new ImageInformation(defaultImageUrl, null));
 
             mImageAdapter.setData(arrayList);

@@ -15,7 +15,7 @@
         android:layout_marginTop="5dp"
         android:orientation="vertical">
 
-        <com.twoheart.dailyhotel.view.widget.DailyEditText
+        <com.twoheart.dailyhotel.widget.DailyEditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="47dp"
@@ -29,7 +29,7 @@
             android:textSize="15dp"
             android:theme="@style/EditTextTheme"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyEditText
+        <com.twoheart.dailyhotel.widget.DailyEditText
             android:id="@+id/passowrdEditText"
             android:layout_width="match_parent"
             android:layout_height="47dp"
@@ -44,7 +44,7 @@
             android:textSize="15dp"
             android:theme="@style/EditTextTheme"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyCheckBox
+        <com.twoheart.dailyhotel.widget.DailyCheckBox
             android:id="@+id/autoSigninView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             android:theme="@style/CheckBoxTheme"
             android:visibility="gone"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/signinView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/findPasswordView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 android:textColor="@color/information_title"
                 android:textSize="12dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/signupView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
             android:scaleType="fitEnd"
             android:src="@drawable/facebook_icon"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
@@ -145,7 +145,7 @@
             android:scaleType="fitEnd"
             android:src="@drawable/kakao_login_symbol"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"

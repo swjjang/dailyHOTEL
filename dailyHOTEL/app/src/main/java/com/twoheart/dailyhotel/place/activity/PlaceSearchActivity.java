@@ -30,9 +30,9 @@ import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.LocationFactory;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 public abstract class PlaceSearchActivity extends BaseActivity
 {
@@ -254,7 +254,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
     {
         lockUI();
 
-        LocationFactory.getInstance(this).startLocationMeasure(this, null, new LocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance(this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
@@ -319,7 +319,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                LocationFactory.getInstance(PlaceSearchActivity.this).stopLocationMeasure();
+                DailyLocationFactory.getInstance(PlaceSearchActivity.this).stopLocationMeasure();
 
                 showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                     , getString(R.string.dialog_msg_used_gps)//
@@ -345,7 +345,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
                     return;
                 }
 
-                LocationFactory.getInstance(PlaceSearchActivity.this).stopLocationMeasure();
+                DailyLocationFactory.getInstance(PlaceSearchActivity.this).stopLocationMeasure();
 
                 if (location == null)
                 {

@@ -5,7 +5,7 @@
               android:background="@color/countrycode_section_background"
               android:gravity="center_vertical">
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/sectionTextView"
         android:layout_width="match_parent"
         android:layout_height="35dp"

@@ -170,7 +170,7 @@ public abstract class PlaceRegionListNetworkController
 
     protected ArrayList<Area> makeAreaList(JSONArray jsonArray)
     {
-        ArrayList<Area> areaList = new ArrayList<Area>();
+        ArrayList<Area> areaList = new ArrayList<>();
 
         try
         {

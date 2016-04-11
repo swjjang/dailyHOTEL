@@ -11,7 +11,7 @@
                 android:paddingRight="12dp"
                 android:paddingTop="12dp">
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/tv_board_subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         android:textColor="@color/textView_textColor_main"
         android:textSize="16.5dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/tv_board_regdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

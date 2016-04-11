@@ -35,7 +35,7 @@ public class EventListAdapter extends ArrayAdapter<Event>
 
         if (mArrayList == null)
         {
-            mArrayList = new ArrayList<Event>();
+            mArrayList = new ArrayList<>();
         }
 
         mArrayList.addAll(collection);

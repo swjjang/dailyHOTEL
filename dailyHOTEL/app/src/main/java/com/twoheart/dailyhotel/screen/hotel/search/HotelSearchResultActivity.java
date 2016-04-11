@@ -26,6 +26,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
     private static final String INTENT_EXTRA_DATA_LOCATION = "location";
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searcyType";
+    private static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
 
     private static final int COUNT_PER_TIMES = 30;
 
@@ -37,6 +38,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private SaleTime mSaleTime;
     private int mNights;
     private Keyword mKeyword;
+    private String mInputText;
     private Location mLocation;
     private String mCustomerSatisfactionTimeMessage;
 
@@ -44,20 +46,27 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
     private int mSearchType;
     private HotelSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Keyword keyword, int searchType)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, String inputText, Keyword keyword, int searchType)
     {
         Intent intent = new Intent(context, HotelSearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType);
+        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
 
         return intent;
     }
 
+
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, Keyword keyword, int searchType)
+    {
+        return newInstance(context, saleTime, nights, null, keyword, searchType);
+    }
+
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String text)
     {
-        return newInstance(context, saleTime, nights, new Keyword(0, text), SEARCHTYPE_SEARCHES);
+        return newInstance(context, saleTime, nights, null, new Keyword(0, text), SEARCHTYPE_SEARCHES);
     }
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, Location location)
@@ -92,6 +101,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         }
 
         mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
+        mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
         mOffset = 0;
     }
 
@@ -263,10 +273,10 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
                         if (keyword.price == 0)
                         {
-                            prefix = "지역";
+                            prefix = String.format("지역-%s", mInputText);
                         } else
                         {
-                            prefix = "호텔";
+                            prefix = String.format("호텔-%s", mInputText);
                         }
                         break;
 
@@ -308,10 +318,10 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
                         if (keyword.price == 0)
                         {
-                            prefix = "지역";
+                            prefix = String.format("지역-%s", mInputText);
                         } else
                         {
-                            prefix = "호텔";
+                            prefix = String.format("호텔-%s", mInputText);
                         }
                         break;
 

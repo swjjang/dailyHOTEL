@@ -29,7 +29,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_wait_timer_main"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                 android:textSize="18dp"
                 android:textStyle="bold"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_wait_timer_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             android:background="@drawable/open_stanby_btn_alert"
             android:gravity="center_horizontal">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -88,7 +88,7 @@
             android:background="@drawable/open_stanby_btn_alert"
             android:gravity="center_horizontal">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -113,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="25dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:background="@color/calendar_month_line"
@@ -142,7 +142,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp">
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
                     android:layout_gravity="center_vertical"
@@ -165,7 +165,7 @@
             android:paddingBottom="20dp"
             android:paddingTop="20dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
@@ -173,7 +173,7 @@
                 android:textColor="@color/curation_title_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_credit_money"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
             android:layout_height="25dp"
             >
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:background="@color/calendar_month_line"
@@ -218,7 +218,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp">
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
                     android:layout_gravity="center_vertical"
@@ -241,7 +241,7 @@
             android:paddingBottom="20dp"
             android:paddingTop="20dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
@@ -249,7 +249,7 @@
                 android:textColor="@color/curation_title_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/tv_credit_recommender_code"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -267,7 +267,7 @@
             android:layout_marginRight="15dp"
             android:background="@color/curation_information_line"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/tv_credit_recommender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -300,7 +300,7 @@
                     android:clickable="false"
                     android:src="@drawable/ic_detail_share_kakao"/>
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"

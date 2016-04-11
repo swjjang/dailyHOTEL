@@ -14,7 +14,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public abstract class PlaceSearchResultActivity extends BaseActivity
 {

@@ -44,7 +44,7 @@ public class DetailInformation implements Parcelable
             JSONArray jsonArray = jsonObject.getJSONArray(title);
             int length = jsonArray.length();
 
-            mContentsList = new ArrayList<String>(length);
+            mContentsList = new ArrayList<>(length);
 
             for (int i = 0; i < length; i++)
             {
@@ -67,7 +67,7 @@ public class DetailInformation implements Parcelable
 
     protected void readFromParcel(Parcel in)
     {
-        mContentsList = new ArrayList<String>();
+        mContentsList = new ArrayList<>();
 
         title = in.readString();
         in.readList(mContentsList, List.class.getClassLoader());

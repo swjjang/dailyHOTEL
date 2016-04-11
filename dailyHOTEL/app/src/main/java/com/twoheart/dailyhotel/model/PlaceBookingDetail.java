@@ -87,7 +87,7 @@ public abstract class PlaceBookingDetail implements Parcelable
 
             String key = specObj.getString("key");
             JSONArray valueArr = specObj.getJSONArray("value");
-            List<String> valueList = new ArrayList<String>(valueArr.length());
+            List<String> valueList = new ArrayList<>(valueArr.length());
 
             for (int j = 0; j < valueArr.length(); j++)
             {

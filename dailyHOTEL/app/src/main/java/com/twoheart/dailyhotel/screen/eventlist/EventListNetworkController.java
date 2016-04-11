@@ -113,7 +113,7 @@ public class EventListNetworkController extends BaseNetworkController
                             mListener.onEventListResponse(null);
                         } else
                         {
-                            ArrayList<Event> eventList = new ArrayList<Event>(length);
+                            ArrayList<Event> eventList = new ArrayList<>(length);
 
                             for (int i = 0; i < length; i++)
                             {
@@ -179,7 +179,7 @@ public class EventListNetworkController extends BaseNetworkController
                 int recommender = jsonObject.getInt("recommender_code");
                 boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                if (Util.isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
+                if (Util.isEmptyTextField(user.getEmail(), user.getPhone(), user.getName()) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                 {
                     mListener.onRequestEvent(user.getUserIdx());
                 } else

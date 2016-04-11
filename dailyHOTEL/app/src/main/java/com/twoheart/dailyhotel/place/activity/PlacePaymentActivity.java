@@ -30,7 +30,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

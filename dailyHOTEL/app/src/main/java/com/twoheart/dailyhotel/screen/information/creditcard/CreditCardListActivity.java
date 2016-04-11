@@ -15,8 +15,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.CreditCardLayout;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -292,7 +291,7 @@ public class CreditCardListActivity extends BaseActivity
                 {
                     AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST, null);
 
-                    arrayList = new ArrayList<CreditCard>(length);
+                    arrayList = new ArrayList<>(length);
 
                     boolean hasCreditCard = false;
                     JSONObject jsonObject;

@@ -1,17 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * DailyHotel
- * <p>
- * Android의 Application을 상속받은 서브 클래스로서 어플리케이션의 가장
- * 기본이 되는 클래스이다. 이 클래스에서는 어플리케이션에서 전역적으로 사용되
- * 는 GoogleAnalytics와 폰트, Volley, Universal Image Loder를
- * 초기화하는 작업을 생성될 시(onCreate)에 수행한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel;
 
 import android.app.Activity;
@@ -30,7 +16,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Locale;
 
