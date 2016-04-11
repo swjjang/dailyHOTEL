@@ -8,17 +8,12 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
 public class GourmetBookingDetail extends PlaceBookingDetail
 {
     public Place.Grade grade;
     public int ticketCount;
     public String ticketName;
-    public String sday;
+    public long reservationTime;
     public String category;
 
     public GourmetBookingDetail()
@@ -38,7 +33,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         dest.writeString(grade.name());
         dest.writeInt(ticketCount);
         dest.writeString(ticketName);
-        dest.writeString(sday);
+        dest.writeLong(reservationTime);
         dest.writeString(category);
     }
 
@@ -49,7 +44,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         grade = Place.Grade.valueOf(in.readString());
         ticketCount = in.readInt();
         ticketName = in.readString();
-        sday = in.readString();
+        reservationTime = in.readLong();
         category = in.readString();
     }
 
@@ -75,12 +70,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
 
         ticketCount = jsonObject.getInt("ticket_count");
         ticketName = jsonObject.getString("ticket_name");
-        long day = jsonObject.getLong("arrival_time");
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        sday = format.format(new Date(day));
+        reservationTime = jsonObject.getLong("arrival_time");
 
         // phone1은 프론트
         String phone1 = jsonObject.getString("phone1");

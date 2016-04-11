@@ -524,10 +524,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             startActivity(intent);
 
-            //            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay());
-            //            String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd"));
-            //
-            //            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.DAILYGOURMET_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, Action.GOURMET_DETAIL_MAP_CLICKED, mPlaceDetail.name, null);
         }
 
         @Override
@@ -542,6 +539,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
             Util.clipText(PlaceDetailActivity.this, address);
 
             DailyToast.showToast(PlaceDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, Action.GOURMET_DETAIL_ADDRESS_COPY_CLICKED, mPlaceDetail.name, null);
         }
     };
 

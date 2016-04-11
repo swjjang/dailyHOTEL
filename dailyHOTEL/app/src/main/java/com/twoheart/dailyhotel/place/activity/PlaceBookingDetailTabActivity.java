@@ -1,11 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * HotelBookingDetailTabActivity (예약한 호텔의 예약, 정보, 지도탭을 보여주는 화면)
- * <p>
- * 예약한 호텔리스트에서 호텔 클릭 시 호텔의 정보들을 보여주는 화면이다.
- * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
- */
 package com.twoheart.dailyhotel.place.activity;
 
 import android.os.Bundle;
@@ -36,6 +28,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     protected abstract void requestPlaceBookingDetail(int reservationIndex);
 
     protected abstract void onOptionsItemSelected(View view);
+
+    protected abstract void onTabSelected(int position);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -119,12 +113,14 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
+            int position = tab.getPosition();
+
             if (mViewPager != null)
             {
-                mViewPager.setCurrentItem(tab.getPosition());
+                mViewPager.setCurrentItem(position);
             }
 
-            switch (tab.getPosition())
+            switch (position)
             {
                 case 0:
                     AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL, null);
@@ -138,6 +134,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
                     AnalyticsManager.getInstance(PlaceBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_MAP, null);
                     break;
             }
+
+            PlaceBookingDetailTabActivity.this.onTabSelected(position);
         }
 
         @Override

@@ -13,19 +13,7 @@ public class Booking implements Parcelable
 {
     public static final int TYPE_ENTRY = 0;
     public static final int TYPE_SECTION = 1;
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Booking createFromParcel(Parcel in)
-        {
-            return new Booking(in);
-        }
 
-        @Override
-        public Booking[] newArray(int size)
-        {
-            return new Booking[size];
-        }
-    };
     public int reservationIndex; // 호텔 예약 고유 번호.
     public int type = TYPE_ENTRY;
     public String placeName;
@@ -114,4 +102,18 @@ public class Booking implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Booking createFromParcel(Parcel in)
+        {
+            return new Booking(in);
+        }
+
+        @Override
+        public Booking[] newArray(int size)
+        {
+            return new Booking[size];
+        }
+    };
 }

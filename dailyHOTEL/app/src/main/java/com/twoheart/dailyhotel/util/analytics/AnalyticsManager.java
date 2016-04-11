@@ -349,6 +349,9 @@ public class AnalyticsManager
         public static final String HOTEL_SORT_FILTER_BUTTON_CLICKED = "HotelSortFilterButtonClicked";
         public static final String HOTEL_SORT_FILTER_BUTTON_UNCLICKED = "HotelSortFilterButtonUnClicked";
         public static final String HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED = "HotelSortFilterApplyButtonClicked";
+        public static final String HOTEL_DETAIL_MAP_CLICKED = "HotelDetailMapClicked";
+        public static final String HOTEL_DETAIL_ADDRESS_COPY_CLICKED = "HotelDetailAddressCopyClicked";
+        public static final String HOTEL_DETAIL_NAVIGATION_APP_CLICKED = "HotelDetailNavigationAppClicked";
         //
         public static final String SOCIAL_SHARE_CLICKED = "SocialShareClicked";
         public static final String KAKAO_INQUIRY_CLICKED = "KakaoInquiryClicked";
@@ -370,6 +373,9 @@ public class AnalyticsManager
         public static final String GOURMET_SORT_FILTER_BUTTON_CLICKED = "GourmetSortFilterButtonClicked";
         public static final String GOURMET_SORT_FILTER_BUTTON_UNCLICKED = "GourmetSortFilterButtonUnClicked";
         public static final String GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED = "GourmetSortFilterApplyButtonClicked";
+        public static final String GOURMET_DETAIL_MAP_CLICKED = "GourmetDetailMapClicked";
+        public static final String GOURMET_DETAIL_ADDRESS_COPY_CLICKED = "GourmetDetailAddressCopyClicked";
+        public static final String GOURMET_DETAIL_NAVIGATION_APP_CLICKED = "GourmetDetailNavigationAppClicked";
         //
         public static final String TICKET_TYPE_CLICKED = "TicketTypeClicked";
         public static final String TICKET_TYPE_ITEM_CLICKED = "TicketTypeItemClicked";
@@ -420,6 +426,13 @@ public class AnalyticsManager
         //
         public static final String LOCATION_AGREEMENT_POPPEDUP = "LocationAgreementPoppedup";
         public static final String CALL_INQUIRY_CLICKED = "CallInquiryClicked";
+        //
+        public static final String UPCOMING_BOOKING_MAP_VIEW_CLICKED = "UpcomingBookingMapViewClicked";
+        public static final String UPCOMING_BOOKING_ADDRESS_COPY_CLICKED = "UpcomingBookingAddressCopyClicked";
+        public static final String UPCOMING_BOOKING_NAVIGATION_APP_CLICKED = "UpcomingBookingNavigationAppClicked";
+        public static final String PAST_BOOKING_MAP_VIEW_CLICKED = "PastBookingMapViewClicked";
+        public static final String PAST_BOOKING_ADDRESS_COPY_CLICKED = "PastBookingAddressCopyClicked";
+        public static final String PAST_BOOKING_NAVIGATION_APP_CLICKED = "PastBookingNavigationAppClicked";
     }
 
     public static class Category
@@ -430,6 +443,7 @@ public class AnalyticsManager
         public static final String POPUP_BOXES = "PopupBoxes";
         public static final String HOTEL_SEARCH = "HotelSearches";
         public static final String GOURMET_SEARCH_ = "GourmetSearches";
+        public static final String BOOKING_STATUS = "BookingStatus";
     }
 
     public static class Label

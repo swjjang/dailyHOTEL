@@ -26,6 +26,11 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
@@ -81,21 +86,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
 
-        TextView tvCustomerName = (TextView) view.findViewById(R.id.tv_booking_tab_user_name);
-        TextView tvCustomerPhone = (TextView) view.findViewById(R.id.tv_booking_tab_user_phone);
-        TextView tvHotelName = (TextView) view.findViewById(R.id.tv_booking_tab_hotel_name);
-        TextView tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
-        TextView tvBedtype = (TextView) view.findViewById(R.id.tv_booking_tab_bedtype);
-        TextView tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
-        TextView tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
-
-        tvHotelName.setText(mBookingDetail.placeName);
-        tvAddress.setText(mBookingDetail.address);
-        tvBedtype.setText(mBookingDetail.roomName);
-        tvCustomerName.setText(mBookingDetail.guestName);
-        tvCustomerPhone.setText(Util.addHippenMobileNumber(baseActivity, mBookingDetail.guestPhone));
-        tvCheckIn.setText(mBookingDetail.checkInDay);
-        tvCheckOut.setText(mBookingDetail.checkOutDay);
+        initHotelInformationLayout(view, mBookingDetail);
+        initCheckInOutInformationLayout(view, mBookingDetail);
+        initGuestInformationLayout(view, mBookingDetail);
 
         // 영수증 발급
         TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
@@ -141,5 +134,53 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         }
 
         return view;
+    }
+
+    private void initHotelInformationLayout(View view, HotelBookingDetail bookingDetail)
+    {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
+        TextView tvHotelName = (TextView) view.findViewById(R.id.tv_booking_tab_hotel_name);
+        TextView tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
+        TextView tvBedtype = (TextView) view.findViewById(R.id.tv_booking_tab_bedtype);
+
+        tvHotelName.setText(bookingDetail.placeName);
+        tvAddress.setText(bookingDetail.address);
+        tvBedtype.setText(bookingDetail.roomName);
+    }
+
+    private void initCheckInOutInformationLayout(View view, HotelBookingDetail bookingDetail)
+    {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
+        TextView tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
+        TextView tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        // Check In
+        String checkInDay = simpleDateFormat.format(new Date(bookingDetail.checkInDate));
+
+        // Check Out
+        String checkOutDay = simpleDateFormat.format(new Date(bookingDetail.checkOutDate));
+
+        tvCheckIn.setText(checkInDay);
+        tvCheckOut.setText(checkOutDay);
+    }
+
+    private void initGuestInformationLayout(View view, HotelBookingDetail bookingDetail)
+    {
+        TextView tvCustomerName = (TextView) view.findViewById(R.id.tv_booking_tab_user_name);
+        TextView tvCustomerPhone = (TextView) view.findViewById(R.id.tv_booking_tab_user_phone);
+
+        tvCustomerName.setText(bookingDetail.guestName);
+        tvCustomerPhone.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
     }
 }
