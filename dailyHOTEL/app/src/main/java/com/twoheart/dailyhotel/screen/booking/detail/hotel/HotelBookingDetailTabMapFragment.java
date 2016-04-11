@@ -38,12 +38,20 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class HotelBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
+    private static final String KEY_BUNDLE_ARGUMENTS_ISUSED = "isUsed";
 
+    private boolean mIsUsed;
     private HotelBookingDetail mBookingDetail;
     private GoogleMap mGoogleMap;
     private FrameLayout mMapLayout;
@@ -51,13 +59,14 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
     private Marker mMarker;
     private Handler mHandler = new Handler();
 
-    public static HotelBookingDetailTabMapFragment newInstance(PlaceBookingDetail bookingDetail)
+    public static HotelBookingDetailTabMapFragment newInstance(PlaceBookingDetail bookingDetail, boolean isUsed)
     {
         HotelBookingDetailTabMapFragment newFragment = new HotelBookingDetailTabMapFragment();
         Bundle arguments = new Bundle();
 
         //관련 정보들은 BookingTabActivity에서 넘겨받음.
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL, bookingDetail);
+        arguments.putBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED, isUsed);
         newFragment.setArguments(arguments);
 
         return newFragment;
@@ -69,6 +78,7 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         super.onCreate(savedInstanceState);
 
         mBookingDetail = getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
+        mIsUsed = getArguments().getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
     }
 
     @Override
@@ -104,8 +114,19 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     return;
                 }
 
-                Util.showShareMapDialog(baseActivity, PlaceType.HOTEL, mBookingDetail.placeName//
-                    , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                String checkInDay = simpleDateFormat.format(new Date(mBookingDetail.checkInDate));
+                String checkOutDay = simpleDateFormat.format(new Date(mBookingDetail.checkOutDate));
+
+                String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
+
+                Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
+                    , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0//
+                    , AnalyticsManager.Category.BOOKING_STATUS//
+                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
+                    , label);
             }
         });
 
@@ -120,6 +141,18 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                 Util.clipText(baseActivity, mBookingDetail.address);
 
                 DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                String checkInDay = simpleDateFormat.format(new Date(mBookingDetail.checkInDate));
+                String checkOutDay = simpleDateFormat.format(new Date(mBookingDetail.checkOutDate));
+
+                String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_ADDRESS_COPY_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_ADDRESS_COPY_CLICKED//
+                    , label, null);
             }
         });
 

@@ -30,13 +30,21 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class GourmetBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
-    protected static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
+    private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
+    private static final String KEY_BUNDLE_ARGUMENTS_ISUSED = "isUsed";
 
-    protected PlaceBookingDetail mPlaceBookingDetail;
+    private boolean mIsUsed;
+    private PlaceBookingDetail mPlaceBookingDetail;
     private SupportMapFragment mMapFragment;
     private GoogleMap mGoogleMap;
     private FrameLayout mMapLayout;
@@ -44,13 +52,14 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
     private Marker mMarker;
     private Handler mHandler = new Handler();
 
-    public static GourmetBookingDetailTabMapFragment newInstance(PlaceBookingDetail placeBookingDetail)
+    public static GourmetBookingDetailTabMapFragment newInstance(PlaceBookingDetail placeBookingDetail, boolean isUsed)
     {
         GourmetBookingDetailTabMapFragment newFragment = new GourmetBookingDetailTabMapFragment();
         Bundle arguments = new Bundle();
 
         //관련 정보들은 BookingTabActivity에서 넘겨받음.
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL, placeBookingDetail);
+        arguments.putBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED, isUsed);
         newFragment.setArguments(arguments);
 
         return newFragment;
@@ -60,7 +69,9 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         mPlaceBookingDetail = getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+        mIsUsed = getArguments().getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
     }
 
     @Override
@@ -106,8 +117,16 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
                     return;
                 }
 
-                Util.showShareMapDialog(baseActivity, PlaceType.FNB, mPlaceBookingDetail.placeName//
-                    , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                String reservationTime = simpleDateFormat.format(new Date(gourmetBookingDetail.reservationTime));
+                String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
+
+                Util.showShareMapDialog(baseActivity, mPlaceBookingDetail.placeName//
+                    , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false, AnalyticsManager.Category.BOOKING_STATUS//
+                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
+                    , label);
             }
         });
 
@@ -122,6 +141,16 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
                 Util.clipText(baseActivity, gourmetBookingDetail.address);
 
                 DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                String reservationTime = simpleDateFormat.format(new Date(gourmetBookingDetail.reservationTime));
+                String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_ADDRESS_COPY_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_ADDRESS_COPY_CLICKED//
+                    , label, null);
             }
         });
 

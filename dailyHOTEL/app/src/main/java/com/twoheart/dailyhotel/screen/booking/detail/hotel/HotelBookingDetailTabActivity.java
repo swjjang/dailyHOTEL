@@ -30,12 +30,17 @@ import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerA
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -69,7 +74,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         BaseFragment baseFragment02 = HotelBookingDetailTabInfomationFragment.newInstance(placeBookingDetail);
         fragmentList.add(baseFragment02);
 
-        BaseFragment baseFragment03 = HotelBookingDetailTabMapFragment.newInstance(placeBookingDetail);
+        BaseFragment baseFragment03 = HotelBookingDetailTabMapFragment.newInstance(placeBookingDetail, mBooking.isUsed);
         fragmentList.add(baseFragment03);
 
         BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
@@ -116,6 +121,38 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     , FontManager.getInstance(HotelBookingDetailTabActivity.this).getRegularTypeface());
             }
         });
+    }
+
+    @Override
+    protected void onTabSelected(int position)
+    {
+        switch (position)
+        {
+            case 0:
+                break;
+
+            case 1:
+                break;
+
+            case 2:
+            {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                // Check In
+                String checkInDay = simpleDateFormat.format(new Date(mHotelBookingDetail.checkInDate));
+
+                // Check Out
+                String checkOutDay = simpleDateFormat.format(new Date(mHotelBookingDetail.checkOutDate));
+
+                String label = String.format("Hotel-%s-%s-%s", mHotelBookingDetail.placeName, checkInDay, checkOutDay);
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
+                    , label, null);
+                break;
+            }
+        }
     }
 
     @Override

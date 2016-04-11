@@ -426,6 +426,13 @@ public class AnalyticsManager
         //
         public static final String LOCATION_AGREEMENT_POPPEDUP = "LocationAgreementPoppedup";
         public static final String CALL_INQUIRY_CLICKED = "CallInquiryClicked";
+        //
+        public static final String UPCOMING_BOOKING_MAP_VIEW_CLICKED = "UpcomingBookingMapViewClicked";
+        public static final String UPCOMING_BOOKING_ADDRESS_COPY_CLICKED = "UpcomingBookingAddressCopyClicked";
+        public static final String UPCOMING_BOOKING_NAVIGATION_APP_CLICKED = "UpcomingBookingNavigationAppClicked";
+        public static final String PAST_BOOKING_MAP_VIEW_CLICKED = "PastBookingMapViewClicked";
+        public static final String PAST_BOOKING_ADDRESS_COPY_CLICKED = "PastBookingAddressCopyClicked";
+        public static final String PAST_BOOKING_NAVIGATION_APP_CLICKED = "PastBookingNavigationAppClicked";
     }
 
     public static class Category
@@ -436,6 +443,7 @@ public class AnalyticsManager
         public static final String POPUP_BOXES = "PopupBoxes";
         public static final String HOTEL_SEARCH = "HotelSearches";
         public static final String GOURMET_SEARCH_ = "GourmetSearches";
+        public static final String BOOKING_STATUS = "BookingStatus";
     }
 
     public static class Label

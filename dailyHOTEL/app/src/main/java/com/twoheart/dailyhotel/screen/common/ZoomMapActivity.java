@@ -149,13 +149,21 @@ public class ZoomMapActivity extends BaseActivity
                 switch (mSourceType)
                 {
                     case HOTEL:
-                    case HOTEL_BOOKING:
-                        Util.showShareMapDialog(ZoomMapActivity.this, PlaceType.HOTEL, placeName, latitude, longitude, isOverseas);
+                        Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas//
+                            , AnalyticsManager.Category.HOTEL_BOOKINGS//
+                            , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
+                            , null);
                         break;
 
                     case GOURMET:
+                        Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas//
+                            , AnalyticsManager.Category.GOURMET_BOOKINGS//
+                            , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
+                            , null);
+                        break;
+
+                    case HOTEL_BOOKING:
                     case GOURMET_BOOKING:
-                        Util.showShareMapDialog(ZoomMapActivity.this, PlaceType.FNB, placeName, latitude, longitude, isOverseas);
                         break;
                 }
             }

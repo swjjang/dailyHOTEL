@@ -9,20 +9,14 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
 public class HotelBookingDetail extends PlaceBookingDetail
 {
     public int isOverseas; // 0 : 국내 , 1 : 해외
-    public String checkInDay;
-    public String checkOutDay;
+    public long checkInDate;
+    public long checkOutDate;
     public String hotelPhone;
     public Hotel.HotelGrade grade;
     public String roomName;
-
 
     public HotelBookingDetail()
     {
@@ -60,17 +54,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
         guestPhone = jsonObject.getString("guest_phone");
         guestName = jsonObject.getString("guest_name");
 
-        long checkin = jsonObject.getLong("checkin_date");
-        long checkout = jsonObject.getLong("checkout_date");
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        // Check In
-        checkInDay = format.format(new Date(checkin));
-
-        // Check Out
-        checkOutDay = format.format(new Date(checkout));
+        checkInDate = jsonObject.getLong("checkin_date");
+        checkOutDate = jsonObject.getLong("checkout_date");
 
         // phone1은 프론트
         String phone1 = jsonObject.getString("phone1");
@@ -100,8 +85,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         dest.writeInt(isOverseas);
         dest.writeString(roomName);
-        dest.writeString(checkInDay);
-        dest.writeString(checkOutDay);
+        dest.writeLong(checkInDate);
+        dest.writeLong(checkOutDate);
         dest.writeString(hotelPhone);
         dest.writeString(grade.name());
     }
@@ -112,8 +97,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         isOverseas = in.readInt();
         roomName = in.readString();
-        checkInDay = in.readString();
-        checkOutDay = in.readString();
+        checkInDate = in.readLong();
+        checkOutDate = in.readLong();
         hotelPhone = in.readString();
         grade = HotelGrade.valueOf(in.readString());
     }

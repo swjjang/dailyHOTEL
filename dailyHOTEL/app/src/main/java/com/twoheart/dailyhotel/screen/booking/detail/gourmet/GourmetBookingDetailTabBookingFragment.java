@@ -26,6 +26,11 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class GourmetBookingDetailTabBookingFragment extends BaseFragment implements Constants
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
@@ -81,28 +86,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
 
-        TextView ticketNameTextView = (TextView) view.findViewById(R.id.ticketNameTextView);
-        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
-        TextView ticketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
-        TextView ticketCountTextView = (TextView) view.findViewById(R.id.ticketCountTextView);
-        TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
-        TextView userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
-        TextView userPhoneTextView = (TextView) view.findViewById(R.id.userPhoneTextView);
-
-        ticketNameTextView.setText(mBookingDetail.placeName);
-        addressTextView.setText(mBookingDetail.address);
-        ticketTypeTextView.setText(mBookingDetail.ticketName);
-        ticketCountTextView.setText(getString(R.string.label_booking_count, mBookingDetail.ticketCount));
-        dateTextView.setText(mBookingDetail.sday);
-        userNameTextView.setText(mBookingDetail.guestName);
-        userPhoneTextView.setText(Util.addHippenMobileNumber(baseActivity, mBookingDetail.guestPhone));
-
-        // Android Marquee bug...
-        ticketNameTextView.setSelected(true);
-        addressTextView.setSelected(true);
-        ticketTypeTextView.setSelected(true);
-        userNameTextView.setSelected(true);
-        userPhoneTextView.setSelected(true);
+        initGourmetInformationLayout(view, mBookingDetail);
+        initGuestInformationLayout(view, mBookingDetail);
 
         // 영수증 발급
         TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
@@ -148,5 +133,33 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         }
 
         return view;
+    }
+
+    private void initGourmetInformationLayout(View view, GourmetBookingDetail bookingDetail)
+    {
+        TextView ticketNameTextView = (TextView) view.findViewById(R.id.ticketNameTextView);
+        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
+        TextView ticketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
+        TextView ticketCountTextView = (TextView) view.findViewById(R.id.ticketCountTextView);
+        TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
+
+        ticketNameTextView.setText(bookingDetail.placeName);
+        addressTextView.setText(bookingDetail.address);
+        ticketTypeTextView.setText(bookingDetail.ticketName);
+        ticketCountTextView.setText(getString(R.string.label_booking_count, bookingDetail.ticketCount));
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        dateTextView.setText(simpleDateFormat.format(new Date(bookingDetail.reservationTime)));
+    }
+
+    private void initGuestInformationLayout(View view, GourmetBookingDetail bookingDetail)
+    {
+        TextView userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
+        TextView userPhoneTextView = (TextView) view.findViewById(R.id.userPhoneTextView);
+
+        userNameTextView.setText(bookingDetail.guestName);
+        userPhoneTextView.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
     }
 }
