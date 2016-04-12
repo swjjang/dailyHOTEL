@@ -83,7 +83,7 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
             return;
         }
 
-        switch (item.getType())
+        switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((HoltelViewHolder) holder, item);
@@ -93,7 +93,7 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
 
     private void onBindViewHolder(HoltelViewHolder holder, PlaceViewItem placeViewItem)
     {
-        final Hotel hotel = placeViewItem.<Hotel>getItem();
+        final Hotel hotel = placeViewItem.getItem();
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 

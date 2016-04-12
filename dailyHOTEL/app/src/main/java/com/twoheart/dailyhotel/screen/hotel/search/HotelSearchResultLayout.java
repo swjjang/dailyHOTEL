@@ -66,7 +66,7 @@ public class HotelSearchResultLayout extends PlaceSearchResultLayout
 
             PlaceViewItem placeViewItem = mListAdapter.getItem(position);
 
-            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+            if (placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
                 return;
             }

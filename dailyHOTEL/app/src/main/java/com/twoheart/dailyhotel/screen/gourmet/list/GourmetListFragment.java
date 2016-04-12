@@ -616,7 +616,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         {
             for (PlaceViewItem placeViewItem : arrayList)
             {
-                if (placeViewItem.getType() == PlaceViewItem.TYPE_ENTRY//
+                if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
                     && placeViewItem.<Gourmet>getItem().isSoldOut == false)
                 {
                     hasPlace = true;
@@ -700,7 +700,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             PlaceViewItem gourmetViewItem = mGourmetAdapter.getItem(position);
 
-            if (gourmetViewItem.getType() == PlaceViewItem.TYPE_ENTRY)
+            if (gourmetViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
                 mOnCommunicateListener.selectPlace(gourmetViewItem, mSaleTime);
             }

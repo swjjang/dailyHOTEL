@@ -97,7 +97,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public int getItemViewType(int position)
     {
-        return mPlaceViewItemList.get(position).getType();
+        return mPlaceViewItemList.get(position).mType;
     }
 
     @Override

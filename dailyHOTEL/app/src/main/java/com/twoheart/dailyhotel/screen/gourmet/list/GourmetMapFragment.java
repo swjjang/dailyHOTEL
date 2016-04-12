@@ -35,11 +35,11 @@ import com.twoheart.dailyhotel.model.PlaceRenderer;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.screen.common.LoadingDialog;
-import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 
 import java.util.ArrayList;
@@ -571,7 +571,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
         {
             placeViewItem = arrangeList.get(i);
 
-            if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+            if (placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
                 arrangeList.remove(i);
             } else
@@ -1073,7 +1073,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
             {
                 for (PlaceViewItem placeViewItem : mPlaceViewItemList)
                 {
-                    if (placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+                    if (placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
                     {
                         continue;
                     }

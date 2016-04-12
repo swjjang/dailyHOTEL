@@ -361,11 +361,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            int msgCode = -1;
-
             try
             {
-                msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();
@@ -504,15 +502,13 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            int msgCode = -1;
-
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 JSONObject jsonObject = response.getJSONObject("data");
-                String message = null;
+                String message;
                 boolean result = false;
 
                 if (jsonObject != null)

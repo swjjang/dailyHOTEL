@@ -286,7 +286,7 @@ public class AnimationImageView extends ImageView
             final Matrix matrix = (Matrix) msg.obj;
 
             final boolean isVerticalTranslate;
-            int moveDistance = 0;
+            int moveDistance;
 
             if (width > height)
             {

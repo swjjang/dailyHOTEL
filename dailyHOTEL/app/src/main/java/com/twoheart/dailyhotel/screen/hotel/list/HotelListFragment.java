@@ -704,7 +704,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             PlaceViewItem placeViewItem = mHotelAdapter.getItem(position);
 
-            if (placeViewItem.getType() == PlaceViewItem.TYPE_ENTRY)
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
                 mOnCommunicateListener.selectHotel(placeViewItem, mCheckInSaleTime);
             }

@@ -265,12 +265,10 @@ public class CreditCardListActivity extends BaseActivity
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int msg_code = -1;
-
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();
@@ -347,12 +345,10 @@ public class CreditCardListActivity extends BaseActivity
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int msg_code = -1;
-
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 JSONObject jsonObject = response.getJSONObject("data");
 

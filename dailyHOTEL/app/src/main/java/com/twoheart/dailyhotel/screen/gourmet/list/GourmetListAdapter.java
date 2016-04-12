@@ -117,7 +117,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             return;
         }
 
-        switch (item.getType())
+        switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((GourmetViewHolder) holder, item);
@@ -140,7 +140,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
     private void onBindViewHolder(final EventBannerViewHolder holder, PlaceViewItem placeViewItem)
     {
-        ArrayList<EventBanner> eventBannerList = placeViewItem.<ArrayList<EventBanner>>getItem();
+        ArrayList<EventBanner> eventBannerList = placeViewItem.getItem();
 
         PlaceBannerViewPagerAdapter adapter = new PlaceBannerViewPagerAdapter(mContext, eventBannerList, mOnEventBannerClickListener);
         holder.dailyLoopViewPager.setOnPageChangeListener(null);
@@ -190,7 +190,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
     private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
     {
-        final Gourmet gourmet = placeViewItem.<Gourmet>getItem();
+        final Gourmet gourmet = placeViewItem.getItem();
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 

@@ -580,12 +580,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int msgCode = -1;
-
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();
@@ -657,12 +655,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int msgCode = -1;
-
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();

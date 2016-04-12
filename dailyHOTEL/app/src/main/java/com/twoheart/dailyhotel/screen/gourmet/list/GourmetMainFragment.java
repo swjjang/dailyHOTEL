@@ -32,12 +32,12 @@ import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.widget.DailyFloatingActionButtonBehavior;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -1210,11 +1210,11 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 return;
             }
 
-            switch (baseListViewItem.getType())
+            switch (baseListViewItem.mType)
             {
                 case PlaceViewItem.TYPE_ENTRY:
                 {
-                    Gourmet gourmet = baseListViewItem.<Gourmet>getItem();
+                    Gourmet gourmet = baseListViewItem.getItem();
 
                     String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
                     DailyPreference.getInstance(baseActivity).setGASelectedPlaceRegion(region);

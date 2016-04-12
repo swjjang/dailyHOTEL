@@ -194,12 +194,12 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onItemClick(PlaceViewItem placeViewItem)
         {
-            if (placeViewItem == null || placeViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+            if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
                 return;
             }
 
-            Hotel hotel = placeViewItem.<Hotel>getItem();
+            Hotel hotel = placeViewItem.getItem();
 
             Intent intent = new Intent(HotelSearchResultActivity.this, HotelDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
@@ -398,7 +398,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
 
             for (PlaceViewItem placeViewItem : placeViewItemList)
             {
-                hotel = placeViewItem.<Hotel>getItem();
+                hotel = placeViewItem.getItem();
 
                 Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel.latitude, hotel.longitude, results);
                 hotel.distance = results[0];

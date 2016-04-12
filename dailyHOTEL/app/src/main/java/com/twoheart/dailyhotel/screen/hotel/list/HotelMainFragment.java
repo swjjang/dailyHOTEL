@@ -34,12 +34,12 @@ import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.widget.DailyFloatingActionButtonBehavior;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -1447,11 +1447,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 return;
             }
 
-            switch (placeViewItem.getType())
+            switch (placeViewItem.mType)
             {
                 case PlaceViewItem.TYPE_ENTRY:
                 {
-                    Hotel hotel = placeViewItem.<Hotel>getItem();
+                    Hotel hotel = placeViewItem.getItem();
 
                     String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
                     DailyPreference.getInstance(baseActivity).setGASelectedRegion(region);

@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
-import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
