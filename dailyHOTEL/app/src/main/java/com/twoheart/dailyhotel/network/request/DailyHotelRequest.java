@@ -57,7 +57,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
-    public static String getUrlEncoder(final String url)
+    private static String getUrlEncoder(final String url)
     {
         final int SEED_LENGTH = 5;
         StringBuilder encodeUrl = new StringBuilder();

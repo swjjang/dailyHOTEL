@@ -602,11 +602,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
     {
         boolean hasPlace = false;
 
-        List<PlaceViewItem> arrayList = gourmetListViewItemList;
-
-        if (arrayList != null)
+        if (gourmetListViewItemList != null)
         {
-            for (PlaceViewItem placeViewItem : arrayList)
+            for (PlaceViewItem placeViewItem : gourmetListViewItemList)
             {
                 if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
                     && placeViewItem.<Gourmet>getItem().isSoldOut == false)

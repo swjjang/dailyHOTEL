@@ -15,7 +15,7 @@ public class PlaceViewItem
         mItem = item;
     }
 
-    public <T extends Object> T getItem()
+    public <T> T getItem()
     {
         return (T) mItem;
     }

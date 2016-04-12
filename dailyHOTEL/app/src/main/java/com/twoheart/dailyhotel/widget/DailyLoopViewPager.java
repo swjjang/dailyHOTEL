@@ -45,14 +45,12 @@ public class DailyLoopViewPager extends ViewPager
                 }
             } else
             {
-                int realPosition = position;
-
-                if (mPreviousPosition != realPosition)
+                if (mPreviousPosition != position)
                 {
-                    mPreviousPosition = realPosition;
+                    mPreviousPosition = position;
                     if (mOuterPageChangeListener != null)
                     {
-                        mOuterPageChangeListener.onPageSelected(realPosition);
+                        mOuterPageChangeListener.onPageSelected(position);
                     }
                 }
             }
