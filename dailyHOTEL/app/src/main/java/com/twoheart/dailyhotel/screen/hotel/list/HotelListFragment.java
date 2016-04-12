@@ -307,16 +307,11 @@ public class HotelListFragment extends BaseFragment implements Constants
         return false;
     }
 
-    public void refreshList()
+    public void refreshList(List<EventBanner> list)
     {
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                fetchList();
-            }
-        });
+        mEventBannerList = list;
+
+        fetchList();
     }
 
     protected void fetchList()
@@ -698,7 +693,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             if (position < 0)
             {
-                refreshList();
+                fetchList();
                 return;
             }
 
@@ -737,53 +732,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String baseUrl = dataJSONObject.getString("imgUrl");
-
-                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
-
-                    if (mEventBannerList == null)
-                    {
-                        mEventBannerList = new ArrayList<>();
-                    }
-
-                    mEventBannerList.clear();
-
-                    int length = jsonArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        try
-                        {
-                            EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
-                            mEventBannerList.add(eventBanner);
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
-                        }
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            } finally
-            {
-                fetchList();
-            }
-        }
-    };
 
     private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
