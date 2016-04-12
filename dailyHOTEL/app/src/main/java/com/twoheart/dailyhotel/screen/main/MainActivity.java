@@ -72,6 +72,36 @@ public class MainActivity extends BaseActivity implements Constants
                         showLockUIProgress();
                     }
                     break;
+
+                case 2:
+                {
+                    Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
+                    animation.setDuration(400);
+                    animation.setAnimationListener(new Animation.AnimationListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animation animation)
+                        {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation)
+                        {
+                            mSplashLayout.setVisibility(View.GONE);
+                            mSplashLayout.setAnimation(null);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation)
+                        {
+
+                        }
+                    });
+
+                    mSplashLayout.startAnimation(animation);
+                    break;
+                }
             }
         }
     };
@@ -93,17 +123,10 @@ public class MainActivity extends BaseActivity implements Constants
 
         initLayout();
 
-        mDelayTimeHandler.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mNetworkController.requestCheckServer();
+        mNetworkController.requestCheckServer();
 
-                // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
-                mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
-            }
-        }, 500);
+        // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
+        mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
     }
 
     @Override
@@ -349,31 +372,7 @@ public class MainActivity extends BaseActivity implements Constants
 
     private void finishSplash()
     {
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-        animation.setDuration(400);
-        animation.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                mSplashLayout.setVisibility(View.GONE);
-                mSplashLayout.setAnimation(null);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-
-            }
-        });
-
-        mSplashLayout.startAnimation(animation);
+        mDelayTimeHandler.sendEmptyMessageDelayed(2, 2000);
 
         mDelayTimeHandler.removeMessages(0);
         mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
