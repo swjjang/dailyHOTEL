@@ -266,13 +266,19 @@ public class MainNetworkController extends BaseNetworkController
                     JSONObject jsonObject = response.getJSONObject("data");
 
                     int count = jsonObject.getInt("count");
+                    long currentDateTime = DailyPreference.getInstance(mContext).getLookUpEventTime();
 
                     if (count > 0)
                     {
                         DailyPreference.getInstance(mContext).setNewEvent(true);
-
-                        long currentDateTime = DailyPreference.getInstance(mContext).getLookUpEventTime();
                         DailyPreference.getInstance(mContext).setNewEventTime(currentDateTime);
+                    } else
+                    {
+                        if(currentDateTime == 0)
+                        {
+                            DailyPreference.getInstance(mContext).setNewEvent(false);
+                            DailyPreference.getInstance(mContext).setNewEventTime(currentDateTime);
+                        }
                     }
                 }
 
