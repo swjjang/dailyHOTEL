@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 
-import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.Map;
@@ -223,9 +222,6 @@ public class AnalyticsManager
             mGoogleAnalyticsManager.purchaseCompleteHotel(transId, params);
             mTuneManager.purchaseCompleteHotel(transId, params);
             mFacebookManager.purchaseCompleteHotel(transId, params);
-
-            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
-            AdWordsConversionReporter.reportWithConversionId(mContext, "927521285", "9r3_CPun0GQQhbSjugM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -244,9 +240,6 @@ public class AnalyticsManager
             mGoogleAnalyticsManager.purchaseCompleteGourmet(transId, params);
             mTuneManager.purchaseCompleteGourmet(transId, params);
             mFacebookManager.purchaseCompleteGourmet(transId, params);
-
-            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
-            AdWordsConversionReporter.reportWithConversionId(mContext, "927521285", "9r3_CPun0GQQhbSjugM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
