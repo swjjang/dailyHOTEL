@@ -1,15 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * VolleyHttpClient
- * <p>
- * 네트워크 이미지 처리 및 네트워크 처리 작업을 담당하는 외부 라이브러리 Vol
- * ley를 네트워크 처리 작업을 목적으로 사용하기 위해 설정하는 유틸 클래스이다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
@@ -36,39 +24,42 @@ import okhttp3.OkUrlFactory;
 
 public class VolleyHttpClient implements Constants
 {
-    public static final int TIME_OUT = 5000;
-    public static final int MAX_RETRY = 2;
-    private static RequestQueue sRequestQueue;
-    private static Context sContext;
-    private static OkHttpStack mOkHttpStack;
+    private static VolleyHttpClient mInstance;
+    private RequestQueue mRequestQueue;
+    private OkHttpStack mOkHttpStack;
 
-    public static void init(Context context)
+    public synchronized static VolleyHttpClient getInstance()
     {
-        sContext = context;
-        mOkHttpStack = new OkHttpStack();
-        sRequestQueue = Volley.newRequestQueue(sContext, mOkHttpStack);
-    }
-
-    public static RequestQueue getRequestQueue()
-    {
-        synchronized (VolleyHttpClient.class)
+        if (mInstance == null)
         {
-            if (sRequestQueue == null)
-            {
-                init(sContext);
-            }
+            mInstance = new VolleyHttpClient();
         }
 
-        return sRequestQueue;
+        return mInstance;
     }
 
-    public static boolean isAvailableNetwork()
+    private VolleyHttpClient()
+    {
+        mOkHttpStack = new OkHttpStack();
+    }
+
+    public void newRequestQueue(Context context)
+    {
+        mRequestQueue = Volley.newRequestQueue(context, mOkHttpStack);
+    }
+
+    public RequestQueue getRequestQueue()
+    {
+        return mRequestQueue;
+    }
+
+    public static boolean isAvailableNetwork(Context context)
     {
         boolean result = false;
 
         AvailableNetwork availableNetwork = AvailableNetwork.getInstance();
 
-        switch (availableNetwork.getNetType(sContext))
+        switch (availableNetwork.getNetType(context))
         {
             case AvailableNetwork.NET_TYPE_WIFI:
                 // WIFI 연결상태
@@ -85,9 +76,9 @@ public class VolleyHttpClient implements Constants
         return result;
     }
 
-    public static boolean hasActiveNetwork()
+    public static boolean hasActiveNetwork(Context context)
     {
-        return AvailableNetwork.getInstance().hasActiveNetwork(sContext);
+        return AvailableNetwork.getInstance().hasActiveNetwork(context);
     }
 
     private static class OkHttpStack extends HurlStack

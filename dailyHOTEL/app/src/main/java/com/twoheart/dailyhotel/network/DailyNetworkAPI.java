@@ -73,7 +73,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
     private DailyNetworkAPI()
     {
-        mQueue = VolleyHttpClient.getRequestQueue();
+        mQueue = VolleyHttpClient.getInstance().getRequestQueue();
     }
 
     public void cancelAll()

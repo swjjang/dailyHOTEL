@@ -85,7 +85,7 @@ public class DailyHotel extends Application implements Constants
 
     private void initializeVolley()
     {
-        VolleyHttpClient.init(this);
+        VolleyHttpClient.getInstance().newRequestQueue(getApplicationContext());
     }
 
     public static DailyHotel getGlobalApplicationContext()

@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         if (mIsInitialization == true)
         {
-            if (VolleyHttpClient.isAvailableNetwork() == false)
+            if (VolleyHttpClient.isAvailableNetwork(this) == false)
             {
                 showDisabledNetworkPopup();
             }
@@ -312,7 +312,7 @@ public class MainActivity extends BaseActivity implements Constants
             {
                 mSettingNetworkDialog.dismiss();
 
-                if (VolleyHttpClient.isAvailableNetwork() == true)
+                if (VolleyHttpClient.isAvailableNetwork(MainActivity.this) == true)
                 {
                     lockUI();
                     mNetworkController.requestCheckServer();
