@@ -20,7 +20,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 
@@ -203,14 +203,14 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
                 if (v.isSelected() == true)
                 {
                     v.setSelected(false);
-                    mHotelCurationOption.flagAmenitiesFilters ^= flag.intValue();
+                    mHotelCurationOption.flagAmenitiesFilters ^= flag;
 
                     AnalyticsManager.getInstance(HotelCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
-                    mHotelCurationOption.flagAmenitiesFilters |= flag.intValue();
+                    mHotelCurationOption.flagAmenitiesFilters |= flag;
 
                     AnalyticsManager.getInstance(HotelCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
@@ -392,7 +392,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
                 setResultMessage(getString(R.string.label_hotel_filter_result_count, count));
 
                 setConfirmOnClickListener(HotelCurationActivity.this);
-                setConfirmEnable(count.intValue() == 0 ? false : true);
+                setConfirmEnable(count == 0 ? false : true);
             }
         }.execute();
     }

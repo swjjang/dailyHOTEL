@@ -39,12 +39,12 @@ import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.LoadingDialog;
-import com.twoheart.dailyhotel.view.LocationFactory;
-import com.twoheart.dailyhotel.view.LoopViewPager;
+import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,7 +73,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
     private HotelClusterRenderer mHotelClusterRenderer;
     private Marker mSelectedMarker;
     private View mMyLocationView;
-    private LoopViewPager mViewPager;
+    private DailyLoopViewPager mViewPager;
     private HotelMapViewPagerAdapter mHotelMapViewPagerAdapter;
 
     public interface OnUserActionListener
@@ -163,7 +163,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             return;
         }
 
-        mViewPager = new LoopViewPager(baseActivity);
+        mViewPager = new DailyLoopViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
@@ -190,7 +190,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             mGoogleMap.clear();
         }
 
-        LocationFactory.getInstance((BaseActivity) getActivity()).clear();
+        DailyLocationFactory.getInstance((BaseActivity) getActivity()).clear();
 
         super.onDestroyView();
     }
@@ -405,7 +405,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
         for (PlaceViewItem hotelListViewItem : mHotelArrangeArrayList)
         {
-            Hotel hotel = hotelListViewItem.<Hotel>getItem();
+            Hotel hotel = hotelListViewItem.getItem();
 
             count++;
 
@@ -575,7 +575,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         {
             hotelListViewItem = arrangeList.get(i);
 
-            if (hotelListViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+            if (hotelListViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
                 arrangeList.remove(i);
             } else
@@ -594,8 +594,8 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
             public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                Hotel item01 = placeViewItem1.<Hotel>getItem();
-                Hotel item02 = placeViewItem2.<Hotel>getItem();
+                Hotel item01 = placeViewItem1.getItem();
+                Hotel item02 = placeViewItem2.getItem();
 
                 float[] results1 = new float[3];
                 Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -619,8 +619,8 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
             for (int i = size - 1; i > 0; i--)
             {
-                item01 = arrangeList.get(i).<Hotel>getItem();
-                item02 = arrangeList.get(i - 1).<Hotel>getItem();
+                item01 = arrangeList.get(i).getItem();
+                item02 = arrangeList.get(i - 1).getItem();
 
                 if (item01.latitude == item02.latitude && item01.longitude == item02.longitude)
                 {
@@ -683,7 +683,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         for (int i = 0; i < size; i++)
         {
             PlaceViewItem hotelListViewItem = mHotelArrangeArrayList.get(i);
-            Hotel hotel = hotelListViewItem.<Hotel>getItem();
+            Hotel hotel = hotelListViewItem.getItem();
 
             if (latlng.latitude == hotel.latitude && latlng.longitude == hotel.longitude)
             {
@@ -741,8 +741,8 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         {
             public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                Hotel item01 = placeViewItem1.<Hotel>getItem();
-                Hotel item02 = placeViewItem2.<Hotel>getItem();
+                Hotel item01 = placeViewItem1.getItem();
+                Hotel item02 = placeViewItem2.getItem();
 
                 float[] results1 = new float[3];
                 Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -774,7 +774,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         for (int i = 0; i < size; i++)
         {
             PlaceViewItem hotelListViewItem = mHotelArrangeArrayList.get(i);
-            Hotel hotel = hotelListViewItem.<Hotel>getItem();
+            Hotel hotel = hotelListViewItem.getItem();
 
             if (latlng.latitude == hotel.latitude && latlng.longitude == hotel.longitude)
             {
@@ -817,7 +817,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
     private void searchMyLocation(BaseActivity baseActivity)
     {
-        LocationFactory.getInstance(baseActivity).startLocationMeasure(this, mMyLocationView, new LocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance(baseActivity).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
@@ -888,7 +888,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+                DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
                 baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
                 {
@@ -911,7 +911,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                     return;
                 }
 
-                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+                DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
                 if (mMyLocationMarkerOptions == null)
                 {
@@ -991,7 +991,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
             PlaceViewItem hotelListViewItem = mHotelArrangeArrayList.get(page);
 
-            Hotel hotel = hotelListViewItem.<Hotel>getItem();
+            Hotel hotel = hotelListViewItem.getItem();
 
             if (hotel != null)
             {
@@ -1077,12 +1077,12 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             {
                 for (PlaceViewItem hotelListViewItem : mHotelArrayList)
                 {
-                    if (hotelListViewItem.getType() != PlaceViewItem.TYPE_ENTRY)
+                    if (hotelListViewItem.mType != PlaceViewItem.TYPE_ENTRY)
                     {
                         continue;
                     }
 
-                    Hotel hotel = hotelListViewItem.<Hotel>getItem();
+                    Hotel hotel = hotelListViewItem.getItem();
 
                     if (hotel.equals(selectedHotel) == true)
                     {

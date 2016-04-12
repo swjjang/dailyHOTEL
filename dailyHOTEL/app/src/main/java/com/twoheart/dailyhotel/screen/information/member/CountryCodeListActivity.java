@@ -19,8 +19,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.CountryCodeNumber;
-import com.twoheart.dailyhotel.view.CountryCodeListLayout;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class CountryCodeListActivity extends BaseActivity
 {

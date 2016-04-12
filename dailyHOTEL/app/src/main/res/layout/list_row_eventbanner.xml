@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="70dp">
 
-    <com.twoheart.dailyhotel.view.LoopViewPager
+    <com.twoheart.dailyhotel.widget.DailyLoopViewPager
         android:id="@+id/loopViewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator
+    <com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator
         android:id="@+id/viewpagerCircleIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

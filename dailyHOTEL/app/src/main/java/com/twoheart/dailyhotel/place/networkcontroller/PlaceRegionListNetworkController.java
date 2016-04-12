@@ -106,7 +106,7 @@ public abstract class PlaceRegionListNetworkController
 
                     if (i > 0 && i % CHILD_GRID_COLUMN == 1)
                     {
-                        areas[i++] = area;
+                        areas[i] = area;
                         areaArrayList.add(areas);
 
                         i = 0;
@@ -170,7 +170,7 @@ public abstract class PlaceRegionListNetworkController
 
     protected ArrayList<Area> makeAreaList(JSONArray jsonArray)
     {
-        ArrayList<Area> areaList = new ArrayList<Area>();
+        ArrayList<Area> areaList = new ArrayList<>();
 
         try
         {

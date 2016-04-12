@@ -53,7 +53,7 @@ public class GourmetDetail extends PlaceDetail
                 JSONArray pathJSONArray = pahtUrlJSONObject.getJSONArray(key);
 
                 int length = pathJSONArray.length();
-                mImageInformationList = new ArrayList<ImageInformation>(pathJSONArray.length());
+                mImageInformationList = new ArrayList<>(pathJSONArray.length());
 
                 for (int i = 0; i < length; i++)
                 {

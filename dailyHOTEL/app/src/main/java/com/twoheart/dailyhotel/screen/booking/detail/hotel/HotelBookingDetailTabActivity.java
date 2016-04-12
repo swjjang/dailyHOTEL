@@ -31,8 +31,8 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.FontManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONObject;
 
@@ -66,7 +66,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         viewPager.setTag("HotelBookingDetailTabActivity");
 
-        ArrayList<BaseFragment> fragmentList = new ArrayList<BaseFragment>();
+        ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
         BaseFragment baseFragment01 = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex, mBooking.isUsed);
         fragmentList.add(baseFragment01);

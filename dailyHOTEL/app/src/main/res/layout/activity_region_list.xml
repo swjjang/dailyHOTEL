@@ -18,7 +18,7 @@
         app:tabTextColor="@color/tab_text"
         android:layout_below="@+id/toolbar"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyViewPager
+    <com.twoheart.dailyhotel.widget.DailyViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

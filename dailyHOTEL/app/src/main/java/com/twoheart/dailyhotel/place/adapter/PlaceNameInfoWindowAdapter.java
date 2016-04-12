@@ -7,7 +7,7 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.view.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 public class PlaceNameInfoWindowAdapter implements InfoWindowAdapter
 {

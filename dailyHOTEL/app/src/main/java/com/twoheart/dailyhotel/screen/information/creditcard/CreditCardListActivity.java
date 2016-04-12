@@ -15,8 +15,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.CreditCardLayout;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -266,12 +265,10 @@ public class CreditCardListActivity extends BaseActivity
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int msg_code = -1;
-
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 JSONArray jsonArray = response.getJSONArray("data");
                 int length = jsonArray.length();
@@ -292,7 +289,7 @@ public class CreditCardListActivity extends BaseActivity
                 {
                     AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST, null);
 
-                    arrayList = new ArrayList<CreditCard>(length);
+                    arrayList = new ArrayList<>(length);
 
                     boolean hasCreditCard = false;
                     JSONObject jsonObject;
@@ -348,12 +345,10 @@ public class CreditCardListActivity extends BaseActivity
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            int msg_code = -1;
-
             try
             {
                 // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
                 JSONObject jsonObject = response.getJSONObject("data");
 

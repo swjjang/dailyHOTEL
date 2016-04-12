@@ -33,8 +33,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -616,7 +616,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         {
             for (PlaceViewItem placeViewItem : arrayList)
             {
-                if (placeViewItem.getType() == PlaceViewItem.TYPE_ENTRY//
+                if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
                     && placeViewItem.<Gourmet>getItem().isSoldOut == false)
                 {
                     hasPlace = true;
@@ -700,7 +700,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             PlaceViewItem gourmetViewItem = mGourmetAdapter.getItem(position);
 
-            if (gourmetViewItem.getType() == PlaceViewItem.TYPE_ENTRY)
+            if (gourmetViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
                 mOnCommunicateListener.selectPlace(gourmetViewItem, mSaleTime);
             }
@@ -723,7 +723,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
             if (index != null)
             {
-                EventBanner eventBanner = mEventBannerList.get(index.intValue());
+                EventBanner eventBanner = mEventBannerList.get(index);
 
                 mOnCommunicateListener.selectEventBanner(eventBanner);
             }

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/calendar_month_line"
@@ -32,7 +32,7 @@
 
     </RelativeLayout>
 
-    <com.twoheart.dailyhotel.view.widget.DailyEditText
+    <com.twoheart.dailyhotel.widget.DailyEditText
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginBottom="15dp"

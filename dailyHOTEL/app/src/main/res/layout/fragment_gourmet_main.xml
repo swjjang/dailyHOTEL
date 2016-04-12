@@ -41,6 +41,6 @@
         android:layout_marginBottom="3dp"
         android:layout_marginRight="4dp"
         android:src="@drawable/selector_floatingactionview"
-        app:layout_behavior="com.twoheart.dailyhotel.view.widget.DailyFloatingActionButtonBehavior"/>
+        app:layout_behavior="com.twoheart.dailyhotel.widget.DailyFloatingActionButtonBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

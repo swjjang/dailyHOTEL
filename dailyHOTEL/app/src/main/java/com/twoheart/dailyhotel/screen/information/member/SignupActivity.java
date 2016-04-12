@@ -45,8 +45,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
@@ -953,7 +953,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                     if (isSignup == true)
                     {
-                        Map<String, String> params = new HashMap<String, String>();
+                        Map<String, String> params = new HashMap<>();
                         params.put("email", mSignupParams.get("email"));
                         params.put("pw", Crypto.encrypt(mSignupParams.get("pw")).replace("\n", ""));
                         params.put("social_id", "0");

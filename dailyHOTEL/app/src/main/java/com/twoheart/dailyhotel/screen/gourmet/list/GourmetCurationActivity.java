@@ -18,7 +18,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.view.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -129,7 +129,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.foodGridLayout);
 
         final HashMap<String, Integer> categroySequenceMap = gourmetCurationOption.getCategorySequenceMap();
-        TreeMap<String, Integer> categoryMap = new TreeMap<String, Integer>(new Comparator<String>()
+        TreeMap<String, Integer> categoryMap = new TreeMap<>(new Comparator<String>()
         {
             @Override
             public int compare(String o1, String o2)
@@ -137,12 +137,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 Integer sequence1 = categroySequenceMap.get(o1);
                 Integer sequence2 = categroySequenceMap.get(o2);
 
-                if (sequence1.intValue() < 0)
+                if (sequence1 < 0)
                 {
                     sequence1 = Integer.MAX_VALUE;
                 }
 
-                if (sequence2.intValue() < 0)
+                if (sequence2 < 0)
                 {
                     sequence2 = Integer.MAX_VALUE;
                 }
@@ -199,7 +199,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         for (String key : keyList)
         {
-            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categroyCodeMap.get(key).intValue()), isSingleLine);
+            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categroyCodeMap.get(key)), isSingleLine);
             categoryView.setOnClickListener(onClickListener);
 
             if (filterMap.containsKey(key) == true)
@@ -401,7 +401,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 setResultMessage(getString(R.string.label_gourmet_filter_result_count, count));
 
                 setConfirmOnClickListener(GourmetCurationActivity.this);
-                setConfirmEnable(count.intValue() == 0 ? false : true);
+                setConfirmEnable(count == 0 ? false : true);
             }
         }.execute();
     }

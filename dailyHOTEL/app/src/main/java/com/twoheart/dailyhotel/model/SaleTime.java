@@ -39,11 +39,6 @@ public class SaleTime implements Parcelable
     //        return stringBuilder.toString();
     //    }
 
-    public String getDailyDayOftheWeek()
-    {
-        return getTimezonedDateFormat("EEE").format(getDayOfDaysDate());
-    }
-
     public String getDailyDay()
     {
         return getTimezonedDateFormat("d").format(getDayOfDaysDate());
@@ -80,11 +75,6 @@ public class SaleTime implements Parcelable
         SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
         sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         return sFormat;
-    }
-
-    public long getCurrentTime()
-    {
-        return mCurrentTime.getTime();
     }
 
     public void setCurrentTime(long currentTime)

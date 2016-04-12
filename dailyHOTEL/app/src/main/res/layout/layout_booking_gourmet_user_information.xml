@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/calendar_month_line"
@@ -39,7 +39,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="28dp"
                 android:layout_height="15dp"
                 android:background="@color/curation_title_text"
@@ -65,7 +65,7 @@
             android:layout_height="35dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
@@ -73,7 +73,7 @@
                 android:textColor="@color/curation_title_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyEditText
+            <com.twoheart.dailyhotel.widget.DailyEditText
                 android:id="@+id/userNameEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             android:layout_height="35dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7">
 
-                <com.twoheart.dailyhotel.view.widget.DailyEditText
+                <com.twoheart.dailyhotel.widget.DailyEditText
                     android:id="@+id/userPhoneEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
             android:layout_height="35dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
@@ -141,7 +141,7 @@
                 android:textColor="@color/curation_title_text"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyEditText
+            <com.twoheart.dailyhotel.widget.DailyEditText
                 android:id="@+id/userEmailEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

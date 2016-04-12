@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
+import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -97,7 +97,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public int getItemViewType(int position)
     {
-        return mPlaceViewItemList.get(position).getType();
+        return mPlaceViewItemList.get(position).mType;
     }
 
     @Override

@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:visibility="visible">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/addCreditCardButton"
             android:layout_width="match_parent"
             android:layout_height="55dp"
@@ -56,7 +56,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="40dp"/>
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -67,7 +67,7 @@
                     android:layout_below="@+id/imageView"/>
             </RelativeLayout>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

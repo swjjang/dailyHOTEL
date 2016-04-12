@@ -6,7 +6,7 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <com.twoheart.dailyhotel.view.widget.PinnedSectionListView
+    <com.twoheart.dailyhotel.widget.PinnedSectionListView
         android:id="@+id/listview_booking"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,7 +43,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/messageTextView01"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                     android:textSize="18dp"
                     android:textStyle="bold"/>
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/messageTextView02"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:background="@drawable/open_stanby_btn_alert"
             android:gravity="center_horizontal">
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

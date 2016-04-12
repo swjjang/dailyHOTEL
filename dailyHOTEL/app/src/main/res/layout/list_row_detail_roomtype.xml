@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyButton
+            <com.twoheart.dailyhotel.widget.DailyButton
                 android:id="@+id/radioButton"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -30,7 +30,7 @@
                 android:clickable="false"
                 android:duplicateParentState="true"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/discountPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                 android:textSize="15dp"
                 dailyFont:style="Medium"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/roomTypeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/priceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="-2dp"/>
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/optionTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                     android:layout_toLeftOf="@+id/priceTextView"/>
             </RelativeLayout>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/amenitiesTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
                 android:textSize="12dp"
                 android:layout_marginTop="2dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/benefitTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

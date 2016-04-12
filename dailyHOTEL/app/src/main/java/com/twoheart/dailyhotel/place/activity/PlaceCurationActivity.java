@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.lang.ref.WeakReference;
 

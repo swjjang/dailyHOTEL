@@ -309,7 +309,7 @@ public class CountryCodeNumber
 
     public ArrayList<String[]> getCountryValue()
     {
-        ArrayList<String[]> values = new ArrayList<String[]>(CODE_NUMBER.length);
+        ArrayList<String[]> values = new ArrayList<>(CODE_NUMBER.length);
 
         for (String[] codeNumber : CODE_NUMBER)
         {

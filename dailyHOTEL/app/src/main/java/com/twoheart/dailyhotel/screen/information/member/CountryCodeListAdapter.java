@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
+import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +47,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
 
         if (mArrayList == null)
         {
-            mArrayList = new ArrayList<String[]>();
+            mArrayList = new ArrayList<>();
         }
 
         mArrayList.addAll(collection);

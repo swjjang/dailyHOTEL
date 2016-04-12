@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceRegionAnimatedExpandableListAd
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
+import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView;
 
 import java.util.List;
 
@@ -91,7 +91,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             {
                 Integer childTag = (Integer) childView.getTag();
 
-                if (childTag != null && childTag.intValue() == groupPosition)
+                if (childTag != null && childTag == groupPosition)
                 {
                     return childView;
                 }
@@ -354,7 +354,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
             if (tag != null)
             {
-                previousGroupPosition = tag.intValue();
+                previousGroupPosition = tag;
 
                 RegionViewItem regionViewItem = mAdapter.getAreaItem(previousGroupPosition);
 
@@ -418,7 +418,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
                     if (groupPosition != null)
                     {
-                        mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition.intValue()));
+                        mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition));
                     }
                 }
             } else

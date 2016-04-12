@@ -18,9 +18,9 @@ import com.twoheart.dailyhotel.place.adapter.PlaceBannerViewPagerAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.LoopViewPager;
-import com.twoheart.dailyhotel.view.widget.DailyViewPagerCircleIndicator;
-import com.twoheart.dailyhotel.view.widget.PinnedSectionRecyclerView;
+import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
+import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
+import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -117,7 +117,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             return;
         }
 
-        switch (item.getType())
+        switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((HoltelViewHolder) holder, item);
@@ -140,14 +140,14 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
     private void onBindViewHolder(final EventBannerViewHolder holder, PlaceViewItem placeViewItem)
     {
-        ArrayList<EventBanner> eventBannerList = placeViewItem.<ArrayList<EventBanner>>getItem();
+        ArrayList<EventBanner> eventBannerList = placeViewItem.getItem();
 
         PlaceBannerViewPagerAdapter adapter = new PlaceBannerViewPagerAdapter(mContext, eventBannerList, mOnEventBannerClickListener);
-        holder.loopViewPager.setOnPageChangeListener(null);
-        holder.loopViewPager.setAdapter(adapter);
+        holder.dailyLoopViewPager.setOnPageChangeListener(null);
+        holder.dailyLoopViewPager.setAdapter(adapter);
         holder.viewpagerCircleIndicator.setTotalCount(eventBannerList.size());
-        holder.loopViewPager.setCurrentItem(mLastEventBannerPosition);
-        holder.loopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        holder.dailyLoopViewPager.setCurrentItem(mLastEventBannerPosition);
+        holder.dailyLoopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
@@ -167,7 +167,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             @Override
             public void onPageScrollStateChanged(int state)
             {
-                if (state == LoopViewPager.SCROLL_STATE_DRAGGING)
+                if (state == DailyLoopViewPager.SCROLL_STATE_DRAGGING)
                 {
                     mEventBannerHandler.removeMessages(0);
                 }
@@ -190,7 +190,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
     private void onBindViewHolder(HoltelViewHolder holder, PlaceViewItem placeViewItem)
     {
-        final Hotel hotel = placeViewItem.<Hotel>getItem();
+        final Hotel hotel = placeViewItem.getItem();
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 
@@ -336,17 +336,17 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
     private class EventBannerViewHolder extends RecyclerView.ViewHolder
     {
-        LoopViewPager loopViewPager;
+        DailyLoopViewPager dailyLoopViewPager;
         DailyViewPagerCircleIndicator viewpagerCircleIndicator;
 
         public EventBannerViewHolder(View itemView)
         {
             super(itemView);
 
-            loopViewPager = (LoopViewPager) itemView.findViewById(R.id.loopViewPager);
+            dailyLoopViewPager = (DailyLoopViewPager) itemView.findViewById(R.id.loopViewPager);
             viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
 
-            loopViewPager.setSlideTime(4);
+            dailyLoopViewPager.setSlideTime(4);
         }
     }
 
@@ -373,7 +373,7 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
             if (eventBannerViewHolder != null)
             {
-                eventBannerViewHolder.loopViewPager.setCurrentItem(msg.arg1 + 1);
+                eventBannerViewHolder.dailyLoopViewPager.setCurrentItem(msg.arg1 + 1);
             }
         }
     }

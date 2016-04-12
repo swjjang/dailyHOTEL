@@ -53,9 +53,7 @@ public class GourmetFilter implements Parcelable
 
         int openFlag = getOpenTimeFlag(openTimeInMillis);
         int closeFlag = getCloseTimeFlag(closeTimeInMillis);
-
         int[] flags = {FLAG_GOURMET_FILTER_TIME_06_11, FLAG_GOURMET_FILTER_TIME_11_15, FLAG_GOURMET_FILTER_TIME_15_17, FLAG_GOURMET_FILTER_TIME_17_21, FLAG_GOURMET_FILTER_TIME_21_06};
-        int flagCount = flags.length;
 
         boolean includeFlag = false;
 

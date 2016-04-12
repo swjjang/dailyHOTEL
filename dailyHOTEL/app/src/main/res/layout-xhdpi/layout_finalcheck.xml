@@ -29,7 +29,7 @@
                 android:src="@drawable/popup_ic_alert_signature"
                 android:layout_marginLeft="10dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,12 +52,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailySignatureView
+            <com.twoheart.dailyhotel.widget.DailySignatureView
                 android:id="@+id/signatureView"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/agreeSinatureTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/popup_ic_signature_ok"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
