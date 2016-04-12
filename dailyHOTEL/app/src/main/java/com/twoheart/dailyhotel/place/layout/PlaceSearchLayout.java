@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyScrollView;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -51,7 +52,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private View mSearchLayout;
     private View mTermsOfLocationView;
     private ViewGroup mAutoCompleteLayout;
-    private View mAutoCompleteScrollLayout;
+    private DailyScrollView mAutoCompleteScrollLayout;
     private View mRecentSearchLayout;
     private ViewGroup mRcentContentsLayout;
     private View mDeleteAllRecentSearchesView;
@@ -376,12 +377,50 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initAutoCompleteLayout(View view)
     {
-        mAutoCompleteScrollLayout = view.findViewById(R.id.autoCompleteScrollLayout);
+        mAutoCompleteScrollLayout = (DailyScrollView) view.findViewById(R.id.autoCompleteScrollLayout);
         mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollLayout.findViewById(R.id.autoCompleteLayout);
 
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
+        mAutoCompleteScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        {
+            private int mDistance;
+            private boolean mIsHide;
 
-        EdgeEffectColor.setEdgeGlowColor((ScrollView) mAutoCompleteScrollLayout, mContext.getResources().getColor(R.color.over_scroll_edge));
+            @Override
+            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+            {
+                if (mIsHide == true)
+                {
+
+                } else
+                {
+                    if (scrollView.getHeight() < Util.getLCDHeight(mContext) / 2)
+                    {
+                        mDistance += (t - oldt);
+
+                        if (mDistance > Util.dpToPx(mContext, 41) == true)
+                        {
+                            mDistance = 0;
+                            mIsHide = true;
+
+                            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                            mHandler.postDelayed(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    mIsHide = false;
+                                }
+                            }, 1000);
+                        }
+                    }
+                }
+            }
+        });
+
+        EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollLayout, mContext.getResources().getColor(R.color.over_scroll_edge));
     }
 
     public void updateAutoCompleteLayout(String text, List<Keyword> keywordList)
