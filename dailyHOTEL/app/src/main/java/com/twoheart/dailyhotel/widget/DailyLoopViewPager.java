@@ -251,11 +251,12 @@ public class DailyLoopViewPager extends ViewPager
         if (layoutParams == null)
         {
             layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(context));
-            setLayoutParams(layoutParams);
         } else
         {
             layoutParams.height = Util.getLCDWidth(context);
         }
+
+        setLayoutParams(layoutParams);
     }
 
     public View findViewWidthPosition(int position)
