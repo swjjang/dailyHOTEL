@@ -158,7 +158,7 @@
             </ScrollView>
         </RelativeLayout>
 
-        <ScrollView
+        <com.twoheart.dailyhotel.widget.DailyScrollView
             android:id="@+id/autoCompleteScrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
-        </ScrollView>
+        </com.twoheart.dailyhotel.widget.DailyScrollView>
     </RelativeLayout>
 
     <View
