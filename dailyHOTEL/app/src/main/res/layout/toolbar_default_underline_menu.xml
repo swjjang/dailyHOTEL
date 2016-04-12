@@ -3,7 +3,7 @@
     android:id="@+id/toolbar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbar_height"
+    android:layout_height="@dimen/toolbar_height_has_tab"
     android:background="@color/white">
 
     <ImageView
