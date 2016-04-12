@@ -386,6 +386,11 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onMenuSelected(int index)
         {
+            if (mMainFragmentManager.getLastIndexFragment() == index)
+            {
+                return;
+            }
+
             switch (index)
             {
                 case 0:

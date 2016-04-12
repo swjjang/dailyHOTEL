@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
@@ -51,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class GourmetMainFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
@@ -72,6 +75,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     private int mCanScrollUpCount = 0;
 
     private GourmetCurationOption mCurationOption;
+    private List<EventBanner> mEventBannerList;
 
     private ViewType mViewType = ViewType.LIST;
 
@@ -156,7 +160,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-                Intent intent = GourmetRegionListActivity.newInstance(getContext(), mCurationOption.getProvince(), currentFragment.getSaleTime());
+                Intent intent = GourmetRegionListActivity.newInstance(getContext(), getProvince(), currentFragment.getSaleTime());
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
@@ -230,7 +234,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 lockUiComponent();
 
-                Intent intent = GourmetCurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
+                Intent intent = GourmetCurationActivity.newInstance(baseActivity, getProvince().isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
@@ -557,6 +561,16 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         mCurationOption.setProvince(province);
     }
 
+    private Province getProvince()
+    {
+        if (mCurationOption == null)
+        {
+            return null;
+        }
+
+        return mCurationOption.getProvince();
+    }
+
     private void clearCurationOption()
     {
         if (mCurationOption == null)
@@ -575,10 +589,10 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         gourmetListFragment.curationList(mViewType, mCurationOption);
     }
 
-    public void refreshCurrentFragment()
+    public void refreshCurrentFragment(List<EventBanner> list)
     {
         GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-        gourmetListFragment.refreshList();
+        gourmetListFragment.refreshList(list);
     }
 
     private void updateFilteredFloatingActionButton()
@@ -590,6 +604,18 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         {
             mFloatingActionView.setSelected(true);
         }
+    }
+
+    private void refreshEventBanner()
+    {
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                refreshCurrentFragment(getProvince());
+            }
+        });
     }
 
     private void refreshCurrentFragment(Province province)
@@ -620,7 +646,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.FNB, province.name);
         }
 
-        refreshCurrentFragment();
+        refreshCurrentFragment(mEventBannerList);
     }
 
     private void searchMyLocation()
@@ -950,11 +976,10 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         if (selectedProvince == null)
         {
-            selectedProvince = mCurationOption.getProvince();
-        } else
-        {
-            setProvince(selectedProvince);
+            selectedProvince = getProvince();
         }
+
+        setProvince(selectedProvince);
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarMenuVisibility(true);
@@ -993,11 +1018,10 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         if (selectedProvince == null)
         {
-            selectedProvince = mCurationOption.getProvince();
-        } else
-        {
-            setProvince(selectedProvince);
+            selectedProvince = getProvince();
         }
+
+        setProvince(selectedProvince);
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarMenuVisibility(true);
@@ -1124,6 +1148,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
             lockUI();
 
             mTabLayout.setOnTabSelectedListener(null);
@@ -1139,7 +1170,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected();
 
-            mOnCommunicateListener.refreshAll(true);
+            //            mOnCommunicateListener.refreshAll(true);
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
 
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -1286,7 +1318,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             GourmetListFragment currentFragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
             currentFragment.setScrollListTop(true);
 
-            refreshCurrentFragment();
+            refreshCurrentFragment(mEventBannerList);
             releaseUiComponent();
         }
 
@@ -1648,6 +1680,37 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         }
     };
 
+    private DailyHotelJsonResponseListener mSimpleDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            try
+            {
+                mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
+                mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                //탭에 들어갈 날짜를 만든다.
+                makeDateTabLayout();
+
+                refreshCurrentFragment(mEventBannerList);
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+
     private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -1674,7 +1737,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
                     ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
-                    Province selectedProvince = mCurationOption.getProvince();
+                    Province selectedProvince = getProvince();
 
                     if (selectedProvince == null)
                     {
@@ -1713,7 +1776,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                     } else
                     {
-                        refreshCurrentFragment(selectedProvince);
+                        refreshEventBanner();
                     }
                 } else
                 {
@@ -1852,6 +1915,53 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             }
 
             return provinceList;
+        }
+    };
+
+    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String baseUrl = dataJSONObject.getString("imgUrl");
+
+                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
+
+                    if (mEventBannerList == null)
+                    {
+                        mEventBannerList = new ArrayList<>();
+                    }
+
+                    mEventBannerList.clear();
+
+                    int length = jsonArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        try
+                        {
+                            EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
+                            mEventBannerList.add(eventBanner);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            } finally
+            {
+                refreshCurrentFragment(getProvince());
+            }
         }
     };
 }
