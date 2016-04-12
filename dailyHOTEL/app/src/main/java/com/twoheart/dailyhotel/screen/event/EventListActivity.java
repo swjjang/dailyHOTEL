@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.eventlist;
+package com.twoheart.dailyhotel.screen.event;
 
 import android.app.Activity;
 import android.content.Intent;

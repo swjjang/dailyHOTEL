@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.eventlist;
+package com.twoheart.dailyhotel.screen.event;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;

@@ -191,7 +191,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.eventlist.EventWebActivity"
+            android:name=".screen.event.EventWebActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -254,7 +254,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.eventlist.EventListActivity"
+            android:name=".screen.event.EventListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
