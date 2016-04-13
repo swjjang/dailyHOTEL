@@ -577,7 +577,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
             mWebView.loadUrl("about:blank");
 
-            if (VolleyHttpClient.isAvailableNetwork())
+            if (VolleyHttpClient.isAvailableNetwork(GourmetPaymentWebActivity.this) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
             } else

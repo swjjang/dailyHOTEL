@@ -28,8 +28,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
@@ -45,7 +43,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -307,16 +304,11 @@ public class HotelListFragment extends BaseFragment implements Constants
         return false;
     }
 
-    public void refreshList()
+    public void refreshList(List<EventBanner> list)
     {
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                fetchList();
-            }
-        });
+        mEventBannerList = list;
+
+        fetchList();
     }
 
     protected void fetchList()
@@ -698,7 +690,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
             if (position < 0)
             {
-                refreshList();
+                fetchList();
                 return;
             }
 
@@ -737,53 +729,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String baseUrl = dataJSONObject.getString("imgUrl");
-
-                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
-
-                    if (mEventBannerList == null)
-                    {
-                        mEventBannerList = new ArrayList<>();
-                    }
-
-                    mEventBannerList.clear();
-
-                    int length = jsonArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        try
-                        {
-                            EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
-                            mEventBannerList.add(eventBanner);
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
-                        }
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            } finally
-            {
-                fetchList();
-            }
-        }
-    };
 
     private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
     {

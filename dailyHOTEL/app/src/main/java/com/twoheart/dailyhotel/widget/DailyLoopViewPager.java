@@ -45,14 +45,12 @@ public class DailyLoopViewPager extends ViewPager
                 }
             } else
             {
-                int realPosition = position;
-
-                if (mPreviousPosition != realPosition)
+                if (mPreviousPosition != position)
                 {
-                    mPreviousPosition = realPosition;
+                    mPreviousPosition = position;
                     if (mOuterPageChangeListener != null)
                     {
-                        mOuterPageChangeListener.onPageSelected(realPosition);
+                        mOuterPageChangeListener.onPageSelected(position);
                     }
                 }
             }
@@ -251,11 +249,12 @@ public class DailyLoopViewPager extends ViewPager
         if (layoutParams == null)
         {
             layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(context));
-            setLayoutParams(layoutParams);
         } else
         {
             layoutParams.height = Util.getLCDWidth(context);
         }
+
+        setLayoutParams(layoutParams);
     }
 
     public View findViewWidthPosition(int position)

@@ -274,7 +274,7 @@ public class MainNetworkController extends BaseNetworkController
                         DailyPreference.getInstance(mContext).setNewEventTime(currentDateTime);
                     } else
                     {
-                        if(currentDateTime == 0)
+                        if (currentDateTime == 0)
                         {
                             DailyPreference.getInstance(mContext).setNewEvent(false);
                             DailyPreference.getInstance(mContext).setNewEventTime(currentDateTime);

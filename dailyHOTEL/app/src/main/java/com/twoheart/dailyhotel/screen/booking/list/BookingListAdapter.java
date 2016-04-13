@@ -126,7 +126,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         {
             Integer tag = (Integer) convertView.getTag();
 
-            if (tag == null || tag.intValue() != booking.type)
+            if (tag == null || tag != booking.type)
             {
                 convertView = null;
             }

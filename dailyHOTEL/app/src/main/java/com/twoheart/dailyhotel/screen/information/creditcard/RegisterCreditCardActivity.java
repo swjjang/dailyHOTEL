@@ -170,7 +170,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
             view.loadUrl("about:blank");
 
-            if (VolleyHttpClient.isAvailableNetwork())
+            if (VolleyHttpClient.isAvailableNetwork(RegisterCreditCardActivity.this) == true)
             {
                 if (errorCode == 401)
                 {

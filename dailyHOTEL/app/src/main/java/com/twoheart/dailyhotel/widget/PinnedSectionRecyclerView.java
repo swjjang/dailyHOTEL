@@ -383,13 +383,12 @@ public class PinnedSectionRecyclerView extends RecyclerView
             int firstVisibleItem = getChildAdapterPosition(firstView);
             int lastVisibleItem = getChildAdapterPosition(lastView);
 
-            int firstVisiblePosition = firstVisibleItem;
-            int sectionPosition = findCurrentSectionPosition(firstVisiblePosition);
+            int sectionPosition = findCurrentSectionPosition(firstVisibleItem);
             if (sectionPosition == -1)
             {
                 return; // no views to pin, exit
             }
-            ensureShadowForPosition(sectionPosition, firstVisiblePosition, lastVisibleItem - firstVisiblePosition);
+            ensureShadowForPosition(sectionPosition, firstVisibleItem, lastVisibleItem - firstVisibleItem);
         }
     }
 

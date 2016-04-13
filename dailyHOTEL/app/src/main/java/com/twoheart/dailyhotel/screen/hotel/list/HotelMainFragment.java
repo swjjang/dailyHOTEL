@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
@@ -25,7 +27,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.screen.eventlist.EventWebActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
@@ -76,6 +78,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private int mCanScrollUpCount = 0;
 
     private HotelCurationOption mCurationOption;
+    private List<EventBanner> mEventBannerList;
 
     private ViewType mViewType = ViewType.LIST;
 
@@ -160,7 +163,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
-                Intent intent = HotelRegionListActivity.newInstance(getContext(), mCurationOption.getProvince(), currentFragment.getCheckInSaleTime(), currentFragment.getNights());
+                Intent intent = HotelRegionListActivity.newInstance(getContext(), getProvince(), currentFragment.getCheckInSaleTime(), currentFragment.getNights());
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
             }
         });
@@ -237,7 +240,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 lockUiComponent();
 
-                Intent intent = HotelCurationActivity.newInstance(baseActivity, mCurationOption.getProvince().isOverseas, mViewType, mCurationOption);
+                Intent intent = HotelCurationActivity.newInstance(baseActivity, getProvince().isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
@@ -732,6 +735,16 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         mCurationOption.setProvince(province);
     }
 
+    private Province getProvince()
+    {
+        if (mCurationOption == null)
+        {
+            return null;
+        }
+
+        return mCurationOption.getProvince();
+    }
+
     private void clearCurationOption()
     {
         if (mCurationOption == null)
@@ -750,10 +763,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         currentFragment.curationList(mViewType, mCurationOption);
     }
 
-    private void refreshCurrentFragment()
+    private void refreshCurrentFragment(List<EventBanner> list)
     {
         HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-        currentFragment.refreshList();
+        currentFragment.refreshList(list);
     }
 
     private void updateFilteredFloatingActionButton()
@@ -765,6 +778,18 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             mFloatingActionView.setSelected(true);
         }
+    }
+
+    private void refreshEventBanner()
+    {
+        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                refreshCurrentFragment(getProvince());
+            }
+        });
     }
 
     private void refreshCurrentFragment(Province province)
@@ -795,7 +820,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
         }
 
-        refreshCurrentFragment();
+        refreshCurrentFragment(mEventBannerList);
     }
 
     private void searchMyLocation()
@@ -1127,11 +1152,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (selectedProvince == null)
         {
-            selectedProvince = mCurationOption.getProvince();
-        } else
-        {
-            setProvince(selectedProvince);
+            selectedProvince = getProvince();
         }
+
+        setProvince(selectedProvince);
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarMenuVisibility(true);
@@ -1182,11 +1206,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (selectedProvince == null)
         {
-            selectedProvince = mCurationOption.getProvince();
-        } else
-        {
-            setProvince(selectedProvince);
+            selectedProvince = getProvince();
         }
+
+        setProvince(selectedProvince);
 
         mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
         mDailyToolbarLayout.setToolbarMenuVisibility(true);
@@ -1332,6 +1355,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void onTabSelected(TabLayout.Tab tab)
         {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
             lockUI();
 
             mTabLayout.setOnTabSelectedListener(null);
@@ -1346,7 +1376,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
             fragment.onPageSelected();
 
-            mOnCommunicateListener.refreshAll(true);
+            //            mOnCommunicateListener.refreshAll(true);
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
 
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -1541,7 +1572,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
             currentFragment.setScrollListTop(true);
 
-            refreshCurrentFragment();
+            refreshCurrentFragment(mEventBannerList);
             releaseUiComponent();
         }
 
@@ -1887,6 +1918,37 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
     };
 
+    private DailyHotelJsonResponseListener mSimpleDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            try
+            {
+                mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
+                mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                //탭에 들어갈 날짜를 만든다.
+                makeDateTabLayout();
+
+                refreshCurrentFragment(mEventBannerList);
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+
     private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -1913,7 +1975,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
                     ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
-                    Province selectedProvince = mCurationOption.getProvince();
+                    Province selectedProvince = getProvince();
 
                     if (selectedProvince == null)
                     {
@@ -1950,11 +2012,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     if (DailyDeepLink.getInstance().isValidateLink() == true//
                         && processDeepLink(baseActivity, provinceList, areaList) == true)
                     {
-                        makeCategoryTabLayout(mCurationOption.getProvince().getCategoryList());
+                        makeCategoryTabLayout(getProvince().getCategoryList());
                     } else
                     {
                         makeCategoryTabLayout(selectedProvince.getCategoryList());
-                        refreshCurrentFragment(selectedProvince);
+                        refreshEventBanner();
                     }
                 } else
                 {
@@ -2092,6 +2154,53 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             return provinceList;
+        }
+    };
+
+    private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String baseUrl = dataJSONObject.getString("imgUrl");
+
+                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
+
+                    if (mEventBannerList == null)
+                    {
+                        mEventBannerList = new ArrayList<>();
+                    }
+
+                    mEventBannerList.clear();
+
+                    int length = jsonArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        try
+                        {
+                            EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
+                            mEventBannerList.add(eventBanner);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            } finally
+            {
+                refreshCurrentFragment(getProvince());
+            }
         }
     };
 }

@@ -147,8 +147,7 @@ public class HotelDetailActivity extends BaseActivity
             String hotelImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
             mDefaultImageUrl = hotelImageUrl;
 
-            String categoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
-            mHotelDetail.categoryCode = categoryCode;
+            mHotelDetail.categoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
 
             if (mCheckInSaleTime == null || hotelIndex == -1 || hotelName == null || nights <= 0)
             {

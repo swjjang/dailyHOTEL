@@ -73,7 +73,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
     private DailyNetworkAPI()
     {
-        mQueue = VolleyHttpClient.getRequestQueue();
+        mQueue = VolleyHttpClient.getInstance().getRequestQueue();
     }
 
     public void cancelAll()
@@ -95,9 +95,7 @@ public class DailyNetworkAPI implements IDailyNetwork
             @Override
             public boolean apply(Request<?> request)
             {
-                Request<?> cancelRequest = request;
-
-                if (cancelRequest != null && tag != null && tag.equals(cancelRequest.getTag()) == true)
+                if (request != null && tag != null && tag.equals(request.getTag()) == true)
                 {
                     return true;
                 }
