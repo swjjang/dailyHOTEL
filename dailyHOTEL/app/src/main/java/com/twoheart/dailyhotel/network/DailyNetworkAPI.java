@@ -57,7 +57,6 @@ public class DailyNetworkAPI implements IDailyNetwork
     // api/abtest/kakao/consult/feedback
     public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK = Constants.UNENCRYPTED_URL ? "api/abtest/kakao/consult/feedback" : "NTEkMjgkMTEwJDQ3JDQ0JA==$QTUxRjgwNzIyNDY1MjQ2ODJGMTdDIMUU4QTRCOTc3QTEP3MDTc5OTMG4RTc1M0NGRUIzNkNBOUJBQUJCOTg4OTU5MjBCNzg4MEZFODk5M0VFRTgxZODMyMDU3NjlGQUYxMzkw$";
 
-
     private static DailyNetworkAPI mInstance;
     private RequestQueue mQueue;
 

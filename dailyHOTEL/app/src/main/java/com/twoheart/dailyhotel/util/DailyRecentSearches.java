@@ -27,18 +27,19 @@ public class DailyRecentSearches
             return;
         }
 
-        int size = mKeywordList.size();
-
-        if (size == MAX_KEYWORD)
-        {
-            mKeywordList.remove(size - 1);
-        }
-
         boolean result = contains(recentKeyword);
 
         if (result == true)
         {
             remove(recentKeyword);
+        } else
+        {
+            int size = mKeywordList.size();
+
+            if (size == MAX_KEYWORD)
+            {
+                mKeywordList.remove(size - 1);
+            }
         }
 
         mKeywordList.add(0, recentKeyword);
