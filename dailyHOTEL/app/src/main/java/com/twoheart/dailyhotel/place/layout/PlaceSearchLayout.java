@@ -52,7 +52,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private View mSearchLayout;
     private View mTermsOfLocationView;
     private ViewGroup mAutoCompleteLayout;
-    private DailyScrollView mAutoCompleteScrollLayout;
+    private DailyScrollView mAutoCompleteScrollLayout, mRecentSearchesScrollLayout;
     private View mRecentSearchLayout;
     private ViewGroup mRcentContentsLayout;
     private View mDeleteAllRecentSearchesView;
@@ -270,8 +270,47 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initRecentSearchesLayout(View view)
     {
-        ScrollView recentSearchesScrollLayout = (ScrollView) view.findViewById(R.id.recentSearchesScrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(recentSearchesScrollLayout, mContext.getResources().getColor(R.color.over_scroll_edge));
+        mRecentSearchesScrollLayout = (DailyScrollView) view.findViewById(R.id.recentSearchesScrollLayout);
+        mRecentSearchesScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        {
+            private int mDistance;
+            private boolean mIsHide;
+
+            @Override
+            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+            {
+                if (mIsHide == true)
+                {
+
+                } else
+                {
+                    if (scrollView.getHeight() < Util.getLCDHeight(mContext) / 2)
+                    {
+                        mDistance += (t - oldt);
+
+                        if (mDistance > Util.dpToPx(mContext, 41) == true)
+                        {
+                            mDistance = 0;
+                            mIsHide = true;
+
+                            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                            mHandler.postDelayed(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    mIsHide = false;
+                                }
+                            }, 1000);
+                        }
+                    }
+                }
+            }
+        });
+
+        EdgeEffectColor.setEdgeGlowColor(mRecentSearchesScrollLayout, mContext.getResources().getColor(R.color.over_scroll_edge));
 
         // 최근 검색어
         // 전체 삭제
