@@ -306,6 +306,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
     public static void makeUrlEncoder()
     {
-        DailyHotelRequest.getUrlEncoder("");
+        DailyHotelRequest.getUrlEncoder("https://mobileapi.dailyhotel.kr/goodnight/");
     }
 }
