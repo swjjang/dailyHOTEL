@@ -172,7 +172,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         builder.add("payment_type", gourmetPaymentInformation.paymentType.name());
         builder.add("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
         builder.add("customer_name", guest.name);
-        builder.add("customer_phone", guest.phone.replace("-", "").replace("+", "%2B"));
+        builder.add("customer_phone", guest.phone.replace("-", ""));
         builder.add("customer_email", guest.email);
         builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
 

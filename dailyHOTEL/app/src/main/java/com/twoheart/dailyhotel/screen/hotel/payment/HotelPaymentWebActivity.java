@@ -175,7 +175,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("nights", String.valueOf(saleRoomInformation.nights));
         builder.add("bonus", String.valueOf(hotelPaymentInformation.isEnabledBonus ? hotelPaymentInformation.bonus : 0));
         builder.add("guest_name", guest.name);
-        builder.add("guest_phone", guest.phone.replace("-", "").replace("+", "%2B"));
+        builder.add("guest_phone", guest.phone.replace("-", ""));
         builder.add("guest_email", guest.email);
 
         String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)//
