@@ -39,7 +39,6 @@ public class MainActivity extends BaseActivity implements Constants
 
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed mBackButtonHandler;
-
     private MainNetworkController mNetworkController;
     private MainFragmentManager mMainFragmentManager;
     private MenuBarLayout mMenuBarLayout;
@@ -75,31 +74,34 @@ public class MainActivity extends BaseActivity implements Constants
 
                 case 2:
                 {
-                    Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
-                    animation.setDuration(400);
-                    animation.setAnimationListener(new Animation.AnimationListener()
+                    if (mSplashLayout.getVisibility() == View.VISIBLE)
                     {
-                        @Override
-                        public void onAnimationStart(Animation animation)
+                        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
+                        animation.setDuration(400);
+                        animation.setAnimationListener(new Animation.AnimationListener()
                         {
+                            @Override
+                            public void onAnimationStart(Animation animation)
+                            {
 
-                        }
+                            }
 
-                        @Override
-                        public void onAnimationEnd(Animation animation)
-                        {
-                            mSplashLayout.setVisibility(View.GONE);
-                            mSplashLayout.setAnimation(null);
-                        }
+                            @Override
+                            public void onAnimationEnd(Animation animation)
+                            {
+                                mSplashLayout.setVisibility(View.GONE);
+                                mSplashLayout.setAnimation(null);
+                            }
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation)
-                        {
+                            @Override
+                            public void onAnimationRepeat(Animation animation)
+                            {
 
-                        }
-                    });
+                            }
+                        });
 
-                    mSplashLayout.startAnimation(animation);
+                        mSplashLayout.startAnimation(animation);
+                    }
                     break;
                 }
             }
@@ -373,7 +375,6 @@ public class MainActivity extends BaseActivity implements Constants
     private void finishSplash()
     {
         mDelayTimeHandler.sendEmptyMessageDelayed(2, 2000);
-
         mDelayTimeHandler.removeMessages(0);
         mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
         mIsInitialization = false;
