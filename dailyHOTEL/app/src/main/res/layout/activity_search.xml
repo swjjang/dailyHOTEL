@@ -141,7 +141,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"/>
 
-            <ScrollView
+            <com.twoheart.dailyhotel.widget.DailyScrollView
                 android:id="@+id/recentSearchesScrollLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:orientation="vertical"/>
-            </ScrollView>
+            </com.twoheart.dailyhotel.widget.DailyScrollView>
         </RelativeLayout>
 
         <com.twoheart.dailyhotel.widget.DailyScrollView
