@@ -554,6 +554,46 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
+    public void requestGourmetSearchList(Object tag, SaleTime saleTime, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "";
+
+        String params = String.format("?dateCheckIn=%s&offset=%d&count=%d&term=%s"//
+            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), offeset, count, text);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestGourmetSearchList(Object tag, SaleTime saleTime, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "";
+
+        String params = String.format("?dateCheckIn=%s&userLatitude=%s&userLongitude=%s&offset=%d&count=%d"//
+            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd")//
+            , Double.toString(location.getLatitude()), Double.toString(location.getLongitude())//
+            , offeset, count);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/auto_complete" : "";
+
+        String params = String.format("?dateCheckIn=%s&term=%s", date, text);
+
+        DailyHotelJsonArrayRequest dailyHotelJsonRequest = new DailyHotelJsonArrayRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
     public void requestGourmetDetailInformation(Object tag, int index, String day, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/restaurant/info" : "MjkkMzYkNDckMjUkODMk$M0FCMTY0Qjk2RDU1NTRFNTc1ROURDRVEFFOTEVyMUFDQTkwNJkExRTkwMzBGNUQ5MTgyQUI4MzJGNEQ2MTBUEOEY2OQ==$";

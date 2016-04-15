@@ -406,14 +406,17 @@ public class AnalyticsManager
         //
         public static final String GOURMET_SEARCH_BUTTON_CLICKED = "GourmetSearchButtonClicked";
         public static final String GOURMET_KEYWORD_SEARCH_CLICKED = "GourmetKeywordSearchClicked";
-        public static final String GOUREMT_SEARCH_BACK_BUTTON_CLICKED = "GourmetSearchBackButtonClicked";
+        public static final String GOURMET_SEARCH_BACK_BUTTON_CLICKED = "GourmetSearchBackButtonClicked";
         public static final String GOURMET_KEYWORD_RESET_CLICKED = "GourmetKeywordResetClicked";
         public static final String GOURMET_AROUND_SEARCH_CLICKED = "GourmetAroundSearchClicked";
         public static final String GOURMET_KEYWORD_HISTORY_DELETED = "GourmetKeywordsHistoryDeleted";
         public static final String GOURMET_RECENT_KEYWORD_SEARCH_CLICKED = "GourmetRecentKeywordSearchClicked";
-        public static final String GOURMET_AUTOCOMPLETED_KEYWORD_SEARCH_CLICKED = "GourmetAutoCompletedKeywordClicked";
-        public static final String GOURMET_AROUND_NOT_FOUND = "GourmetAroundNotFound";
-        public static final String GOURMET_SEARCH_NOT_FOUND = "GourmetSearchNotFound";
+        public static final String GOURMET_AUTOCOMPLETED_KEYWORD_CLICKED = "GourmetAutoCompletedKeywordClicked";
+        public static final String GOURMET_AUTOCOMPLETED_KEYWORD_NOTMATCHED = "GourmetAutoCompletedKeywordNotMatched";
+        public static final String GOURMET_AROUND_SEARCH_NOT_FOUND = "GourmetAroundSearchNotFound";
+        public static final String GOURMET_KEYWORD_SEARCH_NOT_FOUND = "GourmetKeywordSearchNotFound";
+        public static final String GOURMET_AUTOCOMPLETE_KEYWORD_NOT_FOUND = "GourmetAutoCompletedKeywordNotFound";
+        public static final String GOURMET_RECENT_KEYWORD_NOT_FOUND = "GourmetRecentKeywordSearchNotFound";
         public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
         public static final String GOURMET_SEARCH_RESULT_CANCELED = "GourmetSearchResultCanceled";
         //
@@ -435,7 +438,7 @@ public class AnalyticsManager
         public static final String GOURMET_BOOKINGS = "GourmetBookings";
         public static final String POPUP_BOXES = "PopupBoxes";
         public static final String HOTEL_SEARCH = "HotelSearches";
-        public static final String GOURMET_SEARCH_ = "GourmetSearches";
+        public static final String GOURMET_SEARCH = "GourmetSearches";
         public static final String BOOKING_STATUS = "BookingStatus";
     }
 
@@ -525,6 +528,7 @@ public class AnalyticsManager
         public static final String AGREE_AND_SEARCH = "AgreeAndSearch";
         public static final String DELETE_ALL_KEYWORDS = "DeleteAllKeywords";
         public static final String HOTEL_SEARCH_AGAIN_CLICKED = "HotelSearchAgainClicked";
+        public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
         public static final String CALL_KEYWORD_HOTEL = "Call-KeywordHotel";
         public static final String CALL_KEYWORD_GOURMET = "Call-KeywordGourmet";
     }
