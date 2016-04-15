@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
+import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -71,6 +72,15 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     {
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
+        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search_black, -1);
+        dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showSearch();
+            }
+        });
     }
 
     @Override
@@ -97,11 +107,11 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void showSearch()
     {
-        //        Intent intent = GourmetSearchActivity.newInstance(this, mSaleTime);
-        //        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
-        //
-        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-        //            , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
+        Intent intent = GourmetSearchActivity.newInstance(this, mSaleTime);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
     }
 
     @Override
