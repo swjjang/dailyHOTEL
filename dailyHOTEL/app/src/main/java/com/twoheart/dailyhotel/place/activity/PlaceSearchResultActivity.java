@@ -100,6 +100,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             {
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {

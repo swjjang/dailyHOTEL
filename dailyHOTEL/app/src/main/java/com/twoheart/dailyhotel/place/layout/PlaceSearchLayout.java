@@ -134,7 +134,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         final View deleteView = mToolbar.findViewById(R.id.deleteView);
         deleteView.setOnClickListener(this);
-        deleteView.setVisibility(View.INVISIBLE);
+        deleteView.setVisibility(View.GONE);
 
         mSearchEditText.addTextChangedListener(new TextWatcher()
         {
@@ -158,7 +158,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                 if (length == 0)
                 {
-                    deleteView.setVisibility(View.INVISIBLE);
+                    deleteView.setVisibility(View.GONE);
                     searchView.setEnabled(false);
 
                     updateAutoCompleteLayout(mAutoCompleteLayout, null, null);
