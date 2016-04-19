@@ -349,7 +349,7 @@ public class Util implements Constants
     {
         if (texts == null)
         {
-            return false;
+            return true;
         }
 
         for (String text : texts)
