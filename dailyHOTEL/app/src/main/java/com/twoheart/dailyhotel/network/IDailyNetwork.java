@@ -69,7 +69,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserInformationUpdate(Object tag, String name, String phone, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**

@@ -71,7 +71,15 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     protected void initToolbar(View toolbar)
     {
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area));
+        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_area), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search_black, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+    <include layout="@layout/toolbar_default"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/calendar_month_line">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="15dp"
+                android:text="20자 이내의 이름을 입력하신 후[이름 설정 완료 버튼을 눌러주세요."
+                android:textColor="@color/curation_title_text"
+                android:textSize="13dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/curation_information_line"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/curation_information_line"/>
+        </RelativeLayout>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/nameView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_name"
+            android:textColor="@color/dh_theme_color"/>
+
+        <com.twoheart.dailyhotel.widget.DailyEditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:hint="@string/label_necessary_reservation"
+            android:inputType="text"
+            android:maxLength="20"
+            android:singleLine="true"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textColorHint="@color/textView_textColor_disabled"
+            android:textSize="15dp"
+            android:theme="@style/EditTextTheme"/>
+    </LinearLayout>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/confirmView"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dh_theme_color"
+        android:gravity="center"
+        android:text="@string/act_profile_btn_logout"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
+</RelativeLayout>

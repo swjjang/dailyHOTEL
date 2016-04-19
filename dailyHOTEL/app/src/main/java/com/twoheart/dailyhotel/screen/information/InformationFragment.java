@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.screen.event.EventListActivity;
 import com.twoheart.dailyhotel.screen.information.bonus.BonusActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
@@ -115,7 +116,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     {
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), false, false);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), null, false);
     }
 
     private void initSnsLayout(View view)

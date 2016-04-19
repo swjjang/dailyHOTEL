@@ -60,6 +60,8 @@ import okhttp3.OkHttpClient;
 
 public class Util implements Constants
 {
+    public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
+
     private static String MEMORY_CLEAR;
 
     public static void initializeMemory()
@@ -340,12 +342,7 @@ public class Util implements Constants
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
-    public static boolean isTextEmpty(String text)
-    {
-        return (TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true || text.trim().length() == 0);
-    }
-
-    public static boolean isEmptyTextField(String... texts)
+    public static boolean isTextEmpty(String... texts)
     {
         if (texts == null)
         {
@@ -354,7 +351,7 @@ public class Util implements Constants
 
         for (String text : texts)
         {
-            if (Util.isTextEmpty(text) == true)
+            if ((TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true || text.trim().length() == 0) == true)
             {
                 return true;
             }
@@ -518,6 +515,34 @@ public class Util implements Constants
         }.execute();
     }
 
+    public static String getCountryNameNCode(Context context)
+    {
+        try
+        {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String countryIsoCode = telephonyManager.getSimCountryIso();
+
+            if (Util.isTextEmpty(countryIsoCode) == true)
+            {
+                Locale currentLocale = context.getResources().getConfiguration().locale;
+
+                countryIsoCode = currentLocale.getCountry();
+            }
+
+            if (Util.isTextEmpty(countryIsoCode) == false)
+            {
+                CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
+
+                return countryCodeNumber.getContryNameNCode(countryIsoCode);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return DEFAULT_COUNTRY_CODE;
+    }
+
     private static String getValidateCountry(String code)
     {
         CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
@@ -628,8 +653,6 @@ public class Util implements Constants
         TelephonyManager telManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         return telManager.getLine1Number();
     }
-
-    public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
 
     public static String[] getValidatePhoneNumber(String phonenumber)
     {
@@ -945,7 +968,9 @@ public class Util implements Constants
         }
     }
 
-    public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName, final double latitude, final double longitude, boolean isOverseas, final String gaCategory, final String gaAction, final String gaLabel)
+    public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName//
+        , final double latitude, final double longitude, boolean isOverseas//
+        , final String gaCategory, final String gaAction, final String gaLabel)
     {
         if (baseActivity == null || baseActivity.isFinishing() == true)
         {
@@ -984,12 +1009,15 @@ public class Util implements Constants
 
                 Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
 
-                if (Util.isTextEmpty(gaLabel) == true)
+                if (Util.isTextEmpty(gaCategory) == false)
                 {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
-                } else
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
+                    if (Util.isTextEmpty(gaLabel) == true)
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
+                    }
                 }
             }
         });
@@ -1006,12 +1034,15 @@ public class Util implements Constants
 
                 Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                if (Util.isTextEmpty(gaLabel) == true)
+                if (Util.isTextEmpty(gaCategory) == false)
                 {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
-                } else
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
+                    if (Util.isTextEmpty(gaLabel) == true)
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
+                    }
                 }
             }
         });
@@ -1028,12 +1059,15 @@ public class Util implements Constants
 
                 Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                if (Util.isTextEmpty(gaLabel) == true)
+                if (Util.isTextEmpty(gaCategory) == false)
                 {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
-                } else
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                    if (Util.isTextEmpty(gaLabel) == true)
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                    }
                 }
             }
         });

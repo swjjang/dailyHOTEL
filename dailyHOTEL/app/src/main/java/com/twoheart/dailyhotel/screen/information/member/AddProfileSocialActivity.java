@@ -1,15 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * SignupActivity (회원가입화면)
- * <p>
- * 새로운 사용자 가입하는 화면이다. 새로운 사용자로부터 이메일, 이름, 패스워드,
- * 추천인 코드를 입력받는다. 회원가입하는 웹서버 API를 이용한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.Manifest;
@@ -42,9 +30,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -53,7 +38,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignupActivity extends BaseActivity implements OnClickListener
+public class AddProfileSocialActivity extends BaseActivity implements OnClickListener
 {
     private static final String INTENT_EXTRA_DATA_MODE = "mode";
 
@@ -61,40 +46,24 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
     private static final int MAX_OF_RECOMMENDER = 45;
 
-    private static final int MODE_SIGNUP = 1;
-    private static final int MODE_USERINFO_UPDATE = 2;
-
     private EditText mPhoneTextView, mEmailEditText, mNameEditText, mPasswordEditText, mRecommenderEditText;
     private View mFakeMobileView;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsCheckBox;
     private CheckBox mPersonalCheckBox;
-    private int mMode;
     private String mUserIdx;
     private int mRecommender; // 추천인 코드
-    private boolean mIsDailyUser;
 
     private Map<String, String> mSignupParams;
 
     private boolean mFirstMobileNumberFocus;
 
-    public static Intent newInstance(Context context, Customer customer, int recommender, boolean isDailyUser)
+    public static Intent newInstance(Context context, Customer customer, int recommender)
     {
-        Intent intent = new Intent(context, SignupActivity.class);
+        Intent intent = new Intent(context, AddProfileSocialActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_MODE, MODE_USERINFO_UPDATE);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, customer);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, isDailyUser);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context)
-    {
-        Intent intent = new Intent(context, SignupActivity.class);
-
-        intent.putExtra(INTENT_EXTRA_DATA_MODE, MODE_SIGNUP);
 
         return intent;
     }
@@ -104,23 +73,12 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_add_profile_social);
 
         Intent intent = getIntent();
 
         mFirstMobileNumberFocus = true;
-        mMode = intent.getIntExtra(INTENT_EXTRA_DATA_MODE, MODE_SIGNUP);
-
-        switch (mMode)
-        {
-            case MODE_SIGNUP:
-                initSignupUser();
-                break;
-
-            case MODE_USERINFO_UPDATE:
-                initUpdateUser(intent);
-                break;
-        }
+        initUpdateUser(intent);
     }
 
     private void initUpdateUser(Intent intent)
@@ -130,21 +88,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         Customer customer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
         mRecommender = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, -1);
-        mIsDailyUser = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, true);
 
         initToolbar(getString(R.string.actionbar_title_userinfo_update_activity));
 
-        if (mIsDailyUser == true)
+        // 3가지 정보가 전부 있는 경우에는 소셜 유저가 업데이트 하는 경우이다
+        if (Util.isTextEmpty(customer.getName()) == false && Util.isTextEmpty(customer.getEmail()) == false//
+            && Util.isTextEmpty(customer.getPhone()) == false)
         {
             isVisibleRecommender = false;
-        } else
-        {
-            // 3가지 정보가 전부 있는 경우에는 소셜 유저가 업데이트 하는 경우이다
-            if (Util.isTextEmpty(customer.getName()) == false && Util.isTextEmpty(customer.getEmail()) == false//
-                && Util.isTextEmpty(customer.getPhone()) == false)
-            {
-                isVisibleRecommender = false;
-            }
         }
 
         if (Util.isValidatePhoneNumber(customer.getPhone()) == false)
@@ -154,7 +105,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         phoneNumber = customer.getPhone();
 
-        View.OnClickListener onClickListener = null;
+        OnClickListener onClickListener = null;
         String message;
 
         // 전화번호만 업데이트 하는 경우
@@ -165,7 +116,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         {
             message = getString(R.string.toast_msg_confirm_mobilenumber);
 
-            onClickListener = new View.OnClickListener()
+            onClickListener = new OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -183,22 +134,18 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         initLayout(customer, phoneNumber, isVisibleRecommender);
     }
 
-    private void initSignupUser()
-    {
-        mIsDailyUser = true;
-
-        String phoneNumber = Util.getLine1Number(this);
-
-        initToolbar(getString(R.string.actionbar_title_signup_activity));
-
-        initLayout(null, phoneNumber, true);
-    }
-
     private void initToolbar(String title)
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(title);
+        dailyToolbarLayout.initToolbar(title, new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     private void initLayout(Customer user, final String mobileNumber, boolean isVisibleRecommender)
@@ -214,7 +161,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         }
 
         // 회원 가입시 이름 필터 적용.
-        StringFilter stringFilter = new StringFilter(SignupActivity.this);
+        StringFilter stringFilter = new StringFilter(AddProfileSocialActivity.this);
         InputFilter[] allowAlphanumericHangul = new InputFilter[2];
         allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
         allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
@@ -340,10 +287,10 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onStart()
     {
-        if (mMode == MODE_SIGNUP)
-        {
-            AnalyticsManager.getInstance(SignupActivity.this).recordScreen(Screen.SIGNUP, null);
-        }
+        //        if (mMode == MODE_SIGNUP)
+        //        {
+        //            AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordScreen(Screen.SIGNUP, null);
+        //        }
 
         super.onStart();
     }
@@ -382,116 +329,37 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         return true;
     }
 
-    private boolean isEmptyFields(int mode)
-    {
-        if (Util.isTextEmpty(mEmailEditText.getText().toString().trim()) == true//
-            || Util.isTextEmpty(mNameEditText.getText().toString().trim()) == true//
-            || Util.isTextEmpty(mPhoneTextView.getText().toString().trim()) == true)
-        {
-            return false;
-        }
-
-        switch (mode)
-        {
-            case MODE_SIGNUP:
-                if (Util.isTextEmpty(mPasswordEditText.getText().toString().trim()) == true)
-                {
-                    return false;
-                }
-                break;
-
-            case MODE_USERINFO_UPDATE:
-                break;
-        }
-
-        return true;
-    }
-
     private boolean isCheckedAgreement()
     {
         if (mTermsCheckBox.isChecked() == false)
         {
-            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_terms_agreement, Toast.LENGTH_SHORT);
+            DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_terms_agreement, Toast.LENGTH_SHORT);
             return false;
         }
 
         if (mPersonalCheckBox.isChecked() == false)
         {
-            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_personal_agreement, Toast.LENGTH_SHORT);
+            DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_personal_agreement, Toast.LENGTH_SHORT);
             return false;
         }
 
         return true;
     }
 
-
-    private void processSignup()
-    {
-        if (isEmptyFields(MODE_SIGNUP) == false)
-        {
-            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
-            return;
-        }
-
-        // email 유효성 체크
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches() == false)
-        {
-            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-            return;
-        }
-
-        if (mPasswordEditText.length() < 4)
-        {
-            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
-            return;
-        }
-
-        if (isCheckedAgreement() == false)
-        {
-            return;
-        }
-
-        lockUI();
-
-        mSignupParams = new HashMap<>();
-        mSignupParams.put("email", mEmailEditText.getText().toString().trim());
-        mSignupParams.put("pw", mPasswordEditText.getText().toString().trim());
-        mSignupParams.put("name", mNameEditText.getText().toString().trim());
-
-        String phoneNumber = mPhoneTextView.getText().toString().trim();
-        phoneNumber = phoneNumber.replaceAll("-", "");
-
-        mSignupParams.put("phone", phoneNumber);
-
-        mSignupParams.put("device", Util.getDeviceId(this));
-        mSignupParams.put("market_type", RELEASE_STORE.getName());
-
-        String recommender = mRecommenderEditText.getText().toString().trim();
-        if (Util.isTextEmpty(recommender) == false)
-        {
-            mSignupParams.put("recommender", recommender);
-        }
-
-        mSignupParams.put("social_id", "0");
-        mSignupParams.put("user_type", "normal");
-
-        DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mSignupParams, mUserSignupJsonResponseListener, this);
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , Action.REGISTRATION_CLICKED, Label.AGREE_AND_REGISTER, null);
-    }
-
     private void processUpdateUser()
     {
-        if (isEmptyFields(MODE_USERINFO_UPDATE) == false)
+        if (Util.isTextEmpty(mEmailEditText.getText().toString().trim()//
+            , mNameEditText.getText().toString().trim()//
+            , mPhoneTextView.getText().toString().trim()) == true)
         {
-            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+            DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
             return;
         }
 
         // email 유효성 체크
         if (mEmailEditText.isEnabled() == true && android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches() == false)
         {
-            DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+            DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -502,44 +370,34 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         lockUI();
 
-        if (mIsDailyUser == true)
+        Map<String, String> updateParams = new HashMap<>();
+        updateParams.put("user_idx", mUserIdx);
+
+        if (mEmailEditText.isEnabled() == true)
         {
-            String name = mNameEditText.getText().toString().trim();
-            String phone = mPhoneTextView.getText().toString().trim();
-            phone = phone.replaceAll("-", "");
-
-            DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, name, phone, mUserUpdateJsonResponseListener, this);
-        } else
-        {
-            Map<String, String> updateParams = new HashMap<>();
-            updateParams.put("user_idx", mUserIdx);
-
-            if (mEmailEditText.isEnabled() == true)
-            {
-                updateParams.put("user_email", mEmailEditText.getText().toString().trim());
-            }
-
-            if (mNameEditText.isEnabled() == true)
-            {
-                updateParams.put("user_name", mNameEditText.getText().toString().trim());
-            }
-
-            if (mPhoneTextView.isEnabled() == true)
-            {
-                String phoneNumber = mPhoneTextView.getText().toString().trim();
-                phoneNumber = phoneNumber.replaceAll("-", "");
-
-                updateParams.put("user_phone", phoneNumber);
-            }
-
-            String recommender = mRecommenderEditText.getText().toString().trim();
-            if (Util.isTextEmpty(recommender) == false)
-            {
-                updateParams.put("recommendation_code", recommender);
-            }
-
-            DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, updateParams, mUserUpdateFacebookJsonResponseListener, this);
+            updateParams.put("user_email", mEmailEditText.getText().toString().trim());
         }
+
+        if (mNameEditText.isEnabled() == true)
+        {
+            updateParams.put("user_name", mNameEditText.getText().toString().trim());
+        }
+
+        if (mPhoneTextView.isEnabled() == true)
+        {
+            String phoneNumber = mPhoneTextView.getText().toString().trim();
+            phoneNumber = phoneNumber.replaceAll("-", "");
+
+            updateParams.put("user_phone", phoneNumber);
+        }
+
+        String recommender = mRecommenderEditText.getText().toString().trim();
+        if (Util.isTextEmpty(recommender) == false)
+        {
+            updateParams.put("recommendation_code", recommender);
+        }
+
+        DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, updateParams, mUserUpdateFacebookJsonResponseListener, this);
     }
 
     @Override
@@ -548,16 +406,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         switch (v.getId())
         {
             case R.id.btn_signup:
-                switch (mMode)
-                {
-                    case MODE_SIGNUP:
-                        processSignup();
-                        break;
-
-                    case MODE_USERINFO_UPDATE:
-                        processUpdateUser();
-                        break;
-                }
+                processUpdateUser();
                 break;
 
             case R.id.termsContentView:
@@ -604,7 +453,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         String pwd = Crypto.encrypt(mPasswordEditText.getText().toString()).replace("\n", "");
         String name = mNameEditText.getText().toString();
 
-        DailyPreference.getInstance(SignupActivity.this).setUserInformation(true, id, pwd, "normal", name);
+        DailyPreference.getInstance(AddProfileSocialActivity.this).setUserInformation(true, id, pwd, "normal", name);
 
         setResult(RESULT_OK);
     }
@@ -638,7 +487,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     {
         unLockUI();
 
-        DailyToast.showToast(SignupActivity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
+        DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
         finish();
     }
 
@@ -656,7 +505,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             internationalMobileNumber = mPhoneTextView.getText().toString();
         }
 
-        Intent intent = InputMobileNumberDialogActivity.newInstance(SignupActivity.this, internationalMobileNumber);
+        Intent intent = InputMobileNumberDialogActivity.newInstance(AddProfileSocialActivity.this, internationalMobileNumber);
         startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
     }
 
@@ -683,8 +532,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                                     JSONObject jsonObject = response.getJSONObject("data");
 
                                     int uid = jsonObject.getInt("uid");
-                                    DailyPreference.getInstance(SignupActivity.this).setNotificationUid(uid);
-                                    DailyPreference.getInstance(SignupActivity.this).setGCMRegistrationId(registrationId);
+                                    DailyPreference.getInstance(AddProfileSocialActivity.this).setNotificationUid(uid);
+                                    DailyPreference.getInstance(AddProfileSocialActivity.this).setGCMRegistrationId(registrationId);
                                 }
                             } catch (Exception e)
                             {
@@ -748,7 +597,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         {
                             if (msg != null)
                             {
-                                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_SHORT);
+                                DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_SHORT);
                             }
 
                             setResult(RESULT_OK);
@@ -765,7 +614,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                                     return;
                                 }
 
-                                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
                                 {
                                     @Override
                                     public void onClick(View view)
@@ -803,7 +652,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         {
                             if (msg != null)
                             {
-                                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_SHORT);
+                                DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_SHORT);
                             }
                             break;
                         }
@@ -849,13 +698,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 if (result.equals("true") == true)
                 {
-                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
 
                     setResult(RESULT_OK);
                     finish();
                 } else
                 {
-                    DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
+                    DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_LONG);
                 }
             } catch (Exception e)
             {
@@ -873,8 +722,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             {
                 String userIndex = String.valueOf(response.getInt("idx"));
 
-                AnalyticsManager.getInstance(SignupActivity.this).setUserIndex(userIndex);
-                AnalyticsManager.getInstance(SignupActivity.this).signUpDailyUser(userIndex, mSignupParams.get("email")//
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserIndex(userIndex);
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).signUpDailyUser(userIndex, mSignupParams.get("email")//
                     , mSignupParams.get("name"), mSignupParams.get("phone"), AnalyticsManager.UserType.EMAIL);
 
                 requestGoogleCloudMessagingId();
@@ -907,11 +756,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         String accessToken = tokenJSONObject.getString("access_token");
                         String tokenType = tokenJSONObject.getString("token_type");
 
-                        DailyPreference.getInstance(SignupActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
+                        DailyPreference.getInstance(AddProfileSocialActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                         storeLoginInfo();
 
                         lockUI();
-                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, SignupActivity.this);
+                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, AddProfileSocialActivity.this);
                         return;
                     }
                 }
@@ -924,7 +773,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                     msg = getString(R.string.toast_msg_failed_to_login);
                 }
 
-                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
+                DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_LONG);
 
                 unLockUI();
                 finish();
@@ -960,7 +809,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         params.put("user_type", "normal");
                         params.put("is_auto", "true");
 
-                        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, SignupActivity.this);
+                        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, AddProfileSocialActivity.this);
                         return;
                     }
                 }
@@ -974,7 +823,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                     msg = getString(R.string.toast_msg_failed_to_signup);
                 }
 
-                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
+                DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_LONG);
             } catch (Exception e)
             {
                 unLockUI();

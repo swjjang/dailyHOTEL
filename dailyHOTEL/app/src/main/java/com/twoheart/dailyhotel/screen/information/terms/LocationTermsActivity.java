@@ -25,7 +25,14 @@ public class LocationTermsActivity extends WebViewActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_locationterms_activity));
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_locationterms_activity), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     @Override

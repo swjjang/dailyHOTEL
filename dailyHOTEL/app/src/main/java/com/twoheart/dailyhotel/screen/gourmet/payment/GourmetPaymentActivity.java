@@ -144,7 +144,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(title);
+        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {

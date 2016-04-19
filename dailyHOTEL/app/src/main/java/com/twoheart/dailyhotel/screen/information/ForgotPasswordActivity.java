@@ -63,7 +63,14 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_forgot_pwd_activity));
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_forgot_pwd_activity), new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     @Override

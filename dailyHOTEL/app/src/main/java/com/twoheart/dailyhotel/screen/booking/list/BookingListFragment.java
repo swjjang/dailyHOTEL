@@ -82,7 +82,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_booking_list_frag), false, false);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_booking_list_frag), null, false);
     }
 
     private void initLayout(View view)

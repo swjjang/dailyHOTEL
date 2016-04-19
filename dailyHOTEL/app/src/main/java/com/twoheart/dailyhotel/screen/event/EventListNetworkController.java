@@ -179,7 +179,7 @@ public class EventListNetworkController extends BaseNetworkController
                 int recommender = jsonObject.getInt("recommender_code");
                 boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                if (Util.isEmptyTextField(user.getEmail(), user.getPhone(), user.getName()) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
+                if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                 {
                     mListener.onRequestEvent(user.getUserIdx());
                 } else

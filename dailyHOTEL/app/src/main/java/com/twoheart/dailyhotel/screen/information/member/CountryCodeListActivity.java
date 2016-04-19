@@ -73,7 +73,14 @@ public class CountryCodeListActivity extends BaseActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_select_country));
+        dailyToolbarLayout.initToolbar(getString(R.string.label_select_country), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     @Override

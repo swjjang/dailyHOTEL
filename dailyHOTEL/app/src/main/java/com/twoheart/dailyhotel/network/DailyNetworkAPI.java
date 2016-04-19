@@ -171,13 +171,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestUserInformationUpdate(Object tag, String name, String phone, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "user/update" : "MjQkMjkkMzAkMiQ4JA==$QTCNBRjRIFMUZGRUQwMEQzRDM2ZMjM2FCRTIzRjZDREZCRDA=$";
-
-        Map<String, String> params = new HashMap<>();
-        params.put("name", name);
-        params.put("phone", phone);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SESSION_SERVER + URL, params, listener, errorListener);
         dailyHotelJsonRequest.setUsedAuthorization(true);

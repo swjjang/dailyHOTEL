@@ -25,7 +25,7 @@ import java.util.List;
 public class DailyLocationFactory
 {
     private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final int TEN_MINUTES = 1000 * 60;
+    private static final int ONE_MINUTES = 1000 * 60;
     protected static final String SINGLE_LOCATION_UPDATE_ACTION = "com.twoheart.dailyhotel.places.SINGLE_LOCATION_UPDATE_ACTION";
     private static DailyLocationFactory mInstance;
     protected PendingIntent mUpdatePendingIntent;
@@ -200,7 +200,7 @@ public class DailyLocationFactory
 
         mIsMeasuringLocation = true;
 
-        Location location = getLastBestLocation(mBaseActivity, 10, TEN_MINUTES);
+        Location location = getLastBestLocation(mBaseActivity, 10, ONE_MINUTES);
 
         boolean hasLastLocation = false;
 

@@ -107,7 +107,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity), new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     private void initTopLayout()
@@ -341,7 +348,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             case R.id.signupView:
             {
-                Intent intent = SignupActivity.newInstance(this);
+                Intent intent = SignupStep1Activity.newInstance(this);
                 startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 

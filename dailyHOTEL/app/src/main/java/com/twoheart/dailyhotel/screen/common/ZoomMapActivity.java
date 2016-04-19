@@ -130,7 +130,14 @@ public class ZoomMapActivity extends BaseActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(title);
+        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     private void initLayout(final String placeName, final double latitude, final double longitude, final boolean isOverseas)
@@ -164,6 +171,8 @@ public class ZoomMapActivity extends BaseActivity
 
                     case HOTEL_BOOKING:
                     case GOURMET_BOOKING:
+                        Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas//
+                            , null, null, null);
                         break;
                 }
             }
