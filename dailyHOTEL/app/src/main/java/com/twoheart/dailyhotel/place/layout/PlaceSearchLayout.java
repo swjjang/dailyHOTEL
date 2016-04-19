@@ -551,9 +551,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                     if (keyword.price > 0)
                     {
-                        int separatorIndex = keyword.name.indexOf('>');
-                        int startIndex = keyword.name.lastIndexOf(text);
-                        int endIndex = startIndex + text.length();
+                        String keywordNameUpperCase = keyword.name.toUpperCase();
+                        String textUpperCase = text.toUpperCase();
+
+                        int separatorIndex = keywordNameUpperCase.indexOf('>');
+                        int startIndex = keywordNameUpperCase.lastIndexOf(textUpperCase);
+                        int endIndex = startIndex + textUpperCase.length();
 
                         if (startIndex > separatorIndex)
                         {
