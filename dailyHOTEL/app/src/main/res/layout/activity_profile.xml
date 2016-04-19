@@ -10,25 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:orientation="vertical"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
+        android:layout_marginRight="15dp"
+        android:orientation="vertical">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/act_profile_email"
-            android:textColor="@color/curation_title_text"
-            android:textSize="13dp"/>
+            android:layout_height="72dp"
+            android:gravity="center_vertical">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/emailTextView"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:gravity="right|center_vertical"
-            android:lineSpacingExtra="-2dp"
-            android:textColor="@color/curation_information_text"
-            android:textSize="13dp"/>
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/emailView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/act_profile_email"
+                android:textColor="@color/search_hint_text"
+                android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/emailTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/emailView"
+                android:layout_marginTop="8dp"
+                android:maxLength="50"
+                android:singleLine="true"
+                android:textColor="@color/curation_title_text"
+                android:textSize="16dp"
+                android:theme="@style/EditTextTheme"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
@@ -38,39 +48,44 @@
         <RelativeLayout
             android:id="@+id/nameLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="10dp">
+            android:layout_height="72dp">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/nameView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/act_profile_name"
-                android:textColor="@color/curation_title_text"
-                android:textSize="13dp"/>
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/nameArrowImage"
+                android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/nameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/nameView"
-                android:hint="@string/act_profile_input_name"
-                android:inputType="text"
-                android:maxLength="20"
-                android:singleLine="true"
-                android:textColor="@color/curation_information_text"
-                android:textSize="13dp"
-                android:theme="@style/EditTextTheme"
-                android:layout_toLeftOf="@+id/nameArrowImage"/>
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/nameView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/act_profile_name"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="12dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nameView"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/act_profile_input_name"
+                    android:singleLine="true"
+                    android:textColor="@color/curation_information_text"
+                    android:textSize="16dp"
+                    android:theme="@style/EditTextTheme"/>
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/nameArrowImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/more_ic_next"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/more_ic_next"/>
         </RelativeLayout>
 
         <View
@@ -81,49 +96,52 @@
         <RelativeLayout
             android:id="@+id/phoneLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="10dp">
+            android:layout_height="72dp">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/phoneView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/act_profile_contact"
-                android:textColor="@color/curation_title_text"
-                android:textSize="13dp"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/phoneVerifyView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(인증필요)"
-                android:textColor="@color/dh_theme_color"
-                android:textSize="13dp"
-                android:layout_toRightOf="@+id/phoneView"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/profilePhoneTextView"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/phoneView"
-                android:hint="@string/act_profile_input_contact"
-                android:inputType="phone"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/curation_information_text"
-                android:textSize="13dp"
-                android:theme="@style/EditTextTheme"
-                android:layout_toLeftOf="@+id/phoneArrowImage"/>
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/phoneArrowImage">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/phoneView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/act_profile_contact"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="12dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/phoneVerifyView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/phoneView"
+                    android:text="(인증필요)"
+                    android:textColor="@color/dh_theme_color"
+                    android:textSize="12dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/profilePhoneTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/phoneView"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/act_profile_input_contact"
+                    android:singleLine="true"
+                    android:textColor="@color/curation_information_text"
+                    android:textSize="16dp"
+                    android:theme="@style/EditTextTheme"/>
+            </RelativeLayout>
 
             <ImageView
                 android:id="@+id/phoneArrowImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/more_ic_next"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/more_ic_next"/>
         </RelativeLayout>
 
         <View
@@ -134,40 +152,53 @@
         <RelativeLayout
             android:id="@+id/passwordLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="10dp">
+            android:layout_height="72dp">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/passwordView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/act_profile_password"
-                android:textColor="@color/curation_title_text"
-                android:textSize="13dp"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/passwordTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/passwordView"
-                android:maxLength="20"
-                android:singleLine="true"
-                android:textColor="@color/curation_information_text"
-                android:text="******"
-                android:textSize="13dp"
-                android:theme="@style/EditTextTheme"
                 android:layout_toLeftOf="@+id/passwordArrowImage"
-                android:inputType="textPassword"/>
+                android:orientation="vertical"
+                android:layout_centerVertical="true">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/passwordView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/act_profile_password"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="12dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/passwordTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/passwordView"
+                    android:layout_marginTop="8dp"
+                    android:inputType="textPassword"
+                    android:maxLength="20"
+                    android:singleLine="true"
+                    android:text="******"
+                    android:textColor="@color/curation_information_text"
+                    android:textSize="16dp"
+                    android:theme="@style/EditTextTheme"/>
+            </LinearLayout>
+
 
             <ImageView
                 android:id="@+id/passwordArrowImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/more_ic_next"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/more_ic_next"/>
         </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/curation_information_line"/>
     </LinearLayout>
 
     <com.twoheart.dailyhotel.widget.DailyTextView

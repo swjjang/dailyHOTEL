@@ -352,6 +352,9 @@
     <string name="act_profile_input_email">이메일이 없습니다.</string>
     <string name="label_confirm_phonenumber">휴대폰 번호 설정 완료</string>
     <string name="label_confirm_password">비밀번호 설정 완료</string>
+    <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
+    <string name="message_edit_name_guide">20자 이내의 이름을 입력하신 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_edit_password_guide">20자 이상 비밀번호를 입력하신 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
 
     <!-- WaitTimer Fragment -->
     <string name="frag_wait_timer_off">알람 끄기</string>
@@ -445,7 +448,11 @@
     <string name="label_view_content">내용보기</string>
     <string name="label_terms_location">위치기반서비스 이용약관</string>
     <string name="label_next">다음</string>
+    <string name="label_request_verification">인증번호 받기</string>
+    <string name="label_confirm_signup">회원가입 완료</string>
     <string name="message_please_enter_the_same_password">동일한 비밀번호를 입력해주세요.</string>
+    <string name="message_signup_step1_guide">데일리호텔 회원가입을 하시고 적립금, 이벤트 등 다양한 혜택을 누려보세요.</string>
+    <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력하신 후 인증 처리를 해주세요.</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>

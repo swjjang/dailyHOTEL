@@ -313,7 +313,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:drawableLeft="@drawable/more_ic_06"
+                    android:drawableLeft="@drawable/more_ic_09"
                     android:drawablePadding="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_agree_sms"
