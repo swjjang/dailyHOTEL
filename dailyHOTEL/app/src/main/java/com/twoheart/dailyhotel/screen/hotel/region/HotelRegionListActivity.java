@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.hotel.region;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.android.volley.VolleyError;
@@ -41,6 +42,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     private Province mSelectedProvince;
     private TabLayout mTabLayout;
     private View mToolbarUnderline;
+    private int mAttachFragmentCount;
 
     public static Intent newInstance(Context context, Province province, SaleTime saleTime, int nights)
     {
@@ -56,6 +58,8 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     protected void initPrepare()
     {
         mNetworkController = new HotelRegionListNetworkController(this, mOnNetworkControllerListener);
+
+        mAttachFragmentCount = 0;
     }
 
     @Override
@@ -64,6 +68,20 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
         mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment)
+    {
+        super.onAttachFragment(fragment);
+
+        if (++mAttachFragmentCount == HOTEL_TAB_COUNT)
+        {
+            mAttachFragmentCount = 0;
+            lockUI();
+
+            requestRegionList();
+        }
     }
 
     @Override

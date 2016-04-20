@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.gourmet.region;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -35,6 +36,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     private GourmetRegionListNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private Province mSelectedProvince;
+    private int mAttachFragmentCount;
 
     public static Intent newInstance(Context context, Province province, SaleTime saleTime)
     {
@@ -56,6 +58,20 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     {
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment)
+    {
+        super.onAttachFragment(fragment);
+
+        if (++mAttachFragmentCount == GOURMET_TAB_COUNT)
+        {
+            mAttachFragmentCount = 0;
+            lockUI();
+
+            requestRegionList();
+        }
     }
 
     @Override
