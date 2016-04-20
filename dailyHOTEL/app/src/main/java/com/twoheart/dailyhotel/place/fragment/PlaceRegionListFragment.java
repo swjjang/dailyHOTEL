@@ -64,6 +64,13 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         }
 
         mAdapter.setData(arrayList);
+
+        if (mListView == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
         mListView.setAdapter(mAdapter);
         selectedPreviousArea(mSelectedProvince, arrayList);
     }

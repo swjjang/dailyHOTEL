@@ -70,16 +70,6 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     }
 
     @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        lockUI();
-
-        requestRegionList();
-    }
-
-    @Override
     public void onBackPressed()
     {
         setResult(RESULT_CANCELED);
