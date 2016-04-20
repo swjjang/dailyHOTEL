@@ -167,10 +167,18 @@ public class GourmetDetailLayout
             mImageAdapter = new PlaceDetailImageViewPagerAdapter(mActivity);
         }
 
-        mImageAdapter.setData(placeDetail.getImageInformationList());
+        ArrayList<ImageInformation> imageInformationList = placeDetail.getImageInformationList();
+        mImageAdapter.setData(imageInformationList);
         mViewPager.setAdapter(mImageAdapter);
-        mDailyViewPagerIndicator.setTotalCount(placeDetail.getImageInformationList().size());
-        mDailyViewPagerIndicator.setImageInformation(placeDetail.getImageInformationList().get(0).description, 0);
+        mDailyViewPagerIndicator.setTotalCount(imageInformationList.size());
+
+        if (imageInformationList.size() > 0)
+        {
+            mDailyViewPagerIndicator.setImageInformation(imageInformationList.get(0).description, 0);
+        } else
+        {
+            mDailyViewPagerIndicator.setImageInformation(null, 0);
+        }
 
         if (mListAdapter == null)
         {
