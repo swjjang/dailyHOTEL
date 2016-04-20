@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:cacheColorHint="@android:color/transparent"
         android:layout_below="@+id/toolbar"
+        android:fadingEdge="none"
         android:divider="@color/countrycode_underline"
         android:dividerHeight="1px"/>
 

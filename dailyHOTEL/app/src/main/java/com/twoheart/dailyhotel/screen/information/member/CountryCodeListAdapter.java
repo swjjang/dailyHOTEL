@@ -137,40 +137,18 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
 
             if (mSelectedIndex == position)
             {
-                radioButton.setBackgroundResource(R.drawable.contry_selected);
+                view.setEnabled(true);
 
-                countryTextView.setTextColor(mContext.getResources().getColor(R.color.dh_theme_color));
-                codeTextView.setTextColor(mContext.getResources().getColor(R.color.dh_theme_color));
+//                radioButton.setSelected(true);
+//                countryTextView.setSelected(true);
+//                codeTextView.setSelected(true);
             } else
             {
-                try
-                {
-                    Drawable drawable = Drawable.createFromXml(mContext.getResources(), mContext.getResources().getXml(R.drawable.selector_countrycode_radio));
-                    radioButton.setBackgroundDrawable(drawable);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
+                view.setEnabled(false);
 
-                try
-                {
-                    XmlResourceParser parser = mContext.getResources().getXml(R.drawable.selector_countrycode_country_textview_color);
-                    ColorStateList colors = ColorStateList.createFromXml(mContext.getResources(), parser);
-                    countryTextView.setTextColor(colors);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-
-                try
-                {
-                    XmlResourceParser parser = mContext.getResources().getXml(R.drawable.selector_countrycode_code_textview_color);
-                    ColorStateList colors = ColorStateList.createFromXml(mContext.getResources(), parser);
-                    codeTextView.setTextColor(colors);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
+//                radioButton.setSelected(false);
+//                countryTextView.setSelected(false);
+//                codeTextView.setSelected(false);
             }
         }
 

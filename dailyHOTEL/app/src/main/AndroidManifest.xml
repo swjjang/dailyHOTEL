@@ -153,7 +153,13 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysVisible"/>
+        <activity
+            android:name=".screen.information.member.SignupStep2Activity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
             android:name=".screen.information.ForgotPasswordActivity"
             android:launchMode="singleTop"
@@ -174,14 +180,14 @@
             android:name=".screen.hotel.payment.HotelPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppBaseTheme"/>
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".screen.gourmet.payment.GourmetPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppBaseTheme"/>
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".screen.hotel.payment.HotelPaymentThankyouActivity"
             android:launchMode="singleTop"

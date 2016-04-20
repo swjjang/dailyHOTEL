@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,12 +22,11 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class SignupStep2Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
+    private View mVerificationLayout, mSignUpView, mCertificationNumberView;
     private View mCountryView, mPhoneView, mVerificationView;
     private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private CheckBox mSMSCheckBox;
     private TextWatcher mTextWatcher;
-
-    private String mCountryCode;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -68,6 +68,8 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         mCountryView = view.findViewById(R.id.countryView);
         mCountryEditText = (EditText) view.findViewById(R.id.countryEditText);
+        mCountryEditText.setFocusable(false);
+        mCountryEditText.setCursorVisible(false);
         mCountryEditText.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -80,7 +82,6 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mPhoneView = view.findViewById(R.id.phoneView);
         mPhoneEditText = (EditText) view.findViewById(R.id.phoneEditText);
         mPhoneEditText.setOnFocusChangeListener(this);
-
         mPhoneEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -92,7 +93,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
                     // 번호 검증 후에 인증번호 요청
                     String phoneNumber = v.getText().toString().trim();
 
-                    if (Util.isValidatePhoneNumber(phoneNumber) == true)
+                    if (Util.isValidatePhoneNumber(phoneNumber) == true && mSMSCheckBox.isChecked() == true)
                     {
                         ((OnEventListener) mOnEventListener).doVerification(phoneNumber);
                     }
@@ -120,32 +121,39 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
             @Override
             public void afterTextChanged(Editable s)
             {
-                // 입력한 전화번호가 이상이 없는 경우 인증번호 받기가 활성화 된다.
-                String phoneNumber = s.toString().trim();
-
-                if (Util.isValidatePhoneNumber(phoneNumber) == true)
-                {
-
-                } else
-                {
-
-                }
+                provenCertificationButton(s.toString());
             }
         });
 
-        View certificationNumberView = view.findViewById(R.id.certificationNumberView);
-        certificationNumberView.setOnClickListener(this);
+        mCertificationNumberView = view.findViewById(R.id.certificationNumberView);
+        mCertificationNumberView.setOnClickListener(this);
+        mCertificationNumberView.setEnabled(false);
 
-        mVerificationEditText = (EditText)view.findViewById(R.id.verificationEditText);
+        mVerificationLayout = view.findViewById(R.id.verificationLayout);
+        mVerificationLayout.setVisibility(View.INVISIBLE);
+        mVerificationView = mVerificationLayout.findViewById(R.id.verificationView);
+
+        mVerificationEditText = (EditText) mVerificationLayout.findViewById(R.id.verificationEditText);
         mVerificationEditText.setOnFocusChangeListener(this);
 
-        View signUpView = view.findViewById(R.id.signUpView);
-        signUpView.setOnClickListener(this);
+        mSignUpView = view.findViewById(R.id.signUpView);
+        mSignUpView.setOnClickListener(this);
+        mSignUpView.setVisibility(View.INVISIBLE);
+
+        mPhoneEditText.requestFocus();
     }
 
     private void initLayoutCheckBox(View view)
     {
         mSMSCheckBox = (CheckBox) view.findViewById(R.id.smsCheckBox);
+        mSMSCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                provenCertificationButton(mPhoneEditText.getText().toString());
+            }
+        });
     }
 
     public void setCountryCode(String countryCode)
@@ -155,8 +163,8 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
             return;
         }
 
-        mCountryCode = countryCode;
         mCountryEditText.setText(countryCode.substring(0, countryCode.indexOf('\n')));
+        mCountryEditText.setTag(countryCode);
 
         if (mTextWatcher != null)
         {
@@ -172,6 +180,8 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         }
 
         mPhoneEditText.addTextChangedListener(mTextWatcher);
+
+        provenCertificationButton(mPhoneEditText.getText().toString());
     }
 
     @Override
@@ -180,7 +190,14 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         switch (v.getId())
         {
             case R.id.signUpView:
-                String countryCode = mCountryCode.substring(mCountryCode.indexOf('\n') + 1);
+                String tag = (String) mCountryEditText.getTag();
+
+                if (Util.isTextEmpty(tag) == true)
+                {
+                    tag = Util.DEFAULT_COUNTRY_CODE;
+                }
+
+                String countryCode = tag.substring(tag.indexOf('\n') + 1);
                 String phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
                 String verificationNumber = mVerificationEditText.getText().toString().trim();
 
@@ -204,7 +221,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if(hasFocus == false)
+        if (hasFocus == false)
         {
             return;
         }
@@ -214,8 +231,8 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
     private void resetFocus()
     {
-        mPhoneView.setEnabled(false);
-        mVerificationView.setEnabled(false);
+        mPhoneView.setSelected(false);
+        mVerificationView.setSelected(false);
     }
 
     private void setFocusTextView(int id)
@@ -225,12 +242,33 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         switch (id)
         {
             case R.id.phoneEditText:
-                mPhoneView.setEnabled(true);
+                mPhoneView.setSelected(true);
                 break;
 
             case R.id.verificationEditText:
-                mVerificationView.setEnabled(true);
+                mVerificationView.setSelected(true);
                 break;
+        }
+    }
+
+    private void provenCertificationButton(String phoneNumber)
+    {
+        String tag = (String) mCountryEditText.getTag();
+
+        if (Util.isTextEmpty(tag) == true)
+        {
+            tag = Util.DEFAULT_COUNTRY_CODE;
+        }
+
+        // 입력한 전화번호가 이상이 없는 경우 인증번호 받기가 활성화 된다.
+        String countryCode = tag.substring(tag.indexOf('\n') + 1);
+
+        if (Util.isValidatePhoneNumber(countryCode + ' ' + phoneNumber) == true && mSMSCheckBox.isChecked() == true)
+        {
+            mCertificationNumberView.setEnabled(true);
+        } else
+        {
+            mCertificationNumberView.setEnabled(false);
         }
     }
 }

@@ -5,13 +5,16 @@ import android.graphics.Paint;
 import android.text.InputFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -63,6 +66,9 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutForm(View view)
     {
+        ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.over_scroll_edge));
+
         mEmailView = view.findViewById(R.id.emailView);
         mEmailEditText = (EditText) view.findViewById(R.id.emailEditText);
         mEmailEditText.setOnFocusChangeListener(this);
@@ -99,6 +105,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         View nextStepView = view.findViewById(R.id.nextStepView);
 
         nextStepView.setOnClickListener(this);
+
+        mEmailView.requestFocus();
     }
 
     private void initLayoutCheckBox(View view)
@@ -139,7 +147,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         String confirmPasswordText = mConfirmPasswordEditText.getText().toString();
         String recommender = mRecommenderEditText.getText().toString().trim();
 
-        ((OnEventListener)mOnEventListener).nextStep(emailText, nameText, passwordText, confirmPasswordText, recommender);
+        ((OnEventListener) mOnEventListener).nextStep(emailText, nameText, passwordText, confirmPasswordText, recommender);
     }
 
     @Override
@@ -152,22 +160,31 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                 break;
 
             case R.id.termsContentView:
-                ((OnEventListener)mOnEventListener).showTermOfService();
+                ((OnEventListener) mOnEventListener).showTermOfService();
                 break;
 
             case R.id.personalContentView:
-                ((OnEventListener)mOnEventListener).showTermOfPrivacy();
+                ((OnEventListener) mOnEventListener).showTermOfPrivacy();
                 break;
 
             case R.id.allAgreementCheckBox:
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
+
                 boolean isChecked = mAllAgreementCheckBox.isChecked();
 
                 mTermsOfServiceCheckBox.setChecked(isChecked);
                 mTermsOfPrivacyCheckBox.setChecked(isChecked);
                 break;
+            }
 
             case R.id.personalCheckBox:
             case R.id.termsCheckBox:
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
+
                 if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true)
                 {
                     mAllAgreementCheckBox.setChecked(true);
@@ -176,13 +193,14 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                     mAllAgreementCheckBox.setChecked(false);
                 }
                 break;
+            }
         }
     }
 
     @Override
     public void onFocusChange(View v, boolean hasFocus)
     {
-        if(hasFocus == false)
+        if (hasFocus == false)
         {
             return;
         }
@@ -192,11 +210,11 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private void resetFocus()
     {
-        mEmailView.setEnabled(false);
-        mNameView.setEnabled(false);
-        mPasswordView.setEnabled(false);
-        mConfirmPasswordView.setEnabled(false);
-        mRecommenderView.setEnabled(false);
+        mEmailView.setSelected(false);
+        mNameView.setSelected(false);
+        mPasswordView.setSelected(false);
+        mConfirmPasswordView.setSelected(false);
+        mRecommenderView.setSelected(false);
     }
 
     private void setFocusTextView(int id)
@@ -206,23 +224,23 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         switch (id)
         {
             case R.id.emailEditText:
-                mEmailView.setEnabled(true);
+                mEmailView.setSelected(true);
                 break;
 
             case R.id.nameEditText:
-                mNameView.setEnabled(true);
+                mNameView.setSelected(true);
                 break;
 
             case R.id.passwordEditText:
-                mPasswordView.setEnabled(true);
+                mPasswordView.setSelected(true);
                 break;
 
             case R.id.confirmPasswordEditText:
-                mConfirmPasswordView.setEnabled(true);
+                mConfirmPasswordView.setSelected(true);
                 break;
 
             case R.id.recommenderEditText:
-                mRecommenderView.setEnabled(true);
+                mRecommenderView.setSelected(true);
                 break;
         }
     }

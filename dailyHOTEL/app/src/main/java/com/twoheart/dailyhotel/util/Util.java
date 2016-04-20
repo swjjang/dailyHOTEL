@@ -346,7 +346,7 @@ public class Util implements Constants
     {
         if (texts == null)
         {
-            return false;
+            return true;
         }
 
         for (String text : texts)
@@ -593,7 +593,7 @@ public class Util implements Constants
                 }
             } else
             {
-                text[1] = text[1].replace("\\(|\\)|\\s|\\-", "");
+                text[1] = text[1].replaceAll("\\(|\\)|\\s|\\-", "");
 
                 // 국내가 아니면 숫자만 있는지 검증한다 7자리 ~ 15자리
                 int length = text[1].length();

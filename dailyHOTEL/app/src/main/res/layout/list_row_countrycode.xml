@@ -14,23 +14,25 @@
         android:duplicateParentState="true"
         android:focusable="false"/>
 
-    <com.twoheart.dailyhotel.widget.DailyCountryCodeTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/codeTextView"
         android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:duplicateParentState="true"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@drawable/selector_countrycode_code_textview_color"
         android:textSize="17dp"/>
 
-    <com.twoheart.dailyhotel.widget.DailyCountryCodeTextView
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/countryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_toLeftOf="@+id/codeTextView"
         android:layout_toRightOf="@+id/radioButton"
+        android:duplicateParentState="true"
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"

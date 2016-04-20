@@ -1,20 +1,8 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * <p>
- * LoginActivity (로그인화면)
- * <p>
- * 사용자 계정 로그인을 담당하는 화면이다. 사용자로부터 아이디와 패스워드를
- * 입력받으며, 이를 로그인을 하는 웹서버 API를 이용한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
@@ -24,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -139,7 +128,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mPasswordEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
-
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
             {

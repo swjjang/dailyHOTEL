@@ -31,6 +31,7 @@ public class SignupStep2Activity extends BaseActivity
 
     private SignupStep2Layout mSignupStep2Layout;
     private SignupStep2NetworkController mNetworkController;
+    private String mCountryCode;
 
     public static Intent newInstance(Context context, String email, String name, String password, String recommender)
     {
@@ -56,7 +57,8 @@ public class SignupStep2Activity extends BaseActivity
 
         initUserInformation(getIntent());
 
-        mSignupStep2Layout.setCountryCode(Util.getCountryNameNCode(this));
+        mCountryCode = Util.getCountryNameNCode(this);
+        mSignupStep2Layout.setCountryCode(mCountryCode);
     }
 
     private void initUserInformation(Intent intent)
@@ -121,9 +123,9 @@ public class SignupStep2Activity extends BaseActivity
         {
             if (resultCode == RESULT_OK && data != null)
             {
-                String countryCode = data.getStringExtra(CountryCodeListActivity.INTENT_EXTRA_COUNTRY_CODE);
+                mCountryCode = data.getStringExtra(CountryCodeListActivity.INTENT_EXTRA_COUNTRY_CODE);
 
-                mSignupStep2Layout.setCountryCode(countryCode);
+                mSignupStep2Layout.setCountryCode(mCountryCode);
             }
         }
     }
@@ -141,7 +143,10 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void showCountryCodeList()
         {
+            Intent intent = CountryCodeListActivity.newInstance(SignupStep2Activity.this, mCountryCode);
 
+            startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
@@ -158,14 +163,14 @@ public class SignupStep2Activity extends BaseActivity
                 return;
             }
 
-            lockUI();
-
-            mSignupParams.put("phone", phoneNumber);
-            mSignupParams.put("verification", verificationNumber);
-
-            mNetworkController.requestUserSingUp(mSignupParams);
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , Action.REGISTRATION_CLICKED, Label.AGREE_AND_REGISTER, null);
+//            lockUI();
+//
+//            mSignupParams.put("phone", phoneNumber);
+//            mSignupParams.put("verification", verificationNumber);
+//
+//            mNetworkController.requestUserSingUp(mSignupParams);
+//            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+//                , Action.REGISTRATION_CLICKED, Label.AGREE_AND_REGISTER, null);
         }
 
         @Override
