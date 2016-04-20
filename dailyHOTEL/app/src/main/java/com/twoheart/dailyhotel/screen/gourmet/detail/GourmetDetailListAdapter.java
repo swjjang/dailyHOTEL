@@ -442,32 +442,25 @@ public class GourmetDetailListAdapter extends BaseAdapter
             }
         });
 
-        final com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
+        com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
 
-        mapImageView.post(new Runnable()
+        double width = mImageHeight;
+        double height = Util.dpToPx(mFragmentActivity, 200);
+        double ratio = height / width;
+
+        if (width >= 640)
         {
-            @Override
-            public void run()
-            {
-                double width = mapImageView.getWidth();
-                double height = mapImageView.getHeight();
-                double ratio = height / width;
+            width = 640;
+        }
 
-                if (width >= 640)
-                {
-                    width = 640;
-                }
+        height = width * ratio;
 
-                height = width * ratio;
+        String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
+        String iconUrl = "http://s3.dailyhotel.kr/resources/images/_banner/googlemap_marker-1.png";
+        String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
+            , size, iconUrl, mGourmetDetail.latitude, mGourmetDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
-                String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
-                String iconUrl = "http://s3.dailyhotel.kr/resources/images/_banner/googlemap_marker-1.png";
-                String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
-                    , size, iconUrl, mGourmetDetail.latitude, mGourmetDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
-
-                mapImageView.setImageURI(Uri.parse(url));
-            }
-        });
+        mapImageView.setImageURI(Uri.parse(url));
 
         if (Util.isInstallGooglePlayService(mFragmentActivity) == true)
         {
