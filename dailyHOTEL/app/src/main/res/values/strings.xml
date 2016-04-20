@@ -148,6 +148,7 @@
     <string name="toast_msg_confirm_mobilenumber">전화번호를 확인해주시기 바랍니다.</string>
     <string name="toast_msg_terms_agreement">이용약관 항목을 체크해 주세요.</string>
     <string name="toast_msg_personal_agreement">개인정보취급방침 항목을 체크해 주세요.</string>
+    <string name="toast_message_failed_install">앱 설치 요청을 할 수 없습니다. 구글 플레이 스토어를 설치 후 사용해 주십시오.</string>
 
     <!-- Dialog Messages -->
 
