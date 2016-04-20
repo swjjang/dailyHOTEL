@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
@@ -109,6 +110,12 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     public void setToolbarTitle(String title)
     {
         TextView titleView = (TextView) mToolbar.findViewById(R.id.titleView);
+
+        if(titleView == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
 
         titleView.setText(title);
     }
