@@ -194,8 +194,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
     @JavascriptInterface
     private boolean url_scheme_intent(WebView view, String url)
     {
-        //		ExLog.d("[PayDemoActivity] called__test - url=[" + url + "]");
-
         // chrome 버젼 방식 : 2014.01 추가
         if (url.startsWith("intent"))
         {
@@ -207,13 +205,10 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                     startActivity(Intent.parseUri(url, Intent.URI_INTENT_SCHEME));
                 } catch (URISyntaxException e)
                 {
-                    //					ExLog.d("[PayDemoActivity] URISyntaxException=[" + e.getMessage() + "]");
-
                     return false;
                 } catch (ActivityNotFoundException e)
                 {
-                    //					ExLog.d("[PayDemoActivity] ActivityNotFoundException=[" + e.getMessage() + "]");
-
+                    Util.installPackage(GourmetPaymentWebActivity.this, "com.lotte.lottesmartpay");
                     return false;
                 }
             }
@@ -222,21 +217,16 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             {
                 try
                 {
-                    view.getContext().startActivity(Intent.parseUri(url, 0));
+                    startActivity(Intent.parseUri(url, 0));
                 } catch (URISyntaxException e)
                 {
-                    //					ExLog.d("[PayDemoActivity] URISyntaxException=[" + e.getMessage() + "]");
-
                     return false;
                 } catch (ActivityNotFoundException e)
                 {
-                    //					ExLog.d("[PayDemoActivity] ActivityNotFoundException=[" + e.getMessage() + "]");
-
+                    Util.installPackage(GourmetPaymentWebActivity.this, "com.ahnlab.v3mobileplus");
                     return false;
                 }
-            }
-            // 폴라리스 용
-            else
+            } else
             {
                 Intent intent;
 
@@ -245,21 +235,14 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                     intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 } catch (URISyntaxException ex)
                 {
-                    //					ExLog.d("[PayDemoActivity] URISyntaxException=[" + ex.getMessage() + "]");
-
                     return false;
                 }
 
                 // 앱설치 체크를 합니다.
                 if (getPackageManager().resolveActivity(intent, 0) == null)
                 {
-                    String packagename = intent.getPackage();
-
-                    if (packagename != null)
-                    {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packagename)));
-                        return true;
-                    }
+                    Util.installPackage(GourmetPaymentWebActivity.this, intent.getPackage());
+                    return false;
                 }
 
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()));
@@ -269,8 +252,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                     startActivity(intent);
                 } catch (ActivityNotFoundException e)
                 {
-                    //					ExLog.d("[PayDemoActivity] ActivityNotFoundException=[" + e.getMessage() + "]");
-
+                    Util.installPackage(GourmetPaymentWebActivity.this, intent.getPackage());
                     return false;
                 }
             }
@@ -322,7 +304,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                 startActivityForResult(intent, requestCode);
             } catch (ActivityNotFoundException e)
             {
-                return true;
+                return false;
             }
         }
 
@@ -350,8 +332,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
     protected void onRestart()
     {
         super.onRestart();
-
-        //		ExLog.d("[PayDemoActivity] called__onResume + INPROGRESS=[" + m_nStat + "]");
 
         // 하나 SK 모듈로 결제 이후 해당 카드 정보를 가지고 오기위해 사용
         if (ResultRcvActivity.m_uriResult != null)
@@ -573,8 +553,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         {
             super.onReceivedError(view, errorCode, description, failingUrl);
 
-            //			ExLog.e("ErrorCode / Description / failingUrl : " + errorCode + " / " + description + " / " + failingUrl);
-
             mWebView.loadUrl("about:blank");
 
             if (VolleyHttpClient.isAvailableNetwork(GourmetPaymentWebActivity.this) == true)
@@ -610,22 +588,12 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             super.onPageFinished(view, url);
 
             unLockUI();
-            // view.loadUrl("javascript:window.HtmlObserver.showHTML" +
-            // "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
-
-            //			if (mPay.getType() == Pay.Type.PAYPAL)
-            //			{
-            //
-            //				view.loadUrl("javascript:function on_cancel()" + "{ " + "var form = document.pmnt_info_form_2;" + "form.action = '/smart//etc/pay_cancel.php';" + "form.submit();" + "}");
-            //				view.loadUrl("javascript:(function(){" + "var payImg = (document.getElementsByClassName('space_h_auto'))[0];" + "payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + "'background-size: 150px;' +" + "'background-repeat: no-repeat;' +" + "'background-position: center;';" + "})();");
-            //			}
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             {
                 setSupportProgressBarIndeterminateVisibility(false);
             }
         }
-
     }
 
     /**
@@ -681,8 +649,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             {
                 public void run()
                 {
-                    //					ExLog.d("[PayDemoActivity] KCPPayPinInfoBridge=[getPaypinInfo]");
-
                     PackageState ps = new PackageState(GourmetPaymentWebActivity.this);
 
                     if (!ps.getPackageAllInstallState("com.skp.android.paypin"))
@@ -739,8 +705,6 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             {
                 public void run()
                 {
-                    //					ExLog.d("[PayDemoActivity] KCPPayCardInfoBridge=[" + card_cd + ", " + quota + "]");
-
                     CARD_CD = card_cd;
                     QUOTA = quota;
 
@@ -808,8 +772,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                         startActivity(intent);
                     } catch (Exception e)
                     {
-                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=kvp.jjy.MispAndroid320"));
-                        startActivity(intent);
+                        Util.installPackage(GourmetPaymentWebActivity.this, "kvp.jjy.MispAndroid320");
                     }
                 }
             });

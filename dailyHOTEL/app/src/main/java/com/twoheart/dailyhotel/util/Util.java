@@ -853,12 +853,7 @@ public class Util implements Constants
             context.startActivity(intent);
         } else
         {
-            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(downloadUrl));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            installPackage(context, packageName);
         }
     }
 
@@ -880,12 +875,7 @@ public class Util implements Constants
             context.startActivity(intent);
         } else
         {
-            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(downloadUrl));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            installPackage(context, packageName);
         }
     }
 
@@ -936,12 +926,7 @@ public class Util implements Constants
             context.startActivity(intent);
         } else
         {
-            final String downloadUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(downloadUrl));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            installPackage(context, packageName);
         }
     }
 
@@ -1067,6 +1052,32 @@ public class Util implements Constants
         {
             android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboardManager.setText(text);
+        }
+    }
+
+    public static void installPackage(Context context, String packageName)
+    {
+        if (context == null || Util.isTextEmpty(packageName) == true)
+        {
+            return;
+        }
+
+        try
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e)
+        {
+            try
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            } catch (ActivityNotFoundException e1)
+            {
+                DailyToast.showToast(context, R.string.toast_message_failed_install, Toast.LENGTH_SHORT);
+            }
         }
     }
 }
