@@ -156,10 +156,18 @@ public class HotelDetailLayout
             mImageAdapter = new PlaceDetailImageViewPagerAdapter(mActivity);
         }
 
-        mImageAdapter.setData(hotelDetail.getImageInformationList());
+        ArrayList<ImageInformation> imageInformationList = hotelDetail.getImageInformationList();
+        mImageAdapter.setData(imageInformationList);
         mViewPager.setAdapter(mImageAdapter);
-        mDailyViewPagerIndicator.setTotalCount(hotelDetail.getImageInformationList().size());
-        mDailyViewPagerIndicator.setImageInformation(hotelDetail.getImageInformationList().get(0).description, 0);
+        mDailyViewPagerIndicator.setTotalCount(imageInformationList.size());
+
+        if (imageInformationList.size() > 0)
+        {
+            mDailyViewPagerIndicator.setImageInformation(imageInformationList.get(0).description, 0);
+        } else
+        {
+            mDailyViewPagerIndicator.setImageInformation(null, 0);
+        }
 
         if (mListAdapter == null)
         {
