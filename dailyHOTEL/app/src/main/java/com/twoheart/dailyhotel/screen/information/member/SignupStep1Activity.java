@@ -128,7 +128,7 @@ public class SignupStep1Activity extends BaseActivity
         @Override
         public void nextStep(String email, String name, String password, String confirmPassword, String recommender)
         {
-            if ((Util.isTextEmpty(email, name, password, confirmPassword) == true))
+            if (Util.isTextEmpty(email, name, password, confirmPassword) == true)
             {
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
                 return;

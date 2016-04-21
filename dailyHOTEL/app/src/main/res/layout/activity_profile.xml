@@ -15,29 +15,47 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/emailLayout"
             android:layout_width="match_parent"
             android:layout_height="72dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/emailView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/act_profile_email"
-                android:textColor="@color/search_hint_text"
-                android:textSize="12dp"/>
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/emailArrowImage"
+                android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/emailTextView"
-                android:layout_width="match_parent"
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/emailView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/act_profile_email"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="12dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/emailTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:maxLength="50"
+                    android:hint="@string/act_profile_input_email"
+                    android:singleLine="true"
+                    android:textColor="@color/curation_title_text"
+                    android:textSize="16dp"
+                    android:theme="@style/EditTextTheme"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/emailArrowImage"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/emailView"
-                android:layout_marginTop="8dp"
-                android:maxLength="50"
-                android:singleLine="true"
-                android:textColor="@color/curation_title_text"
-                android:textSize="16dp"
-                android:theme="@style/EditTextTheme"/>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/more_ic_next"/>
         </RelativeLayout>
 
         <View
@@ -69,7 +87,6 @@
                     android:id="@+id/nameTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/nameView"
                     android:layout_marginTop="8dp"
                     android:hint="@string/act_profile_input_name"
                     android:singleLine="true"
@@ -122,7 +139,7 @@
                     android:textSize="12dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/profilePhoneTextView"
+                    android:id="@+id/phoneTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/phoneView"
@@ -173,7 +190,6 @@
                     android:id="@+id/passwordTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/passwordView"
                     android:layout_marginTop="8dp"
                     android:inputType="textPassword"
                     android:maxLength="20"

@@ -56,16 +56,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:23.+'
-    compile 'com.android.support:appcompat-v7:23.+'
-    compile 'com.android.support:gridlayout-v7:23.+'
-    compile 'com.android.support:design:23.+'
-    compile 'com.squareup.okhttp3:okhttp:3+'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.+'
-    compile 'com.kakao.sdk:kakaolink:1.+'
-    compile 'com.kakao.sdk:kakaotalk:1.+'
-    compile 'com.facebook.fresco:fresco:0.9.0+'
-    compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0+'
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
@@ -73,6 +63,16 @@ dependencies {
     }
     compile files('libs/MobileAppTracker.jar')
 
+    compile 'com.android.support:support-v4:23.3.0'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:gridlayout-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.squareup.okhttp3:okhttp:3.+'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.+'
+    compile 'com.kakao.sdk:kakaolink:1.+'
+    compile 'com.kakao.sdk:kakaotalk:1.+'
+    compile 'com.facebook.fresco:fresco:0.9.0'
+    compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0'
     compile 'com.facebook.android:facebook-android-sdk:4.5.0'
     compile 'com.google.android.gms:play-services-base:8.4.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'

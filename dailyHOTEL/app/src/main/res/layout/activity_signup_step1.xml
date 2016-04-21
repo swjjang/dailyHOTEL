@@ -271,7 +271,6 @@
                 android:id="@+id/nextStepView"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
                 android:layout_marginTop="28dp"
                 android:background="@color/dh_theme_color"
                 android:gravity="center"

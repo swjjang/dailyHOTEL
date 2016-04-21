@@ -50,7 +50,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         initLayoutCheckBox(view);
     }
 
-    private void initToolbar(View view)
+    protected void initToolbar(View view)
     {
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);

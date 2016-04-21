@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * ProfileActivity (프로필 화면)
- * <p>
+ * <p/>
  * 로그인되어 있는 상태에서 프로필 정보를 보여주는 화면
  * 이름이나 연락처를 수정할 수 있고, 로그아웃할 수 있는 화면이다.
  */
@@ -91,13 +91,27 @@ public class ProfileActivity extends BaseActivity
     private ProfileLayout.OnEventListener mOnEventListener = new ProfileLayout.OnEventListener()
     {
         @Override
-        public void showEditName()
+        public void showEditEmail()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
+            Intent intent = EditProfileEmailActivity.newInstance(ProfileActivity.this);
+            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
+        }
+
+        @Override
+        public void showEditName(String name)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = EditProfileNameActivity.newInstance(ProfileActivity.this, name);
+            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
         @Override
@@ -107,6 +121,9 @@ public class ProfileActivity extends BaseActivity
             {
                 return;
             }
+
+            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this);
+            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
         @Override
@@ -116,6 +133,9 @@ public class ProfileActivity extends BaseActivity
             {
                 return;
             }
+
+            Intent intent = EditProfilePasswordActivity.newInstance(ProfileActivity.this);
+            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
         @Override
@@ -178,8 +198,10 @@ public class ProfileActivity extends BaseActivity
     private ProfileNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ProfileNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String sns, String email, String name, String phone)
+        public void onUserInformation(String email, String name, String phone)
         {
+            String sns = DailyPreference.getInstance(ProfileActivity.this).getUserType();
+
             mProfileLayout.updateUserInformation(sns, email, name, phone);
 
             unLockUI();

@@ -18,6 +18,8 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -26,17 +28,14 @@ import org.json.JSONObject;
 import java.util.Collections;
 import java.util.Map;
 
-public class EditProfileNameActivity extends BaseActivity implements OnClickListener
+public class EditProfileEmailActivity extends BaseActivity implements OnClickListener
 {
-    private static final String INTENT_EXTRA_DATA_NAME = "name";
-
-    private EditText mNameEditText;
+    private EditText mEmailEditText;
     private View mConfirmView;
 
-    public static Intent newInstance(Context context, String name)
+    public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, EditProfileNameActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_NAME, name);
+        Intent intent = new Intent(context, EditProfileEmailActivity.class);
 
         return intent;
     }
@@ -46,21 +45,19 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_edit_name);
+        setContentView(R.layout.activity_edit_email);
 
         Intent intent = getIntent();
 
-        String name = intent.getStringExtra(INTENT_EXTRA_DATA_NAME);
-
         initToolbar();
-        initLayout(name);
+        initLayout();
     }
 
     private void initToolbar()
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_edit_name), new OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_edit_email), new OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -70,11 +67,10 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         });
     }
 
-    private void initLayout(String name)
+    private void initLayout()
     {
-        mNameEditText = (EditText) findViewById(R.id.nameEditText);
-        mNameEditText.setText(name);
-        mNameEditText.addTextChangedListener(new TextWatcher()
+        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mEmailEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -91,17 +87,20 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
             @Override
             public void afterTextChanged(Editable s)
             {
-                if (s.length() > 1)
-                {
-                    mConfirmView.setEnabled(true);
-                } else
+                String email = s.toString();
+
+                // email 유효성 체크
+                if (Util.isTextEmpty(email) == true || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
                 {
                     mConfirmView.setEnabled(false);
+                } else
+                {
+                    mConfirmView.setEnabled(true);
                 }
             }
         });
 
-        mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
@@ -126,7 +125,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     @Override
     protected void onStart()
     {
-        //        AnalyticsManager.getInstance(EditProfileNameActivity.this).recordScreen(Screen.PROFILE, null);
+//        AnalyticsManager.getInstance(EditProfileEmailActivity.this).recordScreen(Screen.PROFILE, null);
 
         super.onStart();
     }
@@ -137,11 +136,18 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         switch (v.getId())
         {
             case R.id.confirmView:
-                String name = mNameEditText.getText().toString();
+                String email = mEmailEditText.getText().toString();
 
-                if (Util.isTextEmpty(name) == true)
+                if (Util.isTextEmpty(email) == true)
                 {
-                    DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(EditProfileEmailActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                // email 유효성 체크
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                {
+                    DailyToast.showToast(EditProfileEmailActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -152,7 +158,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 lockUI();
 
-                Map<String, String> params = Collections.singletonMap("name", name);
+                Map<String, String> params = Collections.singletonMap("email", email);
 
                 DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, params, mUserUpdateJsonResponseListener, this);
                 break;
@@ -187,12 +193,12 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 if (result.equals("true") == true)
                 {
-                    DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(EditProfileEmailActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
 
                     setResult(RESULT_OK);
                 } else
                 {
-                    DailyToast.showToast(EditProfileNameActivity.this, msg, Toast.LENGTH_LONG);
+                    DailyToast.showToast(EditProfileEmailActivity.this, msg, Toast.LENGTH_LONG);
 
                     setResult(RESULT_CANCELED);
                 }

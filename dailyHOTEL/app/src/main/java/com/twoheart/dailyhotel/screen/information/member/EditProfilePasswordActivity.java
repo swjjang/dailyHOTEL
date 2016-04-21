@@ -3,17 +3,20 @@ package com.twoheart.dailyhotel.screen.information.member;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -23,6 +26,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
 {
     private View mPasswordView, mConfirmPasswordView;
     private EditText mPasswordEditText, mConfirmPasswordEditText;
+    private View mConfirmView;
 
     public static Intent newInstance(Context context)
     {
@@ -39,7 +43,6 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         setContentView(R.layout.activity_edit_password);
 
         initToolbar();
-
         initLayout();
     }
 
@@ -47,7 +50,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_profile_activity), new OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_edit_password), new OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -66,15 +69,59 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         mConfirmPasswordView = findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (EditText) findViewById(R.id.confirmPasswordEditText);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
+        mConfirmPasswordEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
 
-        View confirmView = findViewById(R.id.confirmView);
-        confirmView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (mPasswordEditText.length() > 0 && mConfirmPasswordEditText.length() > 0)
+                {
+                    mConfirmView.setEnabled(true);
+                } else
+                {
+                    mConfirmView.setEnabled(false);
+                }
+            }
+        });
+
+        mConfirmPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                switch (actionId)
+                {
+                    case EditorInfo.IME_ACTION_DONE:
+                        mConfirmView.performClick();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        mConfirmView = findViewById(R.id.confirmView);
+        mConfirmView.setEnabled(false);
+        mConfirmView.setOnClickListener(this);
     }
 
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(EditProfilePasswordActivity.this).recordScreen(Screen.PROFILE, null);
+        //        AnalyticsManager.getInstance(EditProfilePasswordActivity.this).recordScreen(Screen.PROFILE, null);
 
         super.onStart();
     }
@@ -90,16 +137,18 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
 
                 if (Util.isTextEmpty(password, confirmPassword) == true)
                 {
+                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
                     return;
                 }
 
-                if (password.equals(confirmPassword) == true)
+                // 패스워드가 동일하게 입력되어있는지 확인
+                if (password.equals(confirmPassword) == false)
                 {
-
-                } else
-                {
-
+                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.message_please_enter_the_same_password, Toast.LENGTH_SHORT);
+                    return;
                 }
+
+
                 break;
         }
     }
@@ -117,19 +166,19 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         switch (v.getId())
         {
             case R.id.passwordEditText:
-                mPasswordView.setEnabled(true);
+                mPasswordView.setSelected(true);
                 break;
 
             case R.id.confirmPasswordEditText:
-                mConfirmPasswordView.setEnabled(true);
+                mConfirmPasswordView.setSelected(true);
                 break;
         }
     }
 
     private void resetFocus()
     {
-        mPasswordView.setEnabled(false);
-        mConfirmPasswordView.setEnabled(false);
+        mPasswordView.setSelected(false);
+        mConfirmPasswordView.setSelected(false);
     }
 
     @Override
@@ -144,40 +193,40 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                String result = response.getString("success");
-                String msg = null;
-
-                if (response.length() > 1)
-                {
-                    msg = response.getString("msg");
-                }
-
-                if (result.equals("true") == true)
-                {
-                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
-
-                    setResult(RESULT_OK);
-                } else
-                {
-                    DailyToast.showToast(EditProfilePasswordActivity.this, msg, Toast.LENGTH_LONG);
-
-                    setResult(RESULT_CANCELED);
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-                finish();
-            }
-        }
-    };
+//    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+//    {
+//        @Override
+//        public void onResponse(String url, JSONObject response)
+//        {
+//            try
+//            {
+//                String result = response.getString("success");
+//                String msg = null;
+//
+//                if (response.length() > 1)
+//                {
+//                    msg = response.getString("msg");
+//                }
+//
+//                if (result.equals("true") == true)
+//                {
+//                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+//
+//                    setResult(RESULT_OK);
+//                } else
+//                {
+//                    DailyToast.showToast(EditProfilePasswordActivity.this, msg, Toast.LENGTH_LONG);
+//
+//                    setResult(RESULT_CANCELED);
+//                }
+//            } catch (Exception e)
+//            {
+//                onError(e);
+//            } finally
+//            {
+//                unLockUI();
+//                finish();
+//            }
+//        }
+//    };
 }

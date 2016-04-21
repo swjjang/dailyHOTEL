@@ -13,11 +13,14 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ProfileLayout extends BaseLayout implements OnClickListener
 {
-    private TextView mEmailEditText, mNameEditText, mPhoneEditText;
+    private TextView mEmailTextView, mNameTextView, mPhoneTextView;
+    private View mEmailLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void showEditName();
+        void showEditEmail();
+
+        void showEditName(String name);
 
         void showEditPhone();
 
@@ -54,9 +57,11 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
     private void initLayoutForm(View view)
     {
-        mEmailEditText = (TextView) view.findViewById(R.id.emailTextView);
-        mNameEditText = (TextView) view.findViewById(R.id.nameTextView);
-        mPhoneEditText = (TextView) view.findViewById(R.id.phoneEditText);
+        mEmailTextView = (TextView) view.findViewById(R.id.emailTextView);
+        mNameTextView = (TextView) view.findViewById(R.id.nameTextView);
+        mPhoneTextView = (TextView) view.findViewById(R.id.phoneTextView);
+
+        mEmailLayout = view.findViewById(R.id.emailLayout);
 
         View nameLayout = view.findViewById(R.id.nameLayout);
         nameLayout.setOnClickListener(this);
@@ -73,18 +78,35 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
     public void updateUserInformation(String sns, String email, String name, String phone)
     {
-        mEmailEditText.setText(email);
+        View emailArrowImage = mEmailLayout.findViewById(R.id.emailArrowImage);
 
-        if(Util.isTextEmpty(sns) == true)
+        if (Util.isTextEmpty(email) == true && Util.isTextEmpty(sns) == false)
         {
-            mEmailEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            mEmailLayout.setOnClickListener(this);
+            emailArrowImage.setVisibility(View.VISIBLE);
         } else
         {
-
+            mEmailLayout.setOnClickListener(null);
+            emailArrowImage.setVisibility(View.INVISIBLE);
         }
 
-        mNameEditText.setText(name);
-        mPhoneEditText.setText(phone);
+        mEmailTextView.setText(email);
+
+        if (Util.isTextEmpty(sns) == true)
+        {
+            mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        } else if ("facebook".equalsIgnoreCase(sns) == true)
+        {
+            mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fb_small, 0, 0, 0);
+            mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
+        } else if ("kakao_talk".equalsIgnoreCase(sns) == true)
+        {
+            mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_kakao_small, 0, 0, 0);
+            mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
+        }
+
+        mNameTextView.setText(name);
+        mPhoneTextView.setText(phone);
     }
 
     @Override
@@ -92,8 +114,12 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
     {
         switch (v.getId())
         {
+            case R.id.emailLayout:
+                ((OnEventListener) mOnEventListener).showEditEmail();
+                break;
+
             case R.id.nameLayout:
-                ((OnEventListener) mOnEventListener).showEditName();
+                ((OnEventListener) mOnEventListener).showEditName(mNameTextView.getText().toString());
                 break;
 
             case R.id.phoneLayout:

@@ -92,7 +92,7 @@
     <string name="actionbar_title_privacy_activity">개인정보취급방침</string>
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
     <string name="actionbar_title_profile_activity">프로필</string>
-    <string name="actionbar_title_signup_1_activity">회원가입(1/2)</string>
+    <string name="actionbar_title_signup_1_activity"><![CDATA[회원가입(&#189;)]]></string>
     <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
     <string name="actionbar_title_term_activity">이용약관</string>
@@ -102,6 +102,10 @@
     <string name="actionbar_title_creditcard_activity">결제카드 관리</string>
     <string name="actionbar_title_hoteldetailinfo_activity">호텔 정보</string>
     <string name="actionbar_title_event_list_frag">이벤트</string>
+    <string name="actionbar_title_edit_email">이메일 설정</string>
+    <string name="actionbar_title_edit_name">이름 설정</string>
+    <string name="actionbar_title_edit_password">비밀번호 설정</string>
+    <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -350,8 +354,11 @@
     <string name="act_profile_input_password">비밀번호를 입력해주세요.</string>
     <string name="act_profile_input_contact">연락처를 입력해주세요.</string>
     <string name="act_profile_input_email">이메일이 없습니다.</string>
+    <string name="label_confirm_phone">이메일 설정 완료</string>
     <string name="label_confirm_phonenumber">휴대폰 번호 설정 완료</string>
+    <string name="label_confirm_name">이름 설정 완료</string>
     <string name="label_confirm_password">비밀번호 설정 완료</string>
+    <string name="message_edit_email_guide">이메일 주소를 입력하신 후 [이메일 설정 완료] 버튼을 눌 러주세요.</string>
     <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
     <string name="message_edit_name_guide">20자 이내의 이름을 입력하신 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_password_guide">20자 이상 비밀번호를 입력하신 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>

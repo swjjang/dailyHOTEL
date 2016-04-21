@@ -40,8 +40,6 @@ import java.util.Map;
 
 public class AddProfileSocialActivity extends BaseActivity implements OnClickListener
 {
-    private static final String INTENT_EXTRA_DATA_MODE = "mode";
-
     private static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
 
     private static final int MAX_OF_RECOMMENDER = 45;

@@ -14,7 +14,7 @@ public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String sns, String email, String name, String phone);
+        void onUserInformation(String email, String name, String phone);
     }
 
     public ProfileNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -48,7 +48,7 @@ public class ProfileNetworkController extends BaseNetworkController
                 String name = response.getString("name");
                 String phone = response.getString("phone");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(null, email, name, phone);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(email, name, phone);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
