@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.event;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,13 +8,10 @@ import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -88,31 +84,6 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        unLockUI();
-
-        switch (requestCode)
-        {
-            case CODE_REQUEST_ACTIVITY_LOGIN:
-            case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
-            {
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    lockUI();
-                    processViewEvent(mSelectedEvent);
-                } else
-                {
-                    mSelectedEvent = null;
-                }
-                break;
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
         if (isLockUiComponent() == true)
@@ -121,25 +92,9 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         lockUI();
-        processViewEvent(mEventListAdapter.getItem(position));
-    }
 
-    private void processViewEvent(Event selectedEvent)
-    {
-        if (selectedEvent == null)
-        {
-            return;
-        }
-
-        mSelectedEvent = selectedEvent;
-
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
-        {
-            mOnNetworkControllerListener.onSignin();
-        } else
-        {
-            mEventListNetworkController.requestUserInformationEx();
-        }
+        mSelectedEvent = mEventListAdapter.getItem(position);
+        mEventListNetworkController.requestEventPageUrl(mSelectedEvent);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,22 +104,6 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     private EventListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new EventListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRequestEvent(String userIndex)
-        {
-            lockUI();
-
-            mEventListNetworkController.requestEventPageUrl(mSelectedEvent, userIndex);
-        }
-
-        @Override
-        public void onUpdateUserInformation(Customer user, int recommender, boolean isDailyUser)
-        {
-            //            Intent intent = AddProfileSocialActivity.newInstance(EventListActivity.this, user, recommender);
-            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
-            //            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-        }
-
-        @Override
         public void processEventPage(String eventUrl)
         {
             Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, eventUrl, null);
@@ -172,17 +111,6 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
             AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.EVENT_CLICKED, mSelectedEvent.name, null);
-        }
-
-        @Override
-        public void onSignin()
-        {
-            DailyPreference.getInstance(EventListActivity.this).removeUserInformation();
-
-            // 로그인이 되어있지 않으면 회원 가입으로 이동
-            Intent intent = new Intent(EventListActivity.this, LoginActivity.class);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

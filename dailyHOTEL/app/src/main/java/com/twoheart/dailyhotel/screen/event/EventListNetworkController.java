@@ -25,13 +25,7 @@ public class EventListNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onRequestEvent(String userIndex);
-
-        void onUpdateUserInformation(Customer user, int recommender, boolean isDailyUser);
-
         void processEventPage(String eventUrl);
-
-        void onSignin();
 
         void onEventListResponse(List<Event> eventList);
     }
@@ -54,12 +48,7 @@ public class EventListNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance().requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, this);
     }
 
-    public void requestUserInformationEx()
-    {
-        DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, EventListNetworkController.this);
-    }
-
-    public void requestEventPageUrl(Event event, String userIndex)
+    public void requestEventPageUrl(Event event)
     {
         String store;
 
@@ -71,7 +60,7 @@ public class EventListNetworkController extends BaseNetworkController
             store = "skt";
         }
 
-        DailyNetworkAPI.getInstance().requestEventPageUrl(mNetworkTag, userIndex, event.index, store, mDailyEventPageJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,40 +141,6 @@ public class EventListNetworkController extends BaseNetworkController
                 {
                     String eventUrl = response.getJSONObject("data").getString("url");
                     mListener.processEventPage(eventUrl);
-                }
-            } catch (Exception e)
-            {
-                mListener.onError(e);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                JSONObject jsonObject = response.getJSONObject("data");
-
-                Customer user = new Customer();
-                user.setEmail(jsonObject.getString("email"));
-                user.setName(jsonObject.getString("name"));
-                user.setPhone(jsonObject.getString("phone"));
-                user.setUserIdx(jsonObject.getString("idx"));
-
-                // 추천인
-                int recommender = jsonObject.getInt("recommender_code");
-                boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
-
-                if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
-                {
-                    mListener.onRequestEvent(user.getUserIdx());
-                } else
-                {
-                    // 정보 업데이트 화면으로 이동.
-                    mListener.onUpdateUserInformation(user, recommender, isDailyUser);
                 }
             } catch (Exception e)
             {

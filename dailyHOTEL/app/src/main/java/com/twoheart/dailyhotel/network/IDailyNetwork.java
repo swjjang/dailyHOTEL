@@ -438,7 +438,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventPageUrl(Object tag, String userIndex, int eventIndex, String store, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventPageUrl(Object tag, int eventIndex, String store, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * 회사 정보 얻어오기
