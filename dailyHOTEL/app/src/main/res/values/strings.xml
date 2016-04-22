@@ -92,7 +92,7 @@
     <string name="actionbar_title_privacy_activity">개인정보취급방침</string>
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
     <string name="actionbar_title_profile_activity">프로필</string>
-    <string name="actionbar_title_signup_1_activity"><![CDATA[회원가입(&#189;)]]></string>
+    <string name="actionbar_title_signup_1_activity">회원가입(1/2)</string>
     <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
     <string name="actionbar_title_term_activity">이용약관</string>
@@ -358,10 +358,14 @@
     <string name="label_confirm_phonenumber">휴대폰 번호 설정 완료</string>
     <string name="label_confirm_name">이름 설정 완료</string>
     <string name="label_confirm_password">비밀번호 설정 완료</string>
+    <string name="label_confirm_profile">비밀번호 설정 완료</string>
     <string name="message_edit_email_guide">이메일 주소를 입력하신 후 [이메일 설정 완료] 버튼을 눌 러주세요.</string>
     <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
     <string name="message_edit_name_guide">20자 이내의 이름을 입력하신 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_password_guide">20자 이상 비밀번호를 입력하신 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_add_profile_guide">신속한 예약확인 및 안내를 위해 추가 정보를 등록해 주세요.</string>
+    <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
+    <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 등록을 해주세요.</string>
 
     <!-- WaitTimer Fragment -->
     <string name="frag_wait_timer_off">알람 끄기</string>
@@ -458,7 +462,7 @@
     <string name="label_request_verification">인증번호 받기</string>
     <string name="label_confirm_signup">회원가입 완료</string>
     <string name="message_please_enter_the_same_password">동일한 비밀번호를 입력해주세요.</string>
-    <string name="message_signup_step1_guide">데일리호텔 회원가입을 하시고 적립금, 이벤트 등 다양한 혜택을 누려보세요.</string>
+    <string name="message_signup_step1_guide">데일리호텔 회원가입을 하시고 다양한 혜택을 누려보세요!</string>
     <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력하신 후 인증 처리를 해주세요.</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->

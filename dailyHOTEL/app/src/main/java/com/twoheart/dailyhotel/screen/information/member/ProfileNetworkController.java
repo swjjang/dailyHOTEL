@@ -14,7 +14,7 @@ public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String email, String name, String phone);
+        void onUserInformation(String email, String name, String phoneNumber);
     }
 
     public ProfileNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)

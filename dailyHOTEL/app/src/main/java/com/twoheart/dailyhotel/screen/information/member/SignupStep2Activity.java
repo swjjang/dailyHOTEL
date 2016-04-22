@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
@@ -82,7 +83,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         mSignupParams.put("social_id", "0");
-        mSignupParams.put("user_type", "normal");
+        mSignupParams.put("user_type", Constants.DAILY_USER);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class SignupStep2Activity extends BaseActivity
         //        String pwd = Crypto.encrypt(mPasswordEditText.getText().toString()).replace("\n", "");
         //        String name = mNameEditText.getText().toString();
         //
-        //        DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(true, id, pwd, "normal", name);
+        //        DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(true, id, pwd, Constants.DAILY_USER, name);
         //        DailyPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
         //
         //        setResult(RESULT_OK);
@@ -143,8 +144,12 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void showCountryCodeList()
         {
-            Intent intent = CountryCodeListActivity.newInstance(SignupStep2Activity.this, mCountryCode);
+            if(lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            Intent intent = CountryCodeListActivity.newInstance(SignupStep2Activity.this, mCountryCode);
             startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
@@ -195,19 +200,19 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            SignupStep2Activity.this.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
-
+            SignupStep2Activity.this.onError(e);
         }
 
         @Override
         public void onErrorMessage(int msgCode, String message)
         {
-
+            SignupStep2Activity.this.onErrorMessage(msgCode, message);
         }
     };
 
@@ -304,7 +309,7 @@ public class SignupStep2Activity extends BaseActivity
     //                        params.put("email", mSignupParams.get("email"));
     //                        params.put("pw", Crypto.encrypt(mSignupParams.get("pw")).replace("\n", ""));
     //                        params.put("social_id", "0");
-    //                        params.put("user_type", "normal");
+    //                        params.put("user_type", Constants.DAILY_USER);
     //                        params.put("is_auto", "true");
     //
     //                        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, SignupStep2Activity.this);

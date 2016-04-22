@@ -109,7 +109,7 @@
             android:layout_marginTop="5dp"
             android:checked="true"
             android:gravity="center"
-            android:text="SMS 수신 동의"
+            android:text="@string/label_agree_sms"
             android:textColor="@color/information_title"
             android:textSize="12dp"
             android:theme="@style/CheckBoxTheme"/>

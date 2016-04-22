@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailLayout;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
+import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -292,9 +293,16 @@ public abstract class PlaceDetailActivity extends BaseActivity
         finish();
     }
 
-    private void moveToUserInfoUpdate(Customer user, int recommender, boolean isDailyUser)
+    private void moveToAddSocialUserInformation(Customer user)
     {
-        Intent intent = AddProfileSocialActivity.newInstance(this, user, recommender);
+        Intent intent = AddProfileSocialActivity.newInstance(this, user);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+    }
+
+    private void moveToUpdateUserPhoneNumber(Customer user, EditProfilePhoneActivity.Type type)
+    {
+        Intent intent = EditProfilePhoneActivity.newInstance(this, user.getUserIdx(), type);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
@@ -585,13 +593,29 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                    if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
+                    if (isDailyUser == true)
                     {
-                        processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
+                        // 전화번호가 잘못 입력되어 있음
+                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                        {
+                            moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
+                        } else
+                        {
+                            processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
+                        }
                     } else
                     {
-                        // 정보 업데이트 화면으로 이동.
-                        moveToUserInfoUpdate(user, recommender, isDailyUser);
+                        // 입력된 정보가 부족해.
+                        if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
+                        {
+                            moveToAddSocialUserInformation(user);
+                        } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                        {
+                            moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
+                        } else
+                        {
+                            processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
+                        }
                     }
                 } else
                 {

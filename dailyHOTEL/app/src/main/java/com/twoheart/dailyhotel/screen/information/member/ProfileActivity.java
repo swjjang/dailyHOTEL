@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -32,6 +33,7 @@ public class ProfileActivity extends BaseActivity
 
     private ProfileLayout mProfileLayout;
     private ProfileNetworkController mNetworkController;
+    private String mUserIndex;
 
     public static Intent newInstance(Context context)
     {
@@ -98,7 +100,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfileEmailActivity.newInstance(ProfileActivity.this);
+            Intent intent = EditProfileEmailActivity.newInstance(ProfileActivity.this, mUserIndex);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -110,7 +112,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfileNameActivity.newInstance(ProfileActivity.this, name);
+            Intent intent = EditProfileNameActivity.newInstance(ProfileActivity.this, mUserIndex, name);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -122,7 +124,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this);
+            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this, mUserIndex, EditProfilePhoneActivity.Type.EDIT_PROFILE);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -134,7 +136,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfilePasswordActivity.newInstance(ProfileActivity.this);
+            Intent intent = EditProfilePasswordActivity.newInstance(ProfileActivity.this, mUserIndex);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -198,11 +200,11 @@ public class ProfileActivity extends BaseActivity
     private ProfileNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ProfileNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String email, String name, String phone)
+        public void onUserInformation(String email, String name, String phoneNumber)
         {
             String sns = DailyPreference.getInstance(ProfileActivity.this).getUserType();
 
-            mProfileLayout.updateUserInformation(sns, email, name, phone);
+            mProfileLayout.updateUserInformation(sns, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber));
 
             unLockUI();
         }

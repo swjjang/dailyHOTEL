@@ -28,14 +28,17 @@ import java.util.Map;
 
 public class EditProfileNameActivity extends BaseActivity implements OnClickListener
 {
+    private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_NAME = "name";
 
     private EditText mNameEditText;
     private View mConfirmView;
+    private String mUserIndex;
 
-    public static Intent newInstance(Context context, String name)
+    public static Intent newInstance(Context context, String userIndex, String name)
     {
         Intent intent = new Intent(context, EditProfileNameActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
         intent.putExtra(INTENT_EXTRA_DATA_NAME, name);
 
         return intent;
@@ -49,7 +52,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         setContentView(R.layout.activity_edit_name);
 
         Intent intent = getIntent();
-
+        mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
         String name = intent.getStringExtra(INTENT_EXTRA_DATA_NAME);
 
         initToolbar();

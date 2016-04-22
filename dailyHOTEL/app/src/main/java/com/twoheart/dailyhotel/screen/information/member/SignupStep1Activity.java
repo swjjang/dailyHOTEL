@@ -20,6 +20,8 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SignupStep1Activity extends BaseActivity
 {
+    private static final int REQUEST_CODE_ACTIVITY = 100;
+
     private SignupStep1Layout mSignupStep1Layout;
 
     public static Intent newInstance(Context context)
@@ -56,8 +58,6 @@ public class SignupStep1Activity extends BaseActivity
     protected void onResume()
     {
         super.onResume();
-
-        releaseUiComponent();
     }
 
     @Override
@@ -187,7 +187,7 @@ public class SignupStep1Activity extends BaseActivity
             }
 
             Intent intent = new Intent(SignupStep1Activity.this, TermActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
@@ -200,7 +200,7 @@ public class SignupStep1Activity extends BaseActivity
             }
 
             Intent intent = new Intent(SignupStep1Activity.this, PrivacyActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 

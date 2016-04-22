@@ -50,7 +50,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         initLayoutCheckBox(view);
     }
 
-    protected void initToolbar(View view)
+    private void initToolbar(View view)
     {
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
@@ -161,6 +161,14 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         if (Util.isTextEmpty(countryCode) == true)
         {
             return;
+        }
+
+        String previousCountryCode = (String) mCountryEditText.getTag();
+
+        // 지역이 변경되면 전화번호 초기화
+        if (countryCode.equalsIgnoreCase(previousCountryCode) == false)
+        {
+            mPhoneEditText.setText(null);
         }
 
         mCountryEditText.setText(countryCode.substring(0, countryCode.indexOf('\n')));

@@ -71,6 +71,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     // 카카오톡
     private com.kakao.usermgmt.LoginButton mKakaoLoginView;
     private SessionCallback mKakaoSessionCallback;
+    private boolean mIsSocialSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -266,7 +267,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
 
         params.put("is_auto", "true");
-        params.put("user_type", "facebook");
+        params.put("user_type", Constants.FACEBOOK_USER);
 
         mStoreParams.putAll(params);
 
@@ -315,7 +316,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
 
         params.put("is_auto", "true");
-        params.put("user_type", "kakao_talk");
+        params.put("user_type", Constants.KAKAO_USER);
 
         mStoreParams.putAll(params);
 
@@ -385,7 +386,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         params.put("email", email);
         params.put("pw", passwordEncrypt);
         params.put("social_id", "0");
-        params.put("user_type", "normal");
+        params.put("user_type", Constants.DAILY_USER);
         params.put("is_auto", "true");
 
         if (mStoreParams == null)
@@ -667,7 +668,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     if (isSignup == true)
                     {
                         // 회원가입에 성공하면 이제 로그인 절차
-                        DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(true);
+                        mIsSocialSignUp = true;
 
                         HashMap<String, String> params = new HashMap<>();
 
@@ -744,19 +745,19 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     DailyPreference.getInstance(LoginActivity.this).setUserName(name);
                 }
 
-                if (DailyPreference.getInstance(LoginActivity.this).isSocialSignUp() == true)
+                if (mIsSocialSignUp == true)
                 {
-                    DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(false);
+                    mIsSocialSignUp = false;
 
                     if (mStoreParams.containsKey("new_user") == true)
                     {
                         // user_type : kakao_talk. facebook
                         String userType = mStoreParams.get("user_type");
 
-                        if ("kakao_talk".equalsIgnoreCase(userType) == true)
+                        if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
                         {
                             userType = AnalyticsManager.UserType.KAKAO;
-                        } else if ("facebook".equalsIgnoreCase(userType) == true)
+                        } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                         {
                             userType = AnalyticsManager.UserType.FACEBOOK;
                         }

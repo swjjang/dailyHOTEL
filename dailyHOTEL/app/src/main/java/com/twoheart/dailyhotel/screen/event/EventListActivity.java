@@ -161,9 +161,9 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void onUpdateUserInformation(Customer user, int recommender, boolean isDailyUser)
         {
-            Intent intent = AddProfileSocialActivity.newInstance(EventListActivity.this, user, recommender);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+//            Intent intent = AddProfileSocialActivity.newInstance(EventListActivity.this, user, recommender);
+//            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override

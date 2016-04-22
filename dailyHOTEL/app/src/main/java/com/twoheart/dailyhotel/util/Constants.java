@@ -20,7 +20,7 @@ public interface Constants
 {
     // 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다.
     public static final boolean DEBUG = BuildConfig.DEBUG;
-    public static final boolean UNENCRYPTED_URL = false;
+    public static final boolean UNENCRYPTED_URL = true;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
 
     // 스토어 선택.
@@ -65,17 +65,21 @@ public interface Constants
         GONE // 목록이 비어있는 경우.
     }
 
+    public static String DAILY_USER = "normal";
+    public static String KAKAO_USER = "kakao_talk";
+    public static String FACEBOOK_USER = "facebook";
+
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
     public static final String GOOGLE_MAP_KEY = UNENCRYPTED_URL ? "AIzaSyBEynLg8WjW7YKtmc2B6aOCn7PQtGig-6I" : "MTEzJDkwJDExOCQxMjQkODgk$N0I2MjE5NjU0Mzg0Q0RBNUUwRUFEMzI2MTAzNDlGRTA3ODRFQ0M5RkEwRThFRDgxQzY0Q0IzNkZBNEZDNkUyOTBFMNUSVBNDdFQTJFMjBENzVBQjIzNJDhEWMzAwNSjA1N0NE$";
 
     // 웹서버 호스트
-    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://lb2.dailyhotel.kr/goodnight/" : "MTE2JDEzJDEwMiQ1OCQxMTEk$MDQzNkMwNTRCOBDgzNjM1MTM4NDY1M0VFMkIwRkM3QzMzQUE0NzU4OEI1MFEEzN0IwNkE3NUExRkM2QjNDNUFBNUE1MzI2RDNDQThGNJEFFQkJFGNzk4QTc0FRkFDMDgzOEQw$";
-    public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://mobileapi.dailyhotel.kr/goodnight/" : "MTIyJDExOSQ0OCQ4MSQxMTAk$RjI5MTc2RTg1NTRBNkFFODE3QTRCQkVBQjhDM0UyOUM1NDlFJNTcyQTVBOEZDODkyMTZCMDcwNjBGRUFGPRjBDMUIxNDZGRjIzMzA3Rjg1QzZFWRDEwNTYzRUNYGQjCU5NDIx$";
-    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "MTA1JDI3JDM1JDEwOCQxMjkk$MzAxNzZERkRGNzA3NjQ5ODgzRDMOzREUyQTRUyNkM5MkNGODgwQzVEMTc5NTQxRDVFQzY1NEFCRTBCQzREQTc2MDczMUI0RDMxN0NENDY5MPN0ZEOUNDOTc1Qzk3NzgxRVjdC$";
+//    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://lb2.dailyhotel.kr/goodnight/" : "MTE2JDEzJDEwMiQ1OCQxMTEk$MDQzNkMwNTRCOBDgzNjM1MTM4NDY1M0VFMkIwRkM3QzMzQUE0NzU4OEI1MFEEzN0IwNkE3NUExRkM2QjNDNUFBNUE1MzI2RDNDQThGNJEFFQkJFGNzk4QTc0FRkFDMDgzOEQw$";
+//    public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "https://mobileapi.dailyhotel.kr/goodnight/" : "MTIyJDExOSQ0OCQ4MSQxMTAk$RjI5MTc2RTg1NTRBNkFFODE3QTRCQkVBQjhDM0UyOUM1NDlFJNTcyQTVBOEZDODkyMTZCMDcwNjBGRUFGPRjBDMUIxNDZGRjIzMzA3Rjg1QzZFWRDEwNTYzRUNYGQjCU5NDIx$";
+//    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://prod-search.dailyhotel.kr/" : "MTA1JDI3JDM1JDEwOCQxMjkk$MzAxNzZERkRGNzA3NjQ5ODgzRDMOzREUyQTRUyNkM5MkNGODgwQzVEMTc5NTQxRDVFQzY1NEFCRTBCQzREQTc2MDczMUI0RDMxN0NENDY5MPN0ZEOUNDOTc1Qzk3NzgxRVjdC$";
 
-    //    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:32772/goodnight/" : "";
-    //    public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:32772/goodnight/" : "";
-    //    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://52.196.30.125/" : "";
+    public static final String URL_DAILYHOTEL_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:32772/goodnight/" : "";
+    public static final String URL_DAILYHOTEL_SESSION_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://dev.dailyhotel.me:32772/goodnight/" : "";
+    public static final String URL_DAILYHOTEL_SEARCH_SERVER_DEFAULT = UNENCRYPTED_URL ? "http://52.196.30.125/" : "";
 
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";

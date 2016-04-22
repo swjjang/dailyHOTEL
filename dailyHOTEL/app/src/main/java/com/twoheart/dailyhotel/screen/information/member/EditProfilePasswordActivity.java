@@ -24,13 +24,17 @@ import org.json.JSONObject;
 
 public class EditProfilePasswordActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
+    private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
+
     private View mPasswordView, mConfirmPasswordView;
     private EditText mPasswordEditText, mConfirmPasswordEditText;
     private View mConfirmView;
+    private String mUserIndex;
 
-    public static Intent newInstance(Context context)
+    public static Intent newInstance(Context context, String userIndex)
     {
         Intent intent = new Intent(context, EditProfilePasswordActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
 
         return intent;
     }
@@ -41,6 +45,9 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_password);
+
+        Intent intent = getIntent();
+        mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
 
         initToolbar();
         initLayout();

@@ -30,12 +30,16 @@ import java.util.Map;
 
 public class EditProfileEmailActivity extends BaseActivity implements OnClickListener
 {
+    private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
+
     private EditText mEmailEditText;
     private View mConfirmView;
+    private String mUserIndex;
 
-    public static Intent newInstance(Context context)
+    public static Intent newInstance(Context context, String userIndex)
     {
         Intent intent = new Intent(context, EditProfileEmailActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
 
         return intent;
     }
@@ -48,6 +52,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
         setContentView(R.layout.activity_edit_email);
 
         Intent intent = getIntent();
+        mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
 
         initToolbar();
         initLayout();

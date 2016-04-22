@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -81,38 +82,34 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         super.onStart();
     }
 
-    // Jason | Fix send email api
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == btnForgot.getId())
+        if (isLockUiComponent() == true)
         {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            mEmail = etForgot.getText().toString().trim();
-
-            if (mEmail.equals(""))
-            {
-                releaseUiComponent();
-
-                DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
-                return;
-            } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
-            {
-                releaseUiComponent();
-
-                DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-                return;
-            }
-
-            lockUI();
-            DailyNetworkAPI.getInstance().requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener, this);
+            return;
         }
+
+        lockUiComponent();
+
+        mEmail = etForgot.getText().toString().trim();
+
+        if (mEmail.equals(""))
+        {
+            releaseUiComponent();
+
+            DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
+            return;
+        } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
+        {
+            releaseUiComponent();
+
+            DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        lockUI();
+        DailyNetworkAPI.getInstance().requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener, this);
     }
 
     @Override
@@ -147,8 +144,15 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
                 if ("true".equalsIgnoreCase(result) == true)
                 {
-                    showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null);
                     etForgot.setText("");
+                    showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            finish();
+                        }
+                    });
                 } else
                 {
                     String message = response.getString("msg");
@@ -164,6 +168,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         }
     };
+
     private DailyHotelJsonResponseListener mUserCheckEmailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
