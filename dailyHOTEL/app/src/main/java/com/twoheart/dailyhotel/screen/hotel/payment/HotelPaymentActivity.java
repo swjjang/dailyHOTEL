@@ -356,6 +356,23 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         }
 
         mFinalPaymentTextView.setText(comma.format(payPrice) + getString(R.string.currency));
+
+        if (payPrice < 1000)
+        {
+            mEasyPaymentButton.setEnabled(false);
+            mCardPaymentButton.setEnabled(false);
+
+            mPaymentRadioGroup.check(mHpPaymentButton.getId());
+        } else
+        {
+            if (mEasyPaymentButton.isEnabled() == false)
+            {
+                mPaymentRadioGroup.check(mEasyPaymentButton.getId());
+            }
+
+            mEasyPaymentButton.setEnabled(true);
+            mCardPaymentButton.setEnabled(true);
+        }
     }
 
 

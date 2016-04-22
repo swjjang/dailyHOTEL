@@ -1,18 +1,15 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.content.res.XmlResourceParser;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
@@ -128,27 +125,20 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
                 view = convertView;
             }
 
-            Button radioButton = (Button) view.findViewById(R.id.radioButton);
-            TextView countryTextView = (TextView) view.findViewById(R.id.countryTextView);
+            CheckBox radioCheckBox = (CheckBox) view.findViewById(R.id.radioCheckBox);
             TextView codeTextView = (TextView) view.findViewById(R.id.codeTextView);
 
-            countryTextView.setText(countryCode[0]);
+            radioCheckBox.setText(countryCode[0]);
             codeTextView.setText(countryCode[1]);
 
             if (mSelectedIndex == position)
             {
-                view.setEnabled(true);
-
-//                radioButton.setSelected(true);
-//                countryTextView.setSelected(true);
-//                codeTextView.setSelected(true);
+                codeTextView.setSelected(true);
+                radioCheckBox.setChecked(true);
             } else
             {
-                view.setEnabled(false);
-
-//                radioButton.setSelected(false);
-//                countryTextView.setSelected(false);
-//                codeTextView.setSelected(false);
+                codeTextView.setSelected(false);
+                radioCheckBox.setChecked(false);
             }
         }
 

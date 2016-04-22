@@ -26,7 +26,7 @@
                 android:id="@+id/radioButton"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/selector_rooomtype_radio"
+                android:background="@drawable/selector_radio_button"
                 android:clickable="false"
                 android:duplicateParentState="true"/>
 

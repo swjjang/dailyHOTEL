@@ -4,38 +4,31 @@
                 android:layout_height="49dp"
                 android:gravity="center_vertical">
 
-    <com.twoheart.dailyhotel.widget.DailyButton
-        android:id="@+id/radioButton"
-        android:layout_width="21dp"
-        android:layout_height="21dp"
-        android:layout_marginLeft="12dp"
-        android:background="@drawable/selector_countrycode_radio"
+    <com.twoheart.dailyhotel.widget.DailyCheckBox
+        android:id="@+id/radioCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_toLeftOf="@+id/codeTextView"
+        android:button="@null"
         android:clickable="false"
-        android:duplicateParentState="true"
-        android:focusable="false"/>
+        android:drawableLeft="@drawable/selector_radio_button"
+        android:drawablePadding="7dp"
+        android:ellipsize="end"
+        android:focusable="false"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@drawable/selector_countrycode_country_textview_color"
+        android:textSize="17dp"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/codeTextView"
         android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:duplicateParentState="true"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@drawable/selector_countrycode_code_textview_color"
-        android:textSize="17dp"/>
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/countryTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_toLeftOf="@+id/codeTextView"
-        android:layout_toRightOf="@+id/radioButton"
-        android:duplicateParentState="true"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textColor="@drawable/selector_countrycode_country_textview_color"
         android:textSize="17dp"/>
 </RelativeLayout>
