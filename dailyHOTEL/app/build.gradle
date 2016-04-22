@@ -64,8 +64,8 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.+'
     compile 'com.kakao.sdk:kakaolink:1.+'
     compile 'com.kakao.sdk:kakaotalk:1.+'
-    compile 'com.facebook.fresco:fresco:0.9.0+'
-    compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0+'
+    compile 'com.facebook.fresco:fresco:0.9.0'
+    compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0'
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
