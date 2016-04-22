@@ -243,6 +243,14 @@ public class DailyToolbarLayout
         TextView textView = getTitleTextView(mAppCompatActivity);
         textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_region_v, 0);
         textView.setText(title);
+
+        if (Util.isTextEmpty(title) == true)
+        {
+            textView.setVisibility(View.VISIBLE);
+        } else
+        {
+            textView.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void setToolbarText(String title)
