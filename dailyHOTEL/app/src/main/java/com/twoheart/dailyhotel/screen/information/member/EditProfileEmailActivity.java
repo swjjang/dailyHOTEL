@@ -17,15 +17,15 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class EditProfileEmailActivity extends BaseActivity implements OnClickListener
@@ -130,7 +130,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
     @Override
     protected void onStart()
     {
-//        AnalyticsManager.getInstance(EditProfileEmailActivity.this).recordScreen(Screen.PROFILE, null);
+        //        AnalyticsManager.getInstance(EditProfileEmailActivity.this).recordScreen(Screen.PROFILE, null);
 
         super.onStart();
     }
@@ -163,9 +163,17 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 
                 lockUI();
 
-                Map<String, String> params = Collections.singletonMap("email", email);
+                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileEmailActivity.this).getUserType()) == true)
+                {
 
-                DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, params, mUserUpdateJsonResponseListener, this);
+                } else
+                {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("user_idx", mUserIndex);
+                    params.put("user_email", email);
+
+                    DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
+                }
                 break;
         }
     }
@@ -181,29 +189,28 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                String result = response.getString("success");
-                String msg = null;
+                JSONObject jsonObject = response.getJSONObject("data");
 
-                if (response.length() > 1)
-                {
-                    msg = response.getString("msg");
-                }
+                boolean result = jsonObject.getBoolean("is_success");
+                int msgCode = response.getInt("msg_code");
 
-                if (result.equals("true") == true)
+                if (result == true)
                 {
                     DailyToast.showToast(EditProfileEmailActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
 
                     setResult(RESULT_OK);
                 } else
                 {
-                    DailyToast.showToast(EditProfileEmailActivity.this, msg, Toast.LENGTH_LONG);
+                    String message = response.getString("msg");
+
+                    DailyToast.showToast(EditProfileEmailActivity.this, message, Toast.LENGTH_LONG);
 
                     setResult(RESULT_CANCELED);
                 }

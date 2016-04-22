@@ -168,7 +168,7 @@ public class SignupStep1Activity extends BaseActivity
                 return;
             }
 
-            if(lockUiComponentAndIsLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -181,7 +181,7 @@ public class SignupStep1Activity extends BaseActivity
         @Override
         public void showTermOfService()
         {
-            if(lockUiComponentAndIsLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -194,7 +194,7 @@ public class SignupStep1Activity extends BaseActivity
         @Override
         public void showTermOfPrivacy()
         {
-            if(lockUiComponentAndIsLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }

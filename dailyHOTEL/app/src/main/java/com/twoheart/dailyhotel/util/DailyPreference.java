@@ -38,7 +38,7 @@ public class DailyPreference
     private static final String KEY_ALLOW_PUSH = "5";
 
     private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
-//    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
+    //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
 
     private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
     private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
@@ -428,15 +428,15 @@ public class DailyPreference
         setValue(mEditor, KEY_COLLAPSEKEY, value);
     }
 
-//    public boolean isSocialSignUp()
-//    {
-//        return getValue(mPreferences, KEY_SOCIAL_SIGNUP, false);
-//    }
-//
-//    public void setSocialSignUp(boolean value)
-//    {
-//        setValue(mEditor, KEY_SOCIAL_SIGNUP, value);
-//    }
+    //    public boolean isSocialSignUp()
+    //    {
+    //        return getValue(mPreferences, KEY_SOCIAL_SIGNUP, false);
+    //    }
+    //
+    //    public void setSocialSignUp(boolean value)
+    //    {
+    //        setValue(mEditor, KEY_SOCIAL_SIGNUP, value);
+    //    }
 
     public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
     {

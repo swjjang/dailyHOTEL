@@ -11,8 +11,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -144,7 +142,7 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void showCountryCodeList()
         {
-            if(lockUiComponentAndIsLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -168,14 +166,14 @@ public class SignupStep2Activity extends BaseActivity
                 return;
             }
 
-//            lockUI();
-//
-//            mSignupParams.put("phone", phoneNumber);
-//            mSignupParams.put("verification", verificationNumber);
-//
-//            mNetworkController.requestUserSingUp(mSignupParams);
-//            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-//                , Action.REGISTRATION_CLICKED, Label.AGREE_AND_REGISTER, null);
+            //            lockUI();
+            //
+            //            mSignupParams.put("phone", phoneNumber);
+            //            mSignupParams.put("verification", verificationNumber);
+            //
+            //            mNetworkController.requestUserSingUp(mSignupParams);
+            //            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            //                , Action.REGISTRATION_CLICKED, Label.AGREE_AND_REGISTER, null);
         }
 
         @Override

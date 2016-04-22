@@ -14,13 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-
-import org.json.JSONObject;
 
 public class EditProfilePasswordActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
@@ -200,40 +197,40 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-//    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-//    {
-//        @Override
-//        public void onResponse(String url, JSONObject response)
-//        {
-//            try
-//            {
-//                String result = response.getString("success");
-//                String msg = null;
-//
-//                if (response.length() > 1)
-//                {
-//                    msg = response.getString("msg");
-//                }
-//
-//                if (result.equals("true") == true)
-//                {
-//                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
-//
-//                    setResult(RESULT_OK);
-//                } else
-//                {
-//                    DailyToast.showToast(EditProfilePasswordActivity.this, msg, Toast.LENGTH_LONG);
-//
-//                    setResult(RESULT_CANCELED);
-//                }
-//            } catch (Exception e)
-//            {
-//                onError(e);
-//            } finally
-//            {
-//                unLockUI();
-//                finish();
-//            }
-//        }
-//    };
+    //    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    //    {
+    //        @Override
+    //        public void onResponse(String url, JSONObject response)
+    //        {
+    //            try
+    //            {
+    //                String result = response.getString("success");
+    //                String msg = null;
+    //
+    //                if (response.length() > 1)
+    //                {
+    //                    msg = response.getString("msg");
+    //                }
+    //
+    //                if (result.equals("true") == true)
+    //                {
+    //                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+    //
+    //                    setResult(RESULT_OK);
+    //                } else
+    //                {
+    //                    DailyToast.showToast(EditProfilePasswordActivity.this, msg, Toast.LENGTH_LONG);
+    //
+    //                    setResult(RESULT_CANCELED);
+    //                }
+    //            } catch (Exception e)
+    //            {
+    //                onError(e);
+    //            } finally
+    //            {
+    //                unLockUI();
+    //                finish();
+    //            }
+    //        }
+    //    };
 }

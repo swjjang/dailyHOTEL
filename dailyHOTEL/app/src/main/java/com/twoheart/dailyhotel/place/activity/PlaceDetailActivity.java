@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailLayout;
 import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
-import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;

@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;

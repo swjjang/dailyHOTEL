@@ -12,9 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.information.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -161,9 +159,9 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void onUpdateUserInformation(Customer user, int recommender, boolean isDailyUser)
         {
-//            Intent intent = AddProfileSocialActivity.newInstance(EventListActivity.this, user, recommender);
-//            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
-//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            //            Intent intent = AddProfileSocialActivity.newInstance(EventListActivity.this, user, recommender);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+            //            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
