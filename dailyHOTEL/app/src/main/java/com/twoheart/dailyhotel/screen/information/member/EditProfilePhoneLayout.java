@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -271,6 +272,12 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     public void showCertificationLayout()
     {
         mCertificationLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void showKeyPad()
+    {
+        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(mPhoneEditText, InputMethodManager.SHOW_FORCED);
     }
 
     private void resetFocus()

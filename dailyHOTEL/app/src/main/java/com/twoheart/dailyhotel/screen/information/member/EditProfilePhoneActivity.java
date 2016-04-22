@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -71,22 +73,42 @@ public class EditProfilePhoneActivity extends BaseActivity
                 if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(this).getUserType()) == true)
                 {
                     mEditProfilePhoneLayout.showCertificationLayout();
+
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 } else
                 {
                     mEditProfilePhoneLayout.hideCertificationLayout();
+
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 }
                 break;
 
             case WRONG_PHONENUMBER:
                 mEditProfilePhoneLayout.hideCertificationLayout();
 
-                showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_register_phonenumber), getString(R.string.dialog_btn_text_confirm), null, null, null);
+                showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_register_phonenumber), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        mEditProfilePhoneLayout.showKeyPad();
+                    }
+                });
                 break;
 
             case NEED_VERIFICATION_PHONENUMBER:
                 mEditProfilePhoneLayout.showCertificationLayout();
 
-                showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_register_phonenumber), getString(R.string.dialog_btn_text_confirm), null, null, null);
+                showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_register_phonenumber), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        mEditProfilePhoneLayout.showKeyPad();
+                    }
+                });
                 break;
         }
     }
