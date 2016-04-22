@@ -53,6 +53,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private View mNewEventIconView;
     private String mCSoperatingTimeMessage;
     private BroadcastReceiver mNewEventBroadcastReceiver;
+    private boolean mIsAttach;
     //    private View mInformationScrollView, mInformationLayout, mDailyInformationView;
 
     @Override
@@ -109,6 +110,14 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         versionTextView.setText(getString(R.string.label_version, DailyHotel.VERSION));
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+
+        mIsAttach = true;
     }
 
     private void initToolbar(BaseActivity baseActivity, View view)
@@ -255,7 +264,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     @Override
     public void onClick(View v)
     {
-        if (isLockUiComponent() == true)
+        if (isLockUiComponent() == true || mIsAttach == false)
         {
             return;
         }
