@@ -198,6 +198,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         switch (v.getId())
         {
             case R.id.signUpView:
+            {
                 String tag = (String) mCountryEditText.getTag();
 
                 if (Util.isTextEmpty(tag) == true)
@@ -211,16 +212,27 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
                 ((OnEventListener) mOnEventListener).doSignUp(phoneNumber, verificationNumber);
                 break;
+            }
 
             case R.id.certificationNumberView:
             {
                 if (mSMSCheckBox.isChecked() == false)
                 {
-                    // SMS 수신 동의에 체크해주셔야 합니다
                     return;
                 }
 
+                String tag = (String) mCountryEditText.getTag();
+
+                if (Util.isTextEmpty(tag) == true)
+                {
+                    tag = Util.DEFAULT_COUNTRY_CODE;
+                }
+
+                String countryCode = tag.substring(tag.indexOf('\n') + 1);
+                String phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
+
                 // SMS 인증 요청
+                ((OnEventListener) mOnEventListener).doVerification(phoneNumber);
                 break;
             }
         }
@@ -235,6 +247,11 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         }
 
         setFocusTextView(v.getId());
+    }
+
+    public void showVerificationVisible()
+    {
+        mVerificationLayout.setVisibility(View.VISIBLE);
     }
 
     private void resetFocus()

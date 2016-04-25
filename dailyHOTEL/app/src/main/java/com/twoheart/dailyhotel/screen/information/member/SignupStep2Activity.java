@@ -155,7 +155,7 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void doVerification(String phoneNumber)
         {
-
+            mSignupStep2Layout.showVerificationVisible();
         }
 
         @Override
