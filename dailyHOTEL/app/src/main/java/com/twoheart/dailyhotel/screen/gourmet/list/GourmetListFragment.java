@@ -532,6 +532,12 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     private void setGourmetListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> gourmetListViewItemList, SortType sortType)
     {
+        if (mGourmetAdapter == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
         mGourmetAdapter.clear();
 
         if (gourmetListViewItemList == null || gourmetListViewItemList.size() == 0)
@@ -743,8 +749,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String imageUrl = dataJSONObject.getString("imgUrl");
                     JSONArray gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
 
                     int length;
@@ -772,6 +776,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
                         mOnCommunicateListener.expandedAppBar(true, true);
                     } else
                     {
+                        String imageUrl = dataJSONObject.getString("imgUrl");
+
                         ArrayList<Gourmet> gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
                         GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
                         setFilterInformation(gourmetList, gourmetCurationOption);

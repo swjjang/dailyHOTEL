@@ -580,6 +580,12 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     private void setHotelListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> hotelListViewItemList, SortType sortType)
     {
+        if (mHotelAdapter == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
         mHotelAdapter.clear();
 
         if (hotelListViewItemList == null || hotelListViewItemList.size() == 0)
@@ -749,9 +755,6 @@ public class HotelListFragment extends BaseFragment implements Constants
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String imageUrl = dataJSONObject.getString("imgUrl");
-                    int nights = dataJSONObject.getInt("lengthStay");
                     JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
 
                     int length;
@@ -779,6 +782,9 @@ public class HotelListFragment extends BaseFragment implements Constants
                         mOnCommunicateListener.expandedAppBar(true, true);
                     } else
                     {
+                        String imageUrl = dataJSONObject.getString("imgUrl");
+                        int nights = dataJSONObject.getInt("lengthStay");
+
                         ArrayList<Hotel> hotelList = makeHotelList(hotelJSONArray, imageUrl, nights);
                         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
                         setFilterInformation(hotelList, hotelCurationOption);
