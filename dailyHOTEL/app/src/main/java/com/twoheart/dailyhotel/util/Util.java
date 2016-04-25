@@ -13,6 +13,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap.Config;
@@ -1062,19 +1063,25 @@ public class Util implements Constants
             return;
         }
 
-        try
+        Intent intentMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName));
+        intentMarket.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        ResolveInfo resolveInfoMarket = context.getPackageManager().resolveActivity(intentMarket, PackageManager.MATCH_DEFAULT_ONLY);
+
+        if (resolveInfoMarket != null)
         {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        } catch (ActivityNotFoundException e)
+            context.startActivity(intentMarket);
+        } else
         {
-            try
+            Intent intentWeb = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
+            intentWeb.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            ResolveInfo resolveInfoWeb = context.getPackageManager().resolveActivity(intentWeb, PackageManager.MATCH_DEFAULT_ONLY);
+
+            if (resolveInfoWeb != null)
             {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            } catch (ActivityNotFoundException e1)
+                context.startActivity(intentWeb);
+            } else
             {
                 DailyToast.showToast(context, R.string.toast_message_failed_install, Toast.LENGTH_SHORT);
             }
