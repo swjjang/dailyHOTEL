@@ -14,6 +14,8 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.Map;
 
 public class FacebookManager implements IBaseAnalyticsManager
@@ -336,6 +338,7 @@ public class FacebookManager implements IBaseAnalyticsManager
 
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
+        String price = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         Bundle parameters = new Bundle();
         parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
         parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
@@ -343,10 +346,10 @@ public class FacebookManager implements IBaseAnalyticsManager
         parameters.putString(EventParam.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN));
         parameters.putString(EventParam.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT));
         parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
-        parameters.putString(EventParam.HOTEL_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        parameters.putString(EventParam.HOTEL_VALUE_TO_SUM, price);
         parameters.putString(EventParam.NUMBER_OF_NIGHTS, params.get(AnalyticsManager.KeyType.QUANTITY));
 
-        appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED, parameters);
+        appEventsLogger.logPurchase(new BigDecimal(price), Currency.getInstance("KRW"), parameters);
 
         if (DEBUG == true)
         {
@@ -364,16 +367,17 @@ public class FacebookManager implements IBaseAnalyticsManager
 
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
+        String price = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         Bundle parameters = new Bundle();
         parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, params.get(AnalyticsManager.KeyType.NAME));
         parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
         parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, AnalyticsManager.Label.GOURMET);
         parameters.putString(EventParam.GOURMET_RESERVATION_DATE, params.get(AnalyticsManager.KeyType.DATE));
         parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "KRW");
-        parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        parameters.putString(EventParam.GOURMET_VALUE_TO_SUM, price);
         parameters.putString(AppEventsConstants.EVENT_PARAM_NUM_ITEMS, params.get(AnalyticsManager.KeyType.QUANTITY));
 
-        appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED, parameters);
+        appEventsLogger.logPurchase(new BigDecimal(price), Currency.getInstance("KRW"), parameters);
 
         if (DEBUG == true)
         {
