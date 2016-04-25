@@ -18,11 +18,11 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[GoogleAnalyticsManager]";
+    private static final boolean ENABLED = true;
     private static final String GA_PROPERTY_ID = "UA-43721645-6";
 
     private Tracker mGoogleAnalyticsTracker;
     private String mClientId;
-    private boolean mEnabled;
 
     interface OnClientIdListener
     {
@@ -31,8 +31,6 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
 
     public GoogleAnalyticsManager(Context context, final OnClientIdListener listener)
     {
-        setEnabled(true);
-
         final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
         googleAnalytics.setLocalDispatchPeriod(60);
 
@@ -61,15 +59,9 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void setEnabled(boolean enabled)
-    {
-        mEnabled = enabled;
-    }
-
-    @Override
     public void recordScreen(String screen, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -104,7 +96,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -133,7 +125,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -150,7 +142,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void onResume(Activity activity)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -159,7 +151,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void onPause(Activity activity)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -168,7 +160,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void addCreditCard(String cardType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -177,7 +169,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -186,7 +178,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -195,7 +187,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -241,7 +233,7 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
