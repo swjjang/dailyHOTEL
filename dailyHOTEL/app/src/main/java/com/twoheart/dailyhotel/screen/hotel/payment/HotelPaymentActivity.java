@@ -357,6 +357,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         mFinalPaymentTextView.setText(comma.format(payPrice) + getString(R.string.currency));
 
+        // 1000원 미만 결제시에 간편/일반 결제 불가
         if (payPrice < 1000)
         {
             mEasyPaymentButton.setEnabled(false);
