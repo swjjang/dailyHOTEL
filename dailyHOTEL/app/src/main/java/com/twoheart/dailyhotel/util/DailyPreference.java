@@ -359,7 +359,7 @@ public class DailyPreference
 
     public boolean isAllowSMS()
     {
-        return getValue(mPreferences, KEY_ALLOW_SMS, true);
+        return getValue(mPreferences, KEY_ALLOW_SMS, false);
     }
 
     public void setAllowSMS(boolean value)
