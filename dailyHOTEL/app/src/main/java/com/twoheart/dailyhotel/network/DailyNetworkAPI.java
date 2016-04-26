@@ -584,9 +584,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetSearchAutoCompleteList(Object tag, String date, String text, DailyHotelJsonArrayResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/auto_complete" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/gourmet/auto_complete" : "NDUkMzkkNjYkNSQ4MiQ=$RENBQDzdBREIzNDA0QUJFMzg4QjAxOTA1OTU5OEQNxOERFRDEY4NzRDQjRCNjE4Rjk3TRkM5MzMzMzE5OEERFRUUzMTczOTYzMzA3MzYzNTMxQkQzOURBREIzQUJCRERFQkQ2$";
 
-        String params = String.format("?dateCheckIn=%s&term=%s", date, text);
+        String params = String.format("?dateTarget=%s&term=%s", date, text);
 
         DailyHotelJsonArrayRequest dailyHotelJsonRequest = new DailyHotelJsonArrayRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
 
