@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,28 +14,21 @@ public class GourmetSearch extends Gourmet
     {
         try
         {
-            index = jsonObject.getInt("restaurantIdx");
-            name = jsonObject.getString("restaurantName");
+            index = jsonObject.getInt("restaurant_idx");
+            name = jsonObject.getString("restaurant_name");
 
             price = jsonObject.getInt("price");
             discountPrice = jsonObject.getInt("discount");
-            addressSummary = jsonObject.getString("addrSummary");
+            addressSummary = jsonObject.getString("addr_summary");
             grade = Grade.gourmet;
-            districtName = jsonObject.getString("districtName");
+            districtName = jsonObject.getString("district_name");
             latitude = jsonObject.getDouble("latitude");
             longitude = jsonObject.getDouble("longitude");
-            isDailyChoice = jsonObject.getBoolean("isDailychoice");
+            isDailyChoice = jsonObject.getInt("is_dailychoice") == 1 ? true : false;
             persons = jsonObject.getInt("persons");
             category = jsonObject.getString("category");
-            categoryCode = jsonObject.getInt("categoryCode");
-            categorySequence = jsonObject.getInt("categorySeq");
 
-            if (jsonObject.has("ratingValue") == true)
-            {
-                satisfaction = jsonObject.getInt("ratingValue");
-            }
-
-            JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
+            JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");
 
             Iterator<String> iterator = imageJSONObject.keys();
             while (iterator.hasNext())

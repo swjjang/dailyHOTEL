@@ -8,10 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.cache.common.SimpleCacheKey;
-import com.facebook.cache.disk.DiskStorageCache;
-import com.facebook.cache.disk.FileCache;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;

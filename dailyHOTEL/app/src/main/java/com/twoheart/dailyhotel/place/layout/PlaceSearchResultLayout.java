@@ -111,7 +111,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
     {
         TextView titleView = (TextView) mToolbar.findViewById(R.id.titleView);
 
-        if(titleView == null)
+        if (titleView == null)
         {
             Util.restartApp(mContext);
             return;

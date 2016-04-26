@@ -7,7 +7,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchResultListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
