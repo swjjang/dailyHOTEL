@@ -38,10 +38,10 @@ public class GourmetSearchNetworkController extends BaseNetworkController
     public void requestAutoComplete(SaleTime saleTime, String keyword)
     {
         DailyNetworkAPI.getInstance().requestGourmetSearchAutoCompleteList(mNetworkTag//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mHotelSearchAutoCompleteListener, mHotelSearchAutoCompleteErrorListener);
+            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteListener, mGourmetearchAutoCompleteErrorListener);
     }
 
-    private DailyHotelJsonArrayResponseListener mHotelSearchAutoCompleteListener = new DailyHotelJsonArrayResponseListener()
+    private DailyHotelJsonArrayResponseListener mGourmetSearchAutoCompleteListener = new DailyHotelJsonArrayResponseListener()
     {
         @Override
         public void onResponse(String url, JSONArray response)
@@ -67,7 +67,7 @@ public class GourmetSearchNetworkController extends BaseNetworkController
         }
     };
 
-    private Response.ErrorListener mHotelSearchAutoCompleteErrorListener = new Response.ErrorListener()
+    private Response.ErrorListener mGourmetearchAutoCompleteErrorListener = new Response.ErrorListener()
     {
         @Override
         public void onErrorResponse(VolleyError volleyError)
