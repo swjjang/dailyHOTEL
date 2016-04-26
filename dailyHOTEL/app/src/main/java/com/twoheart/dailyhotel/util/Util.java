@@ -32,9 +32,9 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -44,7 +44,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyOkHttpImagePipelineConfigFactory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -73,28 +72,17 @@ public class Util implements Constants
         return Util.isTextEmpty(MEMORY_CLEAR);
     }
 
-    static
-    {
-        try
-        {
-            SoLoaderShim.loadLibrary("webp");
-        } catch (UnsatisfiedLinkError e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
     public static void initializeFresco(Context context)
     {
         ImagePipelineConfig imagePipelineConfig;
 
         if (Util.isOverAPI11() == true && Util.getLCDWidth(context) >= 720)
         {
-            imagePipelineConfig = DailyOkHttpImagePipelineConfigFactory//
+            imagePipelineConfig = OkHttpImagePipelineConfigFactory//
                 .newBuilder(context, new OkHttpClient()).build();
         } else
         {
-            imagePipelineConfig = DailyOkHttpImagePipelineConfigFactory//
+            imagePipelineConfig = OkHttpImagePipelineConfigFactory//
                 .newBuilder(context, new OkHttpClient())//
                 .setBitmapsConfig(Config.RGB_565).build();
         }
@@ -103,7 +91,7 @@ public class Util implements Constants
 
         try
         {
-            Fresco.getImagePipelineFactory().getMainDiskStorageCache().clearAll();
+            Fresco.getImagePipelineFactory().getMainFileCache().clearAll();
         } catch (UnsatisfiedLinkError e)
         {
             ExLog.e(e.toString());
