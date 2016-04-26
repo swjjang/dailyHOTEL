@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.cache.disk.DiskStorageCache;
+import com.facebook.cache.disk.FileCache;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -212,13 +213,6 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 
         Uri uri = Util.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
         provinceImageView.setImageURI(uri);
-
-        if (uri != null)
-        {
-            DiskStorageCache diskCache = Fresco.getImagePipelineFactory().getMainDiskStorageCache();
-            SimpleCacheKey cacheKey = new SimpleCacheKey(uri.toString());
-            diskCache.probe(cacheKey);
-        }
 
         textView.setText(getInsertSpaceName(province.name));
         englishTextView.setText(getInsertSpaceName(province.englishName));
