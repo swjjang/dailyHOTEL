@@ -8,8 +8,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,7 +23,6 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     private View mVerificationLayout, mSignUpView, mCertificationNumberView;
     private View mCountryView, mPhoneView, mVerificationView;
     private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
-    private CheckBox mSMSCheckBox;
     private TextWatcher mTextWatcher;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -47,7 +44,6 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         initToolbar(view);
         initLayoutForm(view);
-        initLayoutCheckBox(view);
     }
 
     private void initToolbar(View view)
@@ -93,7 +89,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
                     // 번호 검증 후에 인증번호 요청
                     String phoneNumber = v.getText().toString().trim();
 
-                    if (Util.isValidatePhoneNumber(phoneNumber) == true && mSMSCheckBox.isChecked() == true)
+                    if (Util.isValidatePhoneNumber(phoneNumber) == true)
                     {
                         ((OnEventListener) mOnEventListener).doVerification(phoneNumber);
                     }
@@ -141,19 +137,6 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mSignUpView.setVisibility(View.INVISIBLE);
 
         mPhoneEditText.requestFocus();
-    }
-
-    private void initLayoutCheckBox(View view)
-    {
-        mSMSCheckBox = (CheckBox) view.findViewById(R.id.smsCheckBox);
-        mSMSCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                provenCertificationButton(mPhoneEditText.getText().toString());
-            }
-        });
     }
 
     public void setCountryCode(String countryCode)
@@ -216,11 +199,6 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
             case R.id.certificationNumberView:
             {
-                if (mSMSCheckBox.isChecked() == false)
-                {
-                    return;
-                }
-
                 String tag = (String) mCountryEditText.getTag();
 
                 if (Util.isTextEmpty(tag) == true)
@@ -288,7 +266,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         // 입력한 전화번호가 이상이 없는 경우 인증번호 받기가 활성화 된다.
         String countryCode = tag.substring(tag.indexOf('\n') + 1);
 
-        if (Util.isValidatePhoneNumber(countryCode + ' ' + phoneNumber) == true && mSMSCheckBox.isChecked() == true)
+        if (Util.isValidatePhoneNumber(countryCode + ' ' + phoneNumber) == true)
         {
             mCertificationNumberView.setEnabled(true);
         } else

@@ -102,6 +102,18 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         pushTextView.setOnClickListener(this);
 
+        TextView smsTextView = (TextView) view.findViewById(R.id.smsTextView);
+
+        if (DailyPreference.getInstance(baseActivity).isAllowSMS() == true)
+        {
+            smsTextView.setText(R.string.label_on);
+        } else
+        {
+            smsTextView.setText(R.string.label_off);
+        }
+
+        smsTextView.setOnClickListener(this);
+
         initSnsLayout(view);
         initBusinessLayout(baseActivity, view);
         initTermsLayout(baseActivity, view);
@@ -356,6 +368,21 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 } else
                 {
                     DailyPreference.getInstance(baseActivity).setAllowPush(true);
+                    ((TextView) v).setText(R.string.label_on);
+                }
+                releaseUiComponent();
+                break;
+            }
+
+            case R.id.smsTextView:
+            {
+                if (DailyPreference.getInstance(baseActivity).isAllowSMS() == true)
+                {
+                    DailyPreference.getInstance(baseActivity).setAllowSMS(false);
+                    ((TextView) v).setText(R.string.label_off);
+                } else
+                {
+                    DailyPreference.getInstance(baseActivity).setAllowSMS(true);
                     ((TextView) v).setText(R.string.label_on);
                 }
                 releaseUiComponent();

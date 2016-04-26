@@ -101,23 +101,11 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyCheckBox
-            android:id="@+id/smsCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:text="@string/label_agree_sms"
-            android:textColor="@color/information_title"
-            android:textSize="12dp"
-            android:theme="@style/CheckBoxTheme"/>
-
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/certificationNumberView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/selector_button_default_background_color"
             android:gravity="center"
             android:text="@string/label_request_verification"

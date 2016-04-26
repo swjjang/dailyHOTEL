@@ -291,7 +291,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="18dp"
                     android:gravity="center_vertical"
-                    android:text="@string/label_on"
+                    android:text="@string/label_off"
                     android:textColor="@color/dh_theme_color"
                     android:textSize="12dp"
                     dailyFont:style="Medium"/>
@@ -328,7 +328,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="18dp"
                     android:gravity="center_vertical"
-                    android:text="@string/label_on"
+                    android:text="@string/label_off"
                     android:textColor="@color/dh_theme_color"
                     android:textSize="12dp"
                     dailyFont:style="Medium"/>
