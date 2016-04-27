@@ -63,7 +63,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
     compile 'com.facebook.fresco:fresco:0.10.0@aar'
     compile 'com.facebook.fresco:drawee:0.10.0'
-    compile 'com.facebook.fresco:animated-base-support:0.10.0'
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.10.0+'
 
     compile 'com.kakao.sdk:kakaolink:1.1.10'
