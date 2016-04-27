@@ -141,10 +141,17 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
                 if ("true".equalsIgnoreCase(result) == true)
                 {
                     etForgot.setText("");
-                    showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override
-                        public void onDismiss(DialogInterface dialog)
+                        public void onClick(View v)
+                        {
+                            finish();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
                         {
                             finish();
                         }
