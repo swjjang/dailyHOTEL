@@ -913,7 +913,6 @@ public class GourmetDetailLayout
         }
     };
 
-
     protected View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
     {
         private int mMoveState;
