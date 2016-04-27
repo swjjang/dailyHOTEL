@@ -348,7 +348,7 @@ public class DailyPreference
 
     public boolean isAllowPush()
     {
-        return getValue(mPreferences, KEY_ALLOW_PUSH, true);
+        return getValue(mPreferences, KEY_ALLOW_PUSH, false);
     }
 
     public void setAllowPush(boolean value)

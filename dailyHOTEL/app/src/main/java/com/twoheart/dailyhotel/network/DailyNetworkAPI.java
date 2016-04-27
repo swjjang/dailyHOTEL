@@ -556,9 +556,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetSearchList(Object tag, SaleTime saleTime, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/gourmet/result/list" : "NjYkNzQkMTI5JDM3JDEyNSQ=$NjBDOURFNURBMDFFMjg1MDlFOEFEMjJCQ0U3OUTAyNTYwRDMwMDVFMkYwRDREOTAzQzFU5MEY4NPUM2QkEwREE2MkQwMkM1RTYwNEU4NTg1NDhGQ0FDQTAyMEI5MTMQ4QzITz$";
 
-        String params = String.format("?dateCheckIn=%s&offset=%d&count=%d&term=%s"//
+        String params = String.format("?dateTarget=%s&offset=%d&count=%d&term=%s"//
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), offeset, count, text);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
@@ -569,9 +569,9 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetSearchList(Object tag, SaleTime saleTime, Location location, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/gourmet/result/list" : "NTAkMTA1JDEyNSQ5NSQ1OSQ=$MzBENkE3RTcxMTJCRjM0RjdGMTQ2ODBFRkMxRTcwMkY4QTdERDEhBODAyNkLFBNDdFQ0M1NEU3NzQ2RDQ2RTdGQUZCMTRGMzZNBMUI2NDBEWOEYxMzNGOTlCNEJEQzQQxOERC$";
 
-        String params = String.format("?dateCheckIn=%s&userLatitude=%s&userLongitude=%s&offset=%d&count=%d"//
+        String params = String.format("?dateTarget=%s&userLatitude=%s&userLongitude=%s&offset=%d&count=%d"//
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd")//
             , Double.toString(location.getLatitude()), Double.toString(location.getLongitude())//
             , offeset, count);
