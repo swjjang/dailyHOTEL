@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -56,7 +57,7 @@ public class HotelSearchNetworkController extends BaseNetworkController
             {
                 try
                 {
-                    keywordList.add(new Keyword(response.getJSONObject(i)));
+                    keywordList.add(new Keyword(response.getJSONObject(i), PlaceSearchLayout.HOTEL_ICON));
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());

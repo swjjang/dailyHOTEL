@@ -19,7 +19,7 @@ public class Keyword implements Parcelable
         this.price = -1;
     }
 
-    public Keyword(JSONObject jsonObject) throws JSONException
+    public Keyword(JSONObject jsonObject, int defaultPlaceIcon) throws JSONException
     {
         name = jsonObject.getString("display_text");
 
@@ -33,7 +33,7 @@ public class Keyword implements Parcelable
 
         if (price > 0)
         {
-            icon = 1;
+            icon = defaultPlaceIcon;
         } else
         {
             icon = 0;
