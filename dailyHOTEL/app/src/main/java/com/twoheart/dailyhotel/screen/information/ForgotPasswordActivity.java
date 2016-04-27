@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -74,7 +75,6 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         super.onStart();
     }
 
-    // Jason | Fix send email api
     @Override
     public void onClick(View v)
     {
@@ -140,8 +140,15 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
                 if ("true".equalsIgnoreCase(result) == true)
                 {
-                    showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null);
                     etForgot.setText("");
+                    showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            finish();
+                        }
+                    });
                 } else
                 {
                     String message = response.getString("msg");
@@ -157,6 +164,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         }
     };
+
     private DailyHotelJsonResponseListener mUserCheckEmailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
