@@ -34,7 +34,6 @@ public class HotelDetailListAdapter extends BaseAdapter
     private SaleTime mCheckInSaleTime;
     private FragmentActivity mFragmentActivity;
     private View[] mDeatilViews;
-    private boolean[] mNeedRefreshData;
     private int mImageHeight;
     private View mHotelTitleLayout;
     private TextView mHotelGradeTextView;
@@ -48,14 +47,6 @@ public class HotelDetailListAdapter extends BaseAdapter
         mFragmentActivity = activity;
         mHotelDetail = hotelDetail;
         mCheckInSaleTime = checkInSaleTime;
-
-        mNeedRefreshData = new boolean[NUMBER_OF_ROWSLIST];
-
-        for (int i = 0; i < NUMBER_OF_ROWSLIST; i++)
-        {
-            mNeedRefreshData[i] = true;
-        }
-
         mDeatilViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(activity);
 
@@ -80,151 +71,112 @@ public class HotelDetailListAdapter extends BaseAdapter
     @Override
     public int getCount()
     {
-        int count = NUMBER_OF_ROWSLIST;
-
-        if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == true)
-        {
-            count--;
-        }
-
-        return count;
+        return 1;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view = null;
+        LinearLayout linearLayout = null;
 
         LayoutInflater layoutInflater = (LayoutInflater) mFragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        switch (position)
+        if (convertView == null)
         {
-            // 빈화면
-            case 0:
-                if (mDeatilViews[0] == null)
-                {
-                    mDeatilViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
-                }
-
-                if (mNeedRefreshData[0] == true)
-                {
-                    mNeedRefreshData[0] = false;
-
-                    getDetail00View(mDeatilViews[0]);
-                }
-
-                view = mDeatilViews[0];
-                break;
-
-            // 호텔 등급과 이름.
-            case 1:
-                if (mDeatilViews[1] == null)
-                {
-                    mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
-                }
-
-                if (mNeedRefreshData[1] == true)
-                {
-                    mNeedRefreshData[1] = false;
-
-                    getDetail01View(mDeatilViews[1], mHotelDetail);
-                }
-
-                view = mDeatilViews[1];
-                break;
-
-            // 주소 및 맵
-            case 2:
-                if (mDeatilViews[2] == null)
-                {
-                    mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
-                }
-
-                if (mNeedRefreshData[2] == true)
-                {
-                    mNeedRefreshData[2] = false;
-
-                    getDetail02View(mDeatilViews[2], mHotelDetail);
-                }
-
-                view = mDeatilViews[2];
-                break;
-
-            // D Benefit or 데일리's comment
-            case 3:
-                if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
-                {
-                    if (mDeatilViews[3] == null)
-                    {
-                        mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
-                        getDetailBenefitView(mDeatilViews[3], mHotelDetail);
-                    }
-
-                    if (mNeedRefreshData[3] == true)
-                    {
-                        mNeedRefreshData[3] = false;
-
-                        getDetailBenefitView(mDeatilViews[3], mHotelDetail);
-                    }
-
-                    view = mDeatilViews[3];
-                } else
-                {
-                    view = makeCommentView(layoutInflater, parent);
-                }
-                break;
-
-            // 데일리 추천이유 or 호텔 정보
-            case 4:
-                if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
-                {
-                    view = makeCommentView(layoutInflater, parent);
-                } else
-                {
-                    view = makeHotelInfoView(layoutInflater, parent);
-                }
-                break;
-
-            // 호텔 정보 or 호텔 더보기 정보
-            case 5:
-                if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
-                {
-                    view = makeHotelInfoView(layoutInflater, parent);
-                } else
-                {
-                    view = makeHotelMoreInfoView(layoutInflater, parent);
-                }
-                break;
-
-            // 호텔 더보기 정보 or 확인 사항
-            case 6:
-                if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
-                {
-                    view = makeHotelMoreInfoView(layoutInflater, parent);
-                } else
-                {
-                    view = makeCheckListView(layoutInflater, parent);
-                }
-                break;
-
-            // 확인 사항 or 카카오톡 문의
-            case 7:
-                if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
-                {
-                    view = makeCheckListView(layoutInflater, parent);
-                } else
-                {
-                    view = makeKakaoView(layoutInflater, parent);
-                }
-                break;
-
-            // 카카오톡 문의
-            case 8:
-                view = makeKakaoView(layoutInflater, parent);
-                break;
+            linearLayout = new LinearLayout(mFragmentActivity);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+        } else
+        {
+            linearLayout = (LinearLayout) convertView;
         }
 
-        return view;
+        linearLayout.removeAllViews();
+
+        // 빈화면
+        if (mDeatilViews[0] == null)
+        {
+            mDeatilViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
+            getDetail00View(mDeatilViews[0]);
+        }
+
+        linearLayout.addView(mDeatilViews[0]);
+
+        // 호텔 등급과 이름.
+        if (mDeatilViews[1] == null)
+        {
+            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
+            getDetail01View(mDeatilViews[1], mHotelDetail);
+        }
+
+        linearLayout.addView(mDeatilViews[1]);
+
+        // 주소 및 맵
+        if (mDeatilViews[2] == null)
+        {
+            mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
+            getDetail02View(mDeatilViews[2], mHotelDetail);
+        }
+
+        linearLayout.addView(mDeatilViews[2]);
+
+        // D Benefit
+        if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
+        {
+            if (mDeatilViews[3] == null)
+            {
+                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                getDetailBenefitView(mDeatilViews[3], mHotelDetail);
+            }
+
+            linearLayout.addView(mDeatilViews[3]);
+        }
+
+        // 데일리's comment
+        if (mDeatilViews[4] == null)
+        {
+            mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+            getDetail04View(layoutInflater, (ViewGroup) mDeatilViews[4], mHotelDetail);
+        }
+
+        linearLayout.addView(mDeatilViews[4]);
+
+        // 호텔 정보
+        if (mDeatilViews[5] == null)
+        {
+            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
+            getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mHotelDetail);
+        }
+
+        linearLayout.addView(mDeatilViews[5]);
+
+        // 호텔 더보기 정보
+        if (mDeatilViews[6] == null)
+        {
+            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
+            getDeatil06View(layoutInflater, (ViewGroup) mDeatilViews[6], mHotelDetail);
+        }
+
+        linearLayout.addView(mDeatilViews[6]);
+
+        // 확인 사항
+        if (mDeatilViews[7] == null)
+        {
+            mDeatilViews[7] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
+            getDeatil07View(layoutInflater, (ViewGroup) mDeatilViews[7], mHotelDetail);
+        }
+
+        linearLayout.addView(mDeatilViews[7]);
+
+        // 카카오톡 문의
+        if (mDeatilViews[8] == null)
+        {
+            mDeatilViews[8] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            getDeatil08View(mDeatilViews[8]);
+        }
+
+        linearLayout.addView(mDeatilViews[8]);
+
+        return linearLayout;
     }
 
     public View getHotelTitleLayout()
@@ -240,116 +192,6 @@ public class HotelDetailListAdapter extends BaseAdapter
     public View getHotelNameTextView()
     {
         return mHotelNameTextView;
-    }
-
-    private View makeCommentView(LayoutInflater layoutInflater, ViewGroup parent)
-    {
-        if (layoutInflater == null || parent == null)
-        {
-            return null;
-        }
-
-        if (mDeatilViews[4] == null)
-        {
-            mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
-        }
-
-        if (mNeedRefreshData[4] == true)
-        {
-            mNeedRefreshData[4] = false;
-
-            getDetail04View(layoutInflater, (ViewGroup) mDeatilViews[4], mHotelDetail);
-        }
-
-        return mDeatilViews[4];
-    }
-
-    private View makeHotelInfoView(LayoutInflater layoutInflater, ViewGroup parent)
-    {
-        if (layoutInflater == null || parent == null)
-        {
-            return null;
-        }
-
-        if (mDeatilViews[5] == null)
-        {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
-        }
-
-        if (mNeedRefreshData[5] == true)
-        {
-            mNeedRefreshData[5] = false;
-
-            getDeatil05View(layoutInflater, (ViewGroup) mDeatilViews[5], mHotelDetail);
-        }
-
-        return mDeatilViews[5];
-    }
-
-    private View makeHotelMoreInfoView(LayoutInflater layoutInflater, ViewGroup parent)
-    {
-        if (layoutInflater == null || parent == null)
-        {
-            return null;
-        }
-
-        if (mDeatilViews[6] == null)
-        {
-            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
-        }
-
-        if (mNeedRefreshData[6] == true)
-        {
-            mNeedRefreshData[6] = false;
-
-            getDeatil06View(layoutInflater, (ViewGroup) mDeatilViews[6], mHotelDetail);
-        }
-
-        return mDeatilViews[6];
-    }
-
-    private View makeCheckListView(LayoutInflater layoutInflater, ViewGroup parent)
-    {
-        if (layoutInflater == null || parent == null)
-        {
-            return null;
-        }
-
-        if (mDeatilViews[7] == null)
-        {
-            mDeatilViews[7] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
-        }
-
-        if (mNeedRefreshData[7] == true)
-        {
-            mNeedRefreshData[7] = false;
-
-            getDeatil07View(layoutInflater, (ViewGroup) mDeatilViews[7], mHotelDetail);
-        }
-
-        return mDeatilViews[7];
-    }
-
-    private View makeKakaoView(LayoutInflater layoutInflater, ViewGroup parent)
-    {
-        if (layoutInflater == null || parent == null)
-        {
-            return null;
-        }
-
-        if (mDeatilViews[8] == null)
-        {
-            mDeatilViews[8] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
-        }
-
-        if (mNeedRefreshData[8] == true)
-        {
-            mNeedRefreshData[8] = false;
-
-            getDeatil08View(mDeatilViews[8]);
-        }
-
-        return mDeatilViews[8];
     }
 
     /**
@@ -650,7 +492,9 @@ public class HotelDetailListAdapter extends BaseAdapter
     /**
      * 데일리 추천 이유
      *
-     * @param view
+     * @param layoutInflater
+     * @param viewGroup
+     * @param hotelDetail
      * @return
      */
     private View getDetail04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
@@ -677,7 +521,9 @@ public class HotelDetailListAdapter extends BaseAdapter
     /**
      * 호텔 정보
      *
-     * @param view
+     * @param layoutInflater
+     * @param viewGroup
+     * @param hotelDetail
      * @return
      */
     private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)

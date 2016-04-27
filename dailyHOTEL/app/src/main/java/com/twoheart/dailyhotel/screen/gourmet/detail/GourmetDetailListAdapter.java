@@ -34,7 +34,6 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private SaleTime mSaleTime;
     private FragmentActivity mFragmentActivity;
     private View[] mDeatilViews;
-    private boolean[] mNeedRefreshData;
     private int mImageHeight;
     protected View mTitleLayout;
     protected TextView mGradeTextView;
@@ -48,14 +47,6 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mFragmentActivity = activity;
         mGourmetDetail = gourmetDetail;
         mSaleTime = saleTime;
-
-        mNeedRefreshData = new boolean[NUMBER_OF_ROWSLIST];
-
-        for (int i = 0; i < NUMBER_OF_ROWSLIST; i++)
-        {
-            mNeedRefreshData[i] = true;
-        }
-
         mDeatilViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(activity);
 
@@ -80,14 +71,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     @Override
     public int getCount()
     {
-        int count = NUMBER_OF_ROWSLIST;
-
-        if (Util.isTextEmpty(mGourmetDetail.benefit) == true)
-        {
-            count--;
-        }
-
-        return count;
+        return 1;
     }
 
     public View getTitleLayout()
@@ -108,149 +92,79 @@ public class GourmetDetailListAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view = null;
+        LinearLayout linearLayout = null;
 
         LayoutInflater layoutInflater = (LayoutInflater) mFragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        switch (position)
+        if (convertView == null)
         {
-            // 빈화면
-            case 0:
-                if (mDeatilViews[0] == null)
-                {
-                    mDeatilViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
-                }
-
-                if (mNeedRefreshData[0] == true)
-                {
-                    mNeedRefreshData[0] = false;
-
-                    getEmptyView(mDeatilViews[0]);
-                }
-
-                view = mDeatilViews[0];
-                break;
-
-            // 호텔 등급과 이름.
-            case 1:
-                if (mDeatilViews[1] == null)
-                {
-                    mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
-                }
-
-                if (mNeedRefreshData[1] == true)
-                {
-                    mNeedRefreshData[1] = false;
-
-                    getTitleView(mDeatilViews[1], mGourmetDetail);
-                }
-
-                view = mDeatilViews[1];
-                break;
-
-            // 주소 및 맵
-            case 2:
-                if (mDeatilViews[2] == null)
-                {
-                    mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
-                }
-
-                if (mNeedRefreshData[2] == true)
-                {
-                    mNeedRefreshData[2] = false;
-
-                    getAddressView(mDeatilViews[2], mGourmetDetail);
-                }
-
-                view = mDeatilViews[2];
-                break;
-
-            // D Benefit or 호텔 정보
-            case 3:
-                if (Util.isTextEmpty(mGourmetDetail.benefit) == false)
-                {
-                    if (mDeatilViews[3] == null)
-                    {
-                        mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
-                        getBenefitView(mDeatilViews[3], mGourmetDetail);
-                    }
-
-                    if (mNeedRefreshData[3] == true)
-                    {
-                        mNeedRefreshData[3] = false;
-
-                        getBenefitView(mDeatilViews[3], mGourmetDetail);
-                    }
-
-                    view = mDeatilViews[3];
-                } else
-                {
-                    view = makeInformationView(layoutInflater, parent);
-                }
-                break;
-
-            // 호텔 정보 or 카카오톡 문의
-            case 4:
-                if (Util.isTextEmpty(mGourmetDetail.benefit) == false)
-                {
-                    view = makeInformationView(layoutInflater, parent);
-                } else
-                {
-                    view = makeKakaoView(layoutInflater, parent);
-                }
-                break;
-
-            // 카카오톡 문의
-            case 5:
-                view = makeKakaoView(layoutInflater, parent);
-                break;
+            linearLayout = new LinearLayout(mFragmentActivity);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+        } else
+        {
+            linearLayout = (LinearLayout) convertView;
         }
 
-        return view;
-    }
+        linearLayout.removeAllViews();
 
-    private View makeInformationView(LayoutInflater layoutInflater, ViewGroup parent)
-    {
-        if (layoutInflater == null || parent == null)
+        // 빈화면
+        if (mDeatilViews[0] == null)
         {
-            return null;
+            mDeatilViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
+            getEmptyView(mDeatilViews[0]);
         }
 
+        linearLayout.addView(mDeatilViews[0]);
+
+        // 호텔 등급과 이름.
+        if (mDeatilViews[1] == null)
+        {
+            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
+            getTitleView(mDeatilViews[1], mGourmetDetail);
+        }
+
+        linearLayout.addView(mDeatilViews[1]);
+
+        // 주소 및 맵
+        if (mDeatilViews[2] == null)
+        {
+            mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
+            getAddressView(mDeatilViews[2], mGourmetDetail);
+        }
+
+        linearLayout.addView(mDeatilViews[2]);
+
+        if (Util.isTextEmpty(mGourmetDetail.benefit) == false)
+        {
+            // D Benefit
+            if (mDeatilViews[3] == null)
+            {
+                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                getBenefitView(mDeatilViews[3], mGourmetDetail);
+            }
+
+            linearLayout.addView(mDeatilViews[3]);
+        }
+
+        // 호텔 정보
         if (mDeatilViews[4] == null)
         {
             mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_more, parent, false);
-        }
-
-        if (mNeedRefreshData[4] == true)
-        {
-            mNeedRefreshData[4] = false;
-
             getInformationView(layoutInflater, (ViewGroup) mDeatilViews[4], mGourmetDetail);
         }
 
-        return mDeatilViews[4];
-    }
+        linearLayout.addView(mDeatilViews[4]);
 
-    private View makeKakaoView(LayoutInflater layoutInflater, ViewGroup parent)
-    {
-        if (layoutInflater == null || parent == null)
-        {
-            return null;
-        }
-
+        // 카카오톡 문의
         if (mDeatilViews[5] == null)
         {
             mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
-        }
-
-        if (mNeedRefreshData[5] == true)
-        {
-            mNeedRefreshData[5] = false;
-
             getKakaoView(mDeatilViews[5]);
         }
 
-        return mDeatilViews[5];
+        linearLayout.addView(mDeatilViews[5]);
+
+        return linearLayout;
     }
 
     /**
