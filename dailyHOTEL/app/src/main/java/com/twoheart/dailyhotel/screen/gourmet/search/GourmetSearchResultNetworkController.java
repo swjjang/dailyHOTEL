@@ -22,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,9 +59,19 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
         mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
-    public void requestSearchResultList(SaleTime saleTime, String keword, int offset, int count)
+    public void requestSearchResultList(SaleTime saleTime, String keyword, int offset, int count)
     {
-        DailyNetworkAPI.getInstance().requestGourmetSearchList(mNetworkTag, saleTime, keword, offset, count, mGourmetSearchListJsonResponseListener, this);
+        String encodeKeyword;
+
+        try
+        {
+            encodeKeyword = URLEncoder.encode(keyword, "UTF-8");
+        } catch (UnsupportedEncodingException e)
+        {
+            encodeKeyword = keyword;
+        }
+
+        DailyNetworkAPI.getInstance().requestGourmetSearchList(mNetworkTag, saleTime, encodeKeyword, offset, count, mGourmetSearchListJsonResponseListener, this);
     }
 
     public void requestSearchResultList(SaleTime saleTime, Location location, int offset, int count)
