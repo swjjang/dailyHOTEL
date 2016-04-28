@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
@@ -25,9 +26,9 @@
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/popup_ic_alert_signature"
-                android:layout_marginLeft="10dp"/>
+                android:src="@drawable/popup_ic_alert_signature"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/titleTextView"
@@ -55,43 +56,32 @@
             <com.twoheart.dailyhotel.widget.DailySignatureView
                 android:id="@+id/signatureView"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"/>
+                android:layout_height="140dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/agreeSinatureTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
                 android:freezesText="true"
                 android:gravity="center"
-                android:lineSpacingExtra="3dp"
-                android:text="@string/dialog_msg_hotel_payment_message07"
-                android:textColor="@color/dialog_agree_text"
-                android:textSize="13dp"/>
+                android:lineSpacingExtra="-2dp"
+                android:text="@string/dialog_msg_hotel_payment_message13"
+                android:textColor="@color/curation_information_text"
+                android:textSize="13dp"
+                dailyFont:style="Medium"/>
         </FrameLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/agreeLayout"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/transition_color"
-        android:gravity="center">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/popup_ic_signature_ok"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:freezesText="true"
-            android:text="@string/dialog_btn_text_pay"
-            android:textColor="@color/white"
-            android:textSize="17dp"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
+        android:freezesText="true"
+        android:text="@string/dialog_btn_text_pay"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:gravity="center"/>
 </LinearLayout>

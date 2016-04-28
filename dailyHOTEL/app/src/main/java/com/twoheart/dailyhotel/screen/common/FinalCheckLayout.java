@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
 /**
@@ -36,13 +38,26 @@ public class FinalCheckLayout extends FrameLayout
         View view = inflater.inflate(R.layout.layout_finalcheck, this, true);
         ViewGroup messageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
 
-        for (int resId : textResIds)
+        int length = textResIds.length;
+
+        for (int i = 0; i < length; i++)
         {
             View messageRow = inflater.inflate(R.layout.row_payment_agreedialog, messageLayout, false);
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-            String message = context.getString(resId);
+            if (i == length - 1)
+            {
+                layoutParams.setMargins(Util.dpToPx(context, 5), 0, 0, 0);
+            } else
+            {
+                layoutParams.setMargins(Util.dpToPx(context, 5), 0, 0, Util.dpToPx(context, 10));
+            }
+
+            messageTextView.setLayoutParams(layoutParams);
+
+            String message = context.getString(textResIds[i]);
 
             int startIndex = message.indexOf("<b>");
 

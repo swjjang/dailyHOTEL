@@ -45,40 +45,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:freezesText="true"
-            android:gravity="center"
-            android:lineSpacingExtra="-2dp"
-            android:text="@string/dialog_msg_hotel_payment_message06"
-            android:textColor="@color/dialog_agree_text"
-            android:textSize="13dp"/>
     </LinearLayout>
 
-    <LinearLayout
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/agreeLayout"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/popup_btn_on"
-        android:gravity="center">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/popup_ic_signature_ok"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:freezesText="true"
-            android:text="@string/dialog_btn_payment_confirm"
-            android:textColor="@color/white"
-            android:textSize="17dp"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
+        android:freezesText="true"
+        android:gravity="center"
+        android:text="@string/dialog_btn_payment_confirm"
+        android:textColor="@color/white"
+        android:textSize="20dp"/>
 </LinearLayout>
