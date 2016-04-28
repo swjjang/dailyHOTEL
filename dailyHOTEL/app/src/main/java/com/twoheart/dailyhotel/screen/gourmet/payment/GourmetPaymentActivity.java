@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -319,7 +320,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(layoutParams);
 
-        int[] messageResIds = {R.string.dialog_msg_gourmet_payment_message01, R.string.dialog_msg_gourmet_payment_message02, R.string.dialog_msg_gourmet_payment_message03, R.string.dialog_msg_hotel_payment_message08};
+        int[] messageResIds = {R.string.dialog_msg_gourmet_payment_message01//
+            , R.string.dialog_msg_gourmet_payment_message02//
+            , R.string.dialog_msg_gourmet_payment_message03//
+            , R.string.dialog_msg_gourmet_payment_message08, R.string.dialog_msg_gourmet_payment_message07};
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this, messageResIds);
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
@@ -332,8 +336,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             @Override
             public void onConfirmSignature()
             {
-                agreeLayout.setEnabled(true);
-
                 AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
                 animation.setDuration(500);
                 animation.setFillBefore(true);
@@ -359,11 +361,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     }
                 });
 
+                agreeSinatureTextView.startAnimation(animation);
+
                 TransitionDrawable transition = (TransitionDrawable) agreeLayout.getBackground();
                 transition.startTransition(500);
 
-                agreeSinatureTextView.startAnimation(animation);
-
+                agreeLayout.setEnabled(true);
                 agreeLayout.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -416,7 +419,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             case CARD:
                 textResIds = new int[]{R.string.dialog_msg_gourmet_payment_message01//
                     , R.string.dialog_msg_gourmet_payment_message02//
-                    , R.string.dialog_msg_gourmet_payment_message03};
+                    , R.string.dialog_msg_gourmet_payment_message03//
+                    , R.string.dialog_msg_gourmet_payment_message06};
                 break;
 
             // 핸드폰 결제
@@ -424,7 +428,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 textResIds = new int[]{R.string.dialog_msg_gourmet_payment_message01//
                     , R.string.dialog_msg_gourmet_payment_message02//
                     , R.string.dialog_msg_gourmet_payment_message03//
-                    , R.string.dialog_msg_gourmet_payment_message04};
+                    , R.string.dialog_msg_gourmet_payment_message04//
+                    , R.string.dialog_msg_gourmet_payment_message06};
                 break;
 
             // 계좌 이체
@@ -432,20 +437,34 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 textResIds = new int[]{R.string.dialog_msg_gourmet_payment_message01//
                     , R.string.dialog_msg_gourmet_payment_message02//
                     , R.string.dialog_msg_gourmet_payment_message03//
-                    , R.string.dialog_msg_gourmet_payment_message05};
+                    , R.string.dialog_msg_gourmet_payment_message05//
+                    , R.string.dialog_msg_gourmet_payment_message06};
                 break;
 
             default:
                 return null;
         }
 
-        for (int resId : textResIds)
+        int length = textResIds.length;
+
+        for (int i = 0; i < length; i++)
         {
             View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, messageLayout, false);
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-            String message = getString(resId);
+            if (i == length - 1)
+            {
+                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, 0);
+            } else
+            {
+                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, Util.dpToPx(this, 10));
+            }
+
+            messageTextView.setLayoutParams(layoutParams);
+
+            String message = getString(textResIds[i]);
 
             int startIndex = message.indexOf("<b>");
 

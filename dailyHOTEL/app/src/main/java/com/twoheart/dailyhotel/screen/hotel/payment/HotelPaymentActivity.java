@@ -33,6 +33,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -541,7 +542,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         int[] messageResIds = {R.string.dialog_msg_hotel_payment_message01//
             , R.string.dialog_msg_hotel_payment_message02//
             , R.string.dialog_msg_hotel_payment_message03//
-            , R.string.dialog_msg_hotel_payment_message08};
+            , R.string.dialog_msg_hotel_payment_message08, R.string.dialog_msg_hotel_payment_message07};
 
         messageResIds = paymentDialogMessage(mPensionPopupMessageType, messageResIds);
 
@@ -556,8 +557,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             @Override
             public void onConfirmSignature()
             {
-                agreeLayout.setEnabled(true);
-
                 AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
                 animation.setDuration(500);
                 animation.setFillBefore(true);
@@ -583,11 +582,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     }
                 });
 
+                agreeSinatureTextView.startAnimation(animation);
+
                 TransitionDrawable transition = (TransitionDrawable) agreeLayout.getBackground();
                 transition.startTransition(500);
 
-                agreeSinatureTextView.startAnimation(animation);
-
+                agreeLayout.setEnabled(true);
                 agreeLayout.setOnClickListener(new OnClickListener()
                 {
                     @Override
@@ -640,7 +640,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             case CARD:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
                     , R.string.dialog_msg_hotel_payment_message02//
-                    , R.string.dialog_msg_hotel_payment_message03};
+                    , R.string.dialog_msg_hotel_payment_message03//
+                    , R.string.dialog_msg_hotel_payment_message06};
 
                 textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
                 break;
@@ -650,7 +651,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
                     , R.string.dialog_msg_hotel_payment_message02//
                     , R.string.dialog_msg_hotel_payment_message03//
-                    , R.string.dialog_msg_hotel_payment_message04};
+                    , R.string.dialog_msg_hotel_payment_message04//
+                    , R.string.dialog_msg_hotel_payment_message06};
 
                 textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
                 break;
@@ -660,7 +662,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
                     , R.string.dialog_msg_hotel_payment_message02//
                     , R.string.dialog_msg_hotel_payment_message03//
-                    , R.string.dialog_msg_hotel_payment_message05};
+                    , R.string.dialog_msg_hotel_payment_message05//
+                    , R.string.dialog_msg_hotel_payment_message06};
 
                 textResIds = paymentDialogMessage(mPensionPopupMessageType, textResIds);
                 break;
@@ -669,13 +672,26 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 return null;
         }
 
-        for (int resId : textResIds)
+        int length = textResIds.length;
+
+        for (int i = 0; i < length; i++)
         {
             View messageRow = LayoutInflater.from(this).inflate(R.layout.row_payment_agreedialog, messageLayout, false);
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-            String message = getString(resId);
+            if (i == length - 1)
+            {
+                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, 0);
+            } else
+            {
+                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, Util.dpToPx(this, 10));
+            }
+
+            messageTextView.setLayoutParams(layoutParams);
+
+            String message = getString(textResIds[i]);
 
             int startIndex = message.indexOf("<b>");
 
