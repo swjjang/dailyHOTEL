@@ -72,6 +72,7 @@ public class HotelDetailActivity extends BaseActivity
     private View mToolbarUnderline;
 
     private Handler mImageHandler;
+    private boolean mDontReloadAtOnResume;
 
     public interface OnUserActionListener
     {
@@ -204,8 +205,14 @@ public class HotelDetailActivity extends BaseActivity
             mHotelDetailLayout.setBookingStatus(HotelDetailLayout.STATUS_SEARCH_ROOM);
         }
 
-        lockUI();
-        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
+        if (mDontReloadAtOnResume == true)
+        {
+            mDontReloadAtOnResume = false;
+        } else
+        {
+            lockUI();
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
+        }
 
         super.onResume();
     }
@@ -236,6 +243,8 @@ public class HotelDetailActivity extends BaseActivity
         {
             case CODE_REQUEST_ACTIVITY_BOOKING:
             {
+                mDontReloadAtOnResume = true;
+
                 setResult(resultCode);
 
                 if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
@@ -248,6 +257,8 @@ public class HotelDetailActivity extends BaseActivity
             case CODE_REQUEST_ACTIVITY_LOGIN:
             case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
             {
+                mDontReloadAtOnResume = true;
+
                 if (resultCode == RESULT_OK)
                 {
                     mOnUserActionListener.doBooking(mSelectedSaleRoomInformation);
