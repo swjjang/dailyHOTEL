@@ -320,6 +320,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         mOnCommunicateListener.showAppBarLayout();
         mOnCommunicateListener.pinAppBarLayout();
         mOnCommunicateListener.expandedAppBar(true, false);
+        mDailyToolbarLayout.resizeToolbarRegionText();
 
         if (mDontReloadAtOnResume == true)
         {

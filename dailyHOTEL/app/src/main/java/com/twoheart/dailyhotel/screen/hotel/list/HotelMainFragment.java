@@ -325,6 +325,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         mOnCommunicateListener.showAppBarLayout();
         mOnCommunicateListener.pinAppBarLayout();
         mOnCommunicateListener.expandedAppBar(true, false);
+        mDailyToolbarLayout.resizeToolbarRegionText();
 
         if (mDontReloadAtOnResume == true)
         {

@@ -35,28 +35,25 @@ public class DailyToolbarLayout
 
     public void initToolbarRegion(View.OnClickListener listener)
     {
-        if (mToolbar.getTag() != null)
-        {
-            return;
-        }
-
         final TextView textView = getTitleTextView(mAppCompatActivity);
         textView.setText(null);
         textView.setCompoundDrawables(null, null, null, null);
         textView.setOnClickListener(listener);
+    }
 
-        final View view = mToolbar.findViewById(R.id.biImageView);
-
-        view.post(new Runnable()
+    public void resizeToolbarRegionText()
+    {
+        mToolbar.post(new Runnable()
         {
             @Override
             public void run()
             {
+                TextView textView = getTitleTextView(mAppCompatActivity);
+                View view = mToolbar.findViewById(R.id.biImageView);
+
                 textView.setMaxWidth(view.getLeft() - textView.getLeft() - Util.dpToPx(mAppCompatActivity, 5));
             }
         });
-
-        mToolbar.setTag(mToolbar.getId(), textView);
     }
 
     public void initToolbarRegionMenu(View.OnClickListener listener)
@@ -243,7 +240,6 @@ public class DailyToolbarLayout
         TextView textView = getTitleTextView(mAppCompatActivity);
         textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_region_v, 0);
         textView.setText(title);
-        textView.setVisibility(View.VISIBLE);
     }
 
     public void setToolbarText(String title)
