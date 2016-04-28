@@ -55,6 +55,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
     private View mToolbarUnderline;
+    private boolean mDontReloadAtOnResume;
 
     public interface OnUserActionListener
     {
@@ -212,8 +213,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mPlaceDetailLayout.setBookingStatus(GourmetDetailLayout.STATUS_SEARCH_TICKET);
         }
 
-        lockUI();
-        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
+        if (mDontReloadAtOnResume == true)
+        {
+            mDontReloadAtOnResume = false;
+        } else
+        {
+            lockUI();
+            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
+        }
 
         super.onResume();
     }
@@ -246,6 +253,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 case CODE_REQUEST_ACTIVITY_BOOKING:
                 {
+                    mDontReloadAtOnResume = true;
+
                     setResult(resultCode);
 
                     if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
@@ -258,6 +267,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 case CODE_REQUEST_ACTIVITY_LOGIN:
                 case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
                 {
+                    mDontReloadAtOnResume = true;
+
                     if (resultCode == RESULT_OK)
                     {
                         mOnUserActionListener.doBooking(mSelectedTicketInformation);

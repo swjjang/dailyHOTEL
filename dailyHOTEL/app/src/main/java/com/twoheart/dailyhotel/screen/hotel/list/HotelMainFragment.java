@@ -439,6 +439,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
                 mDontReloadAtOnResume = true;
 
                 if (mViewType == ViewType.MAP)
@@ -450,6 +451,16 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     searchMyLocation();
                 }
                 break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_EVENTWEB:
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_SEARCH:
+            {
+                mDontReloadAtOnResume = true;
+                break;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
