@@ -344,7 +344,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/search/v1/result/list" : "ODUkMjEkNjYkNCQ3JA==$NTMxCQzTM3OTVEQUU3NTg3NYUQxMzVDMURERjk5QjE3QkFGOEMxRTIxOUMzNEQ1OEUxNGkUyMEM5Q0UxQUY1RTAxOTA==$";
 
-        String params = String.format("?dateCheckIn=%s&lengthStay=%d&offset=%d&count=%d&term=%s"//
+        String params = String.format("?isEncoded=true&dateCheckIn=%s&lengthStay=%d&offset=%d&count=%d&term=%s"//
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), nights, offeset, count, text);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SEARCH_SERVER + URL + params, null, listener, errorListener);
