@@ -27,6 +27,7 @@ public class GourmetSearch extends Gourmet
             isDailyChoice = jsonObject.getInt("is_dailychoice") == 1 ? true : false;
             persons = jsonObject.getInt("persons");
             category = jsonObject.getString("category");
+            isSoldOut = jsonObject.getBoolean("is_sold_out");
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("img_path_main");
 
