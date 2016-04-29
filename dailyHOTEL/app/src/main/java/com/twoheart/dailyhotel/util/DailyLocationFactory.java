@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,7 +24,7 @@ import java.util.List;
 public class DailyLocationFactory
 {
     private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final int TEN_MINUTES = 1000 * 60;
+    private static final int TEN_MINUTES = 1000 * 60 * 10;
     protected static final String SINGLE_LOCATION_UPDATE_ACTION = "com.twoheart.dailyhotel.places.SINGLE_LOCATION_UPDATE_ACTION";
     private static DailyLocationFactory mInstance;
     protected PendingIntent mUpdatePendingIntent;
@@ -200,9 +199,7 @@ public class DailyLocationFactory
 
         mIsMeasuringLocation = true;
 
-        Location location = getLastBestLocation(mBaseActivity, 10, TEN_MINUTES);
-
-        boolean hasLastLocation = false;
+        Location location = getLastBestLocation(mBaseActivity, 1000, System.currentTimeMillis() + TEN_MINUTES);
 
         if (location != null && mLocationListener != null)
         {
@@ -217,17 +214,11 @@ public class DailyLocationFactory
         {
             IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
             mBaseActivity.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
-            mLocationManager.requestSingleUpdate(new Criteria(), mUpdatePendingIntent);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mUpdatePendingIntent);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mUpdatePendingIntent);
 
             mHandler.removeMessages(0);
-
-            if (hasLastLocation == true)
-            {
-                mHandler.sendEmptyMessageDelayed(4, 10 * 1000);
-            } else
-            {
-                mHandler.sendEmptyMessageDelayed(0, 10 * 1000);
-            }
+            mHandler.sendEmptyMessageDelayed(0, 30 * 1000);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -283,7 +274,6 @@ public class DailyLocationFactory
         for (String provider : matchingProviders)
         {
             Location location = mLocationManager.getLastKnownLocation(provider);
-
             if (location != null)
             {
                 float accuracy = location.getAccuracy();
@@ -302,7 +292,17 @@ public class DailyLocationFactory
             }
         }
 
-        return bestResult;
+        // If the best result is beyond the allowed time limit, or the accuracy of the
+        // best result is wider than the acceptable maximum distance, request a single update.
+        // This check simply implements the same conditions we set when requesting regular
+        // location updates every [minTime] and [minDistance].
+        if (mLocationManager != null && (bestTime < minTime || bestAccuracy < minDistance))
+        {
+            return bestResult;
+        } else
+        {
+            return null;
+        }
     }
 
     public void stopLocationMeasure()
