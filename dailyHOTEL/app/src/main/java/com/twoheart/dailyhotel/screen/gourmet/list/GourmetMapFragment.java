@@ -729,7 +729,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
             return;
         }
 
-        mOnCommunicateListener.hideFloatingActionButton(true);
+        mOnCommunicateListener.hideFloatingActionButton();
         mViewPager.setVisibility(View.VISIBLE);
         mViewPager.bringToFront();
 

@@ -733,7 +733,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             return;
         }
 
-        mOnCommunicateListener.hideFloatingActionButton(true);
+        mOnCommunicateListener.hideFloatingActionButton();
         mViewPager.setVisibility(View.VISIBLE);
         mViewPager.bringToFront();
 

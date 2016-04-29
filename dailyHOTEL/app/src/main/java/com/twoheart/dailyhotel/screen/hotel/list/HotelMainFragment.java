@@ -70,13 +70,10 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private HotelFragmentPagerAdapter mFragmentPagerAdapter;
     private DailyToolbarLayout mDailyToolbarLayout;
     private View mFloatingActionView;
+    private DailyFloatingActionButtonBehavior mDailyFloatingActionButtonBehavior;
 
     private SaleTime mTodaySaleTime;
-
     private boolean mDontReloadAtOnResume;
-    private boolean mIsHideAppBarlayout;
-    private int mCanScrollUpCount = 0;
-
     private HotelCurationOption mCurationOption;
     private List<EventBanner> mEventBannerList;
 
@@ -100,17 +97,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         void refreshCompleted();
 
-        void expandedAppBar(boolean expanded, boolean animate);
-
-        void showAppBarLayout();
-
-        void hideAppBarLayout();
-
-        void pinAppBarLayout();
-
         void showFloatingActionButton();
 
-        void hideFloatingActionButton(boolean isAnimation);
+        void hideFloatingActionButton();
+
+        void expandedAppBar(boolean expanded, boolean animate);
 
         HotelCurationOption getCurationOption();
     }
@@ -196,7 +187,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
-                mOnCommunicateListener.hideFloatingActionButton(true);
+                mOnCommunicateListener.hideFloatingActionButton();
             }
 
             @Override
@@ -224,8 +215,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onClick(View v)
             {
-                mOnCommunicateListener.hideFloatingActionButton(false);
-
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
                 if (baseActivity == null || baseActivity.isFinishing() == true)
@@ -266,64 +255,18 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
     {
-        final int CANSCROLLUP_REPEAT_COUNT = 3;
-
-        if (verticalOffset == -TOOLBAR_HEIGHT)
+        if (mDailyFloatingActionButtonBehavior == null)
         {
-            if (mIsHideAppBarlayout == true)
-            {
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-                boolean canScrollUp = currentFragment.canScrollUp();
-
-                if (canScrollUp == false)
-                {
-                    if (++mCanScrollUpCount > CANSCROLLUP_REPEAT_COUNT)
-                    {
-                        mCanScrollUpCount = 0;
-                        mOnCommunicateListener.showAppBarLayout();
-                        mOnCommunicateListener.expandedAppBar(true, true);
-                        mIsHideAppBarlayout = false;
-                    }
-                } else
-                {
-                    mCanScrollUpCount = 0;
-                }
-            } else
-            {
-                mOnCommunicateListener.hideAppBarLayout();
-                mIsHideAppBarlayout = true;
-                mCanScrollUpCount = 0;
-
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-                currentFragment.resetScrollDistance(false);
-            }
-        } else if (verticalOffset == 0)
-        {
-            if (mIsHideAppBarlayout == true)
-            {
-                mOnCommunicateListener.showFloatingActionButton();
-            } else
-            {
-                mOnCommunicateListener.showAppBarLayout();
-                mOnCommunicateListener.pinAppBarLayout();
-                mIsHideAppBarlayout = true;
-                mCanScrollUpCount = 0;
-
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-                currentFragment.resetScrollDistance(true);
-            }
-        } else if (verticalOffset < 0 && verticalOffset > -TOOLBAR_HEIGHT)
-        {
-            mIsHideAppBarlayout = false;
-            mCanScrollUpCount = 0;
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
+            mDailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
         }
+
+        mDailyFloatingActionButtonBehavior.setScale(mFloatingActionView, ((float) verticalOffset) / TOOLBAR_HEIGHT);
     }
 
     @Override
     public void onResume()
     {
-        mOnCommunicateListener.showAppBarLayout();
-        mOnCommunicateListener.pinAppBarLayout();
         mOnCommunicateListener.expandedAppBar(true, false);
         mDailyToolbarLayout.resizeToolbarRegionText();
 
@@ -433,8 +376,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         }
                     }
                 }
-
-                mOnCommunicateListener.showFloatingActionButton();
                 break;
             }
 
@@ -1666,9 +1607,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     break;
             }
 
-            showAppBarLayout();
-            pinAppBarLayout();
-
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
 
@@ -1721,140 +1659,27 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         @Override
+        public void showFloatingActionButton()
+        {
+            if (mDailyFloatingActionButtonBehavior != null)
+            {
+                mDailyFloatingActionButtonBehavior.show(mFloatingActionView);
+            }
+        }
+
+        @Override
+        public void hideFloatingActionButton()
+        {
+            if (mDailyFloatingActionButtonBehavior != null)
+            {
+                mDailyFloatingActionButtonBehavior.hide(mFloatingActionView);
+            }
+        }
+
+        @Override
         public void expandedAppBar(boolean expanded, boolean animate)
         {
             mAppBarLayout.setExpanded(expanded, animate);
-
-            if (expanded == true)
-            {
-                showFloatingActionButton();
-            } else
-            {
-                hideFloatingActionButton(true);
-            }
-        }
-
-        @Override
-        public void showAppBarLayout()
-        {
-            if (mDailyToolbarLayout == null)
-            {
-                return;
-            }
-
-            View toolbar = mDailyToolbarLayout.getToolbar();
-
-            if (toolbar == null)
-            {
-                return;
-            }
-
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-
-            if (params != null &&//
-                params.getScrollFlags() != (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS))
-            {
-                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-                toolbar.setLayoutParams(params);
-            }
-        }
-
-        @Override
-        public void hideAppBarLayout()
-        {
-            if (mDailyToolbarLayout == null)
-            {
-                return;
-            }
-
-            View toolbar = mDailyToolbarLayout.getToolbar();
-
-            if (toolbar == null)
-            {
-                return;
-            }
-
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-
-            if (params != null && params.getScrollFlags() != AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL)
-            {
-                params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
-                toolbar.setLayoutParams(params);
-            }
-
-            hideFloatingActionButton(true);
-        }
-
-        @Override
-        public void pinAppBarLayout()
-        {
-            if (mDailyToolbarLayout == null)
-            {
-                return;
-            }
-
-            View toolbar = mDailyToolbarLayout.getToolbar();
-
-            if (toolbar == null)
-            {
-                return;
-            }
-
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-
-            if (params != null && params.getScrollFlags() != 0)
-            {
-                params.setScrollFlags(0);
-                toolbar.setLayoutParams(params);
-            }
-
-            showFloatingActionButton();
-        }
-
-        @Override
-        public void showFloatingActionButton()
-        {
-            if (mFloatingActionView.getTag() == null)
-            {
-                return;
-            }
-
-            if (mFloatingActionView.getVisibility() != View.GONE)
-            {
-                return;
-            }
-
-            HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-            if (currentFragment.isShowInformationAtMapView() == true)
-            {
-                return;
-            }
-
-            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
-            DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
-
-            dailyFloatingActionButtonBehavior.show(mFloatingActionView);
-        }
-
-        @Override
-        public void hideFloatingActionButton(boolean isAnimation)
-        {
-            if (mFloatingActionView.getVisibility() == View.GONE)
-            {
-                return;
-            }
-
-            if (isAnimation == true)
-            {
-                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionView.getLayoutParams();
-                DailyFloatingActionButtonBehavior dailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
-
-                dailyFloatingActionButtonBehavior.hide(mFloatingActionView);
-            } else
-            {
-                mFloatingActionView.setVisibility(View.GONE);
-            }
         }
 
         @Override

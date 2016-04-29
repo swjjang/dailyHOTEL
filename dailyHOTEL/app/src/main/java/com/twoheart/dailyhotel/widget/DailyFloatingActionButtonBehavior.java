@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
@@ -13,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavior
 {
@@ -31,7 +31,7 @@ public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavio
             return;
         }
 
-        if (Build.VERSION.SDK_INT >= 14)
+        if (Util.isOverAPI14() == true)
         {
             ViewCompat.animate(view).scaleX(0.0F).scaleY(0.0F).alpha(0.0F).setInterpolator(INTERPOLATOR).withLayer().setListener(new ViewPropertyAnimatorListener()
             {
@@ -86,7 +86,7 @@ public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavio
         }
 
         view.setVisibility(View.VISIBLE);
-        if (Build.VERSION.SDK_INT >= 14)
+        if (Util.isOverAPI14() == true)
         {
             ViewCompat.animate(view).scaleX(1.0F).scaleY(1.0F).alpha(1.0F).setInterpolator(INTERPOLATOR).withLayer().setListener(null).start();
         } else
@@ -95,6 +95,39 @@ public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavio
             anim.setDuration(200L);
             anim.setInterpolator(INTERPOLATOR);
             view.startAnimation(anim);
+        }
+    }
+
+    public void setScale(View floatingView, float verticalOffset)
+    {
+        float offset = 1 - Math.abs(verticalOffset);
+
+        if (offset < 0 || offset > 1)
+        {
+            return;
+        }
+
+        if (Util.isOverAPI11() == true)
+        {
+            floatingView.setScaleX(offset);
+            floatingView.setScaleY(offset);
+
+            if (offset == 1)
+            {
+                floatingView.setEnabled(true);
+            } else
+            {
+                floatingView.setEnabled(false);
+            }
+        } else
+        {
+            if (offset == 0)
+            {
+                hide(floatingView);
+            } else if (offset == 1)
+            {
+                show(floatingView);
+            }
         }
     }
 }
