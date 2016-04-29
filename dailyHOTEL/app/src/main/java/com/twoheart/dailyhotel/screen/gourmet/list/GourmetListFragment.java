@@ -5,7 +5,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +80,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         mGourmetAdapter = new GourmetListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
         mGourmetRecyclerView.setAdapter(mGourmetAdapter);
-        mGourmetRecyclerView.setOnScrollListener(mOnScrollListener);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
@@ -90,7 +88,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
             @Override
             public void onRefresh()
             {
-                mOnCommunicateListener.showAppBarLayout();
                 mOnCommunicateListener.expandedAppBar(true, true);
                 mOnCommunicateListener.refreshAll(false);
             }
@@ -183,7 +180,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     public void onAnimationEnd(Animation animation)
                     {
                         mSwipeRefreshLayout.setAnimation(null);
-
                         mOnCommunicateListener.showFloatingActionButton();
                     }
 
@@ -628,52 +624,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener()
-    {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-        {
-            super.onScrolled(recyclerView, dx, dy);
-
-            if (dy < 0)
-            {
-                if (mDownDistance == 1)
-                {
-                    return;
-                }
-
-                mDownDistance += dy;
-
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (-mDownDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
-                {
-                    mUpDistance = 0;
-                    mDownDistance = 1;
-                    mOnCommunicateListener.showAppBarLayout();
-                }
-            } else if (dy > 0)
-            {
-                if (mUpDistance == -1)
-                {
-                    return;
-                }
-
-                mUpDistance += dy;
-
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (mUpDistance >= Util.dpToPx(baseActivity, APPBARLAYOUT_DRAG_DISTANCE))
-                {
-                    mDownDistance = 0;
-                    mUpDistance = -1;
-                    mOnCommunicateListener.hideAppBarLayout();
-                    mOnCommunicateListener.expandedAppBar(false, true);
-                }
-            }
-        }
-    };
-
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
     {
         @Override
@@ -795,7 +745,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 } else
                 {
                     String message = response.getString("msg");
-
                     onErrorMessage(msgCode, message);
                 }
             } catch (Exception e)
