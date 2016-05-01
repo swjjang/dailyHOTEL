@@ -120,7 +120,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initEditTextsLayout()
     {
         mEmailEditText = (EditText) findViewById(R.id.emailEditText);
-        mPasswordEditText = (EditText) findViewById(R.id.passowrdEditText);
+        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
 
         mEmailEditText.requestFocus();
 
