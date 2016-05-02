@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -275,6 +274,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     }
                     break;
                 }
+
+                case CODE_REQUEST_ACTIVITY_IMAGELIST:
+                case CODE_REQUEST_ACTIVITY_ZOOMMAP:
+                case CODE_REQUEST_ACTIVITY_SHAREKAKAO:
+                    mDontReloadAtOnResume = true;
+                    break;
             }
 
             super.onActivityResult(requestCode, resultCode, data);
@@ -415,7 +420,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             Intent intent = new Intent(PlaceDetailActivity.this, ImageDetailListActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, ticketDetailDto.getImageInformationList());
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
-            startActivity(intent);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
         }
 
         @Override
@@ -459,20 +464,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             lockUiComponent();
 
-            try
+            Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94"));
+            if (intent.resolveActivity(getPackageManager()) == null)
             {
-                startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-            } catch (ActivityNotFoundException e)
+                Util.installPackage(PlaceDetailActivity.this, "com.kakao.talk");
+            } else
             {
-                try
-                {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-                } catch (ActivityNotFoundException e1)
-                {
-                    Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                    marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                    startActivity(marketLaunch);
-                }
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SHAREKAKAO);
             }
 
             AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
@@ -533,7 +531,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 , ZoomMapActivity.SourceType.GOURMET, mPlaceDetail.name//
                 , mPlaceDetail.latitude, mPlaceDetail.longitude, false);
 
-            startActivity(intent);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_ZOOMMAP);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, Action.GOURMET_DETAIL_MAP_CLICKED, mPlaceDetail.name, null);
         }

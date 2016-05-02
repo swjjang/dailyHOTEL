@@ -7,7 +7,6 @@
 package com.twoheart.dailyhotel.screen.hotel.detail;
 
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -265,6 +264,12 @@ public class HotelDetailActivity extends BaseActivity
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_IMAGELIST:
+            case CODE_REQUEST_ACTIVITY_ZOOMMAP:
+            case CODE_REQUEST_ACTIVITY_SHAREKAKAO:
+                mDontReloadAtOnResume = true;
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -460,7 +465,7 @@ public class HotelDetailActivity extends BaseActivity
             Intent intent = new Intent(HotelDetailActivity.this, ImageDetailListActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, hotelDetail.getImageInformationList());
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
-            startActivity(intent);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
         }
 
         @Override
@@ -528,20 +533,13 @@ public class HotelDetailActivity extends BaseActivity
 
             lockUiComponent();
 
-            try
+            Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"));
+            if (intent.resolveActivity(getPackageManager()) == null)
             {
-                startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
-            } catch (ActivityNotFoundException e)
+                Util.installPackage(HotelDetailActivity.this, "com.kakao.talk");
+            } else
             {
-                try
-                {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-                } catch (ActivityNotFoundException e1)
-                {
-                    Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                    marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                    startActivity(marketLaunch);
-                }
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SHAREKAKAO);
             }
 
             AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
@@ -602,7 +600,7 @@ public class HotelDetailActivity extends BaseActivity
                 , ZoomMapActivity.SourceType.HOTEL, mHotelDetail.hotelName//
                 , mHotelDetail.latitude, mHotelDetail.longitude, mHotelDetail.isOverseas);
 
-            startActivity(intent);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_ZOOMMAP);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_DETAIL_MAP_CLICKED, mHotelDetail.hotelName, null);
         }
