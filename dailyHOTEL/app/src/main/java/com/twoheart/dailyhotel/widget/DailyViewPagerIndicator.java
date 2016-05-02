@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -48,15 +49,21 @@ public class DailyViewPagerIndicator extends RelativeLayout
     {
         mDescriptionTextView = new DailyTextView(context);
         mPageTextView = new DailyTextView(context);
+        mPageTextView.setId(mPageTextView.getClass().hashCode());
 
         RelativeLayout.LayoutParams descLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         mDescriptionTextView.setTextColor(getResources().getColor(R.color.hoteldetail_image_tag_text));
         mDescriptionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         mDescriptionTextView.setBackgroundResource(R.color.white_a70);
         mDescriptionTextView.setPadding(Util.dpToPx(context, 5), Util.dpToPx(context, 2), Util.dpToPx(context, 5), Util.dpToPx(context, 2));
+        mDescriptionTextView.setMaxLines(2);
+        mDescriptionTextView.setEllipsize(TextUtils.TruncateAt.END);
 
         descLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         descLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        descLayoutParams.addRule(RelativeLayout.LEFT_OF, mPageTextView.getId());
+        descLayoutParams.leftMargin = Util.dpToPx(context, 15);
+        descLayoutParams.rightMargin = Util.dpToPx(context, 5);
 
         mDescriptionTextView.setLayoutParams(descLayoutParams);
         addView(mDescriptionTextView);
