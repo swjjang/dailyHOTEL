@@ -39,17 +39,20 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     }
 
     @Override
+    protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    {
+        super.initLayout(context, dailyTime, enableDayCountOfMax, dayCountOfMax);
+
+        View confirmView = findViewById(R.id.confirmView);
+        confirmView.setVisibility(View.GONE);
+    }
+
+    @Override
     protected void onStart()
     {
         AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_CALENDAR, null);
 
         super.onStart();
-    }
-
-    @Override
-    protected void initToolbar(DailyToolbarLayout dailyToolbarLayout)
-    {
-
     }
 
     @Override

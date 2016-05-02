@@ -30,8 +30,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected TextView[] mDailyTextViews;
     private DailyToolbarLayout mDailyToolbarLayout;
 
-    protected abstract void initToolbar(DailyToolbarLayout dailyToolbarLayout);
-
     protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
         setContentView(R.layout.activity_calendar);
@@ -82,8 +80,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         mDailyToolbarLayout.initToolbar(title);
-
-        initToolbar(mDailyToolbarLayout);
     }
 
     protected void setToolbarText(String title)
@@ -234,7 +230,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private int getMonthInterval(final Calendar calendar, int interval)
     {
         Calendar lastMonthCalendar = (Calendar) calendar.clone();
-        lastMonthCalendar.add(Calendar.DAY_OF_MONTH, interval);
+        lastMonthCalendar.add(Calendar.DAY_OF_MONTH, interval - 1);
 
         int lastMonth = lastMonthCalendar.get(Calendar.MONTH);
         int currentMonth = calendar.get(Calendar.MONTH);

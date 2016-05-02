@@ -59,6 +59,7 @@
     <string name="grade_pension">펜션</string>
     <string name="grade_fullvilla">풀빌라</string>
     <string name="grade_condo">콘도</string>
+    <string name="grade_guesthouse">게스트 하우스</string>
     <string name="grade_not_yet">미정</string>
 
     <!-- IntroActivity Guide Ment -->
@@ -630,6 +631,7 @@
     <string name="label_calendar_hotel_select_checkout">체크아웃 날짜 선택</string>
     <string name="label_calendar_gourmet_select">날짜 선택</string>
     <string name="message_calendar_reset">재설정 하시려면 다른 날짜를 선택해 주세요.</string>
+    <string name="label_selected_date">날짜 선택 완료</string>
 
 
     <string name="label_monday">월</string>
