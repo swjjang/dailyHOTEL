@@ -91,7 +91,7 @@
                 android:text="@string/label_searchresult_empty"
                 android:textColor="@color/search_hint_text"
                 android:textSize="18dp"
-                android:textStyle="bold"/>
+                dailyFont:style="Bold"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/researchUnderTextView"

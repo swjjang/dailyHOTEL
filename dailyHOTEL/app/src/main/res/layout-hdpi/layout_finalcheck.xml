@@ -39,7 +39,7 @@
                 android:text="@string/label_booking_confirm_signature"
                 android:textColor="@color/dialog_title_text"
                 android:textSize="17dp"
-                android:textStyle="bold"/>
+                dailyFont:style="Bold"/>
         </LinearLayout>
 
         <LinearLayout
