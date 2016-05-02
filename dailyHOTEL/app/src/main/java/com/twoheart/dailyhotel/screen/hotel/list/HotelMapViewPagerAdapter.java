@@ -62,7 +62,8 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
         TextView grade = (TextView) view.findViewById(R.id.gradeTextView);
         View closeView = view.findViewById(R.id.closeImageVIew);
-        View dBenefitImageView = view.findViewById(R.id.dBenefitImageView);
+        View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
+        TextView dBenefitTextView = (TextView)view.findViewById(R.id.dBenefitTextView);
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 
@@ -80,12 +81,13 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         name.setText(hotel.name);
 
         // D.benefit
-        if (hotel.isDBenefit == true)
+        if (Util.isTextEmpty(hotel.dBenefitText) == false)
         {
-            dBenefitImageView.setVisibility(View.VISIBLE);
+            dBenefitLayout.setVisibility(View.VISIBLE);
+            dBenefitTextView.setText(hotel.dBenefitText);
         } else
         {
-            dBenefitImageView.setVisibility(View.GONE);
+            dBenefitLayout.setVisibility(View.GONE);
         }
 
         String currency = mContext.getResources().getString(R.string.currency);

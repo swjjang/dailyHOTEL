@@ -278,11 +278,11 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
 
         if (mSortType == Constants.SortType.DISTANCE)
         {
-            holder.distanceView.setVisibility(View.VISIBLE);
-            holder.distanceView.setText(new DecimalFormat("#.#").format(gourmet.distance / 1000) + "km");
+            holder.distanceTextView.setVisibility(View.VISIBLE);
+            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance / 1000) + "km)");
         } else
         {
-            holder.distanceView.setVisibility(View.GONE);
+            holder.distanceTextView.setVisibility(View.GONE);
         }
     }
 
@@ -298,7 +298,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         TextView gradeView;
         TextView satisfactionView;
         TextView personsTextView;
-        TextView distanceView;
+        TextView distanceTextView;
 
         public GourmetViewHolder(View itemView)
         {
@@ -314,7 +314,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
             addressView = (TextView) itemView.findViewById(R.id.addressTextView);
             gradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             personsTextView = (TextView) itemView.findViewById(R.id.personsTextView);
-            distanceView = (TextView) itemView.findViewById(R.id.distanceTextView);
+            distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
             itemView.setOnClickListener(mOnClickListener);
         }

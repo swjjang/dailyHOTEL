@@ -4,7 +4,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/hoteldetail_dbenefit_background"
-                android:minHeight="77dp">
+                android:minHeight="65dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:id="@+id/benefit2LineTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="-2dp"
             android:freezesText="true"
             android:gravity="center_horizontal"
             android:maxLines="1"
