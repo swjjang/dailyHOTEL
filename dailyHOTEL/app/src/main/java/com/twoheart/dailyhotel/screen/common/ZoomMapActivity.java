@@ -164,6 +164,8 @@ public class ZoomMapActivity extends BaseActivity
 
                     case HOTEL_BOOKING:
                     case GOURMET_BOOKING:
+                        Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas//
+                            , null, null, null);
                         break;
                 }
             }

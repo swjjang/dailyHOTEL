@@ -75,9 +75,6 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected boolean mScrollListTop;
     protected HotelMainFragment.OnCommunicateListener mOnCommunicateListener;
 
-    private int mDownDistance;
-    private int mUpDistance;
-
     protected List<Hotel> mHotelList = new ArrayList<>();
 
     @Override
@@ -280,6 +277,12 @@ public class HotelListFragment extends BaseFragment implements Constants
 
     public int getNights()
     {
+        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+        {
+            Util.restartApp(getContext());
+            return 1;
+        }
+
         return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
     }
 
@@ -499,19 +502,6 @@ public class HotelListFragment extends BaseFragment implements Constants
         }
 
         return hotelListViewItemList;
-    }
-
-    public void resetScrollDistance(boolean isUpDistance)
-    {
-        if (isUpDistance == true)
-        {
-            mDownDistance = 1;
-            mUpDistance = 0;
-        } else
-        {
-            mUpDistance = -1;
-            mDownDistance = 0;
-        }
     }
 
     public void curationList(ViewType viewType, HotelCurationOption curationOption)
