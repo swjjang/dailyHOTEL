@@ -63,7 +63,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         TextView grade = (TextView) view.findViewById(R.id.gradeTextView);
         View closeView = view.findViewById(R.id.closeImageVIew);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
-        TextView dBenefitTextView = (TextView)view.findViewById(R.id.dBenefitTextView);
+        TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 

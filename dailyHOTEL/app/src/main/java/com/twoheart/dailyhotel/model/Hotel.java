@@ -6,7 +6,6 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,7 +132,7 @@ public class Hotel implements Parcelable
                 }
             }
 
-            if(jsonObject.has("hotelBenefit") == true)
+            if (jsonObject.has("hotelBenefit") == true)
             {
                 dBenefitText = jsonObject.getString("hotelBenefit");
             } else

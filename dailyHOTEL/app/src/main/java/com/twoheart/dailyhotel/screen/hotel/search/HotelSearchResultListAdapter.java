@@ -220,7 +220,7 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
             hotelSoldOutView = itemView.findViewById(R.id.soldoutView);
             hotelAddressView = (TextView) itemView.findViewById(R.id.addressTextView);
             hotelGradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
-            dBenefitTextView = (TextView)itemView.findViewById(R.id.dBenefitTextView);
+            dBenefitTextView = (TextView) itemView.findViewById(R.id.dBenefitTextView);
             averageView = itemView.findViewById(R.id.averageTextView);
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
