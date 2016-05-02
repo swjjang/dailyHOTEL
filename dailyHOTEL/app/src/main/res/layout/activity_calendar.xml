@@ -96,7 +96,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/lineView"
         android:fadingEdge="none"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_above="@+id/confirmView">
 
         <LinearLayout
             android:id="@+id/calendarLayout"
@@ -139,5 +140,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:visibility="gone"
+        android:layout_alignParentBottom="false"
+        android:layout_above="@+id/confirmView"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/confirmView"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/selector_button_background_color"
+        android:gravity="center"
+        android:text="@string/label_selected_date"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:layout_alignParentBottom="true"
         android:visibility="gone"/>
 </RelativeLayout>

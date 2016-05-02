@@ -20,6 +20,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
 
     private Day mCheckInDay;
     private Day mCheckOutDay;
+    private View mConfirmView;
 
     public static Intent newInstance(Context context, SaleTime dailyTime)
     {
@@ -43,6 +44,17 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
     }
 
     @Override
+    protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    {
+        super.initLayout(context, dailyTime, enableDayCountOfMax, dayCountOfMax);
+
+        mConfirmView = findViewById(R.id.confirmView);
+        mConfirmView.setVisibility(View.VISIBLE);
+        mConfirmView.setOnClickListener(this);
+        mConfirmView.setEnabled(false);
+    }
+
+    @Override
     protected void onStart()
     {
         AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_CALENDAR, null);
@@ -51,19 +63,11 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
     }
 
     @Override
-    protected void initToolbar(DailyToolbarLayout dailyToolbarLayout)
-    {
-        dailyToolbarLayout.setToolbarMenu(getString(R.string.label_completed), null);
-        dailyToolbarLayout.setToolbarMenuEnable(false, false);
-        dailyToolbarLayout.setToolbarMenuClickListener(this);
-    }
-
-    @Override
     public void onClick(View view)
     {
         switch (view.getId())
         {
-            case R.id.menu1View:
+            case R.id.confirmView:
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
                 {
@@ -145,7 +149,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                     setRangeDaysAlpha(view);
                     setRangeNextDaysEnable(view, false);
                     setCancelViewVisibility(View.VISIBLE);
-                    setToolbarMenuEnable(true, false);
+                    mConfirmView.setEnabled(true);
                     setToastVisibility(View.VISIBLE);
                 }
 
@@ -224,7 +228,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         }
 
         setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
-        setToolbarMenuEnable(false, false);
+        mConfirmView.setEnabled(false);
 
         setCancelViewVisibility(View.GONE);
         mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
