@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,15 +54,7 @@ public class HotelSearch extends Hotel
                 }
             }
 
-            String dBenefit = jsonObject.getString("hotel_benefit");
-
-            if (Util.isTextEmpty(dBenefit) == true)
-            {
-                isDBenefit = false;
-            } else
-            {
-                isDBenefit = true;
-            }
+            dBenefitText = jsonObject.getString("hotel_benefit");
         } catch (JSONException e)
         {
             ExLog.e(e.toString());

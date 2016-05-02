@@ -268,21 +268,22 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (hotel.isDBenefit == true)
+        if (Util.isTextEmpty(hotel.dBenefitText) == false)
         {
-            holder.dBenefitView.setVisibility(View.VISIBLE);
+            holder.dBenefitLayout.setVisibility(View.VISIBLE);
+            holder.dBenefitTextView.setText(hotel.dBenefitText);
         } else
         {
-            holder.dBenefitView.setVisibility(View.GONE);
+            holder.dBenefitLayout.setVisibility(View.GONE);
         }
 
         if (mSortType == Constants.SortType.DISTANCE)
         {
-            holder.distanceView.setVisibility(View.VISIBLE);
-            holder.distanceView.setText(new DecimalFormat("#.#").format(hotel.distance / 1000) + "km");
+            holder.distanceTextView.setVisibility(View.VISIBLE);
+            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(hotel.distance / 1000) + "km)");
         } else
         {
-            holder.distanceView.setVisibility(View.GONE);
+            holder.distanceTextView.setVisibility(View.GONE);
         }
     }
 
@@ -298,13 +299,15 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         TextView hotelGradeView;
         TextView satisfactionView;
         View averageView;
-        View dBenefitView;
-        TextView distanceView;
+        TextView dBenefitTextView;
+        TextView distanceTextView;
+        View dBenefitLayout;
 
         public HoltelViewHolder(View itemView)
         {
             super(itemView);
 
+            dBenefitLayout = itemView.findViewById(R.id.dBenefitLayout);
             gradientView = itemView.findViewById(R.id.gradientView);
             hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);
@@ -314,9 +317,9 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
             hotelSoldOutView = itemView.findViewById(R.id.soldoutView);
             hotelAddressView = (TextView) itemView.findViewById(R.id.addressTextView);
             hotelGradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
-            dBenefitView = itemView.findViewById(R.id.dBenefitImageView);
+            dBenefitTextView = (TextView)itemView.findViewById(R.id.dBenefitTextView);
             averageView = itemView.findViewById(R.id.averageTextView);
-            distanceView = (TextView) itemView.findViewById(R.id.distanceTextView);
+            distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
             itemView.setOnClickListener(mOnClickListener);
         }

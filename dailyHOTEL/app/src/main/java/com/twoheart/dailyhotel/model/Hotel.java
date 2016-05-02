@@ -21,7 +21,7 @@ public class Hotel implements Parcelable
     public double latitude;
     public double longitude;
     public boolean isDailyChoice;
-    public boolean isDBenefit;
+    public String dBenefitText;
     public int nights;
     public String imageUrl;
     public String name;
@@ -60,7 +60,7 @@ public class Hotel implements Parcelable
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeInt(isDailyChoice ? 1 : 0);
-        dest.writeInt(isDBenefit ? 1 : 0);
+        dest.writeString(dBenefitText);
         dest.writeInt(satisfaction);
         dest.writeString(categoryCode);
     }
@@ -78,7 +78,7 @@ public class Hotel implements Parcelable
         latitude = in.readDouble();
         longitude = in.readDouble();
         isDailyChoice = in.readInt() == 1 ? true : false;
-        isDBenefit = in.readInt() == 1 ? true : false;
+        dBenefitText = in.readString();
         satisfaction = in.readInt();
         categoryCode = in.readString();
     }
@@ -135,18 +135,10 @@ public class Hotel implements Parcelable
 
             if(jsonObject.has("hotelBenefit") == true)
             {
-                String dBenefit = jsonObject.getString("hotelBenefit");
-
-                if (Util.isTextEmpty(dBenefit) == true)
-                {
-                    isDBenefit = false;
-                } else
-                {
-                    isDBenefit = true;
-                }
+                dBenefitText = jsonObject.getString("hotelBenefit");
             } else
             {
-                isDBenefit = false;
+                dBenefitText = null;
             }
 
             mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
