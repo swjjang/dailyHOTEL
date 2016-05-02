@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 
+import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.Map;
@@ -31,6 +32,8 @@ public class AnalyticsManager
     {
         setEnabled(true);
         initAnalytics(context);
+
+        AdWordsConversionReporter.reportWithConversionId(context, "972698918", "swVfCLnEnWYQpurozwM", "0.00", false);
     }
 
     private void initAnalytics(Context context)

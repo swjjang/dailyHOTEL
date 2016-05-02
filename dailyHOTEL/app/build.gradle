@@ -73,6 +73,7 @@ dependencies {
         transitive = true;
     }
     compile files('libs/MobileAppTracker.jar')
+    compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')
 
     compile 'com.facebook.android:facebook-android-sdk:4.5.0'
     compile 'com.google.android.gms:play-services-base:8.4.0'
