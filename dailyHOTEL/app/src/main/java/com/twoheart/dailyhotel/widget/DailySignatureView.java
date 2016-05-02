@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class DailySignatureView extends View
 {
-    private static final int CONFIRM_RAIO_PERCENT_OF_SIGNATURE = 15; // 전체 화면의 xx%
+    private static final int CONFIRM_RAIO_PERCENT_OF_SIGNATURE = 5; // 전체 화면의 xx%
     private static final int B_CURVE_COUNT_OF_POINT = 5;
 
     private Path mPath;

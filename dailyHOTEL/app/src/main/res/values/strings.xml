@@ -92,6 +92,7 @@
     <string name="actionbar_title_payment_activity">결제하기</string>
     <string name="actionbar_title_privacy_activity">개인정보취급방침</string>
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
+    <string name="actionbar_title_protectchildterms_activity">청소년 보호 정책</string>
     <string name="actionbar_title_profile_activity">프로필</string>
     <string name="actionbar_title_signup_activity">회원가입</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
@@ -429,6 +430,7 @@
     <string name="label_registeration_mobile">연락처 등록</string>
     <string name="label_view_content">내용보기</string>
     <string name="label_terms_location">위치기반서비스 이용약관</string>
+    <string name="label_terms_protectchild">청소년 보호 정책</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>

@@ -171,6 +171,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".screen.information.terms.ProtectChildTermsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.hotel.payment.HotelPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

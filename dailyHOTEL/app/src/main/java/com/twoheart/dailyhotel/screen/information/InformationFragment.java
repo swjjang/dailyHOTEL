@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActiv
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
+import com.twoheart.dailyhotel.screen.information.terms.ProtectChildTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -149,8 +151,21 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             , DailyPreference.getInstance(baseActivity).getCompanyBizRegNumber()//
             , DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber()));
 
-        business2TextView.setText(getString(R.string.frag_about_business_license02//
-            , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber()));
+        if (Util.getLCDWidth(baseActivity) < 720)
+        {
+            String text = DailyPreference.getInstance(baseActivity).getCompanyAddress() + '\n'//
+                + getString(R.string.frag_about_business_license02//
+                , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber());
+
+            business2TextView.setText(text);
+        } else
+        {
+            String text = DailyPreference.getInstance(baseActivity).getCompanyAddress() + " | "//
+                + getString(R.string.frag_about_business_license02//
+                , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber());
+
+            business2TextView.setText(text);
+        }
 
         business3TextView.setText(getString(R.string.frag_about_business_license03//
             , DailyPreference.getInstance(baseActivity).getCompanyPrivacyEmail()));
@@ -158,13 +173,22 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
     private void initTermsLayout(BaseActivity baseActivity, View view)
     {
+        LinearLayout termsLayout = (LinearLayout) view.findViewById(R.id.termsLayout);
+
+        if (Util.getLCDWidth(baseActivity) < 720)
+        {
+            termsLayout.setOrientation(LinearLayout.VERTICAL);
+        }
+
         View termsView = view.findViewById(R.id.termsView);
         View personalView = view.findViewById(R.id.personalView);
         View locationTermsView = view.findViewById(R.id.locationTermsView);
+        View protectChildTermsView = view.findViewById(R.id.protectChildTermsView);
 
         termsView.setOnClickListener(this);
         personalView.setOnClickListener(this);
         locationTermsView.setOnClickListener(this);
+        protectChildTermsView.setOnClickListener(this);
     }
 
     private void setSigninLayout(boolean isSignin)
@@ -451,6 +475,14 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             case R.id.locationTermsView:
             {
                 Intent intent = new Intent(baseActivity, LocationTermsActivity.class);
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                break;
+            }
+
+            case R.id.protectChildTermsView:
+            {
+                Intent intent = new Intent(baseActivity, ProtectChildTermsActivity.class);
                 startActivity(intent);
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
                 break;
