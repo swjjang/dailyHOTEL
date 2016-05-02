@@ -42,12 +42,11 @@
 
     <color name="grade_business">#576071</color>
     <color name="grade_boutique">#615060</color>
-    <color name="grade_design">#c46262</color>
-    <color name="grade_residence">#738253</color>
-    <color name="grade_resort_pension_condo">#d69467</color>
-    <color name="grade_special">#722a44</color>
-    <color name="grade_special1">#812144</color>
-    <color name="grade_special2">#78554a</color>
+    <color name="grade_design">#bd7171</color>
+    <color name="grade_residence">#576071</color>
+    <color name="grade_resort_pension_condo">#738253</color>
+    <color name="grade_special">#812144</color>
+    <color name="grade_guesthouse">#cb8e64</color>
     <color name="grade_not_yet">#aca69c</color>
 
     <color name="white">#ffffff</color>

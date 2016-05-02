@@ -133,14 +133,20 @@ public class Hotel implements Parcelable
                 }
             }
 
-            String dBenefit = jsonObject.getString("hotelBenefit");
-
-            if (Util.isTextEmpty(dBenefit) == true)
+            if(jsonObject.has("hotelBenefit") == true)
             {
-                isDBenefit = false;
+                String dBenefit = jsonObject.getString("hotelBenefit");
+
+                if (Util.isTextEmpty(dBenefit) == true)
+                {
+                    isDBenefit = false;
+                } else
+                {
+                    isDBenefit = true;
+                }
             } else
             {
-                isDBenefit = true;
+                isDBenefit = false;
             }
 
             mHotelFilters = makeHotelFilters(categoryCode, jsonObject);
@@ -203,8 +209,8 @@ public class Hotel implements Parcelable
     public enum HotelGrade
     {
         special(R.string.grade_special, R.color.grade_special, R.drawable.bg_hotel_price_special1),
-        special1(R.string.grade_special1, R.color.grade_special1, R.drawable.bg_hotel_price_special1),
-        special2(R.string.grade_special2, R.color.grade_special2, R.drawable.bg_hotel_price_special2),
+        special1(R.string.grade_special1, R.color.grade_special, R.drawable.bg_hotel_price_special1),
+        special2(R.string.grade_special2, R.color.grade_special, R.drawable.bg_hotel_price_special1),
         //
         biz(R.string.grade_biz, R.color.grade_business, R.drawable.bg_hotel_price_business),
         hostel(R.string.grade_hostel, R.color.grade_business, R.drawable.bg_hotel_price_business),
@@ -218,9 +224,12 @@ public class Hotel implements Parcelable
         condo(R.string.grade_condo, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_pension),
         //
         boutique(R.string.grade_boutique, R.color.grade_boutique, R.drawable.bg_hotel_price_boutique),
+        //
         design(R.string.grade_design, R.color.grade_design, R.drawable.bg_hotel_price_design),
         //
         residence(R.string.grade_residence, R.color.grade_residence, R.drawable.bg_hotel_price_residence),
+        //
+        guest_house(R.string.grade_guesthouse, R.color.grade_guesthouse, R.drawable.bg_hotel_price_gesthouse),
         //
         etc(R.string.grade_not_yet, R.color.grade_not_yet, R.drawable.bg_hotel_price_etc);
 
