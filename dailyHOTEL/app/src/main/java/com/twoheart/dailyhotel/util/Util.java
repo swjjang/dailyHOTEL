@@ -919,7 +919,9 @@ public class Util implements Constants
         }
     }
 
-    public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName, final double latitude, final double longitude, boolean isOverseas, final String gaCategory, final String gaAction, final String gaLabel)
+    public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName//
+        , final double latitude, final double longitude, boolean isOverseas//
+        , final String gaCategory, final String gaAction, final String gaLabel)
     {
         if (baseActivity == null || baseActivity.isFinishing() == true)
         {
@@ -958,12 +960,15 @@ public class Util implements Constants
 
                 Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
 
-                if (Util.isTextEmpty(gaLabel) == true)
+                if (Util.isTextEmpty(gaCategory) == false)
                 {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
-                } else
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
+                    if (Util.isTextEmpty(gaLabel) == true)
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
+                    }
                 }
             }
         });
@@ -980,12 +985,15 @@ public class Util implements Constants
 
                 Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                if (Util.isTextEmpty(gaLabel) == true)
+                if (Util.isTextEmpty(gaCategory) == false)
                 {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
-                } else
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
+                    if (Util.isTextEmpty(gaLabel) == true)
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
+                    }
                 }
             }
         });
@@ -1002,12 +1010,15 @@ public class Util implements Constants
 
                 Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                if (Util.isTextEmpty(gaLabel) == true)
+                if (Util.isTextEmpty(gaCategory) == false)
                 {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
-                } else
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                    if (Util.isTextEmpty(gaLabel) == true)
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
+                    } else
+                    {
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                    }
                 }
             }
         });

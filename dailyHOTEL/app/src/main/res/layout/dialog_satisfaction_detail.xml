@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="wrap_content">
 
@@ -24,7 +25,7 @@
                 android:text="@string/satisfaction_recommend_title"
                 android:textColor="@color/dialog_title_text"
                 android:textSize="17dp"
-                android:textStyle="bold"/>
+                dailyFont:style="Bold"/>
         </LinearLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -49,7 +50,7 @@
             android:text="@string/satisfaction_selectservice_title"
             android:textColor="@color/dialog_message_text"
             android:textSize="13dp"
-            android:textStyle="bold"/>
+            dailyFont:style="Bold"/>
 
         <LinearLayout
             android:id="@+id/selectServiceLayout"
@@ -173,7 +174,7 @@
             android:text="@string/label_send_your_comments"
             android:textColor="@color/white"
             android:textSize="17dp"
-            android:textStyle="bold"/>
+            dailyFont:style="Bold"/>
 
     </LinearLayout>
 </FrameLayout>

@@ -80,6 +80,7 @@
 
 
     <color name="toast_background">#aa000000</color>
+    <color name="calendar_toast_background">#99000000</color>
 
     <!-- banner -->
     <color name="banner_title_text">#454545</color>

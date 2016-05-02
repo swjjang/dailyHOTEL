@@ -61,9 +61,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
     protected boolean mScrollListTop;
     protected GourmetMainFragment.OnCommunicateListener mOnCommunicateListener;
 
-    private int mDownDistance;
-    private int mUpDistance;
-
     protected List<Gourmet> mGourmetList = new ArrayList<>();
 
     @Override
@@ -453,19 +450,6 @@ public class GourmetListFragment extends BaseFragment implements Constants
         }
 
         return placeViewItemList;
-    }
-
-    public void resetScrollDistance(boolean isUpDistance)
-    {
-        if (isUpDistance == true)
-        {
-            mDownDistance = 1;
-            mUpDistance = 0;
-        } else
-        {
-            mUpDistance = -1;
-            mDownDistance = 0;
-        }
     }
 
     public void curationList(ViewType type, GourmetCurationOption curationOption)

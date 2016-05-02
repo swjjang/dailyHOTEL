@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
@@ -34,7 +35,7 @@
                 android:text="@string/frag_rating_hotel_title"
                 android:textColor="@color/dialog_title_text"
                 android:textSize="17dp"
-                android:textStyle="bold"/>
+                dailyFont:style="Bold"/>
         </LinearLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -63,7 +64,7 @@
                 android:gravity="center"
                 android:textColor="@color/dialog_title_text"
                 android:textSize="13dp"
-                android:textStyle="bold"/>
+                dailyFont:style="Bold"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/messageTextView"
@@ -90,7 +91,7 @@
             android:gravity="center"
             android:text="@string/frag_rating_hotel_recomm"
             android:textColor="@color/white"
-            android:textStyle="bold"/>
+            dailyFont:style="Bold"/>
 
         <View
             android:layout_width="2px"
@@ -105,7 +106,7 @@
             android:gravity="center"
             android:text="@string/frag_rating_hotel_cancel"
             android:textColor="@color/white"
-            android:textStyle="bold"/>
+            dailyFont:style="Bold"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -38,7 +39,7 @@
                     android:text="@string/label_receipt_bookinginfo"
                     android:textColor="@color/black"
                     android:textSize="13dp"
-                    android:textStyle="bold"/>
+                    dailyFont:style="Bold"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/textView12"
@@ -196,7 +197,7 @@
                     android:text="@string/label_receipt_paymentinfo"
                     android:textColor="@color/black"
                     android:textSize="13dp"
-                    android:textStyle="bold"/>
+                    dailyFont:style="Bold"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/textView22"
@@ -351,7 +352,7 @@
                     android:text="@string/label_receipt_provider"
                     android:textColor="@color/black"
                     android:textSize="13dp"
-                    android:textStyle="bold"/>
+                    dailyFont:style="Bold"/>
 
                 <ImageView
                     android:id="@+id/imageView1"
