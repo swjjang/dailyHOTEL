@@ -1,11 +1,9 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -56,12 +54,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
+public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener, View.OnFocusChangeListener
 {
     public CallbackManager mCallbackManager;
     private EditText mEmailEditText, mPasswordEditText;
     private TextView mLoginView;
+    private View mEmailView, mPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
 
     private Map<String, String> mStoreParams;
@@ -119,8 +117,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initEditTextsLayout()
     {
+        mEmailView = findViewById(R.id.emailView);
         mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mEmailEditText.setOnFocusChangeListener(this);
+
+        mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText.setOnFocusChangeListener(this);
 
         mEmailEditText.requestFocus();
 
@@ -356,6 +359,39 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 processSignin();
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        if (hasFocus == false)
+        {
+            return;
+        }
+
+        setFocusTextView(v.getId());
+    }
+
+    private void resetFocus()
+    {
+        mEmailView.setSelected(false);
+        mPasswordView.setSelected(false);
+    }
+
+    private void setFocusTextView(int id)
+    {
+        resetFocus();
+
+        switch (id)
+        {
+            case R.id.emailEditText:
+                mEmailView.setSelected(true);
+                break;
+
+            case R.id.passwordEditText:
+                mPasswordView.setSelected(true);
+                break;
         }
     }
 
