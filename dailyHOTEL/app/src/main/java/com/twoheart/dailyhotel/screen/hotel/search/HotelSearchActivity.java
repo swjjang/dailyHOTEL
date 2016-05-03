@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.screen.hotel.list.HotelCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -55,6 +56,31 @@ public class HotelSearchActivity extends PlaceSearchActivity
         super.initContents();
 
         mNetworkController = new HotelSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+
+        setDateText(mSaleTime, mNights);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case REQUEST_ACTIVITY_CALENDAR:
+            {
+                if (resultCode == RESULT_OK && data != null)
+                {
+                    SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                    SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+
+                    setDateText(checkInSaleTime, checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay());
+
+                    mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -88,6 +114,23 @@ public class HotelSearchActivity extends PlaceSearchActivity
         super.onStart();
 
         AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH, null);
+    }
+
+    private void setDateText(SaleTime checkInSaleTime, int nights)
+    {
+        if (checkInSaleTime == null || nights == 0 || mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mSaleTime = checkInSaleTime;
+        mNights = nights;
+
+        String checkInDate = checkInSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
+        SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
+        String checkOutDate = checkOutSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
+
+        mPlaceSearchLayout.setDataText(checkInDate + " - " + checkOutDate);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,6 +217,13 @@ public class HotelSearchActivity extends PlaceSearchActivity
                 Intent intent = HotelSearchResultActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, text, keyword, HotelSearchResultActivity.SEARCHTYPE_AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
+        }
+
+        @Override
+        public void onShowCalendar()
+        {
+            Intent intent = HotelCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime.getClone(0));
+            startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 
         @Override

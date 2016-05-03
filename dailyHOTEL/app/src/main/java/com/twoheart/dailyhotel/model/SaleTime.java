@@ -35,6 +35,7 @@ public class SaleTime implements Parcelable
     //
     //        stringBuilder.append("currentTime : " + sFormat.format(mCurrentTime));
     //        stringBuilder.append("\ndailyTime : " + sFormat.format(mDailyTime));
+    //        stringBuilder.append("\nmDayOfDays : " + mDayOfDays));
     //
     //        return stringBuilder.toString();
     //    }

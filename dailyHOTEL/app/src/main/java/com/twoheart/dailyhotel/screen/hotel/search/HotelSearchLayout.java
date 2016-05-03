@@ -13,7 +13,7 @@ public class HotelSearchLayout extends PlaceSearchLayout
     }
 
     @Override
-    protected String getAroundPlaceString()
+    protected String getAroundPlaceText()
     {
         return mContext.getString(R.string.label_view_myaround_hotel);
     }

@@ -173,6 +173,12 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         }
 
         @Override
+        public void onShowCalendar()
+        {
+
+        }
+
+        @Override
         public void finish()
         {
             GourmetSearchActivity.this.finish();

@@ -38,7 +38,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
 {
     private boolean mShowSearchKeyboard;
 
-    protected static final int REQUEST_ACTIVITY_SEARCHRESULT = 100;
+    protected static final int REQUEST_ACTIVITY_SEARCHRESULT = 10000;
+    protected static final int REQUEST_ACTIVITY_CALENDAR = 10001;
 
     protected DailyRecentSearches mDailyRecentSearches;
     protected PlaceSearchLayout mPlaceSearchLayout;

@@ -691,6 +691,7 @@
     <!-- Search -->
     <string name="label_view_myaround_hotel">내 주변 호텔 보기</string>
     <string name="label_view_myaround_gourmet">내 주변 레스토랑 보기</string>
+    <string name="label_change_date">검색 날짜 변경하기</string>
     <string name="label_search_need_to_agree_termsoflocation">위치기반서비스 이용약관 동의 필요</string>
     <string name="label_search_agree_termsoflocation">위치기반서비스 이용동의</string>
     <string name="label_search_hotel_hint">검색어 입력(호텔명 또는 지역명)</string>
