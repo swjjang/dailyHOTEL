@@ -17,8 +17,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -163,17 +161,11 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 
                 lockUI();
 
-                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileEmailActivity.this).getUserType()) == true)
-                {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_idx", mUserIndex);
+                params.put("user_email", email);
 
-                } else
-                {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("user_idx", mUserIndex);
-                    params.put("user_email", email);
-
-                    DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
-                }
+                DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
                 break;
         }
     }

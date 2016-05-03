@@ -173,6 +173,8 @@ public class SignupStep1Activity extends BaseActivity
                 return;
             }
 
+            // 네트워크 검증 후에 다음 코스로 넘김.
+
             Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this//
                 , email, name, Crypto.encrypt(password), recommender);
             startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);

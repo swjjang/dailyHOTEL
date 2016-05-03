@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.event;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -11,7 +10,6 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

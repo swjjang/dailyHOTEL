@@ -197,12 +197,12 @@ public class ProfileActivity extends BaseActivity
     private ProfileNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ProfileNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String userIndex, String email, String name, String phoneNumber)
+        public void onUserInformation(String userIndex, String email, String name, String phoneNumber, boolean isPhoneVerified, String verifiedDate)
         {
             mUserIndex = userIndex;
-            String sns = DailyPreference.getInstance(ProfileActivity.this).getUserType();
+            String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
 
-            mProfileLayout.updateUserInformation(sns, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber));
+            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), isPhoneVerified, verifiedDate);
 
             unLockUI();
         }

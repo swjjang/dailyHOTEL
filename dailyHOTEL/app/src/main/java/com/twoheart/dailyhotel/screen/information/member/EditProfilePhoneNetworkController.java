@@ -35,10 +35,9 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
-    public void requestUpdateDailyUserInformation(String name, String phoneNumber)
+    public void requestUpdateDailyUserInformation(String phoneNumber)
     {
         Map<String, String> params = new HashMap<>();
-        params.put("name", name);
         params.put("phone", phoneNumber.replaceAll("-", ""));
 
         DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, params, mUserUpdateJsonResponseListener, this);

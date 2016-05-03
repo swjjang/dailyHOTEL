@@ -162,7 +162,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         {
             if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == true)
             {
-                mEditProfilePhoneNetworkController.requestUpdateDailyUserInformation(mUserIndex, phoneNumber);
+                mEditProfilePhoneNetworkController.requestUpdateDailyUserInformation(phoneNumber);
             } else
             {
                 mEditProfilePhoneNetworkController.requestUpdateSocialUserInformation(mUserIndex, phoneNumber);

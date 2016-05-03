@@ -14,8 +14,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ProfileLayout extends BaseLayout implements OnClickListener
 {
-    private TextView mEmailTextView, mNameTextView, mPhoneTextView;
-    private View mEmailLayout;
+    private TextView mEmailTextView, mNameTextView, mPhoneTextView, mPhoneVerifyView;
+    private View mEmailLayout, mPasswordLayout;
+    private View mPasswordUnderLine;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -61,6 +62,8 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mEmailTextView = (TextView) view.findViewById(R.id.emailTextView);
         mNameTextView = (TextView) view.findViewById(R.id.nameTextView);
         mPhoneTextView = (TextView) view.findViewById(R.id.phoneTextView);
+        mPhoneVerifyView = (TextView) view.findViewById(R.id.phoneVerifyView);
+        mPasswordUnderLine = view.findViewById(R.id.passwordUnderLine);
 
         mEmailLayout = view.findViewById(R.id.emailLayout);
 
@@ -70,44 +73,98 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         View phoneLayout = view.findViewById(R.id.phoneLayout);
         phoneLayout.setOnClickListener(this);
 
-        View passwordLayout = view.findViewById(R.id.passwordLayout);
-        passwordLayout.setOnClickListener(this);
+        mPasswordLayout = view.findViewById(R.id.passwordLayout);
 
         View logoutView = view.findViewById(R.id.signOutView);
         logoutView.setOnClickListener(this);
     }
 
-    public void updateUserInformation(String sns, String email, String name, String phone)
+    public void updateUserInformation(String userType, String email, String name, String phone, boolean isPhoneVerified, String verifiedDate)
     {
+        boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(userType);
+
+        if(isDailyUser == true)
+        {
+            updateDailyUserInformation(email, name, phone, isPhoneVerified, verifiedDate);
+        } else
+        {
+            updateSocialUserInformation(userType, email, name, phone);
+        }
+    }
+
+    private void updateDailyUserInformation(String email, String name, String phone, boolean isPhoneVerified, String verifiedDate)
+    {
+        // 이메일
+        mEmailLayout.setOnClickListener(null);
+        mEmailTextView.setText(email);
+        mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_daily_small, 0, 0, 0);
+        mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
+
+        View emailArrowImage = mEmailLayout.findViewById(R.id.emailArrowImage);
+        emailArrowImage.setVisibility(View.INVISIBLE);
+
+        // 이름
+        mNameTextView.setText(name);
+
+        // 휴대폰
+        mPhoneVerifyView.setVisibility(View.VISIBLE);
+        mPhoneTextView.setText(phone);
+
+        // 인증 여부
+        if (isPhoneVerified == true)
+        {
+            mPhoneVerifyView.setTextColor(mContext.getResources().getColor(R.color.search_hint_text));
+            mPhoneVerifyView.setText(mContext.getString(R.string.label_date_verification, verifiedDate.replaceAll("-", ".")));
+        } else
+        {
+            mPhoneVerifyView.setTextColor(mContext.getResources().getColor(R.color.dh_theme_color));
+            mPhoneVerifyView.setText(R.string.label_dont_verification);
+        }
+
+        // 페스워드
+        mPasswordLayout.setVisibility(View.VISIBLE);
+        mPasswordUnderLine.setVisibility(View.VISIBLE);
+        mPasswordLayout.setOnClickListener(this);
+    }
+
+    private void updateSocialUserInformation(String userType, String email, String name, String phone)
+    {
+        // 이메일
         View emailArrowImage = mEmailLayout.findViewById(R.id.emailArrowImage);
 
-        if (Util.isTextEmpty(email) == true && Util.isTextEmpty(sns) == false)
+        if (Util.isTextEmpty(email) == true)
         {
+            mEmailTextView.setText(null);
             mEmailLayout.setOnClickListener(this);
             emailArrowImage.setVisibility(View.VISIBLE);
         } else
         {
+            mEmailTextView.setText(email);
             mEmailLayout.setOnClickListener(null);
             emailArrowImage.setVisibility(View.INVISIBLE);
-        }
 
-        mEmailTextView.setText(email);
+            if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
+            {
+                mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fb_small, 0, 0, 0);
 
-        if (Util.isTextEmpty(sns) == true)
-        {
-            mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(sns) == true)
-        {
-            mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fb_small, 0, 0, 0);
-            mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
-        } else if (Constants.KAKAO_USER.equalsIgnoreCase(sns) == true)
-        {
-            mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_kakao_small, 0, 0, 0);
+            } else if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+            {
+                mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_kakao_small, 0, 0, 0);
+            }
+
             mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
         }
 
+        // 이름
         mNameTextView.setText(name);
+
+        // 휴대폰 번호
         mPhoneTextView.setText(phone);
+        mPhoneVerifyView.setVisibility(View.GONE);
+
+        // 패스워드
+        mPasswordLayout.setVisibility(View.GONE);
+        mPasswordUnderLine.setVisibility(View.GONE);
     }
 
     @Override

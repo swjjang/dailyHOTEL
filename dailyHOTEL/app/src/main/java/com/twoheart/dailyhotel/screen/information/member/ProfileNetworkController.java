@@ -14,7 +14,7 @@ public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String userIndex, String email, String name, String phoneNumber);
+        void onUserInformation(String userIndex, String email, String name, String phoneNumber, boolean isPhoneVerified, String verifiedDate);
     }
 
     public ProfileNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -30,14 +30,14 @@ public class ProfileNetworkController extends BaseNetworkController
 
     public void requestUserInformation()
     {
-        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserLogInfoJsonResponseListener, this);
+        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserLogInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -48,8 +48,15 @@ public class ProfileNetworkController extends BaseNetworkController
                 String name = response.getString("name");
                 String phone = response.getString("phone");
                 String userIndex = response.getString("idx");
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                String verifiedDate = null;
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone);
+                if (isPhoneVerified == true)
+                {
+                    verifiedDate = response.getString("phone_verified_at");
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone, isPhoneVerified, verifiedDate);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

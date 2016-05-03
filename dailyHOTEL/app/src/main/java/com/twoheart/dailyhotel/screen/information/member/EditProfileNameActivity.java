@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,7 +125,15 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         });
 
         mConfirmView = findViewById(R.id.confirmView);
-        mConfirmView.setEnabled(false);
+
+        if (Util.isTextEmpty(name) == true)
+        {
+            mConfirmView.setEnabled(false);
+        } else
+        {
+            mConfirmView.setEnabled(true);
+        }
+
         mConfirmView.setOnClickListener(this);
     }
 
@@ -159,7 +168,8 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileNameActivity.this).getUserType()) == true)
                 {
-
+                    Map<String, String> params = Collections.singletonMap("name", name);
+                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener, this);
                 } else
                 {
                     Map<String, String> params = new HashMap<>();
@@ -182,6 +192,44 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                String result = response.getString("success");
+
+                if ("true".equalsIgnoreCase(result) == true)
+                {
+                    DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+
+                    setResult(RESULT_OK);
+                } else
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String message = response.getString("msg");
+                        DailyToast.showToast(EditProfileNameActivity.this, message, Toast.LENGTH_LONG);
+                    } else
+                    {
+                        onError();
+                    }
+
+                    setResult(RESULT_CANCELED);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+                finish();
+            }
+        }
+    };
 
     private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
