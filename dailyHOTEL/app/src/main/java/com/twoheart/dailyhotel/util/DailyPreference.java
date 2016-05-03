@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
@@ -49,6 +50,7 @@ public class DailyPreference
     private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
 
     private static final String KEY_AGREE_TERMS_OF_LOCATION = "21"; // 위치 약관 동의 여부
+    private static final String KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE = "22"; // 운영시간 문구
 
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
@@ -516,6 +518,16 @@ public class DailyPreference
     public boolean isAgreeTermsOfLocation()
     {
         return getValue(mPreferences, KEY_AGREE_TERMS_OF_LOCATION, false);
+    }
+
+    public String getOperationTimeMessage(Context context)
+    {
+        return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, context.getString(R.string.dialog_msg_call));
+    }
+
+    public void setOperationTimeMessage(String text)
+    {
+        setValue(mEditor, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, text);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

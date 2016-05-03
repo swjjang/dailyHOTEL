@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -47,7 +48,6 @@ public class PaymentWaitActivity extends BaseActivity
     private TextView mPriceTextView;
     private TextView mDeadlineTextView;
     private ViewGroup mGuide1Layout;
-    private String mCSoperatingTimeMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -194,12 +194,9 @@ public class PaymentWaitActivity extends BaseActivity
             }
         };
 
-        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
-        {
-            mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
-        }
+        String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
 
-        showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
+        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
@@ -276,8 +273,6 @@ public class PaymentWaitActivity extends BaseActivity
                 {
                     setReservationData(response);
                 }
-
-                DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, PaymentWaitActivity.this);
             } catch (JSONException e)
             {
                 ExLog.e(e.toString());
@@ -312,37 +307,6 @@ public class PaymentWaitActivity extends BaseActivity
                     finish();
                     return;
                 }
-
-                DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, PaymentWaitActivity.this);
-            } catch (Exception e)
-            {
-                onError(e);
-                finish();
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
             } catch (Exception e)
             {
                 onError(e);

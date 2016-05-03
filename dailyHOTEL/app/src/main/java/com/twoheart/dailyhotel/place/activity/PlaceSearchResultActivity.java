@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -111,7 +112,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         }
     }
 
-    protected void showCallDialog(String message)
+    protected void showCallDialog()
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -136,12 +137,9 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             }
         };
 
-        if (Util.isTextEmpty(message) == true)
-        {
-            message = getString(R.string.dialog_msg_call);
-        }
+        String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
 
-        showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
+        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)

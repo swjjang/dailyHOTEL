@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -15,6 +16,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MainNetworkController extends BaseNetworkController
 {
@@ -82,6 +88,16 @@ public class MainNetworkController extends BaseNetworkController
                 try
                 {
                     currentDateTime = response.getLong("currentDateTime");
+
+                    // 요청하면서 CS운영시간도 같이 받아온다.
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                    String text = mContext.getString(R.string.dialog_message_cs_operating_time //
+                        , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
+                        , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
+
+                    DailyPreference.getInstance(mContext).setOperationTimeMessage(text);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -356,6 +372,9 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 final String userIndex = response.getString("idx");
+                boolean isSMSEnabled = response.getBoolean("is_text_enabled");
+
+                DailyPreference.getInstance(mContext).setAllowSMS(isSMSEnabled);
 
                 AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
 

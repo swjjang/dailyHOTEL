@@ -38,7 +38,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private Keyword mKeyword;
     private String mInputText;
     private Location mLocation;
-    private String mCustomerSatisfactionTimeMessage;
 
     private int mOffset, mTotalCount;
     private int mSearchType;
@@ -116,7 +115,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         mNetworkController = new GourmetSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
-        mNetworkController.requestCustomerSatisfactionTimeMessage();
     }
 
     @Override
@@ -207,7 +205,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onShowCallDialog()
         {
-            showCallDialog(mCustomerSatisfactionTimeMessage);
+            showCallDialog();
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                 , AnalyticsManager.Action.CALL_INQUIRY_CLICKED, AnalyticsManager.Label.CALL_KEYWORD_GOURMET, null);
@@ -490,12 +488,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
 
             responseSearchResultList(totalCount, placeViewItemList);
-        }
-
-        @Override
-        public void onResponseCustomerSatisfactionTimeMessage(String message)
-        {
-            mCustomerSatisfactionTimeMessage = message;
         }
 
         @Override

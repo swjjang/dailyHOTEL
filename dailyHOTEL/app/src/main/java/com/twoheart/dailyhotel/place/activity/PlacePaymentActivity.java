@@ -35,11 +35,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
 public abstract class PlacePaymentActivity extends BaseActivity
 {
     protected static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
@@ -51,7 +46,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected SaleTime mCheckInSaleTime;
 
     private ProgressDialog mProgressDialog;
-    private String mCSoperatingTimeMessage;
 
     private boolean mDontReload;
 
@@ -103,7 +97,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             } else
             {
                 lockUI();
-                DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
+                requestUserInformationForPayment();
             }
         }
     }
@@ -441,12 +435,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
             }
         };
 
-        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
-        {
-            mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
-        }
+        String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
 
-        showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new OnDismissListener()
+        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
@@ -543,37 +534,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
-
-                lockUI();
-                requestUserInformationForPayment();
-            } catch (Exception e)
-            {
-                onError(e);
-                unLockUI();
-
-                finish();
-            }
-        }
-    };
 
     protected DailyHotelJsonResponseListener mUserCreditCardListJsonResponseListener = new DailyHotelJsonResponseListener()
     {

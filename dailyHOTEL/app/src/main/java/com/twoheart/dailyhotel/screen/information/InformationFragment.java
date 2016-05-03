@@ -18,8 +18,6 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
@@ -41,18 +39,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
 public class InformationFragment extends BaseFragment implements Constants, OnClickListener
 {
     private View mProfileLayout, mCreditcardLayout;
     private View mNewEventIconView;
-    private String mCSoperatingTimeMessage;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     //    private View mInformationScrollView, mInformationLayout, mDailyInformationView;
 
@@ -246,12 +236,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN, null);
 
             setSigninLayout(true);
-        }
-
-        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
 
         registerReceiver();
@@ -522,12 +506,9 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             }
         };
 
-        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
-        {
-            mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
-        }
+        String operatingTimeMessage = DailyPreference.getInstance(baseActivity).getOperationTimeMessage(baseActivity);
 
-        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
+        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
@@ -574,33 +555,4 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mNewEventBroadcastReceiver);
         mNewEventBroadcastReceiver = null;
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
-
-                updateNewIconView(getContext());
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
 }
