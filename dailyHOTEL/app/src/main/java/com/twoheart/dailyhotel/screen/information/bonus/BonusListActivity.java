@@ -47,7 +47,14 @@ public class BonusListActivity extends BaseActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.act_credit_history));
+        dailyToolbarLayout.initToolbar(getString(R.string.act_credit_history), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     private void initLayout(List<Bonus> list)

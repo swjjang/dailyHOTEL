@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
@@ -36,9 +37,10 @@ public class DailyPreference
     private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     private static final String KEY_ALLOW_PUSH = "5";
+    private static final String KEY_ALLOW_SMS = "6";
 
     private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
-    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
+    //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
 
     private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
     private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
@@ -48,6 +50,7 @@ public class DailyPreference
     private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
 
     private static final String KEY_AGREE_TERMS_OF_LOCATION = "21"; // 위치 약관 동의 여부
+    private static final String KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE = "22"; // 운영시간 문구
 
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
@@ -348,12 +351,22 @@ public class DailyPreference
 
     public boolean isAllowPush()
     {
-        return getValue(mPreferences, KEY_ALLOW_PUSH, true);
+        return getValue(mPreferences, KEY_ALLOW_PUSH, false);
     }
 
     public void setAllowPush(boolean value)
     {
         setValue(mEditor, KEY_ALLOW_PUSH, value);
+    }
+
+    public boolean isAllowSMS()
+    {
+        return getValue(mPreferences, KEY_ALLOW_SMS, false);
+    }
+
+    public void setAllowSMS(boolean value)
+    {
+        setValue(mEditor, KEY_ALLOW_SMS, value);
     }
 
     public void setCompanyInformation(String name, String ceo, String bizRegNumber//
@@ -428,15 +441,15 @@ public class DailyPreference
         setValue(mEditor, KEY_COLLAPSEKEY, value);
     }
 
-    public boolean isSocialSignUp()
-    {
-        return getValue(mPreferences, KEY_SOCIAL_SIGNUP, false);
-    }
-
-    public void setSocialSignUp(boolean value)
-    {
-        setValue(mEditor, KEY_SOCIAL_SIGNUP, value);
-    }
+    //    public boolean isSocialSignUp()
+    //    {
+    //        return getValue(mPreferences, KEY_SOCIAL_SIGNUP, false);
+    //    }
+    //
+    //    public void setSocialSignUp(boolean value)
+    //    {
+    //        setValue(mEditor, KEY_SOCIAL_SIGNUP, value);
+    //    }
 
     public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
     {
@@ -505,6 +518,16 @@ public class DailyPreference
     public boolean isAgreeTermsOfLocation()
     {
         return getValue(mPreferences, KEY_AGREE_TERMS_OF_LOCATION, false);
+    }
+
+    public String getOperationTimeMessage(Context context)
+    {
+        return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, context.getString(R.string.dialog_msg_call));
+    }
+
+    public void setOperationTimeMessage(String text)
+    {
+        setValue(mEditor, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, text);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

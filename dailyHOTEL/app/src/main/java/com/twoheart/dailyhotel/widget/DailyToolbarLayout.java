@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,12 +11,12 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class DailyToolbarLayout
 {
-    private AppCompatActivity mAppCompatActivity;
+    private Context mContext;
     private View mToolbar;
 
-    public DailyToolbarLayout(AppCompatActivity appCompatActivity, View toolbar)
+    public DailyToolbarLayout(Context context, View toolbar)
     {
-        mAppCompatActivity = appCompatActivity;
+        mContext = context;
         mToolbar = toolbar;
     }
 
@@ -35,7 +34,7 @@ public class DailyToolbarLayout
 
     public void initToolbarRegion(View.OnClickListener listener)
     {
-        final TextView textView = getTitleTextView(mAppCompatActivity);
+        TextView textView = getTitleTextView(mContext);
         textView.setText(null);
         textView.setCompoundDrawables(null, null, null, null);
         textView.setOnClickListener(listener);
@@ -48,10 +47,10 @@ public class DailyToolbarLayout
             @Override
             public void run()
             {
-                TextView textView = getTitleTextView(mAppCompatActivity);
+                TextView textView = getTitleTextView(mContext);
                 View view = mToolbar.findViewById(R.id.biImageView);
 
-                textView.setMaxWidth(view.getLeft() - textView.getLeft() - Util.dpToPx(mAppCompatActivity, 5));
+                textView.setMaxWidth(view.getLeft() - textView.getLeft() - Util.dpToPx(mContext, 5));
             }
         });
     }
@@ -65,44 +64,31 @@ public class DailyToolbarLayout
         setToolbarMenuVisibility(false);
     }
 
-    public void initToolbar(String title)
+    public void initToolbar(String title, View.OnClickListener backPressedListener)
     {
-        initToolbar(title, false);
+        initToolbar(title, backPressedListener, false);
     }
 
-    public void initToolbar(String title, boolean isTransparent)
-    {
-        initToolbar(title, true, isTransparent);
-    }
-
-    public void initToolbar(String title, boolean isBackPressed, boolean isTransparent)
+    public void initToolbar(String title, View.OnClickListener backPressedListener, boolean isTransparent)
     {
         setToolbarTransparent(isTransparent);
 
-        FontManager.apply(mToolbar, FontManager.getInstance(mAppCompatActivity).getRegularTypeface());
+        FontManager.apply(mToolbar, FontManager.getInstance(mContext).getRegularTypeface());
 
-        TextView textView = getTitleTextView(mAppCompatActivity);
+        TextView textView = getTitleTextView(mContext);
         textView.setText(title);
 
         View backView = mToolbar.findViewById(R.id.backImageView);
 
-        if (isBackPressed == true)
-        {
-            backView.setVisibility(View.VISIBLE);
-            backView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    mAppCompatActivity.finish();
-                }
-            });
-
-            textView.setPadding(0, 0, 0, 0);
-        } else
+        if (backPressedListener == null)
         {
             backView.setVisibility(View.GONE);
-            textView.setPadding(Util.dpToPx(mAppCompatActivity, 15), 0, 0, 0);
+            textView.setPadding(Util.dpToPx(mContext, 15), 0, 0, 0);
+        } else
+        {
+            backView.setVisibility(View.VISIBLE);
+            backView.setOnClickListener(backPressedListener);
+            textView.setPadding(0, 0, 0, 0);
         }
     }
 
@@ -113,7 +99,7 @@ public class DailyToolbarLayout
 
         if (menu1 == null || menu2 == null)
         {
-            Util.restartApp(mAppCompatActivity);
+            Util.restartApp(mContext);
             return;
         }
 
@@ -128,7 +114,7 @@ public class DailyToolbarLayout
 
         if (menu1 == null || menu2 == null)
         {
-            Util.restartApp(mAppCompatActivity);
+            Util.restartApp(mContext);
             return;
         }
 
@@ -167,7 +153,7 @@ public class DailyToolbarLayout
 
         if (menu1 == null || menu2 == null)
         {
-            Util.restartApp(mAppCompatActivity);
+            Util.restartApp(mContext);
             return;
         }
 
@@ -199,7 +185,7 @@ public class DailyToolbarLayout
 
         if (menu1 == null || menu2 == null)
         {
-            Util.restartApp(mAppCompatActivity);
+            Util.restartApp(mContext);
             return;
         }
 
@@ -237,14 +223,14 @@ public class DailyToolbarLayout
     public void setToolbarRegionText(String title)
     {
         // 인덱스 번호는 나중에 바뀜
-        TextView textView = getTitleTextView(mAppCompatActivity);
+        TextView textView = getTitleTextView(mContext);
         textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_region_v, 0);
         textView.setText(title);
     }
 
     public void setToolbarText(String title)
     {
-        TextView textView = getTitleTextView(mAppCompatActivity);
+        TextView textView = getTitleTextView(mContext);
         textView.setText(title);
     }
 
@@ -255,16 +241,16 @@ public class DailyToolbarLayout
 
     public void setToolbarTransparent(boolean isTransparent)
     {
-        TextView textView = getTitleTextView(mAppCompatActivity);
+        TextView textView = getTitleTextView(mContext);
 
         if (isTransparent == true)
         {
-            textView.setTextColor(mAppCompatActivity.getResources().getColor(android.R.color.transparent));
-            mToolbar.setBackgroundColor(mAppCompatActivity.getResources().getColor(android.R.color.transparent));
+            textView.setTextColor(mContext.getResources().getColor(android.R.color.transparent));
+            mToolbar.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
         } else
         {
-            textView.setTextColor(mAppCompatActivity.getResources().getColor(R.color.actionbar_title));
-            mToolbar.setBackgroundColor(mAppCompatActivity.getResources().getColor(R.color.white));
+            textView.setTextColor(mContext.getResources().getColor(R.color.actionbar_title));
+            mToolbar.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         }
     }
 

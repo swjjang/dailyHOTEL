@@ -20,7 +20,7 @@ public interface Constants
 {
     // 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다.
     public static final boolean DEBUG = BuildConfig.DEBUG;
-    public static final boolean UNENCRYPTED_URL = false;
+    public static final boolean UNENCRYPTED_URL = true;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
 
     // 스토어 선택.
@@ -64,6 +64,10 @@ public interface Constants
         MAP,
         GONE // 목록이 비어있는 경우.
     }
+
+    public static String DAILY_USER = "normal";
+    public static String KAKAO_USER = "kakao_talk";
+    public static String FACEBOOK_USER = "facebook";
 
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
     public static final String GOOGLE_MAP_KEY = UNENCRYPTED_URL ? "AIzaSyBEynLg8WjW7YKtmc2B6aOCn7PQtGig-6I" : "MTEzJDkwJDExOCQxMjQkODgk$N0I2MjE5NjU0Mzg0Q0RBNUUwRUFEMzI2MTAzNDlGRTA3ODRFQ0M5RkEwRThFRDgxQzY0Q0IzNkZBNEZDNkUyOTBFMNUSVBNDdFQTJFMjBENzVBQjIzNJDhEWMzAwNSjA1N0NE$";

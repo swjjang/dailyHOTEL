@@ -64,7 +64,14 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_forgot_pwd_activity));
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_forgot_pwd_activity), new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -78,34 +85,31 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == btnForgot.getId())
+        if (isLockUiComponent() == true)
         {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            mEmail = etForgot.getText().toString().trim();
-
-            if (mEmail.equals(""))
-            {
-                releaseUiComponent();
-
-                DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
-                return;
-            } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
-            {
-                releaseUiComponent();
-
-                DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-                return;
-            }
-
-            lockUI();
-            DailyNetworkAPI.getInstance().requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener, this);
+            return;
         }
+
+        lockUiComponent();
+
+        mEmail = etForgot.getText().toString().trim();
+
+        if (mEmail.equals(""))
+        {
+            releaseUiComponent();
+
+            DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
+            return;
+        } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
+        {
+            releaseUiComponent();
+
+            DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        lockUI();
+        DailyNetworkAPI.getInstance().requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener, this);
     }
 
     @Override
@@ -141,6 +145,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
                 if ("true".equalsIgnoreCase(result) == true)
                 {
                     etForgot.setText("");
+
                     showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
                         @Override

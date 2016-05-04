@@ -39,6 +39,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -60,6 +61,8 @@ import okhttp3.OkHttpClient;
 
 public class Util implements Constants
 {
+    public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
+
     private static String MEMORY_CLEAR;
 
     public static void initializeMemory()
@@ -235,7 +238,7 @@ public class Util implements Constants
         final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
         try
         {
-            if (!"9774d56d682e549c".equals(androidId))
+            if ("9774d56d682e549c".equals(androidId) == false)
             {
                 uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
             } else
@@ -329,12 +332,7 @@ public class Util implements Constants
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
-    public static boolean isTextEmpty(String text)
-    {
-        return (TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true || text.trim().length() == 0);
-    }
-
-    public static boolean isEmptyTextField(String... texts)
+    public static boolean isTextEmpty(String... texts)
     {
         if (texts == null)
         {
@@ -343,7 +341,7 @@ public class Util implements Constants
 
         for (String text : texts)
         {
-            if (Util.isTextEmpty(text) == true)
+            if ((TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true || text.trim().length() == 0) == true)
             {
                 return true;
             }
@@ -507,6 +505,34 @@ public class Util implements Constants
         }.execute();
     }
 
+    public static String getCountryNameNCode(Context context)
+    {
+        try
+        {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String countryIsoCode = telephonyManager.getSimCountryIso();
+
+            if (Util.isTextEmpty(countryIsoCode) == true)
+            {
+                Locale currentLocale = context.getResources().getConfiguration().locale;
+
+                countryIsoCode = currentLocale.getCountry();
+            }
+
+            if (Util.isTextEmpty(countryIsoCode) == false)
+            {
+                CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
+
+                return countryCodeNumber.getContryNameNCode(countryIsoCode);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return DEFAULT_COUNTRY_CODE;
+    }
+
     private static String getValidateCountry(String code)
     {
         CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
@@ -557,7 +583,7 @@ public class Util implements Constants
                 }
             } else
             {
-                text[1] = text[1].replace("\\(|\\)|\\s|\\-", "");
+                text[1] = text[1].replaceAll("\\(|\\)|\\s|\\-", "");
 
                 // 국내가 아니면 숫자만 있는지 검증한다 7자리 ~ 15자리
                 int length = text[1].length();
@@ -617,8 +643,6 @@ public class Util implements Constants
         TelephonyManager telManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         return telManager.getLine1Number();
     }
-
-    public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
 
     public static String[] getValidatePhoneNumber(String phonenumber)
     {

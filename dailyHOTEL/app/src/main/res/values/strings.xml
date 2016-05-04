@@ -94,7 +94,8 @@
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
     <string name="actionbar_title_protectchildterms_activity">청소년 보호 정책</string>
     <string name="actionbar_title_profile_activity">프로필</string>
-    <string name="actionbar_title_signup_activity">회원가입</string>
+    <string name="actionbar_title_signup_1_activity">회원가입(1/2)</string>
+    <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
     <string name="actionbar_title_term_activity">이용약관</string>
     <string name="actionbar_title_version_activity">버전정보</string>
@@ -103,6 +104,10 @@
     <string name="actionbar_title_creditcard_activity">결제카드 관리</string>
     <string name="actionbar_title_hoteldetailinfo_activity">호텔 정보</string>
     <string name="actionbar_title_event_list_frag">이벤트</string>
+    <string name="actionbar_title_edit_email">이메일 설정</string>
+    <string name="actionbar_title_edit_name">이름 설정</string>
+    <string name="actionbar_title_edit_password">비밀번호 설정</string>
+    <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -151,6 +156,7 @@
     <string name="toast_msg_terms_agreement">이용약관 항목을 체크해 주세요.</string>
     <string name="toast_msg_personal_agreement">개인정보취급방침 항목을 체크해 주세요.</string>
     <string name="toast_message_failed_install">앱 설치 요청을 할 수 없습니다. 구글 플레이 스토어를 설치 후 사용해 주십시오.</string>
+    <string name="toast_msg_dont_support_service_phone">해당 단말기는 서비스를 지원하지 않습니다. 다른 단말기를 이용해 주십시오.</string>
 
     <!-- Dialog Messages -->
 
@@ -287,6 +293,7 @@
     <string name="frag_app">앱</string>
     <string name="frag_version_info">앱 버전정보</string>
     <string name="frag_push_alert">앱 알림설정</string>
+    <string name="label_agree_sms">SMS 수신 동의</string>
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>
@@ -344,12 +351,28 @@
     <string name="act_profile_email">이메일</string>
     <string name="act_profile_user">사용자 정보</string>
     <string name="act_profile_name">이름</string>
-    <string name="act_profile_contact">연락처</string>
+    <string name="act_profile_password">비밀번호</string>
+    <string name="act_profile_contact">휴대폰 번호</string>
     <string name="act_profile_modify">수정</string>
     <string name="act_profile_btn_logout">로그아웃</string>
     <string name="act_profile_input_name">이름을 입력해주세요.</string>
+    <string name="act_profile_input_password">비밀번호를 입력해주세요.</string>
     <string name="act_profile_input_contact">연락처를 입력해주세요.</string>
     <string name="act_profile_input_email">이메일이 없습니다.</string>
+    <string name="label_confirm_phone">이메일 설정 완료</string>
+    <string name="label_confirm_phonenumber">휴대폰 번호 설정 완료</string>
+    <string name="label_confirm_name">이름 설정 완료</string>
+    <string name="label_confirm_password">비밀번호 설정 완료</string>
+    <string name="label_confirm_profile">비밀번호 설정 완료</string>
+    <string name="label_dont_verification">(인증필요)</string>
+    <string name="label_date_verification">"(%1$s 인증됨)"</string>
+    <string name="message_edit_email_guide">이메일 주소를 입력하신 후 [이메일 설정 완료] 버튼을 눌 러주세요.</string>
+    <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
+    <string name="message_edit_name_guide">20자 이내의 이름을 입력하신 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_edit_password_guide">4자 이상 비밀번호를 입력하신 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_add_profile_guide">신속한 예약확인 및 안내를 위해 추가 정보를 등록해 주세요.</string>
+    <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
+    <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 등록을 해주세요.</string>
 
     <!-- WaitTimer Fragment -->
     <string name="frag_wait_timer_off">알람 끄기</string>
@@ -416,10 +439,22 @@
     <string name="act_payment_chk_contain">취소</string>
 
     <!-- Signup Activity -->
+    <string name="label_necessary">필수</string>
+    <string name="label_name">이름</string>
+    <string name="label_password_4over">비밀번호 (4자이상)</string>
+    <string name="label_confirm_password_4over">비밀번호 확인 (4자이상)</string>
+    <string name="label_necessary_reservation">필수 (예약시 사용)</string>
+    <string name="label_recommender_code">추천인 코드</string>
+    <string name="label_select">선택</string>
+    <string name="label_country">국가</string>
+    <string name="label_phone_number_special_except">휴대폰 번호 (\'-\'제외)</string>
+    <string name="label_certification_number_ndigit">인증번호 (N자리)</string>
+
     <string name="act_signup_phone">필수. 휴대폰 번호 (예약시 사용)</string>
     <string name="act_signup_email">필수. 이메일</string>
     <string name="act_signup_name">필수. 이름 (예약시 사용)</string>
     <string name="act_signup_pwd">필수. 비밀번호 (4자이상)</string>
+    <string name="act_signup_confirm_password">필수. 비밀번호 확인 (4자이상)</string>
     <string name="act_signup_code">선택. 추천인 코드</string>
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관 동의 (필수)</string>
@@ -431,6 +466,12 @@
     <string name="label_view_content">내용보기</string>
     <string name="label_terms_location">위치기반서비스 이용약관</string>
     <string name="label_terms_protectchild">청소년 보호 정책</string>
+    <string name="label_next">다음</string>
+    <string name="label_request_verification">인증번호 받기</string>
+    <string name="label_confirm_signup">회원가입 완료</string>
+    <string name="message_please_enter_the_same_password">동일한 비밀번호를 입력해주세요.</string>
+    <string name="message_signup_step1_guide">데일리호텔 회원가입을 하시고 다양한 혜택을 누려보세요!</string>
+    <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력하신 후 인증 처리를 해주세요.</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>
@@ -667,7 +708,7 @@
     <string name="label_wifi">무료WIFI</string>
     <string name="label_breakfast">조식포함</string>
     <string name="label_cooking">취사가능</string>
-    <string name="label_beth">욕조포함</string>
+    <string name="label_beth">욕조구비</string>
     <string name="label_pool">수영장</string>
     <string name="label_fitness">피트니스</string>
     <string name="label_settime">시간설정</string>

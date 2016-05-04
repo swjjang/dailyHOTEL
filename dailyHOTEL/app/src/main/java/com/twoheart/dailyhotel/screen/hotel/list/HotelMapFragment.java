@@ -155,6 +155,14 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         return view;
     }
 
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+
+        System.gc();
+    }
+
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
         // Add Hotel Info ViewPager

@@ -29,13 +29,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     private Map<String, String> mParameters;
     private boolean mIsUsedAuthorization;
 
-    public DailyHotelRequest(int method, String url, Map<String, String> parameters, ErrorListener errorListener)
-    {
-        this(errorListener, method, url, errorListener);
-
-        mParameters = parameters;
-    }
-
     public DailyHotelRequest(Object tag, int method, String url, Map<String, String> parameters, ErrorListener errorListener)
     {
         this(tag, method, url, errorListener);

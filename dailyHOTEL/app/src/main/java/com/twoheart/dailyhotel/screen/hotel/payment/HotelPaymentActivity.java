@@ -159,7 +159,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(title);
+        dailyToolbarLayout.initToolbar(title, new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new OnClickListener()
         {
@@ -349,6 +357,24 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         }
 
         mFinalPaymentTextView.setText(comma.format(payPrice) + getString(R.string.currency));
+
+        // 1000원 미만 결제시에 간편/일반 결제 불가
+        if (payPrice < 1000)
+        {
+            mEasyPaymentButton.setEnabled(false);
+            mCardPaymentButton.setEnabled(false);
+
+            mPaymentRadioGroup.check(mHpPaymentButton.getId());
+        } else
+        {
+            if (mEasyPaymentButton.isEnabled() == false)
+            {
+                mPaymentRadioGroup.check(mEasyPaymentButton.getId());
+            }
+
+            mEasyPaymentButton.setEnabled(true);
+            mCardPaymentButton.setEnabled(true);
+        }
     }
 
 

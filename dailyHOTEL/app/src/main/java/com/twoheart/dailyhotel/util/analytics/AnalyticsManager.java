@@ -11,13 +11,13 @@ import java.util.Map;
 public class AnalyticsManager
 {
     private static final String TAG = "[AnalyticsManager]";
+    private static final boolean ENABLED = true;
 
     private static AnalyticsManager mInstance = null;
     private Context mContext;
     private GoogleAnalyticsManager mGoogleAnalyticsManager;
     private TuneManager mTuneManager;
     private FacebookManager mFacebookManager;
-    private boolean mEnabled;
 
     public synchronized static AnalyticsManager getInstance(Context context)
     {
@@ -30,7 +30,6 @@ public class AnalyticsManager
 
     private AnalyticsManager(Context context)
     {
-        setEnabled(true);
         initAnalytics(context);
 
         AdWordsConversionReporter.reportWithConversionId(context, "972698918", "swVfCLnEnWYQpurozwM", "0.00", false);
@@ -60,14 +59,9 @@ public class AnalyticsManager
         }
     }
 
-    private void setEnabled(boolean enabled)
-    {
-        mEnabled = enabled;
-    }
-
     public void setUserIndex(String index)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -85,7 +79,7 @@ public class AnalyticsManager
 
     public void onResume(Activity activity)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -103,7 +97,7 @@ public class AnalyticsManager
 
     public void onPause(Activity activity)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -121,7 +115,7 @@ public class AnalyticsManager
 
     public void recordScreen(String screen, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -139,7 +133,7 @@ public class AnalyticsManager
 
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -161,7 +155,7 @@ public class AnalyticsManager
 
     public void addCreditCard(String cardType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -179,7 +173,7 @@ public class AnalyticsManager
 
     public void singUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -197,7 +191,7 @@ public class AnalyticsManager
 
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -215,7 +209,7 @@ public class AnalyticsManager
 
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -225,6 +219,9 @@ public class AnalyticsManager
             mGoogleAnalyticsManager.purchaseCompleteHotel(transId, params);
             mTuneManager.purchaseCompleteHotel(transId, params);
             mFacebookManager.purchaseCompleteHotel(transId, params);
+
+            //            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
+            //            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "2uFUCJrApWYQpurozwM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -233,7 +230,7 @@ public class AnalyticsManager
 
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -243,6 +240,9 @@ public class AnalyticsManager
             mGoogleAnalyticsManager.purchaseCompleteGourmet(transId, params);
             mTuneManager.purchaseCompleteGourmet(transId, params);
             mFacebookManager.purchaseCompleteGourmet(transId, params);
+
+            //            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
+            //            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "KVTICNS-pWYQpurozwM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());

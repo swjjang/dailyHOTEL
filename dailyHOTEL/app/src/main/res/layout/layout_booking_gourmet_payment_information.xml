@@ -73,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="10dp">
 
@@ -113,10 +113,11 @@
                 android:id="@+id/easyPaymentRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
-                android:button="@drawable/abc_btn_radio_material"
-                android:buttonTint="@color/actionbar_hamburger"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_radio_button"
+                android:drawablePadding="7dp"
                 android:text="@string/label_booking_easypayment"
-                android:textColor="@color/curation_information_text"
+                android:textColor="@drawable/selector_radio_textcolor"
                 android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
@@ -133,18 +134,20 @@
                 android:id="@+id/cardPaymentRadionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
-                android:button="@drawable/abc_btn_radio_material"
-                android:buttonTint="@color/actionbar_hamburger"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_radio_button"
+                android:drawablePadding="7dp"
                 android:text="@string/act_booking_pay_card"
-                android:textColor="@color/curation_information_text"
+                android:textColor="@drawable/selector_radio_textcolor"
                 android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyRadioButton
                 android:id="@+id/hpPaymentRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
-                android:button="@drawable/abc_btn_radio_material"
-                android:buttonTint="@color/actionbar_hamburger"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_radio_button"
+                android:drawablePadding="7dp"
                 android:text="@string/act_booking_pay_mobile"
                 android:textColor="@color/curation_information_text"
                 android:textSize="13dp"/>
@@ -153,8 +156,9 @@
                 android:id="@+id/accountPaymentRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
-                android:button="@drawable/abc_btn_radio_material"
-                android:buttonTint="@color/actionbar_hamburger"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_radio_button"
+                android:drawablePadding="7dp"
                 android:paddingRight="15dp"
                 android:text="@string/act_booking_pay_account"
                 android:textColor="@color/curation_information_text"

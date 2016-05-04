@@ -79,7 +79,14 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     {
         View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(title);
+        mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     protected void setToolbarText(String title)

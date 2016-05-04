@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
@@ -30,6 +31,7 @@ public class CountryCodeListLayout implements OnItemClickListener
         View view = inflater.inflate(R.layout.activity_countrycode_list, null, false);
 
         mListView = (PinnedSectionListView) view.findViewById(R.id.listView);
+        EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
         mListView.setOnItemClickListener(this);
         mListView.setFastScrollEnabled(true);
         mListView.setTag("CountryCodeListLayout");

@@ -26,9 +26,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
@@ -42,8 +39,6 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
         void onResponseSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
 
         void onResponseLocationSearchResultList(int totalCount, ArrayList<PlaceViewItem> placeViewItemList);
-
-        void onResponseCustomerSatisfactionTimeMessage(String message);
 
         void onResponseAddress(String address);
     }
@@ -79,11 +74,6 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
         requestAddress(location, mLocationToAddressListener);
 
         DailyNetworkAPI.getInstance().requestGourmetSearchList(mNetworkTag, saleTime, location, offset, count, mGourmetLocationSearchListJsonResponseListener, this);
-    }
-
-    public void requestCustomerSatisfactionTimeMessage()
-    {
-        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, null);
     }
 
     private ArrayList<PlaceViewItem> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -126,29 +116,6 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                String message = mContext.getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
-
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseCustomerSatisfactionTimeMessage(message);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
-            }
-        }
-    };
 
     private DailyHotelJsonResponseListener mGourmetSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
     {

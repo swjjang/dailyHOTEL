@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.information.member.SignupActivity;
+import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -61,7 +61,14 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
         View toolbar = findViewById(R.id.toolbar);
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_credit_frag));
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_credit_frag), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     private void initLayout()
@@ -162,7 +169,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
             case R.id.btn_no_login_signup:
             {
-                Intent intent = SignupActivity.newInstance(BonusActivity.this);
+                Intent intent = SignupStep1Activity.newInstance(BonusActivity.this);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 

@@ -25,6 +25,7 @@ public class TuneManager implements IBaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[TuneManager]";
+    private static final boolean ENABLED = true;
 
     private static final String ADVERTISE_ID = "190723";
     private static final String CONVERSION_KEY = "93aa9a40026991386dd92922cb14f58f";
@@ -32,12 +33,9 @@ public class TuneManager implements IBaseAnalyticsManager
     private MobileAppTracker mMobileAppTracker;
     private Context mContext;
     private String mUserIndex;
-    private boolean mEnabled;
 
     public TuneManager(Context context)
     {
-        setEnabled(true);
-
         mContext = context;
         mMobileAppTracker = MobileAppTracker.init(context.getApplicationContext(), ADVERTISE_ID, CONVERSION_KEY);
         mMobileAppTracker.setCurrencyCode("KRW");
@@ -63,7 +61,7 @@ public class TuneManager implements IBaseAnalyticsManager
             @Override
             public void didReceiveDeeplink(String deeplink)
             {
-                if (mEnabled == false)
+                if (ENABLED == false)
                 {
                     return;
                 }
@@ -86,15 +84,9 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void setEnabled(boolean enabled)
-    {
-        mEnabled = enabled;
-    }
-
-    @Override
     public void recordScreen(String screen, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -182,7 +174,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -266,7 +258,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -285,7 +277,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void onResume(Activity activity)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -297,7 +289,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void onPause(Activity activity)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -306,7 +298,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void addCreditCard(String cardType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -327,7 +319,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -376,7 +368,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -439,7 +431,7 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }

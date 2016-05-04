@@ -31,8 +31,9 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 84
-        versionName "1.8.4"
+        versionCode 85
+        versionName "1.8.5"
+//        multiDexEnabled true
 
         resConfigs "ko"
 //        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
@@ -64,18 +65,20 @@ dependencies {
     compile 'com.facebook.fresco:fresco:0.10.0@aar'
     compile 'com.facebook.fresco:drawee:0.10.0'
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.10.0'
-
     compile 'com.kakao.sdk:kakaolink:1.1.10'
     compile 'com.kakao.sdk:kakaotalk:1.1.10'
-    compile project(':AndroidMapsUtils')
-    compile project(':androidnumberpicker')
+    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+
+    compile project(':AndroidMapsUtils')
+    compile project(':androidnumberpicker')
+
     compile files('libs/MobileAppTracker.jar')
     compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')
 
-    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
     compile 'com.google.android.gms:play-services-base:8.4.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'

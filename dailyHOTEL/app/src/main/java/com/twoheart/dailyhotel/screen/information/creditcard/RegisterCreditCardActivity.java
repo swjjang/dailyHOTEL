@@ -82,7 +82,14 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_reg_creditcard));
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_reg_creditcard), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     @Override

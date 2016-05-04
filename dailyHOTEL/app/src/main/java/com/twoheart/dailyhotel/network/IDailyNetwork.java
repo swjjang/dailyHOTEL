@@ -69,7 +69,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestUserInformationUpdate(Object tag, String name, String phone, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestUserInformationUpdate(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -438,7 +438,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventPageUrl(Object tag, String userIndex, int eventIndex, String store, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventPageUrl(Object tag, int eventIndex, String store, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * 회사 정보 얻어오기
@@ -451,9 +451,28 @@ interface IDailyNetwork
      * 호텔 이벤트 배너 리스트를 얻어온다
      *
      * @param tag
-     * @param params
+     * @param place
      * @param listener
      * @param errorListener
      */
     void requestEventBannerList(Object tag, String place, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     * 회원 가입 step1단계 검증
+     * @param tag
+     * @param params
+     * @param listener
+     * @param errorListener
+     */
+    void requestSignupValidation(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     *
+     * @param tag
+     * @param signupKey
+     * @param phone
+     * @param listener
+     * @param errorListener
+     */
+    void requestVerfication(Object tag, String signupKey, String phone, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 }

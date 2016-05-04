@@ -345,6 +345,21 @@ public class CountryCodeNumber
         return result;
     }
 
+    public String getContryNameNCode(String isoString)
+    {
+        String result = "";
+
+        for (String[] codeNumber : CODE_NUMBER)
+        {
+            if (isoString.equalsIgnoreCase(codeNumber[0]))
+            {
+                result = String.format("%s\n+%s", codeNumber[3], codeNumber[1]);
+                break;
+            }
+        }
+
+        return result;
+    }
 
     /**
      * ISO코드를 이용하여 해당국가명을 한국어로 획득합니다.

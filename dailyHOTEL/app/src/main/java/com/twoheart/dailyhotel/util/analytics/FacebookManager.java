@@ -22,13 +22,12 @@ public class FacebookManager implements IBaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[FacebookManager]";
+    private static final boolean ENABLED = true;
+
     private Context mContext;
-    private boolean mEnabled;
 
     public FacebookManager(Context context)
     {
-        setEnabled(true);
-
         mContext = context;
 
         setDeferredDeepLink();
@@ -41,7 +40,7 @@ public class FacebookManager implements IBaseAnalyticsManager
             @Override
             public void onDeferredAppLinkDataFetched(AppLinkData appLinkData)
             {
-                if (mEnabled == false)
+                if (ENABLED == false)
                 {
                     return;
                 }
@@ -61,15 +60,9 @@ public class FacebookManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void setEnabled(boolean enabled)
-    {
-        mEnabled = enabled;
-    }
-
-    @Override
     public void recordScreen(String screen, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -179,7 +172,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -227,7 +220,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -246,7 +239,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void onResume(Activity activity)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -257,7 +250,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void onPause(Activity activity)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -268,7 +261,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void addCreditCard(String cardType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -289,7 +282,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -310,7 +303,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -331,7 +324,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }
@@ -360,7 +353,7 @@ public class FacebookManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        if (mEnabled == false)
+        if (ENABLED == false)
         {
             return;
         }

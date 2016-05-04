@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.screen.event.EventListActivity;
 import com.twoheart.dailyhotel.screen.information.bonus.BonusActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.ProtectChildTermsActivity;
@@ -44,16 +45,15 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InformationFragment extends BaseFragment implements Constants, OnClickListener
 {
     private View mProfileLayout, mCreditcardLayout;
     private View mNewEventIconView;
-    private String mCSoperatingTimeMessage;
+    private TextView mEnabledSMS, mEnabledPush;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
     //    private View mInformationScrollView, mInformationLayout, mDailyInformationView;
@@ -83,13 +83,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
 
-        //        mDailyInformationView = view.findViewById(R.id.dailyInformationView);
-        //        mInformationScrollView = view.findViewById(R.id.informationScrollView);
-        //        mInformationLayout = view.findViewById(R.id.informationLayout);
-
-        // 프로필
-        setSigninLayout(false);
-
         mNewEventIconView = eventLayout.findViewById(R.id.newIconView);
 
         TextView pushTextView = (TextView) view.findViewById(R.id.pushTextView);
@@ -104,6 +97,11 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         pushTextView.setOnClickListener(this);
 
+        mEnabledSMS = (TextView) view.findViewById(R.id.smsTextView);
+        setEnabledSMS(baseActivity, DailyPreference.getInstance(baseActivity).isAllowSMS());
+        mEnabledSMS.setOnClickListener(this);
+
+        setSigninLayout(false);
         initSnsLayout(view);
         initBusinessLayout(baseActivity, view);
         initTermsLayout(baseActivity, view);
@@ -126,7 +124,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     {
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), false, false);
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), null, false);
     }
 
     private void initSnsLayout(View view)
@@ -207,6 +205,9 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             mCreditcardLayout.setVisibility(View.GONE);
         }
 
+        boolean enabled = DailyPreference.getInstance(getContext()).isAllowSMS();
+        setEnabledSMS(getContext(), enabled);
+
         //        mDailyInformationView.post(new Runnable()
         //        {
         //            @Override
@@ -266,12 +267,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN, null);
 
             setSigninLayout(true);
-        }
-
-        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
 
         registerReceiver();
@@ -394,6 +389,24 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 break;
             }
 
+            case R.id.smsTextView:
+            {
+                lockUI();
+
+                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(baseActivity).getUserType()) == true)
+                {
+                    boolean enabled = DailyPreference.getInstance(baseActivity).isAllowSMS();
+
+                    Map<String, String> params = Collections.singletonMap("is_text_enabled", enabled ? "false" : "true");
+
+                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener, this);
+                } else
+                {
+                    DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+                }
+                break;
+            }
+
             case R.id.facebookLinkView:
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -510,6 +523,19 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         }
     }
 
+    private void setEnabledSMS(Context context, boolean enabled)
+    {
+        DailyPreference.getInstance(context).setAllowSMS(enabled);
+
+        if (enabled == true)
+        {
+            mEnabledSMS.setText(R.string.label_on);
+        } else
+        {
+            mEnabledSMS.setText(R.string.label_off);
+        }
+    }
+
     private void showCallDialog(final BaseActivity baseActivity)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
@@ -535,12 +561,9 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             }
         };
 
-        if (Util.isTextEmpty(mCSoperatingTimeMessage) == true)
-        {
-            mCSoperatingTimeMessage = getString(R.string.dialog_msg_call);
-        }
+        String operatingTimeMessage = DailyPreference.getInstance(baseActivity).getOperationTimeMessage(baseActivity);
 
-        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), mCSoperatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
+        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, getString(R.string.dialog_btn_call), null, positiveListener, null, null, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
@@ -589,24 +612,83 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
+    //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                boolean result = false;
 
-                mCSoperatingTimeMessage = getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
-                    , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
+                if (response.has("success") == true)
+                {
+                    result = response.getBoolean("success");
+                }
 
-                updateNewIconView(getContext());
+                if (result == true)
+                {
+                    setEnabledSMS(getContext(), DailyPreference.getInstance(getContext()).isAllowSMS() ? false : true);
+                } else
+                {
+                    DailyToast.showToast(getContext(), response.getString("msg"), Toast.LENGTH_LONG);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                String userIndex = response.getString("idx");
+
+                boolean enabled = DailyPreference.getInstance(getContext()).isAllowSMS();
+
+                Map<String, String> params = new HashMap<>();
+                params.put("user_idx", userIndex);
+                params.put("is_text_enabled", enabled ? "false" : "true");
+
+                DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, InformationFragment.this);
+            } catch (Exception e)
+            {
+                onError(e);
+                unLockUI();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                JSONObject jsonObject = response.getJSONObject("data");
+
+                boolean result = jsonObject.getBoolean("is_success");
+                int msgCode = response.getInt("msg_code");
+
+                if (result == true)
+                {
+                    setEnabledSMS(getContext(), DailyPreference.getInstance(getContext()).isAllowSMS() ? false : true);
+                } else
+                {
+                    DailyToast.showToast(getContext(), response.getString("msg"), Toast.LENGTH_LONG);
+                }
             } catch (Exception e)
             {
                 onError(e);

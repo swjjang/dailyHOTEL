@@ -76,7 +76,15 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(title);
+        mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
         mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {

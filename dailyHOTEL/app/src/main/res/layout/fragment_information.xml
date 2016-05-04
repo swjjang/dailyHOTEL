@@ -290,7 +290,44 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="18dp"
                     android:gravity="center_vertical"
-                    android:text="@string/label_on"
+                    android:text="@string/label_off"
+                    android:textColor="@color/dh_theme_color"
+                    android:textSize="12dp"
+                    dailyFont:style="Medium"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="45dp"
+                    android:background="@color/information_underline"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:layout_marginLeft="15dp">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@drawable/more_ic_09"
+                    android:drawablePadding="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_agree_sms"
+                    android:textColor="@color/information_title"
+                    android:textSize="15dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/smsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="18dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_off"
                     android:textColor="@color/dh_theme_color"
                     android:textSize="12dp"
                     dailyFont:style="Medium"/>

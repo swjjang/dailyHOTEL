@@ -149,11 +149,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".screen.information.member.SignupActivity"
+            android:name=".screen.information.member.SignupStep1Activity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysVisible"/>
+        <activity
+            android:name=".screen.information.member.SignupStep2Activity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
             android:name=".screen.information.ForgotPasswordActivity"
             android:launchMode="singleTop"
@@ -178,14 +184,14 @@
             android:name=".screen.hotel.payment.HotelPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppBaseTheme"/>
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".screen.gourmet.payment.GourmetPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppBaseTheme"/>
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".screen.hotel.payment.HotelPaymentThankyouActivity"
             android:launchMode="singleTop"
@@ -199,10 +205,39 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.ProfileActivity"
+            android:name=".screen.information.member.ProfileActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
+        <activity
+            android:name=".screen.information.member.EditProfileEmailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity
+            android:name=".screen.information.member.EditProfileNameActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity
+            android:name=".screen.information.member.EditProfilePhoneActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"/>
+        <activity
+            android:name=".screen.information.member.EditProfilePasswordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity
+            android:name=".screen.information.member.AddProfileSocialActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateVisible"/>
         <activity
             android:name=".screen.booking.detail.PaymentWaitActivity"
             android:launchMode="singleTop"

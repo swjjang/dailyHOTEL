@@ -139,6 +139,14 @@ public class MainActivity extends BaseActivity implements Constants
         mOnNetworkControllerListener.onConfigurationResponse();
     }
 
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+
+        System.gc();
+    }
+
     private void initLayout()
     {
         setContentView(R.layout.activity_main);

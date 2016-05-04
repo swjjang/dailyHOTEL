@@ -412,6 +412,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }, null, false);
     }
 
+    public void onErrorToastMessage(final String message)
+    {
+        unLockUI();
+
+        handler.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
+            }
+        });
+    }
+
     private void recursiveRecycle(View root)
     {
         if (root == null)

@@ -1,24 +1,9 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
- * <p>
- * LoginActivity (로그인화면)
- * <p>
- * 사용자 계정 로그인을 담당하는 화면이다. 사용자로부터 아이디와 패스워드를
- * 입력받으며, 이를 로그인을 하는 웹서버 API를 이용한다.
- *
- * @version 1
- * @author Mike Han(mike@dailyhotel.co.kr)
- * @since 2014-02-24
- */
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -69,12 +54,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
+public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener, View.OnFocusChangeListener
 {
     public CallbackManager mCallbackManager;
     private EditText mEmailEditText, mPasswordEditText;
     private TextView mLoginView;
+    private View mEmailView, mPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
 
     private Map<String, String> mStoreParams;
@@ -82,6 +67,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     // 카카오톡
     private com.kakao.usermgmt.LoginButton mKakaoLoginView;
     private SessionCallback mKakaoSessionCallback;
+    private boolean mIsSocialSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -107,7 +93,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity));
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_login_activity), new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
     }
 
     private void initTopLayout()
@@ -124,15 +117,19 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initEditTextsLayout()
     {
+        mEmailView = findViewById(R.id.emailView);
         mEmailEditText = (EditText) findViewById(R.id.emailEditText);
-        mPasswordEditText = (EditText) findViewById(R.id.passowrdEditText);
+        mEmailEditText.setOnFocusChangeListener(this);
+
+        mPasswordView = findViewById(R.id.passwordView);
+        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText.setOnFocusChangeListener(this);
 
         mEmailEditText.requestFocus();
 
         mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mPasswordEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
-
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
             {
@@ -271,7 +268,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
 
         params.put("is_auto", "true");
-        params.put("user_type", "facebook");
+        params.put("user_type", Constants.FACEBOOK_USER);
 
         mStoreParams.putAll(params);
 
@@ -320,7 +317,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
 
         params.put("is_auto", "true");
-        params.put("user_type", "kakao_talk");
+        params.put("user_type", Constants.KAKAO_USER);
 
         mStoreParams.putAll(params);
 
@@ -341,7 +338,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             case R.id.signupView:
             {
-                Intent intent = SignupActivity.newInstance(this);
+                Intent intent = SignupStep1Activity.newInstance(this);
                 startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
@@ -362,6 +359,39 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 processSignin();
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        if (hasFocus == false)
+        {
+            return;
+        }
+
+        setFocusTextView(v.getId());
+    }
+
+    private void resetFocus()
+    {
+        mEmailView.setSelected(false);
+        mPasswordView.setSelected(false);
+    }
+
+    private void setFocusTextView(int id)
+    {
+        resetFocus();
+
+        switch (id)
+        {
+            case R.id.emailEditText:
+                mEmailView.setSelected(true);
+                break;
+
+            case R.id.passwordEditText:
+                mPasswordView.setSelected(true);
+                break;
         }
     }
 
@@ -390,7 +420,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         params.put("email", email);
         params.put("pw", passwordEncrypt);
         params.put("social_id", "0");
-        params.put("user_type", "normal");
+        params.put("user_type", Constants.DAILY_USER);
         params.put("is_auto", "true");
 
         if (mStoreParams == null)
@@ -661,9 +691,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -672,7 +702,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     if (isSignup == true)
                     {
                         // 회원가입에 성공하면 이제 로그인 절차
-                        DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(true);
+                        mIsSocialSignUp = true;
 
                         HashMap<String, String> params = new HashMap<>();
 
@@ -728,7 +758,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -749,19 +779,22 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     DailyPreference.getInstance(LoginActivity.this).setUserName(name);
                 }
 
-                if (DailyPreference.getInstance(LoginActivity.this).isSocialSignUp() == true)
+                boolean enabledSMS= response.getBoolean("is_text_enabled");
+                DailyPreference.getInstance(LoginActivity.this).setAllowSMS(enabledSMS);
+
+                if (mIsSocialSignUp == true)
                 {
-                    DailyPreference.getInstance(LoginActivity.this).setSocialSignUp(false);
+                    mIsSocialSignUp = false;
 
                     if (mStoreParams.containsKey("new_user") == true)
                     {
                         // user_type : kakao_talk. facebook
                         String userType = mStoreParams.get("user_type");
 
-                        if ("kakao_talk".equalsIgnoreCase(userType) == true)
+                        if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
                         {
                             userType = AnalyticsManager.UserType.KAKAO;
-                        } else if ("facebook".equalsIgnoreCase(userType) == true)
+                        } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                         {
                             userType = AnalyticsManager.UserType.FACEBOOK;
                         }
@@ -807,7 +840,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                         storeLoginInfo();
 
-                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
+                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         return;
                     }
@@ -852,7 +885,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                     storeLoginInfo();
 
-                    DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
+                    DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                 } else
                 {
