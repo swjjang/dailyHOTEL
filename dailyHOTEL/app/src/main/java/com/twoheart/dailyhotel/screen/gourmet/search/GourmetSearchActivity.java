@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -51,6 +52,30 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         super.initContents();
 
         mNetworkController = new GourmetSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+
+        setDateText(mSaleTime);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case REQUEST_ACTIVITY_CALENDAR:
+            {
+                if (resultCode == RESULT_OK && data != null)
+                {
+                    SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+
+                    setDateText(saleTime);
+
+                    mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -84,6 +109,18 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         super.onStart();
 
         AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH, null);
+    }
+
+    private void setDateText(SaleTime saleTime)
+    {
+        if (saleTime == null || mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mSaleTime = saleTime;
+
+        mPlaceSearchLayout.setDataText(saleTime.getDailyDateFormat("yyyy.MM.dd(EEE)"));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,7 +212,8 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         @Override
         public void onShowCalendar()
         {
-
+            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchActivity.this, mSaleTime.getClone(0));
+            startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 
         @Override

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    >
+                android:layout_height="match_parent">
 
     <include layout="@layout/toolbar_default_menu_text"/>
 
@@ -94,16 +93,17 @@
         android:id="@+id/calendarScrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/confirmView"
         android:layout_below="@+id/lineView"
         android:fadingEdge="none"
-        android:orientation="vertical"
-        android:layout_above="@+id/confirmView">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/calendarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:orientation="vertical"
+            android:paddingBottom="38dp"/>
     </ScrollView>
 
     <View
@@ -139,20 +139,20 @@
         android:id="@+id/cancelView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:visibility="gone"
+        android:layout_above="@+id/confirmView"
         android:layout_alignParentBottom="false"
-        android:layout_above="@+id/confirmView"/>
+        android:layout_below="@+id/toolbar"
+        android:visibility="gone"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/confirmView"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/selector_button_background_color"
         android:gravity="center"
         android:text="@string/label_selected_date"
         android:textColor="@android:color/white"
         android:textSize="20dp"
-        android:layout_alignParentBottom="true"
         android:visibility="gone"/>
 </RelativeLayout>

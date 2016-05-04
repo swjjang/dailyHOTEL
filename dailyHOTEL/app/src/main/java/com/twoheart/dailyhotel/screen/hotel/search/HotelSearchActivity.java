@@ -116,18 +116,18 @@ public class HotelSearchActivity extends PlaceSearchActivity
         AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH, null);
     }
 
-    private void setDateText(SaleTime checkInSaleTime, int nights)
+    private void setDateText(SaleTime saleTime, int nights)
     {
-        if (checkInSaleTime == null || nights == 0 || mPlaceSearchLayout == null)
+        if (saleTime == null || nights == 0 || mPlaceSearchLayout == null)
         {
             return;
         }
 
-        mSaleTime = checkInSaleTime;
+        mSaleTime = saleTime;
         mNights = nights;
 
-        String checkInDate = checkInSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
-        SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
+        String checkInDate = saleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
+        SaleTime checkOutSaleTime = saleTime.getClone(saleTime.getOffsetDailyDay() + nights);
         String checkOutDate = checkOutSaleTime.getDailyDateFormat("yyyy.MM.dd(EEE)");
 
         mPlaceSearchLayout.setDataText(checkInDate + " - " + checkOutDate);
