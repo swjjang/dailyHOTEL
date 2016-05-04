@@ -58,6 +58,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private View mDeleteAllRecentSearchesView;
 
     private EditText mSearchEditText;
+    private TextView mDateTextView;
 
     private Handler mHandler;
 
@@ -76,9 +77,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         void onSearch(String text);
 
         void onSearch(String text, Keyword keyword);
+
+        void onShowCalendar();
     }
 
-    protected abstract String getAroundPlaceString();
+    protected abstract String getAroundPlaceText();
 
     protected abstract String getSearchHintText();
 
@@ -95,6 +98,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     protected void initLayout(View view)
     {
         initToolbarLayout(view);
+        initCalendarLayout(view);
         initAroundLayout(view);
         initSearchLayout(view);
     }
@@ -227,17 +231,46 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         }, 500);
     }
 
+    private void initCalendarLayout(View view)
+    {
+        View calendarLayout = view.findViewById(R.id.calendarLayout);
+        calendarLayout.setOnClickListener(this);
+
+        mDateTextView = (TextView) calendarLayout.findViewById(R.id.dateTextView);
+    }
+
     private void initAroundLayout(View view)
     {
         View searchAroundLayout = view.findViewById(R.id.searchAroundLayout);
         searchAroundLayout.setOnClickListener(this);
 
         TextView text01View = (TextView) searchAroundLayout.findViewById(R.id.text01View);
-        text01View.setText(getAroundPlaceString());
+        text01View.setText(getAroundPlaceText());
 
         mTermsOfLocationView = searchAroundLayout.findViewById(R.id.text02View);
 
         updateTermsOfLocationLayout(mTermsOfLocationView);
+    }
+
+    public void setDataText(String date)
+    {
+        if (mDateTextView == null)
+        {
+            return;
+        }
+
+        mDateTextView.setText(date);
+    }
+
+    public void requestUpdateAutoCompleteLayout()
+    {
+        if (mSearchEditText == null)
+        {
+            return;
+        }
+
+        mSearchEditText.setText(mSearchEditText.getText().toString());
+        mSearchEditText.setSelection(mSearchEditText.length());
     }
 
     private void updateTermsOfLocationLayout(View view)
@@ -626,6 +659,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     {
         switch (v.getId())
         {
+            case R.id.calendarLayout:
+            {
+                ((OnEventListener) mOnEventListener).onShowCalendar();
+                break;
+            }
+
             case R.id.searchAroundLayout:
             {
                 if (DailyPreference.getInstance(mContext).isAgreeTermsOfLocation() == true)
