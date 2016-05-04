@@ -200,25 +200,23 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         {
             try
             {
-                String result = response.getString("success");
+                boolean result = false;
 
-                if ("true".equalsIgnoreCase(result) == true)
+                if(response.has("success") == true)
                 {
-                    DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+                    result = response.getBoolean("success");
+                }
 
+                if (result == true)
+                {
                     setResult(RESULT_OK);
+
+                    DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
                 } else
                 {
-                    if (response.has("msg") == true)
-                    {
-                        String message = response.getString("msg");
-                        DailyToast.showToast(EditProfileNameActivity.this, message, Toast.LENGTH_LONG);
-                    } else
-                    {
-                        onError();
-                    }
-
                     setResult(RESULT_CANCELED);
+
+                    DailyToast.showToast(EditProfileNameActivity.this, response.getString("msg"), Toast.LENGTH_LONG);
                 }
             } catch (Exception e)
             {

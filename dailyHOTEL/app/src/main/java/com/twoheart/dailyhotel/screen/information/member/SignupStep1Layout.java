@@ -30,7 +30,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void nextStep(String email, String name, String password, String confirmPassword, String recommender);
+        void onValidation(String email, String name, String password1, String confirmPassword, String recommender);
 
         void showTermOfService();
 
@@ -147,7 +147,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         String confirmPasswordText = mConfirmPasswordEditText.getText().toString();
         String recommender = mRecommenderEditText.getText().toString().trim();
 
-        ((OnEventListener) mOnEventListener).nextStep(emailText, nameText, passwordText, confirmPasswordText, recommender);
+        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender);
     }
 
     @Override

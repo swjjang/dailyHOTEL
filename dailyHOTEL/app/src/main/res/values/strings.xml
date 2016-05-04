@@ -153,6 +153,7 @@
     <string name="toast_msg_confirm_mobilenumber">전화번호를 확인해주시기 바랍니다.</string>
     <string name="toast_msg_terms_agreement">이용약관 항목을 체크해 주세요.</string>
     <string name="toast_msg_personal_agreement">개인정보취급방침 항목을 체크해 주세요.</string>
+    <string name="toast_msg_dont_support_service_phone">해당 단말기는 서비스를 지원하지 않습니다. 다른 단말기를 이용해 주십시오.</string>
 
     <!-- Dialog Messages -->
 
@@ -464,6 +465,8 @@
     <string name="label_request_verification">인증번호 받기</string>
     <string name="label_confirm_signup">회원가입 완료</string>
     <string name="message_please_enter_the_same_password">동일한 비밀번호를 입력해주세요.</string>
+    <string name="message_send_verification_number">%s로 N자리 인증번호를 보내드렸습니다.
+N분내 인증번호를 입력해주세요!</string>
     <string name="message_signup_step1_guide">데일리호텔 회원가입을 하시고 다양한 혜택을 누려보세요!</string>
     <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력하신 후 인증 처리를 해주세요.</string>
 
@@ -701,7 +704,7 @@
     <string name="label_wifi">무료WIFI</string>
     <string name="label_breakfast">조식포함</string>
     <string name="label_cooking">취사가능</string>
-    <string name="label_beth">욕조포함</string>
+    <string name="label_beth">욕조구비</string>
     <string name="label_pool">수영장</string>
     <string name="label_fitness">피트니스</string>
     <string name="label_settime">시간설정</string>

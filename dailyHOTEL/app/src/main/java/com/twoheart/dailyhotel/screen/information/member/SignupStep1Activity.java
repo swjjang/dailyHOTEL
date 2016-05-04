@@ -7,7 +7,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
@@ -17,6 +21,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupStep1Activity extends BaseActivity
 {
@@ -126,7 +135,7 @@ public class SignupStep1Activity extends BaseActivity
     private SignupStep1Layout.OnEventListener mOnEventListener = new SignupStep1Layout.OnEventListener()
     {
         @Override
-        public void nextStep(String email, String name, String password, String confirmPassword, String recommender)
+        public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender)
         {
             if (Util.isTextEmpty(email, name, password, confirmPassword) == true)
             {
@@ -173,11 +182,72 @@ public class SignupStep1Activity extends BaseActivity
                 return;
             }
 
-            // 네트워크 검증 후에 다음 코스로 넘김.
+            final String deviceId = Util.getDeviceId(SignupStep1Activity.this);
 
-            Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this//
-                , email, name, Crypto.encrypt(password), recommender);
-            startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+            if(Util.isTextEmpty(deviceId) == true)
+            {
+                DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_dont_support_service_phone, Toast.LENGTH_LONG);
+                return;
+            }
+
+            // 네트워크 검증 후에 다음 코스로 넘김.\
+            Map<String, String> params = new HashMap<>();
+            params.put("email", email);
+            params.put("pw", password);
+            params.put("pw2", confirmPassword);
+            params.put("device", deviceId);
+            params.put("name", name);
+
+            if(Util.isTextEmpty(recommender) == false)
+            {
+                params.put("recommender", recommender);
+            }
+
+            params.put("market_type", RELEASE_STORE.getName());
+
+            DailyNetworkAPI.getInstance().requestSignupValidation(mNetworkTag, params, new DailyHotelJsonResponseListener()
+            {
+                @Override
+                public void onResponse(String url, JSONObject response)
+                {
+                    try
+                    {
+                        int msgCode = response.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = response.getJSONObject("data");
+                            String signupKey = dataJSONObject.getString("signup_key");
+
+                            Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this//
+                                , signupKey, email, name, Crypto.encrypt(password), deviceId, recommender);
+                            startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+                        } else
+                        {
+                            onErrorMessage(msgCode, response.getString("msg"));
+                        }
+                    }catch (Exception e)
+                    {
+                        onError(e);
+                    }
+                }
+            }, new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError volleyError)
+                {
+                    try
+                    {
+                        JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
+
+                        onErrorToastMessage(jsonObject.getString("msg"));
+
+                    }catch(Exception e)
+                    {
+                        onErrorResponse(volleyError);
+                    }
+                }
+            });
         }
 
         @Override

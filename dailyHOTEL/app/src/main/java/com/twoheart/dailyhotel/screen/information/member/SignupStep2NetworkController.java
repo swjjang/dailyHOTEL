@@ -20,6 +20,8 @@ public class SignupStep2NetworkController extends BaseNetworkController
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onSignUp(int notificationUid, String gcmRegisterId);
+
+        void onResponseVerification(String time);
     }
 
     public SignupStep2NetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -36,6 +38,11 @@ public class SignupStep2NetworkController extends BaseNetworkController
     public void requestUserSingUp(Map<String, String> signupParams)
     {
         DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, signupParams, mUserSignupJsonResponseListener, this);
+    }
+
+    public void requestVerfication(String signupKey, String phone)
+    {
+        DailyNetworkAPI.getInstance().requestVerfication(mNetworkTag, signupKey, phone, mVerificationJsonResponseListener, this);
     }
 
     public void requestGoogleCloudMessagingId()
@@ -196,6 +203,33 @@ public class SignupStep2NetworkController extends BaseNetworkController
             //            {
             //                mOnNetworkControllerListener.onError(e);
             //            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mVerificationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJONObject = response.getJSONObject("data");
+                    String message = "010-NNNN-NNNN로 N자리 인증번호를 보내드렸습니다.\nN분내 인증번호를 입력해주세요!";
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseVerification(message);
+                } else
+                {
+                    // 다른 폰에서 인증된 경우
+                    mOnNetworkControllerListener.onErrorMessage(msgCode, response.getString("msg"));
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
         }
     };
 }

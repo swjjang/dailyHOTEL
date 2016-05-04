@@ -38,6 +38,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -248,7 +249,7 @@ public class Util implements Constants
         final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
         try
         {
-            if (!"9774d56d682e549c".equals(androidId))
+            if ("9774d56d682e549c".equals(androidId) == false)
             {
                 uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
             } else

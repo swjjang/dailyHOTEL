@@ -691,9 +691,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -758,7 +758,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -778,6 +778,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 {
                     DailyPreference.getInstance(LoginActivity.this).setUserName(name);
                 }
+
+                boolean enabledSMS= response.getBoolean("is_text_enabled");
+                DailyPreference.getInstance(LoginActivity.this).setAllowSMS(enabledSMS);
 
                 if (mIsSocialSignUp == true)
                 {
@@ -837,7 +840,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                         storeLoginInfo();
 
-                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
+                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         return;
                     }
@@ -882,7 +885,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                     storeLoginInfo();
 
-                    DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, LoginActivity.this);
+                    DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                 } else
                 {

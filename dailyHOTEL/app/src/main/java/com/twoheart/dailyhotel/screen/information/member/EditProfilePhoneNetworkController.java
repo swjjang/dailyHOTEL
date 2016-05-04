@@ -63,9 +63,14 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         {
             try
             {
-                String result = response.getString("success");
+                boolean result = false;
 
-                if (result.equals("true") == true)
+                if(response.has("success") == true)
+                {
+                    result = response.getBoolean("success");
+                }
+
+                if (result == true)
                 {
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
                 } else

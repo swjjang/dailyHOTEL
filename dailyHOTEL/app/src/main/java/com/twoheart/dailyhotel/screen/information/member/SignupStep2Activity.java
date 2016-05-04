@@ -19,9 +19,11 @@ import java.util.Map;
 
 public class SignupStep2Activity extends BaseActivity
 {
+    private static final String INTENT_EXTRA_DATA_SIGNUPKEY = "signupKey";
     private static final String INTENT_EXTRA_DATA_EMAIL = "email";
     private static final String INTENT_EXTRA_DATA_NAME = "name";
     private static final String INTENT_EXTRA_DATA_PASSWORD = "password";
+    private static final String INTENT_EXTRA_DATA_DEVICEID = "deviceId";
     private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
 
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
@@ -32,13 +34,15 @@ public class SignupStep2Activity extends BaseActivity
     private SignupStep2NetworkController mNetworkController;
     private String mCountryCode;
 
-    public static Intent newInstance(Context context, String email, String name, String password, String recommender)
+    public static Intent newInstance(Context context, String singupKey, String email, String name, String password, String deviceId, String recommender)
     {
         Intent intent = new Intent(context, SignupStep2Activity.class);
 
+        intent.putExtra(INTENT_EXTRA_DATA_SIGNUPKEY, singupKey);
         intent.putExtra(INTENT_EXTRA_DATA_EMAIL, email);
         intent.putExtra(INTENT_EXTRA_DATA_NAME, name);
         intent.putExtra(INTENT_EXTRA_DATA_PASSWORD, password);
+        intent.putExtra(INTENT_EXTRA_DATA_DEVICEID, deviceId);
         intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommender);
 
         return intent;
@@ -68,10 +72,11 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         mSignupParams = new HashMap<>();
+        mSignupParams.put("signup_key", intent.getStringExtra(INTENT_EXTRA_DATA_SIGNUPKEY));
         mSignupParams.put("email", intent.getStringExtra(INTENT_EXTRA_DATA_EMAIL));
         mSignupParams.put("name", intent.getStringExtra(INTENT_EXTRA_DATA_NAME));
         mSignupParams.put("pw", intent.getStringExtra(INTENT_EXTRA_DATA_PASSWORD));
-        mSignupParams.put("device", Util.getDeviceId(this));
+        mSignupParams.put("device", intent.getStringExtra(INTENT_EXTRA_DATA_DEVICEID));
         mSignupParams.put("market_type", RELEASE_STORE.getName());
 
         String recommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
@@ -156,6 +161,8 @@ public class SignupStep2Activity extends BaseActivity
         public void doVerification(String phoneNumber)
         {
             mSignupStep2Layout.showVerificationVisible();
+
+            mNetworkController.requestVerfication(mSignupParams.get("signup_key"), phoneNumber);
         }
 
         @Override
@@ -193,6 +200,12 @@ public class SignupStep2Activity extends BaseActivity
         public void onSignUp(int notificationUid, String gcmRegisterId)
         {
 
+        }
+
+        @Override
+        public void onResponseVerification(String message)
+        {
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override
