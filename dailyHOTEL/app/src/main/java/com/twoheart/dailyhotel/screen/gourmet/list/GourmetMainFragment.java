@@ -1457,6 +1457,12 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -1519,6 +1525,12 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     private DailyHotelJsonResponseListener mSimpleDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -1549,6 +1561,12 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1756,6 +1774,12 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -618,6 +619,12 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -649,6 +656,12 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -672,6 +685,12 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
     private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

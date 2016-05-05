@@ -24,7 +24,6 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -120,6 +119,12 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mGourmetSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -170,6 +175,12 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mGourmetLocationSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -219,6 +230,12 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mLocationToAddressListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

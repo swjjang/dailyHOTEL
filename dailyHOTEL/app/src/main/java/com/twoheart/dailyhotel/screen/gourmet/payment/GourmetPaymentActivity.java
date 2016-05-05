@@ -24,6 +24,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -1053,6 +1054,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -1121,6 +1128,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private DailyHotelJsonResponseListener mGourmetPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1224,6 +1237,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -1266,6 +1285,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private DailyHotelJsonResponseListener mFinalCheckPayJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1375,6 +1400,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private DailyHotelJsonResponseListener mCheckAvailableTicketJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -1402,6 +1433,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

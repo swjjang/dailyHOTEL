@@ -67,6 +67,12 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserUpdateFacebookJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try

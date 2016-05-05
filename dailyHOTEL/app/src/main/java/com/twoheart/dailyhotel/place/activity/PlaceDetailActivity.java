@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetDetail;
@@ -582,6 +583,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private DailyHotelJsonResponseListener mUserSocialInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -648,6 +655,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

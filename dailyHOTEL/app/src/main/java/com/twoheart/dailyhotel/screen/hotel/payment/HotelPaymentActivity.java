@@ -42,6 +42,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -1530,6 +1531,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -1674,6 +1681,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private DailyHotelJsonResponseListener mHotelPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1820,6 +1833,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             hidePorgressDialog();
@@ -1849,6 +1868,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private DailyHotelJsonResponseListener mFinalCheckPayJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1959,6 +1984,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     private DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -2012,6 +2043,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private DailyHotelJsonResponseListener mMessageDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

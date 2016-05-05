@@ -538,6 +538,12 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected DailyHotelJsonResponseListener mUserCreditCardListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -612,6 +618,12 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mPaymentAfterRegisterCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

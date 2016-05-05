@@ -59,13 +59,19 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
                 boolean result = false;
 
-                if(response.has("success") == true)
+                if (response.has("success") == true)
                 {
                     result = response.getBoolean("success");
                 }
@@ -86,6 +92,12 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mUserUpdateSocialJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

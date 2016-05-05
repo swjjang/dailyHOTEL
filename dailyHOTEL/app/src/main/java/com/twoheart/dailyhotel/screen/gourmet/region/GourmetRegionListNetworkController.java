@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.region;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
@@ -39,6 +40,12 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
 
     private DailyHotelJsonResponseListener mGourmetRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

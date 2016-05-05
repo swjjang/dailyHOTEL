@@ -638,6 +638,12 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
     private DailyHotelJsonResponseListener mReserveReviewJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             if (mDialog != null && mDialog.isShowing() == true)
@@ -715,6 +721,12 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
     private DailyHotelJsonResponseListener mRequestServicesJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             unLockUI();
@@ -764,6 +776,12 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
     private DailyHotelJsonResponseListener mReservSatisfactionUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

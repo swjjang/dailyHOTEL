@@ -523,6 +523,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
         {
             @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+
+            }
+
+            @Override
             public void onResponse(String url, JSONObject response)
             {
                 try
@@ -687,6 +693,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mSocialUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -761,6 +773,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             String userIndex = null;
@@ -779,7 +797,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     DailyPreference.getInstance(LoginActivity.this).setUserName(name);
                 }
 
-                boolean enabledSMS= response.getBoolean("is_text_enabled");
+                boolean enabledSMS = response.getBoolean("is_text_enabled");
                 DailyPreference.getInstance(LoginActivity.this).setAllowSMS(enabledSMS);
 
                 if (mIsSocialSignUp == true)
@@ -818,6 +836,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private DailyHotelJsonResponseListener mDailyUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -867,6 +891,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private DailyHotelJsonResponseListener mSocialUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

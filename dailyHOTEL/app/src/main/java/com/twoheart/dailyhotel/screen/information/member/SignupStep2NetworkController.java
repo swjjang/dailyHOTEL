@@ -57,6 +57,12 @@ public class SignupStep2NetworkController extends BaseNetworkController
                     DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, registrationId, new DailyHotelJsonResponseListener()
                     {
                         @Override
+                        public void onErrorResponse(VolleyError volleyError)
+                        {
+
+                        }
+
+                        @Override
                         public void onResponse(String url, JSONObject response)
                         {
                             int uid = -1;
@@ -174,6 +180,12 @@ public class SignupStep2NetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             //            try
@@ -208,6 +220,12 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mVerificationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

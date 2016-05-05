@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.region;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
@@ -38,6 +39,12 @@ public class HotelRegionListNetworkController extends PlaceRegionListNetworkCont
 
     private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

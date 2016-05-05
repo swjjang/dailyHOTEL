@@ -459,6 +459,7 @@ interface IDailyNetwork
 
     /**
      * 회원 가입 step1단계 검증
+     *
      * @param tag
      * @param params
      * @param listener
@@ -467,7 +468,6 @@ interface IDailyNetwork
     void requestSignupValidation(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     *
      * @param tag
      * @param signupKey
      * @param phone

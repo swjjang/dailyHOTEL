@@ -184,7 +184,7 @@ public class SignupStep1Activity extends BaseActivity
 
             final String deviceId = Util.getDeviceId(SignupStep1Activity.this);
 
-            if(Util.isTextEmpty(deviceId) == true)
+            if (Util.isTextEmpty(deviceId) == true)
             {
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_dont_support_service_phone, Toast.LENGTH_LONG);
                 return;
@@ -198,7 +198,7 @@ public class SignupStep1Activity extends BaseActivity
             params.put("device", deviceId);
             params.put("name", name);
 
-            if(Util.isTextEmpty(recommender) == false)
+            if (Util.isTextEmpty(recommender) == false)
             {
                 params.put("recommender", recommender);
             }
@@ -207,6 +207,12 @@ public class SignupStep1Activity extends BaseActivity
 
             DailyNetworkAPI.getInstance().requestSignupValidation(mNetworkTag, params, new DailyHotelJsonResponseListener()
             {
+                @Override
+                public void onErrorResponse(VolleyError volleyError)
+                {
+
+                }
+
                 @Override
                 public void onResponse(String url, JSONObject response)
                 {
@@ -226,7 +232,7 @@ public class SignupStep1Activity extends BaseActivity
                         {
                             onErrorMessage(msgCode, response.getString("msg"));
                         }
-                    }catch (Exception e)
+                    } catch (Exception e)
                     {
                         onError(e);
                     }
@@ -242,7 +248,7 @@ public class SignupStep1Activity extends BaseActivity
 
                         onErrorToastMessage(jsonObject.getString("msg"));
 
-                    }catch(Exception e)
+                    } catch (Exception e)
                     {
                         onErrorResponse(volleyError);
                     }
