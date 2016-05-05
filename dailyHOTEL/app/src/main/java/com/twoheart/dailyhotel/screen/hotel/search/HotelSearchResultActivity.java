@@ -102,6 +102,11 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         mSearchType = intent.getIntExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SEARCHTYPE_SEARCHES);
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
         mOffset = 0;
+
+        if (mSaleTime == null)
+        {
+            finish();
+        }
     }
 
     @Override

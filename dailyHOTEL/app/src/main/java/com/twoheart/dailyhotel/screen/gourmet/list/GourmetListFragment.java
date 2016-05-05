@@ -45,8 +45,6 @@ import java.util.Map;
 
 public class GourmetListFragment extends BaseFragment implements Constants
 {
-    private static final int APPBARLAYOUT_DRAG_DISTANCE = 200;
-
     protected PinnedSectionRecyclerView mGourmetRecyclerView;
     protected GourmetListAdapter mGourmetAdapter;
     protected SaleTime mSaleTime;
@@ -683,7 +681,12 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
+                    JSONArray gourmetJSONArray = null;
+
+                    if (dataJSONObject.has("gourmetSaleList") == false)
+                    {
+                        gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
+                    }
 
                     int length;
 

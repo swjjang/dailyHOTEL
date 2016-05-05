@@ -44,9 +44,9 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             return;
         }
 
-        setContentView(mPlaceSearchResultLayout.onCreateView(R.layout.activity_search_result));
-
         initIntent(getIntent());
+
+        setContentView(mPlaceSearchResultLayout.onCreateView(R.layout.activity_search_result));
 
         initContents();
     }

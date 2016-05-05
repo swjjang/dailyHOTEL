@@ -61,6 +61,17 @@ public class HotelSearchActivity extends PlaceSearchActivity
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mSaleTime == null)
+        {
+            finish();
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);

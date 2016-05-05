@@ -448,6 +448,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
         @Override
         public void doBooking(TicketInformation ticketInformation)
         {
+            if (ticketInformation == null)
+            {
+                finish();
+                return;
+            }
+
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;

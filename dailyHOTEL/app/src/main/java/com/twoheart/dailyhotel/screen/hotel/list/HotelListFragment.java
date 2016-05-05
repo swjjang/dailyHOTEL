@@ -693,7 +693,12 @@ public class HotelListFragment extends BaseFragment implements Constants
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+                    JSONArray hotelJSONArray = null;
+
+                    if (dataJSONObject.has("hotelSaleList") == true)
+                    {
+                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+                    }
 
                     int length;
 
