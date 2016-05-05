@@ -162,7 +162,7 @@ public class SignupStep2Activity extends BaseActivity
         {
             mSignupStep2Layout.showVerificationVisible();
 
-            mNetworkController.requestVerfication(mSignupParams.get("signup_key"), phoneNumber);
+            mNetworkController.requestVerfication(mSignupParams.get("signup_key"), phoneNumber.replaceAll("-", ""));
         }
 
         @Override

@@ -218,7 +218,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                 if (msgCode == 100)
                 {
                     JSONObject dataJONObject = response.getJSONObject("data");
-                    String message = "010-NNNN-NNNN로 N자리 인증번호를 보내드렸습니다.\nN분내 인증번호를 입력해주세요!";
+                    String message = dataJONObject.getString("msg");
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseVerification(message);
                 } else
