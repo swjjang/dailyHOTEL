@@ -830,9 +830,9 @@ public class Util implements Constants
         }
     }
 
-    public static boolean isInstalledPackage(Context context, String packageName)
+    public static boolean isInstalledPackage(Context context, String packageName, Intent intent)
     {
-        if (context == null)
+        if (context == null || Util.isTextEmpty(packageName) == true || intent == null)
         {
             return false;
         }
@@ -840,7 +840,9 @@ public class Util implements Constants
         try
         {
             PackageManager packageManager = context.getPackageManager();
-            return (packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES) != null);
+            ResolveInfo resolveInfoMarket = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+            return (packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES) != null && resolveInfoMarket != null);
         } catch (PackageManager.NameNotFoundException e)
         {
             return false;
@@ -855,13 +857,13 @@ public class Util implements Constants
         }
 
         final String packageName = "net.daum.android.map";
+        String url = String.format("daummaps://look?p=%s,%s", latitude, longitude);
 
-        if (isInstalledPackage(context, packageName) == true)
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+
+        if (isInstalledPackage(context, packageName, intent) == true)
         {
-            String url = String.format("daummaps://look?p=%s,%s", latitude, longitude);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
             context.startActivity(intent);
         } else
         {
@@ -877,13 +879,13 @@ public class Util implements Constants
         }
 
         final String packageName = "com.nhn.android.nmap";
+        String url = String.format("navermaps://?menu=location&lat=%s&lng=%s&title=%s", latitude, longitude, name);
 
-        if (isInstalledPackage(context, packageName) == true)
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+
+        if (isInstalledPackage(context, packageName, intent) == true)
         {
-            String url = String.format("navermaps://?menu=location&lat=%s&lng=%s&title=%s", latitude, longitude, name);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
             context.startActivity(intent);
         } else
         {
@@ -926,15 +928,15 @@ public class Util implements Constants
         }
 
         final String packageName = "com.google.android.apps.maps";
+        //            String url = String.format("http://maps.google.com/maps?q=%s&ll=%s,%s&z=14", placeName, latitude, longitude);
+        String url = String.format("http://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, placeName);
 
-        if (isInstalledPackage(context, packageName) == true)
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        intent.setPackage(packageName);
+
+        if (isInstalledPackage(context, packageName, intent) == true)
         {
-            //            String url = String.format("http://maps.google.com/maps?q=%s&ll=%s,%s&z=14", placeName, latitude, longitude);
-            String url = String.format("http://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, placeName);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            intent.setPackage(packageName);
             context.startActivity(intent);
         } else
         {
