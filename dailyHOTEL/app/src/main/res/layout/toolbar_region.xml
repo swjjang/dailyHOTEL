@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height_has_tab"
-    android:background="@color/white"
     app:layout_scrollFlags="scroll|enterAlways">
 
     <ImageView

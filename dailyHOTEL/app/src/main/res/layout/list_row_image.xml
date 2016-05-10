@@ -8,7 +8,6 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:background="@drawable/background_hoteldetail_viewpager"
         fresco:actualImageScaleType="centerCrop"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView

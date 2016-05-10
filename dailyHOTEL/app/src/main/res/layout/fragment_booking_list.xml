@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/information_background">
+                android:layout_height="match_parent">
 
     <include layout="@layout/toolbar_default"/>
 
@@ -12,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:background="@color/information_background"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
         android:fadingEdge="none"/>
@@ -69,9 +69,9 @@
                 android:layout_height="match_parent"
                 android:layout_above="@id/textLayout"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:src="@drawable/no_event_ic"
-                android:layout_marginTop="15dp"/>
+                android:src="@drawable/no_event_ic"/>
         </RelativeLayout>
 
         <LinearLayout
