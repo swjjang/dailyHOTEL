@@ -123,14 +123,6 @@ interface IDailyNetwork
     void requestUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     * api/user/signup
-     * 회원 가입
-     *
-     * @return
-     */
-    void requestUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
-
-    /**
      * api/user/information
      * 결제를 위한 유저 정보
      *
@@ -458,21 +450,56 @@ interface IDailyNetwork
     void requestEventBannerList(Object tag, String place, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
+     * @param tag
+     * @param phone
+     * @param listener
+     */
+    void requestDailyUserVerfication(Object tag, String phone, DailyHotelJsonResponseListener listener);
+
+    /**
+     * @param tag
+     * @param phone
+     * @param code
+     * @param listener
+     */
+    void requestDailyUserUpdatePhoneNumber(Object tag, String phone, String code, DailyHotelJsonResponseListener listener);
+
+    /**
      * 회원 가입 step1단계 검증
+     *
      * @param tag
      * @param params
      * @param listener
-     * @param errorListener
      */
-    void requestSignupValidation(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestSignupValidation(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
 
     /**
-     *
      * @param tag
      * @param signupKey
      * @param phone
      * @param listener
-     * @param errorListener
      */
-    void requestVerfication(Object tag, String signupKey, String phone, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestDailyUserSignupVerfication(Object tag, String signupKey, String phone, DailyHotelJsonResponseListener listener);
+
+    /**
+     * @param tag
+     * @param signupKey
+     * @param code
+     * @param listener
+     */
+    void requestDailyUserSignup(Object tag, String signupKey, String code, DailyHotelJsonResponseListener listener);
+
+    /**
+     * @param tag
+     * @param params
+     * @param listener
+     */
+    void requestFacebookUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+
+    /**
+     * @param tag
+     * @param params
+     * @param listener
+     */
+    void requestKakaoUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
 }

@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -45,8 +46,6 @@ import java.util.Map;
 
 public class GourmetListFragment extends BaseFragment implements Constants
 {
-    private static final int APPBARLAYOUT_DRAG_DISTANCE = 200;
-
     protected PinnedSectionRecyclerView mGourmetRecyclerView;
     protected GourmetListAdapter mGourmetAdapter;
     protected SaleTime mSaleTime;
@@ -667,6 +666,12 @@ public class GourmetListFragment extends BaseFragment implements Constants
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -683,7 +688,12 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
+                    JSONArray gourmetJSONArray = null;
+
+                    if (dataJSONObject.has("gourmetSaleList") == false)
+                    {
+                        gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
+                    }
 
                     int length;
 

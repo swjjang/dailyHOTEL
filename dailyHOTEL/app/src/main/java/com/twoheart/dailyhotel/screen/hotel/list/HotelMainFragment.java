@@ -1696,6 +1696,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -1758,6 +1764,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private DailyHotelJsonResponseListener mSimpleDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -1788,6 +1800,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private DailyHotelJsonResponseListener mRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1996,6 +2014,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private DailyHotelJsonResponseListener mEventBannerListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

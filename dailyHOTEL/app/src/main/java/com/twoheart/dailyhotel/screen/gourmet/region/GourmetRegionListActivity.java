@@ -51,6 +51,8 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     protected void initPrepare()
     {
         mNetworkController = new GourmetRegionListNetworkController(this, mOnNetworkControllerListener);
+
+        mAttachFragmentCount = 0;
     }
 
     @Override

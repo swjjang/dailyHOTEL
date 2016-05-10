@@ -22,6 +22,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -352,6 +353,12 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private DailyHotelJsonResponseListener mReservationListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -465,6 +472,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
 
         @Override
         public void onResponse(String url, JSONObject response)
@@ -491,6 +503,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
     private DailyHotelJsonResponseListener mReservationHiddenJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
 
         @Override
         public void onResponse(String url, JSONObject response)

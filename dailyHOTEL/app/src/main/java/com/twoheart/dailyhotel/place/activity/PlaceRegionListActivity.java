@@ -42,9 +42,9 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_region_list);
-
         initPrepare();
+
+        setContentView(R.layout.activity_region_list);
 
         initIntent(getIntent());
 

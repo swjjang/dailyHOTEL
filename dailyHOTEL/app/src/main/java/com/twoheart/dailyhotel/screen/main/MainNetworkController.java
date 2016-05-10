@@ -81,6 +81,12 @@ public class MainNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
         {
             @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+
+            }
+
+            @Override
             public void onResponse(String url, JSONObject response)
             {
                 long currentDateTime = 0L;
@@ -122,6 +128,12 @@ public class MainNetworkController extends BaseNetworkController
         DailyHotelJsonResponseListener dailyHotelJsonResponseListener = new DailyHotelJsonResponseListener()
         {
             @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+
+            }
+
+            @Override
             public void onResponse(String url, JSONObject response)
             {
                 try
@@ -160,6 +172,12 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -192,6 +210,12 @@ public class MainNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -236,6 +260,12 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -270,6 +300,12 @@ public class MainNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -309,6 +345,12 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mGourmetSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -334,6 +376,12 @@ public class MainNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mHotelSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -366,6 +414,12 @@ public class MainNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mUserInfomationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

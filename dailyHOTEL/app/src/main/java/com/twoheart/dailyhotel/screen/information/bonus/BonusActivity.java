@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -210,6 +211,11 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
     private DailyHotelJsonResponseListener mUserBonusAllResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
 
         @Override
         public void onResponse(String url, JSONObject response)
@@ -250,6 +256,11 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
     private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
 
         @Override
         public void onResponse(String url, JSONObject response)

@@ -9,7 +9,7 @@ public class DailyRecentSearches
 {
     public static final int MAX_KEYWORD = 10;
     private static final char ICON_DELIMITER = ':';
-    private static final char KEYWORD_DELIMITER = '_';
+    private static final String KEYWORD_DELIMITER = "^+^\n";
 
     private List<Keyword> mKeywordList;
 
@@ -125,14 +125,26 @@ public class DailyRecentSearches
             return;
         }
 
-        String[] keywords = text.split(String.format("\\%c", KEYWORD_DELIMITER));
+        // 호텔/고메 이름에 문자열이 있는 경우가 있는데 관련해서 수정이 필요하다
+        if (text.indexOf(KEYWORD_DELIMITER) == -1)
+        {
+            return;
+        }
+
+        String[] keywords = text.split(KEYWORD_DELIMITER);
         String[] values;
 
         for (String keyword : keywords)
         {
             values = keyword.split(String.format("\\%c", ICON_DELIMITER));
 
-            mKeywordList.add(new Keyword(Integer.parseInt(values[0]), values[1]));
+            try
+            {
+                mKeywordList.add(new Keyword(Integer.parseInt(values[0]), values[1]));
+            } catch (NumberFormatException e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     }
 }

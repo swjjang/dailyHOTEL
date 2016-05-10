@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 
@@ -38,6 +39,11 @@ public class GourmetSearchNetworkController extends BaseNetworkController
 
     public void requestAutoComplete(SaleTime saleTime, String keyword)
     {
+        if (saleTime == null || Util.isTextEmpty(keyword) == true)
+        {
+            return;
+        }
+
         DailyNetworkAPI.getInstance().requestGourmetSearchAutoCompleteList(mNetworkTag//
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteListener, mGourmetearchAutoCompleteErrorListener);
     }

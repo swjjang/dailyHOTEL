@@ -5,6 +5,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -80,6 +81,11 @@ public class NoticeActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mBoardNoticeResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
 
         @Override
         public void onResponse(String url, JSONObject response)

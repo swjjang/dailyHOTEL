@@ -27,6 +27,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
@@ -677,6 +678,12 @@ public class HotelListFragment extends BaseFragment implements Constants
     private DailyHotelJsonResponseListener mHotelListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -693,7 +700,12 @@ public class HotelListFragment extends BaseFragment implements Constants
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
-                    JSONArray hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+                    JSONArray hotelJSONArray = null;
+
+                    if (dataJSONObject.has("hotelSaleList") == true)
+                    {
+                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSaleList");
+                    }
 
                     int length;
 

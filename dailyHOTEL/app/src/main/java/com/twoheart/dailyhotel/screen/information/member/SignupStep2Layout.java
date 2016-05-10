@@ -31,7 +31,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
         void doVerification(String phoneNumber);
 
-        void doSignUp(String phoneNumber, String verificationNumber);
+        void doSignUp(String verificationNumber);
     }
 
     public SignupStep2Layout(Context context, OnEventListener mOnEventListener)
@@ -83,15 +83,15 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
             {
-                if (actionId == EditorInfo.IME_ACTION_DONE)
+                if (actionId == EditorInfo.IME_ACTION_NEXT)
                 {
-                    // 인증번호 요청
                     // 번호 검증 후에 인증번호 요청
-                    String phoneNumber = v.getText().toString().trim();
+                    String phoneNumber = getPhoneNumber();
 
                     if (Util.isValidatePhoneNumber(phoneNumber) == true)
                     {
                         ((OnEventListener) mOnEventListener).doVerification(phoneNumber);
+                        return true;
                     }
                 }
 
@@ -131,6 +131,19 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
         mVerificationEditText = (EditText) mVerificationLayout.findViewById(R.id.verificationEditText);
         mVerificationEditText.setOnFocusChangeListener(this);
+        mVerificationEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    doSignUp();
+                }
+
+                return false;
+            }
+        });
 
         mSignUpView = view.findViewById(R.id.signUpView);
         mSignUpView.setOnClickListener(this);
@@ -182,32 +195,18 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         {
             case R.id.signUpView:
             {
-                String tag = (String) mCountryEditText.getTag();
-
-                if (Util.isTextEmpty(tag) == true)
-                {
-                    tag = Util.DEFAULT_COUNTRY_CODE;
-                }
-
-                String countryCode = tag.substring(tag.indexOf('\n') + 1);
-                String phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
-                String verificationNumber = mVerificationEditText.getText().toString().trim();
-
-                ((OnEventListener) mOnEventListener).doSignUp(phoneNumber, verificationNumber);
+                doSignUp();
                 break;
             }
 
             case R.id.certificationNumberView:
             {
-                String tag = (String) mCountryEditText.getTag();
-
-                if (Util.isTextEmpty(tag) == true)
+                if (v.isEnabled() == false)
                 {
-                    tag = Util.DEFAULT_COUNTRY_CODE;
+                    return;
                 }
 
-                String countryCode = tag.substring(tag.indexOf('\n') + 1);
-                String phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
+                String phoneNumber = getPhoneNumber();
 
                 // SMS 인증 요청
                 ((OnEventListener) mOnEventListener).doVerification(phoneNumber);
@@ -230,6 +229,16 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     public void showVerificationVisible()
     {
         mVerificationLayout.setVisibility(View.VISIBLE);
+        mSignUpView.setVisibility(View.VISIBLE);
+
+        mVerificationEditText.requestFocus();
+    }
+
+    private void doSignUp()
+    {
+        String verificationNumber = mVerificationEditText.getText().toString().trim();
+
+        ((OnEventListener) mOnEventListener).doSignUp(verificationNumber);
     }
 
     private void resetFocus()
@@ -254,7 +263,22 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         }
     }
 
-    private void provenCertificationButton(String phoneNumber)
+    private String getPhoneNumber()
+    {
+        String tag = (String) mCountryEditText.getTag();
+
+        if (Util.isTextEmpty(tag) == true)
+        {
+            tag = Util.DEFAULT_COUNTRY_CODE;
+        }
+
+        String countryCode = tag.substring(tag.indexOf('\n') + 1);
+        String phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
+
+        return phoneNumber;
+    }
+
+    private boolean provenCertificationButton(String phoneNumber)
     {
         String tag = (String) mCountryEditText.getTag();
 
@@ -269,9 +293,11 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         if (Util.isValidatePhoneNumber(countryCode + ' ' + phoneNumber) == true)
         {
             mCertificationNumberView.setEnabled(true);
+            return true;
         } else
         {
             mCertificationNumberView.setEnabled(false);
+            return false;
         }
     }
 }

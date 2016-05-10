@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -270,6 +271,12 @@ public class CreditCardListActivity extends BaseActivity
     private DailyHotelJsonResponseListener mCreditCardListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -349,6 +356,12 @@ public class CreditCardListActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mDeleteCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

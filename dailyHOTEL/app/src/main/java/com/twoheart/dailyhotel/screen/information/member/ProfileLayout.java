@@ -83,7 +83,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
     {
         boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(userType);
 
-        if(isDailyUser == true)
+        if (isDailyUser == true)
         {
             updateDailyUserInformation(email, name, phone, isPhoneVerified, verifiedDate);
         } else

@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -254,6 +255,12 @@ public class PaymentWaitActivity extends BaseActivity
     private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -282,6 +289,11 @@ public class PaymentWaitActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mFnBReservationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
 
         @Override
         public void onResponse(String url, JSONObject response)

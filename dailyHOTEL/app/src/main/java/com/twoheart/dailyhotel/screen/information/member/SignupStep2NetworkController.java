@@ -4,24 +4,29 @@ import android.content.Context;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class SignupStep2NetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
+        void onVerification(String time);
+
         void onSignUp(int notificationUid, String gcmRegisterId);
 
-        void onResponseVerification(String time);
+        void onLogin(String authorization);
     }
 
     public SignupStep2NetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -35,14 +40,26 @@ public class SignupStep2NetworkController extends BaseNetworkController
         mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
-    public void requestUserSingUp(Map<String, String> signupParams)
+    public void requestVerfication(String signupKey, String phoneNumber)
     {
-        DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, signupParams, mUserSignupJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, mVerificationJsonResponseListener);
     }
 
-    public void requestVerfication(String signupKey, String phone)
+    public void requestSingUp(String signupKey, String code)
     {
-        DailyNetworkAPI.getInstance().requestVerfication(mNetworkTag, signupKey, phone, mVerificationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignup(mNetworkTag, signupKey, code, mDailyUserSignupJsonResponseListener);
+    }
+
+    public void requestLogin(String email, String password)
+    {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("pw", password);
+        params.put("social_id", "0");
+        params.put("user_type", Constants.DAILY_USER);
+        params.put("is_auto", "true");
+
+        DailyNetworkAPI.getInstance(mContext).requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
     }
 
     public void requestGoogleCloudMessagingId()
@@ -54,8 +71,14 @@ public class SignupStep2NetworkController extends BaseNetworkController
             {
                 if (Util.isTextEmpty(registrationId) == false)
                 {
-                    DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, registrationId, new DailyHotelJsonResponseListener()
+                    DailyNetworkAPI.getInstance(mContext).requestUserRegisterNotification(mNetworkTag, registrationId, new DailyHotelJsonResponseListener()
                     {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError)
+                        {
+
+                        }
+
                         @Override
                         public void onResponse(String url, JSONObject response)
                         {
@@ -70,8 +93,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
                                     JSONObject jsonObject = response.getJSONObject("data");
 
                                     uid = jsonObject.getInt("uid");
-                                    //                                    DailyPreference.getInstance(mContext).setNotificationUid(uid);
-                                    //                                    DailyPreference.getInstance(mContext).setGCMRegistrationId(registrationId);
                                 }
                             } catch (Exception e)
                             {
@@ -100,112 +121,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                String userIndex = String.valueOf(response.getInt("idx"));
-    //
-    //                AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
-    //                AnalyticsManager.getInstance(mContext).signUpDailyUser(userIndex, mSignupParams.get("email")//
-    //                    , mSignupParams.get("name"), mSignupParams.get("phone"), AnalyticsManager.UserType.EMAIL);
-    //
-    //                requestGoogleCloudMessagingId();
-    //            } catch (Exception e)
-    //            {
-    //                unLockUI();
-    //                onError(e);
-    //            }
-    //        }
-    //    };
-
-    //    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                int msg_code = response.getInt("msg_code");
-    //
-    //                if (msg_code == 0)
-    //                {
-    //                    JSONObject jsonObject = response.getJSONObject("data");
-    //
-    //                    boolean isSignin = jsonObject.getBoolean("is_signin");
-    //
-    //                    if (isSignin == true)
-    //                    {
-    //                        JSONObject tokenJSONObject = response.getJSONObject("token");
-    //                        String accessToken = tokenJSONObject.getString("access_token");
-    //                        String tokenType = tokenJSONObject.getString("token_type");
-    //
-    //                        storeUserInformation(String.format("%s %s", tokenType, accessToken));
-    //
-    //                        lockUI();
-    //                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, SignupStep2NetworkController.this);
-    //                        return;
-    //                    }
-    //                }
-    //
-    //                // 로그인이 실패한 경우
-    //                String msg = response.getString("msg");
-    //
-    //                if (Util.isTextEmpty(msg) == true)
-    //                {
-    //                    msg = getString(R.string.toast_msg_failed_to_login);
-    //                }
-    //
-    //                DailyToast.showToast(SignupStep2NetworkController.this, msg, Toast.LENGTH_LONG);
-    //
-    //                unLockUI();
-    //                finish();
-    //            } catch (Exception e)
-    //            {
-    //                unLockUI();
-    //                onError(e);
-    //            }
-    //        }
-    //    };
-
-    private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            //            try
-            //            {
-            //                int msg_code = response.getInt("msg_code");
-            //
-            //                if (msg_code == 0)
-            //                {
-            //                    JSONObject jsonObject = response.getJSONObject("data");
-            //
-            //                    boolean isSignup = jsonObject.getBoolean("is_signup");
-            //
-            //                    if (isSignup == true)
-            //                    {
-            //                        requestGoogleCloudMessagingId();
-            //                        return;
-            //                    }
-            //                }
-            //
-            //                String msg = response.getString("msg");
-            //
-            //                if (Util.isTextEmpty(msg) == true)
-            //                {
-            //                    msg = getString(R.string.toast_msg_failed_to_signup);
-            //                }
-            //            } catch (Exception e)
-            //            {
-            //                mOnNetworkControllerListener.onError(e);
-            //            }
-        }
-    };
-
     private DailyHotelJsonResponseListener mVerificationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -218,14 +133,125 @@ public class SignupStep2NetworkController extends BaseNetworkController
                 if (msgCode == 100)
                 {
                     JSONObject dataJONObject = response.getJSONObject("data");
-                    String message = "010-NNNN-NNNN로 N자리 인증번호를 보내드렸습니다.\nN분내 인증번호를 입력해주세요!";
+                    String message = dataJONObject.getString("msg");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseVerification(message);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
                 } else
                 {
                     // 다른 폰에서 인증된 경우
-                    mOnNetworkControllerListener.onErrorMessage(msgCode, response.getString("msg"));
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
+                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onErrorResponse(volleyError);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mDailyUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignup = jsonObject.getBoolean("is_signup");
+
+                    if (isSignup == true)
+                    {
+                        requestGoogleCloudMessagingId();
+                        return;
+                    }
+                }
+
+                String msg = response.getString("msg");
+
+                if (Util.isTextEmpty(msg) == true)
+                {
+                    msg = mContext.getString(R.string.toast_msg_failed_to_signup);
+                }
+
+                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
+                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onErrorResponse(volleyError);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mDailyUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        JSONObject tokenJSONObject = response.getJSONObject("token");
+                        String accessToken = tokenJSONObject.getString("access_token");
+                        String tokenType = tokenJSONObject.getString("token_type");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken));
+                        return;
+                    }
+                }
+
+                // 로그인이 실패한 경우
+                String msg = response.getString("msg");
+
+                if (Util.isTextEmpty(msg) == true)
+                {
+                    msg = mContext.getString(R.string.toast_msg_failed_to_login);
+                }
+
+                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

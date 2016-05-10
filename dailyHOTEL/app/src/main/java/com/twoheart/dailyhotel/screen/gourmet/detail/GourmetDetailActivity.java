@@ -9,6 +9,7 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
@@ -119,6 +120,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {

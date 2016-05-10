@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -17,6 +16,7 @@ import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -32,6 +32,7 @@ public class SignupStep1Activity extends BaseActivity
     private static final int REQUEST_CODE_ACTIVITY = 100;
 
     private SignupStep1Layout mSignupStep1Layout;
+    private Map<String, String> mSignupParams;
 
     public static Intent newInstance(Context context)
     {
@@ -58,7 +59,7 @@ public class SignupStep1Activity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(Screen.SIGNUP, null);
+        AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(Screen.MENU_REGISTRATION_GETINFO, null);
 
         super.onStart();
     }
@@ -125,11 +126,26 @@ public class SignupStep1Activity extends BaseActivity
                     finish();
                 } else
                 {
-
+                    removeUserInformation();
                 }
                 break;
             }
         }
+    }
+
+    public void storeUserInformation(String email, String name)
+    {
+        if (Util.isTextEmpty(email, name) == true)
+        {
+            return;
+        }
+
+        DailyPreference.getInstance(SignupStep1Activity.this).setUserInformation(Constants.DAILY_USER, email, name);
+    }
+
+    public void removeUserInformation()
+    {
+        DailyPreference.getInstance(SignupStep1Activity.this).removeUserInformation();
     }
 
     private SignupStep1Layout.OnEventListener mOnEventListener = new SignupStep1Layout.OnEventListener()
@@ -177,77 +193,40 @@ public class SignupStep1Activity extends BaseActivity
                 return;
             }
 
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
             final String deviceId = Util.getDeviceId(SignupStep1Activity.this);
 
-            if(Util.isTextEmpty(deviceId) == true)
+            if (Util.isTextEmpty(deviceId) == true)
             {
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_dont_support_service_phone, Toast.LENGTH_LONG);
                 return;
             }
 
-            // 네트워크 검증 후에 다음 코스로 넘김.\
-            Map<String, String> params = new HashMap<>();
-            params.put("email", email);
-            params.put("pw", password);
-            params.put("pw2", confirmPassword);
-            params.put("device", deviceId);
-            params.put("name", name);
-
-            if(Util.isTextEmpty(recommender) == false)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
-                params.put("recommender", recommender);
+                return;
             }
 
-            params.put("market_type", RELEASE_STORE.getName());
-
-            DailyNetworkAPI.getInstance().requestSignupValidation(mNetworkTag, params, new DailyHotelJsonResponseListener()
+            if (mSignupParams == null)
             {
-                @Override
-                public void onResponse(String url, JSONObject response)
-                {
-                    try
-                    {
-                        int msgCode = response.getInt("msgCode");
+                mSignupParams = new HashMap<>();
+            }
 
-                        if (msgCode == 100)
-                        {
-                            JSONObject dataJSONObject = response.getJSONObject("data");
-                            String signupKey = dataJSONObject.getString("signup_key");
+            mSignupParams.clear();
+            mSignupParams.put("email", email);
+            mSignupParams.put("pw", password);
+            mSignupParams.put("device", deviceId);
+            mSignupParams.put("name", name);
 
-                            Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this//
-                                , signupKey, email, name, Crypto.encrypt(password), deviceId, recommender);
-                            startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
-                        } else
-                        {
-                            onErrorMessage(msgCode, response.getString("msg"));
-                        }
-                    }catch (Exception e)
-                    {
-                        onError(e);
-                    }
-                }
-            }, new Response.ErrorListener()
+            if (Util.isTextEmpty(recommender) == false)
             {
-                @Override
-                public void onErrorResponse(VolleyError volleyError)
-                {
-                    try
-                    {
-                        JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
+                mSignupParams.put("recommender", recommender);
+            }
 
-                        onErrorToastMessage(jsonObject.getString("msg"));
+            mSignupParams.put("market_type", RELEASE_STORE.getName());
 
-                    }catch(Exception e)
-                    {
-                        onErrorResponse(volleyError);
-                    }
-                }
-            });
+            storeUserInformation(email, name);
+
+            DailyNetworkAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationListener);
         }
 
         @Override
@@ -280,6 +259,53 @@ public class SignupStep1Activity extends BaseActivity
         public void finish()
         {
             SignupStep1Activity.this.finish();
+        }
+    };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mSignupValidationListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    String signupKey = dataJSONObject.getString("signup_key");
+                    String password = Crypto.encrypt(mSignupParams.get("pw"));
+
+                    Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, signupKey, mSignupParams.get("email"), password);
+                    startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+
+                    storeUserInformation(mSignupParams.get("email"), mSignupParams.get("name"));
+                } else
+                {
+                    onErrorPopupMessage(msgCode, response.getString("msg"), null);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
+                onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+            } catch (Exception e)
+            {
+                SignupStep1Activity.this.onErrorResponse(volleyError);
+            }
         }
     };
 }

@@ -430,6 +430,7 @@
     <string name="label_booking_memo">예약시 요청사항</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>
     <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
+    <string name="message_gourmet_please_input_guest">예약자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -448,7 +449,7 @@
     <string name="label_select">선택</string>
     <string name="label_country">국가</string>
     <string name="label_phone_number_special_except">휴대폰 번호 (\'-\'제외)</string>
-    <string name="label_certification_number_ndigit">인증번호 (N자리)</string>
+    <string name="label_certification_number_ndigit">인증번호</string>
 
     <string name="act_signup_phone">필수. 휴대폰 번호 (예약시 사용)</string>
     <string name="act_signup_email">필수. 이메일</string>
@@ -503,8 +504,7 @@
     <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>
     <string name="frag_rating_gourmet_title">식사는 만족스러우셨나요?</string>
     <string name="frag_rating_hotel_text1">%1$s에 이용하신</string>
-    <string name="frag_rating_hotel_text2">\'%1$s\'</string>
-    <string name="frag_rating_hotel_text3">은/는 어떠셨나요?</string>
+    <string name="frag_rating_hotel_text2">%1$s 은/는 어떠셨나요?</string>
     <string name="frag_rating_hotel_recomm">만족함</string>
     <string name="frag_rating_hotel_cancel">만족안함</string>
     <string name="satisfaction_recommend_detailtext">특별히 만족스러우셨던 부분을 말씀해주세요!\n고객님의 평가를 반영하여\n앞으로도 최상의 서비스를 제공해드리겠습니다.</string>
