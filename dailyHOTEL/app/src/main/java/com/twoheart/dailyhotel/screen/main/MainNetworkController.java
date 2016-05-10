@@ -53,24 +53,24 @@ public class MainNetworkController extends BaseNetworkController
     protected void requestCheckServer()
     {
         // 서버 상태 체크
-        DailyNetworkAPI.getInstance().requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener, new Response.ErrorListener()
+        DailyNetworkAPI.getInstance(mContext).requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                DailyNetworkAPI.getInstance().requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, this);
             }
         });
     }
 
     public void requestConfiguration()
     {
-        DailyNetworkAPI.getInstance().requestCompanyInformation(mNetworkTag, mCompanyInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestCompanyInformation(mNetworkTag, mCompanyInformationJsonResponseListener, this);
     }
 
     public void requestUserInformation()
     {
-        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfomationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInfomationJsonResponseListener, this);
     }
 
     /**
@@ -78,7 +78,7 @@ public class MainNetworkController extends BaseNetworkController
      */
     protected void requestEvent()
     {
-        DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        DailyNetworkAPI.getInstance(mContext).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)
@@ -113,14 +113,14 @@ public class MainNetworkController extends BaseNetworkController
 
                 DailyPreference.getInstance(mContext).setLookUpEventTime(currentDateTime);
 
-                DailyNetworkAPI.getInstance().requestEventNewCount(mNetworkTag, Long.toString(lastLookupDateTime), mDailyEventCountJsonResponseListener, null);
+                DailyNetworkAPI.getInstance(mContext).requestEventNewCount(mNetworkTag, Long.toString(lastLookupDateTime), mDailyEventCountJsonResponseListener, null);
             }
         }, null);
     }
 
     protected void requestGourmetIsExistRating()
     {
-        DailyNetworkAPI.getInstance().requestGourmetIsExistRating(mNetworkTag, mGourmetSatisfactionRatingExistJsonResponseListener, null);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetIsExistRating(mNetworkTag, mGourmetSatisfactionRatingExistJsonResponseListener, null);
     }
 
     public void registerNotificationId(final String registrationId, String userIndex)
@@ -158,12 +158,12 @@ public class MainNetworkController extends BaseNetworkController
         int uid = DailyPreference.getInstance(mContext).getNotificationUid();
         if (uid < 0)
         {
-            DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener, null);
+            DailyNetworkAPI.getInstance(mContext).requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener, null);
         } else
         {
             if (registrationId.equalsIgnoreCase(DailyPreference.getInstance(mContext).getGCMRegistrationId()) == false)
             {
-                DailyNetworkAPI.getInstance().requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener, null);
+                DailyNetworkAPI.getInstance(mContext).requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener, null);
             }
         }
     }
@@ -198,7 +198,7 @@ public class MainNetworkController extends BaseNetworkController
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
                     } else
                     {
-                        DailyNetworkAPI.getInstance().requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, MainNetworkController.this);
+                        DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, MainNetworkController.this);
                     }
                 }
             } catch (Exception e)
@@ -426,10 +426,6 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 final String userIndex = response.getString("idx");
-                boolean isSMSEnabled = response.getBoolean("is_text_enabled");
-
-                DailyPreference.getInstance(mContext).setAllowSMS(isSMSEnabled);
-
                 AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
 
                 Util.requestGoogleCloudMessaging(mContext, new Util.OnGoogleCloudMessagingListener()
@@ -447,7 +443,7 @@ public class MainNetworkController extends BaseNetworkController
                 });
 
                 // 호텔 평가요청
-                DailyNetworkAPI.getInstance().requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener, null);
+                DailyNetworkAPI.getInstance(mContext).requestHotelIsExistRating(mNetworkTag, mHotelSatisfactionRatingExistJsonResponseListener, null);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

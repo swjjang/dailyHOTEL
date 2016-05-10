@@ -5,18 +5,20 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
+import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
@@ -28,19 +30,19 @@ public class VolleyHttpClient implements Constants
     private RequestQueue mRequestQueue;
     private OkHttpStack mOkHttpStack;
 
-    public synchronized static VolleyHttpClient getInstance()
+    public synchronized static VolleyHttpClient getInstance(Context context)
     {
         if (mInstance == null)
         {
-            mInstance = new VolleyHttpClient();
+            mInstance = new VolleyHttpClient(context);
         }
 
         return mInstance;
     }
 
-    private VolleyHttpClient()
+    private VolleyHttpClient(Context context)
     {
-        mOkHttpStack = new OkHttpStack();
+        mOkHttpStack = new OkHttpStack(context);
     }
 
     public void newRequestQueue(Context context)
@@ -107,18 +109,19 @@ public class VolleyHttpClient implements Constants
             }
         }
 
-        public OkHttpStack()
+        public OkHttpStack(Context context)
         {
             mOkHttpClient = new OkHttpClient();
             SSLContext sslContext;
 
             try
             {
-                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
+                //                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
+                TrustManager[] trustManagers = newTrustManager(context);
 
                 sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(null, trustManagers, new SecureRandom());
-            } catch (GeneralSecurityException e)
+                sslContext.init(null, trustManagers, null);
+            } catch (Exception e)
             {
                 throw new AssertionError(); // 시스템이 TLS를 지원하지 않습니다
             }
@@ -142,6 +145,30 @@ public class VolleyHttpClient implements Constants
         protected HttpURLConnection createConnection(URL url) throws IOException
         {
             return mOkUrlFactory.open(url);
+        }
+
+        private TrustManager[] newTrustManager(Context context)
+        {
+            try
+            {
+                KeyStore trusted = KeyStore.getInstance("BKS");
+                InputStream in = context.getResources().openRawResource(R.raw.daily);
+
+                try
+                {
+                    trusted.load(in, "androidDAILYHOTEL_MIIEowIBAA".toCharArray());
+                } finally
+                {
+                    in.close();
+                }
+
+                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                trustManagerFactory.init(trusted);
+                return trustManagerFactory.getTrustManagers();
+            } catch (Exception e)
+            {
+                throw new AssertionError(e);
+            }
         }
     }
 }

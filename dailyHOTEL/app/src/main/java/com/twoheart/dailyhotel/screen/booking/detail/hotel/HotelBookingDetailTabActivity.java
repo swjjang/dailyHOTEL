@@ -235,7 +235,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         lockUI();
 
         // 호텔 정보를 가져온다.
-        DailyNetworkAPI.getInstance().requestHotelBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestHotelBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -266,8 +266,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     loadFragments(getViewPager(), mHotelBookingDetail);
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {

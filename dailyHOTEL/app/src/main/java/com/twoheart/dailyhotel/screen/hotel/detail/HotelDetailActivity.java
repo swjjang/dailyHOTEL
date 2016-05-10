@@ -211,7 +211,11 @@ public class HotelDetailActivity extends BaseActivity
         if (mHotelDetailLayout != null)
         {
             mHotelDetailLayout.hideRoomType();
-            mHotelDetailLayout.setBookingStatus(HotelDetailLayout.STATUS_SEARCH_ROOM);
+
+            if (mHotelDetailLayout.getBookingStatus() != HotelDetailLayout.STATUS_SOLD_OUT)
+            {
+                mHotelDetailLayout.setBookingStatus(HotelDetailLayout.STATUS_SEARCH_ROOM);
+            }
         }
 
         if (mDontReloadAtOnResume == true)
@@ -220,7 +224,7 @@ public class HotelDetailActivity extends BaseActivity
         } else
         {
             lockUI();
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
+            DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
         }
 
         super.onResume();
@@ -538,7 +542,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 lockUI();
 
-                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, HotelDetailActivity.this);
+                DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, HotelDetailActivity.this);
             }
 
             String label = String.format("%s-%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
@@ -844,10 +848,10 @@ public class HotelDetailActivity extends BaseActivity
                     }
 
                     // 호텔 정보를 가져온다.
-                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
+                    DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
                 } else
                 {
-                    DailyNetworkAPI.getInstance().requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
+                    DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestHotelDetailInformation(mNetworkTag, mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"), mHotelDetail.nights, mHotelDetailInformationJsonResponseListener, HotelDetailActivity.this);
                 }
             } catch (Exception e)
             {

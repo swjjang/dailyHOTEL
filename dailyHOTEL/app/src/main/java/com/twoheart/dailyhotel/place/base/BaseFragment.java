@@ -12,11 +12,6 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
 {
     protected String mNetworkTag;
 
-    /**
-     * UI Component의 잠금 상태인지 확인하는 변수..
-     */
-    private boolean mIsLockUiComponent = false;
-
     public BaseFragment()
     {
     }
@@ -32,7 +27,14 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
     @Override
     public void onDestroy()
     {
-        DailyNetworkAPI.getInstance().cancelAll(mNetworkTag);
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        DailyNetworkAPI.getInstance(baseActivity).cancelAll(mNetworkTag);
 
         super.onDestroy();
     }
@@ -66,7 +68,7 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
         baseActivity.onErrorResponse(error);
     }
 
-    protected void onErrorMessage(int msgCode, String message)
+    protected void onErrorPopupMessage(int msgCode, String message)
     {
         unLockUI();
 
@@ -77,7 +79,21 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
             return;
         }
 
-        baseActivity.onErrorMessage(msgCode, message);
+        baseActivity.onErrorPopupMessage(msgCode, message);
+    }
+
+    protected void onErrorToastMessage(String message)
+    {
+        unLockUI();
+
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.onErrorToastMessage(message);
     }
 
     public void lockUI()
@@ -94,15 +110,11 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
             return;
         }
 
-        lockUiComponent();
-
         baseActivity.lockUI(isShowProgress);
     }
 
     public void unLockUI()
     {
-        releaseUiComponent();
-
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         if (baseActivity == null)
@@ -120,7 +132,14 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
      */
     protected boolean isLockUiComponent()
     {
-        return mIsLockUiComponent;
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return true;
+        }
+
+        return baseActivity.isLockUiComponent();
     }
 
     /**
@@ -128,7 +147,26 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
      */
     protected void lockUiComponent()
     {
-        mIsLockUiComponent = true;
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.lockUiComponent();
+    }
+
+    public boolean lockUiComponentAndIsLockUiComponent()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return true;
+        }
+
+        return baseActivity.lockUiComponentAndIsLockUiComponent();
     }
 
     /**
@@ -136,6 +174,13 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
      */
     protected void releaseUiComponent()
     {
-        mIsLockUiComponent = false;
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.releaseUiComponent();
     }
 }

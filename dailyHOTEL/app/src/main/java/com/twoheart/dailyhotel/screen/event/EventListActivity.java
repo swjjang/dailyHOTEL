@@ -155,10 +155,17 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            EventListActivity.this.onErrorMessage(msgCode, message);
+            EventListActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            unLockUI();
+            EventListActivity.this.onErrorToastMessage(message);
         }
     };
 }

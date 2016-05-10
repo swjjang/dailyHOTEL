@@ -73,7 +73,8 @@ public class HotelCurationOption extends PlaceCurationOption
     {
         if (getSortType() != Constants.SortType.DEFAULT//
             || person != HotelFilter.MIN_PERSON//
-            || flagBedTypeFilters != HotelFilter.FLAG_HOTEL_FILTER_BED_NONE || flagAmenitiesFilters != HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+            || flagBedTypeFilters != HotelFilter.FLAG_HOTEL_FILTER_BED_NONE//
+            || flagAmenitiesFilters != HotelFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
             return false;
         }

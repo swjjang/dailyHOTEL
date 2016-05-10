@@ -295,7 +295,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance().requestGourmetList(mNetworkTag, province, checkInSaleTime, mGourmetListJsonResponseListener, baseActivity);
+        DailyNetworkAPI.getInstance(baseActivity).requestGourmetList(mNetworkTag, province, checkInSaleTime, mGourmetListJsonResponseListener, baseActivity);
     }
 
     public void setScrollListTop(boolean scrollListTop)
@@ -739,7 +739,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 } else
                 {
                     String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

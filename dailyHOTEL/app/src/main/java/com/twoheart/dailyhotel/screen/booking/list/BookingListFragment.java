@@ -173,7 +173,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         {
             lockUI();
 
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
     }
 
@@ -331,11 +331,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     switch (booking.placeType)
                     {
                         case HOTEL:
-                            DailyNetworkAPI.getInstance().requestHotelHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestHotelHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener, baseActivity);
                             break;
 
                         case FNB:
-                            DailyNetworkAPI.getInstance().requestGourmetHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestGourmetHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener, baseActivity);
                             break;
                     }
 
@@ -492,7 +492,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 mCurrentTime = response.getLong("currentDateTime");
 
-                DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
             } catch (Exception e)
             {
                 onError(e);
@@ -557,7 +557,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             }
 
                             lockUI();
-                            DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         }
                     };
                 } else
@@ -575,7 +575,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             }
 
                             lockUI();
-                            DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         }
                     };
                 }
@@ -587,7 +587,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                         message = response.getString("msg");
                         DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
 
-                        DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                        DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         break;
                     }
 
@@ -601,7 +601,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                         }
 
-                        DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                        DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         break;
                     }
 
@@ -622,7 +622,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
                         } else
                         {
-                            DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
                         }
                         break;
                     }
@@ -632,7 +632,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 onError(e);
 
                 // credit card 요청
-                DailyNetworkAPI.getInstance().requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
             }
         }
     };

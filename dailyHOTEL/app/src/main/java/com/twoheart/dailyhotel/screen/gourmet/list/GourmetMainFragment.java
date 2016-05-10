@@ -71,7 +71,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     private DailyFloatingActionButtonBehavior mDailyFloatingActionButtonBehavior;
 
     private SaleTime mTodaySaleTime;
-    private boolean mDontReloadAtOnResume;
+    private boolean mDontReloadAtOnResume, mIsDeepLink;
     private GourmetCurationOption mCurationOption;
     private List<EventBanner> mEventBannerList;
 
@@ -217,15 +217,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     return;
                 }
 
-                if (isLockUiComponent() == true)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return;
                 }
 
-                lockUiComponent();
-
                 Intent intent = GourmetCurationActivity.newInstance(baseActivity, getProvince().isOverseas, mViewType, mCurationOption);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
                 String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -278,7 +276,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             }
 
             lockUI();
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
 
         super.onResume();
@@ -312,7 +310,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             // 지역을 선택한 후에 되돌아 온경우.
             case CODE_REQUEST_ACTIVITY_REGIONLIST:
             {
-                mDontReloadAtOnResume = true;
+                if (mIsDeepLink == false)
+                {
+                    mDontReloadAtOnResume = true;
+                } else
+                {
+                    mIsDeepLink = false;
+                }
 
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
@@ -345,7 +349,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_CURATION:
+            case CODE_REQUEST_ACTIVITY_GOURMETCURATION:
             {
                 mDontReloadAtOnResume = true;
 
@@ -394,7 +398,13 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH:
             {
-                mDontReloadAtOnResume = true;
+                if (mIsDeepLink == false)
+                {
+                    mDontReloadAtOnResume = true;
+                } else
+                {
+                    mIsDeepLink = false;
+                }
                 break;
             }
         }
@@ -560,7 +570,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private void refreshEventBanner()
     {
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)
@@ -782,6 +792,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             mOnCommunicateListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
 
             DailyDeepLink.getInstance().clear();
+            mIsDeepLink = true;
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -792,7 +803,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             makeDateTabLayout();
 
             // 지역 리스트를 가져온다
-            DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
         }
     }
 
@@ -805,13 +816,14 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         {
             Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, mTodaySaleTime);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+            mIsDeepLink = true;
         } else
         {
             //탭에 들어갈 날짜를 만든다.
             makeDateTabLayout();
 
             // 지역 리스트를 가져온다
-            DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
         }
     }
 
@@ -940,6 +952,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
+        mIsDeepLink = true;
     }
 
     private void deepLinkGourmetList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
@@ -1123,7 +1136,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             fragment.onPageSelected();
 
             //            mOnCommunicateListener.refreshAll(true);
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
 
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -1410,7 +1423,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             }
 
             lockUI(isShowProgress);
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
 
         @Override
@@ -1487,7 +1500,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     makeDateTabLayout();
 
                     // 지역 리스트를 가져온다
-                    DailyNetworkAPI.getInstance().requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+                    DailyNetworkAPI.getInstance(baseActivity).requestGourmetRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
                 }
             } catch (Exception e)
             {
@@ -1636,7 +1649,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 {
                     String message = response.getString("msg");
 
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

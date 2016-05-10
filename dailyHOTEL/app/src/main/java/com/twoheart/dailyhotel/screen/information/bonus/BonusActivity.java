@@ -106,7 +106,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
         } else
         {
             lockUI();
-            DailyNetworkAPI.getInstance().requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, this);
+            DailyNetworkAPI.getInstance(this).requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, this);
         }
     }
 
@@ -272,7 +272,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 mUserName = response.getString("name");
 
                 // 적립금 목록 요청.
-                DailyNetworkAPI.getInstance().requestUserBonus(mNetworkTag, mUserBonusAllResponseListener, BonusActivity.this);
+                DailyNetworkAPI.getInstance(BonusActivity.this).requestUserBonus(mNetworkTag, mUserBonusAllResponseListener, BonusActivity.this);
             } catch (Exception e)
             {
                 onError(e);
@@ -311,7 +311,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 mBonusTextView.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
 
                 // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, BonusActivity.this);
+                DailyNetworkAPI.getInstance(BonusActivity.this).requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, BonusActivity.this);
             } catch (Exception e)
             {
                 onError(e);

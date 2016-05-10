@@ -165,7 +165,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
     protected void requestReceiptDetail(int index)
     {
-        DailyNetworkAPI.getInstance().requestGourmetReceipt(mNetworkTag, index, mReservReceiptJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservReceiptJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,8 +197,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
                     makeLayout(response.getJSONObject("data"));
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {

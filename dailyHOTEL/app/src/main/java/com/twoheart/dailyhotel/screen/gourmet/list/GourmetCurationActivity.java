@@ -584,13 +584,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     @Override
     protected void onCancel()
     {
-        if (mGourmetCurationOption.isDefaultFilter() == true)
-        {
-            Intent intent = new Intent();
-            intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mGourmetCurationOption);
-            setResult(RESULT_OK, intent);
-        }
-
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
 

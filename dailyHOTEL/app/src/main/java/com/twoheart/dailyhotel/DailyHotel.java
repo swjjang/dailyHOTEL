@@ -70,22 +70,22 @@ public class DailyHotel extends Application implements Constants
 
         AUTHORIZATION = DailyPreference.getInstance(getApplicationContext()).getAuthorization();
 
-        initializeVolley();
-        initializeAnalytics();
+        initializeVolley(getApplicationContext());
+        initializeAnalytics(getApplicationContext());
         Util.initializeFresco(getApplicationContext());
         FacebookSdk.sdkInitialize(getApplicationContext());
         KakaoSDK.init(new KakaoSDKAdapter());
         FontManager.getInstance(getApplicationContext());
     }
 
-    private void initializeAnalytics()
+    private void initializeAnalytics(Context context)
     {
-        AnalyticsManager.getInstance(getApplicationContext());
+        AnalyticsManager.getInstance(context);
     }
 
-    private void initializeVolley()
+    private void initializeVolley(Context context)
     {
-        VolleyHttpClient.getInstance().newRequestQueue(getApplicationContext());
+        VolleyHttpClient.getInstance(context).newRequestQueue(context);
     }
 
     public static DailyHotel getGlobalApplicationContext()

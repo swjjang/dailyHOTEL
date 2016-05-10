@@ -576,7 +576,7 @@ public class Util implements Constants
                         int length = text[1].length();
                         if (length == 12 || length == 13)
                         {
-                            return true;
+                            return (Util.isExistMobileNumber(phonenumber) == false);
                         }
                     }
                 }
@@ -633,7 +633,7 @@ public class Util implements Constants
         Pattern pattern02 = mobile02.length() == 3 ? Pattern.compile(PATTERN_3) : Pattern.compile(PATTENR_4);
         Pattern pattern03 = Pattern.compile(PATTENR_4);
 
-        return pattern01.matcher(mobile01).matches() && pattern02.matcher(mobile02).matches() && pattern03.matcher(mobile03).matches();
+        return pattern01.matcher(mobile01).matches() == false && pattern02.matcher(mobile02).matches() && pattern03.matcher(mobile03).matches();
     }
 
 

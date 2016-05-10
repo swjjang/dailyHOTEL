@@ -65,14 +65,14 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
             encodeKeyword = keyword;
         }
 
-        DailyNetworkAPI.getInstance().requestGourmetSearchList(mNetworkTag, saleTime, encodeKeyword, offset, count, mGourmetSearchListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, encodeKeyword, offset, count, mGourmetSearchListJsonResponseListener, this);
     }
 
     public void requestSearchResultList(SaleTime saleTime, Location location, int offset, int count)
     {
         requestAddress(location, mLocationToAddressListener);
 
-        DailyNetworkAPI.getInstance().requestGourmetSearchList(mNetworkTag, saleTime, location, offset, count, mGourmetLocationSearchListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, location, offset, count, mGourmetLocationSearchListJsonResponseListener, this);
     }
 
     private ArrayList<PlaceViewItem> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -163,7 +163,7 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
                 } else
                 {
                     String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorMessage(msgCode, message);
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
@@ -219,7 +219,7 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
                 } else
                 {
                     String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorMessage(msgCode, message);
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {
@@ -250,12 +250,18 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
                 JSONArray jsonArray = response.getJSONArray("results");
                 JSONObject searchJSONObject = getSearchTypes(jsonArray, "country");
 
-                String shortName = searchJSONObject.getString("short_name");
-                String searchKeyword = "KR".equalsIgnoreCase(shortName) ? "sublocality_level_2" : "administrative_area_level_1";
+                if (searchJSONObject == null)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
+                } else
+                {
+                    String shortName = searchJSONObject.getString("short_name");
+                    String searchKeyword = "KR".equalsIgnoreCase(shortName) ? "sublocality_level_2" : "administrative_area_level_1";
 
-                String address = getSearchTypes(jsonArray, searchKeyword, "long_name");
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address);
-            } catch (JSONException e)
+                    String address = getSearchTypes(jsonArray, searchKeyword, "long_name");
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(address);
+                }
+            } catch (Exception e)
             {
                 ExLog.e(e.toString());
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));

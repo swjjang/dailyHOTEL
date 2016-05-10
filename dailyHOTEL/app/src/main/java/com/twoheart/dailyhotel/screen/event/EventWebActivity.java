@@ -100,6 +100,24 @@ public class EventWebActivity extends WebViewActivity implements Constants
         setWebView(url);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("sourceType", mSourceType.name());
+        outState.putParcelable("saleTime", mSaleTime);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mSourceType = SourceType.valueOf(savedInstanceState.getString("sourceType"));
+        mSaleTime = savedInstanceState.getParcelable("saleTime");
+    }
+
     private void initToolbar()
     {
         View toolbar = findViewById(R.id.toolbar);

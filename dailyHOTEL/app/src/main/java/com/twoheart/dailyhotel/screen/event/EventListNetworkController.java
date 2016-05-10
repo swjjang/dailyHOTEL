@@ -43,7 +43,7 @@ public class EventListNetworkController extends BaseNetworkController
 
     public void requestEventList()
     {
-        DailyNetworkAPI.getInstance().requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, this);
     }
 
     public void requestEventPageUrl(Event event)
@@ -58,7 +58,7 @@ public class EventListNetworkController extends BaseNetworkController
             store = "skt";
         }
 
-        DailyNetworkAPI.getInstance().requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ public class EventListNetworkController extends BaseNetworkController
                     {
                         String message = response.getString("msg");
 
-                        mListener.onErrorMessage(msgCode, message);
+                        mListener.onErrorPopupMessage(msgCode, message);
                     }
 
                     mListener.onEventListResponse(null);
@@ -145,7 +145,7 @@ public class EventListNetworkController extends BaseNetworkController
                     if (response.has("msg") == true)
                     {
                         String message = response.getString("msg");
-                        mListener.onErrorMessage(msgCode, message);
+                        mListener.onErrorPopupMessage(msgCode, message);
                     }
                 } else
                 {

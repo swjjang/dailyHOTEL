@@ -44,7 +44,7 @@ public class HotelSearchNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyNetworkAPI.getInstance().requestHotelSearchAutoCompleteList(mNetworkTag//
+        DailyNetworkAPI.getInstance(mContext).requestHotelSearchAutoCompleteList(mNetworkTag//
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), lengthStay, keyword, mHotelSearchAutoCompleteListener, mHotelSearchAutoCompleteErrorListener);
     }
 

@@ -340,7 +340,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance().requestHotelList(mNetworkTag, province, checkInSaleTime, nights, mHotelListJsonResponseListener, baseActivity);
+        DailyNetworkAPI.getInstance(baseActivity).requestHotelList(mNetworkTag, province, checkInSaleTime, nights, mHotelListJsonResponseListener, baseActivity);
     }
 
     public void setScrollListTop(boolean scrollListTop)
@@ -752,7 +752,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 } else
                 {
                     String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

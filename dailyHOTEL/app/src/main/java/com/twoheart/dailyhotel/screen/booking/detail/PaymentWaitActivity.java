@@ -146,7 +146,7 @@ public class PaymentWaitActivity extends BaseActivity
                 placeInformationView.setText(R.string.actionbar_title_hoteldetailinfo_activity);
                 placeNameView.setText(R.string.label_receipt_hotelname);
 
-                DailyNetworkAPI.getInstance().requestDepositWaitDetailInformation(mNetworkTag, booking.payType, booking.tid, mHotelReservationJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.payType, booking.tid, mHotelReservationJsonResponseListener, this);
                 break;
             }
 
@@ -155,7 +155,7 @@ public class PaymentWaitActivity extends BaseActivity
                 placeInformationView.setText(R.string.label_restaurant_information);
                 placeNameView.setText(R.string.label_receipt_restaurantname);
 
-                DailyNetworkAPI.getInstance().requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener, this);
                 break;
             }
         }

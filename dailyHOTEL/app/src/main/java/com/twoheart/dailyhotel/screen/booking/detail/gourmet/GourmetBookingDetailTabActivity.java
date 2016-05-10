@@ -229,7 +229,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     protected void requestPlaceBookingDetail(int reservationIndex)
     {
         lockUI();
-        DailyNetworkAPI.getInstance().requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,8 +260,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     loadFragments(getViewPager(), mGourmetBookingDetail);
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {

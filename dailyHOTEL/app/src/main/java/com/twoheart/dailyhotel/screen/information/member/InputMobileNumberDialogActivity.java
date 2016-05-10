@@ -215,7 +215,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 
                 String phoneNumber = String.format("%s %s", countryCode, mMobileNumber);
 
-                if (Util.isValidatePhoneNumber(phoneNumber) == true && Util.isExistMobileNumber(phoneNumber) == false)
+                if (Util.isValidatePhoneNumber(phoneNumber) == true)
                 {
                     Intent intent = new Intent();
                     intent.putExtra(INTENT_EXTRA_MOBILE_NUMBER, String.format("%s %s", countryCode, mMobileNumber));

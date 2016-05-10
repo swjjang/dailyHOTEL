@@ -44,7 +44,7 @@ public class GourmetSearchNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyNetworkAPI.getInstance().requestGourmetSearchAutoCompleteList(mNetworkTag//
+        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchAutoCompleteList(mNetworkTag//
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteListener, mGourmetearchAutoCompleteErrorListener);
     }
 

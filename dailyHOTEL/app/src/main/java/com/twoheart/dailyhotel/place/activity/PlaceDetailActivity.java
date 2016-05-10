@@ -219,7 +219,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
         if (mPlaceDetailLayout != null)
         {
             mPlaceDetailLayout.hideTicketInformationLayout();
-            mPlaceDetailLayout.setBookingStatus(GourmetDetailLayout.STATUS_SEARCH_TICKET);
+
+            if (mPlaceDetailLayout.getBookingStatus() != GourmetDetailLayout.STATUS_SOLD_OUT)
+            {
+                mPlaceDetailLayout.setBookingStatus(GourmetDetailLayout.STATUS_SEARCH_TICKET);
+            }
         }
 
         if (mDontReloadAtOnResume == true)
@@ -228,7 +232,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         } else
         {
             lockUI();
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
+            DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, this);
         }
 
         super.onResume();
@@ -469,7 +473,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 lockUI();
 
-                DailyNetworkAPI.getInstance().requestUserInformationEx(mNetworkTag, mUserSocialInformationJsonResponseListener, PlaceDetailActivity.this);
+                DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserSocialInformationJsonResponseListener, PlaceDetailActivity.this);
             }
 
             String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);

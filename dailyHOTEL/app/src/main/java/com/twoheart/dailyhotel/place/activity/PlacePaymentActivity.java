@@ -216,7 +216,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         mDontReload = true;
 
                         // 신용카드 등록후에 바로 결제를 할경우.
-                        DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mPaymentAfterRegisterCreditCardJsonResponseListener, this);
+                        DailyNetworkAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mPaymentAfterRegisterCreditCardJsonResponseListener, this);
                         return;
 
                     case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
