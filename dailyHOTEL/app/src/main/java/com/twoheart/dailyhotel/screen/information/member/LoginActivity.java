@@ -262,12 +262,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             params.put("social_id", id);
         }
 
-        if (encryptedId != null)
-        {
-            params.put("pw", encryptedId);
-        }
-
-        params.put("is_auto", "true");
+        params.put("pw", encryptedId);
         params.put("user_type", Constants.FACEBOOK_USER);
 
         mStoreParams.putAll(params);
@@ -282,14 +277,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             mStoreParams.put("gender", gender);
         }
 
-        if (deviceId != null)
+        if (Util.isTextEmpty(deviceId) == false)
         {
             mStoreParams.put("device", deviceId);
         }
 
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+        DailyNetworkAPI.getInstance(this).requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, this);
     }
 
     private void registerKakaokUser(long id)
@@ -311,24 +306,20 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             params.put("social_id", index);
         }
 
-        if (encryptedId != null)
-        {
-            params.put("pw", encryptedId);
-        }
-
-        params.put("is_auto", "true");
+        params.put("pw", encryptedId);
+        params.put("pw2", encryptedId);
         params.put("user_type", Constants.KAKAO_USER);
 
         mStoreParams.putAll(params);
 
-        if (deviceId != null)
+        if (Util.isTextEmpty(deviceId) == false)
         {
             mStoreParams.put("device", deviceId);
         }
 
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+        DailyNetworkAPI.getInstance(this).requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, this);
     }
 
     @Override
@@ -431,7 +422,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         mStoreParams.putAll(params);
 
-        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
     }
@@ -439,24 +430,20 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     public void storeLoginInfo()
     {
-        String id = mStoreParams.get("email");
-        String pwd = mStoreParams.get("pw");
+        String email = mStoreParams.get("email");
         String accessToken = mStoreParams.get("social_id");
         String type = mStoreParams.get("user_type");
 
-        DailyPreference.getInstance(this).setAutoLogin(true);
-
         if (Util.isTextEmpty(accessToken) == false && "0".equals(accessToken) == false)
         {
+            DailyPreference.getInstance(this).setUserEmail(null);
             DailyPreference.getInstance(this).setUserAccessToken(accessToken);
-            DailyPreference.getInstance(this).setUserId(null);
         } else
         {
-            DailyPreference.getInstance(this).setUserId(id);
+            DailyPreference.getInstance(this).setUserEmail(email);
             DailyPreference.getInstance(this).setUserAccessToken(null);
         }
 
-        DailyPreference.getInstance(this).setUserPassword(pwd);
         DailyPreference.getInstance(this).setUserType(type);
     }
 
@@ -558,10 +545,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         int uid = DailyPreference.getInstance(LoginActivity.this).getNotificationUid();
         if (uid < 0)
         {
-            DailyNetworkAPI.getInstance().requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener, errorListener);
+            DailyNetworkAPI.getInstance(this).requestUserRegisterNotification(mNetworkTag, registrationId, dailyHotelJsonResponseListener, errorListener);
         } else
         {
-            DailyNetworkAPI.getInstance().requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener, errorListener);
+            DailyNetworkAPI.getInstance(this).requestUserUpdateNotification(mNetworkTag, userIndex, registrationId, Integer.toString(uid), dailyHotelJsonResponseListener, errorListener);
         }
     }
 
@@ -693,12 +680,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mSocialUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -738,14 +719,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             params.put("user_type", mStoreParams.get("user_type"));
                         }
 
-                        if (mStoreParams.containsKey("is_auto") == true)
-                        {
-                            params.put("is_auto", mStoreParams.get("is_auto"));
-                        }
-
                         mStoreParams.put("new_user", "1");
 
-                        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
                         return;
                     }
                 }
@@ -767,6 +743,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 unLockUI();
                 onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            LoginActivity.this.onErrorResponse(volleyError);
         }
     };
 
@@ -796,9 +778,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 {
                     DailyPreference.getInstance(LoginActivity.this).setUserName(name);
                 }
-
-                boolean enabledSMS = response.getBoolean("is_text_enabled");
-                DailyPreference.getInstance(LoginActivity.this).setAllowSMS(enabledSMS);
 
                 if (mIsSocialSignUp == true)
                 {
@@ -864,7 +843,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                         storeLoginInfo();
 
-                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
+                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         return;
                     }
@@ -915,12 +894,21 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
                     storeLoginInfo();
 
-                    DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
+                    DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                 } else
                 {
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-                    DailyNetworkAPI.getInstance().requestUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupJsonResponseListener, LoginActivity.this);
+
+                    String userType = mStoreParams.get("user_type");
+
+                    if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
+                    {
+                        DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupJsonResponseListener);
+                    } else if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+                    {
+                        DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupJsonResponseListener);
+                    }
                 }
             } catch (Exception e)
             {

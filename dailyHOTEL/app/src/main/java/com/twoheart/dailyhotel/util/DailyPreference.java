@@ -37,7 +37,6 @@ public class DailyPreference
     private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     private static final String KEY_ALLOW_PUSH = "5";
-    private static final String KEY_ALLOW_SMS = "6";
 
     private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
@@ -87,10 +86,11 @@ public class DailyPreference
     //    private static final String KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE = "FNB_REGION_SELECT_BEFORE";
 
     // User Information
-    private static final String KEY_PREFERENCE_AUTO_LOGIN = "AUTO_LOGIN";
-    private static final String KEY_PREFERENCE_USER_ID = "USER_ID";
+    private static final String KEY_PREFERENCE_AUTO_LOGIN = "AUTO_LOGIN"; // 사용하지 않음
+    private static final String KEY_PREFERENCE_USER_ID = "USER_ID"; // 사용하지 않음
+    private static final String KEY_PREFERENCE_USER_EMAIL = "USER_EMAIL";
     private static final String KEY_PREFERENCE_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
-    private static final String KEY_PREFERENCE_USER_PWD = "USER_PWD";
+    private static final String KEY_PREFERENCE_USER_PWD = "USER_PWD"; // 사용하지 않음
     private static final String KEY_PREFERENCE_USER_TYPE = "USER_TYPE";
     private static final String KEY_PREFERENCE_USER_NAME = "USER_NAME";
 
@@ -351,22 +351,12 @@ public class DailyPreference
 
     public boolean isAllowPush()
     {
-        return getValue(mPreferences, KEY_ALLOW_PUSH, false);
+        return getValue(mPreferences, KEY_ALLOW_PUSH, true);
     }
 
     public void setAllowPush(boolean value)
     {
         setValue(mEditor, KEY_ALLOW_PUSH, value);
-    }
-
-    public boolean isAllowSMS()
-    {
-        return getValue(mPreferences, KEY_ALLOW_SMS, false);
-    }
-
-    public void setAllowSMS(boolean value)
-    {
-        setValue(mEditor, KEY_ALLOW_SMS, value);
     }
 
     public void setCompanyInformation(String name, String ceo, String bizRegNumber//
@@ -644,26 +634,6 @@ public class DailyPreference
         }
     }
 
-    public boolean isAutoLogin()
-    {
-        return getValue(mOldPreferences, KEY_PREFERENCE_AUTO_LOGIN, true);
-    }
-
-    public void setAutoLogin(boolean value)
-    {
-        setValue(mOldEditor, KEY_PREFERENCE_AUTO_LOGIN, value);
-    }
-
-    public String getUserId()
-    {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_ID, null);
-    }
-
-    public void setUserId(String value)
-    {
-        setValue(mOldEditor, KEY_PREFERENCE_USER_ID, value);
-    }
-
     public String getUserAccessToken()
     {
         return getValue(mOldPreferences, KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
@@ -672,16 +642,6 @@ public class DailyPreference
     public void setUserAccessToken(String value)
     {
         setValue(mOldEditor, KEY_PREFERENCE_USER_ACCESS_TOKEN, value);
-    }
-
-    public String getUserPassword()
-    {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_PWD, null);
-    }
-
-    public void setUserPassword(String value)
-    {
-        setValue(mOldEditor, KEY_PREFERENCE_USER_PWD, value);
     }
 
     public String getUserType()
@@ -704,14 +664,17 @@ public class DailyPreference
         setValue(mOldEditor, KEY_PREFERENCE_USER_NAME, value);
     }
 
-    public void setUserInformation(boolean isAutoLogin, String id, String password, String type, String name)
+    public void setUserEmail(String value)
+    {
+        setValue(mOldEditor, KEY_PREFERENCE_USER_EMAIL, value);
+    }
+
+    public void setUserInformation(String type, String email, String name)
     {
         if (mOldEditor != null)
         {
-            mOldEditor.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, isAutoLogin);
-            mOldEditor.putString(KEY_PREFERENCE_USER_ID, id);
-            mOldEditor.putString(KEY_PREFERENCE_USER_PWD, password);
             mOldEditor.putString(KEY_PREFERENCE_USER_TYPE, type);
+            mOldEditor.putString(KEY_PREFERENCE_USER_EMAIL, email);
             mOldEditor.putString(KEY_PREFERENCE_USER_NAME, name);
             mOldEditor.apply();
         }
@@ -726,6 +689,7 @@ public class DailyPreference
             mOldEditor.remove(KEY_PREFERENCE_USER_PWD);
             mOldEditor.remove(KEY_PREFERENCE_USER_TYPE);
             mOldEditor.remove(KEY_PREFERENCE_USER_ACCESS_TOKEN);
+            mOldEditor.remove(KEY_PREFERENCE_USER_EMAIL);
             mOldEditor.remove(KEY_PREFERENCE_USER_NAME);
             mEditor.remove(KEY_AUTHORIZATION);
 
