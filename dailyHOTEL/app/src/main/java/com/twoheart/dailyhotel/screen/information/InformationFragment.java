@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -46,18 +45,13 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 public class InformationFragment extends BaseFragment implements Constants, OnClickListener
 {
     private View mProfileLayout, mCreditcardLayout;
     private View mNewEventIconView;
-    private TextView mEnabledSMS, mEnabledPush;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
-    //    private View mInformationScrollView, mInformationLayout, mDailyInformationView;
+    private View mDailyInformationView, mInformationScrollView, mInformationLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -67,6 +61,10 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         initToolbar(baseActivity, view);
+
+        mInformationScrollView = view.findViewById(R.id.informationScrollView);
+        mInformationLayout = view.findViewById(R.id.informationLayout);
+        mDailyInformationView = view.findViewById(R.id.dailyInformationView);
 
         mProfileLayout = view.findViewById(R.id.profileLayout);
         mCreditcardLayout = view.findViewById(R.id.creditcardLayout);
@@ -97,10 +95,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         }
 
         pushTextView.setOnClickListener(this);
-
-        mEnabledSMS = (TextView) view.findViewById(R.id.smsTextView);
-        setEnabledSMS(baseActivity, DailyPreference.getInstance(baseActivity).isAllowSMS());
-        mEnabledSMS.setOnClickListener(this);
 
         setSigninLayout(false);
         initSnsLayout(view);
@@ -206,28 +200,36 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             mCreditcardLayout.setVisibility(View.GONE);
         }
 
-        boolean enabled = DailyPreference.getInstance(getContext()).isAllowSMS();
-        setEnabledSMS(getContext(), enabled);
+        mDailyInformationView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int defaultHeight = Util.dpToPx(getContext(), 140);
 
-        //        mDailyInformationView.post(new Runnable()
-        //        {
-        //            @Override
-        //            public void run()
-        //            {
-        //                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
-        //                {
-        //                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
-        //
-        //                    if (layoutParams != null)
-        //                    {
-        //                        layoutParams.height += mInformationScrollView.getHeight() - mInformationLayout.getHeight();
-        //                        mDailyInformationView.setLayoutParams(layoutParams);
-        //                    }
-        //                }
-        //
-        //                mDailyInformationView.setVisibility(View.VISIBLE);
-        //            }
-        //        });
+                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
+                {
+                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
+
+                    if (layoutParams != null)
+                    {
+                        layoutParams.height = defaultHeight + mInformationScrollView.getHeight() - mInformationLayout.getHeight();
+                        mDailyInformationView.setLayoutParams(layoutParams);
+                    }
+                } else
+                {
+                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
+
+                    if (layoutParams != null)
+                    {
+                        layoutParams.height = defaultHeight;
+                        mDailyInformationView.setLayoutParams(layoutParams);
+                    }
+                }
+
+                mDailyInformationView.setMinimumHeight(defaultHeight);
+            }
+        });
     }
 
     @Override
@@ -390,24 +392,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 break;
             }
 
-            case R.id.smsTextView:
-            {
-                lockUI();
-
-                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(baseActivity).getUserType()) == true)
-                {
-                    boolean enabled = DailyPreference.getInstance(baseActivity).isAllowSMS();
-
-                    Map<String, String> params = Collections.singletonMap("is_text_enabled", enabled ? "false" : "true");
-
-                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener, this);
-                } else
-                {
-                    DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
-                }
-                break;
-            }
-
             case R.id.facebookLinkView:
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -524,19 +508,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         }
     }
 
-    private void setEnabledSMS(Context context, boolean enabled)
-    {
-        DailyPreference.getInstance(context).setAllowSMS(enabled);
-
-        if (enabled == true)
-        {
-            mEnabledSMS.setText(R.string.label_on);
-        } else
-        {
-            mEnabledSMS.setText(R.string.label_off);
-        }
-    }
-
     private void showCallDialog(final BaseActivity baseActivity)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
@@ -616,73 +587,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                boolean result = false;
-
-                if (response.has("success") == true)
-                {
-                    result = response.getBoolean("success");
-                }
-
-                if (result == true)
-                {
-                    setEnabledSMS(getContext(), DailyPreference.getInstance(getContext()).isAllowSMS() ? false : true);
-                } else
-                {
-                    DailyToast.showToast(getContext(), response.getString("msg"), Toast.LENGTH_LONG);
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                String userIndex = response.getString("idx");
-
-                boolean enabled = DailyPreference.getInstance(getContext()).isAllowSMS();
-
-                Map<String, String> params = new HashMap<>();
-                params.put("user_idx", userIndex);
-                params.put("is_text_enabled", enabled ? "false" : "true");
-
-                DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, InformationFragment.this);
-            } catch (Exception e)
-            {
-                onError(e);
-                unLockUI();
-            }
-        }
-    };
-
     private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -703,7 +607,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
                 if (result == true)
                 {
-                    setEnabledSMS(getContext(), DailyPreference.getInstance(getContext()).isAllowSMS() ? false : true);
                 } else
                 {
                     DailyToast.showToast(getContext(), response.getString("msg"), Toast.LENGTH_LONG);

@@ -73,7 +73,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     private DailyFloatingActionButtonBehavior mDailyFloatingActionButtonBehavior;
 
     private SaleTime mTodaySaleTime;
-    private boolean mDontReloadAtOnResume;
+    private boolean mDontReloadAtOnResume, mIsDeepLink;
     private HotelCurationOption mCurationOption;
     private List<EventBanner> mEventBannerList;
 
@@ -222,7 +222,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     return;
                 }
 
-                if (isLockUiComponent() == true)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return;
                 }
@@ -230,7 +230,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 lockUiComponent();
 
                 Intent intent = HotelCurationActivity.newInstance(baseActivity, getProvince().isOverseas, mViewType, mCurationOption);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CURATION);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
                 String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -283,7 +283,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             lockUI();
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
 
         super.onResume();
@@ -317,7 +317,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             // 지역을 선택한 후에 되돌아 온경우.
             case CODE_REQUEST_ACTIVITY_REGIONLIST:
             {
-                mDontReloadAtOnResume = true;
+                if (mIsDeepLink == false)
+                {
+                    mDontReloadAtOnResume = true;
+                } else
+                {
+                    mIsDeepLink = false;
+                }
 
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
@@ -350,7 +356,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_CURATION:
+            case CODE_REQUEST_ACTIVITY_HOTELCURATION:
             {
                 mDontReloadAtOnResume = true;
 
@@ -399,7 +405,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH:
             {
-                mDontReloadAtOnResume = true;
+                if (mIsDeepLink == false)
+                {
+                    mDontReloadAtOnResume = true;
+                } else
+                {
+                    mIsDeepLink = false;
+                }
                 break;
             }
         }
@@ -735,7 +747,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private void refreshEventBanner()
     {
-        DailyNetworkAPI.getInstance().requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, new Response.ErrorListener()
+        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError volleyError)
@@ -957,6 +969,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mOnCommunicateListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
 
             DailyDeepLink.getInstance().clear();
+            mIsDeepLink = true;
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -967,7 +980,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             makeDateTabLayout();
 
             // 지역 리스트를 가져온다
-            DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
         }
     }
 
@@ -980,13 +993,14 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, mTodaySaleTime);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+            mIsDeepLink = true;
         } else
         {
             //탭에 들어갈 날짜를 만든다.
             makeDateTabLayout();
 
             // 지역 리스트를 가져온다
-            DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
         }
     }
 
@@ -1117,6 +1131,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
+        mIsDeepLink = true;
     }
 
     private void deepLinkHotelList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
@@ -1330,7 +1345,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             fragment.onPageSelected();
 
             //            mOnCommunicateListener.refreshAll(true);
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
 
             mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -1649,7 +1664,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
 
             lockUI(isShowProgress);
-            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
+            DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener, baseActivity);
         }
 
         @Override
@@ -1726,7 +1741,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     makeDateTabLayout();
 
                     // 지역 리스트를 가져온다
-                    DailyNetworkAPI.getInstance().requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+                    DailyNetworkAPI.getInstance(baseActivity).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
                 }
             } catch (Exception e)
             {
@@ -1876,7 +1891,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 } else
                 {
                     String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

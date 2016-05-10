@@ -222,10 +222,17 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            GourmetRegionListActivity.this.onErrorMessage(msgCode, message);
+            GourmetRegionListActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            unLockUI();
+            GourmetRegionListActivity.this.onErrorToastMessage(message);
         }
     };
 }

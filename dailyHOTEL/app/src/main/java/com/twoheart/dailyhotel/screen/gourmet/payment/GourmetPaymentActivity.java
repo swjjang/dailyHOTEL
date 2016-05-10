@@ -182,7 +182,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void requestUserInformationForPayment()
     {
-        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     @Override
@@ -222,13 +222,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         //            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
         //        }
 
-        DailyNetworkAPI.getInstance().requestGourmetPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestGourmetPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener, this);
     }
 
     @Override
     protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
-        DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, //
+        DailyNetworkAPI.getInstance(this).requestGourmetPaymentInformation(mNetworkTag, //
             ((GourmetPaymentInformation) paymentInformation).getTicketInformation().index, //
             mGourmetPaymentInformationJsonResponseListener, this);
     }
@@ -393,7 +393,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                             lockUI();
 
                             // 1. 세션이 살아있는지 검사 시작.
-                            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, GourmetPaymentActivity.this);
+                            DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, GourmetPaymentActivity.this);
 
                             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
@@ -520,7 +520,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     lockUI();
 
                     // 1. 세션이 살아있는지 검사 시작.
-                    DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, GourmetPaymentActivity.this);
+                    DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, GourmetPaymentActivity.this);
 
                     AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.PAYMENT_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE, null);
@@ -708,7 +708,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             return;
         }
 
-        DailyNetworkAPI.getInstance().requestGourmetCheckTicket(mNetworkTag//
+        DailyNetworkAPI.getInstance(this).requestGourmetCheckTicket(mNetworkTag//
             , gourmetPaymentInformation.getTicketInformation().index//
             , checkInSaleTime.getDayOfDaysDateFormat("yyMMdd")//
             , gourmetPaymentInformation.ticketCount//
@@ -969,7 +969,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.NAME);
 
-                    DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(GourmetPaymentActivity.this, R.string.message_gourmet_please_input_guest, Toast.LENGTH_SHORT);
                     return;
                 } else if (Util.isTextEmpty(guest.phone) == true)
                 {
@@ -1116,7 +1116,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 }
 
                 // 2. 화면 정보 얻기
-                DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag//
+                DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestGourmetPaymentInformation(mNetworkTag//
                     , gourmetPaymentInformation.getTicketInformation().index//
                     , mGourmetPaymentInformationJsonResponseListener, GourmetPaymentActivity.this);
             } catch (Exception e)
@@ -1211,7 +1211,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     if (gourmetPaymentInformation.ticketTime == 0)
                     {
                         // 방문시간을 선택하지 않은 경우
-                        DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
+                        DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
                     } else
                     {
                         requestValidateTicketPayment(gourmetPaymentInformation, mCheckInSaleTime);
@@ -1224,8 +1224,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     recordAnalyticsPayment(gourmetPaymentInformation);
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {
@@ -1268,13 +1267,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         return;
                     }
 
-                    DailyNetworkAPI.getInstance().requestGourmetPaymentInformation(mNetworkTag, //
+                    DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestGourmetPaymentInformation(mNetworkTag, //
                         ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().index, //
                         mFinalCheckPayJsonResponseListener, GourmetPaymentActivity.this);
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {
@@ -1387,8 +1385,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     }
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {
@@ -1418,11 +1415,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                 if (isOnSale == true && msgCode == 0)
                 {
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
+                    DailyNetworkAPI.getInstance(GourmetPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, GourmetPaymentActivity.this);
                 } else
                 {
-                    String message = response.getString("msg");
-                    onErrorMessage(msgCode, message);
+                    onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {

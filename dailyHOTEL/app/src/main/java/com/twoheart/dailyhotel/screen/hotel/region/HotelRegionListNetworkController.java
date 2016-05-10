@@ -34,7 +34,7 @@ public class HotelRegionListNetworkController extends PlaceRegionListNetworkCont
 
     public void requestRegionList()
     {
-        DailyNetworkAPI.getInstance().requestHotelRegionList(mBaseActivity.getNetworkTag(), mHotelRegionListJsonResponseListener, mBaseActivity);
+        DailyNetworkAPI.getInstance(mBaseActivity).requestHotelRegionList(mBaseActivity.getNetworkTag(), mHotelRegionListJsonResponseListener, mBaseActivity);
     }
 
     private DailyHotelJsonResponseListener mHotelRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -76,7 +76,7 @@ public class HotelRegionListNetworkController extends PlaceRegionListNetworkCont
                 } else
                 {
                     String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorMessage(msgCode, message);
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

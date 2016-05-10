@@ -349,10 +349,17 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
-            HotelRegionListActivity.this.onErrorMessage(msgCode, message);
+            HotelRegionListActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            unLockUI();
+            HotelRegionListActivity.this.onErrorToastMessage(message);
         }
     };
 }

@@ -514,7 +514,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
-
             GourmetSearchResultActivity.this.onErrorResponse(volleyError);
         }
 
@@ -522,16 +521,21 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         public void onError(Exception e)
         {
             unLockUI();
-
             GourmetSearchResultActivity.this.onError(e);
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
+            GourmetSearchResultActivity.this.onErrorPopupMessage(msgCode, message);
+        }
 
-            GourmetSearchResultActivity.this.onErrorMessage(msgCode, message);
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            unLockUI();
+            GourmetSearchResultActivity.this.onErrorToastMessage(message);
         }
     };
 }

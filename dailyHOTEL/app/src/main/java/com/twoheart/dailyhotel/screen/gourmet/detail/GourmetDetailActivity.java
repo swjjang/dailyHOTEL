@@ -88,7 +88,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime)
     {
-        DailyNetworkAPI.getInstance().requestGourmetDetailInformation(mNetworkTag, placeDetail.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), mGourmetDetailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, placeDetail.index, checkInSaleTime.getDayOfDaysDateFormat("yyMMdd"), mGourmetDetailJsonResponseListener, this);
     }
 
     @Override

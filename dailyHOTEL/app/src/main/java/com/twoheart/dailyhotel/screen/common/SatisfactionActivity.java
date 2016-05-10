@@ -13,7 +13,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -189,10 +192,8 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         TextView ratingPeriod = (TextView) view.findViewById(R.id.periodTextView);
         TextView ratingHotelName = (TextView) view.findViewById(R.id.hotelNameTextView);
-        TextView messageTextView = (TextView) view.findViewById(R.id.messageTextView);
 
         ratingPeriod.setTypeface(FontManager.getInstance(this).getMediumTypeface());
-        messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
 
         TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
         TextView negativeTextView = (TextView) view.findViewById(R.id.negativeTextView);
@@ -226,7 +227,11 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             }
         }
 
-        ratingHotelName.setText(getString(R.string.frag_rating_hotel_text2, mTicketName));
+        String placeName = String.format("\'%s\'", mTicketName);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.frag_rating_hotel_text2, placeName));
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), 0, placeName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        ratingHotelName.setText(spannableStringBuilder);
 
         positiveTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -476,6 +481,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 {
                     positiveTextView.performClick();
                 }
+
                 return false;
             }
         });
@@ -543,7 +549,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     case HOTEL:
                     {
                         params.put("reserv_idx", String.valueOf(mReservationIndex));
-                        DailyNetworkAPI.getInstance().requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
+                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestHotelDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
                         {
                             @Override
                             public void onErrorResponse(VolleyError arg0)
@@ -558,7 +564,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                     {
                         params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
 
-                        DailyNetworkAPI.getInstance().requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
+                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestGourmetDetailRating(mNetworkTag, params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
                         {
                             @Override
                             public void onErrorResponse(VolleyError arg0)
@@ -612,7 +618,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         switch (placeType)
         {
             case HOTEL:
-                DailyNetworkAPI.getInstance().requestHotelRating(mNetworkTag, result, Integer.toString(index), listener, new ErrorListener()
+                DailyNetworkAPI.getInstance(this).requestHotelRating(mNetworkTag, result, Integer.toString(index), listener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
@@ -623,7 +629,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 break;
 
             case FNB:
-                DailyNetworkAPI.getInstance().requestGourmetRating(mNetworkTag, result, Integer.toString(index), listener, new ErrorListener()
+                DailyNetworkAPI.getInstance(this).requestGourmetRating(mNetworkTag, result, Integer.toString(index), listener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
@@ -696,7 +702,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                                 break;
                         }
 
-                        DailyNetworkAPI.getInstance().requestCommonReview(mNetworkTag, review, mRequestServicesJsonResponseListener, new ErrorListener()
+                        DailyNetworkAPI.getInstance(SatisfactionActivity.this).requestCommonReview(mNetworkTag, review, mRequestServicesJsonResponseListener, new ErrorListener()
                         {
                             @Override
                             public void onErrorResponse(VolleyError arg0)

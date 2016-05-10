@@ -266,7 +266,6 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
-
             GourmetSearchActivity.this.onErrorResponse(volleyError);
         }
 
@@ -274,16 +273,21 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         public void onError(Exception e)
         {
             unLockUI();
-
             GourmetSearchActivity.this.onError(e);
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
+            GourmetSearchActivity.this.onErrorPopupMessage(msgCode, message);
+        }
 
-            GourmetSearchActivity.this.onErrorMessage(msgCode, message);
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            unLockUI();
+            GourmetSearchActivity.this.onErrorToastMessage(message);
         }
     };
 

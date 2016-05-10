@@ -382,7 +382,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     @Override
     protected void requestUserInformationForPayment()
     {
-        DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     @Override
@@ -428,7 +428,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         //                showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
         //            }
 
-        DailyNetworkAPI.getInstance().requestHotelPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener, HotelPaymentActivity.this);
+        DailyNetworkAPI.getInstance(this).requestHotelPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener, this);
     }
 
     @Override
@@ -437,7 +437,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
 
         // 호텔 디테일 정보 재 요청
-        DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag//
+        DailyNetworkAPI.getInstance(this).requestHotelPaymentInformation(mNetworkTag//
             , saleRoomInformation.roomIndex//
             , checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
             , saleRoomInformation.nights, mHotelPaymentInformationJsonResponseListener, this);
@@ -632,7 +632,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             lockUI();
 
                             // 1. 세션이 살아있는지 검사 시작.
-                            DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
+                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
 
                             AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                                 , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
@@ -765,7 +765,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     lockUI();
 
                     // 1. 세션이 살아있는지 검사 시작.
-                    DailyNetworkAPI.getInstance().requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
+                    DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener, HotelPaymentActivity.this);
 
                     AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
@@ -1095,7 +1095,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                                 {
                                     lockUI();
 
-                                    DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener, HotelPaymentActivity.this);
+                                    DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener, HotelPaymentActivity.this);
                                 } else
                                 {
                                     processAgreeTermDialog();
@@ -1117,7 +1117,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         {
                             lockUI();
 
-                            DailyNetworkAPI.getInstance().requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener, HotelPaymentActivity.this);
+                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener, HotelPaymentActivity.this);
                         } else
                         {
                             processAgreeTermDialog();
@@ -1668,7 +1668,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 }
 
                 // 2. 화면 정보 얻기
-                DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag//
+                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestHotelPaymentInformation(mNetworkTag//
                     , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
                     , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
                     , hotelPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationJsonResponseListener, HotelPaymentActivity.this);
@@ -1777,7 +1777,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         } else
                         {
                             // 3. 간편결제 credit card 요청
-                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, HotelPaymentActivity.this);
+                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener, HotelPaymentActivity.this);
                         }
                         break;
                     }
@@ -2030,7 +2030,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 }
 
                 // 2. 마지막 가격 및 기타 이상이 없는지 검사
-                DailyNetworkAPI.getInstance().requestHotelPaymentInformation(mNetworkTag//
+                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestHotelPaymentInformation(mNetworkTag//
                     , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
                     , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
                     , hotelPaymentInformation.getSaleRoomInformation().nights, mFinalCheckPayJsonResponseListener, HotelPaymentActivity.this);

@@ -100,7 +100,7 @@ public class CreditCardListActivity extends BaseActivity
             lockUI();
 
             mCreditCardLayout.setViewLoginLayout(true);
-            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
+            DailyNetworkAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, this);
         }
     }
 
@@ -210,7 +210,7 @@ public class CreditCardListActivity extends BaseActivity
                     lockUI();
 
                     // 등록된 카드 삭제.
-                    DailyNetworkAPI.getInstance().requestUserDeleteBillingCard(mNetworkTag, card.billingkey, mDeleteCreditCardJsonResponseListener, CreditCardListActivity.this);
+                    DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserDeleteBillingCard(mNetworkTag, card.billingkey, mDeleteCreditCardJsonResponseListener, CreditCardListActivity.this);
 
                     AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.OK, null);
@@ -383,7 +383,7 @@ public class CreditCardListActivity extends BaseActivity
                 {
                     // 성공
                     // credit card 요청
-                    DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
+                    DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
                 } else
                 {
                     unLockUI();
@@ -402,7 +402,7 @@ public class CreditCardListActivity extends BaseActivity
                             lockUI();
 
                             // credit card 요청
-                            DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
+                            DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
                         }
 
                     });
@@ -414,7 +414,7 @@ public class CreditCardListActivity extends BaseActivity
                 lockUI();
 
                 // credit card 요청
-                DailyNetworkAPI.getInstance().requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
+                DailyNetworkAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListJsonResponseListener, CreditCardListActivity.this);
             }
         }
     };

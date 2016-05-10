@@ -276,7 +276,6 @@ public class HotelSearchActivity extends PlaceSearchActivity
         public void onErrorResponse(VolleyError volleyError)
         {
             unLockUI();
-
             HotelSearchActivity.this.onErrorResponse(volleyError);
         }
 
@@ -284,16 +283,21 @@ public class HotelSearchActivity extends PlaceSearchActivity
         public void onError(Exception e)
         {
             unLockUI();
-
             HotelSearchActivity.this.onError(e);
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
             unLockUI();
+            HotelSearchActivity.this.onErrorPopupMessage(msgCode, message);
+        }
 
-            HotelSearchActivity.this.onErrorMessage(msgCode, message);
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            unLockUI();
+            HotelSearchActivity.this.onErrorToastMessage(message);
         }
     };
 

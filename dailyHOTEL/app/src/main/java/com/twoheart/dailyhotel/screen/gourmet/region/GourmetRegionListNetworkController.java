@@ -35,7 +35,7 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
     @Override
     public void requestRegionList()
     {
-        DailyNetworkAPI.getInstance().requestGourmetRegionList(mBaseActivity.getNetworkTag(), mGourmetRegionListJsonResponseListener, mBaseActivity);
+        DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetRegionList(mBaseActivity.getNetworkTag(), mGourmetRegionListJsonResponseListener, mBaseActivity);
     }
 
     private DailyHotelJsonResponseListener mGourmetRegionListJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -78,7 +78,7 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
                 {
                     String message = response.getString("msg");
 
-                    mListener.onErrorMessage(msgCode, message);
+                    mListener.onErrorPopupMessage(msgCode, message);
                 }
             } catch (Exception e)
             {

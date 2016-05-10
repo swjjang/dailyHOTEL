@@ -8,5 +8,7 @@ public interface OnBaseNetworkControllerListener
 
     void onError(Exception e);
 
-    void onErrorMessage(int msgCode, String message);
+    void onErrorPopupMessage(int msgCode, String message);
+
+    void onErrorToastMessage(String message);
 }

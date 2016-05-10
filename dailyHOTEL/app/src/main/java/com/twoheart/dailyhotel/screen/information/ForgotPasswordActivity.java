@@ -110,7 +110,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
 
         lockUI();
-        DailyNetworkAPI.getInstance().requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailJsonResponseListener, this);
     }
 
     @Override
@@ -211,7 +211,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
                         DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
                     } else
                     {
-                        DailyNetworkAPI.getInstance().requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwJsonResponseListener, ForgotPasswordActivity.this);
+                        DailyNetworkAPI.getInstance(ForgotPasswordActivity.this).requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwJsonResponseListener, ForgotPasswordActivity.this);
                     }
                 } else
                 {

@@ -91,7 +91,7 @@ public class IssuingReceiptActivity extends BaseActivity
         {
             lockUI();
 
-            DailyNetworkAPI.getInstance().requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener, IssuingReceiptActivity.this);
+            DailyNetworkAPI.getInstance(this).requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener, IssuingReceiptActivity.this);
         }
     }
 

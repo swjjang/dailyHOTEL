@@ -95,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             finish();
         } finally
         {
-            DailyNetworkAPI.getInstance().cancelAll();
+            DailyNetworkAPI.getInstance(this).cancelAll();
         }
     }
 
@@ -313,7 +313,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // 현재 Activity에 등록된 Request를 취소한다.
-        DailyNetworkAPI.getInstance().cancelAll(mNetworkTag);
+        DailyNetworkAPI.getInstance(this).cancelAll(mNetworkTag);
         if (mDialog != null && mDialog.isShowing())
         {
             mDialog.dismiss();
@@ -398,18 +398,23 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         });
     }
 
-    public void onErrorMessage(int msgCode, String message)
+    public void onErrorPopupMessage(int msgCode, String message)
     {
-        unLockUI();
-
-        showSimpleDialog(null, String.format("%s(%d)", message, msgCode), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+        onErrorPopupMessage(msgCode, message, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 finish();
             }
-        }, null, false);
+        });
+    }
+
+    public void onErrorPopupMessage(int msgCode, String message, View.OnClickListener listener)
+    {
+        unLockUI();
+
+        showSimpleDialog(null, String.format("%s(%d)", message, msgCode), getString(R.string.dialog_btn_text_confirm), null, listener, null, false);
     }
 
     public void onErrorToastMessage(final String message)

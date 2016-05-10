@@ -405,7 +405,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onMenuSelected(int index)
         {
-            if (mMainFragmentManager.getLastIndexFragment() == index)
+            if (mMainFragmentManager.getLastIndexFragment() == index || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -488,7 +488,6 @@ public class MainActivity extends BaseActivity implements Constants
         public void onErrorResponse(VolleyError volleyError)
         {
             mDelayTimeHandler.removeMessages(0);
-
             MainActivity.this.onErrorResponse(volleyError);
         }
 
@@ -496,16 +495,21 @@ public class MainActivity extends BaseActivity implements Constants
         public void onError(Exception e)
         {
             mDelayTimeHandler.removeMessages(0);
-
             MainActivity.this.onError(e);
         }
 
         @Override
-        public void onErrorMessage(int magCode, String message)
+        public void onErrorPopupMessage(int magCode, String message)
         {
             mDelayTimeHandler.removeMessages(0);
+            MainActivity.this.onErrorPopupMessage(magCode, message);
+        }
 
-            MainActivity.this.onErrorMessage(magCode, message);
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            MainActivity.this.onErrorToastMessage(message);
         }
 
         @Override
