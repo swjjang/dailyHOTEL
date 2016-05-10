@@ -313,7 +313,6 @@ public class AnalyticsManager
         public static final String INFORMATION_SIGNOUT = "Menu_BeforeLogin";
         //
         public static final String SIGNIN = "Menu_Login";
-        public static final String SIGNUP = "Menu_Registration";
         //
         public static final String TERMSOFUSE = "Menu_TermsofUse";
         public static final String TERMSOFPRIVACY = "Menu_TermsofPrivacy";
@@ -333,6 +332,12 @@ public class AnalyticsManager
         public static final String ABOUT = "Menu_ServiceIntro";
         public static final String NETWORK_ERROR = "Error_NetworkDisconnected";
         //
+        public static final String MENU_REGISTRATION_GETINFO = "Menu_Registration_GetInfo";
+        public static final String MENU_REGISTRATION_PHONENUMBERVERIFICATION = "Menu_Registration_PhoneNumberVerification";
+        public static final String MENU_SETPROFILE_EMAILACCOUNT = "Menu_SetProfileEmailAccount";
+        public static final String MENU_SETPROFILE_NAME = "Menu_SetProfileName";
+        public static final String MENU_SETPROFILE_PASSWORD = "Menu_SetProfilePassword";
+        public static final String MENU_SETPROFILE_PHONENUMBER = "Menu_SetProfilePhoneNumber";
     }
 
     public static class Action
