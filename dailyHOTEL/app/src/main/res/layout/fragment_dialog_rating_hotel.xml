@@ -49,32 +49,16 @@
             android:textColor="@color/dialog_message_text"
             android:textSize="13dp"/>
 
-        <LinearLayout
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/hotelNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="3dp"
-            android:gravity="center">
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/hotelNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/dialog_title_text"
-                android:textSize="13dp"
-                dailyFont:style="Bold"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/messageTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/frag_rating_hotel_text3"
-                android:textColor="@color/dialog_message_text"
-                android:textSize="13dp"/>
-        </LinearLayout>
+            android:gravity="center"
+            android:textColor="@color/dialog_title_text"
+            android:textSize="13dp"/>
     </LinearLayout>
 
     <LinearLayout

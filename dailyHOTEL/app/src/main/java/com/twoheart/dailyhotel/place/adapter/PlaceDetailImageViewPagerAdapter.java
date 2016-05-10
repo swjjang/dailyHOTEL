@@ -13,6 +13,7 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -80,6 +81,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
 
                 imageView.setController(controller);
                 imageView.setTag(imageView.getId(), position);
+                imageView.getHierarchy().setPlaceholderImage(R.drawable.background_hoteldetail_viewpager);
 
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewPager.LayoutParams.MATCH_PARENT, height);
                 container.addView(imageView, 0, layoutParams);
@@ -87,6 +89,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
             {
                 imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
                 imageView.setTag(imageView.getId(), position);
+                imageView.getHierarchy().setPlaceholderImage(R.drawable.background_hoteldetail_viewpager);
 
                 Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).url);
 

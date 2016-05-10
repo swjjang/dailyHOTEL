@@ -10,14 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:fadingEdge="none"
-        android:background="@color/white">
+        android:fadingEdge="none">
 
         <LinearLayout
             android:id="@+id/bookingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:orientation="vertical">

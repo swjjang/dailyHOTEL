@@ -42,12 +42,13 @@
             android:id="@+id/checkinDayTextView"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:gravity="center_vertical"
             android:textColor="@color/dh_theme_color"
             android:textSize="13dp"
-            dailyFont:style="Medium"/>
+            dailyFont:style="Medium"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:background="@color/white"/>
     </LinearLayout>
 
     <View
@@ -91,11 +92,12 @@
             android:id="@+id/checkoutDayTextView"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:gravity="center_vertical"
             android:textColor="@color/dh_theme_color"
             android:textSize="13dp"
-            dailyFont:style="Medium"/>
+            dailyFont:style="Medium"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:background="@color/white"/>
     </LinearLayout>
 </LinearLayout>

@@ -112,7 +112,7 @@ public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavio
             floatingView.setScaleX(offset);
             floatingView.setScaleY(offset);
 
-            if (offset == 1)
+            if (offset >= 0.5)
             {
                 floatingView.setEnabled(true);
             } else

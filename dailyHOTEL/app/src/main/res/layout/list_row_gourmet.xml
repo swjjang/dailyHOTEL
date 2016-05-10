@@ -5,17 +5,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="202dp">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="202dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/img_placeholder"/>
-
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="202dp"
         android:adjustViewBounds="true"
+        fresco:placeholderImage="@drawable/img_placeholder"
+        fresco:placeholderImageScaleType="centerCrop"
         fresco:actualImageScaleType="centerCrop"/>
 
     <View

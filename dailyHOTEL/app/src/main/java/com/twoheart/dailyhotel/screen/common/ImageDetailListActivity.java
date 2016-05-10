@@ -145,6 +145,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             }
 
             imageView.setController(controller);
+            imageView.getHierarchy().setPlaceholderImage(R.drawable.background_hoteldetail_viewpager);
 
             return view;
         }
