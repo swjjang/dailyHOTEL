@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class EditProfilePhoneActivity extends BaseActivity
@@ -116,7 +117,7 @@ public class EditProfilePhoneActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        //        AnalyticsManager.getInstance(EditProfilePhoneActivity.this).recordScreen(Screen.PROFILE, null);
+        AnalyticsManager.getInstance(EditProfilePhoneActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_PHONENUMBER, null);
 
         super.onStart();
     }
@@ -158,27 +159,27 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
 
         @Override
-        public void onConfirm(String phoneNumber)
+        public void doConfirm(String phoneNumber)
         {
-            if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == true)
-            {
-                mEditProfilePhoneNetworkController.requestUpdateDailyUserInformation(phoneNumber);
-            } else
+            if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == false)
             {
                 mEditProfilePhoneNetworkController.requestUpdateSocialUserInformation(mUserIndex, phoneNumber);
             }
         }
 
         @Override
-        public void onConfirm(String phoneNumber, String verificationNumber)
+        public void doConfirm(String phoneNumber, String verificationNumber)
         {
-
+            if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == true)
+            {
+                mEditProfilePhoneNetworkController.requestUpdateDailyUserInformation(phoneNumber, verificationNumber);
+            }
         }
 
         @Override
         public void doVerification(String phoneNumber)
         {
-
+            mEditProfilePhoneNetworkController.requestDailyUserVerification(phoneNumber.replaceAll("-", ""));
         }
 
         @Override
@@ -191,9 +192,9 @@ public class EditProfilePhoneActivity extends BaseActivity
     private EditProfilePhoneNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new EditProfilePhoneNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onVerification(String number)
+        public void onVerification(String message)
         {
-
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override
@@ -202,17 +203,6 @@ public class EditProfilePhoneActivity extends BaseActivity
             DailyToast.showToast(EditProfilePhoneActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
             setResult(RESULT_OK);
             finish();
-        }
-
-        @Override
-        public void onFailed(String message)
-        {
-            if (Util.isTextEmpty(message) == true)
-            {
-                return;
-            }
-
-            DailyToast.showToast(EditProfilePhoneActivity.this, message, Toast.LENGTH_SHORT);
         }
 
         @Override
@@ -228,9 +218,15 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
-            EditProfilePhoneActivity.this.onErrorMessage(msgCode, message);
+            EditProfilePhoneActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            EditProfilePhoneActivity.this.onErrorToastMessage(message);
         }
     };
 }

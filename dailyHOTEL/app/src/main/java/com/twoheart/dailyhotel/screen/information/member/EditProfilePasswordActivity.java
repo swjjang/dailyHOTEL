@@ -13,26 +13,30 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import org.json.JSONObject;
+
+import java.util.Collections;
+import java.util.Map;
+
 public class EditProfilePasswordActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
-    private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
-
     private View mPasswordView, mConfirmPasswordView;
     private EditText mPasswordEditText, mConfirmPasswordEditText;
     private View mConfirmView;
-    private String mUserIndex;
 
-    public static Intent newInstance(Context context, String userIndex)
+    public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, EditProfilePasswordActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
-
         return intent;
     }
 
@@ -42,9 +46,6 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_password);
-
-        Intent intent = getIntent();
-        mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
 
         initToolbar();
         initLayout();
@@ -125,7 +126,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     @Override
     protected void onStart()
     {
-        //        AnalyticsManager.getInstance(EditProfilePasswordActivity.this).recordScreen(Screen.PROFILE, null);
+        AnalyticsManager.getInstance(EditProfilePasswordActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_PASSWORD, null);
 
         super.onStart();
     }
@@ -136,6 +137,11 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         switch (v.getId())
         {
             case R.id.confirmView:
+                if (v.isEnabled() == false)
+                {
+                    return;
+                }
+
                 String password = mPasswordEditText.getText().toString();
                 String confirmPassword = mConfirmPasswordEditText.getText().toString();
 
@@ -152,7 +158,8 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                     return;
                 }
 
-
+                Map<String, String> params = Collections.singletonMap("pw", password);
+                DailyNetworkAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener, this);
                 break;
         }
     }
@@ -196,41 +203,45 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private DailyHotelJsonResponseListener mDailyUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
 
-    //    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                String result = response.getString("success");
-    //                String msg = null;
-    //
-    //                if (response.length() > 1)
-    //                {
-    //                    msg = response.getString("msg");
-    //                }
-    //
-    //                if (result.equals("true") == true)
-    //                {
-    //                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
-    //
-    //                    setResult(RESULT_OK);
-    //                } else
-    //                {
-    //                    DailyToast.showToast(EditProfilePasswordActivity.this, msg, Toast.LENGTH_LONG);
-    //
-    //                    setResult(RESULT_CANCELED);
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                onError(e);
-    //            } finally
-    //            {
-    //                unLockUI();
-    //                finish();
-    //            }
-    //        }
-    //    };
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                boolean result = false;
+
+                if (response.has("success") == true)
+                {
+                    result = response.getBoolean("success");
+                }
+
+                if (result == true)
+                {
+                    setResult(RESULT_OK);
+
+                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+                } else
+                {
+                    setResult(RESULT_CANCELED);
+
+                    DailyToast.showToast(EditProfilePasswordActivity.this, response.getString("msg"), Toast.LENGTH_LONG);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+                finish();
+            }
+        }
+    };
 }

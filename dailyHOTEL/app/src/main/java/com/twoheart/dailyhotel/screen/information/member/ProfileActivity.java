@@ -133,7 +133,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfilePasswordActivity.newInstance(ProfileActivity.this, mUserIndex);
+            Intent intent = EditProfilePasswordActivity.newInstance(ProfileActivity.this);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -220,9 +220,15 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
-            ProfileActivity.this.onErrorMessage(msgCode, message);
+            ProfileActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            ProfileActivity.this.onErrorToastMessage(message);
         }
     };
 

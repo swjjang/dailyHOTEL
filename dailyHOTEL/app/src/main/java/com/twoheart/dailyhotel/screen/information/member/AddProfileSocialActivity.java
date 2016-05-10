@@ -228,9 +228,15 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorMessage(int msgCode, String message)
+        public void onErrorPopupMessage(int msgCode, String message)
         {
-            AddProfileSocialActivity.this.onErrorMessage(msgCode, message);
+            AddProfileSocialActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            AddProfileSocialActivity.this.onErrorToastMessage(message);
         }
     };
 
