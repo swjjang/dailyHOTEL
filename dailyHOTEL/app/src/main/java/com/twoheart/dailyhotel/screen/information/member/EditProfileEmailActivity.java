@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -129,7 +130,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
     @Override
     protected void onStart()
     {
-        //        AnalyticsManager.getInstance(EditProfileEmailActivity.this).recordScreen(Screen.PROFILE, null);
+        AnalyticsManager.getInstance(EditProfileEmailActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_EMAILACCOUNT, null);
 
         super.onStart();
     }
@@ -166,7 +167,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 params.put("user_idx", mUserIndex);
                 params.put("user_email", email);
 
-                DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
                 break;
         }
     }

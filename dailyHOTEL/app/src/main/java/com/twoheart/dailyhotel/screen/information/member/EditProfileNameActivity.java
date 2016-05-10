@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -141,7 +142,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     @Override
     protected void onStart()
     {
-        //        AnalyticsManager.getInstance(EditProfileNameActivity.this).recordScreen(Screen.PROFILE, null);
+        AnalyticsManager.getInstance(EditProfileNameActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_NAME, null);
 
         super.onStart();
     }
@@ -170,14 +171,14 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                 if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileNameActivity.this).getUserType()) == true)
                 {
                     Map<String, String> params = Collections.singletonMap("name", name);
-                    DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener, this);
+                    DailyNetworkAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateJsonResponseListener, this);
                 } else
                 {
                     Map<String, String> params = new HashMap<>();
                     params.put("user_idx", mUserIndex);
                     params.put("user_name", name);
 
-                    DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
+                    DailyNetworkAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateJsonResponseListener, this);
                 }
                 break;
         }

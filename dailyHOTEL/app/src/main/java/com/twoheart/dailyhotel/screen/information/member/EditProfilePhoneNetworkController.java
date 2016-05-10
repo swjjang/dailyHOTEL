@@ -20,8 +20,6 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         void onVerification(String number);
 
         void onConfirm();
-
-        void onFailed(String message);
     }
 
     public EditProfilePhoneNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -35,12 +33,14 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
-    public void requestUpdateDailyUserInformation(String phoneNumber)
+    public void requestDailyUserVerification(String phoneNumber)
     {
-        Map<String, String> params = new HashMap<>();
-        params.put("phone", phoneNumber.replaceAll("-", ""));
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber, mDailUserVerificationJsonResponseListener);
+    }
 
-        DailyNetworkAPI.getInstance().requestUserInformationUpdate(mNetworkTag, params, mUserUpdateJsonResponseListener, this);
+    public void requestUpdateDailyUserInformation(String phoneNumber, String code)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber, code, mDailyserUpdatePhoneNumberJsonResponseListener);
     }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
@@ -49,43 +49,85 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         params.put("user_idx", userIndex);
         params.put("user_phone", phoneNumber.replaceAll("-", ""));
 
-        DailyNetworkAPI.getInstance().requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDailUserVerificationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                boolean result = false;
+                int msgCode = response.getInt("msgCode");
 
-                if (response.has("success") == true)
+                if (msgCode == 100)
                 {
-                    result = response.getBoolean("success");
-                }
+                    JSONObject dataJONObject = response.getJSONObject("data");
+                    String message = dataJONObject.getString("msg");
 
-                if (result == true)
-                {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
                 } else
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onFailed(response.getString("msg"));
+                    // 다른 폰에서 인증된 경우
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
+                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onErrorResponse(volleyError);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mDailyserUpdatePhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
+                } else
+                {
+                    mOnNetworkControllerListener.onErrorPopupMessage(response.getInt("msgCode"), response.getString("msg"));
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
+                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onErrorResponse(volleyError);
             }
         }
     };
@@ -113,7 +155,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
                 } else
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onFailed(response.getString("msg"));
+                    mOnNetworkControllerListener.onErrorToastMessage(response.getString("msg"));
                 }
             } catch (Exception e)
             {

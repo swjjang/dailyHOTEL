@@ -35,9 +35,9 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     {
         void showCountryCodeList();
 
-        void onConfirm(String phoneNumber);
+        void doConfirm(String phoneNumber);
 
-        void onConfirm(String phoneNumber, String verificationNumber);
+        void doConfirm(String phoneNumber, String verificationNumber);
 
         void doVerification(String phoneNumber);
     }
@@ -93,7 +93,20 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
             {
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    mConfirm.performClick();
+                    // 번호 검증 후에 인증번호 요청
+                    String phoneNumber = getPhoneNumber();
+
+                    if (Util.isValidatePhoneNumber(phoneNumber) == true)
+                    {
+                        if (mCertificationLayout.getVisibility() == View.VISIBLE)
+                        {
+                            ((OnEventListener) mOnEventListener).doVerification(phoneNumber);
+                        } else
+                        {
+                            ((OnEventListener) mOnEventListener).doConfirm(phoneNumber);
+                        }
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -133,6 +146,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mVerificationEditText.setOnFocusChangeListener(this);
 
         mConfirm = view.findViewById(R.id.confirmView);
+        mConfirm.setEnabled(false);
         mConfirm.setOnClickListener(this);
 
         mCertificationLayout = view.findViewById(R.id.certificationLayout);
@@ -183,15 +197,12 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         {
             case R.id.confirmView:
             {
-                String tag = (String) mCountryEditText.getTag();
-
-                if (Util.isTextEmpty(tag) == true)
+                if (v.isEnabled() == false)
                 {
-                    tag = Util.DEFAULT_COUNTRY_CODE;
+                    return;
                 }
 
-                String countryCode = tag.substring(tag.indexOf('\n') + 1);
-                String phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
+                String phoneNumber = getPhoneNumber();
 
                 if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(mContext).getUserType()) == true)
                 {
@@ -205,22 +216,28 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                             return;
                         }
 
-                        ((OnEventListener) mOnEventListener).onConfirm(phoneNumber, verificationNumber);
+                        ((OnEventListener) mOnEventListener).doConfirm(phoneNumber, verificationNumber);
                     } else
                     {
-                        ((OnEventListener) mOnEventListener).onConfirm(phoneNumber);
+                        ((OnEventListener) mOnEventListener).doConfirm(phoneNumber);
                     }
                 } else
                 {
-                    ((OnEventListener) mOnEventListener).onConfirm(phoneNumber);
+                    ((OnEventListener) mOnEventListener).doConfirm(phoneNumber);
                 }
                 break;
             }
 
             case R.id.certificationNumberView:
             {
+                if (v.isEnabled() == false)
+                {
+                    return;
+                }
 
-                // SMS 인증 요청
+                String phoneNumber = getPhoneNumber();
+
+                ((OnEventListener) mOnEventListener).doVerification(phoneNumber);
                 break;
             }
         }
@@ -280,6 +297,21 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         }
     }
 
+    private String getPhoneNumber()
+    {
+        String tag = (String) mCountryEditText.getTag();
+
+        if (Util.isTextEmpty(tag) == true)
+        {
+            tag = Util.DEFAULT_COUNTRY_CODE;
+        }
+
+        String countryCode = tag.substring(tag.indexOf('\n') + 1);
+        String phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
+
+        return phoneNumber;
+    }
+
     private void provenCertificationButton(String phoneNumber)
     {
         String tag = (String) mCountryEditText.getTag();
@@ -291,13 +323,19 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
         // 입력한 전화번호가 이상이 없는 경우 인증번호 받기가 활성화 된다.
         String countryCode = tag.substring(tag.indexOf('\n') + 1);
+        boolean enabled = false;
 
         if (Util.isValidatePhoneNumber(countryCode + ' ' + phoneNumber) == true)
         {
-            mCertificationNumberView.setEnabled(true);
+            enabled = true;
+        }
+
+        if (mCertificationLayout.getVisibility() == View.VISIBLE)
+        {
+            mCertificationNumberView.setEnabled(enabled);
         } else
         {
-            mCertificationNumberView.setEnabled(false);
+            mConfirm.setEnabled(enabled);
         }
     }
 }
