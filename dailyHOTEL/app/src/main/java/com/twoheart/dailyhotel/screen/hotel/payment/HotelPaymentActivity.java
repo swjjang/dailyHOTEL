@@ -44,12 +44,14 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -104,9 +106,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
     private int mPensionPopupMessageType;
     private String mWarningDialogMessage;
+    private Province mProvince;
+    private String mArea; // Analytics용 소지역
 
     public static Intent newInstance(Context context, SaleRoomInformation saleRoomInformation//
-        , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit)
+        , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit, Province province, String area)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -115,6 +119,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
 
         return intent;
     }
@@ -142,6 +148,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
         hotelPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
         hotelPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
+        mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
         if (hotelPaymentInformation.getSaleRoomInformation() == null)
         {
@@ -1319,6 +1327,30 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, hotelPaymentInformation.paymentType.getName());
             params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
+
+            if (mProvince == null)
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, "");
+                params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                params.put(AnalyticsManager.KeyType.AREA, "");
+            } else
+            {
+                if (mProvince instanceof Area)
+                {
+                    Area area = (Area) mProvince;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                }
+
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+            }
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(checkOutSaleTime.getDayOfDaysDate().getTime()));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

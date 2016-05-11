@@ -1225,6 +1225,12 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mCurationOption.getProvince());
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.discountPrice);
+
+                    String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
+
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
 

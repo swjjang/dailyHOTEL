@@ -532,9 +532,9 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         Map<String, String> eventParmas = new HashMap<>();
         Province province = mGourmetCurationOption.getProvince();
 
-        if(province instanceof Area)
+        if (province instanceof Area)
         {
-            Area area = (Area)province;
+            Area area = (Area) province;
             eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
             eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);

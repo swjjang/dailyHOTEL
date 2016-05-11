@@ -23,9 +23,11 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -64,6 +66,10 @@ public class HotelDetailActivity extends BaseActivity
 
     private HotelDetail mHotelDetail;
     private SaleTime mCheckInSaleTime;
+
+    private Province mProvince;
+    private String mArea; // Analytics용 소지역
+    private int mViewPrice; // Analytics용 리스트 가격
 
     private int mCurrentImage;
     private SaleRoomInformation mSelectedSaleRoomInformation;
@@ -158,6 +164,10 @@ public class HotelDetailActivity extends BaseActivity
                 Util.restartApp(this);
                 return;
             }
+
+            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
 
             initLayout(hotelName, hotelImageUrl);
         }
@@ -317,7 +327,7 @@ public class HotelDetailActivity extends BaseActivity
         saleRoomInformation.categoryCode = hotelDetail.categoryCode;
 
         Intent intent = HotelPaymentActivity.newInstance(HotelDetailActivity.this, saleRoomInformation//
-            , checkInSaleTime, imageUrl, hotelDetail.hotelIndex, !Util.isTextEmpty(hotelDetail.hotelBenefit));
+            , checkInSaleTime, imageUrl, hotelDetail.hotelIndex, !Util.isTextEmpty(hotelDetail.hotelBenefit), mProvince, mArea);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -370,11 +380,83 @@ public class HotelDetailActivity extends BaseActivity
             params.put(AnalyticsManager.KeyType.ADDRESS, mHotelDetail.address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mHotelDetail.categoryCode);
 
+            if (mProvince == null)
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, "");
+                params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                params.put(AnalyticsManager.KeyType.AREA, "");
+            } else
+            {
+                if (mProvince instanceof Area)
+                {
+                    Area area = (Area) mProvince;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                }
+
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+            }
+
+            params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
+
             AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(screen, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
+    }
+
+    private Map<String, String> recordAnalyticsBooking(HotelDetail hotelDetail, SaleRoomInformation saleRoomInformation)
+    {
+        if (hotelDetail == null || saleRoomInformation == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, mHotelDetail.hotelName);
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mHotelDetail.nights));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mHotelDetail.hotelIndex));
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mHotelDetail.categoryCode);
+
+            if (mProvince == null)
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, "");
+                params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                params.put(AnalyticsManager.KeyType.AREA, "");
+            } else
+            {
+                if (mProvince instanceof Area)
+                {
+                    Area area = (Area) mProvince;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                }
+
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+            }
+
+            params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(saleRoomInformation.averageDiscount));
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
+
+            return params;
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return null;
     }
 
     private void shareKakao()
@@ -549,7 +631,7 @@ public class HotelDetailActivity extends BaseActivity
 
             String label = String.format("%s-%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
             AnalyticsManager.getInstance(HotelDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , Action.BOOKING_CLICKED, label, null);
+                , Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mHotelDetail, saleRoomInformation));
         }
 
         @Override
@@ -776,8 +858,6 @@ public class HotelDetailActivity extends BaseActivity
                     user.setPhone(jsonObject.getString("phone"));
                     user.setUserIdx(jsonObject.getString("idx"));
 
-                    boolean isPhoneVerified = jsonObject.getBoolean("is_phone_verified");
-
                     // 추천인
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
@@ -785,7 +865,7 @@ public class HotelDetailActivity extends BaseActivity
                     if (isDailyUser == true)
                     {
                         // 전화번호가 잘못 입력되어 있음
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == false || isPhoneVerified == false)
+                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                         {
                             moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
                         } else

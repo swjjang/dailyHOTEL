@@ -36,7 +36,7 @@ public abstract class BaseAnalyticsManager
 
     abstract void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType);
 
-    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType);
+    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender);
 
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 

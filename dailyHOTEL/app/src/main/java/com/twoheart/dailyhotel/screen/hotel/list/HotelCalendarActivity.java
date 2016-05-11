@@ -12,6 +12,9 @@ import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class HotelCalendarActivity extends PlaceCalendarActivity
 {
     private static final int DAYCOUNT_OF_MAX = 60;
@@ -72,6 +75,16 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                 {
                     return;
                 }
+
+                String checkInDate = mCheckInDay.dayTime.getDayOfDaysDateFormat("yyyyMMdd");
+                String checkOutDate = mCheckOutDay.dayTime.getDayOfDaysDateFormat("yyyyMMdd");
+
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInDay.dayTime.getDayOfDaysDate().getTime()));
+                params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(mCheckOutDay.dayTime.getDayOfDaysDate().getTime()));
+                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mCheckOutDay.dayTime.getOffsetDailyDay() - mCheckInDay.dayTime.getOffsetDailyDay()));
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED, checkInDate + "-" + checkOutDate, params);
 
                 Intent intent = new Intent();
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInDay.dayTime);

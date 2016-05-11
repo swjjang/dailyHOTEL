@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -21,21 +22,29 @@ public class SignupStep2Activity extends BaseActivity
     private static final String INTENT_EXTRA_DATA_SIGNUPKEY = "signupKey";
     private static final String INTENT_EXTRA_DATA_EMAIL = "email";
     private static final String INTENT_EXTRA_DATA_PASSWORD = "password";
+    private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
 
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
 
     private SignupStep2Layout mSignupStep2Layout;
     private SignupStep2NetworkController mNetworkController;
     private String mCountryCode;
-    private String mSignupKey, mEmail, mPassword;
+    private String mSignupKey, mEmail, mPassword, mRecommender;
 
-    public static Intent newInstance(Context context, String singupKey, String email, String password)
+    public static Intent newInstance(Context context, String singupKey, String email, String password, String recommmender)
     {
         Intent intent = new Intent(context, SignupStep2Activity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_SIGNUPKEY, singupKey);
         intent.putExtra(INTENT_EXTRA_DATA_EMAIL, email);
         intent.putExtra(INTENT_EXTRA_DATA_PASSWORD, password);
+
+        if (Util.isTextEmpty(recommmender) == true)
+        {
+            recommmender = "";
+        }
+
+        intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommmender);
 
         return intent;
     }
@@ -66,6 +75,7 @@ public class SignupStep2Activity extends BaseActivity
         mSignupKey = intent.getStringExtra(INTENT_EXTRA_DATA_SIGNUPKEY);
         mEmail = intent.getStringExtra(INTENT_EXTRA_DATA_EMAIL);
         mPassword = intent.getStringExtra(INTENT_EXTRA_DATA_PASSWORD);
+        mRecommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
     }
 
     @Override
@@ -205,6 +215,15 @@ public class SignupStep2Activity extends BaseActivity
 
             DailyPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
 
+            mNetworkController.requestUserInformation();
+        }
+
+        @Override
+        public void onUserInformation(String userIndex, String email, String name, String phoneNumber)
+        {
+            AnalyticsManager.getInstance(SignupStep2Activity.this).setUserIndex(userIndex);
+            AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser(userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender);
+
             showSimpleDialog(null, getString(R.string.toast_msg_success_to_signup), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {
                 @Override
@@ -220,6 +239,12 @@ public class SignupStep2Activity extends BaseActivity
                     signupAndFinish();
                 }
             });
+        }
+
+        @Override
+        public void onAlreadyVerification()
+        {
+
         }
 
         @Override
