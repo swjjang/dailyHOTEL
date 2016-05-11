@@ -77,7 +77,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void recordScreen(String screen, Map<String, String> params)
+    void recordScreen(String screen, Map<String, String> params)
     {
         if (params == null)
         {
@@ -164,8 +164,13 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void recordEvent(String category, String action, String label, Map<String, String> params)
+    void recordEvent(String category, String action, String label, Map<String, String> params)
     {
+        if (Util.isTextEmpty(category, action, label) == true)
+        {
+            return;
+        }
+
         if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED.equalsIgnoreCase(action) == true)
@@ -202,12 +207,18 @@ public class FacebookManager extends BaseAnalyticsManager
         }
     }
 
+    @Override
+    void recordEvent(Map<String, String> params)
+    {
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void setUserIndex(String index)
+    void setUserIndex(String index)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -221,31 +232,37 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void onStart(Activity activity)
+    void onStart(Activity activity)
     {
 
     }
 
     @Override
-    public void onStop(Activity activity)
+    void onStop(Activity activity)
     {
 
     }
 
     @Override
-    public void onResume(Activity activity)
+    void onResume(Activity activity)
     {
         AppEventsLogger.activateApp(activity);
     }
 
     @Override
-    public void onPause(Activity activity)
+    void onPause(Activity activity)
     {
         AppEventsLogger.deactivateApp(activity);
     }
 
     @Override
-    public void addCreditCard(String cardType)
+    void currentAppVersion(String version)
+    {
+
+    }
+
+    @Override
+    void addCreditCard(String cardType)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -261,7 +278,13 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    void updateCreditCard(String cardTypes)
+    {
+
+    }
+
+    @Override
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -277,7 +300,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -293,7 +316,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void purchaseCompleteHotel(String transId, Map<String, String> params)
+    void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -317,7 +340,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 

@@ -189,9 +189,37 @@ public class AnalyticsManager
         }
     }
 
+    public void recordEvent(Map<String, String> params)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.recordEvent(params);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void currentAppVersion(String version)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.currentAppVersion(version);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
 
     public void addCreditCard(String cardType)
     {
@@ -200,6 +228,20 @@ public class AnalyticsManager
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
                 analyticsManager.addCreditCard(cardType);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
+
+    public void updateCreditCard(String cardTypes)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.updateCreditCard(cardTypes);
             }
         } catch (Exception e)
         {
@@ -597,5 +639,12 @@ public class AnalyticsManager
         public static final String NUM_OF_BOOKING = "num_of_booking";
         public static final String EVENT_NAME = "event_name";
         public static final String KEYWORD = "keyword";
+        public static final String NUM_OF_SEARCH_RESULTS_RETURNED = "num_of_search_results_returned";
+        public static final String USER_IDX = "user_idx";
+        public static final String COUNTRY = "country";
+        public static final String DOMESTIC = "domestic";
+        public static final String OVERSEAS = "overseas";
+        public static final String APP_VERSION = "app_version";
+        public static final String CARD_ISSUING_COMPANY = "card_issuing_company";
     }
 }

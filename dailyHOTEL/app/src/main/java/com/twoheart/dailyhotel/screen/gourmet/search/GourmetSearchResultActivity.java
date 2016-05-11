@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
@@ -294,12 +295,15 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     label = String.format("%s-%s-%s", prefix, keyword.name, getSearchDate());
                 }
 
+                Map<String, String> eventParams = new HashMap<>();
+                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
+                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                    , action, label, null);
+                    , action, label, eventParams);
 
-                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
+                Map<String, String> screenParams = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, params);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, screenParams);
             } else
             {
                 String prefix = null;
@@ -346,8 +350,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     label = String.format("%s-%s", prefix, label);
                 }
 
+                Map<String, String> eventParams = new HashMap<>();
+                eventParams.put(AnalyticsManager.KeyType.KEYWORD, keyword.name);
+                eventParams.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(totalCount));
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
-                    , action, label, null);
+                    , action, label, eventParams);
 
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
             }

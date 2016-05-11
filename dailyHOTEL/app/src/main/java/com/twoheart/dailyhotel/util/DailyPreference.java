@@ -50,6 +50,7 @@ public class DailyPreference
 
     private static final String KEY_AGREE_TERMS_OF_LOCATION = "21"; // 위치 약관 동의 여부
     private static final String KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE = "22"; // 운영시간 문구
+    private static final String KEY_APP_VERSION = "23";
 
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
@@ -64,6 +65,7 @@ public class DailyPreference
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
 
     private static final String KEY_AUTHORIZATION = "1000";
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -518,6 +520,16 @@ public class DailyPreference
     public void setOperationTimeMessage(String text)
     {
         setValue(mEditor, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, text);
+    }
+
+    public void setAppVersion(String value)
+    {
+        setValue(mEditor, KEY_APP_VERSION, value);
+    }
+
+    public String getAppVersion()
+    {
+        return getValue(mPreferences, KEY_APP_VERSION, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

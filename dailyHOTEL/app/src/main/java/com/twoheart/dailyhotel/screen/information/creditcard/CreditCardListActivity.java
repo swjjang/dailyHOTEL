@@ -163,6 +163,7 @@ public class CreditCardListActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UI Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override
@@ -299,6 +300,8 @@ public class CreditCardListActivity extends BaseActivity
                     {
                         mSelectedCreditCard = null;
                     }
+
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).updateCreditCard(null);
                 } else
                 {
                     AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST);
@@ -307,6 +310,7 @@ public class CreditCardListActivity extends BaseActivity
 
                     boolean hasCreditCard = false;
                     JSONObject jsonObject;
+                    String cardcds = null;
 
                     for (int i = 0; i < length; i++)
                     {
@@ -317,12 +321,22 @@ public class CreditCardListActivity extends BaseActivity
 
                         arrayList.add(creditCard);
 
+                        if (cardcds == null)
+                        {
+                            cardcds = CreditCard.getCardCDName(CreditCardListActivity.this, creditCard.cardcd);
+                        } else
+                        {
+                            cardcds += "," + CreditCard.getCardCDName(CreditCardListActivity.this, creditCard.cardcd);
+                        }
+
                         if (mIsPickMode == true && mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(creditCard.billingkey) == true)
                         {
                             hasCreditCard = true;
                             mSelectedCreditCard = creditCard;
                         }
                     }
+
+                    AnalyticsManager.getInstance(CreditCardListActivity.this).updateCreditCard(cardcds);
 
                     if (mIsRegisterCreditCard == true)
                     {

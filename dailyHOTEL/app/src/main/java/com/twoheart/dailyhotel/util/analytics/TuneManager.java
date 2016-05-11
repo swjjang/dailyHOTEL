@@ -47,7 +47,7 @@ public class TuneManager extends BaseAnalyticsManager
         setDeferredDeepLink();
     }
 
-    public void setGoogleClientId(String clientId)
+    void setGoogleClientId(String clientId)
     {
         mMobileAppTracker.setGoogleUserId(clientId);
     }
@@ -83,7 +83,7 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void recordScreen(String screen, Map<String, String> params)
+    void recordScreen(String screen, Map<String, String> params)
     {
         if (params == null)
         {
@@ -166,8 +166,13 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void recordEvent(String category, String action, String label, Map<String, String> params)
+    void recordEvent(String category, String action, String label, Map<String, String> params)
     {
+        if (Util.isTextEmpty(category, action, label) == true)
+        {
+            return;
+        }
+
         if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
@@ -240,12 +245,18 @@ public class TuneManager extends BaseAnalyticsManager
         }
     }
 
+    @Override
+    void recordEvent(Map<String, String> params)
+    {
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void setUserIndex(String index)
+    void setUserIndex(String index)
     {
         mUserIndex = index;
 
@@ -259,31 +270,37 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void onStart(Activity activity)
+    void onStart(Activity activity)
     {
 
     }
 
     @Override
-    public void onStop(Activity activity)
+    void onStop(Activity activity)
     {
 
     }
 
     @Override
-    public void onResume(Activity activity)
+    void onResume(Activity activity)
     {
         mMobileAppTracker.setReferralSources(activity);
         mMobileAppTracker.measureSession();
     }
 
     @Override
-    public void onPause(Activity activity)
+    void onPause(Activity activity)
     {
     }
 
     @Override
-    public void addCreditCard(String cardType)
+    void currentAppVersion(String version)
+    {
+
+    }
+
+    @Override
+    void addCreditCard(String cardType)
     {
         MATEvent matEvent = new MATEvent(TuneEventId.CARDLIST_ADDED_CARD);
         matEvent.withAttribute1(cardType);
@@ -299,7 +316,13 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    void updateCreditCard(String cardTypes)
+    {
+
+    }
+
+    @Override
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
         mMobileAppTracker.setUserId(userIndex);
 
@@ -343,7 +366,7 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
         // Tune
         mMobileAppTracker.setUserId(userIndex);
@@ -364,7 +387,7 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void purchaseCompleteHotel(String transId, Map<String, String> params)
+    void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
         MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PURCHASE_COMPLETE, params, true);
 
@@ -401,7 +424,7 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    public void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PURCHASE_COMPLETE, params, true);
 

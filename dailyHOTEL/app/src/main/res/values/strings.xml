@@ -40,6 +40,22 @@
     <string name="label_restaurant_information">레스토랑 정보</string>
     <string name="label_manager">관리</string>
 
+    <string name="label_cardcd01">외환</string>
+    <string name="label_cardcd03">롯데</string>
+    <string name="label_cardcd04">현대</string>
+    <string name="label_cardcd06">국민</string>
+    <string name="label_cardcd11">BC</string>
+    <string name="label_cardcd12">삼성</string>
+    <string name="label_cardcd14">신한</string>
+    <string name="label_cardcd15">한미</string>
+    <string name="label_cardcd16">NH</string>
+    <string name="label_cardcd17">하나 SK</string>
+    <string name="label_cardcd21">해외비자</string>
+    <string name="label_cardcd22">해외마스터</string>
+    <string name="label_cardcd23">JCB</string>
+    <string name="label_cardcd24">해외아멕스</string>
+    <string name="label_cardcd25">해외다이너스</string>
+
     <string name="message_detail_copy_address">주소가 복사되었습니다.</string>
     <string name="message_detail_copy_account_number">계좌번호가 복사되었습니다.</string>
 
@@ -185,7 +201,7 @@
     <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 15분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message13">이곳에 서명하세요 </string>
+    <string name="dialog_msg_hotel_payment_message13">이곳에 서명해주세요</string>
 
     <string name="dialog_msg_gourmet_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품이에요!</string>
     <string name="dialog_msg_gourmet_payment_message02">특정 좌석과 뷰를 보장해드리기 어려운 점 양해 부탁드려요.</string>

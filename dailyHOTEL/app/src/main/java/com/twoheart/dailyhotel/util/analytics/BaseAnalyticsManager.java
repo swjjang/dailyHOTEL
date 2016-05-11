@@ -12,6 +12,8 @@ public abstract class BaseAnalyticsManager
 
     abstract void recordEvent(String category, String action, String label, Map<String, String> params);
 
+    abstract void recordEvent(Map<String, String> params);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,11 @@ public abstract class BaseAnalyticsManager
 
     abstract void onPause(Activity activity);
 
+    abstract void currentAppVersion(String version);
+
     abstract void addCreditCard(String cardType);
+
+    abstract void updateCreditCard(String cardTypes);
 
     abstract void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType);
 
