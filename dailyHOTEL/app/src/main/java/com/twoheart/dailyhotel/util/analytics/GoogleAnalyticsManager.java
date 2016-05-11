@@ -14,11 +14,10 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Map;
 
-public class GoogleAnalyticsManager implements IBaseAnalyticsManager
+public class GoogleAnalyticsManager extends BaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[GoogleAnalyticsManager]";
-    private static final boolean ENABLED = true;
     private static final String GA_PROPERTY_ID = "UA-43721645-6";
 
     private Tracker mGoogleAnalyticsTracker;
@@ -59,53 +58,48 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordScreen(String screen, Map<String, String> params)
+    void recordScreen(String screen)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
+        mGoogleAnalyticsTracker.setScreenName(screen);
+        mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        if (params == null)
+        if (DEBUG == true)
         {
-            mGoogleAnalyticsTracker.setScreenName(screen);
-            mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
-            if (DEBUG == true)
-            {
-                ExLog.d(TAG + "Screen : " + screen);
-            }
-        } else
-        {
-            if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
-            {
-                checkoutStep(1, screen, null, params);
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
-            {
-                checkoutStep(2, screen, null, params);
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
-            {
-                checkoutStep(3, screen, null, params);
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
-            {
-                checkoutStep(4, screen, null, params);
-            }
+            ExLog.d(TAG + "Screen : " + screen);
         }
     }
 
     @Override
-    public void recordEvent(String category, String action, String label, Map<String, String> params)
+    void recordScreen(String screen, Map<String, String> params)
     {
-        if (ENABLED == false)
+        if (params == null)
         {
             return;
         }
 
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        {
+            checkoutStep(1, screen, null, params);
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
+        {
+            checkoutStep(2, screen, null, params);
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+        {
+            checkoutStep(3, screen, null, params);
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
+        {
+            checkoutStep(4, screen, null, params);
+        }
+    }
+
+    @Override
+    void recordEvent(String category, String action, String label, Map<String, String> params)
+    {
         long value = 0L;
 
-        if (params != null)
+        if (Util.isTextEmpty(category, action, label) == true)
         {
-
+            return;
         }
 
         mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
@@ -118,18 +112,19 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
         }
     }
 
+    @Override
+    void recordEvent(Map<String, String> params)
+    {
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void setUserIndex(String index)
+    void setUserIndex(String index)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         if (Util.isTextEmpty(index) == true)
         {
             mGoogleAnalyticsTracker.set("&uid", "");
@@ -140,58 +135,57 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void onResume(Activity activity)
+    void onStart(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
+
     }
 
     @Override
-    public void onPause(Activity activity)
+    void onStop(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
+
     }
 
     @Override
-    public void addCreditCard(String cardType)
+    void onResume(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
     }
 
     @Override
-    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    void onPause(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
     }
 
     @Override
-    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
+    void currentAppVersion(String version)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
+
     }
 
     @Override
-    public void purchaseCompleteHotel(String transId, Map<String, String> params)
+    void addCreditCard(String cardType)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
+    }
 
+    @Override
+    void updateCreditCard(String cardTypes)
+    {
+
+    }
+
+    @Override
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    {
+    }
+
+    @Override
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
+    {
+    }
+
+    @Override
+    void purchaseCompleteHotel(String transId, Map<String, String> params)
+    {
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
@@ -231,13 +225,8 @@ public class GoogleAnalyticsManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
 

@@ -119,7 +119,7 @@ public class GourmetSearchActivity extends PlaceSearchActivity
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH);
     }
 
     private void setDateText(SaleTime saleTime)

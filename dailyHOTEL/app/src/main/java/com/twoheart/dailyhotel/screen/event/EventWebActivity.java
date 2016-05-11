@@ -27,12 +27,17 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 public class EventWebActivity extends WebViewActivity implements Constants
 {
+    private static final String INTENT_EXTRA_DATA_EVENTNAME = "eventName";
+
     private SourceType mSourceType;
     private SaleTime mSaleTime;
+    private String mEventName;
 
     public enum SourceType
     {
@@ -41,7 +46,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         EVENT,
     }
 
-    public static Intent newInstance(Context context, SourceType sourceType, String url, SaleTime saleTime)
+    public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName, SaleTime saleTime)
     {
         if (sourceType == null || Util.isTextEmpty(url) == true)
         {
@@ -52,6 +57,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, url);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+
+        if (Util.isTextEmpty(eventName) == true)
+        {
+            eventName = "";
+        }
+
+        intent.putExtra(INTENT_EXTRA_DATA_EVENTNAME, eventName);
 
         return intent;
     }
@@ -65,13 +77,29 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = getIntent();
 
         String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
-        mSourceType = SourceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
+
+        try
+        {
+            mSourceType = SourceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
         if (Util.isTextEmpty(url) == true)
         {
             finish();
             return;
+        }
+
+        mEventName = intent.getParcelableExtra(INTENT_EXTRA_DATA_EVENTNAME);
+
+        if (Util.isTextEmpty(mEventName) == true)
+        {
+            mEventName = "";
         }
 
         setContentView(R.layout.activity_event_web);
@@ -100,24 +128,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
         setWebView(url);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-
-        outState.putString("sourceType", mSourceType.name());
-        outState.putParcelable("saleTime", mSaleTime);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        mSourceType = SourceType.valueOf(savedInstanceState.getString("sourceType"));
-        mSaleTime = savedInstanceState.getParcelable("saleTime");
-    }
-
     private void initToolbar()
     {
         View toolbar = findViewById(R.id.toolbar);
@@ -135,18 +145,23 @@ public class EventWebActivity extends WebViewActivity implements Constants
     @Override
     protected void onStart()
     {
+        Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.EVENT_NAME, mEventName);
+
         switch (mSourceType)
         {
             case HOTEL_BANNER:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYHOTEL_BANNER_DETAIL, null);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYHOTEL_BANNER_DETAIL);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYHOTEL_BANNER_DETAIL, params);
                 break;
 
             case GOURMET_BANNER:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYGOURMET_BANNER_DETAIL, null);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYGOURMET_BANNER_DETAIL);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYGOURMET_BANNER_DETAIL, params);
                 break;
 
             case EVENT:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_DETAIL, null);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_DETAIL);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_DETAIL, params);
                 break;
         }
 

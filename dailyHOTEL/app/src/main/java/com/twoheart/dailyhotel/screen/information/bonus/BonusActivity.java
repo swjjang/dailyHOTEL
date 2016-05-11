@@ -195,13 +195,13 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             mBeforeSigninLayout.setVisibility(View.GONE);
             mSigninLayout.setVisibility(View.VISIBLE);
 
-            AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS, null);
+            AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS);
         } else
         {
             mBeforeSigninLayout.setVisibility(View.VISIBLE);
             mSigninLayout.setVisibility(View.GONE);
 
-            AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS_BEFORE_LOGIN, null);
+            AnalyticsManager.getInstance(this).recordScreen(Screen.BONUS_BEFORE_LOGIN);
         }
     }
 

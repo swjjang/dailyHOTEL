@@ -47,6 +47,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 예약한 호텔의 리스트들을 출력.
@@ -151,6 +153,17 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     DailyPreference.getInstance(baseActivity).setVirtualAccountReadyFlag(-1);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        if (Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == true)
+        {
+            AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST);
         }
     }
 
@@ -377,16 +390,19 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 if (length == 0)
                 {
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY, null);
-
                     updateLayout(true, null);
+
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
                 } else
                 {
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, null);
-
                     ArrayList<Booking> bookingArrayList = makeBookingList(jsonArray);
 
                     updateLayout(true, bookingArrayList);
+
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST);
+
+                    Map<String, String> params = new HashMap<>();
+                    params.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
                 }
             } catch (Exception e)
             {

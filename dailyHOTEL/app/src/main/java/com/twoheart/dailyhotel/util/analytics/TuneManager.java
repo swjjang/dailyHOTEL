@@ -21,12 +21,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
-public class TuneManager implements IBaseAnalyticsManager
+public class TuneManager extends BaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[TuneManager]";
-    private static final boolean ENABLED = true;
-
     private static final String ADVERTISE_ID = "190723";
     private static final String CONVERSION_KEY = "93aa9a40026991386dd92922cb14f58f";
 
@@ -49,7 +47,7 @@ public class TuneManager implements IBaseAnalyticsManager
         setDeferredDeepLink();
     }
 
-    public void setGoogleClientId(String clientId)
+    void setGoogleClientId(String clientId)
     {
         mMobileAppTracker.setGoogleUserId(clientId);
     }
@@ -61,11 +59,6 @@ public class TuneManager implements IBaseAnalyticsManager
             @Override
             public void didReceiveDeeplink(String deeplink)
             {
-                if (ENABLED == false)
-                {
-                    return;
-                }
-
                 if (Util.isTextEmpty(deeplink) == false)
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
@@ -84,13 +77,14 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordScreen(String screen, Map<String, String> params)
+    void recordScreen(String screen)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
 
+    }
+
+    @Override
+    void recordScreen(String screen, Map<String, String> params)
+    {
         if (params == null)
         {
             return;
@@ -172,9 +166,9 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void recordEvent(String category, String action, String label, Map<String, String> params)
+    void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (ENABLED == false)
+        if (Util.isTextEmpty(category, action, label) == true)
         {
             return;
         }
@@ -251,18 +245,19 @@ public class TuneManager implements IBaseAnalyticsManager
         }
     }
 
+    @Override
+    void recordEvent(Map<String, String> params)
+    {
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Special Event
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void setUserIndex(String index)
+    void setUserIndex(String index)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         mUserIndex = index;
 
         if (Util.isTextEmpty(index) == true)
@@ -275,34 +270,38 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void onResume(Activity activity)
+    void onStart(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
 
+    }
+
+    @Override
+    void onStop(Activity activity)
+    {
+
+    }
+
+    @Override
+    void onResume(Activity activity)
+    {
         mMobileAppTracker.setReferralSources(activity);
         mMobileAppTracker.measureSession();
     }
 
     @Override
-    public void onPause(Activity activity)
+    void onPause(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
     }
 
     @Override
-    public void addCreditCard(String cardType)
+    void currentAppVersion(String version)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
 
+    }
+
+    @Override
+    void addCreditCard(String cardType)
+    {
         MATEvent matEvent = new MATEvent(TuneEventId.CARDLIST_ADDED_CARD);
         matEvent.withAttribute1(cardType);
 
@@ -317,13 +316,14 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    void updateCreditCard(String cardTypes)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
 
+    }
+
+    @Override
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    {
         mMobileAppTracker.setUserId(userIndex);
 
         if (Util.isTextEmpty(email) == false)
@@ -366,13 +366,8 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         // Tune
         mMobileAppTracker.setUserId(userIndex);
         mMobileAppTracker.setUserEmail(email);
@@ -392,7 +387,7 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void purchaseCompleteHotel(String transId, Map<String, String> params)
+    void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
         MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PURCHASE_COMPLETE, params, true);
 
@@ -429,13 +424,8 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
-    public void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PURCHASE_COMPLETE, params, true);
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)

@@ -12,11 +12,11 @@ public class HotelRegionListFragment extends PlaceRegionListFragment
         switch (region)
         {
             case DOMESTIC:
-                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
+                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
                 break;
 
             case GLOBAL:
-                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
+                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL);
                 break;
         }
     }

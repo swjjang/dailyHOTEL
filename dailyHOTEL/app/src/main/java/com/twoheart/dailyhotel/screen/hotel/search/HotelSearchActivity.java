@@ -124,7 +124,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SEARCH);
     }
 
     private void setDateText(SaleTime saleTime, int nights)

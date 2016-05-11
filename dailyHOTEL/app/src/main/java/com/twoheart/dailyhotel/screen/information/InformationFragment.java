@@ -30,7 +30,7 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
-import com.twoheart.dailyhotel.screen.information.terms.ProtectChildTermsActivity;
+import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -262,12 +262,12 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         if (Util.isTextEmpty(DailyPreference.getInstance(getActivity()).getAuthorization()) == true)
         {
-            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT, null);
+            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT);
 
             setSigninLayout(false);
         } else
         {
-            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN, null);
+            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN);
 
             setSigninLayout(true);
         }
@@ -480,7 +480,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
             case R.id.protectChildTermsView:
             {
-                Intent intent = new Intent(baseActivity, ProtectChildTermsActivity.class);
+                Intent intent = new Intent(baseActivity, ProtectYouthTermsActivity.class);
                 startActivity(intent);
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
                 break;

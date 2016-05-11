@@ -200,7 +200,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.DAILYGOURMET_DETAIL, null);
+        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordScreen(Screen.DAILYGOURMET_DETAIL);
 
         try
         {
@@ -473,7 +473,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 lockUI();
 
-                DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserSocialInformationJsonResponseListener, PlaceDetailActivity.this);
+                DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, PlaceDetailActivity.this);
             }
 
             String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);
@@ -584,7 +584,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserSocialInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onErrorResponse(VolleyError volleyError)
@@ -597,14 +597,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             try
             {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
+                int msgCode = response.getInt("msg_code");
 
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -614,6 +609,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     user.setPhone(jsonObject.getString("phone"));
                     user.setUserIdx(jsonObject.getString("idx"));
 
+                    boolean isPhoneVerified = jsonObject.getBoolean("is_phone_verified");
+
                     // 추천인
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
@@ -621,7 +618,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     if (isDailyUser == true)
                     {
                         // 전화번호가 잘못 입력되어 있음
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                        if (Util.isValidatePhoneNumber(user.getPhone()) == false || isPhoneVerified == false)
                         {
                             moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
                         } else

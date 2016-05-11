@@ -192,7 +192,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.SIGNIN, null);
+        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.SIGNIN);
 
         super.onStart();
     }

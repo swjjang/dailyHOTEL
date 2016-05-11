@@ -49,7 +49,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_CALENDAR, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_CALENDAR);
 
         super.onStart();
     }

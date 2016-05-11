@@ -71,7 +71,7 @@ public class SignupStep2Activity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_PHONENUMBERVERIFICATION, null);
+        AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_PHONENUMBERVERIFICATION);
 
         super.onStart();
     }

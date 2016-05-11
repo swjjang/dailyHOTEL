@@ -38,7 +38,7 @@ public class LocationTermsActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFLOCATION, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFLOCATION);
 
         super.onStart();
     }

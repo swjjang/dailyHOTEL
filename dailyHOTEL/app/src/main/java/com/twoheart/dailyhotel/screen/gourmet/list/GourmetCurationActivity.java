@@ -11,9 +11,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class GourmetCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
@@ -473,7 +476,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_CURATION, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_CURATION);
     }
 
     @Override
@@ -526,8 +529,24 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
                 return;
         }
 
+        Map<String, String> eventParmas = new HashMap<>();
+        Province province = mGourmetCurationOption.getProvince();
+
+        if(province instanceof Area)
+        {
+            Area area = (Area)province;
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        } else
+        {
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+        }
+
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, null);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParmas);
     }
 
     @Override

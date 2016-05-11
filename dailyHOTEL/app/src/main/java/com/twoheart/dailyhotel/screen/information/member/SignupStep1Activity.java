@@ -59,7 +59,7 @@ public class SignupStep1Activity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(Screen.MENU_REGISTRATION_GETINFO, null);
+        AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(Screen.MENU_REGISTRATION_GETINFO);
 
         super.onStart();
     }

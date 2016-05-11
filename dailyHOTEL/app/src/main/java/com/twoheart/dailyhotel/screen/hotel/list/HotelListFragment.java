@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -56,7 +57,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HotelListFragment extends BaseFragment implements Constants
 {
@@ -246,12 +249,12 @@ public class HotelListFragment extends BaseFragment implements Constants
                 break;
 
             case GONE:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_EMPTY, null);
-
                 mEmptyView.setVisibility(View.VISIBLE);
                 mMapLayout.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_EMPTY);
                 break;
         }
     }
@@ -589,10 +592,28 @@ public class HotelListFragment extends BaseFragment implements Constants
                 mHotelMapFragment.setOnCommunicateListener(mOnCommunicateListener);
                 mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, mCheckInSaleTime, mScrollListTop);
 
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST_MAP, null);
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST_MAP);
             } else
             {
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST, null);
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST);
+
+                Map<String, String> parmas = new HashMap<>();
+                HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
+                Province province = hotelCurationOption.getProvince();
+
+                if (province instanceof Area)
+                {
+                    Area area = (Area) province;
+                    parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                } else
+                {
+                    parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    parmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+                }
+
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST, parmas);
             }
 
             if (sortType == SortType.DEFAULT)

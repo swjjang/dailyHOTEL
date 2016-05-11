@@ -177,7 +177,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.terms.ProtectChildTermsActivity"
+            android:name=".screen.information.terms.ProtectYouthTermsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -230,7 +231,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 break;
 
             case GONE:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY, null);
+                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY);
 
                 mEmptyView.setVisibility(View.VISIBLE);
                 mMapLayout.setVisibility(View.GONE);
@@ -552,10 +553,28 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 mGourmetMapFragment.setOnCommunicateListener(mOnCommunicateListener);
                 mGourmetMapFragment.setPlaceViewItemList(gourmetListViewItemList, mSaleTime, mScrollListTop);
 
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP, null);
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
             } else
             {
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST, null);
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST);
+
+                Map<String, String> parmas = new HashMap<>();
+                GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
+                Province province = gourmetCurationOption.getProvince();
+
+                if (province instanceof Area)
+                {
+                    Area area = (Area) province;
+                    parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                } else
+                {
+                    parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    parmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+                }
+
+                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST, parmas);
             }
 
             if (sortType == SortType.DEFAULT)

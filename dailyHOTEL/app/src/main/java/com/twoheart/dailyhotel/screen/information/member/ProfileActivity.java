@@ -60,7 +60,7 @@ public class ProfileActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.PROFILE, null);
+        AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.PROFILE);
 
         super.onStart();
     }
@@ -231,98 +231,4 @@ public class ProfileActivity extends BaseActivity
             ProfileActivity.this.onErrorToastMessage(message);
         }
     };
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //    private DailyHotelJsonResponseListener mUserLogInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                String userEmail = response.getString("email");
-    //                String userName = response.getString("name");
-    //                String userPhone = response.getString("phone");
-    //
-    //                if (Util.isTextEmpty(userEmail) == true)
-    //                {
-    //                    userEmail = getString(R.string.act_profile_input_email);
-    //                }
-    //
-    //                if (Util.isTextEmpty(userName) == true)
-    //                {
-    //                    mProfileName = "";
-    //                } else
-    //                {
-    //                    mProfileName = userName;
-    //                }
-    //
-    //                if (Util.isTextEmpty(userPhone) == true)
-    //                {
-    //                    mProfilePhone = "";
-    //                } else
-    //                {
-    //                    mProfilePhone = userPhone;
-    //                }
-    //
-    //                if (Util.isValidatePhoneNumber(mProfilePhone) == false)
-    //                {
-    //                    mProfilePhone = "";
-    //                } else
-    //                {
-    //                    mProfilePhone = Util.addHippenMobileNumber(ProfileActivity.this, mProfilePhone);
-    //                }
-    //
-    //                TextView emailTextView = (TextView) findViewById(R.id.tv_profile_email);
-    //                emailTextView.setText(userEmail);
-    //
-    //                mPhoneEditText.setText(mProfilePhone);
-    //                mNameEditText.setText(mProfileName);
-    //
-    //                setEditEnabled(false);
-    //                mEditButtonView.setText(R.string.act_profile_modify);
-    //            } catch (Exception e)
-    //            {
-    //                onError(e);
-    //            } finally
-    //            {
-    //                unLockUI();
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                String result = response.getString("success");
-    //                String msg = null;
-    //
-    //                if (response.length() > 1)
-    //                {
-    //                    msg = response.getString("msg");
-    //                }
-    //
-    //                if (result.equals("true") == true)
-    //                {
-    //                    unLockUI();
-    //                    DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
-    //                    updateTextField();
-    //                } else
-    //                {
-    //                    unLockUI();
-    //                    DailyToast.showToast(ProfileActivity.this, msg, Toast.LENGTH_LONG);
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                onError(e);
-    //            }
-    //        }
-    //    };
 }

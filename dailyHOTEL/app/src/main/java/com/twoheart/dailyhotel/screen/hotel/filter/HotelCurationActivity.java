@@ -12,10 +12,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.HotelFilter;
 import com.twoheart.dailyhotel.model.HotelFilters;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -23,6 +25,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HotelCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
@@ -437,7 +441,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_CURATION, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_CURATION);
     }
 
     @Override
@@ -490,8 +494,24 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
                 return;
         }
 
+        Map<String, String> eventParmas = new HashMap<>();
+        Province province = mHotelCurationOption.getProvince();
+
+        if(province instanceof Area)
+        {
+            Area area = (Area)province;
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        } else
+        {
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+        }
+
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, null);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParmas);
     }
 
     @Override
