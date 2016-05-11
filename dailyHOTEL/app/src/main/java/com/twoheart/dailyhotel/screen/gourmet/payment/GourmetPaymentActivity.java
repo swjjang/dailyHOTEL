@@ -26,11 +26,13 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -69,6 +71,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
     private boolean mIsEditMode;
+    private Province mProvince;
+    private String mArea; // Analytics용 소지역
 
     public interface OnUserActionListener
     {
@@ -90,7 +94,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime//
-        , String imageUrl, String category, int gourmetIndex, boolean isDBenefit)
+        , String imageUrl, String category, int gourmetIndex, boolean isDBenefit, Province province, String area)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
 
@@ -128,6 +132,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         gourmetPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, -1);
         gourmetPaymentInformation.category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
         gourmetPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
+        mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
         if (gourmetPaymentInformation.getTicketInformation() == null)
         {
@@ -791,6 +797,30 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
 
             params.put(AnalyticsManager.KeyType.RESERVATION_TIME, formatDay.format(gourmetPaymentInformation.ticketTime));
+            params.put(AnalyticsManager.KeyType.VISIT_HOUR, Long.toString(gourmetPaymentInformation.ticketTime));
+
+            if (mProvince == null)
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, "");
+                params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                params.put(AnalyticsManager.KeyType.AREA, "");
+            } else
+            {
+                if (mProvince instanceof Area)
+                {
+                    Area area = (Area) mProvince;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                }
+
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+            }
+
+            params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

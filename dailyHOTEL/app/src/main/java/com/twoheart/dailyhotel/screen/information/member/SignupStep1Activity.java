@@ -281,7 +281,7 @@ public class SignupStep1Activity extends BaseActivity
                     String signupKey = dataJSONObject.getString("signup_key");
                     String password = Crypto.encrypt(mSignupParams.get("pw"));
 
-                    Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, signupKey, mSignupParams.get("email"), password);
+                    Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, signupKey, mSignupParams.get("email"), password, mSignupParams.get("recommender"));
                     startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
 
                     storeUserInformation(mSignupParams.get("email"), mSignupParams.get("name"));

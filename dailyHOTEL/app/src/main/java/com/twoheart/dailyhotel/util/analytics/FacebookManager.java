@@ -300,7 +300,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 

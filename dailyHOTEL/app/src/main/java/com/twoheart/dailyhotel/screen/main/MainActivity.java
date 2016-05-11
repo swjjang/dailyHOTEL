@@ -33,10 +33,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.security.Key;
-import java.util.HashMap;
-import java.util.Map;
-
 public class MainActivity extends BaseActivity implements Constants
 {
     public static final String BROADCAST_EVENT_UPDATE = " com.twoheart.dailyhotel.broadcastreceiver.EVENT_UPDATE";
@@ -128,7 +124,7 @@ public class MainActivity extends BaseActivity implements Constants
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
 
         String version = DailyPreference.getInstance(this).getAppVersion();
-        if(version.equalsIgnoreCase(Util.getAppVersion(this)) == false)
+        if (Util.getAppVersion(this).equalsIgnoreCase(version) == false)
         {
             DailyPreference.getInstance(this).setAppVersion(version);
             AnalyticsManager.getInstance(this).currentAppVersion(version);

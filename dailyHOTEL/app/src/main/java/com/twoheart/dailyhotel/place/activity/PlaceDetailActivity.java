@@ -13,9 +13,11 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -57,6 +59,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected DailyToolbarLayout mDailyToolbarLayout;
     private View mToolbarUnderline;
     private boolean mDontReloadAtOnResume;
+
+    protected Province mProvince;
+    protected String mArea; // Analytics용 소지역
+    private int mViewPrice; // Analytics용 리스트 가격
 
     public interface OnUserActionListener
     {
@@ -156,6 +162,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 Util.restartApp(this);
                 return;
             }
+
+            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRICE, 0);
 
             initLayout(placeName, imageUrl);
         }
@@ -352,11 +362,81 @@ public abstract class PlaceDetailActivity extends BaseActivity
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
             params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
+            if (mProvince == null)
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, "");
+                params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                params.put(AnalyticsManager.KeyType.AREA, "");
+            } else
+            {
+                if (mProvince instanceof Area)
+                {
+                    Area area = (Area) mProvince;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                }
+
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+            }
+
+            params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
+            params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
+
             AnalyticsManager.getInstance(this).recordScreen(screen, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
+    }
+
+    protected Map<String, String> recordAnalyticsBooking(PlaceDetail placeDetail, TicketInformation ticketInformation)
+    {
+        if (placeDetail == null || ticketInformation == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
+            params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) placeDetail).category);
+
+            if (mProvince == null)
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, "");
+                params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                params.put(AnalyticsManager.KeyType.AREA, "");
+            } else
+            {
+                if (mProvince instanceof Area)
+                {
+                    Area area = (Area) mProvince;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                }
+
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+            }
+
+            params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(ticketInformation.discountPrice));
+            params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
+
+            return params;
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return null;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -478,7 +558,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);
             AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , Action.BOOKING_CLICKED, label, null);
+                , Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mPlaceDetail, ticketInformation));
         }
 
         @Override
@@ -609,8 +689,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     user.setPhone(jsonObject.getString("phone"));
                     user.setUserIdx(jsonObject.getString("idx"));
 
-                    boolean isPhoneVerified = jsonObject.getBoolean("is_phone_verified");
-
                     // 추천인
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
@@ -618,7 +696,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     if (isDailyUser == true)
                     {
                         // 전화번호가 잘못 입력되어 있음
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == false || isPhoneVerified == false)
+                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                         {
                             moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
                         } else

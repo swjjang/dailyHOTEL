@@ -263,13 +263,13 @@ public class AnalyticsManager
         }
     }
 
-    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
+    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
     {
         try
         {
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
-                analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
+                analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType, recommender);
             }
         } catch (Exception e)
         {
@@ -416,6 +416,7 @@ public class AnalyticsManager
         public static final String HOTEL_DETAIL_MAP_CLICKED = "HotelDetailMapClicked";
         public static final String HOTEL_DETAIL_ADDRESS_COPY_CLICKED = "HotelDetailAddressCopyClicked";
         public static final String HOTEL_DETAIL_NAVIGATION_APP_CLICKED = "HotelDetailNavigationAppClicked";
+        public static final String HOTEL_BOOKING_DATE_CLICKED = "HotelBookingDateClicked";
         //
         public static final String SOCIAL_SHARE_CLICKED = "SocialShareClicked";
         public static final String KAKAO_INQUIRY_CLICKED = "KakaoInquiryClicked";
@@ -440,6 +441,7 @@ public class AnalyticsManager
         public static final String GOURMET_DETAIL_MAP_CLICKED = "GourmetDetailMapClicked";
         public static final String GOURMET_DETAIL_ADDRESS_COPY_CLICKED = "GourmetDetailAddressCopyClicked";
         public static final String GOURMET_DETAIL_NAVIGATION_APP_CLICKED = "GourmetDetailNavigationAppClicked";
+        public static final String GOURMET_BOOKING_DATE_CLICKED = "GourmetBookingDateClicked";
         //
         public static final String TICKET_TYPE_CLICKED = "TicketTypeClicked";
         public static final String TICKET_TYPE_ITEM_CLICKED = "TicketTypeItemClicked";
@@ -636,6 +638,7 @@ public class AnalyticsManager
         public static final String HOTEL_CATEGORY = "hotelCategory";
         public static final String PROVINCE = "province ";
         public static final String DISTRICT = "district ";
+        public static final String AREA = "area ";
         public static final String NUM_OF_BOOKING = "num_of_booking";
         public static final String EVENT_NAME = "event_name";
         public static final String KEYWORD = "keyword";
@@ -646,5 +649,26 @@ public class AnalyticsManager
         public static final String OVERSEAS = "overseas";
         public static final String APP_VERSION = "app_version";
         public static final String CARD_ISSUING_COMPANY = "card_issuing_company";
+        public static final String VIEWD_DATE = "viewed_date";
+        public static final String CHECK_IN_DATE = "check_in_date";
+        public static final String CHECK_OUT_DATE = "check_out_date";
+        public static final String LENGTH_OF_STAY = "length_of_stay";
+        public static final String VISIT_DATE = "visit_date";
+        public static final String STAY_CATEGORY = "stay_category";
+        public static final String STAY_NAME = "stay_name";
+        public static final String UNIT_PRICE = "unit_price";
+        public static final String GOURMET_CATEGORY = "gourmet_category";
+        public static final String RESTAURANT_NAME = "restaurant_name";
+        public static final String PRICE_OF_SELECTED_ROOM = "price_of_selected_room";
+        public static final String BOOKING_INITIALISED_DATE = "booking_initialised_date";
+        public static final String PRICE_OF_SELECTED_TICKET = "price_of_selected_ticket";
+        public static final String REVENUE = "revenue";
+        public static final String USED_CREDITS = "used_credits";
+        public static final String PURCHASED_DATE = "purchased_date";
+        public static final String VISIT_HOUR = "visit_hour";
+        public static final String NUM_OF_TICKETS = "num_of_tickets";
+        public static final String TYPE_OF_REGISTRATION = "type_of_registration";
+        public static final String REGISTRATION_DATE = "registration_date";
+        public static final String REFERRAL_CODE = "referral_code";
     }
 }

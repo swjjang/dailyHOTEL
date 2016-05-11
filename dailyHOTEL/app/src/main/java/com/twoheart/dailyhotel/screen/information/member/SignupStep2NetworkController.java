@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
@@ -27,6 +28,10 @@ public class SignupStep2NetworkController extends BaseNetworkController
         void onSignUp(int notificationUid, String gcmRegisterId);
 
         void onLogin(String authorization);
+
+        void onUserInformation(String userIndex, String email, String name, String phoneNumber);
+
+        void onAlreadyVerification();
     }
 
     public SignupStep2NetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -60,6 +65,11 @@ public class SignupStep2NetworkController extends BaseNetworkController
         params.put("is_auto", "true");
 
         DailyNetworkAPI.getInstance(mContext).requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
+    }
+
+    public void requestUserInformation()
+    {
+        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
     }
 
     public void requestGoogleCloudMessagingId()
@@ -130,16 +140,25 @@ public class SignupStep2NetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 100)
+                switch (msgCode)
                 {
-                    JSONObject dataJONObject = response.getJSONObject("data");
-                    String message = dataJONObject.getString("msg");
+                    case 100:
+                    {
+                        JSONObject dataJONObject = response.getJSONObject("data");
+                        String message = dataJONObject.getString("msg");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
-                } else
-                {
-                    // 다른 폰에서 인증된 경우
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
+                        break;
+                    }
+
+                    case 2001:
+                    {
+                        break;
+                    }
+
+                    default:
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
+                        break;
                 }
             } catch (Exception e)
             {
@@ -255,6 +274,42 @@ public class SignupStep2NetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                String userIndex = String.valueOf(response.getInt("idx"));
+
+                AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
+
+                String name = response.getString("name");
+                String email = response.getString("email");
+                String phone = response.getString("phone");
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone);
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
+                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onErrorResponse(volleyError);
             }
         }
     };

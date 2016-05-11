@@ -11,6 +11,9 @@ import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GourmetCalendarActivity extends PlaceCalendarActivity
 {
     private static final int DAYCOUNT_OF_MAX = 30;
@@ -73,6 +76,13 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         dailyTextView.setSelected(true);
 
         lockUiComponent();
+
+        String date = day.dayTime.getDayOfDaysDateFormat("yyyyMMdd");
+
+        Map<String, String> params = new HashMap<>();
+        params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(day.dayTime.getDayOfDaysDate().getTime()));
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED, date, params);
 
         Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, day.dayTime);
