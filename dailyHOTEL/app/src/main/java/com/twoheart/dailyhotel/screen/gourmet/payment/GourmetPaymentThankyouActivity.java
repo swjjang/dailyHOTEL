@@ -24,7 +24,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_THANKYOU, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_THANKYOU);
 
         super.onStart();
     }

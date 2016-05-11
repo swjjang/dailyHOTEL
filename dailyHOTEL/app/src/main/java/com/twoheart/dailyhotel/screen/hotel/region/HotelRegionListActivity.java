@@ -178,10 +178,10 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
 
         if (isOverseas == true)
         {
-            AnalyticsManager.getInstance(HotelRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
+            AnalyticsManager.getInstance(HotelRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL);
         } else
         {
-            AnalyticsManager.getInstance(HotelRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
+            AnalyticsManager.getInstance(HotelRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
         }
     }
 
@@ -281,10 +281,10 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         {
             if (position == 0)
             {
-                AnalyticsManager.getInstance(HotelRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
+                AnalyticsManager.getInstance(HotelRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
             } else
             {
-                AnalyticsManager.getInstance(HotelRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
+                AnalyticsManager.getInstance(HotelRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL);
             }
         }
 

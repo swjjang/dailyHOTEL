@@ -21,6 +21,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -45,6 +46,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -200,7 +202,7 @@ public class HotelDetailActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.DAILYHOTEL_DETAIL, null);
+        AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.DAILYHOTEL_DETAIL);
 
         super.onStart();
     }
@@ -728,6 +730,16 @@ public class HotelDetailActivity extends BaseActivity
                         break;
                     }
                 }
+            } catch (JSONException e)
+            {
+                if (DEBUG == false)
+                {
+                    String message = url + " : " + response.toString();
+                    Crashlytics.logException(new JSONException(message));
+                }
+
+                onError(e);
+                finish();
             } catch (Exception e)
             {
                 onError(e);
@@ -764,6 +776,8 @@ public class HotelDetailActivity extends BaseActivity
                     user.setPhone(jsonObject.getString("phone"));
                     user.setUserIdx(jsonObject.getString("idx"));
 
+                    boolean isPhoneVerified = jsonObject.getBoolean("is_phone_verified");
+
                     // 추천인
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
@@ -771,13 +785,12 @@ public class HotelDetailActivity extends BaseActivity
                     if (isDailyUser == true)
                     {
                         // 전화번호가 잘못 입력되어 있음
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                        if (Util.isValidatePhoneNumber(user.getPhone()) == false || isPhoneVerified == false)
                         {
                             moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
                         } else
                         {
                             moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
-
                         }
                     } else
                     {

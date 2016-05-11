@@ -54,7 +54,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class GourmetMainFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
@@ -814,7 +816,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, mTodaySaleTime);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null, mTodaySaleTime);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             mIsDeepLink = true;
         } else
@@ -1336,7 +1338,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, mTodaySaleTime);
+                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, eventBanner.name, mTodaySaleTime);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
@@ -1374,14 +1376,34 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     }
 
                     mViewType = ViewType.MAP;
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP, null);
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
                     break;
                 }
 
                 case MAP:
+                {
                     mViewType = ViewType.LIST;
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, null);
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST);
+
+                    Map<String, String> parmas = new HashMap<>();
+                    GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
+                    Province province = gourmetCurationOption.getProvince();
+
+                    if (province instanceof Area)
+                    {
+                        Area area = (Area) province;
+                        parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                    } else
+                    {
+                        parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+                    }
+
+                    AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, parmas);
                     break;
+                }
             }
 
             for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())

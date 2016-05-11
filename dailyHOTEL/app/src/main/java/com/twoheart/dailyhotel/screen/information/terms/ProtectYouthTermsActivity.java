@@ -9,7 +9,7 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class ProtectChildTermsActivity extends WebViewActivity
+public class ProtectYouthTermsActivity extends WebViewActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -25,7 +25,7 @@ public class ProtectChildTermsActivity extends WebViewActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_protectchildterms_activity), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_protectyouthterms_activity), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -38,7 +38,7 @@ public class ProtectChildTermsActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFLOCATION, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFJUVENILE);
 
         super.onStart();
     }

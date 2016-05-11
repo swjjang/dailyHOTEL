@@ -153,6 +153,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         {
             Util.restartApp(this);
         }
+
+        AnalyticsManager.getInstance(this).onStart(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        AnalyticsManager.getInstance(this).onStop(this);
     }
 
     @Override

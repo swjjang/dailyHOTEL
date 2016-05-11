@@ -117,7 +117,7 @@ public class EditProfilePhoneActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(EditProfilePhoneActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_PHONENUMBER, null);
+        AnalyticsManager.getInstance(EditProfilePhoneActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_PHONENUMBER);
 
         super.onStart();
     }

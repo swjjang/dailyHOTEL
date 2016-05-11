@@ -591,7 +591,7 @@ public class GourmetDetailLayout
             setBookingStatus(STATUS_SEARCH_TICKET);
         }
 
-        AnalyticsManager.getInstance(mActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, null);
+        AnalyticsManager.getInstance(mActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
         AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
     }

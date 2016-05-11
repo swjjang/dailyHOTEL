@@ -72,7 +72,7 @@ public class BonusListActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(BonusListActivity.this).recordScreen(Screen.BONUS_LIST, null);
+        AnalyticsManager.getInstance(BonusListActivity.this).recordScreen(Screen.BONUS_LIST);
 
         super.onStart();
     }

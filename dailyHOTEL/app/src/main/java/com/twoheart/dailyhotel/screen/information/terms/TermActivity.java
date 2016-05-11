@@ -38,7 +38,7 @@ public class TermActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFUSE, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFUSE);
 
         super.onStart();
     }

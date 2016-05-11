@@ -21,12 +21,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
-public class TuneManager implements IBaseAnalyticsManager
+public class TuneManager extends BaseAnalyticsManager
 {
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[TuneManager]";
-    private static final boolean ENABLED = true;
-
     private static final String ADVERTISE_ID = "190723";
     private static final String CONVERSION_KEY = "93aa9a40026991386dd92922cb14f58f";
 
@@ -61,11 +59,6 @@ public class TuneManager implements IBaseAnalyticsManager
             @Override
             public void didReceiveDeeplink(String deeplink)
             {
-                if (ENABLED == false)
-                {
-                    return;
-                }
-
                 if (Util.isTextEmpty(deeplink) == false)
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
@@ -84,13 +77,14 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
+    void recordScreen(String screen)
+    {
+
+    }
+
+    @Override
     public void recordScreen(String screen, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         if (params == null)
         {
             return;
@@ -174,11 +168,6 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
@@ -258,11 +247,6 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void setUserIndex(String index)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         mUserIndex = index;
 
         if (Util.isTextEmpty(index) == true)
@@ -275,13 +259,20 @@ public class TuneManager implements IBaseAnalyticsManager
     }
 
     @Override
+    public void onStart(Activity activity)
+    {
+
+    }
+
+    @Override
+    public void onStop(Activity activity)
+    {
+
+    }
+
+    @Override
     public void onResume(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         mMobileAppTracker.setReferralSources(activity);
         mMobileAppTracker.measureSession();
     }
@@ -289,20 +280,11 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void onPause(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
     }
 
     @Override
     public void addCreditCard(String cardType)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         MATEvent matEvent = new MATEvent(TuneEventId.CARDLIST_ADDED_CARD);
         matEvent.withAttribute1(cardType);
 
@@ -319,11 +301,6 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         mMobileAppTracker.setUserId(userIndex);
 
         if (Util.isTextEmpty(email) == false)
@@ -368,11 +345,6 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         // Tune
         mMobileAppTracker.setUserId(userIndex);
         mMobileAppTracker.setUserEmail(email);
@@ -431,11 +403,6 @@ public class TuneManager implements IBaseAnalyticsManager
     @Override
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PURCHASE_COMPLETE, params, true);
 
         if (params.containsKey(AnalyticsManager.KeyType.USED_BOUNS) == true)

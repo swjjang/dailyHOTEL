@@ -74,7 +74,7 @@ public class IssuingReceiptActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_RECEIPT, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL_RECEIPT);
 
         super.onStart();
     }

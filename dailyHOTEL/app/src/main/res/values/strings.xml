@@ -92,7 +92,7 @@
     <string name="actionbar_title_payment_activity">결제하기</string>
     <string name="actionbar_title_privacy_activity">개인정보취급방침</string>
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
-    <string name="actionbar_title_protectchildterms_activity">청소년 보호 정책</string>
+    <string name="actionbar_title_protectyouthterms_activity">청소년 보호 정책</string>
     <string name="actionbar_title_profile_activity">프로필</string>
     <string name="actionbar_title_signup_1_activity">회원가입(1/2)</string>
     <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>

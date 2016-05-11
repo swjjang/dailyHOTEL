@@ -60,6 +60,8 @@ public class ProfileNetworkController extends BaseNetworkController
                 if (isPhoneVerified == true)
                 {
                     verifiedDate = response.getString("phone_verified_at");
+
+
                 }
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone, isPhoneVerified, verifiedDate);
@@ -69,36 +71,4 @@ public class ProfileNetworkController extends BaseNetworkController
             }
         }
     };
-
-    //    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                String result = response.getString("success");
-    //                String msg = null;
-    //
-    //                if (response.length() > 1)
-    //                {
-    //                    msg = response.getString("msg");
-    //                }
-    //
-    //                if (result.equals("true") == true)
-    //                {
-    //                    unLockUI();
-    //                    DailyToast.showToast(ProfileNetworkController.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
-    //                    updateTextField();
-    //                } else
-    //                {
-    //                    unLockUI();
-    //                    DailyToast.showToast(ProfileNetworkController.this, msg, Toast.LENGTH_LONG);
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                onError(e);
-    //            }
-    //        }
-    //    };
 }

@@ -19,6 +19,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Map;
 
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 {
@@ -295,7 +297,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , action, label, null);
 
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, null);
+                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, keyword.name);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, params);
             } else
             {
                 String prefix = null;
@@ -345,7 +349,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , action, label, null);
 
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT, null);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
             }
         }
 
@@ -362,7 +366,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , AnalyticsManager.Action.GOURMET_AROUND_SEARCH_NOT_FOUND, label, null);
 
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, null);
+                Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.KEYWORD, mAddress);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT_EMPTY, params);
             } else
             {
                 String label;
@@ -378,7 +384,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SEARCH//
                     , AnalyticsManager.Action.GOURMET_AROUND_SEARCH_CLICKED, label, null);
 
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT, null);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SEARCH_RESULT);
             }
         }
 

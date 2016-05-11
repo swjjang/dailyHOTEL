@@ -437,7 +437,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_CURATION, null);
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_CURATION);
     }
 
     @Override

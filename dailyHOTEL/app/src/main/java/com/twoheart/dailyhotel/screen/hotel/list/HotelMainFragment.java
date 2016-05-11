@@ -54,7 +54,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
@@ -991,7 +993,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, mTodaySaleTime);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, null, mTodaySaleTime);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             mIsDeepLink = true;
         } else
@@ -1594,7 +1596,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 }
             } else
             {
-                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink, mTodaySaleTime);
+                Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink, eventBanner.name, mTodaySaleTime);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             }
         }
@@ -1613,13 +1615,32 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 case LIST:
                     mViewType = ViewType.MAP;
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP, null);
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
                     break;
 
                 case MAP:
+                {
                     mViewType = ViewType.LIST;
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, null);
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+
+                    Map<String, String> parmas = new HashMap<>();
+                    Province province = mCurationOption.getProvince();
+
+                    if (province instanceof Area)
+                    {
+                        Area area = (Area) province;
+                        parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                    } else
+                    {
+                        parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+                    }
+
+                    AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, parmas);
                     break;
+                }
             }
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.

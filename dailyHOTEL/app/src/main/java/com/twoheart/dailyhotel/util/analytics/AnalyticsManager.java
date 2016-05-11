@@ -6,18 +6,27 @@ import android.content.Context;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.ExLog;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class AnalyticsManager
 {
     private static final String TAG = "[AnalyticsManager]";
-    private static final boolean ENABLED = true;
+
+    // 추후에 작업을 해볼까 생각중
+    private static final boolean ENABLED_GOOGLE = true;
+    private static final boolean ENABLED_FACEBOOK = true;
+    private static final boolean ENABLED_TUNE = true;
+    private static final boolean ENABLED_APPBOY = true;
 
     private static AnalyticsManager mInstance = null;
     private Context mContext;
     private GoogleAnalyticsManager mGoogleAnalyticsManager;
     private TuneManager mTuneManager;
     private FacebookManager mFacebookManager;
+    private AppboyManager mAppboyManager;
+    private List<BaseAnalyticsManager> mAnalyticsManagerList;
 
     public synchronized static AnalyticsManager getInstance(Context context)
     {
@@ -30,6 +39,8 @@ public class AnalyticsManager
 
     private AnalyticsManager(Context context)
     {
+        mAnalyticsManagerList = new ArrayList<>();
+
         initAnalytics(context);
 
         AdWordsConversionReporter.reportWithConversionId(context, "972698918", "swVfCLnEnWYQpurozwM", "0.00", false);
@@ -53,6 +64,13 @@ public class AnalyticsManager
             });
 
             mFacebookManager = new FacebookManager(context);
+            mAppboyManager = new AppboyManager(context);
+
+
+            mAnalyticsManagerList.add(mGoogleAnalyticsManager);
+            mAnalyticsManagerList.add(mTuneManager);
+            mAnalyticsManagerList.add(mFacebookManager);
+            mAnalyticsManagerList.add(mAppboyManager);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -61,16 +79,40 @@ public class AnalyticsManager
 
     public void setUserIndex(String index)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.setUserIndex(index);
-            mTuneManager.setUserIndex(index);
-            mFacebookManager.setUserIndex(index);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.setUserIndex(index);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
+
+    public void onStart(Activity activity)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.onStart(activity);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
+
+    public void onStop(Activity activity)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.onStop(activity);
+            }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -79,16 +121,12 @@ public class AnalyticsManager
 
     public void onResume(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.onResume(activity);
-            mTuneManager.onResume(activity);
-            mFacebookManager.onResume(activity);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.onResume(activity);
+            }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -97,16 +135,26 @@ public class AnalyticsManager
 
     public void onPause(Activity activity)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.onPause(activity);
-            mTuneManager.onPause(activity);
-            mFacebookManager.onPause(activity);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.onPause(activity);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
+
+    public void recordScreen(String screen)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.recordScreen(screen);
+            }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -115,16 +163,12 @@ public class AnalyticsManager
 
     public void recordScreen(String screen, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.recordScreen(screen, params);
-            mTuneManager.recordScreen(screen, params);
-            mFacebookManager.recordScreen(screen, params);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.recordScreen(screen, params);
+            }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -133,16 +177,12 @@ public class AnalyticsManager
 
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.recordEvent(category, action, label, params);
-            mTuneManager.recordEvent(category, action, label, params);
-            mFacebookManager.recordEvent(category, action, label, params);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.recordEvent(category, action, label, params);
+            }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -155,16 +195,12 @@ public class AnalyticsManager
 
     public void addCreditCard(String cardType)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.addCreditCard(cardType);
-            mTuneManager.addCreditCard(cardType);
-            mFacebookManager.addCreditCard(cardType);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.addCreditCard(cardType);
+            }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -173,16 +209,12 @@ public class AnalyticsManager
 
     public void singUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
-            mTuneManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
-            mFacebookManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+            }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -191,16 +223,12 @@ public class AnalyticsManager
 
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
-            mTuneManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
-            mFacebookManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType);
+            }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -209,19 +237,15 @@ public class AnalyticsManager
 
     public void purchaseCompleteHotel(String transId, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.purchaseCompleteHotel(transId, params);
-            mTuneManager.purchaseCompleteHotel(transId, params);
-            mFacebookManager.purchaseCompleteHotel(transId, params);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.purchaseCompleteHotel(transId, params);
+            }
 
-            //            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
-            //            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "2uFUCJrApWYQpurozwM", price, true);
+            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
+            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "2uFUCJrApWYQpurozwM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -230,19 +254,15 @@ public class AnalyticsManager
 
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
-        if (ENABLED == false)
-        {
-            return;
-        }
-
         try
         {
-            mGoogleAnalyticsManager.purchaseCompleteGourmet(transId, params);
-            mTuneManager.purchaseCompleteGourmet(transId, params);
-            mFacebookManager.purchaseCompleteGourmet(transId, params);
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.purchaseCompleteGourmet(transId, params);
+            }
 
-            //            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
-            //            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "KVTICNS-pWYQpurozwM", price, true);
+            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
+            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "KVTICNS-pWYQpurozwM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -319,6 +339,7 @@ public class AnalyticsManager
         public static final String FORGOTPASSWORD = "Menu_LostPassword";
         public static final String PROFILE = "Menu_Profile";
         public static final String TERMSOFLOCATION = "Menu_TermsofLocation";
+        public static final String TERMSOFJUVENILE = "Menu_TermsofJuvenile";
         //
         public static final String CREDITCARD_LIST = "Menu_PaymentCardRegistered";
         public static final String CREDITCARD_LIST_EMPTY = "Menu_NoCardRegistered";
@@ -571,5 +592,10 @@ public class AnalyticsManager
         public static final String CATEGORY = "category";
         public static final String ADDRESS = "address";
         public static final String HOTEL_CATEGORY = "hotelCategory";
+        public static final String PROVINCE = "province ";
+        public static final String DISTRICT = "district ";
+        public static final String NUM_OF_BOOKING = "num_of_booking";
+        public static final String EVENT_NAME = "event_name";
+        public static final String KEYWORD = "keyword";
     }
 }

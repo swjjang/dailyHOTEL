@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
@@ -27,6 +28,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -164,6 +166,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }
 
                 recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mPlaceDetail);
+            } catch (JSONException e)
+            {
+                if (DEBUG == false)
+                {
+                    String message = url + " : " + response.toString();
+                    Crashlytics.logException(new JSONException(message));
+                }
+
+                onError(e);
+                finish();
             } catch (Exception e)
             {
                 onError(e);
