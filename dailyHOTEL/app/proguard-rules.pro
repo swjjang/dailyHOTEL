@@ -98,6 +98,15 @@
 -keepnames class android.widget.EdgeEffect { *; }
 -keepnames class android.support.v4.widget.EdgeEffectCompat { *; }
 
+#Appboy
+-dontoptimize
+-dontwarn com.amazon.device.messaging.**
+-dontwarn bo.app.**
+-dontwarn com.appboy.ui.**
+-dontwarn com.google.android.gms.**
+-keep class bo.app.** { *; }
+-keep class com.appboy.** { *; }
+
 -dontwarn okhttp3.**
 -dontwarn okio.**
 -dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**, org.jboss.netty.**

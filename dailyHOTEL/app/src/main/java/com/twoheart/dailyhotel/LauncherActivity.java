@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class LauncherActivity extends Activity
 {
@@ -45,5 +46,21 @@ public class LauncherActivity extends Activity
         startActivity(newIntent);
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
         finish();
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(this).onStart(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        AnalyticsManager.getInstance(this).onStop(this);
     }
 }

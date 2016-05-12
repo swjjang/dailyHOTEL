@@ -44,6 +44,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -499,6 +500,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 lockUI();
 
                 Map<String, String> params = new HashMap<>();
+                String ratingName = null; // Analytics 용
 
                 if (isSatisfaction == true)
                 {
@@ -511,35 +513,37 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
                 } else
                 {
-                    String rating_types = null;
+                    String ratingTypes = null;
 
                     for (ReviewCode reviewCode : mReviewCodeList)
                     {
                         if (reviewCode.isChecked == true)
                         {
-                            if (Util.isTextEmpty(rating_types) == true)
+                            if (Util.isTextEmpty(ratingTypes) == true)
                             {
-                                rating_types = String.valueOf(reviewCode.index);
+                                ratingTypes = String.valueOf(reviewCode.index);
+                                ratingName = reviewCode.name;
                             } else
                             {
-                                rating_types += ("," + reviewCode.index);
+                                ratingTypes += ("," + reviewCode.index);
+                                ratingName += "," + reviewCode.name;
                             }
                         }
                     }
 
                     // 아무내용이 없으면 보내지 않는다.
-                    if (Util.isTextEmpty(mCommentsView.getText().toString().trim()) == true && Util.isTextEmpty(rating_types) == true)
+                    if (Util.isTextEmpty(mCommentsView.getText().toString().trim()) == true && Util.isTextEmpty(ratingTypes) == true)
                     {
                         finish();
                         return;
                     }
 
-                    if (Util.isTextEmpty(rating_types) == true)
+                    if (Util.isTextEmpty(ratingTypes) == true)
                     {
-                        rating_types = String.valueOf(mReviewCodeList.get(mReviewCodeList.size() - 1).index);
+                        ratingTypes = String.valueOf(mReviewCodeList.get(mReviewCodeList.size() - 1).index);
                     }
 
-                    params.put("rating_types", rating_types);
+                    params.put("rating_types", ratingTypes);
                 }
 
                 params.put("msg", mCommentsView.getText().toString().trim());
@@ -557,6 +561,16 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                                 finish();
                             }
                         });
+
+                        if (Util.isTextEmpty(ratingName) == true)
+                        {
+                            ratingName = AnalyticsManager.ValueType.EMPTY;
+                        }
+
+
+                        Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
+                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                            , AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
                         break;
                     }
 
@@ -572,6 +586,15 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                                 finish();
                             }
                         });
+
+                        if (Util.isTextEmpty(ratingName) == true)
+                        {
+                            ratingName = AnalyticsManager.ValueType.EMPTY;
+                        }
+
+                        Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
+                        AnalyticsManager.getInstance(SatisfactionActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                            , AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
                         break;
                     }
                 }
