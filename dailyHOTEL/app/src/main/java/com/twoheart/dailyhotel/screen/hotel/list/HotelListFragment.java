@@ -610,7 +610,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 } else
                 {
                     parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    parmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+                    parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                 }
 
                 AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST, parmas);

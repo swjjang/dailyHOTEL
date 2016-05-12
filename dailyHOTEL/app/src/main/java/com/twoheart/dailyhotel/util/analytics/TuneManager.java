@@ -262,7 +262,7 @@ public class TuneManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(index) == true)
         {
-            mMobileAppTracker.setUserId("");
+            mMobileAppTracker.setUserId(AnalyticsManager.ValueType.EMPTY);
         } else
         {
             mMobileAppTracker.setUserId(index);

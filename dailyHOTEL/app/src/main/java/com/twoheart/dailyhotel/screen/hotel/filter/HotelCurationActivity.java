@@ -507,7 +507,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         {
             eventParmas.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
             eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//

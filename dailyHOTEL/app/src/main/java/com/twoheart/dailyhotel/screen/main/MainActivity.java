@@ -124,10 +124,11 @@ public class MainActivity extends BaseActivity implements Constants
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
 
         String version = DailyPreference.getInstance(this).getAppVersion();
-        if (Util.getAppVersion(this).equalsIgnoreCase(version) == false)
+        String currentVersion = Util.getAppVersion(this);
+        if (currentVersion.equalsIgnoreCase(version) == false)
         {
-            DailyPreference.getInstance(this).setAppVersion(version);
-            AnalyticsManager.getInstance(this).currentAppVersion(version);
+            DailyPreference.getInstance(this).setAppVersion(currentVersion);
+            AnalyticsManager.getInstance(this).currentAppVersion(currentVersion);
         }
 
         initLayout();

@@ -95,7 +95,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         mEmail = etForgot.getText().toString().trim();
 
-        if (mEmail.equals(""))
+        if (Util.isTextEmpty(mEmail) == true)
         {
             releaseUiComponent();
 
@@ -151,7 +151,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
                 if ("true".equalsIgnoreCase(result) == true)
                 {
-                    etForgot.setText("");
+                    etForgot.setText(null);
 
                     showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {

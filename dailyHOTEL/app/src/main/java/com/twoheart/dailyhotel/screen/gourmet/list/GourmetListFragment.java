@@ -571,7 +571,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 } else
                 {
                     parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    parmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+                    parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                 }
 
                 AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST, parmas);

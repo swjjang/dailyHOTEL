@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.appboy.Appboy;
 import com.appboy.models.outgoing.AppboyProperties;
+import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -20,6 +21,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
     private Appboy mAppboy;
     private String mUserIndex;
+    private boolean mRefreshData;
 
     public AppboyManager(Context context)
     {
@@ -30,7 +32,7 @@ public class AppboyManager extends BaseAnalyticsManager
     void recordScreen(String screen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
-        appboyProperties.addProperty(screen, "");
+        appboyProperties.addProperty(screen, AnalyticsManager.ValueType.EMPTY);
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
         mAppboy.logCustomEvent(EventName.SCREEN);
@@ -48,7 +50,7 @@ public class AppboyManager extends BaseAnalyticsManager
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
-            appboyProperties.addProperty(screen, "");
+            appboyProperties.addProperty(screen, AnalyticsManager.ValueType.EMPTY);
             appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
             try
@@ -112,7 +114,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
             if (appboyProperties != null)
             {
-                appboyProperties.addProperty(screen, "");
+                appboyProperties.addProperty(screen, AnalyticsManager.ValueType.EMPTY);
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
                 mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
@@ -301,23 +303,33 @@ public class AppboyManager extends BaseAnalyticsManager
     @Override
     void onStart(Activity activity)
     {
-        mAppboy.openSession(activity);
+        if (mAppboy.openSession(activity))
+        {
+            mRefreshData = true;
+        }
     }
 
     @Override
     void onStop(Activity activity)
     {
-        mAppboy.openSession(activity);
+        mAppboy.closeSession(activity);
     }
 
     @Override
     void onResume(Activity activity)
     {
+        AppboyInAppMessageManager.getInstance().registerInAppMessageManager(activity);
+        if (mRefreshData)
+        {
+            mAppboy.requestInAppMessageRefresh();
+            mRefreshData = false;
+        }
     }
 
     @Override
     void onPause(Activity activity)
     {
+        AppboyInAppMessageManager.getInstance().unregisterInAppMessageManager(activity);
     }
 
     @Override
@@ -346,7 +358,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(cardTypes) == true)
         {
-            cardTypes = "";
+            cardTypes = AnalyticsManager.ValueType.EMPTY;
         }
 
         appboyProperties.addProperty(AnalyticsManager.KeyType.CARD_ISSUING_COMPANY, cardTypes);
@@ -370,7 +382,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(recommender) == true)
         {
-            recommender = "";
+            recommender = AnalyticsManager.ValueType.EMPTY;
         }
 
         appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, recommender);
@@ -438,7 +450,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
     private String getUserIndex()
     {
-        return Util.isTextEmpty(mUserIndex) == true ? "" : mUserIndex;
+        return Util.isTextEmpty(mUserIndex) == true ? AnalyticsManager.ValueType.EMPTY : mUserIndex;
     }
 
     private AppboyProperties getAppboyProperties(Map<String, String> params)
@@ -452,7 +464,8 @@ public class AppboyManager extends BaseAnalyticsManager
 
         for (Map.Entry<String, String> element : params.entrySet())
         {
-            appboyProperties.addProperty((String) element.getKey(), element.getValue());
+            String value = Util.isTextEmpty(element.getValue()) == true ? AnalyticsManager.ValueType.EMPTY : element.getValue();
+            appboyProperties.addProperty(element.getKey(), element.getValue());
         }
 
         return appboyProperties;

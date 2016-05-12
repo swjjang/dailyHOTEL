@@ -382,9 +382,9 @@ public class HotelDetailActivity extends BaseActivity
 
             if (mProvince == null)
             {
-                params.put(AnalyticsManager.KeyType.PROVINCE, "");
-                params.put(AnalyticsManager.KeyType.DISTRICT, "");
-                params.put(AnalyticsManager.KeyType.AREA, "");
+                params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
             } else
             {
                 if (mProvince instanceof Area)
@@ -395,10 +395,10 @@ public class HotelDetailActivity extends BaseActivity
                 } else
                 {
                     params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
@@ -428,9 +428,9 @@ public class HotelDetailActivity extends BaseActivity
 
             if (mProvince == null)
             {
-                params.put(AnalyticsManager.KeyType.PROVINCE, "");
-                params.put(AnalyticsManager.KeyType.DISTRICT, "");
-                params.put(AnalyticsManager.KeyType.AREA, "");
+                params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
             } else
             {
                 if (mProvince instanceof Area)
@@ -441,10 +441,10 @@ public class HotelDetailActivity extends BaseActivity
                 } else
                 {
                     params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(saleRoomInformation.averageDiscount));

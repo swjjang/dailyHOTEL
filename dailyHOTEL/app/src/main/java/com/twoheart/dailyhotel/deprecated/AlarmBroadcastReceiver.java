@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
@@ -12,6 +12,8 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
+import com.twoheart.dailyhotel.LauncherActivity;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.push.PushDialogActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.WakeLock;

@@ -801,9 +801,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             if (mProvince == null)
             {
-                params.put(AnalyticsManager.KeyType.PROVINCE, "");
-                params.put(AnalyticsManager.KeyType.DISTRICT, "");
-                params.put(AnalyticsManager.KeyType.AREA, "");
+                params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
             } else
             {
                 if (mProvince instanceof Area)
@@ -814,10 +814,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 } else
                 {
                     params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, "");
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? "" : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));

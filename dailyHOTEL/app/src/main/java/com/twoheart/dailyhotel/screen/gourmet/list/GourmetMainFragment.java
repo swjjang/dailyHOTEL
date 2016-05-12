@@ -135,7 +135,15 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height_has_tab);
 
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-        View toolbar = view.findViewById(R.id.toolbar);
+        final View toolbar = view.findViewById(R.id.toolbar);
+        toolbar.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                TOOLBAR_HEIGHT = toolbar.getHeight();
+            }
+        });
 
         mAppBarLayout.addOnOffsetChangedListener(this);
 
@@ -1404,7 +1412,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     } else
                     {
                         parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                        parmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                     }
 
                     AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, parmas);

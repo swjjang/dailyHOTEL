@@ -818,13 +818,14 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestDailyUserSignupVerfication(Object tag, String signupKey, String phone, DailyHotelJsonResponseListener listener)
+    public void requestDailyUserSignupVerfication(Object tag, String signupKey, String phone, boolean force, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/phones/verification/start" : "";
 
         Map<String, String> params = new HashMap<>();
         params.put("signup_key", signupKey);
         params.put("phone", phone);
+        params.put("force_to_proceed", Boolean.toString(force));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
 

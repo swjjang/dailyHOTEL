@@ -144,7 +144,7 @@ public class SignupStep2Activity extends BaseActivity
 
             lockUI();
 
-            mNetworkController.requestVerfication(mSignupKey, phoneNumber.replaceAll("-", ""));
+            mNetworkController.requestVerfication(mSignupKey, phoneNumber.replaceAll("-", ""), false);
         }
 
         @Override
@@ -242,9 +242,29 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onAlreadyVerification()
+        public void onAlreadyVerification(final String phoneNumber)
         {
+            unLockUI();
 
+            showSimpleDialog(null, getString(R.string.message_signup_step2_already_verification)//
+                , getString(R.string.dialog_btn_text_continue)//
+                , getString(R.string.dialog_btn_text_input_other_phonenumber), new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        lockUI();
+
+                        mNetworkController.requestVerfication(mSignupKey, phoneNumber, true);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mSignupStep2Layout.resetPhoneNumber();
+                    }
+                });
         }
 
         @Override
