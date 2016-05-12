@@ -553,7 +553,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 lockUI();
 
-                DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, PlaceDetailActivity.this);
+                DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserInformationExJsonResponseListener, PlaceDetailActivity.this);
             }
 
             String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);
@@ -664,7 +664,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserInformationExJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onErrorResponse(VolleyError volleyError)
@@ -695,14 +695,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (isDailyUser == true)
                     {
-                        // 전화번호가 잘못 입력되어 있음
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-                        {
-                            moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
-                        } else
-                        {
-                            processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
-                        }
+                        DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
                     } else
                     {
                         // 입력된 정보가 부족해.
@@ -724,6 +717,48 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     String msg = response.getString("msg");
 
                     DailyToast.showToast(PlaceDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                Customer user = new Customer();
+                user.setEmail(response.getString("email"));
+                user.setName(response.getString("name"));
+                user.setPhone(response.getString("phone"));
+                user.setUserIdx(response.getString("idx"));
+
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                boolean isVerified = response.getBoolean("is_verified");
+
+                if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                {
+                    if (isVerified == true && isPhoneVerified == false)
+                    {
+                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                    } else
+                    {
+                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
+                    }
+                } else
+                {
+                    processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
                 }
             } catch (Exception e)
             {
