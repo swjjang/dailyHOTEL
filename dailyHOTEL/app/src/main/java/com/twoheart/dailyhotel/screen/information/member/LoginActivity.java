@@ -391,6 +391,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
 
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+        {
+            DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+            return;
+        }
+
         if (Util.isTextEmpty(email) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
@@ -400,6 +406,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         if (Util.isTextEmpty(password) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_passwd, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if (password.length() < 4)
+        {
+            DailyToast.showToast(this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
             return;
         }
 
