@@ -29,6 +29,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     private View mVerificationLayout, mConfirm, mCertificationNumberView;
     private View mCountryView, mPhoneView, mVerificationView;
     private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
+    private TextView mGuideTextView;
     private TextWatcher mTextWatcher;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -70,6 +71,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     private void initLayoutForm(View view)
     {
+        mGuideTextView = (TextView) view.findViewById(R.id.guideTextView);
         mCountryView = view.findViewById(R.id.countryView);
         mCountryEditText = (EditText) view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
@@ -144,6 +146,29 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
         mVerificationEditText = (EditText) mVerificationLayout.findViewById(R.id.verificationEditText);
         mVerificationEditText.setOnFocusChangeListener(this);
+        mVerificationEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    String verificationNumber = mVerificationEditText.getText().toString().trim();
+
+                    if (Util.isTextEmpty(verificationNumber) == true)
+                    {
+                        DailyToast.showToast(mContext, R.string.message_wrong_certificationnumber, Toast.LENGTH_SHORT);
+                        return true;
+                    }
+
+                    String phoneNumber = getPhoneNumber();
+
+                    ((OnEventListener) mOnEventListener).doConfirm(phoneNumber, verificationNumber);
+                }
+
+                return false;
+            }
+        });
 
         mConfirm = view.findViewById(R.id.confirmView);
         mConfirm.setEnabled(false);
@@ -152,6 +177,16 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mCertificationLayout = view.findViewById(R.id.certificationLayout);
 
         mPhoneEditText.requestFocus();
+    }
+
+    public void setGuideText(String text)
+    {
+        if (mGuideTextView == null)
+        {
+            return;
+        }
+
+        mGuideTextView.setText(text);
     }
 
     public void setCountryCode(String countryCode)
@@ -269,10 +304,23 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mCertificationLayout.setVisibility(View.VISIBLE);
     }
 
+    public void showVerificationVisible()
+    {
+        mVerificationLayout.setVisibility(View.VISIBLE);
+        mVerificationEditText.requestFocus();
+
+        mConfirm.setEnabled(true);
+    }
+
     public void showKeyPad()
     {
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(mPhoneEditText, InputMethodManager.SHOW_FORCED);
+    }
+
+    public void resetPhoneNumber()
+    {
+        mPhoneEditText.setText(null);
     }
 
     private void resetFocus()

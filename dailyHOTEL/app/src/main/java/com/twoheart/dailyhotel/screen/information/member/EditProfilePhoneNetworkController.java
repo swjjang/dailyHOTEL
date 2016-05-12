@@ -19,6 +19,8 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
     {
         void onVerification(String number);
 
+        void onAlreadyVerification(String phoneNumber);
+
         void onConfirm();
     }
 
@@ -33,9 +35,9 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
-    public void requestDailyUserVerification(String phoneNumber)
+    public void requestDailyUserVerification(String phoneNumber, boolean force)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber, mDailUserVerificationJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber, force, mDailUserVerificationJsonResponseListener);
     }
 
     public void requestUpdateDailyUserInformation(String phoneNumber, String code)
@@ -65,16 +67,29 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 100)
+                switch(msgCode)
                 {
-                    JSONObject dataJONObject = response.getJSONObject("data");
-                    String message = dataJONObject.getString("msg");
+                    case 100:
+                    {
+                        JSONObject dataJONObject = response.getJSONObject("data");
+                        String message = dataJONObject.getString("msg");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
-                } else
-                {
-                    // 다른 폰에서 인증된 경우
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
+                        break;
+                    }
+
+                    case 2001:
+                    {
+                        JSONObject dataJONObject = response.getJSONObject("data");
+                        String phoneNumber = dataJONObject.getString("phone");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
+                        break;
+                    }
+
+                    default:
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
+                        break;
                 }
             } catch (Exception e)
             {
