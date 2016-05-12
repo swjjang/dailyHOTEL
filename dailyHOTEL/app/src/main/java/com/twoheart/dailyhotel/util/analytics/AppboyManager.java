@@ -162,6 +162,27 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     curationCustomEvent(EventName.RATING_SORTED, ValueName.DAILYGOURMET, params);
                 }
+            } else if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
+            {
+                satisfactionCustomEvent(label);
+            } else if (AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SELECTED_RESPONSE_ITEM, label);
+                appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
+
+                mAppboy.logCustomEvent(EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
+            } else if (AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SELECTED_RESPONSE_ITEM, label);
+                appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
+
+                mAppboy.logCustomEvent(EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
             }
         } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
@@ -285,6 +306,39 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
         appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
         appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
+
+        mAppboy.logCustomEvent(eventName, appboyProperties);
+    }
+
+    private void satisfactionCustomEvent(String label)
+    {
+        AppboyProperties appboyProperties = new AppboyProperties();
+        appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+        String eventName = EventName.STAY_SATISFACTION_SURVEY;
+
+        if (AnalyticsManager.Label.HOTEL_SATISFACTION.equalsIgnoreCase(label) == true)
+        {
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.SATISFIED);
+        } else if (AnalyticsManager.Label.HOTEL_DISSATISFACTION.equalsIgnoreCase(label) == true)
+        {
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.DISSATISFIED);
+        } else if (AnalyticsManager.Label.HOTEL_CLOSE_BUTTON_CLICKED.equalsIgnoreCase(label) == true)
+        {
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.CLOSED);
+        } else if (AnalyticsManager.Label.GOURMET_SATISFACTION.equalsIgnoreCase(label) == true)
+        {
+            eventName = EventName.GOURMET_SATISFACTION_SURVEY;
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.SATISFIED);
+        } else if (AnalyticsManager.Label.GOURMET_DISSATISFACTION.equalsIgnoreCase(label) == true)
+        {
+            eventName = EventName.GOURMET_SATISFACTION_SURVEY;
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.DISSATISFIED);
+        } else if (AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED.equalsIgnoreCase(label) == true)
+        {
+            eventName = EventName.GOURMET_SATISFACTION_SURVEY;
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.CLOSED);
+        }
 
         mAppboy.logCustomEvent(eventName, appboyProperties);
     }
@@ -491,9 +545,9 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String GOURMET_PURCHASE_COMPLETED = "gourmet_purchase_completed";
         public static final String REGISTER_COMPLETED = "register_completed";
         public static final String STAY_SATISFACTION_SURVEY = "stay_satisfaction_survey";
-        public static final String STAY_SATISFACTION_RESPONSE = "stay_satisfaction_detail_response";
+        public static final String STAY_DISSATISFACTION_DETAIL_RESPONSE = "stay_dissatisfaction_detail_response";
         public static final String GOURMET_SATISFACTION_SURVEY = "gourmet_satisfaction_survey";
-        public static final String GOURMET_STATISFACTION_DETAIL_RESPONSE = "gourmet_satisfaction_detail_response";
+        public static final String GOURMET_DISSATISFACTION_DETAIL_RESPONSE = "gourmet_dissatisfaction_detail_response";
 
 
     }
@@ -502,5 +556,8 @@ public class AppboyManager extends BaseAnalyticsManager
     {
         public static final String DAILYHOTEL = "dailyhotel";
         public static final String DAILYGOURMET = "dailygourmet";
+        public static final String SATISFIED = "satisfied";
+        public static final String DISSATISFIED = "dissatisfied";
+        public static final String CLOSED = "closed";
     }
 }

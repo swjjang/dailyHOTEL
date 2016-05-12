@@ -458,6 +458,8 @@ public class AnalyticsManager
         public static final String EVENT_CLICKED = "EventClicked";
         //
         public static final String SATISFACTION_EVALUATION_POPPEDUP = "SatisfactionEvaluationPoppedup";
+        public static final String HOTEL_DISSATISFACTION_DETAILED_POPPEDUP = "HotelDissatisfactionDetailedPoppedup";
+        public static final String GOURMET_DISSATISFACTION_DETAILED_POPPEDUP = "GourmetDissatisfactionDetailedPoppedup";
         //
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
         //
@@ -670,6 +672,8 @@ public class AnalyticsManager
         public static final String TYPE_OF_REGISTRATION = "type_of_registration";
         public static final String REGISTRATION_DATE = "registration_date";
         public static final String REFERRAL_CODE = "referral_code";
+        public static final String POPUP_STATUS = "popup_status";
+        public static final String SELECTED_RESPONSE_ITEM = "selected_response_Item";
     }
 
     public static class ValueType
