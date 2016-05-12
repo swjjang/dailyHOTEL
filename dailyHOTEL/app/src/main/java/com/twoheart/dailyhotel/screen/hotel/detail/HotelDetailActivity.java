@@ -626,7 +626,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 lockUI();
 
-                DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserInformationJsonResponseListener, HotelDetailActivity.this);
+                DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestUserInformationEx(mNetworkTag, mUserInformationExJsonResponseListener, HotelDetailActivity.this);
             }
 
             String label = String.format("%s-%s", mHotelDetail.hotelName, mSelectedSaleRoomInformation.roomName);
@@ -833,7 +833,7 @@ public class HotelDetailActivity extends BaseActivity
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserInformationExJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onErrorResponse(VolleyError volleyError)
@@ -864,14 +864,7 @@ public class HotelDetailActivity extends BaseActivity
 
                     if (isDailyUser == true)
                     {
-                        // 전화번호가 잘못 입력되어 있음
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-                        {
-                            moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
-                        } else
-                        {
-                            moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
-                        }
+                        DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
                     } else
                     {
                         // 입력된 정보가 부족해.
@@ -893,6 +886,48 @@ public class HotelDetailActivity extends BaseActivity
                     String msg = response.getString("msg");
 
                     DailyToast.showToast(HotelDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                Customer user = new Customer();
+                user.setEmail(response.getString("email"));
+                user.setName(response.getString("name"));
+                user.setPhone(response.getString("phone"));
+                user.setUserIdx(response.getString("idx"));
+
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                boolean isVerified = response.getBoolean("is_verified");
+
+                if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                {
+                    if (isVerified == true && isPhoneVerified == false)
+                    {
+                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                    } else
+                    {
+                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
+                    }
+                } else
+                {
+                    moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
                 }
             } catch (Exception e)
             {

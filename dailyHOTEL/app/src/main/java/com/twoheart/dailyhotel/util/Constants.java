@@ -20,7 +20,7 @@ public interface Constants
 {
     // 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다.
     public static final boolean DEBUG = BuildConfig.DEBUG;
-    public static final boolean UNENCRYPTED_URL = true;
+    public static final boolean UNENCRYPTED_URL = false;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
 
     // 스토어 선택.
