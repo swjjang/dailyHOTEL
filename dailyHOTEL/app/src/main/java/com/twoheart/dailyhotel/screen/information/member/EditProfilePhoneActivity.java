@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class EditProfilePhoneActivity extends BaseActivity
     private static final String INTENT_EXTRA_DATA_TYPE = "type";
 
     private EditProfilePhoneLayout mEditProfilePhoneLayout;
-    private EditProfilePhoneNetworkController mEditProfilePhoneNetworkController;
+    private EditProfilePhoneNetworkController mNetworkController;
     private String mCountryCode;
     private String mUserIndex; // 소셜 계정인 경우에는 userIndex, 일반 계정인 경우에는 이름이 넘어온다
     private Type mType;
@@ -57,7 +58,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         mEditProfilePhoneLayout = new EditProfilePhoneLayout(this, mOnEventListener);
-        mEditProfilePhoneNetworkController = new EditProfilePhoneNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mNetworkController = new EditProfilePhoneNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setContentView(mEditProfilePhoneLayout.onCreateView(R.layout.activity_edit_phone));
 
@@ -73,11 +74,13 @@ public class EditProfilePhoneActivity extends BaseActivity
             case EDIT_PROFILE:
                 if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(this).getUserType()) == true)
                 {
+                    mEditProfilePhoneLayout.setGuideText(getString(R.string.message_edit_phone_guide));
                     mEditProfilePhoneLayout.showCertificationLayout();
 
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 } else
                 {
+                    mEditProfilePhoneLayout.setGuideText(getString(R.string.message_edit_phone_social_guide));
                     mEditProfilePhoneLayout.hideCertificationLayout();
 
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -85,6 +88,7 @@ public class EditProfilePhoneActivity extends BaseActivity
                 break;
 
             case WRONG_PHONENUMBER:
+                mEditProfilePhoneLayout.setGuideText(getString(R.string.message_edit_phone_social_guide));
                 mEditProfilePhoneLayout.hideCertificationLayout();
 
                 showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_register_phonenumber), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -99,6 +103,7 @@ public class EditProfilePhoneActivity extends BaseActivity
                 break;
 
             case NEED_VERIFICATION_PHONENUMBER:
+                mEditProfilePhoneLayout.setGuideText(getString(R.string.message_edit_phone_guide));
                 mEditProfilePhoneLayout.showCertificationLayout();
 
                 showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_register_phonenumber), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -163,7 +168,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         {
             if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == false)
             {
-                mEditProfilePhoneNetworkController.requestUpdateSocialUserInformation(mUserIndex, phoneNumber);
+                mNetworkController.requestUpdateSocialUserInformation(mUserIndex, phoneNumber);
             }
         }
 
@@ -172,14 +177,14 @@ public class EditProfilePhoneActivity extends BaseActivity
         {
             if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == true)
             {
-                mEditProfilePhoneNetworkController.requestUpdateDailyUserInformation(phoneNumber, verificationNumber);
+                mNetworkController.requestUpdateDailyUserInformation(phoneNumber, verificationNumber);
             }
         }
 
         @Override
         public void doVerification(String phoneNumber)
         {
-            mEditProfilePhoneNetworkController.requestDailyUserVerification(phoneNumber.replaceAll("-", ""));
+            mNetworkController.requestDailyUserVerification(phoneNumber.replaceAll("-", ""), false);
         }
 
         @Override
@@ -194,7 +199,37 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void onVerification(String message)
         {
+            unLockUI();
+
+            mEditProfilePhoneLayout.showVerificationVisible();
+
             showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+        }
+
+        @Override
+        public void onAlreadyVerification(final String phoneNumber)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, getString(R.string.message_signup_step2_already_verification)//
+                , getString(R.string.dialog_btn_text_continue)//
+                , getString(R.string.dialog_btn_text_input_other_phonenumber), new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        lockUI();
+
+                        mNetworkController.requestDailyUserVerification(phoneNumber, true);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mEditProfilePhoneLayout.resetPhoneNumber();
+                    }
+                });
         }
 
         @Override
