@@ -10,6 +10,9 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
@@ -59,9 +62,11 @@ public class ProfileNetworkController extends BaseNetworkController
 
                 if (isPhoneVerified == true)
                 {
-                    verifiedDate = response.getString("phone_verified_at");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                    Date date = simpleDateFormat.parse(response.getString("phone_verified_at"));
 
-
+                    SimpleDateFormat verifiedSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                    verifiedDate = verifiedSimpleDateFormat.format(date);
                 }
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone, isPhoneVerified, verifiedDate);
