@@ -782,13 +782,16 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestDailyUserVerfication(Object tag, String phone, DailyHotelJsonResponseListener listener)
+    public void requestDailyUserVerfication(Object tag, String phone, boolean force, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v1/users/myself/phones/verification/start" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/myself/phones/verification/start" : "MjMkODAkMTAwJDEwNSQ3NSQ=$RTlERTJFNENBNTI5Qzk4QTAO5NTA0RDU0RjM2QkUzOTA5Q0NCNTU3NUM2NzJDMUU3NjAyMDIxMUFJCNzIV5RDQyQ0Y4QTY4OUYzRDAYxODBE5NzRGMzM3QTkwMjlDOEU1RDI4$";
 
-        Map<String, String> params = Collections.singletonMap("phone", phone);
+        Map<String, String> params = new HashMap<>();
+        params.put("phone", phone);
+        params.put("force_to_proceed", Boolean.toString(force));
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setUsedAuthorization(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -796,13 +799,14 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestDailyUserUpdatePhoneNumber(Object tag, String phone, String code, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v1/users/myself/phones/verification/check" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/myself/phones/verification/check" : "MzUkMzYkOTgkNzIkNTIk$ODM3RDg2MUE2MjkzOTRCRjY5NkE0OUNGNjhODBNUJCQUQyQkIyOTEYwNjE4NzhGODAyMDg3RDSU3RTM3RDY1OTAyNjdFRjdBNDc3ZQUFDNjVCRjhBOTVDQThDQzlBODcxOTA3$";
 
         Map<String, String> params = new HashMap<>();
         params.put("phone", phone);
         params.put("code", code);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
+        dailyHotelJsonRequest.setUsedAuthorization(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -810,7 +814,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestSignupValidation(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/validation" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/validation" : "NDkkMjYkODIkNjgkOTEk$MzI4MkYwRDBEQ0IyODRFNEY4NUFY3Qzg0QjYxMTZGNjdCRUMwNOUVCMzdFQTZDMUQ4QkUM3ODUwMUUzODQxFRTEyOTgZ5NDhCMTI4QzY2M0I5MkFFNTZEQUMxNDhEQjA1OTI4$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
 
@@ -820,7 +824,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestDailyUserSignupVerfication(Object tag, String signupKey, String phone, boolean force, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/phones/verification/start" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/phones/verification/start" : "OTUkMTA5JDE0MCQ4MSQxNTIk$OEY1MTg3MEIzNkYzMjA5QTUwQTkzRDMzNTUyQ0EyODVCNUMxMUM2MTI5NkFGNjY1MjE4Nzc4OUZGOTgyRGTQ1NkMwQzE5OUMD1REVCMjY0OENBFMTAwRUZENDcyMEQ3NUZCQTYwOTVDMUTIzQzRDRTRECOTQ2Q0ExNzA1QzlFNDk1RDA=$";
 
         Map<String, String> params = new HashMap<>();
         params.put("signup_key", signupKey);
@@ -835,7 +839,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestDailyUserSignup(Object tag, String signupKey, String code, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/phones/verification/check" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/phones/verification/check" : "MTA5JDk0JDkzJDQzJDYxJA==$NjA5NTkwNUQ1ODQ1MDBCRjk2M0YwRkU1MkVCRkI4MUMOzMjc1MEFFNjlDOTY5QM0MyMzM4NjBCNjc5QTBCRjk3NTE4MUM4QGjAhCQjIwNDJBQjBFNT0E5NzhCQjdCNkZDRkE5QjE5ODk2QTNGNkMyMDdGOTJCNEMyMjJDRUZBMEYxMTk=$";
 
         Map<String, String> params = new HashMap<>();
         params.put("signup_key", signupKey);
@@ -849,7 +853,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestFacebookUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/facebook" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/facebook" : "NjAkNzIkNjgkNjkkMzYk$NDhCQUNCNDJFMjI5NzRGMzZDNTYyRkVERjc4ONDE4NDk0OTg5MDAyRDFDRERGXNUY5Q0IMD3MzRFDMTFCQjEzQUNBQQ==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
 
@@ -859,7 +863,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestKakaoUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/kakao_talk" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/kakao_talk" : "MSQzOSQxNiQyMiQ0JA==$RTTEP4RTI1QkI0NDgN0RERDSRDAzNTRBREZCRDJFRDVNDNzMyRDkwQkNBRTE4NTRDQjE3RjZGMDJGMEJGODlBNTc5MA==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
 
