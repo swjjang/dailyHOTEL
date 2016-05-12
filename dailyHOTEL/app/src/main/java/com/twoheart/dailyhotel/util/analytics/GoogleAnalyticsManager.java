@@ -127,7 +127,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     {
         if (Util.isTextEmpty(index) == true)
         {
-            mGoogleAnalyticsTracker.set("&uid", "");
+            mGoogleAnalyticsTracker.set("&uid", AnalyticsManager.ValueType.EMPTY);
         } else
         {
             mGoogleAnalyticsTracker.set("&uid", index);

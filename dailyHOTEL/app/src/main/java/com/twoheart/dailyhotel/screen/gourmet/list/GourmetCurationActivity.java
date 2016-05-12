@@ -542,7 +542,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
             eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, "");
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//

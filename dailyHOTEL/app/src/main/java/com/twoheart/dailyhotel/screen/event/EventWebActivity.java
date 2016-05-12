@@ -97,11 +97,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         mEventName = intent.getParcelableExtra(INTENT_EXTRA_DATA_EVENTNAME);
 
-        if (Util.isTextEmpty(mEventName) == true)
-        {
-            mEventName = "";
-        }
-
         setContentView(R.layout.activity_event_web);
 
         initToolbar();
@@ -145,6 +140,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
     @Override
     protected void onStart()
     {
+        if (Util.isTextEmpty(mEventName) == true)
+        {
+            mEventName = AnalyticsManager.ValueType.EMPTY;
+        }
+
         Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.EVENT_NAME, mEventName);
 
         switch (mSourceType)

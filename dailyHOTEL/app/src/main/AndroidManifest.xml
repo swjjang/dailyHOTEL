@@ -403,27 +403,44 @@
 
         <service android:name="com.google.android.gms.analytics.CampaignTrackingService"/>
 
-        <receiver
-            android:name=".AlarmBroadcastReceiver"
-            android:process=":remote"/>
+        <!--<receiver-->
+        <!--android:name=".deprecated.AlarmBroadcastReceiver"-->
+        <!--android:process=":remote"/>-->
 
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <category android:name="com.twoheart.dailyhotel"/>
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+        <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
+        <!--android:exported="true"-->
+        <!--android:permission="com.google.android.c2dm.permission.SEND">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.google.android.c2dm.intent.RECEIVE"/>-->
+        <!--<category android:name="com.twoheart.dailyhotel"/>-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <service
             android:name=".gcm.GcmIntentService"
             android:exported="false">
+        </service>
+
+        <receiver
+            android:name=".gcm.AppboyBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.twoheart.dailyhotel.intent.APPBOY_PUSH_RECEIVED"/>
+                <action android:name="com.twoheart.dailyhotel.intent.APPBOY_NOTIFICATION_OPENED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".gcm.AppboyGcmReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+
+                <category android:name="com.twoheart.dailyhotel"/>
             </intent-filter>
-        </service>
+        </receiver>
 
         <meta-data
             android:name="io.fabric.ApiKey"

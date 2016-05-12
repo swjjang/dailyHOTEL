@@ -31,7 +31,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
         void onUserInformation(String userIndex, String email, String name, String phoneNumber);
 
-        void onAlreadyVerification();
+        void onAlreadyVerification(String phoneNumber);
     }
 
     public SignupStep2NetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -45,9 +45,9 @@ public class SignupStep2NetworkController extends BaseNetworkController
         mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
-    public void requestVerfication(String signupKey, String phoneNumber)
+    public void requestVerfication(String signupKey, String phoneNumber, boolean force)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, mVerificationJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, mVerificationJsonResponseListener);
     }
 
     public void requestSingUp(String signupKey, String code)
@@ -153,6 +153,10 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
                     case 2001:
                     {
+                        JSONObject dataJONObject = response.getJSONObject("data");
+                        String phoneNumber = dataJONObject.getString("phone");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
                         break;
                     }
 

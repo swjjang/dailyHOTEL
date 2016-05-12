@@ -671,4 +671,9 @@ public class AnalyticsManager
         public static final String REGISTRATION_DATE = "registration_date";
         public static final String REFERRAL_CODE = "referral_code";
     }
+
+    public static class ValueType
+    {
+        public static final String EMPTY = "null";
+    }
 }

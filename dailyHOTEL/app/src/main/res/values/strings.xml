@@ -236,6 +236,8 @@
     <string name="dialog_btn_install">설치</string>
     <string name="dialog_btn_update">업데이트</string>
     <string name="dialog_btn_text_close">닫기</string>
+    <string name="dialog_btn_text_input_other_phonenumber">다른 번호 입력</string>
+    <string name="dialog_btn_text_continue">계속 진행</string>
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
     <string name="dialog_msg_register_creditcard_cancel">결제카드 등록을 취소하시겠습니까?</string>
     <string name="dialog_msg_delete_register_creditcard">등록된 결제카드를 삭제하시겠습니까?</string>
@@ -489,6 +491,7 @@
     <string name="message_please_enter_the_same_password">동일한 비밀번호를 입력해주세요.</string>
     <string name="message_signup_step1_guide">데일리호텔 회원가입을 하시고 다양한 혜택을 누려보세요!</string>
     <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력하신 후 인증 처리를 해주세요.</string>
+    <string name="message_signup_step2_already_verification">다른 계정에 등록되어 있는 휴대폰 번호입니다.\n계속 진행할까요?</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>

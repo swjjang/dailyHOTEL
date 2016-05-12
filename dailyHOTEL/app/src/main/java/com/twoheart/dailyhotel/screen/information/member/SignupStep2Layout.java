@@ -234,6 +234,11 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mVerificationEditText.requestFocus();
     }
 
+    public void resetPhoneNumber()
+    {
+        mPhoneEditText.setText(null);
+    }
+
     private void doSignUp()
     {
         String verificationNumber = mVerificationEditText.getText().toString().trim();

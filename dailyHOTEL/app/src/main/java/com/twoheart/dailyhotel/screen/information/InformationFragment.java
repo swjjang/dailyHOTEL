@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.appboy.Appboy;
+import com.appboy.enums.NotificationSubscriptionType;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -383,10 +385,14 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                 {
                     DailyPreference.getInstance(baseActivity).setAllowPush(false);
                     ((TextView) v).setText(R.string.label_off);
+
+                    Appboy.getInstance(baseActivity).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
                 } else
                 {
                     DailyPreference.getInstance(baseActivity).setAllowPush(true);
                     ((TextView) v).setText(R.string.label_on);
+
+                    Appboy.getInstance(baseActivity).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
                 }
                 releaseUiComponent();
                 break;
