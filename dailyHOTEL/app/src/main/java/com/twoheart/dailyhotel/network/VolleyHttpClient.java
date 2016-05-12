@@ -6,8 +6,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +28,8 @@ import okhttp3.OkUrlFactory;
 
 public class VolleyHttpClient implements Constants
 {
+    private static final String KEY = Constants.UNENCRYPTED_URL ? "androidDAILYHOTEL_MIIEowIBAA" : "ODIkNjkkMTEkODYkNDQk$NzdENjkwNTQY0NUY3QjQ5QjIyNUZCRjg0NENDOTZCOEEY5OUEzQTZGQUU3NkZFOTZDQzI4NTThBRDhBMzhGQjEhVFNw==$";
+
     private static VolleyHttpClient mInstance;
     private RequestQueue mRequestQueue;
     private OkHttpStack mOkHttpStack;
@@ -156,7 +160,7 @@ public class VolleyHttpClient implements Constants
 
                 try
                 {
-                    trusted.load(in, "androidDAILYHOTEL_MIIEowIBAA".toCharArray());
+                    trusted.load(in, DailyHotelRequest.getUrlDecoderEx(KEY).toCharArray());
                 } finally
                 {
                     in.close();

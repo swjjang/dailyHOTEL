@@ -454,7 +454,7 @@ interface IDailyNetwork
      * @param phone
      * @param listener
      */
-    void requestDailyUserVerfication(Object tag, String phone, DailyHotelJsonResponseListener listener);
+    void requestDailyUserVerfication(Object tag, String phone, boolean force, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag
