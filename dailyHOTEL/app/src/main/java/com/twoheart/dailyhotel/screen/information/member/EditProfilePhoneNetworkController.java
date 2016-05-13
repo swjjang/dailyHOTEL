@@ -67,7 +67,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                switch(msgCode)
+                switch (msgCode)
                 {
                     case 100:
                     {

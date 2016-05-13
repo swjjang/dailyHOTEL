@@ -648,6 +648,16 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isBonusView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                } else if(DailyDeepLink.getInstance().isSingUpView() == true)
+                {
+                    if(Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == true)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                    } else
+                    {
+                        DailyDeepLink.getInstance().clear();
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    }
                 } else
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);

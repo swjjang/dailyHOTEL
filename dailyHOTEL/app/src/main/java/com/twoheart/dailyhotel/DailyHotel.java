@@ -22,7 +22,8 @@ import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
 
-public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
+//public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
+public class DailyHotel extends Application implements Constants
 {
     private static volatile DailyHotel mInstance = null;
     private static volatile Activity mCurrentActivity = null;

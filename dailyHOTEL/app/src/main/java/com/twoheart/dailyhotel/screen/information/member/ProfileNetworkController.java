@@ -68,6 +68,9 @@ public class ProfileNetworkController extends BaseNetworkController
 
                     SimpleDateFormat verifiedSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
                     verifiedDate = verifiedSimpleDateFormat.format(date);
+                } else
+                {
+                    isPhoneVerified = false;
                 }
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone, isPhoneVerified, verifiedDate);

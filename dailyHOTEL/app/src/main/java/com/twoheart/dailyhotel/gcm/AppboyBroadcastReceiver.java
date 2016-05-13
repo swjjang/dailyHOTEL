@@ -87,7 +87,6 @@ public class AppboyBroadcastReceiver extends BroadcastReceiver
             startActivityIntent.putExtras(extras);
         }
         return startActivityIntent;
-
     }
 
     private Bundle getPushExtrasBundle(Intent intent)

@@ -31,6 +31,14 @@ public class DailyDeepLink
     private static final String PARAM_V3_REGION_ISOVERSEA = "ios"; // isOverSea
     private static final String PARAM_V3_CATEGORY_CODE = "cc"; // category Code
 
+    private static final String PARAM_V4_RECOMMENDER_CODE = "rc"; // 추천인 코드
+    private static final String PARAM_V4_DATE_PLUS = "dp"; // 오늘 날짜에 더해줄 일
+    private static final String PARAM_V4_SORTING = "s"; // lp (낮은 가격). hp (높은 가격), r (만족도)
+
+    private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
+    private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
+    private static final String VALUE_V4_SORTING_SATISFACTION = "r";
+
     private static final String HOTEL_V3_LIST = "hl"; // 호텔리스트
     private static final String HOTEL_V3_DETAIL = "hd"; // 호텔 상세
     private static final String HOTEL_V3_REGION_LIST = "hrl"; // 호텔 지역 리스트
@@ -43,7 +51,10 @@ public class DailyDeepLink
     private static final String EVENT_V3_LIST = "el"; // 이벤트 리스트
     private static final String BOOKING_V3_LIST = "bl"; // 예약 리스트
 
+    private static final String SINGUP_V4 = "su"; // 회원 가입 화면
+
     private static final String V3 = "3";
+    private static final String V4 = "4";
 
     private static DailyDeepLink mInstance;
 
@@ -103,6 +114,10 @@ public class DailyDeepLink
             {
                 mVersionCode = 3;
                 decodingLinkV3(uri);
+            } else if (V4.equalsIgnoreCase(versionCode) == true)
+            {
+                mVersionCode = 4;
+                decodingLinkV4(uri);
             } else
             {
                 clear();
@@ -128,6 +143,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 value = mParams.get(PARAM_V3_VIEW);
                 break;
 
@@ -146,6 +162,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return HOTEL_V3_LIST.equalsIgnoreCase(view)//
                     || HOTEL_V3_DETAIL.equalsIgnoreCase(view)//
                     || HOTEL_V3_REGION_LIST.equalsIgnoreCase(view)//
@@ -163,6 +180,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return HOTEL_V3_LIST.equalsIgnoreCase(view);
 
             default:
@@ -177,6 +195,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return HOTEL_V3_DETAIL.equalsIgnoreCase(view);
 
             default:
@@ -196,6 +215,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return HOTEL_V3_REGION_LIST.equalsIgnoreCase(view);
 
             default:
@@ -210,6 +230,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return HOTEL_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view);
 
             default:
@@ -224,6 +245,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return GOURMET_V3_LIST.equalsIgnoreCase(view)//
                     || GOURMET_V3_DETAIL.equalsIgnoreCase(view)//
                     || GOURMET_V3_REGION_LIST.equalsIgnoreCase(view)//
@@ -241,6 +263,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return GOURMET_V3_LIST.equalsIgnoreCase(view);
 
             default:
@@ -255,6 +278,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return GOURMET_V3_DETAIL.equalsIgnoreCase(view);
 
             default:
@@ -273,6 +297,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return GOURMET_V3_REGION_LIST.equalsIgnoreCase(view);
 
             default:
@@ -287,6 +312,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return GOURMET_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view);
 
             default:
@@ -301,6 +327,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return BOOKING_V3_LIST.equalsIgnoreCase(view);
 
             default:
@@ -315,6 +342,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return BONUS_V3.equalsIgnoreCase(view);
 
             default:
@@ -329,10 +357,25 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 return EVENT_V3_LIST.equalsIgnoreCase(view);
 
             default:
                 return EVENT_V2_LIST.equalsIgnoreCase(view);
+        }
+    }
+
+    public boolean isSingUpView()
+    {
+        String view = getView();
+
+        switch (mVersionCode)
+        {
+            case 4:
+                return SINGUP_V4.equalsIgnoreCase(view);
+
+            default:
+                return false;
         }
     }
 
@@ -343,6 +386,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 value = mParams.get(PARAM_V3_INDEX);
                 break;
 
@@ -361,6 +405,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 value = mParams.get(PARAM_V3_NIGHTS);
                 break;
 
@@ -379,6 +424,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 value = mParams.get(PARAM_V3_DATE);
                 break;
 
@@ -397,6 +443,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 value = mParams.get(PARAM_V3_URL);
                 break;
 
@@ -415,6 +462,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 value = mParams.get(PARAM_V3_PROVINCE_INDEX);
                 break;
 
@@ -433,6 +481,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 value = mParams.get(PARAM_V3_AREA_INDEX);
                 break;
 
@@ -451,6 +500,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 String isOverseas = mParams.get(PARAM_V3_REGION_ISOVERSEA);
                 if ("0".equalsIgnoreCase(isOverseas) == true)
                 {
@@ -476,6 +526,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 3:
+            case 4:
                 value = mParams.get(PARAM_V3_CATEGORY_CODE);
                 break;
 
@@ -485,6 +536,92 @@ public class DailyDeepLink
         }
 
         return value;
+    }
+
+    public String getRecommenderCode()
+    {
+        String value;
+
+        switch (mVersionCode)
+        {
+            case 4:
+                value = mParams.get(PARAM_V4_RECOMMENDER_CODE);
+                break;
+
+            default:
+                value = null;
+                break;
+        }
+
+        return value;
+    }
+
+    public int getDatePlus()
+    {
+        String value;
+
+        switch (mVersionCode)
+        {
+            case 4:
+                value = mParams.get(PARAM_V4_DATE_PLUS);
+
+                if (Util.isTextEmpty(value) == false)
+                {
+                    try
+                    {
+                        return Integer.parseInt(value);
+                    } catch (NumberFormatException e)
+                    {
+                        return 0;
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        return 0;
+    }
+
+    public Constants.SortType getSorting()
+    {
+        String value;
+
+        switch (mVersionCode)
+        {
+            case 4:
+                value = mParams.get(PARAM_V4_SORTING);
+
+                if (Util.isTextEmpty(value) == false)
+                {
+                    if (VALUE_V4_SORTING_LOW_TO_HIGH.equalsIgnoreCase(value) == true)
+                    {
+                        return Constants.SortType.LOW_PRICE;
+                    } else if (VALUE_V4_SORTING_HIGH_TO_LOW.equalsIgnoreCase(value) == true)
+                    {
+                        return Constants.SortType.HIGH_PRICE;
+                    } else if (VALUE_V4_SORTING_SATISFACTION.equalsIgnoreCase(value) == true)
+                    {
+                        return Constants.SortType.SATISFACTION;
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        return Constants.SortType.DEFAULT;
+    }
+
+    private void decodingLinkV4(Uri uri)
+    {
+        decodingLinkV3(uri);
+
+        putParams(uri, PARAM_V4_RECOMMENDER_CODE);
+        putParams(uri, PARAM_V4_DATE_PLUS);
+        putParams(uri, PARAM_V4_SORTING);
     }
 
     private void decodingLinkV3(Uri uri)

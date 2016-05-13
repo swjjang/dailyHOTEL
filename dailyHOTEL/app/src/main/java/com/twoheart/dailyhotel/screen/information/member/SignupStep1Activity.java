@@ -30,6 +30,7 @@ import java.util.Map;
 public class SignupStep1Activity extends BaseActivity
 {
     private static final int REQUEST_CODE_ACTIVITY = 100;
+    private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
 
     private SignupStep1Layout mSignupStep1Layout;
     private Map<String, String> mSignupParams;
@@ -41,14 +42,39 @@ public class SignupStep1Activity extends BaseActivity
         return intent;
     }
 
+    public static Intent newInstance(Context context, String recommender)
+    {
+        Intent intent = new Intent(context, SignupStep1Activity.class);
+
+        if (Util.isTextEmpty(recommender) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommender);
+        }
+
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        String recommender = null;
+
+        if (intent != null && intent.hasExtra(INTENT_EXTRA_DATA_RECOMMENDER) == true)
+        {
+            recommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
+        }
+
         mSignupStep1Layout = new SignupStep1Layout(this, mOnEventListener);
 
         setContentView(mSignupStep1Layout.onCreateView(R.layout.activity_signup_step1));
+
+        if (Util.isTextEmpty(recommender) == false)
+        {
+            mSignupStep1Layout.setRecommenderText(recommender);
+        }
 
         if (Util.isOverAPI23() == true && hasPermission() == false)
         {
