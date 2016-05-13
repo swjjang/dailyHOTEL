@@ -203,36 +203,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             mCreditcardLayout.setVisibility(View.GONE);
         }
 
-        mDailyInformationView.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                int defaultHeight = Util.dpToPx(getContext(), 140);
-
-                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
-                {
-                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
-
-                    if (layoutParams != null)
-                    {
-                        layoutParams.height = defaultHeight + mInformationScrollView.getHeight() - mInformationLayout.getHeight();
-                        mDailyInformationView.setLayoutParams(layoutParams);
-                    }
-                } else
-                {
-                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
-
-                    if (layoutParams != null)
-                    {
-                        layoutParams.height = defaultHeight;
-                        mDailyInformationView.setLayoutParams(layoutParams);
-                    }
-                }
-
-                mDailyInformationView.setMinimumHeight(defaultHeight);
-            }
-        });
+        updateTermsLayoutHeight();
     }
 
     @Override
@@ -517,6 +488,51 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         {
             mNewEventIconView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void updateTermsLayoutHeight()
+    {
+        mDailyInformationView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int defaultHeight = Util.dpToPx(getContext(), 140);
+
+                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
+                {
+                    int height = mInformationScrollView.getHeight() - mInformationLayout.getHeight();
+
+                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
+
+                    if (layoutParams != null)
+                    {
+                        layoutParams.height = mDailyInformationView.getHeight() + height;
+                        mDailyInformationView.setLayoutParams(layoutParams);
+                    }
+
+                } else if (mInformationScrollView.getHeight() < mInformationLayout.getHeight())
+                {
+                    int height = (mInformationLayout.getHeight() - mInformationScrollView.getHeight());
+
+                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
+
+                    if (layoutParams != null)
+                    {
+                        layoutParams.height = mDailyInformationView.getHeight() - height;
+
+                        if (layoutParams.height < defaultHeight)
+                        {
+                            layoutParams.height = defaultHeight;
+                        }
+
+                        mDailyInformationView.setLayoutParams(layoutParams);
+                    }
+                }
+
+                mDailyInformationView.setMinimumHeight(defaultHeight);
+            }
+        });
     }
 
     private void showCallDialog(final BaseActivity baseActivity)
