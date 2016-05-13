@@ -572,7 +572,7 @@ public class DailyDeepLink
                         return Integer.parseInt(value);
                     } catch (NumberFormatException e)
                     {
-                        return 0;
+                        return -1;
                     }
                 }
                 break;
@@ -581,7 +581,7 @@ public class DailyDeepLink
                 break;
         }
 
-        return 0;
+        return -1;
     }
 
     public Constants.SortType getSorting()

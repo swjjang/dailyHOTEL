@@ -965,18 +965,32 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
 
             String date = DailyDeepLink.getInstance().getDate();
-            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-            Date schemeDate = format.parse(date);
-            Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+            int datePlus = DailyDeepLink.getInstance().getDatePlus();
 
-            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-            if (nights <= 0 || dailyDayOfDays < 0)
+            if (Util.isTextEmpty(date) == true)
             {
-                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
-            }
+                if (datePlus >= 0)
+                {
+                    mOnCommunicateListener.selectHotel(hotelIndex, dailyTime, datePlus, nights);
+                } else
+                {
+                    throw new NullPointerException("datePlus < 0");
+                }
+            } else
+            {
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date schemeDate = format.parse(date);
+                Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
-            mOnCommunicateListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+                int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                if (nights <= 0 || dailyDayOfDays < 0)
+                {
+                    throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+                }
+
+                mOnCommunicateListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+            }
 
             DailyDeepLink.getInstance().clear();
             mIsDeepLink = true;
@@ -1269,7 +1283,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 DailyDeepLink.getInstance().clear();
                 refreshEventBanner();
             }
-        } else if (datePlus > 1)
+        } else if (datePlus >= 0)
         {
             try
             {
