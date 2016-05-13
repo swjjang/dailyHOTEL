@@ -107,6 +107,8 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
         versionTextView.setText(getString(R.string.label_version, DailyHotel.VERSION));
 
+        updateNewIconView(baseActivity);
+
         return view;
     }
 
