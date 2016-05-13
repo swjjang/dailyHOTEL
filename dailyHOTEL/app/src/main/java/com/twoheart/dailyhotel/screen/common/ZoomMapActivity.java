@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
@@ -33,7 +35,7 @@ public class ZoomMapActivity extends BaseActivity
     private GoogleMap mGoogleMap;
     private View mMyLocationView;
     private MarkerOptions mMyLocationMarkerOptions;
-    private Marker mMyLocationMarker;
+    private Marker mMyLocationMarker, mPlaceLocationMarker;
     private Handler mHandler = new Handler();
     private SourceType mSourceType;
 
@@ -246,8 +248,8 @@ public class ZoomMapActivity extends BaseActivity
     {
         if (googleMap != null)
         {
-            final Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+            mPlaceLocationMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+            mPlaceLocationMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
 
             LatLng address = new LatLng(lat, lng);
             CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
@@ -264,13 +266,13 @@ public class ZoomMapActivity extends BaseActivity
                 }
             });
 
-            marker.hideInfoWindow();
+            mPlaceLocationMarker.hideInfoWindow();
             mHandler.post(new Runnable()
             {
                 @Override
                 public void run()
                 {
-                    marker.showInfoWindow();
+                    mPlaceLocationMarker.showInfoWindow();
                 }
             });
         }
@@ -356,8 +358,12 @@ public class ZoomMapActivity extends BaseActivity
                 mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
                 mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
 
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
+                latLngBounds.include(mPlaceLocationMarker.getPosition());
+                latLngBounds.include(mMyLocationMarker.getPosition());
+
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), Util.dpToPx(ZoomMapActivity.this, 50));
+                mGoogleMap.animateCamera(cameraUpdate);
             }
         });
     }
