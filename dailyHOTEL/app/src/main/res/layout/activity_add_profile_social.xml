@@ -10,12 +10,14 @@
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/confirmView">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="28dp">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
@@ -272,19 +274,19 @@
                     android:textColor="@color/information_title"
                     android:textSize="12dp"/>
             </RelativeLayout>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/confirmView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="28dp"
-                android:background="@color/dh_theme_color"
-                android:gravity="center"
-                android:text="@string/act_signup_btn_update"
-                android:textColor="@android:color/white"
-                android:textSize="17dp"/>
         </LinearLayout>
     </ScrollView>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/confirmView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/dh_theme_color"
+        android:gravity="center"
+        android:text="@string/act_signup_btn_update"
+        android:textColor="@android:color/white"
+        android:textSize="17dp"
+        android:layout_alignParentBottom="true"/>
 
     <View
         android:layout_width="match_parent"
