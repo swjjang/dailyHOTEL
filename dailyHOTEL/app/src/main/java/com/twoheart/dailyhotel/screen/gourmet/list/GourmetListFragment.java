@@ -709,7 +709,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     JSONArray gourmetJSONArray = null;
 
-                    if (dataJSONObject.has("gourmetSaleList") == false)
+                    if (dataJSONObject.has("gourmetSaleList") == true)
                     {
                         gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSaleList");
                     }
