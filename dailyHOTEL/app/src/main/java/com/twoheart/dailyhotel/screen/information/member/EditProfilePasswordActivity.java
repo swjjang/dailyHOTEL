@@ -145,6 +145,13 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 String password = mPasswordEditText.getText().toString();
                 String confirmPassword = mConfirmPasswordEditText.getText().toString();
 
+                // 패스워드 유효성 체크
+                if (Util.isTextEmpty(password) == true || password.length() < 4)
+                {
+                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
+                    return;
+                }
+
                 if (Util.isTextEmpty(password, confirmPassword) == true)
                 {
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
