@@ -803,7 +803,7 @@ public class Util implements Constants
     {
         if (Util.isTextEmpty(mobileNumber) == true)
         {
-            return mobileNumber;
+            return "";
         }
 
         mobileNumber = mobileNumber.replace("-", "");

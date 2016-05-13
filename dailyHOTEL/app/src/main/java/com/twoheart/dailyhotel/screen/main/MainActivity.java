@@ -19,6 +19,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.android.volley.VolleyError;
+import com.appboy.Appboy;
+import com.appboy.enums.NotificationSubscriptionType;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -137,6 +139,14 @@ public class MainActivity extends BaseActivity implements Constants
 
         // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
         mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
+
+        if (DailyPreference.getInstance(this).isAllowPush() == true)
+        {
+            Appboy.getInstance(this).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
+        } else
+        {
+            Appboy.getInstance(this).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
+        }
     }
 
     @Override
