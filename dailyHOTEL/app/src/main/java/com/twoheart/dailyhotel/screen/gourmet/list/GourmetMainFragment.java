@@ -968,6 +968,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
     private void deepLinkGourmetList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
     {
         String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+        mCurationOption.setSortType(DailyDeepLink.getInstance().getSorting());
 
         int provinceIndex;
         int areaIndex;
@@ -1020,8 +1022,30 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 if (dailyDayOfDays >= 0)
                 {
-                    SaleTime selectedSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
-                    mOnCommunicateListener.selectDay(selectedSaleTime, true);
+                    final SaleTime selectedSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
+
+                    DailyHotelJsonResponseListener deepLinkEventListener = new DailyHotelJsonResponseListener()
+                    {
+                        @Override
+                        public void onResponse(String url, JSONObject response)
+                        {
+                            setEventBannerJson(response);
+
+                            mOnCommunicateListener.selectDay(selectedSaleTime, true);
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError)
+                        {
+                            mOnCommunicateListener.selectDay(selectedSaleTime, true);
+                        }
+                    };
+
+                    DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", deepLinkEventListener, deepLinkEventListener);
+                } else
+                {
+                    DailyDeepLink.getInstance().clear();
+                    refreshEventBanner();
                 }
             } catch (Exception e)
             {
@@ -1031,12 +1055,92 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
                 DailyDeepLink.getInstance().clear();
-                refreshCurrentFragment(selectedProvince);
+                refreshEventBanner();
+            }
+        } else if (datePlus > 0)
+        {
+            try
+            {
+                mTabLayout.setOnTabSelectedListener(null);
+                mTabLayout.setScrollPosition(2, 0f, true);
+                mViewPager.setCurrentItem(2);
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+                DailyDeepLink.getInstance().clear();
+
+                final SaleTime selectedSaleTime = mTodaySaleTime.getClone(datePlus);
+
+                DailyHotelJsonResponseListener deepLinkEventListener = new DailyHotelJsonResponseListener()
+                {
+                    @Override
+                    public void onResponse(String url, JSONObject response)
+                    {
+                        setEventBannerJson(response);
+
+                        mOnCommunicateListener.selectDay(selectedSaleTime, true);
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError)
+                    {
+                        mOnCommunicateListener.selectDay(selectedSaleTime, true);
+                    }
+                };
+
+                DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", deepLinkEventListener, deepLinkEventListener);
+            } catch (Exception e)
+            {
+                mTabLayout.setOnTabSelectedListener(null);
+                mTabLayout.setScrollPosition(0, 0f, true);
+                mViewPager.setCurrentItem(0);
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+
+                DailyDeepLink.getInstance().clear();
+                refreshEventBanner();
             }
         } else
         {
             DailyDeepLink.getInstance().clear();
-            refreshCurrentFragment(selectedProvince);
+            refreshEventBanner();
+        }
+    }
+
+    private void setEventBannerJson(JSONObject jsonObjectj)
+    {
+        try
+        {
+            int msgCode = jsonObjectj.getInt("msgCode");
+
+            if (msgCode == 100)
+            {
+                JSONObject dataJSONObject = jsonObjectj.getJSONObject("data");
+
+                String baseUrl = dataJSONObject.getString("imgUrl");
+
+                JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
+
+                if (mEventBannerList == null)
+                {
+                    mEventBannerList = new ArrayList<>();
+                }
+
+                mEventBannerList.clear();
+
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    try
+                    {
+                        EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
+                        mEventBannerList.add(eventBanner);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 
@@ -1832,45 +1936,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
+            setEventBannerJson(response);
 
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String baseUrl = dataJSONObject.getString("imgUrl");
-
-                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
-
-                    if (mEventBannerList == null)
-                    {
-                        mEventBannerList = new ArrayList<>();
-                    }
-
-                    mEventBannerList.clear();
-
-                    int length = jsonArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        try
-                        {
-                            EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
-                            mEventBannerList.add(eventBanner);
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
-                        }
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            } finally
-            {
-                refreshCurrentFragment(getProvince());
-            }
+            refreshCurrentFragment(getProvince());
         }
     };
 }

@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.screen.information.bonus.BonusActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
+import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
@@ -245,10 +246,14 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         {
             if (DailyDeepLink.getInstance().isEventView() == true)
             {
-                startActivity(new Intent(getActivity(), EventListActivity.class));
+                startActivity(new Intent(getContext(), EventListActivity.class));
             } else if (DailyDeepLink.getInstance().isBonusView() == true)
             {
-                startActivity(new Intent(getActivity(), BonusActivity.class));
+                startActivity(new Intent(getContext(), BonusActivity.class));
+            } else if (DailyDeepLink.getInstance().isSingUpView() == true)
+            {
+                Intent intent = SignupStep1Activity.newInstance(getContext(), DailyDeepLink.getInstance().getRecommenderCode());
+                startActivity(intent);
             }
 
             DailyDeepLink.getInstance().clear();

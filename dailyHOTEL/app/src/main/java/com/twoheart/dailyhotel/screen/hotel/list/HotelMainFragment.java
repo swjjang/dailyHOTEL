@@ -1148,6 +1148,11 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     {
         String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
         String date = DailyDeepLink.getInstance().getDate();
+        int datePlus = DailyDeepLink.getInstance().getDatePlus();
+        mCurationOption.setSortType(DailyDeepLink.getInstance().getSorting());
+
+        updateFilteredFloatingActionButton();
+
         int night;
 
         try
@@ -1224,13 +1229,35 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 if (dailyDayOfDays >= 0)
                 {
-                    SaleTime checkInSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
-                    SaleTime checkOutSaleTime = mTodaySaleTime.getClone(dailyDayOfDays + night);
+                    final SaleTime checkInSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
+                    final SaleTime checkOutSaleTime = mTodaySaleTime.getClone(dailyDayOfDays + night);
 
                     HotelDaysListFragment hotelListFragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                     hotelListFragment.setCheckInSaleTime(checkInSaleTime);
                     hotelListFragment.setCheckOutSaleTime(checkOutSaleTime);
-                    mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
+
+                    DailyHotelJsonResponseListener deepLinkEventListener = new DailyHotelJsonResponseListener()
+                    {
+                        @Override
+                        public void onResponse(String url, JSONObject response)
+                        {
+                            setEventBannerJson(response);
+
+                            mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError)
+                        {
+                            mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
+                        }
+                    };
+
+                    DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", deepLinkEventListener, deepLinkEventListener);
+                } else
+                {
+                    DailyDeepLink.getInstance().clear();
+                    refreshEventBanner();
                 }
             } catch (Exception e)
             {
@@ -1240,12 +1267,97 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
                 DailyDeepLink.getInstance().clear();
-                refreshCurrentFragment(selectedProvince);
+                refreshEventBanner();
+            }
+        } else if (datePlus > 1)
+        {
+            try
+            {
+                mTabLayout.setOnTabSelectedListener(null);
+                mTabLayout.setScrollPosition(2, 0f, true);
+                mViewPager.setCurrentItem(2);
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+                DailyDeepLink.getInstance().clear();
+
+                final SaleTime checkInSaleTime = mTodaySaleTime.getClone(datePlus);
+                final SaleTime checkOutSaleTime = mTodaySaleTime.getClone(datePlus + night);
+
+                HotelDaysListFragment hotelListFragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                hotelListFragment.setCheckInSaleTime(checkInSaleTime);
+                hotelListFragment.setCheckOutSaleTime(checkOutSaleTime);
+
+                DailyHotelJsonResponseListener deepLinkEventListener = new DailyHotelJsonResponseListener()
+                {
+                    @Override
+                    public void onResponse(String url, JSONObject response)
+                    {
+                        setEventBannerJson(response);
+
+                        mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError)
+                    {
+                        mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
+                    }
+                };
+
+                DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", deepLinkEventListener, deepLinkEventListener);
+            } catch (Exception e)
+            {
+                mTabLayout.setOnTabSelectedListener(null);
+                mTabLayout.setScrollPosition(0, 0f, true);
+                mViewPager.setCurrentItem(0);
+                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+
+                DailyDeepLink.getInstance().clear();
+                refreshEventBanner();
             }
         } else
         {
             DailyDeepLink.getInstance().clear();
-            refreshCurrentFragment(selectedProvince);
+            refreshEventBanner();
+        }
+    }
+
+    private void setEventBannerJson(JSONObject jsonObject)
+    {
+        try
+        {
+            int msgCode = jsonObject.getInt("msgCode");
+
+            if (msgCode == 100)
+            {
+                JSONObject dataJSONObject = jsonObject.getJSONObject("data");
+
+                String baseUrl = dataJSONObject.getString("imgUrl");
+
+                JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
+
+                if (mEventBannerList == null)
+                {
+                    mEventBannerList = new ArrayList<>();
+                }
+
+                mEventBannerList.clear();
+
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    try
+                    {
+                        EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
+                        mEventBannerList.add(eventBanner);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 
@@ -2073,45 +2185,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
+            setEventBannerJson(response);
 
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-
-                    String baseUrl = dataJSONObject.getString("imgUrl");
-
-                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
-
-                    if (mEventBannerList == null)
-                    {
-                        mEventBannerList = new ArrayList<>();
-                    }
-
-                    mEventBannerList.clear();
-
-                    int length = jsonArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        try
-                        {
-                            EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
-                            mEventBannerList.add(eventBanner);
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
-                        }
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            } finally
-            {
-                refreshCurrentFragment(getProvince());
-            }
+            refreshCurrentFragment(getProvince());
         }
     };
 }

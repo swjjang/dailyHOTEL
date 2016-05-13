@@ -138,6 +138,16 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         return mTermsOfPrivacyCheckBox.isChecked();
     }
 
+    public void setRecommenderText(String recommender)
+    {
+        if (mRecommenderEditText == null)
+        {
+            return;
+        }
+
+        mRecommenderEditText.setText(recommender);
+    }
+
     private void nextStep()
     {
         String emailText = mEmailEditText.getText().toString().trim();

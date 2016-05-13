@@ -20,6 +20,11 @@ public abstract class PlaceCurationOption implements Parcelable
 
     public void setSortType(Constants.SortType sortType)
     {
+        if (sortType == null)
+        {
+            sortType = Constants.SortType.DEFAULT;
+        }
+
         this.sortType = sortType;
     }
 
