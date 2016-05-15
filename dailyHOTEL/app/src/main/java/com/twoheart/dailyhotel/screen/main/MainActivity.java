@@ -1,0 +1,722 @@
+package com.twoheart.dailyhotel.screen.main;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import com.android.volley.VolleyError;
+import com.appboy.Appboy;
+import com.appboy.enums.NotificationSubscriptionType;
+import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
+import com.twoheart.dailyhotel.screen.common.ExitActivity;
+import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+public class MainActivity extends BaseActivity implements Constants
+{
+    public static final String BROADCAST_EVENT_UPDATE = " com.twoheart.dailyhotel.broadcastreceiver.EVENT_UPDATE";
+
+    // Back 버튼을 두 번 눌러 핸들러 멤버 변수
+    private CloseOnBackPressed mBackButtonHandler;
+    private MainNetworkController mNetworkController;
+    private MainFragmentManager mMainFragmentManager;
+    private MenuBarLayout mMenuBarLayout;
+    private Dialog mSettingNetworkDialog;
+    private View mSplashLayout;
+
+    private boolean mIsInitialization;
+    private Handler mDelayTimeHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            switch (msg.what)
+            {
+                case 0:
+                    if (mIsInitialization == true)
+                    {
+                        lockUI();
+                    }
+                    break;
+
+                case 1:
+                    if (isVisibleLockUI() == true)
+                    {
+                        showLockUIProgress();
+                    }
+                    break;
+
+                case 2:
+                {
+                    if (mSplashLayout.getVisibility() == View.VISIBLE)
+                    {
+                        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
+                        animation.setDuration(400);
+                        animation.setAnimationListener(new Animation.AnimationListener()
+                        {
+                            @Override
+                            public void onAnimationStart(Animation animation)
+                            {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation)
+                            {
+                                mSplashLayout.setVisibility(View.GONE);
+                                mSplashLayout.setAnimation(null);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation)
+                            {
+
+                            }
+                        });
+
+                        mSplashLayout.startAnimation(animation);
+                    }
+                    break;
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        // URL 만들때 사용
+        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+
+        mIsInitialization = true;
+        mNetworkController = new MainNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+
+        //        DailyPreference.getInstance(this).removeDeepLink();
+        DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
+        DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
+
+        String version = DailyPreference.getInstance(this).getAppVersion();
+        String currentVersion = Util.getAppVersion(this);
+        if (currentVersion.equalsIgnoreCase(version) == false)
+        {
+            DailyPreference.getInstance(this).setAppVersion(currentVersion);
+            AnalyticsManager.getInstance(this).currentAppVersion(currentVersion);
+        }
+
+        initLayout();
+
+        mNetworkController.requestCheckServer();
+
+        // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
+        mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
+
+        if (DailyPreference.getInstance(this).isAllowPush() == true)
+        {
+            Appboy.getInstance(this).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
+        } else
+        {
+            Appboy.getInstance(this).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        mOnNetworkControllerListener.onConfigurationResponse();
+    }
+
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+
+        System.gc();
+    }
+
+    private void initLayout()
+    {
+        setContentView(R.layout.activity_main);
+
+        mSplashLayout = findViewById(R.id.splashLayout);
+
+        ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
+        mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
+
+        ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
+        mMainFragmentManager = new MainFragmentManager(this, contentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
+        mBackButtonHandler = new CloseOnBackPressed(this);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mIsInitialization == true)
+        {
+            if (VolleyHttpClient.isAvailableNetwork(this) == false)
+            {
+                showDisabledNetworkPopup();
+            }
+        } else
+        {
+            if (mIsInitialization == false)
+            {
+                mNetworkController.requestEvent();
+            }
+        }
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment)
+    {
+        super.onAttachFragment(fragment);
+
+        releaseUiComponent();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+                mNetworkController.requestGourmetIsExistRating();
+                break;
+
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                }
+                break;
+
+            case CODE_REQUEST_ACTIVITY_EVENTWEB:
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_SEARCH:
+            {
+                if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
+                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                } else
+                {
+                    mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode)
+        {
+            case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                    if (fragment != null)
+                    {
+                        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_MENU)
+        {
+            return true;
+        } else
+        {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        int lastIndex = mMainFragmentManager.getLastIndexFragment();
+
+        if (lastIndex == MainFragmentManager.INDEX_HOTEL_FRAGMENT || lastIndex == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
+        {
+            if (mBackButtonHandler.onBackPressed())
+            {
+                ExitActivity.exitApplication(this);
+
+                super.onBackPressed();
+            }
+        } else
+        {
+            mMainFragmentManager.select(mMainFragmentManager.getLastMainIndexFragment());
+        }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        if (mSettingNetworkDialog != null)
+        {
+            if (mSettingNetworkDialog.isShowing() == true)
+            {
+                mSettingNetworkDialog.dismiss();
+            }
+
+            mSettingNetworkDialog = null;
+        }
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void onError()
+    {
+        if (mIsInitialization == false)
+        {
+            super.onError();
+
+            mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT);
+        }
+    }
+
+    private void showDisabledNetworkPopup()
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        if (mSettingNetworkDialog != null)
+        {
+            if (mSettingNetworkDialog.isShowing() == true)
+            {
+                mSettingNetworkDialog.dismiss();
+            }
+
+            mSettingNetworkDialog = null;
+        }
+
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mSettingNetworkDialog.dismiss();
+
+                if (VolleyHttpClient.isAvailableNetwork(MainActivity.this) == true)
+                {
+                    lockUI();
+                    mNetworkController.requestCheckServer();
+                } else
+                {
+                    mDelayTimeHandler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            showDisabledNetworkPopup();
+                        }
+                    }, 100);
+                }
+            }
+        };
+
+        View.OnClickListener negativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                mSettingNetworkDialog.dismiss();
+            }
+        };
+
+        DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener()
+        {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
+            {
+                if (keyCode == KeyEvent.KEYCODE_BACK)
+                {
+                    mSettingNetworkDialog.dismiss();
+                    finish();
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        mSettingNetworkDialog = createSimpleDialog(getString(R.string.dialog_btn_text_waiting)//
+            , getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi)//
+            , getString(R.string.dialog_btn_text_retry)//
+            , getString(R.string.dialog_btn_text_setting), positiveListener, negativeListener);
+        mSettingNetworkDialog.setOnKeyListener(keyListener);
+
+        try
+        {
+            mSettingNetworkDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    private void finishSplash()
+    {
+        mDelayTimeHandler.sendEmptyMessageDelayed(2, 2000);
+        mDelayTimeHandler.removeMessages(0);
+        mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
+        mIsInitialization = false;
+        mNetworkController.requestEvent();
+    }
+
+    private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
+    {
+        @Override
+        public void onMenuSelected(int index)
+        {
+            if (mMainFragmentManager.getLastIndexFragment() == index || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            switch (index)
+            {
+                case 0:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, AnalyticsManager.Label.HOTEL_SCREEN, null);
+                    break;
+
+                case 1:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, AnalyticsManager.Label.GOURMET_SCREEN, null);
+                    break;
+
+                case 2:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
+                    break;
+
+                case 3:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.MENU_CLICKED, AnalyticsManager.Label.MENU_SCREEN, null);
+                    break;
+            }
+        }
+
+        @Override
+        public void onMenuUnselected(int index)
+        {
+        }
+
+        @Override
+        public void onMenuReselected(int intdex)
+        {
+
+        }
+    };
+
+    private MainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new MainNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void updateNewEvent()
+        {
+            if (DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
+            {
+                mMenuBarLayout.setNewIconVisible(true);
+            } else
+            {
+                mMenuBarLayout.setNewIconVisible(false);
+            }
+
+            LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(BROADCAST_EVENT_UPDATE));
+        }
+
+        @Override
+        public void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime)
+        {
+            Intent intent = SatisfactionActivity.newInstance(MainActivity.this, ticketName, reservationIndex, checkInTime);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+        }
+
+        @Override
+        public void onSatisfactionHotel(String hotelName, int reservationIndex, long checkInTime, long checkOutTime)
+        {
+            Intent intent = SatisfactionActivity.newInstance(MainActivity.this, hotelName, reservationIndex, checkInTime, checkOutTime);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            MainActivity.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            MainActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int magCode, String message)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            MainActivity.this.onErrorPopupMessage(magCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            MainActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onCheckServerResponse(String title, String message)
+        {
+            showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+            }, null, false);
+        }
+
+        @Override
+        public void onAppVersionResponse(int maxVersion, int minVersion)
+        {
+            int currentVersion = Integer.parseInt(DailyHotel.VERSION.replace(".", ""));
+            int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
+
+            ExLog.d("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
+
+            if (minVersion > currentVersion)
+            {
+                View.OnClickListener posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                        marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                        if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                        {
+                            marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                        }
+
+                        startActivity(marketLaunch);
+                        finish();
+                    }
+                };
+
+                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        setResult(RESULT_CANCELED);
+                        finish();
+                    }
+                };
+
+                showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+
+            } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
+            {
+                View.OnClickListener posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                        marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                        if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                        {
+                            marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                        }
+
+                        startActivity(marketLaunch);
+                        finish();
+                    }
+                };
+
+                final DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        String maxVersion = DailyPreference.getInstance(MainActivity.this).getMaxVersion();
+                        DailyPreference.getInstance(MainActivity.this).setSkipVersion(maxVersion);
+
+                        mNetworkController.requestConfiguration();
+                    }
+                };
+
+                View.OnClickListener negListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        cancelListener.onCancel(null);
+                    }
+                };
+
+                showSimpleDialog(getString(R.string.dialog_title_notice)//
+                    , getString(R.string.dialog_msg_update_now)//
+                    , getString(R.string.dialog_btn_text_update)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , posListener, negListener, cancelListener, null, false);
+            } else
+            {
+                mNetworkController.requestConfiguration();
+            }
+        }
+
+        @Override
+        public void onConfigurationResponse()
+        {
+            lockUI(false);
+
+            finishSplash();
+
+            if (DailyDeepLink.getInstance().isValidateLink() == true)
+            {
+                if (DailyDeepLink.getInstance().isHotelView() == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                } else if (DailyDeepLink.getInstance().isGourmetView() == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                } else if (DailyDeepLink.getInstance().isBookingView() == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
+                } else if (DailyDeepLink.getInstance().isEventView() == true//
+                    || DailyDeepLink.getInstance().isBonusView() == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                } else if(DailyDeepLink.getInstance().isSingUpView() == true)
+                {
+                    if(Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == true)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
+                    } else
+                    {
+                        DailyDeepLink.getInstance().clear();
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    }
+                } else
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                }
+            } else
+            {
+                String lastMenu = DailyPreference.getInstance(MainActivity.this).getLastMenu();
+
+                if (getString(R.string.label_dailygourmet).equalsIgnoreCase(lastMenu) == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(lastMenu) == true)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                } else
+                {
+                    if (mMainFragmentManager.getLastIndexFragment() == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
+                    } else
+                    {
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                    }
+                }
+
+                if (Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false)
+                {
+                    // session alive
+                    // 호텔 평가를 위한 사용자 정보 조회
+                    mNetworkController.requestUserInformation();
+                } else
+                {
+                    AnalyticsManager.getInstance(MainActivity.this).setUserIndex(null);
+
+                    Util.requestGoogleCloudMessaging(MainActivity.this, new Util.OnGoogleCloudMessagingListener()
+                    {
+                        @Override
+                        public void onResult(String registrationId)
+                        {
+                            if (Util.isTextEmpty(registrationId) == true)
+                            {
+                                return;
+                            }
+
+                            mNetworkController.registerNotificationId(registrationId, null);
+                        }
+                    });
+                }
+            }
+        }
+    };
+}

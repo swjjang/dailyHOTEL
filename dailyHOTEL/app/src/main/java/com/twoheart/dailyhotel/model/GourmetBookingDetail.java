@@ -1,0 +1,109 @@
+package com.twoheart.dailyhotel.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.twoheart.dailyhotel.util.Util;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class GourmetBookingDetail extends PlaceBookingDetail
+{
+    public Place.Grade grade;
+    public int ticketCount;
+    public String ticketName;
+    public long reservationTime;
+    public String category;
+
+    public GourmetBookingDetail()
+    {
+    }
+
+    public GourmetBookingDetail(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        super.writeToParcel(dest, flags);
+
+        dest.writeString(grade.name());
+        dest.writeInt(ticketCount);
+        dest.writeString(ticketName);
+        dest.writeLong(reservationTime);
+        dest.writeString(category);
+    }
+
+    protected void readFromParcel(Parcel in)
+    {
+        super.readFromParcel(in);
+
+        grade = Place.Grade.valueOf(in.readString());
+        ticketCount = in.readInt();
+        ticketName = in.readString();
+        reservationTime = in.readLong();
+        category = in.readString();
+    }
+
+    public void setData(JSONObject jsonObject) throws Exception
+    {
+        address = jsonObject.getString("address");
+        latitude = jsonObject.getDouble("latitude");
+        longitude = jsonObject.getDouble("longitude");
+        placeName = jsonObject.getString("restaurant_name");
+
+        grade = Place.Grade.gourmet;
+        category = jsonObject.getString("category");
+        guestName = jsonObject.getString("customer_name");
+        guestPhone = jsonObject.getString("customer_phone");
+        guestEmail = jsonObject.getString("customer_email");
+        addressSummary = jsonObject.getString("customer_email");
+
+        //
+        JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("description"));
+        JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
+
+        setSpecification(jsonArray);
+
+        ticketCount = jsonObject.getInt("ticket_count");
+        ticketName = jsonObject.getString("ticket_name");
+        reservationTime = jsonObject.getLong("arrival_time");
+
+        // phone1은 프론트
+        String phone1 = jsonObject.getString("phone1");
+
+        // phone2는 예약실
+        String phone2 = jsonObject.getString("phone2");
+
+        // phone3은 사용하지 않음
+        String phone3 = jsonObject.getString("phone3");
+
+        if (Util.isTextEmpty(phone2) == false)
+        {
+            gourmetPhone = phone2;
+        } else if (Util.isTextEmpty(phone1) == false)
+        {
+            gourmetPhone = phone1;
+        } else if (Util.isTextEmpty(phone3) == false)
+        {
+            gourmetPhone = phone3;
+        }
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public GourmetBookingDetail createFromParcel(Parcel in)
+        {
+            return new GourmetBookingDetail(in);
+        }
+
+        @Override
+        public GourmetBookingDetail[] newArray(int size)
+        {
+            return new GourmetBookingDetail[size];
+        }
+    };
+}

@@ -1,0 +1,237 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/information_background">
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/backImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/navibar_ic_back"/>
+
+        <com.twoheart.dailyhotel.widget.DailyEditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/backImageView"
+            android:background="@null"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:textColor="@color/search_text"
+            android:textColorHint="@color/search_hint_text"
+            android:textSize="15dp"
+            android:layout_toLeftOf="@+id/iconLayout"/>
+
+        <LinearLayout
+            android:id="@+id/iconLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/deleteView"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="3dp"
+                android:src="@drawable/navibar_ic_search_x"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/searchView"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="15dp"
+                android:src="@drawable/selector_search_icon"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/calendarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <ImageView
+                android:id="@+id/dateIconView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/seach_ic_01_dete"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/dateIconView"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_change_date"
+                    android:textColor="@color/curation_information_text"
+                    android:textSize="13dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/dateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="11dp"
+                    android:visibility="visible"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/underLineView"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/information_underline"
+            android:layout_below="@+id/calendarLayout"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
+
+        <RelativeLayout
+            android:id="@+id/searchAroundLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_below="@+id/underLineView">
+
+            <ImageView
+                android:id="@+id/aroundIconView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/search_ic_01_surrounding"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/aroundIconView"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/text01View"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_view_myaround_hotel"
+                    android:textColor="@color/curation_information_text"
+                    android:textSize="13dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/text02View"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:text="@string/label_search_need_to_agree_termsoflocation"
+                    android:textColor="@color/search_hint_text"
+                    android:textSize="11dp"
+                    android:visibility="visible"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/recentSearchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/searchAroundLayout"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:visibility="visible">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="@string/label_search_recentsearches"
+                android:textColor="@color/search_hint_text"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/deleteAllView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/label_search_deleteall"
+                android:textColor="@drawable/selector_search_deleteall_textcolor"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/deleteAllView"
+                android:background="@color/information_underline"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyScrollView
+                android:id="@+id/recentSearchesScrollLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/deleteAllView"
+                android:fadingEdge="none">
+
+                <LinearLayout
+                    android:id="@+id/contentsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical"/>
+            </com.twoheart.dailyhotel.widget.DailyScrollView>
+        </RelativeLayout>
+
+        <com.twoheart.dailyhotel.widget.DailyScrollView
+            android:id="@+id/autoCompleteScrollLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/searchAroundLayout"
+            android:layout_marginTop="10dp"
+            android:fadingEdge="none"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/autoCompleteLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+        </com.twoheart.dailyhotel.widget.DailyScrollView>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
+</RelativeLayout>

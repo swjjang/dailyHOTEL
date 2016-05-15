@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:background="@color/calendar_month_line"
+        android:gravity="center"
+        android:text="@string/label_sort_by"
+        android:textColor="@color/curation_title_text"
+        android:textSize="13dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/curation_information_line"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <RadioGroup
+            android:id="@+id/sortLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
+                android:id="@+id/regionCheckView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_sort_area_button"
+                android:gravity="center_horizontal"
+                android:paddingBottom="2dp"
+                android:text="@string/label_sort_by_area"
+                android:textColor="@drawable/selector_curation_textcolor"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
+                android:id="@+id/distanceCheckView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_sort_distance_button"
+                android:gravity="center_horizontal"
+                android:paddingBottom="2dp"
+                android:text="@string/label_sort_by_distance"
+                android:textColor="@drawable/selector_curation_textcolor"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
+                android:id="@+id/lowPriceCheckView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_sort_lowprice_button"
+                android:gravity="center_horizontal"
+                android:paddingBottom="2dp"
+                android:text="@string/label_sort_by_low_price"
+                android:textColor="@drawable/selector_curation_textcolor"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
+                android:id="@+id/highPriceCheckView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_sort_highprice_button"
+                android:gravity="center_horizontal"
+                android:paddingBottom="2dp"
+                android:text="@string/label_sort_by_high_price"
+                android:textColor="@drawable/selector_curation_textcolor"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyRadioButton
+                android:id="@+id/satisfactionCheckView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_sort_satisfaction_button"
+                android:gravity="center_horizontal"
+                android:paddingBottom="2dp"
+                android:text="@string/label_sort_by_satisfaction"
+                android:textColor="@drawable/selector_curation_textcolor"
+                android:textSize="11dp"/>
+        </RadioGroup>
+
+        <View
+            android:id="@+id/dimView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_a80"
+            android:visibility="gone"/>
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="101dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/provinceImageView"
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@color/cd3d3d3"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/provinceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            dailyFont:style="Medium"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/provinceEnglishTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="11dp"
+            dailyFont:style="DemiLight"
+            android:layout_marginTop="6dp"/>
+
+        <ImageView
+            android:id="@+id/updownArrowImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/region_ic_sub_v"
+            android:layout_marginTop="7dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/selectarea_underline"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

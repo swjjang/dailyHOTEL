@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/popup_bg_white"
+        android:orientation="vertical"
+        android:paddingTop="22dp">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/label_registeration_mobile"
+            android:textColor="@color/dialog_message_text"
+            android:textSize="17dp"
+            dailyFont:style="Bold"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/messageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="11dp"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="@string/message_signup_inputmobile"
+            android:textColor="@color/dialog_message_text"
+            android:textSize="14dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="22dp"
+            android:background="@color/dialog_inputmobile_line"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/shape_rect_defaultcolor">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/countryTextView"
+                android:layout_width="86dp"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/dh_theme_color"
+                android:textSize="17dp"/>
+
+            <ImageView
+                android:id="@+id/spinnerImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/countryTextView"
+                android:src="@drawable/spinner"/>
+
+            <com.twoheart.dailyhotel.widget.DailyEditText
+                android:id="@+id/mobileTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="17dp"
+                android:layout_toRightOf="@+id/spinnerImageView"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="@string/label_inputmobile"
+                android:inputType="phone"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/dialog_message_text"
+                android:textColorHint="@color/dialog_inputmobile_hint"
+                android:textSize="17dp"
+                android:theme="@style/EditTextTheme"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:background="@drawable/popup_btn_on">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/confirmTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/dialog_btn_text_complete"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            dailyFont:style="Bold"/>
+    </RelativeLayout>
+
+</LinearLayout>

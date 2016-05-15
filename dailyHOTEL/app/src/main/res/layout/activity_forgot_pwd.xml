@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_default"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+        <com.twoheart.dailyhotel.widget.DailyEditText
+            android:id="@+id/et_forgot_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:ems="10"
+            android:hint="@string/act_forgot_pwd_email"
+            android:imeActionId="@+id/btn_forgot_pwd"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textColorHint="@color/textView_textColor_disabled"
+            android:textSize="15dp"
+            android:theme="@style/EditTextTheme"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="@string/act_forgot_pwd_text"
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="13.5dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/btn_forgot_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="62dp"
+            android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="@string/act_forgot_pwd_forgot"
+            android:textColor="@android:color/white"
+            android:textSize="17dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
+</RelativeLayout>

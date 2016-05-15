@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+    <include layout="@layout/toolbar_default_menu"/>
+
+    <ScrollView
+        android:id="@+id/scrollLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:fadingEdge="none"
+        android:fillViewport="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/placeInformationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:background="@color/calendar_month_line"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="15dp"
+                    android:textColor="@color/curation_title_text"
+                    android:textSize="13dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/curation_information_line"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/curation_information_line"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:minHeight="55dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/placeNameView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:textColor="@color/curation_title_text"
+                    android:textSize="13dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/tv_payment_wait_hotel_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:gravity="right|center_vertical"
+                    android:lineSpacingExtra="-2dp"
+                    android:textColor="@color/curation_information_text"
+                    android:textIsSelectable="true"
+                    android:textSize="13dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp">
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:background="@color/calendar_month_line"
+                        android:gravity="left|center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@string/act_wait_payment_payinfo"
+                        android:textColor="@color/curation_title_text"
+                        android:textSize="13dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:background="@color/curation_information_line"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/curation_information_line"/>
+
+                    <FrameLayout
+                        android:id="@+id/editLinearLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+
+                        <com.twoheart.dailyhotel.widget.DailyTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/curation_title_text"
+                            android:gravity="center"
+                            android:text="@string/label_copy_account_number"
+                            android:textColor="@color/calendar_month_line"
+                            android:textSize="10dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+                    </FrameLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp">
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="@string/act_wait_payment_accounts_no"
+                        android:textColor="@color/curation_title_text"
+                        android:textSize="13dp"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/tv_payment_wait_account"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:gravity="right|center_vertical"
+                        android:lineSpacingExtra="-2dp"
+                        android:textColor="@color/curation_information_text"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical">
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="@string/act_wait_payment_name"
+                        android:textColor="@color/curation_title_text"
+                        android:textSize="13dp"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/tv_payment_wait_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:gravity="right|center_vertical"
+                        android:lineSpacingExtra="-2dp"
+                        android:textColor="@color/curation_information_text"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical">
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="@string/act_wait_payment_price"
+                        android:textColor="@color/curation_title_text"
+                        android:textSize="13dp"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/tv_payment_wait_price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:gravity="right|center_vertical"
+                        android:lineSpacingExtra="-2dp"
+                        android:textColor="@color/curation_information_text"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="@string/act_wait_payment_limit"
+                        android:textColor="@color/curation_title_text"
+                        android:textSize="13dp"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/tv_payment_wait_deadline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:gravity="right|center_vertical"
+                        android:lineSpacingExtra="-2dp"
+                        android:textColor="@color/curation_information_text"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/guide1Layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginBottom="18dp">
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:background="@color/calendar_month_line"
+                        android:gravity="left|center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@string/dialog_title_payment_confirm"
+                        android:textColor="@color/curation_title_text"
+                        android:textSize="13dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:background="@color/curation_information_line"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/curation_information_line"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
+</RelativeLayout>

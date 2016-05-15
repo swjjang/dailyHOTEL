@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/img_placeholder_map">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        fresco:actualImageScaleType="centerCrop"/>
+
+    <View
+        android:id="@+id/gradientView"
+        android:background="@color/black_a14"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/priceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/discountPriceLayout"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="11dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        dailyFont:style="DemiLight"
+        android:layout_marginBottom="3dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/gradeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/nameTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="12dp"
+        android:background="@drawable/shape_rect_whitecolor"
+        android:gravity="center"
+        android:paddingBottom="1px"
+        android:paddingLeft="5.5dp"
+        android:paddingRight="5.5dp"
+        android:paddingTop="2px"
+        android:textColor="@color/white"
+        android:textSize="11dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/satisfactionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/nameTextView"
+        android:layout_marginLeft="7dp"
+        android:layout_toRightOf="@+id/gradeTextView"
+        android:drawableLeft="@drawable/main_ic_satisfaction"
+        android:drawablePadding="2dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        android:visibility="gone"
+        dailyFont:style="DemiLight"
+        android:layout_marginBottom="5dp"/>
+
+    <LinearLayout
+        android:id="@+id/discountPriceLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addressTextView"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="7dp"
+        android:layout_marginRight="11dp">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/personsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:visibility="gone"
+            dailyFont:style="DemiLight"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/discountPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+    </LinearLayout>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/nameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addressTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="5dp"
+        android:ellipsize="marquee"
+        android:freezesText="true"
+        android:gravity="center_vertical"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="17dp"
+        dailyFont:style="Medium"
+        android:layout_toLeftOf="@+id/discountPriceLayout"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/addressTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        dailyFont:style="DemiLight"/>
+
+    <ImageView
+        android:id="@+id/dBenefitImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:src="@drawable/map_d_benefit"
+        android:visibility="gone"
+        android:layout_above="@+id/gradeTextView"
+        android:layout_marginBottom="8dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/hotel_list_item_underline"/>
+
+    <ImageView
+        android:id="@+id/closeImageVIew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:src="@drawable/ic_delete"/>
+</RelativeLayout>

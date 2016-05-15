@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_default_menu"/>
+
+    <ScrollView
+        android:id="@+id/scrollLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:fadingEdge="none">
+
+        <LinearLayout
+            android:id="@+id/bookingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <!-- 상품 정보 넣기 -->
+            <include
+                layout="@layout/layout_booking_gourmet_ticket_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 예약자 정보 -->
+            <include
+                layout="@layout/layout_booking_gourmet_user_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 결제 -->
+            <include
+                layout="@layout/layout_booking_gourmet_payment_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 결제 버튼 -->
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/payButton"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/dh_theme_color"
+                android:gravity="center"
+                android:text="@string/act_booking_btn_pay"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
+</RelativeLayout>

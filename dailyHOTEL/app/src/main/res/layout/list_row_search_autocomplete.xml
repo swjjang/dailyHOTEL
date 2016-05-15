@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="41dp"
+    android:background="@color/white"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/textView01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:textColor="@color/search_text"
+        android:layout_toLeftOf="@+id/textView02"
+        android:textSize="13dp"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/textView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:textColor="@color/search_autocomplete_pricetext"
+        android:layout_alignParentRight="true"
+        android:textSize="13dp"
+        android:layout_marginLeft="10dp"/>
+</RelativeLayout>
