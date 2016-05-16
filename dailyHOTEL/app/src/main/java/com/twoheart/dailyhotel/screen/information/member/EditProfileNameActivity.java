@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -217,14 +218,41 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 if (result == true)
                 {
-                    setResult(RESULT_OK);
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            finish();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            finish();
+                        }
+                    });
 
-                    DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+                    setResult(RESULT_OK);
                 } else
                 {
-                    setResult(RESULT_CANCELED);
-
-                    DailyToast.showToast(EditProfileNameActivity.this, response.getString("msg"), Toast.LENGTH_LONG);
+                    String message = response.getString("msg");
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mNameEditText.setText(null);
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            mNameEditText.setText(null);
+                        }
+                    });
                 }
             } catch (Exception e)
             {
@@ -232,7 +260,6 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
             } finally
             {
                 unLockUI();
-                finish();
             }
         }
     };
@@ -257,16 +284,41 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 if (result == true)
                 {
-                    DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_name), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            finish();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            finish();
+                        }
+                    });
 
                     setResult(RESULT_OK);
                 } else
                 {
                     String message = response.getString("msg");
-
-                    DailyToast.showToast(EditProfileNameActivity.this, message, Toast.LENGTH_LONG);
-
-                    setResult(RESULT_CANCELED);
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mNameEditText.setText(null);
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            mNameEditText.setText(null);
+                        }
+                    });
                 }
             } catch (Exception e)
             {
@@ -274,7 +326,6 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
             } finally
             {
                 unLockUI();
-                finish();
             }
         }
     };

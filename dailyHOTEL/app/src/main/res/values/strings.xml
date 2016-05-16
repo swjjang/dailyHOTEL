@@ -142,6 +142,11 @@
     <string name="toast_msg_cancel_payment">결제를 취소하셨습니다.</string>
     <string name="toast_msg_profile_not_changed">변경된 사항이 없습니다.</string>
     <string name="toast_msg_profile_success_to_change">업데이트를 완료하였습니다.</string>
+    <string name="toast_msg_profile_success_edit_phonenumber">휴대폰 번호 설정이 완료되었습니다.</string>
+    <string name="toast_msg_profile_success_edit_name">이름 설정이 완료되었습니다.</string>
+    <string name="toast_msg_profile_success_edit_password">비밀번호 설정이 완료되었습니다.</string>
+    <string name="toast_msg_profile_success_edit_email">이메일 설정이 완료되었습니다.</string>
+
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인되었습니다.</string>
     <string name="toast_msg_please_input_id">이메일을 입력해주세요.</string>

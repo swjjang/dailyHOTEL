@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -203,16 +204,41 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 
                 if (result == true)
                 {
-                    DailyToast.showToast(EditProfileEmailActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+                    showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_email), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            finish();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            finish();
+                        }
+                    });
 
                     setResult(RESULT_OK);
                 } else
                 {
                     String message = response.getString("msg");
-
-                    DailyToast.showToast(EditProfileEmailActivity.this, message, Toast.LENGTH_LONG);
-
-                    setResult(RESULT_CANCELED);
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mEmailEditText.setText(null);
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            mEmailEditText.setText(null);
+                        }
+                    });
                 }
             } catch (Exception e)
             {
@@ -220,7 +246,6 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
             } finally
             {
                 unLockUI();
-                finish();
             }
         }
     };
