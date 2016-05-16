@@ -164,7 +164,12 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void doConfirm(String phoneNumber)
         {
-            if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == false)
+            mEditProfilePhoneLayout.hideKeypad();
+
+            if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == true)
+            {
+                mNetworkController.requestUpdateDailyUserInformation(phoneNumber);
+            } else
             {
                 mNetworkController.requestUpdateSocialUserInformation(mUserIndex, phoneNumber);
             }

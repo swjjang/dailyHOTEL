@@ -179,6 +179,12 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mPhoneEditText.requestFocus();
     }
 
+    public void hideKeypad()
+    {
+        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(mPhoneEditText.getWindowToken(), 0);
+    }
+
     public void setGuideText(String text)
     {
         if (mGuideTextView == null)

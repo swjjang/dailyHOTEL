@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,13 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
     public void requestUpdateDailyUserInformation(String phoneNumber, String code)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdatePhoneNumberJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdateVerificationPhoneNumberJsonResponseListener);
+    }
+
+    public void requestUpdateDailyUserInformation(String phoneNumber)
+    {
+        Map<String, String> params = Collections.singletonMap("phone", phoneNumber.replaceAll("-", ""));
+        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdatePhoneNumberJsonResponseListener, this);
     }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
@@ -110,7 +117,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mDailyserUpdatePhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDailyserUpdateVerificationPhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -142,6 +149,41 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onErrorResponse(volleyError);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mDailyUserUpdatePhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                boolean result = false;
+
+                if (response.has("success") == true)
+                {
+                    result = response.getBoolean("success");
+                }
+
+                if (result == true)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorPopupMessage(response.getInt("msgCode"), response.getString("msg"));
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
             }
         }
     };
