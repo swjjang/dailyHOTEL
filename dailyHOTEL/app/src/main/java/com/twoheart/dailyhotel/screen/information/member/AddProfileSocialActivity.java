@@ -14,8 +14,6 @@ import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.util.Map;
-
 public class AddProfileSocialActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
@@ -24,7 +22,7 @@ public class AddProfileSocialActivity extends BaseActivity
     private String mUserIdx;
     private String mCountryCode;
 
-    private Map<String, String> mSignupParams;
+    private Customer mCustomer;
     private AddProfileSocialLayout mAddProfileSocialLayout;
     private AddProfileSocialNetworkController mAddProfileSocialNetworkController;
 
@@ -57,11 +55,11 @@ public class AddProfileSocialActivity extends BaseActivity
             return;
         }
 
-        Customer customer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
+        mCustomer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
-        mUserIdx = customer.getUserIdx();
+        mUserIdx = mCustomer.getUserIdx();
 
-        if (Util.isTextEmpty(customer.getPhone()) == true || Util.isValidatePhoneNumber(customer.getPhone()) == false)
+        if (Util.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
         {
             mAddProfileSocialLayout.showPhoneLayout();
 
@@ -72,7 +70,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hidePhoneLayout();
         }
 
-        if (Util.isTextEmpty(customer.getEmail()) == true)
+        if (Util.isTextEmpty(mCustomer.getEmail()) == true)
         {
             mAddProfileSocialLayout.showEmailLayout();
         } else
@@ -80,7 +78,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hideEmailLayout();
         }
 
-        if (Util.isTextEmpty(customer.getName()) == true)
+        if (Util.isTextEmpty(mCustomer.getName()) == true)
         {
             mAddProfileSocialLayout.showNameLayout();
         } else
@@ -100,17 +98,6 @@ public class AddProfileSocialActivity extends BaseActivity
         //        }
 
         super.onStart();
-    }
-
-    public void storeLoginInfo()
-    {
-        //        String id = mEmailEditText.getText().toString();
-        //        String pwd = Crypto.encrypt(mPasswordEditText.getText().toString()).replace("\n", "");
-        //        String name = mNameEditText.getText().toString();
-        //
-        //        DailyPreference.getInstance(AddProfileSocialActivity.this).setUserInformation(true, id, pwd, Constants.DAILY_USER, name);
-        //
-        //        setResult(RESULT_OK);
     }
 
     @Override
@@ -136,14 +123,6 @@ public class AddProfileSocialActivity extends BaseActivity
                 mAddProfileSocialLayout.setCountryCode(mCountryCode);
             }
         }
-    }
-
-    private void signUpAndFinish()
-    {
-        unLockUI();
-
-        DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
-        finish();
     }
 
     private AddProfileSocialLayout.OnEventListener mOnEventListener = new AddProfileSocialLayout.OnEventListener()
@@ -190,6 +169,68 @@ public class AddProfileSocialActivity extends BaseActivity
         @Override
         public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender)
         {
+            // 전화번호가 없거나 잘못 된경우
+            if (Util.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
+            {
+                if (Util.isTextEmpty(phoneNumber) == true)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                if (Util.isValidatePhoneNumber(phoneNumber) == false)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_wrong_phonenumber, Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            // 이메일이 없는 경우
+            if (Util.isTextEmpty(mCustomer.getEmail()) == true)
+            {
+                if (Util.isTextEmpty(email) == true)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                // email 유효성 체크
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            // 이름이 없는 경우
+            if (Util.isTextEmpty(mCustomer.getName()) == true)
+            {
+                if (Util.isTextEmpty(name) == true)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            // 동의 체크 확인
+            if (mAddProfileSocialLayout.isCheckedTermsOfService() == false)
+            {
+                DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_terms_agreement, Toast.LENGTH_SHORT);
+                return;
+            }
+
+            if (mAddProfileSocialLayout.isCheckedTermsOfPrivacy() == false)
+            {
+                DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_personal_agreement, Toast.LENGTH_SHORT);
+                return;
+            }
+
+            if (mAddProfileSocialLayout.isCheckedTermsOfPrivacy() == false)
+            {
+                DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_personal_agreement, Toast.LENGTH_SHORT);
+                return;
+            }
+
             mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(mUserIdx, phoneNumber, email, name, recommender);
         }
 
@@ -239,277 +280,4 @@ public class AddProfileSocialActivity extends BaseActivity
             AddProfileSocialActivity.this.onErrorToastMessage(message);
         }
     };
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //    private DailyHotelJsonResponseListener mUserUpdateFacebookJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            if (isFinishing() == true)
-    //            {
-    //                return;
-    //            }
-    //
-    //            try
-    //            {
-    //                unLockUI();
-    //
-    //                JSONObject jsonObject = response.getJSONObject("data");
-    //
-    //                boolean result = jsonObject.getBoolean("is_success");
-    //                int msgCode = response.getInt("msg_code");
-    //
-    //                if (result == true)
-    //                {
-    //                    String msg = null;
-    //
-    //                    if (response.has("msg") == true)
-    //                    {
-    //                        msg = response.getString("msg");
-    //                    }
-    //
-    //                    switch (msgCode)
-    //                    {
-    //                        case 100:
-    //                        {
-    //                            if (msg != null)
-    //                            {
-    //                                DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_SHORT);
-    //                            }
-    //
-    //                            setResult(RESULT_OK);
-    //                            finish();
-    //                            break;
-    //                        }
-    //
-    //                        case 200:
-    //                        {
-    //                            if (msg != null)
-    //                            {
-    //                                if (isFinishing() == true)
-    //                                {
-    //                                    return;
-    //                                }
-    //
-    //                                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
-    //                                {
-    //                                    @Override
-    //                                    public void onClick(View view)
-    //                                    {
-    //                                        setResult(RESULT_OK);
-    //                                        finish();
-    //                                    }
-    //                                }, null);
-    //                            } else
-    //                            {
-    //                                setResult(RESULT_OK);
-    //                                finish();
-    //                            }
-    //                            break;
-    //                        }
-    //
-    //                        default:
-    //                            setResult(RESULT_OK);
-    //                            finish();
-    //                            break;
-    //                    }
-    //
-    //                } else
-    //                {
-    //                    String msg = null;
-    //
-    //                    if (response.has("msg") == true)
-    //                    {
-    //                        msg = response.getString("msg");
-    //                    }
-    //
-    //                    switch (msgCode)
-    //                    {
-    //                        case 100:
-    //                        {
-    //                            if (msg != null)
-    //                            {
-    //                                DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_SHORT);
-    //                            }
-    //                            break;
-    //                        }
-    //
-    //                        case 200:
-    //                        {
-    //                            if (msg != null)
-    //                            {
-    //                                if (isFinishing() == true)
-    //                                {
-    //                                    return;
-    //                                }
-    //
-    //                                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
-    //                            }
-    //                            break;
-    //                        }
-    //                    }
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                onError(e);
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            unLockUI();
-    //
-    //            try
-    //            {
-    //                String result = response.getString("success");
-    //                String msg = null;
-    //
-    //                if (response.length() > 1)
-    //                {
-    //                    msg = response.getString("msg");
-    //                }
-    //
-    //                if (result.equals("true") == true)
-    //                {
-    //                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
-    //
-    //                    setResult(RESULT_OK);
-    //                    finish();
-    //                } else
-    //                {
-    //                    DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_LONG);
-    //                }
-    //            } catch (Exception e)
-    //            {
-    //                onError(e);
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                String userIndex = String.valueOf(response.getInt("idx"));
-    //
-    //                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserIndex(userIndex);
-    //                AnalyticsManager.getInstance(AddProfileSocialActivity.this).signUpDailyUser(userIndex, mSignupParams.get("email")//
-    //                    , mSignupParams.get("name"), mSignupParams.get("phone"), AnalyticsManager.UserType.EMAIL);
-    //
-    //                requestGoogleCloudMessagingId();
-    //            } catch (Exception e)
-    //            {
-    //                unLockUI();
-    //                onError(e);
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                int msg_code = response.getInt("msg_code");
-    //
-    //                if (msg_code == 0)
-    //                {
-    //                    JSONObject jsonObject = response.getJSONObject("data");
-    //
-    //                    boolean isSignin = jsonObject.getBoolean("is_signin");
-    //
-    //                    if (isSignin == true)
-    //                    {
-    //                        JSONObject tokenJSONObject = response.getJSONObject("token");
-    //                        String accessToken = tokenJSONObject.getString("access_token");
-    //                        String tokenType = tokenJSONObject.getString("token_type");
-    //
-    //                        DailyPreference.getInstance(AddProfileSocialActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
-    //                        storeLoginInfo();
-    //
-    //                        lockUI();
-    //                        DailyNetworkAPI.getInstance().requestUserInformation(mNetworkTag, mUserInfoJsonResponseListener, AddProfileSocialActivity.this);
-    //                        return;
-    //                    }
-    //                }
-    //
-    //                // 로그인이 실패한 경우
-    //                String msg = response.getString("msg");
-    //
-    //                if (Util.isTextEmpty(msg) == true)
-    //                {
-    //                    msg = getString(R.string.toast_msg_failed_to_login);
-    //                }
-    //
-    //                DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_LONG);
-    //
-    //                unLockUI();
-    //                finish();
-    //            } catch (Exception e)
-    //            {
-    //                unLockUI();
-    //                onError(e);
-    //            }
-    //        }
-    //    };
-    //
-    //    private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
-    //    {
-    //        @Override
-    //        public void onResponse(String url, JSONObject response)
-    //        {
-    //            try
-    //            {
-    //                int msg_code = response.getInt("msg_code");
-    //
-    //                if (msg_code == 0)
-    //                {
-    //                    JSONObject jsonObject = response.getJSONObject("data");
-    //
-    //                    boolean isSignup = jsonObject.getBoolean("is_signup");
-    //
-    //                    if (isSignup == true)
-    //                    {
-    //                        Map<String, String> params = new HashMap<>();
-    //                        params.put("email", mSignupParams.get("email"));
-    //                        params.put("pw", Crypto.encrypt(mSignupParams.get("pw")).replace("\n", ""));
-    //                        params.put("social_id", "0");
-    //                        params.put("user_type", Constants.DAILY_USER);
-    //                        params.put("is_auto", "true");
-    //
-    //                        DailyNetworkAPI.getInstance().requestUserSignin(mNetworkTag, params, mUserLoginJsonResponseListener, AddProfileSocialActivity.this);
-    //                        return;
-    //                    }
-    //                }
-    //
-    //                unLockUI();
-    //
-    //                String msg = response.getString("msg");
-    //
-    //                if (Util.isTextEmpty(msg) == true)
-    //                {
-    //                    msg = getString(R.string.toast_msg_failed_to_signup);
-    //                }
-    //
-    //                DailyToast.showToast(AddProfileSocialActivity.this, msg, Toast.LENGTH_LONG);
-    //            } catch (Exception e)
-    //            {
-    //                unLockUI();
-    //                onError(e);
-    //            }
-    //        }
-    //    };
 }

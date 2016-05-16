@@ -151,6 +151,17 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         break;
                     }
 
+                    // 회원 가입 중 세션이 만료되었습니다
+                    case 2000:
+                    {
+                        JSONObject dataJONObject = response.getJSONObject("data");
+                        String message = dataJONObject.getString("msg");
+
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                        break;
+                    }
+
+                    // 다른 번호로 이미 인증된 경우
                     case 2001:
                     {
                         JSONObject dataJONObject = response.getJSONObject("data");

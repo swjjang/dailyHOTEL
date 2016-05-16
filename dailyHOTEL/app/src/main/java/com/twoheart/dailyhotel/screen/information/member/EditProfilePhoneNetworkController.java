@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,12 +38,18 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
     public void requestDailyUserVerification(String phoneNumber, boolean force)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber, force, mDailUserVerificationJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber.replaceAll("-", ""), force, mDailUserVerificationJsonResponseListener);
     }
 
     public void requestUpdateDailyUserInformation(String phoneNumber, String code)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber, code, mDailyserUpdatePhoneNumberJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdateVerificationPhoneNumberJsonResponseListener);
+    }
+
+    public void requestUpdateDailyUserInformation(String phoneNumber)
+    {
+        Map<String, String> params = Collections.singletonMap("phone", phoneNumber.replaceAll("-", ""));
+        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdatePhoneNumberJsonResponseListener, this);
     }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
@@ -67,28 +74,27 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
+                JSONObject dataJONObject = response.getJSONObject("data");
+                String message = response.getString("msg");
+
                 switch (msgCode)
                 {
                     case 100:
                     {
-                        JSONObject dataJONObject = response.getJSONObject("data");
-                        String message = dataJONObject.getString("msg");
-
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
                         break;
                     }
 
                     case 2001:
                     {
-                        JSONObject dataJONObject = response.getJSONObject("data");
-                        String phoneNumber = dataJONObject.getString("phone");
+                        String phoneNumber = response.getString("phone");
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
                         break;
                     }
 
                     default:
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                         break;
                 }
             } catch (Exception e)
@@ -111,7 +117,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mDailyserUpdatePhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mDailyserUpdateVerificationPhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -147,6 +153,41 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         }
     };
 
+    private DailyHotelJsonResponseListener mDailyUserUpdatePhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                boolean result = false;
+
+                if (response.has("success") == true)
+                {
+                    result = response.getBoolean("success");
+                }
+
+                if (result == true)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorPopupMessage(response.getInt("msgCode"), response.getString("msg"));
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+    };
+
     private DailyHotelJsonResponseListener mUserUpdateSocialJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -170,7 +211,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
                 } else
                 {
-                    mOnNetworkControllerListener.onErrorToastMessage(response.getString("msg"));
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {

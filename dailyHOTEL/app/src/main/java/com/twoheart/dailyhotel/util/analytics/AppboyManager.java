@@ -35,7 +35,7 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(screen, AnalyticsManager.ValueType.EMPTY);
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
-        mAppboy.logCustomEvent(EventName.SCREEN);
+        mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
     }
 
     @Override
