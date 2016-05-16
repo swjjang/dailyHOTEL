@@ -14,8 +14,6 @@ import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.util.Map;
-
 public class AddProfileSocialActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
@@ -24,7 +22,7 @@ public class AddProfileSocialActivity extends BaseActivity
     private String mUserIdx;
     private String mCountryCode;
 
-    private Map<String, String> mSignupParams;
+    private Customer mCustomer;
     private AddProfileSocialLayout mAddProfileSocialLayout;
     private AddProfileSocialNetworkController mAddProfileSocialNetworkController;
 
@@ -57,11 +55,11 @@ public class AddProfileSocialActivity extends BaseActivity
             return;
         }
 
-        Customer customer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
+        mCustomer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
-        mUserIdx = customer.getUserIdx();
+        mUserIdx = mCustomer.getUserIdx();
 
-        if (Util.isTextEmpty(customer.getPhone()) == true || Util.isValidatePhoneNumber(customer.getPhone()) == false)
+        if (Util.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
         {
             mAddProfileSocialLayout.showPhoneLayout();
 
@@ -72,7 +70,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hidePhoneLayout();
         }
 
-        if (Util.isTextEmpty(customer.getEmail()) == true)
+        if (Util.isTextEmpty(mCustomer.getEmail()) == true)
         {
             mAddProfileSocialLayout.showEmailLayout();
         } else
@@ -80,7 +78,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hideEmailLayout();
         }
 
-        if (Util.isTextEmpty(customer.getName()) == true)
+        if (Util.isTextEmpty(mCustomer.getName()) == true)
         {
             mAddProfileSocialLayout.showNameLayout();
         } else
@@ -171,6 +169,68 @@ public class AddProfileSocialActivity extends BaseActivity
         @Override
         public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender)
         {
+            // 전화번호가 없거나 잘못 된경우
+            if (Util.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
+            {
+                if (Util.isTextEmpty(phoneNumber) == true)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                if (Util.isValidatePhoneNumber(phoneNumber) == false)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_wrong_phonenumber, Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            // 이메일이 없는 경우
+            if (Util.isTextEmpty(mCustomer.getEmail()) == true)
+            {
+                if (Util.isTextEmpty(email) == true)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                // email 유효성 체크
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            // 이름이 없는 경우
+            if (Util.isTextEmpty(mCustomer.getName()) == true)
+            {
+                if (Util.isTextEmpty(name) == true)
+                {
+                    DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
+                    return;
+                }
+            }
+
+            // 동의 체크 확인
+            if (mAddProfileSocialLayout.isCheckedTermsOfService() == false)
+            {
+                DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_terms_agreement, Toast.LENGTH_SHORT);
+                return;
+            }
+
+            if (mAddProfileSocialLayout.isCheckedTermsOfPrivacy() == false)
+            {
+                DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_personal_agreement, Toast.LENGTH_SHORT);
+                return;
+            }
+
+            if (mAddProfileSocialLayout.isCheckedTermsOfPrivacy() == false)
+            {
+                DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_personal_agreement, Toast.LENGTH_SHORT);
+                return;
+            }
+
             mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(mUserIdx, phoneNumber, email, name, recommender);
         }
 
