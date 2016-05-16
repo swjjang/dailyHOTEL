@@ -171,8 +171,16 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                         tag = Util.DEFAULT_COUNTRY_CODE;
                     }
 
-                    String countryCode = tag.substring(tag.indexOf('\n') + 1);
-                    phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
+                    phoneNumber = mPhoneEditText.getText().toString().trim();
+
+                    if (Util.isTextEmpty(phoneNumber) == true)
+                    {
+                        phoneNumber = null;
+                    } else
+                    {
+                        String countryCode = tag.substring(tag.indexOf('\n') + 1);
+                        phoneNumber = String.format("%s %s", countryCode, phoneNumber);
+                    }
                 }
 
                 if (mEmailLayout.getVisibility() == View.VISIBLE)
