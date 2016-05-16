@@ -103,6 +103,11 @@ public class HotelListFragment extends BaseFragment implements Constants
             @Override
             public void onRefresh()
             {
+                if (mOnCommunicateListener == null)
+                {
+                    return;
+                }
+
                 mOnCommunicateListener.expandedAppBar(true, true);
                 mOnCommunicateListener.refreshAll(false);
             }

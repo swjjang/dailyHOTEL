@@ -85,6 +85,11 @@ public class GourmetListFragment extends BaseFragment implements Constants
             @Override
             public void onRefresh()
             {
+                if (mOnCommunicateListener == null)
+                {
+                    return;
+                }
+
                 mOnCommunicateListener.expandedAppBar(true, true);
                 mOnCommunicateListener.refreshAll(false);
             }

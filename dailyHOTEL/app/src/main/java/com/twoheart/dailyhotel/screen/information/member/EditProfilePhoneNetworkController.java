@@ -67,28 +67,27 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
+                JSONObject dataJONObject = response.getJSONObject("data");
+                String message = response.getString("msg");
+
                 switch (msgCode)
                 {
                     case 100:
                     {
-                        JSONObject dataJONObject = response.getJSONObject("data");
-                        String message = dataJONObject.getString("msg");
-
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
                         break;
                     }
 
                     case 2001:
                     {
-                        JSONObject dataJONObject = response.getJSONObject("data");
-                        String phoneNumber = dataJONObject.getString("phone");
+                        String phoneNumber = response.getString("phone");
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
                         break;
                     }
 
                     default:
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                         break;
                 }
             } catch (Exception e)
@@ -170,7 +169,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
                 } else
                 {
-                    mOnNetworkControllerListener.onErrorToastMessage(response.getString("msg"));
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
                 }
             } catch (Exception e)
             {

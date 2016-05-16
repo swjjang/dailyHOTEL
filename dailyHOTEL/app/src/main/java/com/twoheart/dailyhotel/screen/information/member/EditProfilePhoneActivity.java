@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -15,7 +14,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class EditProfilePhoneActivity extends BaseActivity
 {
@@ -235,9 +233,23 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void onConfirm()
         {
-            DailyToast.showToast(EditProfilePhoneActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
-            setResult(RESULT_OK);
-            finish();
+            showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_phonenumber), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            }, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            });
         }
 
         @Override
@@ -255,7 +267,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            EditProfilePhoneActivity.this.onErrorPopupMessage(msgCode, message);
+            EditProfilePhoneActivity.this.onErrorPopupMessage(msgCode, message, null);
         }
 
         @Override

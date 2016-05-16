@@ -327,7 +327,7 @@ public class SignupStep1Activity extends BaseActivity
             try
             {
                 JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+                onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"), null);
             } catch (Exception e)
             {
                 SignupStep1Activity.this.onErrorResponse(volleyError);
