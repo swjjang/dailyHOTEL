@@ -37,7 +37,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
     public void requestDailyUserVerification(String phoneNumber, boolean force)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber, force, mDailUserVerificationJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber.replaceAll("-", ""), force, mDailUserVerificationJsonResponseListener);
     }
 
     public void requestUpdateDailyUserInformation(String phoneNumber, String code)

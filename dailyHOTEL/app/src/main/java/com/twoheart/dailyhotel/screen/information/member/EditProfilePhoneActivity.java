@@ -182,7 +182,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void doVerification(String phoneNumber)
         {
-            mNetworkController.requestDailyUserVerification(phoneNumber.replaceAll("-", ""), false);
+            mNetworkController.requestDailyUserVerification(phoneNumber, false);
         }
 
         @Override
