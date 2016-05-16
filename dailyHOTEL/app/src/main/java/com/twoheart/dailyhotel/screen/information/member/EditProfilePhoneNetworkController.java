@@ -42,7 +42,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
     public void requestUpdateDailyUserInformation(String phoneNumber, String code)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber, code, mDailyserUpdatePhoneNumberJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdatePhoneNumberJsonResponseListener);
     }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
