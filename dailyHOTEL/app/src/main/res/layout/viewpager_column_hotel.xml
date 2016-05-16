@@ -3,20 +3,21 @@
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/img_placeholder_map">
+                android:layout_height="100dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        fresco:actualImageScaleType="centerCrop"/>
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@drawable/img_placeholder_map"
+        fresco:placeholderImageScaleType="centerCrop"/>
 
     <View
         android:id="@+id/gradientView"
-        android:background="@color/black_a14"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/black_a14"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/gradeTextView"
@@ -56,12 +57,12 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/discountPriceLayout"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="3dp"
         android:layout_marginRight="11dp"
         android:gravity="center_vertical"
         android:textColor="@color/white"
         android:textSize="12dp"
-        dailyFont:style="DemiLight"
-        android:layout_marginBottom="3dp"/>
+        dailyFont:style="DemiLight"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/nameTextView"
@@ -133,9 +134,9 @@
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
         android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@+id/closeImageVIew"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:layout_toLeftOf="@+id/closeImageVIew">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"

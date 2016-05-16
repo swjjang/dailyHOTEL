@@ -979,6 +979,28 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
         mIsDeepLink = true;
     }
 
+    private void deepLinkRefreshBanner(final SaleTime saleTime)
+    {
+        DailyHotelJsonResponseListener deepLinkEventListener = new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                setEventBannerJson(response);
+
+                mOnCommunicateListener.selectDay(saleTime, true);
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                mOnCommunicateListener.selectDay(saleTime, true);
+            }
+        };
+
+        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", deepLinkEventListener, deepLinkEventListener);
+    }
+
     private void deepLinkGourmetList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
     {
         String date = DailyDeepLink.getInstance().getDate();
@@ -1036,26 +1058,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 if (dailyDayOfDays >= 0)
                 {
-                    final SaleTime selectedSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
+                    SaleTime selectedSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
 
-                    DailyHotelJsonResponseListener deepLinkEventListener = new DailyHotelJsonResponseListener()
-                    {
-                        @Override
-                        public void onResponse(String url, JSONObject response)
-                        {
-                            setEventBannerJson(response);
-
-                            mOnCommunicateListener.selectDay(selectedSaleTime, true);
-                        }
-
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError)
-                        {
-                            mOnCommunicateListener.selectDay(selectedSaleTime, true);
-                        }
-                    };
-
-                    DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", deepLinkEventListener, deepLinkEventListener);
+                    deepLinkRefreshBanner(selectedSaleTime);
                 } else
                 {
                     DailyDeepLink.getInstance().clear();
@@ -1081,26 +1086,9 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
                 DailyDeepLink.getInstance().clear();
 
-                final SaleTime selectedSaleTime = mTodaySaleTime.getClone(datePlus);
+                SaleTime selectedSaleTime = mTodaySaleTime.getClone(datePlus);
 
-                DailyHotelJsonResponseListener deepLinkEventListener = new DailyHotelJsonResponseListener()
-                {
-                    @Override
-                    public void onResponse(String url, JSONObject response)
-                    {
-                        setEventBannerJson(response);
-
-                        mOnCommunicateListener.selectDay(selectedSaleTime, true);
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError)
-                    {
-                        mOnCommunicateListener.selectDay(selectedSaleTime, true);
-                    }
-                };
-
-                DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", deepLinkEventListener, deepLinkEventListener);
+                deepLinkRefreshBanner(selectedSaleTime);
             } catch (Exception e)
             {
                 mTabLayout.setOnTabSelectedListener(null);

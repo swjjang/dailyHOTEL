@@ -3,20 +3,21 @@
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/img_placeholder_map">
+                android:layout_height="100dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        fresco:actualImageScaleType="centerCrop"/>
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@drawable/img_placeholder_map"
+        fresco:placeholderImageScaleType="centerCrop"/>
 
     <View
         android:id="@+id/gradientView"
-        android:background="@color/black_a14"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/black_a14"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/priceTextView"
@@ -24,12 +25,12 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/discountPriceLayout"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="3dp"
         android:layout_marginRight="11dp"
         android:gravity="center_vertical"
         android:textColor="@color/white"
         android:textSize="12dp"
-        dailyFont:style="DemiLight"
-        android:layout_marginBottom="3dp"/>
+        dailyFont:style="DemiLight"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/gradeTextView"
@@ -53,6 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/nameTextView"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="7dp"
         android:layout_toRightOf="@+id/gradeTextView"
         android:drawableLeft="@drawable/main_ic_satisfaction"
@@ -61,8 +63,7 @@
         android:textColor="@color/white"
         android:textSize="12dp"
         android:visibility="gone"
-        dailyFont:style="DemiLight"
-        android:layout_marginBottom="5dp"/>
+        dailyFont:style="DemiLight"/>
 
     <LinearLayout
         android:id="@+id/discountPriceLayout"
@@ -102,6 +103,7 @@
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/discountPriceLayout"
         android:ellipsize="marquee"
         android:freezesText="true"
         android:gravity="center_vertical"
@@ -110,8 +112,7 @@
         android:singleLine="true"
         android:textColor="@android:color/white"
         android:textSize="17dp"
-        dailyFont:style="Medium"
-        android:layout_toLeftOf="@+id/discountPriceLayout"/>
+        dailyFont:style="Medium"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/addressTextView"
@@ -132,11 +133,11 @@
         android:id="@+id/dBenefitImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/gradeTextView"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="11dp"
         android:src="@drawable/map_d_benefit"
-        android:visibility="gone"
-        android:layout_above="@+id/gradeTextView"
-        android:layout_marginBottom="8dp"/>
+        android:visibility="gone"/>
 
     <View
         android:layout_width="match_parent"
