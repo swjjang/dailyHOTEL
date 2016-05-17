@@ -115,14 +115,6 @@ interface IDailyNetwork
     void requestUserInformationEx(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     * api/user/signin
-     * 로그인
-     *
-     * @return
-     */
-    void requestUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
-
-    /**
      * api/user/information
      * 결제를 위한 유저 정보
      *
@@ -502,4 +494,31 @@ interface IDailyNetwork
      * @param listener
      */
     void requestKakaoUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
+
+    /**
+     *
+     * @param tag
+     * @param params
+     * @param listener
+     * @param errorListener
+     */
+    void requestDailyUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     *
+     * @param tag
+     * @param params
+     * @param listener
+     * @param errorListener
+     */
+    void requestFacebookUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     *
+     * @param tag
+     * @param params
+     * @param listener
+     * @param errorListener
+     */
+    void requestKakaoUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 }

@@ -36,6 +36,11 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
         mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
+        }
     }
 
     @Override
@@ -59,6 +64,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.parseInt(intValue1));
 
                 mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
+                }
             } catch (NumberFormatException e)
             {
                 ExLog.d(e.toString());
@@ -82,6 +92,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE))));
 
                 mAppboy.logCustomEvent(EventName.STAY_DETAIL_CICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_DETAIL_CICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
             } catch (NumberFormatException e)
             {
                 ExLog.d(e.toString());
@@ -104,6 +119,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.VISIT_DATE))));
 
                 mAppboy.logCustomEvent(EventName.GOURMET_DETAIL_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.GOURMET_DETAIL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
             } catch (NumberFormatException e)
             {
                 ExLog.d(e.toString());
@@ -118,6 +138,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
                 mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
+                }
             }
         }
     }
@@ -174,6 +199,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
 
                 mAppboy.logCustomEvent(EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE + ", " + appboyProperties.forJsonPut().toString());
+                }
             } else if (AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
             {
                 AppboyProperties appboyProperties = new AppboyProperties();
@@ -183,6 +213,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
 
                 mAppboy.logCustomEvent(EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE + ", " + appboyProperties.forJsonPut().toString());
+                }
             }
         } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
@@ -200,6 +235,11 @@ public class AppboyManager extends BaseAnalyticsManager
                     appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY)));
 
                     mAppboy.logCustomEvent(EventName.STAY_SELECTED_DATE, appboyProperties);
+
+                    if (DEBUG == true)
+                    {
+                        ExLog.d(TAG + " : " + EventName.STAY_SELECTED_DATE + ", " + appboyProperties.forJsonPut().toString());
+                    }
                 } catch (NumberFormatException e)
                 {
                     ExLog.d(e.toString());
@@ -216,6 +256,11 @@ public class AppboyManager extends BaseAnalyticsManager
                     appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.VISIT_DATE))));
 
                     mAppboy.logCustomEvent(EventName.GOURMET_SELECTED_DATE, appboyProperties);
+
+                    if (DEBUG == true)
+                    {
+                        ExLog.d(TAG + " : " + EventName.GOURMET_SELECTED_DATE + ", " + appboyProperties.forJsonPut().toString());
+                    }
                 } catch (NumberFormatException e)
                 {
                     ExLog.d(e.toString());
@@ -241,6 +286,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE))));
 
                 mAppboy.logCustomEvent(EventName.STAY_BOOKING_INITIALISED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_BOOKING_INITIALISED + ", " + appboyProperties.forJsonPut().toString());
+                }
             } catch (NumberFormatException e)
             {
                 ExLog.d(e.toString());
@@ -264,6 +314,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.VISIT_DATE))));
 
                 mAppboy.logCustomEvent(EventName.GOURMET_BOOKING_INITIALISED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.GOURMET_BOOKING_INITIALISED + ", " + appboyProperties.forJsonPut().toString());
+                }
             } catch (NumberFormatException e)
             {
                 ExLog.d(e.toString());
@@ -291,6 +346,11 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, count);
 
             mAppboy.logCustomEvent(EventName.SEARCH_TERM, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.SEARCH_TERM + ", " + appboyProperties.forJsonPut().toString());
+            }
         } catch (NumberFormatException e)
         {
             ExLog.d(e.toString());
@@ -308,6 +368,11 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
 
         mAppboy.logCustomEvent(eventName, appboyProperties);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
+        }
     }
 
     private void satisfactionCustomEvent(String label)
@@ -341,6 +406,11 @@ public class AppboyManager extends BaseAnalyticsManager
         }
 
         mAppboy.logCustomEvent(eventName, appboyProperties);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,6 +465,11 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.APP_VERSION, version);
 
         mAppboy.logCustomEvent(EventName.CURRENT_APP_VERSION, appboyProperties);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + " : " + EventName.CURRENT_APP_VERSION + ", " + appboyProperties.forJsonPut().toString());
+        }
     }
 
     @Override
@@ -418,6 +493,11 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.CARD_ISSUING_COMPANY, cardTypes);
 
         mAppboy.logCustomEvent(EventName.REGISTERED_CARD_INFO, appboyProperties);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + " : " + EventName.REGISTERED_CARD_INFO + ", " + appboyProperties.forJsonPut().toString());
+        }
     }
 
     @Override
@@ -442,6 +522,11 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, recommender);
 
         mAppboy.logCustomEvent(EventName.REGISTER_COMPLETED, appboyProperties);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + " : " + EventName.REGISTER_COMPLETED + ", " + appboyProperties.forJsonPut().toString());
+        }
     }
 
     @Override
@@ -467,6 +552,11 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
 
             mAppboy.logPurchase(EventName.STAY_PURCHASE_COMPLETED, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.STAY_PURCHASE_COMPLETED + ", " + appboyProperties.forJsonPut().toString());
+            }
         } catch (NumberFormatException e)
         {
             ExLog.d(e.toString());
@@ -496,6 +586,11 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
 
             mAppboy.logPurchase(EventName.GOURMET_PURCHASE_COMPLETED, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)), appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.GOURMET_PURCHASE_COMPLETED + ", " + appboyProperties.forJsonPut().toString());
+            }
         } catch (NumberFormatException e)
         {
             ExLog.d(e.toString());

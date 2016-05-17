@@ -304,7 +304,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
         <activity
-            android:name=".screen.gourmet.list.GourmetCurationActivity"
+            android:name=".screen.gourmet.filter.GourmetCurationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.FadeTranslucent"/>
