@@ -87,7 +87,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
                     case 2001:
                     {
-                        String phoneNumber = response.getString("phone");
+                        String phoneNumber = dataJONObject.getString("phone");
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
                         break;
