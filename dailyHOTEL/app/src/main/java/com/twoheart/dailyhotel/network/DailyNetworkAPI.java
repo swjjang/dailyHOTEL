@@ -250,16 +250,6 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/user/signin" : "MzIkMzQkMTYkMzAkNDEk$RkNGRTZDQzdGNjI3UNjlCQzExQzY5MNkEyFRGDUyMQDdGMUE=$";
-
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SESSION_SERVER + URL, params, listener, errorListener);
-
-        mQueue.add(dailyHotelJsonRequest);
-    }
-
-    @Override
     public void requestUserInformationForPayment(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/information" : "MzIkNTEkNTkkMzEkMTkk$NkQ5N0RBQTA3NzQ5MUZZEMzQ3QUE0OTIRwEMDI2NjhCMDJBNTdFNERZDNzdBMKjlGNDkxMDYyRURBRTQ3QjBFNTRERg==$";
@@ -866,6 +856,36 @@ public class DailyNetworkAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/kakao_talk" : "MSQzOSQxNiQyMiQ0JA==$RTTEP4RTI1QkI0NDgN0RERDSRDAzNTRBREZCRDJFRDVNDNzMyRDkwQkNBRTE4NTRDQjE3RjZGMDJGMEJGODlBNTc5MA==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL, params, listener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestDailyUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/normal" : "NzIkMyQxNSQwJDM2JA==$TQzFSFQ0E5MTU4MTDU2MDU4REI3NERCNDQyNZDhCRUNEMjAxN0QxNzg0RUVGQjEwOTNFQ0YxM0U4ERDVBQzE5NjhFNA==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SESSION_SERVER + URL, params, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestFacebookUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/facebook" : "MjYkMjkkNDgkMzMkMjYk$RjcwOEFCMUMxMkU3RUFDNDAxMEXLFBENDgSwQjEzRTgxRTUyQTYc3RDg4MTZDOTdCNzI3QkFGRDM2NzEzQkQyNkQ2QQ==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SESSION_SERVER + URL, params, listener, errorListener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
+    public void requestKakaoUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/kakao_talk" : "MzAkNjEkNTkkNDgkNDYk$RDUyM0ZGOUE2MTI5NzY3NzQ0MTIyMTQk4MTUwMkMzMUMxNSkML1QTVFNzk4OUVMyHMzcwNjZENTdGQzc4MTE5OUM0Qw==$";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SESSION_SERVER + URL, params, listener, errorListener);
 
         mQueue.add(dailyHotelJsonRequest);
     }
