@@ -434,7 +434,7 @@
             <LinearLayout
                 android:id="@+id/dailyInformationView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/information_background"
                 android:gravity="center_horizontal"
                 android:minHeight="140dp"

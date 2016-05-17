@@ -54,7 +54,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private View mNewEventIconView;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
-    private View mDailyInformationView, mInformationScrollView, mInformationLayout;
+//    private View mDailyInformationView, mInformationScrollView, mInformationLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -65,9 +65,9 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         initToolbar(baseActivity, view);
 
-        mInformationScrollView = view.findViewById(R.id.informationScrollView);
-        mInformationLayout = view.findViewById(R.id.informationLayout);
-        mDailyInformationView = view.findViewById(R.id.dailyInformationView);
+//        mInformationScrollView = view.findViewById(R.id.informationScrollView);
+//        mInformationLayout = view.findViewById(R.id.informationLayout);
+//        mDailyInformationView = view.findViewById(R.id.dailyInformationView);
 
         mProfileLayout = view.findViewById(R.id.profileLayout);
         mCreditcardLayout = view.findViewById(R.id.creditcardLayout);
