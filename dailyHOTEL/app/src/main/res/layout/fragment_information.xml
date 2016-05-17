@@ -28,8 +28,14 @@
                 android:id="@+id/profileLayout"
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
-                android:background="@color/white"
-                android:paddingLeft="15dp">
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/leftdrawer_divider"
+                    />
 
                 <ImageView
                     android:id="@+id/iconImageView"
@@ -37,6 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="false"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
                     android:src="@drawable/more_ic_mydaily_01_logout"/>
 
                 <LinearLayout
@@ -44,10 +51,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
                     android:layout_marginTop="19dp"
                     android:layout_toRightOf="@+id/iconImageView"
-                    android:orientation="vertical"
-                    android:layout_marginRight="15dp">
+                    android:orientation="vertical">
 
 
                     <RelativeLayout
@@ -69,24 +76,24 @@
                             android:id="@+id/loginTextView"
                             android:layout_width="47dp"
                             android:layout_height="21dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/signupTextView"
                             android:background="@drawable/more_btn_padding"
                             android:gravity="center_vertical"
                             android:text="로그인"
                             android:textColor="@color/curation_title_text"
-                            android:textSize="11dp"
-                            android:layout_toLeftOf="@+id/signupTextView"
-                            android:layout_marginRight="5dp"/>
+                            android:textSize="11dp"/>
 
                         <com.twoheart.dailyhotel.widget.DailyTextView
                             android:id="@+id/signupTextView"
                             android:layout_width="57dp"
                             android:layout_height="21dp"
+                            android:layout_alignParentRight="true"
                             android:background="@drawable/more_btn_padding"
                             android:gravity="center_vertical"
                             android:text="회원가입"
                             android:textColor="@color/curation_title_text"
-                            android:textSize="11dp"
-                            android:layout_alignParentRight="true"/>
+                            android:textSize="11dp"/>
                     </RelativeLayout>
 
 
@@ -96,12 +103,19 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/profileTextView"
                         android:layout_centerVertical="true"
+                        android:layout_marginTop="3dp"
                         android:gravity="center_vertical"
                         android:text="데일리호텔 회원가입하시고 다양한 혜택을 누리세요!"
                         android:textColor="@color/curation_title_text"
-                        android:textSize="12dp"
-                        android:layout_marginTop="3dp"/>
+                        android:textSize="12dp"/>
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/leftdrawer_divider"
+                    />
             </RelativeLayout>
 
             <RelativeLayout
@@ -172,18 +186,59 @@
                 android:background="@color/information_background"/>
 
             <RelativeLayout
-                android:id="@+id/eventLayout"
+                android:id="@+id/recommendLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@color/white"
-                android:paddingLeft="15dp">
+                >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/leftdrawer_divider"
+                    />
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:drawableLeft="@drawable/more_ic_04"
-                    android:drawablePadding="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="친구추천하고 5,000원 받기"
+                    android:textColor="@color/information_title"
+                    android:textSize="15dp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="18dp"
+                    android:src="@drawable/more_ic_next"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/information_underline"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/eventLayout"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@color/white"
+                >
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/actionbar_title_event_list_frag"
                     android:textColor="@color/information_title"
@@ -208,6 +263,13 @@
                     android:layout_toLeftOf="@+id/rightArrowIconView"
                     android:src="@drawable/tapbar_ic_n"
                     android:visibility="invisible"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/leftdrawer_divider"
+                    />
             </RelativeLayout>
 
             <View
@@ -220,14 +282,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@color/white"
-                android:paddingLeft="15dp">
+                >
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:drawableLeft="@drawable/more_ic_05"
-                    android:drawablePadding="15dp"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/frag_call_res_contact"
                     android:textColor="@color/information_title"
@@ -243,25 +304,25 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="45dp"
-                    android:background="@color/information_underline"/>
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/information_underline"
+                    />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/mailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
-                android:background="@color/white"
-                android:paddingLeft="15dp">
+                android:background="@color/white">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:drawableLeft="@drawable/more_ic_06"
-                    android:drawablePadding="15dp"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/frag_send_mail"
                     android:textColor="@color/information_title"
@@ -277,25 +338,25 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="45dp"
-                    android:background="@color/information_underline"/>
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/information_underline"
+                    />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/aboutLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
-                android:background="@color/white"
-                android:paddingLeft="15dp">
+                android:background="@color/white">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:drawableLeft="@drawable/more_ic_07"
-                    android:drawablePadding="15dp"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/frag_about"
                     android:textColor="@color/information_title"
@@ -308,6 +369,13 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="18dp"
                     android:src="@drawable/more_ic_next"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/information_line01_"
+                    />
             </RelativeLayout>
 
             <View
@@ -317,16 +385,15 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:background="@color/white"
-                android:paddingLeft="15dp">
+                android:layout_height="64dp"
+                android:background="@color/white">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/pushTitleTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:drawableLeft="@drawable/more_ic_08"
-                    android:drawablePadding="15dp"
+                    android:layout_height="23dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/frag_push_alert"
                     android:textColor="@color/information_title"
@@ -336,14 +403,32 @@
                     android:id="@+id/pushTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_alignBottom="@id/pushTitleTextView"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
+                    android:layout_alignTop="@id/pushTitleTextView"
                     android:layout_marginRight="18dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_off"
                     android:textColor="@color/dh_theme_color"
                     android:textSize="12dp"
                     dailyFont:style="Medium"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="23dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/frag_push_alert_subtext"
+                    android:layout_below="@id/pushTitleTextView"
+                    android:textColor="@color/information_push_subtext"
+                    android:textSize="9dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/information_line01_"
+                    />
             </RelativeLayout>
 
             <LinearLayout
@@ -354,7 +439,8 @@
                 android:gravity="center_horizontal"
                 android:minHeight="140dp"
                 android:orientation="vertical"
-                android:paddingTop="20dp">
+                android:paddingBottom="45dp"
+                android:paddingTop="45dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -367,14 +453,13 @@
                         android:id="@+id/facebookLinkView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
                         android:src="@drawable/more_sns_01"/>
 
                     <ImageView
                         android:id="@+id/instagramLinkView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
+                        android:layout_marginLeft="5dp"
                         android:src="@drawable/more_sns_02"/>
 
                     <ImageView
@@ -382,7 +467,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
+                        android:layout_marginLeft="5dp"
                         android:src="@drawable/more_sns_03"/>
                 </LinearLayout>
 
