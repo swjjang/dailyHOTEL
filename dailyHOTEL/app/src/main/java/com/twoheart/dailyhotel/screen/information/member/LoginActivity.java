@@ -241,7 +241,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void registerFacebookUser(String id, String name, String email, String gender)
     {
-        String encryptedId = Crypto.encrypt(id).replace("\n", "");
         String deviceId = Util.getDeviceId(this);
 
         if (mStoreParams == null)
@@ -262,7 +261,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             params.put("social_id", id);
         }
 
-        params.put("pw", encryptedId);
+        params.put("pw", Crypto.encrypt(id));
         params.put("user_type", Constants.FACEBOOK_USER);
 
         mStoreParams.putAll(params);
@@ -284,13 +283,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyNetworkAPI.getInstance(this).requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, this);
     }
 
     private void registerKakaokUser(long id)
     {
         String index = String.valueOf(id);
-        String encryptedId = Crypto.encrypt(index).replace("\n", "");
         String deviceId = Util.getDeviceId(this);
 
         if (mStoreParams == null)
@@ -306,8 +304,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             params.put("social_id", index);
         }
 
-        params.put("pw", encryptedId);
-        params.put("pw2", encryptedId);
+        params.put("pw", index);
         params.put("user_type", Constants.KAKAO_USER);
 
         mStoreParams.putAll(params);
@@ -319,7 +316,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyNetworkAPI.getInstance(this).requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, this);
     }
 
     @Override
@@ -423,14 +420,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         lockUI();
 
-        String passwordEncrypt = Crypto.encrypt(password.replace("\n", ""));
-
         HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
-        params.put("pw", passwordEncrypt);
+        params.put("pw", password);
         params.put("social_id", "0");
         params.put("user_type", Constants.DAILY_USER);
-        params.put("is_auto", "true");
 
         if (mStoreParams == null)
         {
@@ -440,7 +434,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         mStoreParams.putAll(params);
 
-        DailyNetworkAPI.getInstance(this).requestUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(this).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
     }
@@ -732,14 +726,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             params.put("social_id", mStoreParams.get("social_id"));
                         }
 
-                        if (mStoreParams.containsKey("user_type") == true)
-                        {
-                            params.put("user_type", mStoreParams.get("user_type"));
-                        }
-
                         mStoreParams.put("new_user", "1");
 
-                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+                        if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
+                        {
+                            DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+                        } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
+                        {
+                            DailyNetworkAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginJsonResponseListener, LoginActivity.this);
+                        }
                         return;
                     }
                 }
