@@ -144,7 +144,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                     case 100:
                     {
                         JSONObject dataJONObject = response.getJSONObject("data");
-                        String message = dataJONObject.getString("msg");
+                        String message = response.getString("msg");
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
                         break;
@@ -154,7 +154,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                     case 2000:
                     {
                         JSONObject dataJONObject = response.getJSONObject("data");
-                        String message = dataJONObject.getString("msg");
+                        String message = response.getString("msg");
 
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                         break;
