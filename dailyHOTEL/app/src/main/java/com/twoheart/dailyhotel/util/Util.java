@@ -32,6 +32,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
@@ -63,6 +64,17 @@ public class Util implements Constants
     public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
 
     private static String MEMORY_CLEAR;
+
+    static
+    {
+        try
+        {
+            SoLoaderShim.loadLibrary("webp");
+        } catch (UnsatisfiedLinkError e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
 
     public static void initializeMemory()
     {

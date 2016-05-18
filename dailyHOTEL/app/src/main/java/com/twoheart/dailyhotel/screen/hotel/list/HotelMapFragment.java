@@ -348,7 +348,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         }
 
         mGoogleMap.clear();
-        mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
+        mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 0.87f));
 
         if (mHotelArrayList == null || mHotelArrayList.size() == 0)
         {
@@ -700,12 +700,10 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 HotelRenderer hotelRenderer = new HotelRenderer(baseActivity, hotel);
                 BitmapDescriptor icon = hotelRenderer.getBitmap(true);
 
-                if (mSelectedMarker != null)
+                if (icon == null)
                 {
                     mSelectedMarker.setVisible(false);
-                }
-
-                if (icon != null && mSelectedMarker != null)
+                } else
                 {
                     mSelectedMarker.setVisible(true);
                     mSelectedMarker.setPosition(latlng);
@@ -728,6 +726,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             }
 
+            // 마커의 order을 상단으로 옮긴다.
             mSelectedMarker.showInfoWindow();
         }
     }
@@ -745,6 +744,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         mViewPager.setVisibility(View.VISIBLE);
         mViewPager.bringToFront();
 
+        // 해당 하는 마커를 중심으로 주변에 가까운 순서대로 정렬한다
         Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
         {
             public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
@@ -791,12 +791,10 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 HotelRenderer hotelRenderer = new HotelRenderer(baseActivity, hotel);
                 BitmapDescriptor icon = hotelRenderer.getBitmap(true);
 
-                if (mSelectedMarker != null)
+                if (icon == null)
                 {
                     mSelectedMarker.setVisible(false);
-                }
-
-                if (icon != null && mSelectedMarker != null)
+                } else
                 {
                     mSelectedMarker.setVisible(true);
                     mSelectedMarker.setPosition(latlng);
@@ -819,6 +817,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             }
 
+            // 마커의 order을 상단으로 옮긴다.
             mSelectedMarker.showInfoWindow();
         }
     }
@@ -949,6 +948,9 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         });
     }
 
+    /**
+     * 마커 선택시에 최상단으로 order를 하기 위한 가짜화면
+     */
     private class MapWindowAdapter implements GoogleMap.InfoWindowAdapter
     {
         private Context mContext;
