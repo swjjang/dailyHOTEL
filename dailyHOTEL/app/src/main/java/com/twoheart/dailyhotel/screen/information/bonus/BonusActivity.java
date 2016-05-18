@@ -39,12 +39,16 @@ import java.util.List;
 
 public class BonusActivity extends BaseActivity implements View.OnClickListener
 {
+    protected static final int REQUEST_ACTIVITY_SIGNUP = 10000;
+
     private View mBeforeSigninLayout;
     private View mSigninLayout;
+    private View mInviteFriends;
     private TextView mBonusTextView, mRecommenderCodeTextView;
     private String mRecommendCode;
     private List<Bonus> mBonusList;
     private String mUserName;
+    private boolean mInviteKakao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -79,8 +83,8 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
         mRecommenderCodeTextView = (TextView) findViewById(R.id.tv_credit_recommender_code);
         mBonusTextView = (TextView) findViewById(R.id.tv_credit_money);
 
-        View inviteFriend = findViewById(R.id.btn_credit_invite_frd);
-        inviteFriend.setOnClickListener(this);
+        mInviteFriends = findViewById(R.id.btn_credit_invite_frd);
+        mInviteFriends.setOnClickListener(this);
 
         View historyLayout = findViewById(R.id.historyLayout);
         historyLayout.setOnClickListener(this);
@@ -107,6 +111,19 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
         {
             lockUI();
             DailyNetworkAPI.getInstance(this).requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, this);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case REQUEST_ACTIVITY_SIGNUP:
+                mInviteKakao = resultCode == RESULT_OK;
+                break;
         }
     }
 
@@ -171,7 +188,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
             case R.id.btn_no_login_signup:
             {
                 Intent intent = SignupStep1Activity.newInstance(BonusActivity.this);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SIGNUP);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.SIGNUP, 0L);
@@ -247,6 +264,11 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 loadLoginProcess(true);
                 unLockUI();
 
+                if (mInviteKakao == true)
+                {
+                    mInviteKakao = false;
+                    mInviteFriends.performClick();
+                }
             } catch (Exception e)
             {
                 onError(e);
