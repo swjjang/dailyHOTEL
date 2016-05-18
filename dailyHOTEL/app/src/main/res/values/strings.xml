@@ -322,6 +322,15 @@
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>
+    <string name="frag_need_login">로그인 해주세요!</string>
+    <string name="frag_signup">회원가입</string>
+    <string name="frag_edit_profile">내정보 수정</string>
+    <string name="frag_login_message">데일리호텔 회원가입하시고 다양한 혜택을 누리세요!</string>
+    <string name="frag_coupon_box">할인쿠폰함</string>
+    <string name="frag_view_bonus">적립금</string>
+    <string name="frag_view_creditcard">결제카드 관리</string>
+    <string name="frag_count_text">(%1$s개)</string>
+    <string name="frag_recommend_text">친구추천하고 5,000원 받기</string>
     <string name="frag_about_business_license01">(주)데일리 ㅣ 대표 %1$s ㅣ 사업자등록번호 : %2$sㅣ 대표연락처 : %3$s</string>
     <string name="frag_about_business_license02">통신판매업 신고번호 : %1$s</string>
     <string name="frag_about_business_license03">개인정보담당자 : %1$s</string>

@@ -54,7 +54,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     private View mNewEventIconView;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
-//    private View mDailyInformationView, mInformationScrollView, mInformationLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -64,10 +63,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         initToolbar(baseActivity, view);
-
-//        mInformationScrollView = view.findViewById(R.id.informationScrollView);
-//        mInformationLayout = view.findViewById(R.id.informationLayout);
-//        mDailyInformationView = view.findViewById(R.id.dailyInformationView);
 
         mProfileLayout = view.findViewById(R.id.profileLayout);
         mCreditcardLayout = view.findViewById(R.id.creditcardLayout);
@@ -204,8 +199,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             profileTextView.setText(R.string.frag_login);
             mCreditcardLayout.setVisibility(View.GONE);
         }
-
-//        updateTermsLayoutHeight();
     }
 
     @Override
@@ -491,51 +484,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
             mNewEventIconView.setVisibility(View.INVISIBLE);
         }
     }
-
-//    private void updateTermsLayoutHeight()
-//    {
-//        mDailyInformationView.post(new Runnable()
-//        {
-//            @Override
-//            public void run()
-//            {
-//                int defaultHeight = Util.dpToPx(getContext(), 140);
-//
-//                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
-//                {
-//                    int height = mInformationScrollView.getHeight() - mInformationLayout.getHeight();
-//
-//                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
-//
-//                    if (layoutParams != null)
-//                    {
-//                        layoutParams.height = mDailyInformationView.getHeight() + height;
-//                        mDailyInformationView.setLayoutParams(layoutParams);
-//                    }
-//
-//                } else if (mInformationScrollView.getHeight() < mInformationLayout.getHeight())
-//                {
-//                    int height = (mInformationLayout.getHeight() - mInformationScrollView.getHeight());
-//
-//                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
-//
-//                    if (layoutParams != null)
-//                    {
-//                        layoutParams.height = mDailyInformationView.getHeight() - height;
-//
-//                        if (layoutParams.height < defaultHeight)
-//                        {
-//                            layoutParams.height = defaultHeight;
-//                        }
-//
-//                        mDailyInformationView.setLayoutParams(layoutParams);
-//                    }
-//                }
-//
-//                mDailyInformationView.setMinimumHeight(defaultHeight);
-//            }
-//        });
-//    }
 
     private void showCallDialog(final BaseActivity baseActivity)
     {

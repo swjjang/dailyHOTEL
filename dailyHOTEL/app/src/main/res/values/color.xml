@@ -206,6 +206,7 @@
     <color name="information_title">#323232</color>
     <color name="information_underline">#dcdcdd</color>
     <color name="information_push_subtext">#929292</color>
+    <color name="information_count_text">#900034</color>
 
     <!-- Etc -->
     <color name="c181818">#181818</color>
