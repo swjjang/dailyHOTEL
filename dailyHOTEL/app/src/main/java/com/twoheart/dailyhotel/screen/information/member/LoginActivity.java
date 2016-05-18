@@ -792,6 +792,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     DailyPreference.getInstance(LoginActivity.this).setUserName(name);
                 }
 
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                boolean isVerified = response.getBoolean("is_verified");
+
+                if (isPhoneVerified == true && isVerified == true)
+                {
+                    DailyPreference.getInstance(LoginActivity.this).setVerification(true);
+                }
+
                 if (mIsSocialSignUp == true)
                 {
                     mIsSocialSignUp = false;

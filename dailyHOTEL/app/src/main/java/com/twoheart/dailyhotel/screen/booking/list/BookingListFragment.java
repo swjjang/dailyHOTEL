@@ -404,6 +404,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     Map<String, String> params = new HashMap<>();
                     params.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
                 }
+
+                // 사용자 정보 요청.
+                DailyNetworkAPI.getInstance(baseActivity).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, null);
             } catch (Exception e)
             {
                 updateLayout(true, null);
@@ -649,6 +652,43 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 // credit card 요청
                 DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener, baseActivity);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                boolean isVerified = response.getBoolean("is_verified");
+
+                // 인증 후 인증이 해지된 경우
+                if (isPhoneVerified == true && isVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
+                {
+                    baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), null, null);
+
+                    DailyPreference.getInstance(baseActivity).setVerification(false);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
             }
         }
     };

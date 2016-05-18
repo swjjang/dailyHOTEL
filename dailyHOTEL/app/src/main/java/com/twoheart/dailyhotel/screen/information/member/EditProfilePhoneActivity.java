@@ -238,6 +238,8 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void onConfirm()
         {
+            DailyPreference.getInstance(EditProfilePhoneActivity.this).setVerification(true);
+
             showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_phonenumber), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {
                 @Override

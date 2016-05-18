@@ -496,7 +496,6 @@ interface IDailyNetwork
     void requestKakaoUserSignup(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener);
 
     /**
-     *
      * @param tag
      * @param params
      * @param listener
@@ -505,7 +504,6 @@ interface IDailyNetwork
     void requestDailyUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     *
      * @param tag
      * @param params
      * @param listener
@@ -514,7 +512,6 @@ interface IDailyNetwork
     void requestFacebookUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
-     *
      * @param tag
      * @param params
      * @param listener

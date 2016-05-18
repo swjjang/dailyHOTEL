@@ -864,13 +864,7 @@ public class HotelDetailActivity extends BaseActivity
 
                     if (isDailyUser == true)
                     {
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-                        {
-                            moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
-                        } else
-                        {
-                            moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
-                        }
+                        DailyNetworkAPI.getInstance(HotelDetailActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
                     } else
                     {
                         // 입력된 정보가 부족해.
@@ -892,6 +886,49 @@ public class HotelDetailActivity extends BaseActivity
                     String msg = response.getString("msg");
 
                     DailyToast.showToast(HotelDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                Customer user = new Customer();
+                user.setEmail(response.getString("email"));
+                user.setName(response.getString("name"));
+                user.setPhone(response.getString("phone"));
+                user.setUserIdx(response.getString("idx"));
+
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                boolean isVerified = response.getBoolean("is_verified");
+
+                if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                {
+                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                } else
+                {
+                    // 기존에 인증이 되었는데 인증이 해지되었다.
+                    if (isVerified == true && isPhoneVerified == false)
+                    {
+                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                    } else
+                    {
+                        moveToBooking(mHotelDetail, mSelectedSaleRoomInformation, mCheckInSaleTime);
+                    }
                 }
             } catch (Exception e)
             {

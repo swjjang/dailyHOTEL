@@ -195,6 +195,8 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void onSignUp(int notificationUid, String gcmRegisterId)
         {
+            DailyPreference.getInstance(SignupStep2Activity.this).setVerification(true);
+
             if (notificationUid > 0)
             {
                 DailyPreference.getInstance(SignupStep2Activity.this).setNotificationUid(notificationUid);
@@ -261,6 +263,29 @@ public class SignupStep2Activity extends BaseActivity
                 {
                     @Override
                     public void onClick(View v)
+                    {
+                        mSignupStep2Layout.resetPhoneNumber();
+                    }
+                });
+        }
+
+        @Override
+        public void onInvalidPhoneNumber(String message)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm)//
+                , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mSignupStep2Layout.resetPhoneNumber();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
                     {
                         mSignupStep2Layout.resetPhoneNumber();
                     }

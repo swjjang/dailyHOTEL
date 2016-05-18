@@ -32,6 +32,8 @@ public class SignupStep2NetworkController extends BaseNetworkController
         void onUserInformation(String userIndex, String email, String name, String phoneNumber);
 
         void onAlreadyVerification(String phoneNumber);
+
+        void onInvalidPhoneNumber(String phoneNumber);
     }
 
     public SignupStep2NetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -186,7 +188,25 @@ public class SignupStep2NetworkController extends BaseNetworkController
             try
             {
                 JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+                int msgCode = jsonObject.getInt("msgCode");
+                String message = jsonObject.getString("msg");
+
+                switch (volleyError.networkResponse.statusCode)
+                {
+                    // 전화번호가 유효하지 않을 때
+                    case 422:
+                    {
+                        if (msgCode == -2003)
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+
+                            return;
+                        }
+                        break;
+                    }
+                }
+
+                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onErrorResponse(volleyError);
