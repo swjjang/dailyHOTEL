@@ -344,7 +344,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
         }
 
         mGoogleMap.clear();
-        mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
+        mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 0.87f));
 
         if (mPlaceViewItemList == null || mPlaceViewItemList.size() == 0)
         {
@@ -696,12 +696,10 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                 PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, place.grade.getMarkerResId());
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
-                if (mSelectedMarker != null)
+                if (icon == null)
                 {
                     mSelectedMarker.setVisible(false);
-                }
-
-                if (icon != null && mSelectedMarker != null)
+                } else
                 {
                     mSelectedMarker.setVisible(true);
                     mSelectedMarker.setPosition(latlng);
@@ -724,6 +722,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             }
 
+            // 마커의 order을 상단으로 옮긴다.
             mSelectedMarker.showInfoWindow();
         }
     }
@@ -787,12 +786,10 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                 PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, place.grade.getMarkerResId());
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
-                if (mSelectedMarker != null)
+                if (icon == null)
                 {
                     mSelectedMarker.setVisible(false);
-                }
-
-                if (icon != null && mSelectedMarker != null)
+                } else
                 {
                     mSelectedMarker.setVisible(true);
                     mSelectedMarker.setPosition(latlng);
@@ -815,6 +812,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
             }
 
+            // 마커의 order을 상단으로 옮긴다.
             mSelectedMarker.showInfoWindow();
         }
     }
