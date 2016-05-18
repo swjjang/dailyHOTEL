@@ -676,11 +676,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     return;
                 }
 
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
                 boolean isVerified = response.getBoolean("is_verified");
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
 
                 // 인증 후 인증이 해지된 경우
-                if (isPhoneVerified == true && isVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
+                if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
                 {
                     baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), null, null);
 

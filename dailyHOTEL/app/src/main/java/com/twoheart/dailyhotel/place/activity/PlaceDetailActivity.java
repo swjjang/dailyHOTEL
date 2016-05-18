@@ -744,8 +744,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 user.setPhone(response.getString("phone"));
                 user.setUserIdx(response.getString("idx"));
 
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
                 boolean isVerified = response.getBoolean("is_verified");
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
 
                 if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                 {

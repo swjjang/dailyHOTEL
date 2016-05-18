@@ -57,11 +57,12 @@ public class ProfileNetworkController extends BaseNetworkController
                 String name = response.getString("name");
                 String phone = response.getString("phone");
                 String userIndex = response.getString("idx");
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
                 boolean isVerified = response.getBoolean("is_verified");
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+
                 String verifiedDate = null;
 
-                if (isPhoneVerified == true && isVerified == true)
+                if (isVerified == true && isPhoneVerified == true)
                 {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
                     Date date = simpleDateFormat.parse(response.getString("phone_verified_at"));
