@@ -695,7 +695,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (isDailyUser == true)
                     {
-                        DailyNetworkAPI.getInstance(PlaceDetailActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+                        if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+                        {
+                            moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                        } else
+                        {
+                            processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
+                        }
                     } else
                     {
                         // 입력된 정보가 부족해.
@@ -717,48 +723,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     String msg = response.getString("msg");
 
                     DailyToast.showToast(PlaceDetailActivity.this, msg, Toast.LENGTH_SHORT);
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                Customer user = new Customer();
-                user.setEmail(response.getString("email"));
-                user.setName(response.getString("name"));
-                user.setPhone(response.getString("phone"));
-                user.setUserIdx(response.getString("idx"));
-
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
-                boolean isVerified = response.getBoolean("is_verified");
-
-                if (Util.isValidatePhoneNumber(user.getPhone()) == false)
-                {
-                    if (isVerified == true && isPhoneVerified == false)
-                    {
-                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
-                    } else
-                    {
-                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
-                    }
-                } else
-                {
-                    processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
                 }
             } catch (Exception e)
             {
