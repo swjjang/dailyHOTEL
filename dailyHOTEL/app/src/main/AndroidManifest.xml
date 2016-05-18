@@ -253,6 +253,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".screen.information.bonus.InviteFriendsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.information.member.CountryCodeListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

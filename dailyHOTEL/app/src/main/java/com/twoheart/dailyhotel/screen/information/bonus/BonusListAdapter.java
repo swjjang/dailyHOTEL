@@ -45,7 +45,17 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
         TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
         TextView expireTextView = (TextView) view.findViewById(R.id.expireTextView);
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
+        String format = null;
+
+        if (bonus.bonus > 0)
+        {
+            format = "+###,##0";
+        } else
+        {
+            format = "-###,##0";
+        }
+
+        DecimalFormat comma = new DecimalFormat(format);
         String strBonus = comma.format(bonus.bonus);
 
         bonusTextView.setText(strBonus + mContext.getString(R.string.currency));
