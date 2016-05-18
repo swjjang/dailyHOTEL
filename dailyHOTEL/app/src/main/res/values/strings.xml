@@ -379,10 +379,10 @@
     <string name="act_profile_contact">휴대폰 번호</string>
     <string name="act_profile_modify">수정</string>
     <string name="act_profile_btn_logout">로그아웃</string>
-    <string name="act_profile_input_name">이름을 입력해주세요.</string>
+    <string name="act_profile_input_name">이름을 등록해주세요.</string>
     <string name="act_profile_input_password">비밀번호를 입력해주세요.</string>
-    <string name="act_profile_input_contact">연락처를 입력해주세요.</string>
-    <string name="act_profile_input_email">이메일이 없습니다.</string>
+    <string name="act_profile_input_contact">휴대폰 번호를 등록해주세요.</string>
+    <string name="act_profile_input_email">이메일을 등록해주세요.</string>
     <string name="label_confirm_phone">이메일 설정 완료</string>
     <string name="label_confirm_phonenumber">휴대폰 번호 설정 완료</string>
     <string name="label_confirm_name">이름 설정 완료</string>
