@@ -46,11 +46,11 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdateVerificationPhoneNumberJsonResponseListener);
     }
 
-    public void requestUpdateDailyUserInformation(String phoneNumber)
-    {
-        Map<String, String> params = Collections.singletonMap("phone", phoneNumber.replaceAll("-", ""));
-        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdatePhoneNumberJsonResponseListener, this);
-    }
+//    public void requestUpdateDailyUserInformation(String phoneNumber)
+//    {
+//        Map<String, String> params = Collections.singletonMap("phone", phoneNumber.replaceAll("-", ""));
+//        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdatePhoneNumberJsonResponseListener, this);
+//    }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
     {

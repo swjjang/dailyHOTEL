@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
+import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -372,7 +373,14 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    HotelCurationOption curationOption = data.getParcelableExtra(HotelCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+                    PlaceCurationOption placeCurationOption = data.getParcelableExtra(HotelCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+
+                    if (placeCurationOption instanceof HotelCurationOption == false)
+                    {
+                        return;
+                    }
+
+                    HotelCurationOption curationOption = (HotelCurationOption) placeCurationOption;
 
                     if (curationOption != null)
                     {

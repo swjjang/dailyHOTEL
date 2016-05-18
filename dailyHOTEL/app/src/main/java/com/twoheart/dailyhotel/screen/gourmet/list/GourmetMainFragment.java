@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -366,7 +367,14 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    GourmetCurationOption curationOption = data.getParcelableExtra(GourmetCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+                    PlaceCurationOption placeCurationOption = data.getParcelableExtra(GourmetCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+
+                    if (placeCurationOption instanceof GourmetCurationOption == false)
+                    {
+                        return;
+                    }
+
+                    GourmetCurationOption curationOption = (GourmetCurationOption) placeCurationOption;
 
                     if (curationOption != null)
                     {
