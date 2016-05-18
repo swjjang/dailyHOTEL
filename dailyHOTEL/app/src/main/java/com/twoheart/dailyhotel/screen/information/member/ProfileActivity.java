@@ -205,6 +205,20 @@ public class ProfileActivity extends BaseActivity
             mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), isPhoneVerified, verifiedDate);
 
             unLockUI();
+
+            if (isPhoneVerified == true)
+            {
+                DailyPreference.getInstance(ProfileActivity.this).setVerification(true);
+            } else
+            {
+                // 인증 후 인증이 해지된 경우
+                if (DailyPreference.getInstance(ProfileActivity.this).isVerification() == true)
+                {
+                    showSimpleDialog(null, getString(R.string.message_invalid_verification), null, null);
+                }
+
+                DailyPreference.getInstance(ProfileActivity.this).setVerification(false);
+            }
         }
 
         @Override

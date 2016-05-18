@@ -273,6 +273,17 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
 
                 // 적립금 목록 요청.
                 DailyNetworkAPI.getInstance(BonusActivity.this).requestUserBonus(mNetworkTag, mUserBonusAllResponseListener, BonusActivity.this);
+
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                boolean isVerified = response.getBoolean("is_verified");
+
+                // 인증 후 인증이 해지된 경우
+                if (isPhoneVerified == true && isVerified == false && DailyPreference.getInstance(BonusActivity.this).isVerification() == true)
+                {
+                    showSimpleDialog(null, getString(R.string.message_invalid_verification), null, null);
+
+                    DailyPreference.getInstance(BonusActivity.this).setVerification(false);
+                }
             } catch (Exception e)
             {
                 onError(e);

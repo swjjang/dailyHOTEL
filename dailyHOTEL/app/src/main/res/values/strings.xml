@@ -398,6 +398,7 @@
     <string name="message_add_profile_guide">신속한 예약확인 및 안내를 위해 추가 정보를 등록해 주세요.</string>
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
     <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 등록을 해주세요.</string>
+    <string name="message_invalid_verification">다른 디바이스에서 휴대폰 번호가 인증처리되었습니다.\n프로필 정보에서 휴대폰 번호를 다시 확인해주세요.</string>
 
     <!-- WaitTimer Fragment -->
     <string name="frag_wait_timer_off">알람 끄기</string>

@@ -65,6 +65,7 @@ public class DailyPreference
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
 
     private static final String KEY_AUTHORIZATION = "1000";
+    private static final String KEY_VERIFICATION = "1001";
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -479,6 +480,16 @@ public class DailyPreference
         DailyHotel.AUTHORIZATION = value;
 
         setValue(mEditor, KEY_AUTHORIZATION, DailyHotelRequest.urlEncrypt(value));
+    }
+
+    public boolean isVerification()
+    {
+        return getValue(mPreferences, KEY_VERIFICATION, false);
+    }
+
+    public void setVerification(boolean value)
+    {
+        setValue(mEditor, KEY_VERIFICATION, value);
     }
 
     public void setHotelRecentSearches(String text)

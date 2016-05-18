@@ -63,7 +63,7 @@ public class ProfileNetworkController extends BaseNetworkController
 
                 if (isPhoneVerified == true && isVerified == true)
                 {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
                     Date date = simpleDateFormat.parse(response.getString("phone_verified_at"));
 
                     SimpleDateFormat verifiedSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");

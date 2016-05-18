@@ -10,7 +10,6 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,11 +45,11 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdateVerificationPhoneNumberJsonResponseListener);
     }
 
-//    public void requestUpdateDailyUserInformation(String phoneNumber)
-//    {
-//        Map<String, String> params = Collections.singletonMap("phone", phoneNumber.replaceAll("-", ""));
-//        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdatePhoneNumberJsonResponseListener, this);
-//    }
+    //    public void requestUpdateDailyUserInformation(String phoneNumber)
+    //    {
+    //        Map<String, String> params = Collections.singletonMap("phone", phoneNumber.replaceAll("-", ""));
+    //        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdatePhoneNumberJsonResponseListener, this);
+    //    }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
     {
