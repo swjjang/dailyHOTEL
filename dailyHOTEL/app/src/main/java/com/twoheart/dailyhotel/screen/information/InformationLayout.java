@@ -27,45 +27,47 @@ public class InformationLayout
 	private View mAccountInfoLayout;
 	private View mNewEventIconView;
 
+	private TextView mPushTextView;
+
 	public interface OnEventListener extends OnBaseEventListener
 	{
-		void onLoginClick();
+		void startLogin();
 
-		void onSignUpClick();
+		void startSignUp();
 
-		void showEditProfile();
+		void startEditProfile();
 
-		void showCouponList();
+		void startCouponList();
 
-		void showBonusList();
+		void startBonusList();
 
-		void showCreditCardList();
+		void startCreditCardList();
 
-		void onRecommendClick();
+		void startInviteFriend();
 
-		void showEvent();
+		void startEvent();
 
-		void sendCall();
+		void startCall();
 
-		void sendEmail();
+		void startEmail();
 
-		void showAbout();
+		void startAbout();
 
 		void onPushClick(View view);
 
-		void onFacebookClick();
+		void startFacebook();
 
-		void onInstagramClick();
+		void startInstagram();
 
-		void onNaverBlogClick();
+		void startNaverBlog();
 
-		void showTerms();
+		void startTerms();
 
-		void showPersonal();
+		void startPersonal();
 
-		void showLocationTerms();
+		void startLocationTerms();
 
-		void showProtectChildTerms();
+		void startProtectChildTerms();
 
 	}
 
@@ -99,17 +101,8 @@ public class InformationLayout
 
 		mNewEventIconView = eventLayout.findViewById(R.id.newIconView);
 
-		TextView pushTextView = (TextView) view.findViewById(R.id.pushTextView);
-
-		if (DailyPreference.getInstance(baseActivity).isAllowPush() == true)
-		{
-			pushTextView.setText(R.string.label_on);
-		} else
-		{
-			pushTextView.setText(R.string.label_off);
-		}
-
-		pushTextView.setOnClickListener(this);
+		mPushTextView = (TextView) view.findViewById(R.id.pushTextView);
+		mPushTextView.setOnClickListener(this);
 
 		initSnsLayout(view);
 		initBusinessLayout(baseActivity, view);
@@ -120,7 +113,8 @@ public class InformationLayout
 
 		updateLoginLayout(false);
 		updateAccountLayout(false);
-		updateNewIconView(baseActivity);
+		updatePushIcon(false);
+		updateNewIconView(false);
 	}
 
 	private void initToolbar(Context context, View view)
@@ -145,11 +139,11 @@ public class InformationLayout
 	{
 		View couponLayout = view.findViewById(R.id.couponLayout);
 		View bonusLayout = view.findViewById(R.id.bonusLayout);
-		View creditcardLayout = view.findViewById(R.id.creditcardLayout);
+		View creditCardLayout = view.findViewById(R.id.creditcardLayout);
 
 		couponLayout.setOnClickListener(this);
 		bonusLayout.setOnClickListener(this);
-		creditcardLayout.setOnClickListener(this);
+		creditCardLayout.setOnClickListener(this);
 	}
 
 	private void initSnsLayout(View view)
@@ -214,25 +208,24 @@ public class InformationLayout
 		protectChildTermsView.setOnClickListener(this);
 	}
 
-//	public boolean isLogin()
-//	{
-//		if (Util.isTextEmpty(DailyPreference.getInstance(mContext).getAuthorization()) == true)
-//		{
-//			return false;
-//		} else
-//		{
-//			return true;
-//		}
-//	}
+	public void updatePushIcon(boolean onOff)
+	{
+		if (mPushTextView == null)
+		{
+			return;
+		}
 
-	public void updateNewIconView(Context context)
+		mPushTextView.setText(onOff ? R.string.label_off : R.string.label_on);
+	}
+
+	public void updateNewIconView(boolean hasNewEvent)
 	{
 		if (mNewEventIconView == null)
 		{
 			return;
 		}
 
-		if (DailyPreference.getInstance(context).hasNewEvent() == true)
+		if (hasNewEvent)
 		{
 			mNewEventIconView.setVisibility(View.VISIBLE);
 		} else
@@ -317,67 +310,67 @@ public class InformationLayout
 		{
 			case R.id.loginTextView:
 			{
-				((OnEventListener) mOnEventListener).onLoginClick();
+				((OnEventListener) mOnEventListener).startLogin();
 				break;
 			}
 
 			case R.id.signupTextView:
 			{
-				((OnEventListener) mOnEventListener).onSignUpClick();
+				((OnEventListener) mOnEventListener).startSignUp();
 				break;
 			}
 
 			case R.id.editProfileTextView:
 			{
-				((OnEventListener) mOnEventListener).showEditProfile();
+				((OnEventListener) mOnEventListener).startEditProfile();
 				break;
 			}
 
 			case R.id.creditcardLayout:
 			{
-				((OnEventListener) mOnEventListener).showCreditCardList();
+				((OnEventListener) mOnEventListener).startCreditCardList();
 				break;
 			}
 
 			case R.id.couponLayout:
 			{
-				((OnEventListener) mOnEventListener).showCouponList();
+				((OnEventListener) mOnEventListener).startCouponList();
 				break;
 			}
 
 			case R.id.bonusLayout:
 			{
-				((OnEventListener) mOnEventListener).showBonusList();
+				((OnEventListener) mOnEventListener).startBonusList();
 				break;
 			}
 
 			case R.id.eventLayout:
 			{
-				((OnEventListener) mOnEventListener).showEvent();
+				((OnEventListener) mOnEventListener).startEvent();
 				break;
 			}
 
 			case R.id.recommendLayout:
 			{
-				((OnEventListener) mOnEventListener).onRecommendClick();
+				((OnEventListener) mOnEventListener).startInviteFriend();
 				break;
 			}
 
 			case R.id.callLayout:
 			{
-				((OnEventListener) mOnEventListener).sendCall();
+				((OnEventListener) mOnEventListener).startCall();
 				break;
 			}
 
 			case R.id.mailLayout:
 			{
-				((OnEventListener) mOnEventListener).sendEmail();
+				((OnEventListener) mOnEventListener).startEmail();
 				break;
 			}
 
 			case R.id.aboutLayout:
 			{
-				((OnEventListener) mOnEventListener).showAbout();
+				((OnEventListener) mOnEventListener).startAbout();
 				break;
 			}
 
@@ -389,43 +382,43 @@ public class InformationLayout
 
 			case R.id.facebookLinkView:
 			{
-				((OnEventListener) mOnEventListener).onFacebookClick();
+				((OnEventListener) mOnEventListener).startFacebook();
 				break;
 			}
 
 			case R.id.instagramLinkView:
 			{
-				((OnEventListener) mOnEventListener).onInstagramClick();
+				((OnEventListener) mOnEventListener).startInstagram();
 				break;
 			}
 
 			case R.id.naverLinkView:
 			{
-				((OnEventListener) mOnEventListener).onNaverBlogClick();
+				((OnEventListener) mOnEventListener).startNaverBlog();
 				break;
 			}
 
 			case R.id.termsView:
 			{
-				((OnEventListener) mOnEventListener).showTerms();
+				((OnEventListener) mOnEventListener).startTerms();
 				break;
 			}
 
 			case R.id.personalView:
 			{
-				((OnEventListener) mOnEventListener).showPersonal();
+				((OnEventListener) mOnEventListener).startPersonal();
 				break;
 			}
 
 			case R.id.locationTermsView:
 			{
-				((OnEventListener) mOnEventListener).showLocationTerms();
+				((OnEventListener) mOnEventListener).startLocationTerms();
 				break;
 			}
 
 			case R.id.protectChildTermsView:
 			{
-				((OnEventListener) mOnEventListener).showProtectChildTerms();
+				((OnEventListener) mOnEventListener).startProtectChildTerms();
 				break;
 			}
 
