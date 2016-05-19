@@ -293,6 +293,29 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
+        public void onInvalidVerificationNumber(String message)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm)//
+                , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mSignupStep2Layout.resetVerificationNumber();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        mSignupStep2Layout.resetVerificationNumber();
+                    }
+                });
+        }
+
+        @Override
         public void onErrorResponse(VolleyError volleyError)
         {
             SignupStep2Activity.this.onErrorResponse(volleyError);

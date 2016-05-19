@@ -260,6 +260,52 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
 
         @Override
+        public void onInvalidPhoneNumber(String message)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm)//
+                , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mEditProfilePhoneLayout.resetPhoneNumber();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        mEditProfilePhoneLayout.resetPhoneNumber();
+                    }
+                });
+        }
+
+        @Override
+        public void onInvalidVerificationNumber(String message)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm)//
+                , new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mEditProfilePhoneLayout.resetVerificationNumber();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        mEditProfilePhoneLayout.resetVerificationNumber();
+                    }
+                });
+        }
+
+        @Override
         public void onErrorResponse(VolleyError volleyError)
         {
             EditProfilePhoneActivity.this.onErrorResponse(volleyError);

@@ -34,6 +34,9 @@ public class SignupStep2NetworkController extends BaseNetworkController
         void onAlreadyVerification(String phoneNumber);
 
         void onInvalidPhoneNumber(String phoneNumber);
+
+        // SMS에서 받은 코드
+        void onInvalidVerificationNumber(String message);
     }
 
     public SignupStep2NetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -162,16 +165,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         break;
                     }
 
-                    // 다른 번호로 이미 인증된 경우
-                    case 2001:
-                    {
-                        JSONObject dataJONObject = response.getJSONObject("data");
-                        String phoneNumber = dataJONObject.getString("phone");
-
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
-                        break;
-                    }
-
                     default:
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, response.getString("msg"));
                         break;
@@ -191,18 +184,26 @@ public class SignupStep2NetworkController extends BaseNetworkController
                 int msgCode = jsonObject.getInt("msgCode");
                 String message = jsonObject.getString("msg");
 
-                switch (volleyError.networkResponse.statusCode)
+                if (volleyError.networkResponse.statusCode == 422)
                 {
-                    // 전화번호가 유효하지 않을 때
-                    case 422:
+                    switch (msgCode)
                     {
-                        if (msgCode == -2003)
+                        // 동일한 전화번호로 인증 받은 사용자가
+                        case 2001:
                         {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                            JSONObject dataJONObject = jsonObject.getJSONObject("data");
+                            String phoneNumber = dataJONObject.getString("phone");
 
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
                             return;
                         }
-                        break;
+
+                        // 전화번호가 유효하지 않을 때
+                        case 2003:
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                            return;
+                        }
                     }
                 }
 
@@ -256,7 +257,23 @@ public class SignupStep2NetworkController extends BaseNetworkController
             try
             {
                 JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+                int msgCode = jsonObject.getInt("msgCode");
+                String message = jsonObject.getString("msg");
+
+                if (volleyError.networkResponse.statusCode == 422)
+                {
+                    switch (msgCode)
+                    {
+                        // SMS인증키가 잘못된 경우
+                        case 2002:
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidVerificationNumber(message);
+                            return;
+                        }
+                    }
+                }
+
+                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onErrorResponse(volleyError);
