@@ -24,6 +24,6 @@ public class InformationNetworkController extends BaseNetworkController
 	@Override
 	public void onErrorResponse(VolleyError volleyError)
 	{
-
+		mOnNetworkControllerListener.onErrorResponse(volleyError);
 	}
 }

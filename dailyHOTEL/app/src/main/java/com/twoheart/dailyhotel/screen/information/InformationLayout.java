@@ -118,10 +118,9 @@ public class InformationLayout
 		TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 		versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION));
 
-		updateLoginLayout();
-		updateAccountLayout();
+		updateLoginLayout(false);
+		updateAccountLayout(false);
 		updateNewIconView(baseActivity);
-
 	}
 
 	private void initToolbar(Context context, View view)
@@ -215,16 +214,16 @@ public class InformationLayout
 		protectChildTermsView.setOnClickListener(this);
 	}
 
-	public boolean isLogin()
-	{
-		if (Util.isTextEmpty(DailyPreference.getInstance(mContext).getAuthorization()) == true)
-		{
-			return false;
-		} else
-		{
-			return true;
-		}
-	}
+//	public boolean isLogin()
+//	{
+//		if (Util.isTextEmpty(DailyPreference.getInstance(mContext).getAuthorization()) == true)
+//		{
+//			return false;
+//		} else
+//		{
+//			return true;
+//		}
+//	}
 
 	public void updateNewIconView(Context context)
 	{
@@ -242,18 +241,8 @@ public class InformationLayout
 		}
 	}
 
-	public void updateLoginLayout()
+	public void updateLoginLayout(boolean isLogin)
 	{
-		if (mContext == null)
-		{
-			throw new NullPointerException();
-		}
-
-		if (mProfileLayout == null)
-		{
-			throw new NullPointerException();
-		}
-
 		TextView profileTextView = (TextView) mProfileLayout.findViewById(R.id.profileTextView);
 		TextView loginMessageTextView = (TextView) mProfileLayout.findViewById(R.id.loginMessageTextView);
 
@@ -263,7 +252,7 @@ public class InformationLayout
 
 		ImageView profileImageView = (ImageView) mProfileLayout.findViewById(R.id.iconImageView);
 
-		if (isLogin() == true)
+		if (isLogin == true)
 		{
 			AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNIN);
 
@@ -292,18 +281,8 @@ public class InformationLayout
 		}
 	}
 
-	public void updateAccountLayout()
+	public void updateAccountLayout(boolean isLogin)
 	{
-		if (mContext == null)
-		{
-			throw new NullPointerException();
-		}
-
-		if (mAccountInfoLayout == null)
-		{
-			throw new NullPointerException();
-		}
-
 		View newCouponIconView = mAccountInfoLayout.findViewById(R.id.newCounponIconView);
 		View newBonusIconView = mAccountInfoLayout.findViewById(R.id.newBonusIconView);
 		TextView couponCountTextView = (TextView) mAccountInfoLayout.findViewById(R.id.couponCountTextView);
@@ -315,7 +294,7 @@ public class InformationLayout
 		String couponCountString = "0";
 		String bonusCountString = "0";
 
-		if (isLogin() == true)
+		if (isLogin == true)
 		{
 			mAccountInfoLayout.setVisibility(View.VISIBLE);
 
@@ -454,5 +433,4 @@ public class InformationLayout
 				break;
 		}
 	}
-
 }
