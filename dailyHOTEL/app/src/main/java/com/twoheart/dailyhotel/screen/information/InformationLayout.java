@@ -85,16 +85,13 @@ public class InformationLayout
 		mAccountInfoLayout = view.findViewById(R.id.accountInfoLayout);
 
 		initProfileLayout(baseActivity, view);
+		initAccountInfoLayout(baseActivity, view);
 
-		View couponLayout = view.findViewById(R.id.couponLayout);
-		View bonusLayout = view.findViewById(R.id.bonusLayout);
 		View eventLayout = view.findViewById(R.id.eventLayout);
 		View callLayout = view.findViewById(R.id.callLayout);
 		View mailLayout = view.findViewById(R.id.mailLayout);
 		View aboutLayout = view.findViewById(R.id.aboutLayout);
 
-		couponLayout.setOnClickListener(this);
-		bonusLayout.setOnClickListener(this);
 		eventLayout.setOnClickListener(this);
 		callLayout.setOnClickListener(this);
 		mailLayout.setOnClickListener(this);
@@ -121,6 +118,8 @@ public class InformationLayout
 		TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 		versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION));
 
+		updateLoginLayout();
+		updateAccountLayout();
 		updateNewIconView(baseActivity);
 
 	}
@@ -141,6 +140,17 @@ public class InformationLayout
 		loginView.setOnClickListener(this);
 		signUpView.setOnClickListener(this);
 		editProfileView.setOnClickListener(this);
+	}
+
+	private void initAccountInfoLayout(Context context, View view)
+	{
+		View couponLayout = view.findViewById(R.id.couponLayout);
+		View bonusLayout = view.findViewById(R.id.bonusLayout);
+		View creditcardLayout = view.findViewById(R.id.creditcardLayout);
+
+		couponLayout.setOnClickListener(this);
+		bonusLayout.setOnClickListener(this);
+		creditcardLayout.setOnClickListener(this);
 	}
 
 	private void initSnsLayout(View view)
@@ -239,6 +249,11 @@ public class InformationLayout
 			throw new NullPointerException();
 		}
 
+		if (mProfileLayout == null)
+		{
+			throw new NullPointerException();
+		}
+
 		TextView profileTextView = (TextView) mProfileLayout.findViewById(R.id.profileTextView);
 		TextView loginMessageTextView = (TextView) mProfileLayout.findViewById(R.id.loginMessageTextView);
 
@@ -252,14 +267,16 @@ public class InformationLayout
 		{
 			AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNIN);
 
-			profileTextView.setText("사용자 프로필 명");
-			loginMessageTextView.setText("사용자 이메일");
+			String userName = DailyPreference.getInstance(mContext).getUserName();
+			String userEmail = DailyPreference.getInstance(mContext).getUserEmail();
+			profileTextView.setText(userName);
+			loginMessageTextView.setText(userEmail);
 
 			loginView.setVisibility(View.GONE);
 			signUpView.setVisibility(View.GONE);
 			editProfileView.setVisibility(View.VISIBLE);
 
-			profileImageView.setImageDrawable(null);
+			profileImageView.setImageResource(R.drawable.more_ic_mydaily_02_login);
 		} else
 		{
 			AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNOUT);
@@ -277,15 +294,37 @@ public class InformationLayout
 
 	public void updateAccountLayout()
 	{
-
 		if (mContext == null)
 		{
 			throw new NullPointerException();
 		}
 
+		if (mAccountInfoLayout == null)
+		{
+			throw new NullPointerException();
+		}
+
+		View newCouponIconView = mAccountInfoLayout.findViewById(R.id.newCounponIconView);
+		View newBonusIconView = mAccountInfoLayout.findViewById(R.id.newBonusIconView);
+		TextView couponCountTextView = (TextView) mAccountInfoLayout.findViewById(R.id.couponCountTextView);
+		TextView bonusCountTextView = (TextView) mAccountInfoLayout.findViewById(R.id.bonusCountTextView);
+
+		boolean hasNewCoupon = false;
+		boolean hasNewBonus = false;
+
+		String couponCountString = "0";
+		String bonusCountString = "0";
+
 		if (isLogin() == true)
 		{
 			mAccountInfoLayout.setVisibility(View.VISIBLE);
+
+			newCouponIconView.setVisibility(hasNewCoupon ? View.VISIBLE : View.GONE);
+			newBonusIconView.setVisibility(hasNewBonus ? View.VISIBLE : View.GONE);
+
+			couponCountTextView.setText(mContext.getResources().getString(R.string.frag_count_text, couponCountString));
+			bonusCountTextView.setText(mContext.getResources().getString(R.string.frag_count_text, bonusCountString));
+
 		} else
 		{
 			mAccountInfoLayout.setVisibility(View.GONE);
