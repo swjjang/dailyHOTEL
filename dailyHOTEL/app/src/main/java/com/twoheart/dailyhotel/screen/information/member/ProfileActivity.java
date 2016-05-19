@@ -214,7 +214,7 @@ public class ProfileActivity extends BaseActivity
                 // 인증 후 인증이 해지된 경우
                 if (DailyPreference.getInstance(ProfileActivity.this).isVerification() == true)
                 {
-                    showSimpleDialog(null, getString(R.string.message_invalid_verification), null, null);
+                    showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
                 }
 
                 DailyPreference.getInstance(ProfileActivity.this).setVerification(false);

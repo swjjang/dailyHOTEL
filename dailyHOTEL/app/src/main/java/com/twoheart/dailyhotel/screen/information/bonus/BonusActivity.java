@@ -302,7 +302,7 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 // 인증 후 인증이 해지된 경우
                 if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(BonusActivity.this).isVerification() == true)
                 {
-                    showSimpleDialog(null, getString(R.string.message_invalid_verification), null, null);
+                    showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
 
                     DailyPreference.getInstance(BonusActivity.this).setVerification(false);
                 }
