@@ -682,7 +682,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 // 인증 후 인증이 해지된 경우
                 if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
                 {
-                    baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), null, null);
+                    baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
 
                     DailyPreference.getInstance(baseActivity).setVerification(false);
                 }
