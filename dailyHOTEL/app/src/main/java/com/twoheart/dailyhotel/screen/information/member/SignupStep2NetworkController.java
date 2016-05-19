@@ -102,7 +102,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                             {
                                 int msg_code = response.getInt("msgCode");
 
-                                if (msg_code == 0 && response.has("data") == true)
+                                if (msg_code == 100 && response.has("data") == true)
                                 {
                                     JSONObject jsonObject = response.getJSONObject("data");
 
