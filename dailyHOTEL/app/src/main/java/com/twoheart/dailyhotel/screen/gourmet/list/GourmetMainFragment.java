@@ -234,7 +234,15 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     return;
                 }
 
-                Intent intent = GourmetCurationActivity.newInstance(baseActivity, getProvince().isOverseas, mViewType, mCurationOption);
+                Province province = getProvince();
+
+                if (province == null)
+                {
+                    releaseUiComponent();
+                    return;
+                }
+
+                Intent intent = GourmetCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
