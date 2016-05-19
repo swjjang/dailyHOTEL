@@ -10,14 +10,12 @@
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/nextStepView">
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="28dp">
+            android:orientation="vertical">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
@@ -139,8 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical" >
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/confirmPasswordView"
@@ -268,19 +265,20 @@
                     android:textColor="@color/information_title"
                     android:textSize="12dp"/>
             </RelativeLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/nextStepView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/dh_theme_color"
+                android:gravity="center"
+                android:text="@string/label_next"
+                android:textColor="@android:color/white"
+                android:textSize="17dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="30dp"/>
         </LinearLayout>
     </ScrollView>
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/nextStepView"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/dh_theme_color"
-        android:gravity="center"
-        android:text="@string/label_next"
-        android:textColor="@android:color/white"
-        android:textSize="17dp"
-        android:layout_alignParentBottom="true"/>
 
     <View
         android:layout_width="match_parent"
