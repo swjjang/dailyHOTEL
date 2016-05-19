@@ -16,7 +16,7 @@ public class BonusTermActivity extends WebViewActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_term);
+        setContentView(R.layout.activity_bonus_term);
 
         initToolbar();
     }
@@ -47,6 +47,6 @@ public class BonusTermActivity extends WebViewActivity
     protected void onResume()
     {
         super.onResume();
-        setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_TERMS));
+        setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_BONUS_TERMS));
     }
 }
