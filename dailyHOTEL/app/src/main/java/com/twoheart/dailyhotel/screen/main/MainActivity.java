@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -142,10 +143,10 @@ public class MainActivity extends BaseActivity implements Constants
 
         if (DailyPreference.getInstance(this).isAllowPush() == true)
         {
-            Appboy.getInstance(this).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
+            AppboyManager.setPushEnabled(this, true);
         } else
         {
-            Appboy.getInstance(this).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
+            AppboyManager.setPushEnabled(this, false);
         }
     }
 
@@ -216,13 +217,6 @@ public class MainActivity extends BaseActivity implements Constants
         {
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
                 mNetworkController.requestGourmetIsExistRating();
-                break;
-
-            case CODE_REQUEST_ACTIVITY_LOGIN:
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
-                }
                 break;
 
             case CODE_REQUEST_ACTIVITY_EVENTWEB:

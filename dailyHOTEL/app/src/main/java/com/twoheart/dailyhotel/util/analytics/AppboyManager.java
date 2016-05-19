@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.appboy.Appboy;
+import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.twoheart.dailyhotel.util.Constants;
@@ -26,6 +27,19 @@ public class AppboyManager extends BaseAnalyticsManager
     public AppboyManager(Context context)
     {
         mAppboy = Appboy.getInstance(context);
+    }
+
+    public static void setPushEnabled(Context context, boolean enabled)
+    {
+        if (enabled == true)
+        {
+            Appboy.getInstance(context).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
+            Appboy.getInstance(context).getCurrentUser().setCustomUserAttribute("pushon", true);
+        } else
+        {
+            Appboy.getInstance(context).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
+            Appboy.getInstance(context).getCurrentUser().setCustomUserAttribute("pushon", false);
+        }
     }
 
     @Override

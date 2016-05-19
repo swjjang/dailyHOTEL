@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -283,7 +284,7 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
                 if (isSignin == null || isSignin == false)
                 {
-                    baseActivity.startActivityForResult(new Intent(baseActivity, LoginActivity.class), CODE_REQUEST_ACTIVITY_LOGIN);
+                    baseActivity.startActivity(new Intent(baseActivity, LoginActivity.class));
                     baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                     AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
@@ -364,15 +365,13 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     DailyPreference.getInstance(baseActivity).setAllowPush(false);
                     ((TextView) v).setText(R.string.label_off);
 
-                    Appboy.getInstance(baseActivity).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
-                    Appboy.getInstance(baseActivity).getCurrentUser().setCustomUserAttribute("pushon", false);
+                    AppboyManager.setPushEnabled(baseActivity, false);
                 } else
                 {
                     DailyPreference.getInstance(baseActivity).setAllowPush(true);
                     ((TextView) v).setText(R.string.label_on);
 
-                    Appboy.getInstance(baseActivity).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
-                    Appboy.getInstance(baseActivity).getCurrentUser().setCustomUserAttribute("pushon", true);
+                    AppboyManager.setPushEnabled(baseActivity, true);
                 }
 
                 releaseUiComponent();
