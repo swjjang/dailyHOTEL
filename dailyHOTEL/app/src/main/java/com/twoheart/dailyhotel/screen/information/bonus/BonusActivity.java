@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.bonus;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -7,13 +8,14 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.terms.BonusTermActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.List;
 
 public class BonusActivity extends BaseActivity
 {
-    protected static final int REQUEST_ACTIVITY_INVITEFRIENDS = 10000;
+    private static final int REQUEST_ACTIVITY_INVITEFRIENDS = 10000;
 
     private String mRecommendCode;
     private String mName;
@@ -22,6 +24,12 @@ public class BonusActivity extends BaseActivity
     private BonusNetworkController mNetworkController;
 
     private boolean mDontReloadAtOnResume;
+
+    public static Intent newInstance(Context context)
+    {
+        Intent intent = new Intent(context, BonusActivity.class);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,6 +49,7 @@ public class BonusActivity extends BaseActivity
 
         if (mDontReloadAtOnResume == true)
         {
+            unLockUI();
             mDontReloadAtOnResume = false;
         } else
         {
@@ -69,6 +78,18 @@ public class BonusActivity extends BaseActivity
 
             Intent intent = InviteFriendsActivity.newInstance(BonusActivity.this, mRecommendCode, mName);
             startActivityForResult(intent, REQUEST_ACTIVITY_INVITEFRIENDS);
+        }
+
+        @Override
+        public void onBonusGuide()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = new Intent(BonusActivity.this, BonusTermActivity.class);
+            startActivity(intent);
         }
 
         @Override

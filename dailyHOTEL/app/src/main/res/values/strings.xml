@@ -115,6 +115,7 @@
     <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
     <string name="actionbar_title_term_activity">이용약관</string>
+    <string name="actionbar_title_bonus_term_activity">적립금 사용시 유의사항 안내</string>
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>

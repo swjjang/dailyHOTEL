@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -23,6 +24,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class InviteFriendsActivity extends BaseActivity implements View.OnClickListener
 {
+    private static final int REQUEST_ACTIVITY_SIGNUP = 10000;
+
     private static final String INTENT_EXTRA_DATA_CODE = "code";
     private static final String INTENT_EXTRA_DATA_NAME = "name";
 
@@ -60,6 +63,13 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             mName = intent.getStringExtra(INTENT_EXTRA_DATA_NAME);
         }
 
+        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == false//
+            && Util.isTextEmpty(mRecommendCode) == true)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         initToolbar();
         initLayout(mRecommendCode);
     }
@@ -90,35 +100,35 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             signinButtonLayout.setVisibility(View.GONE);
             noSigninButtonLayout.setVisibility(View.VISIBLE);
 
-            initNoSigninLayout();
+            initNoSigninLayout(noSigninButtonLayout);
         } else
         {
             signinButtonLayout.setVisibility(View.VISIBLE);
             noSigninButtonLayout.setVisibility(View.GONE);
 
-            TextView codeTextView = (TextView) signinButtonLayout.findViewById(R.id.codeTextView);
-            codeTextView.setText(code);
-
-            initSigninLayout();
+            initSigninLayout(signinButtonLayout, code);
         }
     }
 
-    private void initNoSigninLayout()
+    private void initNoSigninLayout(View view)
     {
-        View signupTextView = findViewById(R.id.signupTextView);
+        View signupTextView = view.findViewById(R.id.signupTextView);
         signupTextView.setOnClickListener(this);
 
-        View signinTextView = findViewById(R.id.signinTextView);
+        View signinTextView = view.findViewById(R.id.signinTextView);
         signinTextView.setOnClickListener(this);
     }
 
-    private void initSigninLayout()
+    private void initSigninLayout(View view, String code)
     {
         View copyCodeLayout = findViewById(R.id.copyCodeLayout);
         copyCodeLayout.setOnClickListener(this);
 
-        View inviteKakaoTextView = findViewById(R.id.inviteKakaoTextView);
+        View inviteKakaoTextView = view.findViewById(R.id.inviteKakaoTextView);
         inviteKakaoTextView.setOnClickListener(this);
+
+        TextView codeTextView = (TextView) view.findViewById(R.id.codeTextView);
+        codeTextView.setText(code);
     }
 
     @Override
@@ -126,6 +136,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
     {
         super.onResume();
 
+        unLockUI();
     }
 
     @Override
@@ -133,12 +144,25 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
     {
         super.onActivityResult(requestCode, resultCode, data);
 
+        switch (requestCode)
+        {
+            case REQUEST_ACTIVITY_SIGNUP:
+                if (resultCode == RESULT_OK)
+                {
+                    Intent intent = BonusActivity.newInstance(InviteFriendsActivity.this);
+                    startActivity(intent);
 
+                    finish();
+                }
+                break;
+        }
     }
 
     @Override
     public void onClick(View v)
     {
+        lockUiComponent();
+
         switch (v.getId())
         {
             case R.id.inviteKakaoTextView:
@@ -180,7 +204,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             case R.id.signupTextView:
             {
                 Intent intent = SignupStep1Activity.newInstance(InviteFriendsActivity.this);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SIGNUP);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.SIGNUP, 0L);
@@ -192,23 +216,14 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
                 Util.clipText(this, mRecommendCode);
 
                 DailyToast.showToast(this, R.string.message_copy_recommendar_code, Toast.LENGTH_SHORT);
+
+                releaseUiComponent();
                 break;
             }
+
+            default:
+                releaseUiComponent();
+                break;
         }
     }
-
-    private BonusLayout.OnEventListener mOnEventListener = new BonusLayout.OnEventListener()
-    {
-        @Override
-        public void onInviteFriends()
-        {
-
-        }
-
-        @Override
-        public void finish()
-        {
-
-        }
-    };
 }

@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.screen.information.bonus;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -14,7 +16,11 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class BonusLayout extends BaseLayout implements View.OnClickListener
 {
@@ -25,6 +31,8 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     public interface OnEventListener extends OnBaseEventListener
     {
         void onInviteFriends();
+
+        void onBonusGuide();
     }
 
     public BonusLayout(Context context, OnEventListener mOnEventListener)
@@ -45,6 +53,17 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
         View header = LayoutInflater.from(mContext).inflate(R.layout.list_row_bonus_header, mListView, false);
         mListView.addHeaderView(header);
+
+        TextView guideTextView = (TextView) header.findViewById(R.id.guideTextView);
+        guideTextView.setPaintFlags(guideTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        guideTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener)mOnEventListener).onBonusGuide();
+            }
+        });
 
         mFooterView = LayoutInflater.from(mContext).inflate(R.layout.list_row_bonus_footer, mListView, false);
         mListView.addFooterView(mFooterView);
@@ -85,13 +104,17 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     public void setData(List<Bonus> list)
     {
         EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
+        BonusListAdapter bonusListAdapter = null;
 
         if (list != null && list.size() != 0)
         {
             mListView.removeFooterView(mFooterView);
-
-            BonusListAdapter adapter = new BonusListAdapter(mContext, 0, list);
-            mListView.setAdapter(adapter);
+            bonusListAdapter = new BonusListAdapter(mContext, 0, list);
+        } else
+        {
+            bonusListAdapter = new BonusListAdapter(mContext, 0, new ArrayList<Bonus>());
         }
+
+        mListView.setAdapter(bonusListAdapter);
     }
 }

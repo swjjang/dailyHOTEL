@@ -30,7 +30,7 @@
         android:layout_marginRight="15dp"
         android:gravity="left|center_vertical"
         android:text="@string/label_bonus_guide"
-        android:textColor="@color/search_hint_text"
+        android:textColor="@color/curation_title_text"
         android:textSize="11dp"
         dailyFont:style="DemiLight"/>
 </RelativeLayout>
