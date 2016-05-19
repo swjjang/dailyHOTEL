@@ -11,7 +11,7 @@ buildscript {
 }
 
 apply plugin: 'io.fabric'
-//apply plugin: 'com.android.application'
+apply plugin: 'com.android.application'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -35,7 +35,7 @@ android {
         targetSdkVersion 22
         versionCode 85
         versionName "1.8.5"
-//        multiDexEnabled true
+        multiDexEnabled true
 
         resConfigs "ko"
 //        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
@@ -51,10 +51,10 @@ android {
         }
     }
 
-//    dexOptions {
-//        javaMaxHeapSize "4g"
-//        preDexLibraries false
-//    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries false
+    }
 }
 
 dependencies {
@@ -72,7 +72,7 @@ dependencies {
     compile 'com.kakao.sdk:kakaotalk:1.1.10'
     compile 'com.facebook.android:facebook-android-sdk:4.5.0'
     compile 'com.appboy:android-sdk-ui:1.13.+'
-//    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.0'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;

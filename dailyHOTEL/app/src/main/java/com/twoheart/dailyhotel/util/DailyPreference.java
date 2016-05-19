@@ -675,6 +675,10 @@ public class DailyPreference
         setValue(mOldEditor, KEY_PREFERENCE_USER_NAME, value);
     }
 
+    public String getUserEmail() {
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_EMAIL, null);
+    }
+
     public void setUserEmail(String value)
     {
         setValue(mOldEditor, KEY_PREFERENCE_USER_EMAIL, value);
