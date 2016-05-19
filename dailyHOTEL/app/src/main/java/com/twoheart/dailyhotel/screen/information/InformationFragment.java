@@ -365,13 +365,16 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     ((TextView) v).setText(R.string.label_off);
 
                     Appboy.getInstance(baseActivity).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
+                    Appboy.getInstance(baseActivity).getCurrentUser().setCustomUserAttribute("pushon", false);
                 } else
                 {
                     DailyPreference.getInstance(baseActivity).setAllowPush(true);
                     ((TextView) v).setText(R.string.label_on);
 
                     Appboy.getInstance(baseActivity).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
+                    Appboy.getInstance(baseActivity).getCurrentUser().setCustomUserAttribute("pushon", true);
                 }
+
                 releaseUiComponent();
                 break;
             }
