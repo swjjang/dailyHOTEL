@@ -357,6 +357,11 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mPhoneEditText.setText(null);
     }
 
+    public void resetVerificationNumber()
+    {
+        mVerificationEditText.setText(null);
+    }
+
     private void resetFocus()
     {
         mPhoneView.setSelected(false);

@@ -22,6 +22,11 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         void onAlreadyVerification(String phoneNumber);
 
         void onConfirm();
+
+        void onInvalidPhoneNumber(String message);
+
+        // SMS에서 받은 코드
+        void onInvalidVerificationNumber(String message);
     }
 
     public EditProfilePhoneNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -45,12 +50,6 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdateVerificationPhoneNumberJsonResponseListener);
     }
 
-    //    public void requestUpdateDailyUserInformation(String phoneNumber)
-    //    {
-    //        Map<String, String> params = Collections.singletonMap("phone", phoneNumber.replaceAll("-", ""));
-    //        DailyNetworkAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdatePhoneNumberJsonResponseListener, this);
-    //    }
-
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
     {
         Map<String, String> params = new HashMap<>();
@@ -72,8 +71,6 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-
-                JSONObject dataJONObject = response.getJSONObject("data");
                 String message = response.getString("msg");
 
                 switch (msgCode)
@@ -81,14 +78,6 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                     case 100:
                     {
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onVerification(message);
-                        break;
-                    }
-
-                    case 2001:
-                    {
-                        String phoneNumber = dataJONObject.getString("phone");
-
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
                         break;
                     }
 
@@ -108,7 +97,33 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             try
             {
                 JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+                int msgCode = jsonObject.getInt("msgCode");
+                String message = jsonObject.getString("msg");
+
+                if (volleyError.networkResponse.statusCode == 422)
+                {
+                    switch (msgCode)
+                    {
+                        // 동일한 전화번호로 인증 받은 사용자가 있는 경우
+                        case 2001:
+                        {
+                            JSONObject dataJONObject = jsonObject.getJSONObject("data");
+                            String phoneNumber = dataJONObject.getString("phone");
+
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
+                            return;
+                        }
+
+                        // 전화번호가 유효하지 않을 때
+                        case 2003:
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                            return;
+                        }
+                    }
+                }
+
+                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onErrorResponse(volleyError);
@@ -144,45 +159,26 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             try
             {
                 JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
+                int msgCode = jsonObject.getInt("msgCode");
+                String message = jsonObject.getString("msg");
+
+                if (volleyError.networkResponse.statusCode == 422)
+                {
+                    switch (msgCode)
+                    {
+                        // SMS인증키가 잘못된 경우
+                        case 2002:
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidVerificationNumber(message);
+                            return;
+                        }
+                    }
+                }
+
+                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onErrorResponse(volleyError);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mDailyUserUpdatePhoneNumberJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                boolean result = false;
-
-                if (response.has("success") == true)
-                {
-                    result = response.getBoolean("success");
-                }
-
-                if (result == true)
-                {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
-                } else
-                {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(response.getInt("msgCode"), response.getString("msg"));
-                }
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
             }
         }
     };
