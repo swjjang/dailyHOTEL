@@ -84,7 +84,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         {
             case PlaceViewItem.TYPE_SECTION:
             {
-                View view = mInflater.inflate(R.layout.list_row_hotel_section, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
 
                 return new SectionViewHolder(view);
             }
@@ -328,7 +328,7 @@ public class GourmetListAdapter extends PlaceListAdapter implements PinnedSectio
         {
             super(itemView);
 
-            regionDetailName = (TextView) itemView.findViewById(R.id.hotelListRegionName);
+            regionDetailName = (TextView) itemView;
         }
     }
 
