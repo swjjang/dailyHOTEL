@@ -34,12 +34,12 @@ public class AppboyManager extends BaseAnalyticsManager
         if (enabled == true)
         {
             Appboy.getInstance(context).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
-            Appboy.getInstance(context).getCurrentUser().setCustomUserAttribute("pushon", true);
         } else
         {
             Appboy.getInstance(context).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
-            Appboy.getInstance(context).getCurrentUser().setCustomUserAttribute("pushon", false);
         }
+
+        Appboy.getInstance(context).requestImmediateDataFlush();
     }
 
     @Override
