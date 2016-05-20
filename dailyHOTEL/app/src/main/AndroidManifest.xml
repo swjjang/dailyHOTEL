@@ -299,6 +299,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".screen.information.coupon.CouponListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.event.EventListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

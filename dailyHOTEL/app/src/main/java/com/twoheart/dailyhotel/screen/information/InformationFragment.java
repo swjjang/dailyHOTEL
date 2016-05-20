@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
 import com.twoheart.dailyhotel.screen.information.bonus.BonusActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
@@ -177,7 +178,8 @@ public class InformationFragment extends BaseFragment implements Constants
 
 			BaseActivity baseActivity = (BaseActivity) getActivity();
 
-			// TODO : 쿠폰함 보기 화면 이동
+			startActivity(new Intent(baseActivity, CouponListActivity.class));
+			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		}
 
