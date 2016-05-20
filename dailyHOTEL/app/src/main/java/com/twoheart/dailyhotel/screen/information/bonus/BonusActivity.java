@@ -138,9 +138,17 @@ public class BonusActivity extends BaseActivity implements View.OnClickListener
                 {
                     // 카카오톡 패키지 설치 여부
                     getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+                    String message;
 
-                    String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode, mRecommendCode);
-                    KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
+                    if (Util.isTextEmpty(mUserName) == true)
+                    {
+                        message = getString(R.string.kakaolink_msg_none_name_invited_friend, mRecommendCode, mRecommendCode);
+                    } else
+                    {
+                        message = getString(R.string.kakaolink_msg_invited_friend, mUserName, mRecommendCode, mRecommendCode);
+                    }
+
+                    KakaoLinkManager.newInstance(this).sendInviteKakaoLink(message);
 
                     AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
                 } catch (Exception e)
