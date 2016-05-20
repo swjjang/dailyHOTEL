@@ -23,11 +23,13 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
     private Day mCheckInDay;
     private Day mCheckOutDay;
     private View mConfirmView;
+    private String mCallByScreen;
 
-    public static Intent newInstance(Context context, SaleTime dailyTime)
+    public static Intent newInstance(Context context, SaleTime dailyTime, String screen)
     {
         Intent intent = new Intent(context, HotelCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
+        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
 
         return intent;
     }
@@ -40,6 +42,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         Intent intent = getIntent();
 
         SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
+        mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
 
         initLayout(HotelCalendarActivity.this, dailyTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
@@ -83,6 +86,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                 params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInDay.dayTime.getDayOfDaysDate().getTime()));
                 params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(mCheckOutDay.dayTime.getDayOfDaysDate().getTime()));
                 params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mCheckOutDay.dayTime.getOffsetDailyDay() - mCheckInDay.dayTime.getOffsetDailyDay()));
+                params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED, checkInDate + "-" + checkOutDate, params);
 

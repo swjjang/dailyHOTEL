@@ -19,10 +19,13 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     private static final int DAYCOUNT_OF_MAX = 30;
     private static final int ENABLE_DAYCOUNT_OF_MAX = 14;
 
-    public static Intent newInstance(Context context, SaleTime dailyTime)
+    private String mCallByScreen;
+
+    public static Intent newInstance(Context context, SaleTime dailyTime, String screen)
     {
         Intent intent = new Intent(context, GourmetCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
+        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
 
         return intent;
     }
@@ -35,6 +38,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         Intent intent = getIntent();
 
         SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
+        mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
 
         initLayout(GourmetCalendarActivity.this, dailyTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_gourmet_select));
@@ -81,6 +85,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         Map<String, String> params = new HashMap<>();
         params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(day.dayTime.getDayOfDaysDate().getTime()));
+        params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED, date, params);
 
