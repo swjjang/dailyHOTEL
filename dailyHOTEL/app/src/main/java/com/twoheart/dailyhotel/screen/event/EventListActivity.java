@@ -84,6 +84,13 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     }
 
     @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
         if (isLockUiComponent() == true)
