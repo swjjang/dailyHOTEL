@@ -788,4 +788,12 @@
     <string name="label_searchresult_research">다시 검색하기</string>
     <string name="label_searchresult_call_customercenter">고객센터로 전화하기</string>
     <string name="label_map_searchmap">지도앱에서 길찾기</string>
+
+    <!-- Coupon -->
+    <string name="coupon_notice_text">주의사항\n확인하기</string>
+    <string name="coupon_duedate_text">(%1$s)</string>
+    <string name="coupon_description_text">사용가능처 %1$s</string>
+    <string name="coupon_download_text">다운로드</string>
+    <string name="coupon_useable_text">사용가능</string>
+
 </resources>

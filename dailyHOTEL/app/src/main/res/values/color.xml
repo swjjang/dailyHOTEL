@@ -228,4 +228,12 @@
     <color name="payment_memo_hint">#d0d0d0</color>
 
     <color name="over_scroll_edge">#dcdcdc</color>
+
+    <!-- Coupon -->
+    <color name="coupon_expire_text">#929292</color>
+    <color name="coupon_red_wine_text">#900034</color>
+    <color name="coupon_vertical_line">#e0e0e0</color>
+    <color name="coupon_description_text">#b3b3b3</color>
+    <color name="coupon_useable_icon_text">#bda279</color>
+
 </resources>
