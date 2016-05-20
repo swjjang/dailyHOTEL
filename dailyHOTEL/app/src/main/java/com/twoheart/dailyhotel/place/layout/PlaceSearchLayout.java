@@ -343,7 +343,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             }
         });
 
-        EdgeEffectColor.setEdgeGlowColor(mRecentSearchesScrollLayout, mContext.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mRecentSearchesScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         // 최근 검색어
         // 전체 삭제
@@ -492,7 +492,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             }
         });
 
-        EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollLayout, mContext.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     public void updateAutoCompleteLayout(String text, List<Keyword> keywordList)

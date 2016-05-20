@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.information.bonus;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -17,10 +16,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class BonusLayout extends BaseLayout implements View.OnClickListener
 {
@@ -61,7 +57,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener)mOnEventListener).onBonusGuide();
+                ((OnEventListener) mOnEventListener).onBonusGuide();
             }
         });
 
@@ -103,7 +99,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
     public void setData(List<Bonus> list)
     {
-        EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
         BonusListAdapter bonusListAdapter = null;
 
         if (list != null && list.size() != 0)

@@ -95,6 +95,7 @@ public class DailyPreference
     private static final String KEY_PREFERENCE_USER_PWD = "USER_PWD"; // 사용하지 않음
     private static final String KEY_PREFERENCE_USER_TYPE = "USER_TYPE";
     private static final String KEY_PREFERENCE_USER_NAME = "USER_NAME";
+    private static final String KEY_PREFERENCE_USER_RECOMMENDER = "USER_RECOMMENDER";
 
     // Version
     private static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
@@ -656,24 +657,9 @@ public class DailyPreference
         }
     }
 
-    public String getUserAccessToken()
-    {
-        return getValue(mOldPreferences, KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-    }
-
-    public void setUserAccessToken(String value)
-    {
-        setValue(mOldEditor, KEY_PREFERENCE_USER_ACCESS_TOKEN, value);
-    }
-
     public String getUserType()
     {
         return getValue(mOldPreferences, KEY_PREFERENCE_USER_TYPE, null);
-    }
-
-    public void setUserType(String value)
-    {
-        setValue(mOldEditor, KEY_PREFERENCE_USER_TYPE, value);
     }
 
     public String getUserName()
@@ -681,27 +667,24 @@ public class DailyPreference
         return getValue(mOldPreferences, KEY_PREFERENCE_USER_NAME, null);
     }
 
-    public void setUserName(String value)
+    public String getUserEmail()
     {
-        setValue(mOldEditor, KEY_PREFERENCE_USER_NAME, value);
-    }
-
-    public String getUserEmail() {
         return getValue(mOldPreferences, KEY_PREFERENCE_USER_EMAIL, null);
     }
 
-    public void setUserEmail(String value)
+    public String getUserRecommender()
     {
-        setValue(mOldEditor, KEY_PREFERENCE_USER_EMAIL, value);
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_RECOMMENDER, null);
     }
 
-    public void setUserInformation(String type, String email, String name)
+    public void setUserInformation(String type, String email, String name, String recommender)
     {
         if (mOldEditor != null)
         {
             mOldEditor.putString(KEY_PREFERENCE_USER_TYPE, type);
             mOldEditor.putString(KEY_PREFERENCE_USER_EMAIL, email);
             mOldEditor.putString(KEY_PREFERENCE_USER_NAME, name);
+            mOldEditor.putString(KEY_PREFERENCE_USER_RECOMMENDER, recommender);
             mOldEditor.apply();
         }
     }

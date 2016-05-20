@@ -57,7 +57,7 @@ public class HotelBookingDetailTabInfomationFragment extends BaseFragment
         View view = inflater.inflate(R.layout.fragment_hotel_tab_info, container, false);
 
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
         ViewGroup viewGroup = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
 

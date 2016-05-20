@@ -62,7 +62,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         mEmptyView = findViewById(R.id.emptyLayout);
 
         mListView = (ListView) findViewById(R.id.listView);
-        EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));
         mListView.setOnItemClickListener(this);
     }
 
@@ -81,6 +81,13 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         lockUI();
         mEventListNetworkController.requestEventList();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
     @Override
