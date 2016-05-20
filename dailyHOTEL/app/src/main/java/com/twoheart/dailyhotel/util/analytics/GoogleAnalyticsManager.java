@@ -102,6 +102,13 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             return;
         }
 
+        if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true//
+            && (AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true//
+            || AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true))
+        {
+            label = params.get(AnalyticsManager.KeyType.SCREEN) + '-' + label;
+        }
+
         mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
             .setCategory(category).setAction(action)//
             .setLabel(label).setValue(value).build());

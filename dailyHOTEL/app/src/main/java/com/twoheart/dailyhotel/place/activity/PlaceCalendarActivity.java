@@ -26,6 +26,8 @@ import java.util.TimeZone;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
+    public static final String INTENT_EXTRA_DATA_SCREEN = "screen";
+
     protected View mCancelView, mToastView;
     protected TextView[] mDailyTextViews;
     private DailyToolbarLayout mDailyToolbarLayout;

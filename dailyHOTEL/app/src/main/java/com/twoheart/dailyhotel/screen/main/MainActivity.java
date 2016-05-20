@@ -19,8 +19,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.android.volley.VolleyError;
-import com.appboy.Appboy;
-import com.appboy.enums.NotificationSubscriptionType;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;

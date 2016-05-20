@@ -241,6 +241,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
                 appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SCREEN, params.get(AnalyticsManager.KeyType.SCREEN));
 
                 try
                 {
@@ -264,6 +265,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
                 appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SCREEN, params.get(AnalyticsManager.KeyType.SCREEN));
 
                 try
                 {
