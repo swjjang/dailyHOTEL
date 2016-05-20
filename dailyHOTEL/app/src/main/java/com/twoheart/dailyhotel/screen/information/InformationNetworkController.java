@@ -11,19 +11,19 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
  */
 public class InformationNetworkController extends BaseNetworkController
 {
-	protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
-	{
+    protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
+    {
 
-	}
+    }
 
-	public InformationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
-	{
-		super(context, networkTag, listener);
-	}
+    public InformationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    {
+        super(context, networkTag, listener);
+    }
 
-	@Override
-	public void onErrorResponse(VolleyError volleyError)
-	{
-		mOnNetworkControllerListener.onErrorResponse(volleyError);
-	}
+    @Override
+    public void onErrorResponse(VolleyError volleyError)
+    {
+        mOnNetworkControllerListener.onErrorResponse(volleyError);
+    }
 }

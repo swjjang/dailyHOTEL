@@ -371,7 +371,7 @@
     <string name="label_bonus_guide">적립금 사용시 유의사항 안내</string>
     <string name="message_no_history_bonus">적립금 내역이 없습니다.</string>
     <string name="message_daily_recommended_hotel_to_friend">친구에게 데일리호텔을 추천하고\n최대 10만원까지 적립금을 쌓아보세요!</string>
-    <string name="message_copy_recommendar_code">추천코드가 복사되었습니다.</string>
+    <string name="message_copy_recommender_code">추천코드가 복사되었습니다.</string>
 
 
     <!-- Credit List Activity -->

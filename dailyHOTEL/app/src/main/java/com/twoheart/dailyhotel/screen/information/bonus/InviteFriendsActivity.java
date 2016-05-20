@@ -25,12 +25,16 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 public class InviteFriendsActivity extends BaseActivity implements View.OnClickListener
 {
     private static final int REQUEST_ACTIVITY_SIGNUP = 10000;
+    private static final int REQUEST_ACTIVITY_LOGIN = 10001;
 
     private static final String INTENT_EXTRA_DATA_CODE = "code";
     private static final String INTENT_EXTRA_DATA_NAME = "name";
 
     private String mRecommendCode;
     private String mName;
+
+    private View mSigninButtonLayout, mNoSigninButtonLayout;
+    private TextView mRecommendCodeTextView;
 
     public static final Intent newInstance(Context context, String code, String name)
     {
@@ -71,7 +75,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
         }
 
         initToolbar();
-        initLayout(mRecommendCode);
+        initLayout();
     }
 
     private void initToolbar()
@@ -89,25 +93,13 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
         });
     }
 
-    private void initLayout(String code)
+    private void initLayout()
     {
-        View signinButtonLayout = findViewById(R.id.signinButtonLayout);
-        View noSigninButtonLayout = findViewById(R.id.noSigninButtonLayout);
+        mSigninButtonLayout = findViewById(R.id.signinButtonLayout);
+        mNoSigninButtonLayout = findViewById(R.id.noSigninButtonLayout);
 
-
-        if (Util.isTextEmpty(code) == true)
-        {
-            signinButtonLayout.setVisibility(View.GONE);
-            noSigninButtonLayout.setVisibility(View.VISIBLE);
-
-            initNoSigninLayout(noSigninButtonLayout);
-        } else
-        {
-            signinButtonLayout.setVisibility(View.VISIBLE);
-            noSigninButtonLayout.setVisibility(View.GONE);
-
-            initSigninLayout(signinButtonLayout, code);
-        }
+        initNoSigninLayout(mNoSigninButtonLayout);
+        initSigninLayout(mSigninButtonLayout);
     }
 
     private void initNoSigninLayout(View view)
@@ -119,7 +111,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
         signinTextView.setOnClickListener(this);
     }
 
-    private void initSigninLayout(View view, String code)
+    private void initSigninLayout(View view)
     {
         View copyCodeLayout = findViewById(R.id.copyCodeLayout);
         copyCodeLayout.setOnClickListener(this);
@@ -127,8 +119,25 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
         View inviteKakaoTextView = view.findViewById(R.id.inviteKakaoTextView);
         inviteKakaoTextView.setOnClickListener(this);
 
-        TextView codeTextView = (TextView) view.findViewById(R.id.codeTextView);
-        codeTextView.setText(code);
+        mRecommendCodeTextView = (TextView) view.findViewById(R.id.codeTextView);
+    }
+
+    private void updateLayout(boolean isLogin)
+    {
+        if (isLogin == true)
+        {
+            mSigninButtonLayout.setVisibility(View.VISIBLE);
+            mNoSigninButtonLayout.setVisibility(View.GONE);
+        } else
+        {
+            mSigninButtonLayout.setVisibility(View.GONE);
+            mNoSigninButtonLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setRecommendCodeText(String recommendCode)
+    {
+        mRecommendCodeTextView.setText(recommendCode);
     }
 
     @Override
@@ -137,6 +146,15 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
         super.onResume();
 
         unLockUI();
+
+        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
+        {
+            updateLayout(false);
+        } else
+        {
+            updateLayout(true);
+            setRecommendCodeText(mRecommendCode);
+        }
     }
 
     @Override
@@ -149,12 +167,45 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             case REQUEST_ACTIVITY_SIGNUP:
                 if (resultCode == RESULT_OK)
                 {
-                    Intent intent = BonusActivity.newInstance(InviteFriendsActivity.this);
-                    startActivity(intent);
+                    mName = DailyPreference.getInstance(this).getUserName();
+                    mRecommendCode = DailyPreference.getInstance(this).getUserRecommender();
 
-                    finish();
+                    inviteFriendsKakao(mName, mRecommendCode);
                 }
                 break;
+
+            case REQUEST_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK)
+                {
+                    mName = DailyPreference.getInstance(this).getUserName();
+                    mRecommendCode = DailyPreference.getInstance(this).getUserRecommender();
+                }
+                break;
+        }
+    }
+
+    private void inviteFriendsKakao(String name, String recommendCode)
+    {
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            String msg = getString(R.string.kakaolink_msg_invited_friend, name, recommendCode, recommendCode);
+            KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
+
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
+        } catch (Exception e)
+        {
+            try
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            } catch (ActivityNotFoundException e1)
+            {
+                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                startActivity(marketLaunch);
+            }
         }
     }
 
@@ -167,34 +218,14 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
         {
             case R.id.inviteKakaoTextView:
             {
-                try
-                {
-                    // 카카오톡 패키지 설치 여부
-                    getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
-                    String msg = getString(R.string.kakaolink_msg_invited_friend, mName, mRecommendCode, mRecommendCode);
-                    KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
-
-                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
-                } catch (Exception e)
-                {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-                    } catch (ActivityNotFoundException e1)
-                    {
-                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                        startActivity(marketLaunch);
-                    }
-                }
+                inviteFriendsKakao(mName, mRecommendCode);
                 break;
             }
 
             case R.id.signinTextView:
             {
                 Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_ACTIVITY_LOGIN);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
                 //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN, 0L);
@@ -215,7 +246,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             {
                 Util.clipText(this, mRecommendCode);
 
-                DailyToast.showToast(this, R.string.message_copy_recommendar_code, Toast.LENGTH_SHORT);
+                DailyToast.showToast(this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
 
                 releaseUiComponent();
                 break;

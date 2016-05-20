@@ -42,7 +42,7 @@ public class DailyPlaceDetailListView extends ListView
 
     private void initLayout(Context context)
     {
-        EdgeEffectColor.setEdgeGlowColor(this, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(this, getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     public void setScrollEnabled(boolean enable)

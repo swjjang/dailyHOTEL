@@ -106,7 +106,7 @@ public class PaymentWaitActivity extends BaseActivity
         }
 
         ScrollView scrollLayout = (ScrollView) findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
         TextView placeNameTextView = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
         mAccountTextView = (TextView) findViewById(R.id.tv_payment_wait_account);
