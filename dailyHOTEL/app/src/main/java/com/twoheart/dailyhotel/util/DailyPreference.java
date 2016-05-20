@@ -95,7 +95,7 @@ public class DailyPreference
     private static final String KEY_PREFERENCE_USER_PWD = "USER_PWD"; // 사용하지 않음
     private static final String KEY_PREFERENCE_USER_TYPE = "USER_TYPE";
     private static final String KEY_PREFERENCE_USER_NAME = "USER_NAME";
-    private static final String KEY_PREFERENCE_USER_RECOMMENDER = "USER_NAME";
+    private static final String KEY_PREFERENCE_USER_RECOMMENDER = "USER_RECOMMENDER";
 
     // Version
     private static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
