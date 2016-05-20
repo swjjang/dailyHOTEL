@@ -183,6 +183,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".screen.information.terms.BonusTermActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.hotel.payment.HotelPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -249,7 +253,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.bonus.BonusListActivity"
+            android:name=".screen.information.bonus.InviteFriendsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

@@ -464,7 +464,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/information_line01_"/>
+                    android:background="@color/information_round"/>
             </RelativeLayout>
 
             <View
@@ -517,7 +517,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/information_line01_"/>
+                    android:background="@color/information_round"/>
             </RelativeLayout>
 
             <LinearLayout
