@@ -95,6 +95,7 @@
     <string name="actionbar_title_gourmet_list_frag">데일리고메</string>
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
+    <string name="actionbar_title_invite_friends">친구 초대하기</string>
     <string name="actionbar_title_reg_creditcard">결제카드 추가하기</string>
     <string name="actionbar_title_setting_frag">더보기</string>
     <string name="actionbar_title_error_frag">DAILYHOTEL</string>
@@ -114,6 +115,7 @@
     <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
     <string name="actionbar_title_term_activity">이용약관</string>
+    <string name="actionbar_title_bonus_term_activity">적립금 유의사항</string>
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
@@ -350,20 +352,27 @@
     <string name="act_login_facebook">페이스북으로 로그인</string>
     <string name="act_login_kakao">카카오계정으로 로그인</string>
 
-    <!-- Credit Activity -->
-    <string name="act_credit_recom">좋은 건 나눠야죠!</string>
-    <string name="act_credit_line1">친구가 내 추천코드를 넣고 회원가입을 하면\n친구는 5,000원을 선물받고!\n친구가 첫 결제를 하면 나도 5,000원 받고!</string>
+    <!-- Bonus Activity -->
+    <string name="act_credit_line1">친구에게 데일리호텔을 추천하고\n5,000원을 선물하세요!</string>
+    <string name="act_credit_line2">(친구가 회원가입시 내 추천코드를 입력하면 됩니다.)</string>
+    <string name="act_credit_line3">친구가 데일리호텔에서 첫 예약을 하면\n5,000원을 받을 수 있어요!</string>
+    <string name="act_credit_line4">(최대 10만원까지 적립할 수 있습니다.)</string>
     <string name="act_credit_btn_login">기존 회원 로그인</string>
     <string name="act_credit_sign_up">회원 가입하고 친구 초대하기</string>
     <string name="act_credit_view_credit">적립금</string>
-    <string name="act_credit_current_credit">현재 적립금</string>
-    <string name="act_credit_history">적립금내역 보기</string>
+    <string name="act_credit_current_credit">보유 적립금</string>
+    <string name="act_credit_history">적립금내역</string>
     <string name="act_credit_recom_code">추천코드</string>
     <string name="act_credit_my_recom_code">나의 추천코드</string>
-    <string name="act_credit_line4">친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!\n*최대 10만원까지 적립 가능</string>
-    <string name="act_credit_kakao">카카오톡 친구 초대</string>
-    <string name="label_copy_recommendar_code">추천코드 복사</string>
+    <string name="act_credit_kakao">카카오톡으로 친구 초대하기</string>
+    <string name="label_invite_friends">친구 초대하기</string>
+    <string name="label_copy">복사</string>
+    <string name="label_my_code">내 추천코드</string>
+    <string name="label_bonus_guide">적립금 사용시 유의사항 안내</string>
+    <string name="message_no_history_bonus">적립금 내역이 없습니다.</string>
+    <string name="message_daily_recommended_hotel_to_friend">친구에게 데일리호텔을 추천하고\n최대 10만원까지 적립금을 쌓아보세요!</string>
     <string name="message_copy_recommendar_code">추천코드가 복사되었습니다.</string>
+
 
     <!-- Credit List Activity -->
     <string name="act_history_no_details">적립금 내역이 없습니다.</string>
@@ -408,6 +417,7 @@
     <string name="message_add_profile_guide">신속한 예약확인 및 안내를 위해 추가 정보를 등록해 주세요.</string>
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
     <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 등록을 해주세요.</string>
+    <string name="message_invalid_verification">다른 디바이스에서 휴대폰 번호가 인증처리되었습니다.\n프로필 정보에서 휴대폰 번호를 다시 확인해주세요.</string>
 
     <!-- WaitTimer Fragment -->
     <string name="frag_wait_timer_off">알람 끄기</string>

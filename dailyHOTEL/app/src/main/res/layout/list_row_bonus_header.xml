@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_below="@+id/bonusLayout"
+                android:layout_marginTop="10dp"
+                android:background="@color/white">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/information_round"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:gravity="left|center_vertical"
+        android:text="@string/act_credit_history"
+        android:textColor="@color/search_hint_text"
+        android:textSize="14dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/guideTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:gravity="left|center_vertical"
+        android:text="@string/label_bonus_guide"
+        android:textColor="@color/curation_title_text"
+        android:textSize="11dp"
+        dailyFont:style="DemiLight"/>
+</RelativeLayout>
