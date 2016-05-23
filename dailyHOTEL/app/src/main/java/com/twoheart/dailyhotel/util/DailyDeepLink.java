@@ -615,30 +615,35 @@ public class DailyDeepLink
         return Constants.SortType.DEFAULT;
     }
 
-    private void decodingLinkV4(Uri uri)
+    private boolean decodingLinkV4(Uri uri)
     {
-        decodingLinkV3(uri);
+        if (decodingLinkV3(uri) == false)
+        {
+            return false;
+        }
 
         putParams(uri, PARAM_V4_RECOMMENDER_CODE);
         putParams(uri, PARAM_V4_DATE_PLUS);
         putParams(uri, PARAM_V4_SORTING);
+
+        return true;
     }
 
-    private void decodingLinkV3(Uri uri)
+    private boolean decodingLinkV3(Uri uri)
     {
         mParams.clear();
 
         if (uri == null)
         {
             clear();
-            return;
+            return false;
         }
 
         if (putParams(uri, PARAM_V3_VIEW) == false)
         {
             // view는 기본요소라서 없으면 안된다
             clear();
-            return;
+            return false;
         }
 
         putParams(uri, PARAM_V3_DATE);
@@ -649,6 +654,8 @@ public class DailyDeepLink
         putParams(uri, PARAM_V3_AREA_INDEX);
         putParams(uri, PARAM_V3_REGION_ISOVERSEA);
         putParams(uri, PARAM_V3_CATEGORY_CODE);
+
+        return true;
     }
 
     private void decodingLinkV2(Uri uri)
