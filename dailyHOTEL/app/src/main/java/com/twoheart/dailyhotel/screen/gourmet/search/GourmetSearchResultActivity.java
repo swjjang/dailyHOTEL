@@ -112,6 +112,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     {
         super.initContents();
 
+        if (mSaleTime == null)
+        {
+            finish();
+            return;
+        }
+
         String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd");
 
         if (mSearchType == SEARCHTYPE_LOCATION)

@@ -148,7 +148,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void doSignUp(String verificationNumber)
+        public void doSignUp(String verificationNumber, String phoneNumber)
         {
             if (Util.isTextEmpty(verificationNumber) == true)
             {
@@ -163,7 +163,7 @@ public class SignupStep2Activity extends BaseActivity
 
             lockUI();
 
-            mNetworkController.requestSingUp(mSignupKey, verificationNumber);
+            mNetworkController.requestSingUp(mSignupKey, verificationNumber, phoneNumber);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.REGISTRATION_CLICKED, AnalyticsManager.Label.AGREE_AND_REGISTER, null);
@@ -274,22 +274,7 @@ public class SignupStep2Activity extends BaseActivity
         {
             unLockUI();
 
-            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm)//
-                , new View.OnClickListener()//
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        mSignupStep2Layout.resetPhoneNumber();
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        mSignupStep2Layout.resetPhoneNumber();
-                    }
-                });
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override
@@ -297,22 +282,7 @@ public class SignupStep2Activity extends BaseActivity
         {
             unLockUI();
 
-            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm)//
-                , new View.OnClickListener()//
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        mSignupStep2Layout.resetVerificationNumber();
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        mSignupStep2Layout.resetVerificationNumber();
-                    }
-                });
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override

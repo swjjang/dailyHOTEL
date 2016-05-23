@@ -479,7 +479,7 @@ interface IDailyNetwork
      * @param code
      * @param listener
      */
-    void requestDailyUserSignup(Object tag, String signupKey, String code, DailyHotelJsonResponseListener listener);
+    void requestDailyUserSignup(Object tag, String signupKey, String code, String phone, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag
