@@ -126,6 +126,7 @@
     <string name="actionbar_title_edit_name">이름 설정</string>
     <string name="actionbar_title_edit_password">비밀번호 설정</string>
     <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
+	<string name="actionbar_title_coupon_list">할인쿠폰함</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -801,4 +802,20 @@
     <string name="label_searchresult_research">다시 검색하기</string>
     <string name="label_searchresult_call_customercenter">고객센터로 전화하기</string>
     <string name="label_map_searchmap">지도앱에서 길찾기</string>
+
+    <!-- Coupon -->
+    <string name="coupon_notice_text">주의사항\n확인하기</string>
+    <string name="coupon_duedate_text">(%1$s일 남음)</string>
+    <string name="coupon_today_text">오늘까지</string>
+    <string name="coupon_description_text">사용가능처 %1$s</string>
+    <string name="coupon_download_text">다운로드</string>
+    <string name="coupon_useable_text">사용가능</string>
+    <string name="coupon_header_text">사용가능한 쿠폰이 %1$d장 있습니다</string>
+    <string name="coupon_use_notice_text">쿠폰 사용시 유의사항 안내</string>
+    <string name="coupon_history_empty_message">쿠폰 사용내역이 없습니다</string>
+    <string name="coupon_list_empty_message">사용가능한 할인 쿠폰이 없습니다</string>
+    <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다</string>
+    <string name="coupon_history_use_text">결제시 사용</string>
+    <string name="coupon_history_expire_text">기간만료</string>
+
 </resources>
