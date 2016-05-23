@@ -152,7 +152,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                 if (convertView == null)
                 {
                     LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = layoutInflater.inflate(R.layout.list_row_booking_section, parent, false);
+                    convertView = layoutInflater.inflate(R.layout.list_row_default_section, parent, false);
                     convertView.setTag(Booking.TYPE_SECTION);
                 }
 
@@ -258,7 +258,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             return view;
         }
 
-        TextView sectionName = (TextView) view.findViewById(R.id.bookingSectionName);
+        TextView sectionName = (TextView) view;
 
         sectionName.setText(booking.placeName);
 

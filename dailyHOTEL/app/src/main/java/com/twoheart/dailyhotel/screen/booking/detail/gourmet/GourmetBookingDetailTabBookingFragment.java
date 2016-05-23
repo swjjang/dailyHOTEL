@@ -84,7 +84,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         View view = inflater.inflate(R.layout.fragment_courmetbooking_tab_booking, container, false);
 
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
         initGourmetInformationLayout(view, mBookingDetail);
         initGuestInformationLayout(view, mBookingDetail);

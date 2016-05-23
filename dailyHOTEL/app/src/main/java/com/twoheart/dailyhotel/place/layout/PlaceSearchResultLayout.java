@@ -153,7 +153,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(getListAdapter());
-        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override

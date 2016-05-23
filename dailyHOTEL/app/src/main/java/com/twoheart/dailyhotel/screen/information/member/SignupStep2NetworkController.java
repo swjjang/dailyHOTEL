@@ -27,9 +27,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
         void onSignUp(int notificationUid, String gcmRegisterId);
 
-        void onLogin(String authorization);
-
-        void onUserInformation(String userIndex, String email, String name, String phoneNumber);
+        void onLogin(String authorization, String userIndex, String email, String name, String recommender, String userType, String phoneNumber);
 
         void onAlreadyVerification(String phoneNumber);
     }
@@ -64,11 +62,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
         params.put("user_type", Constants.DAILY_USER);
 
         DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
-    }
-
-    public void requestUserInformation()
-    {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
     }
 
     public void requestGoogleCloudMessagingId()
@@ -261,9 +254,9 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
                 if (msgCode == 0)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
+                    boolean isSignin = dataJSONObject.getBoolean("is_signin");
 
                     if (isSignin == true)
                     {
@@ -271,7 +264,15 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         String accessToken = tokenJSONObject.getString("access_token");
                         String tokenType = tokenJSONObject.getString("token_type");
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken));
+                        JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
+                        String userIndex = userJSONObject.getString("idx");
+                        String email = userJSONObject.getString("email");
+                        String name = userJSONObject.getString("name");
+                        String rndnum = userJSONObject.getString("rndnum");
+                        String userType = userJSONObject.getString("userType");
+                        String phoneNumber = userJSONObject.getString("phone");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken), userIndex, email, name, rndnum, userType, phoneNumber);
                         return;
                     }
                 }
@@ -288,42 +289,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                String userIndex = String.valueOf(response.getInt("idx"));
-
-                AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
-
-                String name = response.getString("name");
-                String email = response.getString("email");
-                String phone = response.getString("phone");
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            try
-            {
-                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onErrorResponse(volleyError);
             }
         }
     };

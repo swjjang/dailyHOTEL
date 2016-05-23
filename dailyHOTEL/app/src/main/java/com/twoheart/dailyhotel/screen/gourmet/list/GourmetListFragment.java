@@ -71,7 +71,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mGourmetRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
         mGourmetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mGourmetRecyclerView.setTag("GourmetListFragment");
-        EdgeEffectColor.setEdgeGlowColor(mGourmetRecyclerView, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mGourmetRecyclerView, getResources().getColor(R.color.default_over_scroll_edge));
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 

@@ -86,7 +86,7 @@ public class CreditCardLayout extends FrameLayout
         mAddCreditCardButton = (TextView) view.findViewById(R.id.addCreditCardButton);
 
         mListView = (ListView) view.findViewById(R.id.creditcardListView);
-        EdgeEffectColor.setEdgeGlowColor(mListView, context.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mListView, context.getResources().getColor(R.color.default_over_scroll_edge));
 
         mAddCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
 

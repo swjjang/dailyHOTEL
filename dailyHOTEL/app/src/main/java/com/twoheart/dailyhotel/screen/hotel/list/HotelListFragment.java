@@ -89,7 +89,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         mHotelRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
         mHotelRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mHotelRecyclerView.setTag("HotelListFragment");
-        EdgeEffectColor.setEdgeGlowColor(mHotelRecyclerView, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mHotelRecyclerView, getResources().getColor(R.color.default_over_scroll_edge));
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 

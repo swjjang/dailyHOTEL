@@ -4,7 +4,7 @@
 
     <stroke
         android:width="1px"
-        android:color="@color/over_scroll_edge"/>
+        android:color="@color/default_over_scroll_edge"/>
 
     <corners
         android:radius="2dp">

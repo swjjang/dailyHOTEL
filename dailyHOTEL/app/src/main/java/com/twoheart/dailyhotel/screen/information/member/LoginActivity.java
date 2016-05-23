@@ -48,6 +48,7 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
@@ -439,24 +440,27 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
     }
 
-
-    public void storeLoginInfo()
+    public String storeLoginInformation(JSONObject jsonObject) throws JSONException
     {
-        String email = mStoreParams.get("email");
-        String accessToken = mStoreParams.get("social_id");
-        String type = mStoreParams.get("user_type");
+        JSONObject dataJSONObject = jsonObject.getJSONObject("data");
+        JSONObject tokenJSONObject = jsonObject.getJSONObject("token");
+        String accessToken = tokenJSONObject.getString("access_token");
+        String tokenType = tokenJSONObject.getString("token_type");
 
-        if (Util.isTextEmpty(accessToken) == false && "0".equals(accessToken) == false)
-        {
-            DailyPreference.getInstance(this).setUserEmail(null);
-            DailyPreference.getInstance(this).setUserAccessToken(accessToken);
-        } else
-        {
-            DailyPreference.getInstance(this).setUserEmail(email);
-            DailyPreference.getInstance(this).setUserAccessToken(null);
-        }
+        JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
+        String userIndex = userJSONObject.getString("idx");
+        String email = userJSONObject.getString("email");
+        String name = userJSONObject.getString("name");
+        String recommender = userJSONObject.getString("rndnum");
+        String userType = userJSONObject.getString("userType");
+        String phoneNumber = userJSONObject.getString("phone");
 
-        DailyPreference.getInstance(this).setUserType(type);
+        DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
+        DailyPreference.getInstance(this).setUserInformation(userType, email, name, recommender);
+
+        AnalyticsManager.getInstance(this).setUserIndex(userIndex);
+
+        return userIndex;
     }
 
     @Override
@@ -765,67 +769,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            String userIndex = null;
-
-            try
-            {
-                // GCM 등록을 위해 값이 필요한다.
-                userIndex = String.valueOf(response.getInt("idx"));
-
-                AnalyticsManager.getInstance(LoginActivity.this).setUserIndex(userIndex);
-
-                String name = response.getString("name");
-
-                if (Util.isTextEmpty(name) == false)
-                {
-                    DailyPreference.getInstance(LoginActivity.this).setUserName(name);
-                }
-
-                if (mIsSocialSignUp == true)
-                {
-                    mIsSocialSignUp = false;
-
-                    if (mStoreParams.containsKey("new_user") == true)
-                    {
-                        // user_type : kakao_talk. facebook
-                        String userType = mStoreParams.get("user_type");
-
-                        if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
-                        {
-                            userType = AnalyticsManager.UserType.KAKAO;
-                        } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
-                        {
-                            userType = AnalyticsManager.UserType.FACEBOOK;
-                        }
-
-                        AnalyticsManager.getInstance(LoginActivity.this).singUpSocialUser(//
-                            userIndex//
-                            , mStoreParams.get("email"), mStoreParams.get("name")//
-                            , mStoreParams.get("gender"), null, userType);
-                    }
-                }
-            } catch (Exception e)
-            {
-                unLockUI();
-                onError(e);
-            } finally
-            {
-                requestGoogleCloudMessagingId(userIndex);
-            }
-        }
-    };
-
     private DailyHotelJsonResponseListener mDailyUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -839,9 +782,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -849,15 +792,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     if (isSignin == true)
                     {
-                        JSONObject tokenJSONObject = response.getJSONObject("token");
-                        String accessToken = tokenJSONObject.getString("access_token");
-                        String tokenType = tokenJSONObject.getString("token_type");
+                        String userIndex = storeLoginInformation(response);
 
-                        DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
-                        storeLoginInfo();
-
-                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
+
+                        requestGoogleCloudMessagingId(userIndex);
                         return;
                     }
                 }
@@ -898,23 +837,28 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 JSONObject jsonObject = response.getJSONObject("data");
                 boolean isSignin = jsonObject.getBoolean("is_signin");
 
+                String userType = mStoreParams.get("user_type");
+
                 if (isSignin == true)
                 {
-                    JSONObject tokenJSONObject = response.getJSONObject("token");
-                    String accessToken = tokenJSONObject.getString("access_token");
-                    String tokenType = tokenJSONObject.getString("token_type");
+                    String userIndex = storeLoginInformation(response);
 
-                    DailyPreference.getInstance(LoginActivity.this).setAuthorization(String.format("%s %s", tokenType, accessToken));
-                    storeLoginInfo();
-
-                    DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, LoginActivity.this);
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
+
+                    // 소셜 신규 가입인 경우
+                    if (mIsSocialSignUp == true)
+                    {
+                        mIsSocialSignUp = false;
+
+                        AnalyticsManager.getInstance(LoginActivity.this).singUpSocialUser(//
+                            userIndex, mStoreParams.get("email"), mStoreParams.get("name")//
+                            , mStoreParams.get("gender"), null, userType);
+                    }
+
+                    requestGoogleCloudMessagingId(userIndex);
                 } else
                 {
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-
-                    String userType = mStoreParams.get("user_type");
-
                     if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                     {
                         DailyNetworkAPI.getInstance(LoginActivity.this).requestFacebookUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupJsonResponseListener);

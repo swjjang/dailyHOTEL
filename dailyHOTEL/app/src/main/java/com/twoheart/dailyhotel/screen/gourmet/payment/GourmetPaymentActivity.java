@@ -180,7 +180,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private void initLayout()
     {
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
         mGourmetPaymentLayout = new GourmetPaymentLayout(this, scrollView, mOnUserActionListener);
     }

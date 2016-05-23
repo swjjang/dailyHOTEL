@@ -196,7 +196,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     private void initLayout()
     {
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
         initHotelInformation();
         initGuestInformation();

@@ -31,7 +31,6 @@
 
     <color name="tab_background">#f4f4f4</color>
     <color name="button_background">#900034</color>
-    <color name="activity_background">#fdfdfd</color>
     <color name="leftdrawer_divider">#f0f0f0</color>
 
     <color name="bg_hotel_imgs_indicator">#7F000000</color>
@@ -103,7 +102,6 @@
     <color name="creditcard_add_card_text">#858585</color>
 
     <!-- Booking List -->
-    <color name="bookinglist_section_background">#292929</color>
     <color name="bookinglist_used_text">#8b8b8b</color>
 
     <!-- Map View -->
@@ -201,7 +199,6 @@
     <color name="actionbar_title">#323232</color>
 
     <!-- Information -->
-    <color name="information_background">#f8f8f9</color>
     <color name="information_title">#323232</color>
     <color name="information_underline">#dcdcdd</color>
     <color name="information_push_subtext">#929292</color>
@@ -227,5 +224,17 @@
 
     <color name="payment_memo_hint">#d0d0d0</color>
 
-    <color name="over_scroll_edge">#dcdcdc</color>
+    <!-- DEFAULT -->
+    <color name="default_background">#f8f8f9</color>
+    <color name="default_text_c900034">#900034</color>
+    <color name="default_text_c323232">#323232</color>
+    <color name="default_text_c929292">#929292</color>
+    <color name="default_text_cc5c5c5">#c5c5c5</color>
+    <color name="default_over_scroll_edge">#dcdcdc</color>
+    <color name="default_text_kakao">#3c1e1e</color>
+
+    <color name="default_background_section">#323232</color>
+    <color name="default_background_kakao">#f9ed00</color>
+
+
 </resources>

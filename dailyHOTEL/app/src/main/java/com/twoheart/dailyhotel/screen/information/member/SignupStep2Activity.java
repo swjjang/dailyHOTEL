@@ -209,18 +209,13 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onLogin(String authorization)
+        public void onLogin(String authorization, String userIndex, String email, String name, String recommender, String userType, String phoneNumber)
         {
             unLockUI();
 
             DailyPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
+            DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, recommender);
 
-            mNetworkController.requestUserInformation();
-        }
-
-        @Override
-        public void onUserInformation(String userIndex, String email, String name, String phoneNumber)
-        {
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserIndex(userIndex);
             AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser(userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender);
 
