@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:paddingLeft="10dp"
-            android:src="@drawable/navibar_ic_x"/>
+            android:src="@drawable/navibar_ic_search_x"/>
     </RelativeLayout>
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -61,7 +61,7 @@
             android:id="@+id/messageTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="6dp"
             android:gravity="center"
             android:maxLines="1"
             android:singleLine="true"
@@ -84,7 +84,7 @@
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
-                android:background="@color/default_background_section_f2f2f3"
+                android:background="@color/default_background_section_cf2f2f3"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="15dp"
                 android:text="@string/label_booking_information"
@@ -94,13 +94,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/default_line_e7e7e7"/>
+                android:background="@color/default_line_ce7e7e7"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_alignParentBottom="true"
-                android:background="@color/default_line_e7e7e7"/>
+                android:background="@color/default_line_ce7e7e7"/>
         </RelativeLayout>
 
 
@@ -199,7 +199,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/default_line_e7e7e7"/>
+            android:background="@color/default_line_ce7e7e7"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/confirmView"

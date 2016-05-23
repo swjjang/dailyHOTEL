@@ -24,8 +24,7 @@
             android:layout_marginLeft="5dp"
             android:freezesText="true"
             android:lineSpacingExtra="-2dp"
-            android:textColor="@color/black"
-            android:textSize="13dp"
-            dailyFont:style="DemiLight"/>
+            android:textColor="@color/default_background_section_c323232"
+            android:textSize="13dp"/>
     </LinearLayout>
 </FrameLayout>

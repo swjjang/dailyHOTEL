@@ -177,8 +177,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
         TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);
         ImageView bookingIconImageView = (ImageView) view.findViewById(R.id.bookingIconImageView);
-        TextView name = (TextView) view.findViewById(R.id.tv_booking_row_name);
-        TextView day = (TextView) view.findViewById(R.id.tv_booking_row_day);
+        TextView name = (TextView) view.findViewById(R.id.placeNameTextView);
+        TextView day = (TextView) view.findViewById(R.id.bookingDateTextView);
         View deleteView = view.findViewById(R.id.deleteView);
 
         name.setText(booking.placeName);

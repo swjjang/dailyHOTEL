@@ -1,62 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="169dp">
+                android:layout_height="202dp"
+                android:background="@drawable/dim_center">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/hotelImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/img_placeholder"
-        fresco:placeholderImageScaleType="centerCrop"
-        fresco:actualImageScaleType="centerCrop"/>
+        fresco:placeholderImageScaleType="centerCrop"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/waitAccountTextView"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/notice"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="11dp"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/waitAccountTextView"
         android:layout_centerInParent="true"
-        android:background="@drawable/dim_center"
         android:gravity="center"
         android:orientation="vertical">
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/waitAccountTextView"
-            android:layout_width="match_parent"
-            android:layout_height="22dp"
-            android:layout_marginBottom="11dp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="15dp"/>
 
         <ImageView
             android:id="@+id/bookingIconImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="11dp"
             android:textColor="@color/white"
             android:textSize="22dp"
             android:visibility="gone"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/tv_booking_row_name"
+            android:id="@+id/placeNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginTop="6dp"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@color/white"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            dailyFont:style="Medium"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/tv_booking_row_day"
+            android:id="@+id/bookingDateTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginTop="6dp"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="15dp"/>
@@ -70,11 +79,13 @@
 
     <ImageView
         android:id="@+id/deleteView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:padding="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:scaleType="center"
         android:src="@drawable/ic_delete"
         android:visibility="gone"/>
 
