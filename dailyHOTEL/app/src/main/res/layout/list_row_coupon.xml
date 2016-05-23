@@ -15,7 +15,7 @@
         android:background="@color/coupon_vertical_line"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/couponPriceTextView"
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:layout_marginLeft="16dp"
@@ -30,8 +30,8 @@
         android:id="@+id/descriptionTextView"
         android:layout_width="match_parent"
         android:layout_height="18dp"
-        android:layout_alignLeft="@id/nameTextView"
-        android:layout_below="@id/nameTextView"
+        android:layout_alignLeft="@id/couponPriceTextView"
+        android:layout_below="@id/couponPriceTextView"
         android:layout_marginTop="6dp"
         android:layout_toLeftOf="@id/vericalLine"
         android:ellipsize="end"
@@ -43,7 +43,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="17dp"
-        android:layout_alignLeft="@id/nameTextView"
+        android:layout_alignLeft="@id/couponPriceTextView"
         android:layout_below="@id/descriptionTextView"
         android:layout_marginTop="1dp"
         android:layout_toLeftOf="@id/vericalLine"
@@ -75,7 +75,7 @@
         android:id="@+id/useablePlaceTextView"
         android:layout_width="wrap_content"
         android:layout_height="17dp"
-        android:layout_alignLeft="@id/nameTextView"
+        android:layout_alignLeft="@id/couponPriceTextView"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="13dp"
         android:gravity="center_vertical"
@@ -88,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="17dp"
         android:layout_above="@id/useablePlaceTextView"
-        android:layout_alignLeft="@id/nameTextView"
+        android:layout_alignLeft="@id/couponPriceTextView"
         android:gravity="center_vertical"
         android:text="90,000원 이상 구매시 사용 가능"
         android:textColor="@color/coupon_description_text"

@@ -50,13 +50,13 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 		initListView(view);
 
 		mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
+		mEmptyView = view.findViewById(R.id.emptyView);
 
 		View couponHistoryView = view.findViewById(R.id.couponHistoryTextView);
 		couponHistoryView.setOnClickListener(this);
 
 		updateHeaderTextView(0);
 
-		mEmptyView = view.findViewById(R.id.emptyView);
 
 		setData(new ArrayList<Coupon>());
 	}
