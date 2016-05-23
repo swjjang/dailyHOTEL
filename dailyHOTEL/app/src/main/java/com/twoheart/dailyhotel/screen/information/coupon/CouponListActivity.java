@@ -3,9 +3,11 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 
 /**
@@ -15,7 +17,6 @@ public class CouponListActivity extends BaseActivity
 {
 	private CouponListLayout mCouponListLayout;
 	private CouponListNetworkController mCouponListNetworkController;
-
 
 	public static Intent newInstance(Context context)
 	{
@@ -47,7 +48,6 @@ public class CouponListActivity extends BaseActivity
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
-
 	// ////////////////////////////////////////////////////////
 	// EventListener
 	// ////////////////////////////////////////////////////////
@@ -67,23 +67,29 @@ public class CouponListActivity extends BaseActivity
 		}
 
 		@Override
+		public void startListItemNotice(View view, int position, Coupon coupon)
+		{
+			// 리스트 아이템 쿠폰 유의사항 팝업
+		}
+
+		@Override
+		public void onListItemDownLoadClick(View view, int position, Coupon coupon)
+		{
+			// 리스트 아이템 쿠폰 다운로드
+		}
+
+		@Override
 		public void finish()
 		{
 			CouponListActivity.this.finish();
 		}
 	};
 
-
-
 	// ///////////////////////////////////////////////////
 	// NetworkController
 	// ///////////////////////////////////////////////////
 	private CouponListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new CouponListNetworkController.OnNetworkControllerListener()
 	{
-
-
-
-
 
 		@Override
 		public void onErrorResponse(VolleyError volleyError)

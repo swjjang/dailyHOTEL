@@ -27,16 +27,25 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 
 	private Context mContext;
 	private List<Coupon> mCouponList;
+	private OnCouponItemListener mListener;
 
-	public CouponListAdapter(Context context, int resource, List<Coupon> list)
+	public interface OnCouponItemListener
+	{
+		void startNotice(View view, int position);
+
+		void onDownloadClick(View view, int position);
+	}
+
+	public CouponListAdapter(Context context, int resource, List<Coupon> list, OnCouponItemListener listener)
 	{
 		super(context, resource, list);
 		mContext = context;
 		mCouponList = list;
+		mListener = listener;
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent)
+	public View getView(final int position, View convertView, ViewGroup parent)
 	{
 		View view;
 
@@ -93,10 +102,12 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 
 		if (coupon.state == 0)
 		{
+			//download
 			downloadIconView.setVisibility(View.VISIBLE);
 			useIconView.setVisibility(View.GONE);
 		} else
 		{
+			//useable
 			downloadIconView.setVisibility(View.GONE);
 			useIconView.setVisibility(View.VISIBLE);
 		}
@@ -105,6 +116,23 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 		SpannableString spannableString = new SpannableString(charSequence);
 		spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		noticeTextView.setText(spannableString);
+		noticeTextView.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				mListener.startNotice(v, position);
+			}
+		});
+
+		view.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				mListener.onDownloadClick(v, position);
+			}
+		});
 
 		return view;
 	}

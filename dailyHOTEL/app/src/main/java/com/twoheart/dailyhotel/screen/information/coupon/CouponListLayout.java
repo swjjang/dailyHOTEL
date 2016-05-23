@@ -29,12 +29,18 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 	private DailyTextView mHeaderTextView;
 	private ListView mListView;
 	private View mEmptyView;
+	private CouponListAdapter mListAdapter;
+
 
 	public interface OnEventListener extends OnBaseEventListener
 	{
 		void startCouponHistory();
 
 		void startNotice();
+
+		void startListItemNotice(View view, int position, Coupon coupon);
+
+		void onListItemDownLoadClick(View view, int position, Coupon coupon);
 
 	}
 
@@ -56,7 +62,6 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 		couponHistoryView.setOnClickListener(this);
 
 		updateHeaderTextView(0);
-
 
 		setData(new ArrayList<Coupon>());
 	}
@@ -110,25 +115,50 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 	@Override
 	public void onClick(View v)
 	{
-
+		switch (v.getId())
+		{
+			case R.id.couponHistoryTextView:
+				((OnEventListener) mOnEventListener).startCouponHistory();
+				break;
+			case R.id.couponUseNoticeTextView:
+				((OnEventListener) mOnEventListener).startNotice();
+				break;
+		}
 	}
 
 	public void setData(List<Coupon> list)
 	{
 		EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
-		CouponListAdapter couponListAdapter = null;
 
 		if (list != null && list.size() != 0)
 		{
-			couponListAdapter = new CouponListAdapter(mContext, 0, list);
+			mListAdapter = new CouponListAdapter(mContext, 0, list, mCouponItemListener);
 			mEmptyView.setVisibility(View.GONE);
 		} else
 		{
-			couponListAdapter = new CouponListAdapter(mContext, 0, new ArrayList<Coupon>());
+			mListAdapter = new CouponListAdapter(mContext, 0, new ArrayList<Coupon>(), mCouponItemListener);
 			mEmptyView.setVisibility(View.VISIBLE);
 
 		}
 
-		mListView.setAdapter(couponListAdapter);
+		mListView.setAdapter(mListAdapter);
 	}
+
+	private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
+	{
+		@Override
+		public void startNotice(View view, int position)
+		{
+			Coupon coupon = mListAdapter.getItem(position);
+			((OnEventListener) mOnEventListener).startListItemNotice(view, position, coupon);
+		}
+
+		@Override
+		public void onDownloadClick(View view, int position)
+		{
+			Coupon coupon = mListAdapter.getItem(position);
+			((OnEventListener) mOnEventListener).onListItemDownLoadClick(view, position, coupon);
+		}
+	};
+
 }
