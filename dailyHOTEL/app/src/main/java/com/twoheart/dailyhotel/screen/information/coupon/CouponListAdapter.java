@@ -67,30 +67,36 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 		descriptionTextView.setText(coupon.description);
 		expireTextView.setText(coupon.expiredTime);
 
-		if (coupon.dueDate > 0) {
+		if (coupon.dueDate > 0)
+		{
 			dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
 			dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
 			String strDueDate = mContext.getResources().getString(R.string.coupon_duedate_text, coupon.dueDate);
 			dueDateTextView.setText(strDueDate);
-		} else {
+		} else
+		{
 			// 오늘까지
 			dueDateTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
 			dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
 			dueDateTextView.setText(coupon.dueDate);
 		}
 
-		if (coupon.minPrice > 0) {
+		if (coupon.minPrice > 0)
+		{
 			minPriceTextView.setText(coupon.minPrice);
-		} else {
+		} else
+		{
 			minPriceTextView.setText("");
 		}
 
 		useablePlaceTextView.setText(coupon.useablePlace);
 
-		if (coupon.state == 0) {
+		if (coupon.state == 0)
+		{
 			downloadIconView.setVisibility(View.VISIBLE);
 			useIconView.setVisibility(View.GONE);
-		} else {
+		} else
+		{
 			downloadIconView.setVisibility(View.GONE);
 			useIconView.setVisibility(View.VISIBLE);
 		}
