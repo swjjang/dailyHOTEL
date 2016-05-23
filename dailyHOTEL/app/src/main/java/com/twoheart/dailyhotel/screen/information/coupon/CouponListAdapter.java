@@ -1,6 +1,10 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,22 +69,36 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 
 		if (coupon.dueDate > 0) {
 			dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+			dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
+			String strDueDate = mContext.getResources().getString(R.string.coupon_duedate_text, coupon.dueDate);
+			dueDateTextView.setText(strDueDate);
 		} else {
 			// 오늘까지
 			dueDateTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+			dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
+			dueDateTextView.setText(coupon.dueDate);
 		}
-
-		dueDateTextView.setText(coupon.dueDate);
-
-
-
-		useablePlaceTextView.setText(coupon.useablePlace);
 
 		if (coupon.minPrice > 0) {
 			minPriceTextView.setText(coupon.minPrice);
 		} else {
 			minPriceTextView.setText("");
 		}
+
+		useablePlaceTextView.setText(coupon.useablePlace);
+
+		if (coupon.state == 0) {
+			downloadIconView.setVisibility(View.VISIBLE);
+			useIconView.setVisibility(View.GONE);
+		} else {
+			downloadIconView.setVisibility(View.GONE);
+			useIconView.setVisibility(View.VISIBLE);
+		}
+
+		CharSequence charSequence = TextUtils.isEmpty(noticeTextView.getText()) ? "" : noticeTextView.getText();
+		SpannableString spannableString = new SpannableString(charSequence);
+		spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		noticeTextView.setText(spannableString);
 
 		return view;
 	}
