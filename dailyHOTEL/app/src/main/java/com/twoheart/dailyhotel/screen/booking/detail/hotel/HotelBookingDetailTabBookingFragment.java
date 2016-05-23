@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * HotelBookingDetailTabBookingFragment (예약한 호텔의 예약 탭)
- * <p>
+ * <p/>
  * 예약한 호텔 탭 중 예약 탭 프래그먼트
  */
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
@@ -24,7 +23,6 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,13 +33,11 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
     private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
-    private static final String KEY_BUNDLE_ARGUMENTS_ISUSED = "isUsed";
 
     private HotelBookingDetail mBookingDetail;
     private int mReservationIndex;
-    private boolean mIsUsed;
 
-    public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex, boolean isUsed)
+    public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
         HotelBookingDetailTabBookingFragment newFragment = new HotelBookingDetailTabBookingFragment();
 
@@ -49,7 +45,6 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         Bundle arguments = new Bundle();
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL, bookingDetail);
         arguments.putInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX, reservationIndex);
-        arguments.putBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED, isUsed);
 
         newFragment.setArguments(arguments);
 
@@ -67,7 +62,6 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         {
             mBookingDetail = bundle.getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
             mReservationIndex = bundle.getInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX);
-            mIsUsed = bundle.getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
         }
     }
 
@@ -92,46 +86,25 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         // 영수증 발급
         TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
-
-        if (DEBUG == true)
+        viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
+        viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
+        viewReceiptTextView.setOnClickListener(new View.OnClickListener()
         {
-            mIsUsed = true;
-        }
-
-        if (mIsUsed == true)
-        {
-            viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
-            viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
-            viewReceiptTextView.setOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
+                BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                    if (baseActivity == null)
-                    {
-                        return;
-                    }
-
-                    Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
-                    startActivity(intent);
-                }
-            });
-        } else
-        {
-            viewReceiptTextView.setTextColor(getResources().getColor(R.color.hoteldetail_soldout_text));
-            viewReceiptTextView.setBackgroundResource(R.color.hoteldetail_soldout_background);
-            viewReceiptTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
+                if (baseActivity == null)
                 {
-                    DailyToast.showToast(getActivity(), R.string.message_cant_issuing_receipt, Toast.LENGTH_SHORT);
+                    return;
                 }
-            });
-        }
+
+                Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
