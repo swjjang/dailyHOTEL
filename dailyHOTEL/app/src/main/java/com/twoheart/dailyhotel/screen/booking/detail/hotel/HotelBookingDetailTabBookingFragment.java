@@ -83,12 +83,11 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         initHotelInformationLayout(view, mBookingDetail);
         initCheckInOutInformationLayout(view, mBookingDetail);
         initGuestInformationLayout(view, mBookingDetail);
+        initPaymentInformationLayout(view, mBookingDetail);
 
         // 영수증 발급
-        TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
-        viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
-        viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
-        viewReceiptTextView.setOnClickListener(new View.OnClickListener()
+        View confirmView = view.findViewById(R.id.buttonLayout);
+        confirmView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -155,5 +154,19 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         tvCustomerName.setText(bookingDetail.guestName);
         tvCustomerPhone.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
+    }
+
+    private void initPaymentInformationLayout(View view, HotelBookingDetail bookingDetail)
+    {
+        TextView paymentDateTextView = (TextView) view.findViewById(R.id.paymentDateTextView);
+        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+
+        View bonusLayout = view.findViewById(R.id.bonusLayout);
+        View couponLayout = view.findViewById(R.id.couponLayout);
+        TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
+        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
+        TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
+
+
     }
 }

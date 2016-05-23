@@ -339,7 +339,6 @@
                             android:layout_height="1px"
                             android:background="@color/default_line_cdcdcdd"/>
 
-
                         <com.twoheart.dailyhotel.widget.DailyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -362,8 +361,6 @@
                             dailyFont:style="Bold"/>
                     </RelativeLayout>
                 </LinearLayout>
-
-
             </LinearLayout>
 
             <LinearLayout

@@ -230,6 +230,8 @@
     <color name="default_text_c323232">#323232</color>
     <color name="default_text_c929292">#929292</color>
     <color name="default_text_cc5c5c5">#c5c5c5</color>
+    <color name="default_text_c66323232">#66323232</color>
+
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
 
@@ -242,6 +244,7 @@
 
     <color name="default_line_ce7e7e7">#e7e7e7</color>
     <color name="default_line_cdcdcdd">#dcdcdd</color>
+    <color name="default_line_cebebeb">#ebebeb</color>
 
 
 

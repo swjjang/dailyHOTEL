@@ -76,6 +76,12 @@ public class HotelBookingDetail extends PlaceBookingDetail
         {
             hotelPhone = phone3;
         }
+
+//        paymentDate;
+//        price;
+//        bonus;
+//        coupon;
+//        totalPrice;
     }
 
     @Override

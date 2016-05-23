@@ -529,7 +529,7 @@
     <string name="frag_booking_tab_chkout">체크아웃</string>
     <string name="frag_booking_tab_name">투숙자명</string>
     <string name="label_booking_reservation_name">예약자명</string>
-    <string name="label_booking_guest_information">투숙자 정보</string>
+    <string name="label_booking_guest_information">투숙객 정보</string>
     <string name="frag_booking_tab_mobile">투숙자 전화번호</string>
     <string name="frag_hotel_tab_add">주소</string>
     <string name="frag_hotel_tab_bed_type">베드타입</string>
@@ -539,6 +539,7 @@
     <string name="label_booking_ticketcount">수량</string>
     <string name="label_booking_date">날짜</string>
     <string name="label_reservation_contact">예약자 전화번호</string>
+    <string name="label_booking_payment_date">결제일</string>
 
     <!-- RatingHotel Fragment -->
     <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>
