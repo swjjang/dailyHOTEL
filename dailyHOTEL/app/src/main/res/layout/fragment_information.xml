@@ -277,8 +277,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/information_background"/>
+                android:layout_height="10dp"/>
 
             <RelativeLayout
                 android:id="@+id/recommendLayout"
@@ -365,8 +364,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/information_background"/>
+                android:layout_height="10dp"/>
 
             <RelativeLayout
                 android:id="@+id/callLayout"
@@ -468,8 +466,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/information_background"/>
+                android:layout_height="10dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -523,7 +520,6 @@
                 android:id="@+id/dailyInformationView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/information_background"
                 android:gravity="center_horizontal"
                 android:minHeight="185dp"
                 android:orientation="vertical"
