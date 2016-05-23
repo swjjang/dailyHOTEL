@@ -546,6 +546,8 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (minVersion > currentVersion)
             {
+                mDelayTimeHandler.removeMessages(0);
+
                 View.OnClickListener posListener = new View.OnClickListener()
                 {
                     @Override
@@ -578,6 +580,8 @@ public class MainActivity extends BaseActivity implements Constants
 
             } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
             {
+                mDelayTimeHandler.removeMessages(0);
+
                 View.OnClickListener posListener = new View.OnClickListener()
                 {
                     @Override

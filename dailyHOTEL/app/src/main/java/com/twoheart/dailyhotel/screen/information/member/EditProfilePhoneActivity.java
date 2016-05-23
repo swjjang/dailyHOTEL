@@ -264,22 +264,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         {
             unLockUI();
 
-            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm)//
-                , new View.OnClickListener()//
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        mEditProfilePhoneLayout.resetPhoneNumber();
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        mEditProfilePhoneLayout.resetPhoneNumber();
-                    }
-                });
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override
@@ -287,22 +272,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         {
             unLockUI();
 
-            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm)//
-                , new View.OnClickListener()//
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        mEditProfilePhoneLayout.resetVerificationNumber();
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        mEditProfilePhoneLayout.resetVerificationNumber();
-                    }
-                });
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override

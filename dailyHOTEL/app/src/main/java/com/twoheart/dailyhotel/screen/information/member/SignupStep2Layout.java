@@ -34,7 +34,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
         void doVerification(String phoneNumber);
 
-        void doSignUp(String verificationNumber);
+        void doSignUp(String verificationNumber, String phoneNumber);
     }
 
     public SignupStep2Layout(Context context, OnEventListener mOnEventListener)
@@ -277,7 +277,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         String verificationNumber = mVerificationEditText.getText().toString().trim();
 
-        ((OnEventListener) mOnEventListener).doSignUp(verificationNumber);
+        ((OnEventListener) mOnEventListener).doSignUp(verificationNumber, getPhoneNumber());
     }
 
     private void resetFocus()

@@ -172,6 +172,13 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidVerificationNumber(message);
                             return;
                         }
+
+                        // 전화번호가 유효하지 않을 때
+                        case 2003:
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                            return;
+                        }
                     }
                 }
 

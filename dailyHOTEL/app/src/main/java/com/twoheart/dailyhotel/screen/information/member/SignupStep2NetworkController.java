@@ -55,9 +55,9 @@ public class SignupStep2NetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, mVerificationJsonResponseListener);
     }
 
-    public void requestSingUp(String signupKey, String code)
+    public void requestSingUp(String signupKey, String code, String phoneNumber)
     {
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignup(mNetworkTag, signupKey, code, mDailyUserSignupJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignup(mNetworkTag, signupKey, code, phoneNumber, mDailyUserSignupJsonResponseListener);
     }
 
     public void requestLogin(String email, String password)
@@ -268,6 +268,13 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         case 2002:
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidVerificationNumber(message);
+                            return;
+                        }
+
+                        // 전화번호가 유효하지 않을 때
+                        case 2003:
+                        {
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
                             return;
                         }
                     }
