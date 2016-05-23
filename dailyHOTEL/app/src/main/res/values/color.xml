@@ -233,8 +233,11 @@
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
 
-    <color name="default_background_section">#323232</color>
+    <color name="default_background_section_323232">#323232</color>
+    <color name="default_background_section_f2f2f3">#f2f2f3</color>
     <color name="default_background_kakao">#f9ed00</color>
+
+    <color name="default_line_e7e7e7">#e7e7e7</color>
 
 
 </resources>
