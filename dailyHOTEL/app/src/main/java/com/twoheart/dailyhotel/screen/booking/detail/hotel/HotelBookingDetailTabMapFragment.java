@@ -101,9 +101,8 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         hotelGradeTextView.setText(mBookingDetail.grade.getName(getActivity()));
         hotelGradeTextView.setBackgroundResource(mBookingDetail.grade.getColorResId());
 
-        View searchMapView = view.findViewById(R.id.searchMapView);
-        searchMapView.setVisibility(View.VISIBLE);
-        searchMapView.setOnClickListener(new View.OnClickListener()
+        View buttonLayout = view.findViewById(R.id.buttonLayout);
+        buttonLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

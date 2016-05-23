@@ -82,12 +82,11 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         initGourmetInformationLayout(view, mBookingDetail);
         initGuestInformationLayout(view, mBookingDetail);
+        initPaymentInformationLayout(view, mBookingDetail);
 
-        // 영수증 바로 확인 가능하도록 수정
-        TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
-        viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
-        viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
-        viewReceiptTextView.setOnClickListener(new View.OnClickListener()
+        // 영수증 발급
+        View confirmView = view.findViewById(R.id.buttonLayout);
+        confirmView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -134,5 +133,19 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         userNameTextView.setText(bookingDetail.guestName);
         userPhoneTextView.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
+    }
+
+    private void initPaymentInformationLayout(View view, GourmetBookingDetail bookingDetail)
+    {
+        TextView paymentDateTextView = (TextView) view.findViewById(R.id.paymentDateTextView);
+        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+
+        View bonusLayout = view.findViewById(R.id.bonusLayout);
+        View couponLayout = view.findViewById(R.id.couponLayout);
+        TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
+        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
+        TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
+
+
     }
 }

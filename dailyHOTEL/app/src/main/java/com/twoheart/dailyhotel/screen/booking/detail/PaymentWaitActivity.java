@@ -9,6 +9,7 @@
 package com.twoheart.dailyhotel.screen.booking.detail;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -42,26 +43,27 @@ public class PaymentWaitActivity extends BaseActivity
 {
     private TextView mAccountTextView;
     private TextView mDailyTextView;
-    private TextView mPriceTextView;
+    private TextView mPriceTextView, mBonusTextView, mCouponTextView, mTotlalPriceTextView;
     private TextView mDeadlineTextView;
     private ViewGroup mGuide1Layout;
+    private View mBonusLayout, mCouponLayout;
+
+    public static Intent newInstance(Context context, Booking booking)
+    {
+        Intent intent = new Intent(context, PaymentWaitActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, booking);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        Booking booking;
-        Bundle bundle = getIntent().getExtras();
+        Intent intent = getIntent();
 
-        if (bundle != null)
-        {
-            booking = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
-        } else
-        {
-            Util.restartApp(this);
-            return;
-        }
+        Booking booking = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_BOOKING);
 
         if (booking == null)
         {
@@ -111,9 +113,15 @@ public class PaymentWaitActivity extends BaseActivity
         TextView placeNameTextView = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
         mAccountTextView = (TextView) findViewById(R.id.tv_payment_wait_account);
         mDailyTextView = (TextView) findViewById(R.id.tv_payment_wait_name);
-        mPriceTextView = (TextView) findViewById(R.id.tv_payment_wait_price);
+        mPriceTextView = (TextView) findViewById(R.id.priceTextView);
+        mBonusTextView = (TextView) findViewById(R.id.bonusTextView);
+        mCouponTextView = (TextView) findViewById(R.id.couponTextView);
+        mTotlalPriceTextView = (TextView) findViewById(R.id.totalPriceTextView);
         mDeadlineTextView = (TextView) findViewById(R.id.tv_payment_wait_deadline);
         mGuide1Layout = (ViewGroup) findViewById(R.id.guide1Layout);
+
+        mBonusLayout = findViewById(R.id.bonusLayout);
+        mCouponLayout = findViewById(R.id.couponLayout);
 
         View view = findViewById(R.id.editLinearLayout);
         view.setOnClickListener(new View.OnClickListener()
@@ -233,14 +241,43 @@ public class PaymentWaitActivity extends BaseActivity
 
         mDailyTextView.setText(jsonObject.getString("name"));
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
-        mPriceTextView.setText(comma.format(jsonObject.getInt("amt")) + getString(R.string.currency));
-
         String date = jsonObject.getString("date").replaceAll("/", ".");
         String[] timeSlice = jsonObject.getString("time").split(":");
 
+        // 입금기한
         mDeadlineTextView.setText(String.format("%s %s:%s까지", date, timeSlice[0], timeSlice[1]));
 
+        // 결재 금액 정보
+        DecimalFormat comma = new DecimalFormat("###,##0");
+        mPriceTextView.setText(comma.format(jsonObject.getInt("amt")) + getString(R.string.currency));
+
+        if (jsonObject.has("적립금 사용") == true)
+        {
+            mBonusLayout.setVisibility(View.VISIBLE);
+            mBonusTextView.setText(comma.format(jsonObject.getInt("적립금 사용")) + getString(R.string.currency));
+        } else
+        {
+            mBonusLayout.setVisibility(View.GONE);
+        }
+
+        if (jsonObject.has("할인쿠폰 사용") == true)
+        {
+            mCouponLayout.setVisibility(View.VISIBLE);
+            mCouponTextView.setText(comma.format(jsonObject.getInt("할인쿠폰 사용")) + getString(R.string.currency));
+        } else
+        {
+            mCouponLayout.setVisibility(View.GONE);
+        }
+
+        if (jsonObject.has("총 금액") == true)
+        {
+            mTotlalPriceTextView.setText(comma.format(jsonObject.getInt("총 금액")) + getString(R.string.currency));
+        } else
+        {
+            mTotlalPriceTextView.setText(comma.format(jsonObject.getInt("amt")) + getString(R.string.currency));
+        }
+
+        // 확인 사항
         String msg1 = jsonObject.getString("msg1");
         setGuideText(mGuide1Layout, msg1.split("\\."), false);
 
