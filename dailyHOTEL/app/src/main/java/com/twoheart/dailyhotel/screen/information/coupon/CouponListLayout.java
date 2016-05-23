@@ -38,7 +38,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
 		void startNotice();
 
-		void startListItemNotice(View view, int position, Coupon coupon);
+		void showListItemNotice(View view, int position, Coupon coupon);
 
 		void onListItemDownLoadClick(View view, int position, Coupon coupon);
 
@@ -147,10 +147,10 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 	private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
 	{
 		@Override
-		public void startNotice(View view, int position)
+		public void showNotice(View view, int position)
 		{
 			Coupon coupon = mListAdapter.getItem(position);
-			((OnEventListener) mOnEventListener).startListItemNotice(view, position, coupon);
+			((OnEventListener) mOnEventListener).showListItemNotice(view, position, coupon);
 		}
 
 		@Override

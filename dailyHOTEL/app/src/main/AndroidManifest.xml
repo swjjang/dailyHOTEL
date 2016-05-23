@@ -303,6 +303,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".screen.information.coupon.CouponHistoryActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.event.EventListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

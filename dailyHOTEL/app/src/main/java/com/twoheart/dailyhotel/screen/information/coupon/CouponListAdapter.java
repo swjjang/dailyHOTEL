@@ -31,7 +31,7 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 
 	public interface OnCouponItemListener
 	{
-		void startNotice(View view, int position);
+		void showNotice(View view, int position);
 
 		void onDownloadClick(View view, int position);
 	}
@@ -71,7 +71,7 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 
 		DecimalFormat decimalFormat = new DecimalFormat("###,##0");
 		String strPrice = decimalFormat.format(coupon.price);
-		couponPriceTextView.setText(strPrice);
+		couponPriceTextView.setText(strPrice + mContext.getResources().getString(R.string.currency));
 
 		descriptionTextView.setText(coupon.description);
 		expireTextView.setText(coupon.expiredTime);
@@ -121,7 +121,7 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 			@Override
 			public void onClick(View v)
 			{
-				mListener.startNotice(v, position);
+				mListener.showNotice(v, position);
 			}
 		});
 

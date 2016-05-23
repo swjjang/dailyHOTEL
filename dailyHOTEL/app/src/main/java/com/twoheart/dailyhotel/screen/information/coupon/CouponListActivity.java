@@ -58,6 +58,14 @@ public class CouponListActivity extends BaseActivity
 		public void startCouponHistory()
 		{
 			// 쿠폰 사용내역 이동
+
+			if (lockUiComponentAndIsLockUiComponent() == true)
+			{
+				return;
+			}
+
+			Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
+			startActivity(intent);
 		}
 
 		@Override
@@ -67,7 +75,7 @@ public class CouponListActivity extends BaseActivity
 		}
 
 		@Override
-		public void startListItemNotice(View view, int position, Coupon coupon)
+		public void showListItemNotice(View view, int position, Coupon coupon)
 		{
 			// 리스트 아이템 쿠폰 유의사항 팝업
 		}
