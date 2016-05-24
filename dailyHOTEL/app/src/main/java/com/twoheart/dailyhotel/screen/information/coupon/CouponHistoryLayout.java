@@ -39,7 +39,7 @@ public class CouponHistoryLayout
 	protected void initLayout(View view)
 	{
 		initToolbar(view);
-		mListView = (ListView) view.findViewById(R.id.listView);
+		initListView(view);
 
 		mEmptyView = view.findViewById(R.id.emptyView);
 
@@ -61,6 +61,12 @@ public class CouponHistoryLayout
 		});
 	}
 
+	private void initListView(View view)
+	{
+		mListView = (ListView) view.findViewById(R.id.listView);
+		EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
+	}
+
 	@Override
 	public void onClick(View v)
 	{
@@ -77,8 +83,6 @@ public class CouponHistoryLayout
 
 	public void setData(List<Coupon> list)
 	{
-		EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
-
 		if (list != null && list.size() != 0)
 		{
 			mListAdapter = new CouponHistoryListAdapter(mContext, 0, list);

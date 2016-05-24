@@ -84,6 +84,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 	private void initListView(View view)
 	{
 		mListView = (ListView) view.findViewById(R.id.listView);
+		EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
 
 		View header = LayoutInflater.from(mContext).inflate(R.layout.list_row_couponlist_header, mListView, false);
 		mListView.addHeaderView(header);
@@ -128,8 +129,6 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
 	public void setData(List<Coupon> list)
 	{
-		EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
-
 		if (list != null && list.size() != 0)
 		{
 			mListAdapter = new CouponListAdapter(mContext, 0, list, mCouponItemListener);
