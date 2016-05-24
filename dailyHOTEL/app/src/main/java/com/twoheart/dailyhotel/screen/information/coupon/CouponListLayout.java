@@ -1,13 +1,9 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.UnderlineSpan;
-import android.view.LayoutInflater;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -27,10 +23,9 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 {
 
 	private DailyTextView mHeaderTextView;
-	private ListView mListView;
+	private RecyclerView mRecyclerView;
 	private View mEmptyView;
 	private CouponListAdapter mListAdapter;
-
 
 	public interface OnEventListener extends OnBaseEventListener
 	{
@@ -56,7 +51,6 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 		initListView(view);
 
 		mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
-		mEmptyView = view.findViewById(R.id.emptyView);
 
 		View couponHistoryView = view.findViewById(R.id.couponHistoryTextView);
 		couponHistoryView.setOnClickListener(this);
@@ -83,17 +77,15 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
 	private void initListView(View view)
 	{
-		mListView = (ListView) view.findViewById(R.id.listView);
+		mRecyclerView = (RecyclerView) view.findViewById(R.id.couponRecyclerView);
+		EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
 
-		View header = LayoutInflater.from(mContext).inflate(R.layout.list_row_couponlist_header, mListView, false);
-		mListView.addHeaderView(header);
+		mEmptyView = view.findViewById(R.id.emptyView);
 
-		TextView useNoticeTextView = (TextView) header.findViewById(R.id.couponUseNoticeTextView);
-		useNoticeTextView.setOnClickListener(this);
-
-		SpannableString spannableString = new SpannableString(useNoticeTextView.getText());
-		spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		useNoticeTextView.setText(spannableString);
+		LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		layoutManager.scrollToPosition(0);
+		mRecyclerView.setLayoutManager(layoutManager);
 	}
 
 	private void updateHeaderTextView(int count)
@@ -120,32 +112,32 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 			case R.id.couponHistoryTextView:
 				((OnEventListener) mOnEventListener).startCouponHistory();
 				break;
-			case R.id.couponUseNoticeTextView:
-				((OnEventListener) mOnEventListener).startNotice();
-				break;
 		}
 	}
 
 	public void setData(List<Coupon> list)
 	{
-		EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
-
 		if (list != null && list.size() != 0)
 		{
-			mListAdapter = new CouponListAdapter(mContext, 0, list, mCouponItemListener);
+			mListAdapter = new CouponListAdapter(mContext, list, mCouponItemListener);
 			mEmptyView.setVisibility(View.GONE);
 		} else
 		{
-			mListAdapter = new CouponListAdapter(mContext, 0, new ArrayList<Coupon>(), mCouponItemListener);
+			mListAdapter = new CouponListAdapter(mContext, new ArrayList<Coupon>(), mCouponItemListener);
 			mEmptyView.setVisibility(View.VISIBLE);
-
 		}
 
-		mListView.setAdapter(mListAdapter);
+		mRecyclerView.setAdapter(mListAdapter);
 	}
 
 	private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
 	{
+		@Override
+		public void startNotice()
+		{
+			((OnEventListener) mOnEventListener).startNotice();
+		}
+
 		@Override
 		public void showNotice(View view, int position)
 		{
@@ -160,5 +152,4 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 			((OnEventListener) mOnEventListener).onListItemDownLoadClick(view, position, coupon);
 		}
 	};
-
 }

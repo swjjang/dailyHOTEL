@@ -1,8 +1,9 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ListView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -17,11 +18,10 @@ import java.util.List;
 /**
  * Created by iseung-won on 2016. 5. 23..
  */
-public class CouponHistoryLayout
-		extends BaseLayout implements View.OnClickListener
+public class CouponHistoryLayout extends BaseLayout
 {
 
-	private ListView mListView;
+	private RecyclerView mRecyclerView;
 	private View mEmptyView;
 	private CouponHistoryListAdapter mListAdapter;
 
@@ -39,9 +39,7 @@ public class CouponHistoryLayout
 	protected void initLayout(View view)
 	{
 		initToolbar(view);
-		mListView = (ListView) view.findViewById(R.id.listView);
-
-		mEmptyView = view.findViewById(R.id.emptyView);
+		initListView(view);
 
 		setData(new ArrayList<Coupon>());
 	}
@@ -61,35 +59,33 @@ public class CouponHistoryLayout
 		});
 	}
 
-	@Override
-	public void onClick(View v)
+	private void initListView(View view)
 	{
-		switch (v.getId())
-		{
-			//			case R.id.couponHistoryTextView:
-			//				((OnEventListener) mOnEventListener).startCouponHistory();
-			//				break;
-			//			case R.id.couponUseNoticeTextView:
-			//				((OnEventListener) mOnEventListener).showNotice();
-			//				break;
-		}
+		mRecyclerView = (RecyclerView) view.findViewById(R.id.couponHistoryRecyclerView);
+		EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
+
+		mEmptyView = view.findViewById(R.id.emptyView);
+
+		LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		layoutManager.scrollToPosition(0);
+		mRecyclerView.setLayoutManager(layoutManager);
+
 	}
 
 	public void setData(List<Coupon> list)
 	{
-		EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
-
 		if (list != null && list.size() != 0)
 		{
-			mListAdapter = new CouponHistoryListAdapter(mContext, 0, list);
+			mListAdapter = new CouponHistoryListAdapter(mContext, list);
 			mEmptyView.setVisibility(View.GONE);
 		} else
 		{
-			mListAdapter = new CouponHistoryListAdapter(mContext, 0, new ArrayList<Coupon>());
+			mListAdapter = new CouponHistoryListAdapter(mContext, new ArrayList<Coupon>());
 			mEmptyView.setVisibility(View.VISIBLE);
 
 		}
 
-		mListView.setAdapter(mListAdapter);
+		mRecyclerView.setAdapter(mListAdapter);
 	}
 }
