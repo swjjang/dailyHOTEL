@@ -131,6 +131,10 @@ public class IssuingReceiptActivity extends BaseActivity
             int supoplyValue = receipt.getInt("supply_value");
             String paymentName = receipt.getString("payment_name");
 
+            int bonus = 0;
+            int counpon = 0;
+            int totalPayment = 0;
+
             // **예약 세부 정보**
             View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
@@ -167,6 +171,10 @@ public class IssuingReceiptActivity extends BaseActivity
 
             DecimalFormat comma = new DecimalFormat("###,##0");
 
+            // 지불 방식
+            TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
+            paymentTypeTextView.setText(paymentName);
+
             // 소계
             TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
             supplyValueTextView.setText("₩ " + comma.format(supoplyValue));
@@ -175,17 +183,35 @@ public class IssuingReceiptActivity extends BaseActivity
             TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
             vatTextView.setText("₩ " + comma.format(vat));
 
-            // 총금액
-            TextView discountTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-            discountTextView.setText("₩ " + comma.format(discount));
+            View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
 
-            // 지불 금액
-            TextView paymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView31);
-            paymentTextView.setText("₩ " + comma.format(discount));
+            if (bonus == 0 && counpon == 0)
+            {
+                saleLayout.setVisibility(View.GONE);
 
-            // 지불 방식
-            TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
-            paymentTypeTextView.setText(paymentName);
+                // 총 입금 금액
+                TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
+                totalPaymentTextView.setText("₩ " + comma.format(discount));
+            } else
+            {
+                saleLayout.setVisibility(View.VISIBLE);
+
+                // 총금액
+                TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
+                totalPriceTextView.setText("₩ " + comma.format(discount));
+
+                // 적립금 사용
+                TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
+                bonusTextView.setText("₩ " + comma.format(bonus));
+
+                // 할인쿠폰 사용
+                TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
+                couponTextView.setText("₩ " + comma.format(counpon));
+
+                // 총 입금 금액
+                TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
+                totalPaymentTextView.setText("₩ " + comma.format(totalPayment));
+            }
 
             // **공급자**
 
