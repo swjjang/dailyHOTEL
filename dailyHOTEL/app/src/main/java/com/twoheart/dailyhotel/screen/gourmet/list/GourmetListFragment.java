@@ -95,7 +95,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             }
         });
 
-        mEmptyView = view.findViewById(R.id.emptyView);
+        mEmptyView = view.findViewById(R.id.emptyLayout);
 
         mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
 

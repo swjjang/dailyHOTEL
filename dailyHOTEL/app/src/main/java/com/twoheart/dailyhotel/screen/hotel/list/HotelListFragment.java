@@ -113,7 +113,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             }
         });
 
-        mEmptyView = view.findViewById(R.id.emptyView);
+        mEmptyView = view.findViewById(R.id.emptyLayout);
 
         mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
 
@@ -789,6 +789,11 @@ public class HotelListFragment extends BaseFragment implements Constants
             }
         }
 
+        /**
+         * 미리 필터 정보를 저장하여 Curation시에 사용하도록 한다.(개수 정보 노출)
+         * @param hotelList
+         * @param curationOption
+         */
         private void setFilterInformation(ArrayList<Hotel> hotelList, HotelCurationOption curationOption)
         {
             // 필터 정보 넣기
