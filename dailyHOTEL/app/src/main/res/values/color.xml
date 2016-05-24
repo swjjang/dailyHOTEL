@@ -248,9 +248,7 @@
     <color name="default_line_ce7e7e7">#e7e7e7</color>
     <color name="default_line_cdcdcdd">#dcdcdd</color>
     <color name="default_line_cebebeb">#ebebeb</color>
-
-
-
+    <color name="default_line_ce6e6e6">#e6e6e6</color>
 
     <color name="over_scroll_edge">#dcdcdc</color>
 
