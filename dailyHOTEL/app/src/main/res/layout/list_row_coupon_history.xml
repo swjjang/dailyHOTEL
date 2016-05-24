@@ -72,7 +72,8 @@
 			android:gravity="left|center_vertical"
 			android:singleLine="true"
 			android:textColor="@color/coupon_expire_text"
-			android:textSize="11dp"/>
+			android:textSize="11dp"
+			/>
 
 	</LinearLayout>
 
