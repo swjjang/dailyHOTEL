@@ -66,6 +66,7 @@ public class CouponListActivity extends BaseActivity
 
 			Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
 			startActivity(intent);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 
 		@Override
