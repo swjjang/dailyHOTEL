@@ -1,13 +1,9 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.UnderlineSpan;
-import android.view.LayoutInflater;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -27,7 +23,8 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 {
 
 	private DailyTextView mHeaderTextView;
-	private ListView mListView;
+	private RecyclerView mRecyclerView;
+	private View mEmptyView;
 	private CouponListAdapter mListAdapter;
 
 	public interface OnEventListener extends OnBaseEventListener
@@ -61,7 +58,6 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 		updateHeaderTextView(0);
 
 		setData(new ArrayList<Coupon>());
-//		setData(setDummyData());
 	}
 
 	private void initToolbar(View view)
@@ -81,21 +77,15 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
 	private void initListView(View view)
 	{
-		mListView = (ListView) view.findViewById(R.id.listView);
-		EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
+		mRecyclerView = (RecyclerView) view.findViewById(R.id.couponRecyclerView);
+		EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
 
-		View emptyView = LayoutInflater.from(mContext).inflate(R.layout.view_empty_coupon_list, mListView, false);
-		mListView.setEmptyView(emptyView);
+		mEmptyView = view.findViewById(R.id.emptyView);
 
-		View header = LayoutInflater.from(mContext).inflate(R.layout.list_row_couponlist_header, mListView, false);
-		mListView.addHeaderView(header);
-
-		TextView useNoticeTextView = (TextView) header.findViewById(R.id.couponUseNoticeTextView);
-		useNoticeTextView.setOnClickListener(this);
-
-		SpannableString spannableString = new SpannableString(useNoticeTextView.getText());
-		spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		useNoticeTextView.setText(spannableString);
+		LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		layoutManager.scrollToPosition(0);
+		mRecyclerView.setLayoutManager(layoutManager);
 	}
 
 	private void updateHeaderTextView(int count)
@@ -122,9 +112,6 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 			case R.id.couponHistoryTextView:
 				((OnEventListener) mOnEventListener).startCouponHistory();
 				break;
-			case R.id.couponUseNoticeTextView:
-				((OnEventListener) mOnEventListener).startNotice();
-				break;
 		}
 	}
 
@@ -132,35 +119,25 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 	{
 		if (list != null && list.size() != 0)
 		{
-			mListAdapter = new CouponListAdapter(mContext, 0, list, mCouponItemListener);
+			mListAdapter = new CouponListAdapter(mContext, list, mCouponItemListener);
+			mEmptyView.setVisibility(View.GONE);
 		} else
 		{
-			mListAdapter = new CouponListAdapter(mContext, 0, new ArrayList<Coupon>(), mCouponItemListener);
+			mListAdapter = new CouponListAdapter(mContext, new ArrayList<Coupon>(), mCouponItemListener);
+			mEmptyView.setVisibility(View.VISIBLE);
 		}
 
-		mListView.setAdapter(mListAdapter);
+		mRecyclerView.setAdapter(mListAdapter);
 	}
-
-//	private ArrayList<Coupon> setDummyData() {
-//		ArrayList<Coupon> list = new ArrayList<Coupon>();
-//
-//		list.add(new Coupon("name", 5000, "test coupon1", "2015.05.15 ~ 2017.06.15", 0, 10000, 0, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 100000, "test coupon2", "2015.05.15 ~ 2017.06.15", 1, 10000, 1, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 53000, "test coupon3", "2015.05.15 ~ 2017.06.15", 0, 10000, 0, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 5111000, "test coupon4", "2015.05.15 ~ 2017.06.15", 4, 10000, 1, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 665000, "test coupon5", "2015.05.15 ~ 2017.06.15", 123, 10000, 0, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 566678000, "test coupon6 - ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ", "2015.05.15 ~ 2017.06.15", 1, 10000, 0, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 5000, "test coupon7", "2015.05.15 ~ 2017.06.15", 0, 10000, 0, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 100000, "test coupon8", "2015.05.15 ~ 2017.06.15", 1, 10000, 1, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 53000, "test coupon9", "2015.05.15 ~ 2017.06.15", 0, 10000, 0, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 5111000, "test coupon10", "2015.05.15 ~ 2017.06.15", 4, 10000, 1, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 665000, "test coupon11", "2015.05.15 ~ 2017.06.15", 123, 10000, 0, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		list.add(new Coupon("name", 566678000, "test coupon12 - ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ", "2015.05.15 ~ 2017.06.15", 1, 10000, 0, "호텔 , 펜션 등", "주의사항 ~~~~" ));
-//		return list;
-//	}
 
 	private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
 	{
+		@Override
+		public void startNotice()
+		{
+			((OnEventListener) mOnEventListener).startNotice();
+		}
+
 		@Override
 		public void showNotice(View view, int position)
 		{
@@ -175,5 +152,4 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 			((OnEventListener) mOnEventListener).onListItemDownLoadClick(view, position, coupon);
 		}
 	};
-
 }

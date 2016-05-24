@@ -77,7 +77,6 @@
 				android:layout_marginLeft="2dp"
 				android:layout_toLeftOf="@id/vericalLine"
 				android:gravity="center_vertical"
-				android:text="@string/coupon_duedate_text"
 				android:textColor="@color/coupon_red_wine_text"
 				android:textSize="13dp"
 				dailyFont:style="Medium"/>
@@ -91,7 +90,6 @@
 			android:layout_alignParentBottom="true"
 			android:layout_marginBottom="13dp"
 			android:gravity="center_vertical"
-			android:text="@string/coupon_description_text"
 			android:textColor="@color/coupon_description_text"
 			android:textSize="11dp"/>
 
@@ -102,7 +100,6 @@
 			android:layout_above="@id/useablePlaceTextView"
 			android:layout_alignLeft="@id/couponPriceTextView"
 			android:gravity="center_vertical"
-			android:text="90,000원 이상 구매시 사용 가능"
 			android:textColor="@color/coupon_description_text"
 			android:textSize="11dp"/>
 
@@ -123,7 +120,8 @@
 				android:text="@string/coupon_useable_text"
 				android:textColor="@color/coupon_useable_icon_text"
 				android:textSize="11dp"
-				dailyFont:style="Medium"/>
+				dailyFont:style="Medium"
+				android:visibility="gone"/>
 
 			<com.twoheart.dailyhotel.widget.DailyTextView
 				android:id="@+id/downloadIconView"
