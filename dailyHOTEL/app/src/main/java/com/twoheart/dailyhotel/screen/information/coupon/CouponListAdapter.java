@@ -25,8 +25,8 @@ import java.util.List;
 public class CouponListAdapter
 		extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-	public static final int VIEW_TYPE_HEADER = 1;
-	public static final int VIEW_TYPE_ITEM = 2;
+	private static final int VIEW_TYPE_HEADER = 1;
+	private static final int VIEW_TYPE_ITEM = 2;
 
 	private List<Coupon> mList;
 	private Context mContext;
@@ -52,28 +52,6 @@ public class CouponListAdapter
 
 		mList = list;
 		mListener = listener;
-	}
-
-	public void addAll(List<Coupon> list)
-	{
-		if (mList != null)
-		{
-			mList.clear();
-		}
-
-		mList.addAll(list);
-	}
-
-	public void add(Coupon coupon, int position)
-	{
-		mList.add(position, coupon);
-		notifyItemInserted(position);
-	}
-
-	public void remove(int position)
-	{
-		mList.remove(position);
-		notifyItemRemoved(position);
 	}
 
 	/**
