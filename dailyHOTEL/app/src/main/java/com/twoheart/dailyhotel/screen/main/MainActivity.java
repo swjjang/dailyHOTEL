@@ -696,8 +696,6 @@ public class MainActivity extends BaseActivity implements Constants
                     mNetworkController.requestUserInformation();
                 } else
                 {
-                    AnalyticsManager.getInstance(MainActivity.this).setUserIndex(null);
-
                     Util.requestGoogleCloudMessaging(MainActivity.this, new Util.OnGoogleCloudMessagingListener()
                     {
                         @Override
