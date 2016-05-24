@@ -87,12 +87,13 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 			// 오늘까지
 			dueDateTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
 			dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
-			dueDateTextView.setText(coupon.dueDate);
+			dueDateTextView.setText(mContext.getResources().getString(R.string.coupon_today_text));
 		}
 
 		if (coupon.minPrice > 0)
 		{
-			minPriceTextView.setText(coupon.minPrice);
+			String strMinPrice = decimalFormat.format(coupon.minPrice);
+			minPriceTextView.setText(strMinPrice + mContext.getResources().getString(R.string.currency));
 		} else
 		{
 			minPriceTextView.setText("");

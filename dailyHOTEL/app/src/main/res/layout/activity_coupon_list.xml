@@ -67,29 +67,6 @@
 		android:scrollbarStyle="outsideOverlay"
 		android:scrollbars="vertical"/>
 
-	<RelativeLayout
-		android:id="@+id/emptyView"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@+id/couponLayout"
-		android:background="@color/information_background"
-		android:visibility="gone">
-
-		<com.twoheart.dailyhotel.widget.DailyTextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:drawablePadding="20dp"
-			android:drawableTop="@drawable/no_coupon_ic"
-			android:gravity="center"
-			android:text="@string/coupon_list_empty_message"
-			android:textColor="@color/information_title"
-			android:textSize="18dp"
-			dailyFont:style="Medium"/>
-
-	</RelativeLayout>
-
-
 	<View
 		android:layout_width="match_parent"
 		android:layout_height="2dp"

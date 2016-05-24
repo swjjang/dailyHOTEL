@@ -3,143 +3,156 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="140dp"
-	android:background="@drawable/more_coupon_bg">
+	android:layout_height="155dp">
 
 	<View
-		android:id="@+id/vericalLine"
-		android:layout_width="1dp"
-		android:layout_height="match_parent"
-		android:layout_alignParentRight="true"
-		android:layout_marginRight="68dp"
-		android:background="@color/coupon_vertical_line"/>
-
-	<com.twoheart.dailyhotel.widget.DailyTextView
-		android:id="@+id/couponPriceTextView"
+		android:id="@+id/bottomDivider"
 		android:layout_width="match_parent"
-		android:layout_height="28dp"
-		android:layout_marginLeft="16dp"
-		android:layout_marginTop="13dp"
-		android:layout_toLeftOf="@id/vericalLine"
-		android:gravity="center_vertical"
-		android:textColor="@color/black"
-		android:textSize="21dp"
-		dailyFont:style="Bold"/>
-
-	<com.twoheart.dailyhotel.widget.DailyTextView
-		android:id="@+id/descriptionTextView"
-		android:layout_width="match_parent"
-		android:layout_height="18dp"
-		android:layout_alignLeft="@id/couponPriceTextView"
-		android:layout_below="@id/couponPriceTextView"
-		android:layout_marginTop="6dp"
-		android:layout_toLeftOf="@id/vericalLine"
-		android:ellipsize="end"
-		android:gravity="center_vertical"
-		android:singleLine="true"
-		android:textColor="@color/black"
-		android:textSize="13dp"/>
-
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="17dp"
-		android:layout_alignLeft="@id/couponPriceTextView"
-		android:layout_below="@id/descriptionTextView"
-		android:layout_marginTop="1dp"
-		android:layout_toLeftOf="@id/vericalLine"
-		android:orientation="horizontal">
-
-		<com.twoheart.dailyhotel.widget.DailyTextView
-			android:id="@+id/expireTextView"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:gravity="center_vertical"
-			android:textColor="@color/coupon_expire_text"
-			android:textSize="13dp"/>
-
-		<com.twoheart.dailyhotel.widget.DailyTextView
-			android:id="@+id/dueDateTextView"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginLeft="2dp"
-			android:layout_toLeftOf="@id/vericalLine"
-			android:gravity="center_vertical"
-			android:text="@string/coupon_duedate_text"
-			android:textColor="@color/coupon_red_wine_text"
-			android:textSize="13dp"
-			dailyFont:style="Medium"/>
-	</LinearLayout>
-
-	<com.twoheart.dailyhotel.widget.DailyTextView
-		android:id="@+id/useablePlaceTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="17dp"
-		android:layout_alignLeft="@id/couponPriceTextView"
-		android:layout_alignParentBottom="true"
-		android:layout_marginBottom="13dp"
-		android:gravity="center_vertical"
-		android:text="@string/coupon_description_text"
-		android:textColor="@color/coupon_description_text"
-		android:textSize="11dp"/>
-
-	<com.twoheart.dailyhotel.widget.DailyTextView
-		android:id="@+id/minPriceTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="17dp"
-		android:layout_above="@id/useablePlaceTextView"
-		android:layout_alignLeft="@id/couponPriceTextView"
-		android:gravity="center_vertical"
-		android:text="90,000원 이상 구매시 사용 가능"
-		android:textColor="@color/coupon_description_text"
-		android:textSize="11dp"/>
+		android:layout_height="15dp"
+		android:layout_alignParentBottom="true"/>
 
 	<RelativeLayout
-		android:id="@+id/rightLayout"
-		android:layout_width="68dp"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true">
-
-		<com.twoheart.dailyhotel.widget.DailyTextView
-			android:id="@+id/useIconView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_marginTop="12dp"
-			android:drawableTop="@drawable/more_ic_coupon_01"
-			android:gravity="center"
-			android:text="@string/coupon_useable_text"
-			android:textColor="@color/coupon_useable_icon_text"
-			android:textSize="11dp"
-			dailyFont:style="Medium"/>
-
-		<com.twoheart.dailyhotel.widget.DailyTextView
-			android:id="@+id/downloadIconView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_marginTop="12dp"
-			android:drawableTop="@drawable/more_ic_coupon_02"
-			android:gravity="center"
-			android:text="@string/coupon_download_text"
-			android:textColor="@color/coupon_red_wine_text"
-			android:textSize="11dp"
-			android:visibility="gone"
-			dailyFont:style="Medium"/>
+		android:layout_width="match_parent"
+		android:layout_height="140dp"
+		android:layout_above="@id/bottomDivider"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:background="@drawable/more_coupon_bg">
 
 		<View
-			android:id="@+id/dummyView"
-			android:layout_width="wrap_content"
-			android:layout_height="13dp"
-			android:layout_alignParentBottom="true"/>
+			android:id="@+id/vericalLine"
+			android:layout_width="1dp"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="68dp"
+			android:background="@color/coupon_vertical_line"/>
 
 		<com.twoheart.dailyhotel.widget.DailyTextView
-			android:id="@+id/noticeTextView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_above="@id/dummyView"
-			android:layout_centerHorizontal="true"
-			android:text="@string/coupon_notice_text"
-			android:textSize="11dp"/>
-	</RelativeLayout>
+			android:id="@+id/couponPriceTextView"
+			android:layout_width="match_parent"
+			android:layout_height="28dp"
+			android:layout_marginLeft="16dp"
+			android:layout_marginTop="13dp"
+			android:layout_toLeftOf="@id/vericalLine"
+			android:gravity="center_vertical"
+			android:textColor="@color/black"
+			android:textSize="21dp"
+			dailyFont:style="Bold"/>
 
+		<com.twoheart.dailyhotel.widget.DailyTextView
+			android:id="@+id/descriptionTextView"
+			android:layout_width="match_parent"
+			android:layout_height="18dp"
+			android:layout_alignLeft="@id/couponPriceTextView"
+			android:layout_below="@id/couponPriceTextView"
+			android:layout_marginTop="6dp"
+			android:layout_toLeftOf="@id/vericalLine"
+			android:ellipsize="end"
+			android:gravity="center_vertical"
+			android:singleLine="true"
+			android:textColor="@color/black"
+			android:textSize="13dp"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="17dp"
+			android:layout_alignLeft="@id/couponPriceTextView"
+			android:layout_below="@id/descriptionTextView"
+			android:layout_marginTop="1dp"
+			android:layout_toLeftOf="@id/vericalLine"
+			android:orientation="horizontal">
+
+			<com.twoheart.dailyhotel.widget.DailyTextView
+				android:id="@+id/expireTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:gravity="center_vertical"
+				android:textColor="@color/coupon_expire_text"
+				android:textSize="13dp"/>
+
+			<com.twoheart.dailyhotel.widget.DailyTextView
+				android:id="@+id/dueDateTextView"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="2dp"
+				android:layout_toLeftOf="@id/vericalLine"
+				android:gravity="center_vertical"
+				android:text="@string/coupon_duedate_text"
+				android:textColor="@color/coupon_red_wine_text"
+				android:textSize="13dp"
+				dailyFont:style="Medium"/>
+		</LinearLayout>
+
+		<com.twoheart.dailyhotel.widget.DailyTextView
+			android:id="@+id/useablePlaceTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="17dp"
+			android:layout_alignLeft="@id/couponPriceTextView"
+			android:layout_alignParentBottom="true"
+			android:layout_marginBottom="13dp"
+			android:gravity="center_vertical"
+			android:text="@string/coupon_description_text"
+			android:textColor="@color/coupon_description_text"
+			android:textSize="11dp"/>
+
+		<com.twoheart.dailyhotel.widget.DailyTextView
+			android:id="@+id/minPriceTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="17dp"
+			android:layout_above="@id/useablePlaceTextView"
+			android:layout_alignLeft="@id/couponPriceTextView"
+			android:gravity="center_vertical"
+			android:text="90,000원 이상 구매시 사용 가능"
+			android:textColor="@color/coupon_description_text"
+			android:textSize="11dp"/>
+
+		<RelativeLayout
+			android:id="@+id/rightLayout"
+			android:layout_width="68dp"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true">
+
+			<com.twoheart.dailyhotel.widget.DailyTextView
+				android:id="@+id/useIconView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="12dp"
+				android:drawableTop="@drawable/more_ic_coupon_01"
+				android:gravity="center"
+				android:text="@string/coupon_useable_text"
+				android:textColor="@color/coupon_useable_icon_text"
+				android:textSize="11dp"
+				dailyFont:style="Medium"/>
+
+			<com.twoheart.dailyhotel.widget.DailyTextView
+				android:id="@+id/downloadIconView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="12dp"
+				android:drawableTop="@drawable/more_ic_coupon_02"
+				android:gravity="center"
+				android:text="@string/coupon_download_text"
+				android:textColor="@color/coupon_red_wine_text"
+				android:textSize="11dp"
+				android:visibility="gone"
+				dailyFont:style="Medium"/>
+
+			<View
+				android:id="@+id/dummyView"
+				android:layout_width="wrap_content"
+				android:layout_height="13dp"
+				android:layout_alignParentBottom="true"/>
+
+			<com.twoheart.dailyhotel.widget.DailyTextView
+				android:id="@+id/noticeTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_above="@id/dummyView"
+				android:layout_centerHorizontal="true"
+				android:text="@string/coupon_notice_text"
+				android:textSize="11dp"/>
+		</RelativeLayout>
+	</RelativeLayout>
 </RelativeLayout>
