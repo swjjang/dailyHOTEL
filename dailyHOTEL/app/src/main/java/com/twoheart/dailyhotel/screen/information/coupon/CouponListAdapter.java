@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
@@ -112,7 +112,7 @@ public class CouponListAdapter extends ArrayAdapter<Coupon>
 			useIconView.setVisibility(View.VISIBLE);
 		}
 
-		CharSequence charSequence = TextUtils.isEmpty(noticeTextView.getText()) ? "" : noticeTextView.getText();
+		CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
 		SpannableString spannableString = new SpannableString(charSequence);
 		spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		noticeTextView.setText(spannableString);
