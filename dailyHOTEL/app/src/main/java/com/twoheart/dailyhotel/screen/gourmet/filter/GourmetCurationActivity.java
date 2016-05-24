@@ -199,7 +199,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN ? true : false;
 
-
         for (String key : keyList)
         {
             DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categroyCodeMap.get(key)), isSingleLine);
@@ -211,6 +210,19 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             }
 
             mGridLayout.addView(categoryView);
+        }
+
+        // 음식 종류가 COLUMN 개수보다 작으면 위치가 맞지 않는 경우가 발생해서 추가 개수를 넣어준다.
+        if (keyList.size() < GOURMET_CATEGORY_COLUMN)
+        {
+            int addViewCount = GOURMET_CATEGORY_COLUMN - keyList.size();
+
+            for (int i = 0; i < addViewCount; i++)
+            {
+                DailyTextView categoryView = getGridLayoutItemView(null, 0, isSingleLine);
+
+                mGridLayout.addView(categoryView);
+            }
         }
 
         if (isSingleLine == false)
