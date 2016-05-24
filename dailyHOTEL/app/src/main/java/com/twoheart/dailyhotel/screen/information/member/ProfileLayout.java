@@ -75,7 +75,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
         mPasswordLayout = view.findViewById(R.id.passwordLayout);
 
-        View logoutView = view.findViewById(R.id.signOutView);
+        View logoutView = view.findViewById(R.id.logoutView);
         logoutView.setOnClickListener(this);
     }
 
@@ -188,7 +188,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
                 ((OnEventListener) mOnEventListener).showEditPassword();
                 break;
 
-            case R.id.signOutView:
+            case R.id.logoutView:
                 ((OnEventListener) mOnEventListener).doSignOut();
                 break;
         }

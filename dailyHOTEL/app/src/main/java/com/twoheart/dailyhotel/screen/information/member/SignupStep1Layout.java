@@ -103,7 +103,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mRecommenderEditText.setFilters(fArray);
 
         View nextStepView = view.findViewById(R.id.nextStepView);
-
         nextStepView.setOnClickListener(this);
 
         mEmailView.requestFocus();
