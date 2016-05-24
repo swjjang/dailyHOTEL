@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white">
@@ -9,8 +10,8 @@
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/emailView"
         android:layout_width="match_parent"
-        android:layout_below="@+id/toolbar"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="16dp"
@@ -22,6 +23,7 @@
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/emailView"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="8dp"
@@ -33,13 +35,13 @@
         android:textColor="@color/curation_information_text"
         android:textColorHint="@color/search_hint_text"
         android:textSize="16dp"
-        android:theme="@style/EditTextTheme"
-        android:layout_below="@+id/emailView"/>
+        android:theme="@style/EditTextTheme"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/passwordView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/emailEditText"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="16dp"
@@ -47,13 +49,13 @@
         android:singleLine="true"
         android:text="@string/label_password_4over"
         android:textColor="@drawable/selector_label_textcolor"
-        android:textSize="12dp"
-        android:layout_below="@+id/emailEditText"/>
+        android:textSize="12dp"/>
 
     <com.twoheart.dailyhotel.widget.DailyEditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/passwordView"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="8dp"
@@ -67,39 +69,39 @@
         android:textColor="@color/curation_information_text"
         android:textColorHint="@color/search_hint_text"
         android:textSize="16dp"
-        android:theme="@style/EditTextTheme"
-        android:layout_below="@+id/passwordView"/>
+        android:theme="@style/EditTextTheme"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/signinView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="44dp"
+        android:layout_below="@+id/passwordEditText"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/shape_button_common_background"
         android:gravity="center"
         android:text="@string/act_login_btn_login"
         android:textColor="@android:color/white"
         android:textSize="17dp"
-        android:layout_below="@+id/passwordEditText"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"/>
+        dailyFont:style="Medium"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_below="@+id/signinView">
+        android:layout_below="@+id/signinView"
+        android:gravity="center_horizontal">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/findPasswordView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
             android:paddingTop="30dp"
             android:text="@string/act_login_forgot_pwd"
             android:textColor="@color/information_title"
-            android:textSize="12dp"
-            android:paddingLeft="15dp"/>
+            android:textSize="12dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/signupView"
@@ -108,17 +110,17 @@
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/findPasswordView"
             android:paddingBottom="10dp"
+            android:paddingRight="30dp"
             android:paddingTop="30dp"
             android:text="@string/act_login_signup"
             android:textColor="@color/information_title"
-            android:textSize="12dp"
-            android:paddingRight="30dp"/>
+            android:textSize="12dp"/>
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/facebookLoginView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="44dp"
         android:layout_above="@+id/kakaoLoginView"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -141,13 +143,14 @@
             android:gravity="left|center_vertical"
             android:text="@string/act_login_facebook"
             android:textColor="@color/white"
-            android:textSize="17dp"/>
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/kakaoLoginView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
         android:background="@drawable/shape_button_kakaologin_background"
@@ -171,7 +174,8 @@
             android:gravity="left|center_vertical"
             android:text="@string/act_login_kakao"
             android:textColor="@color/com_kakao_brown"
-            android:textSize="17dp"/>
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
 
     </LinearLayout>
 
