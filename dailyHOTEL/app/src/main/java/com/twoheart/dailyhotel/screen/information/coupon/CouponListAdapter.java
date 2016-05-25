@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -142,9 +141,9 @@ public class CouponListAdapter
 
 			Coupon coupon = getItem(position);
 
-			DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-			String strPrice = decimalFormat.format(coupon.price);
-			couponPriceTextView.setText(strPrice + mContext.getResources().getString(R.string.currency));
+
+			String strPrice = String.format("%,d원", coupon.price);
+			couponPriceTextView.setText(strPrice);
 
 			descriptionTextView.setText(coupon.description);
 			expireTextView.setText(coupon.expiredTime);
@@ -165,8 +164,11 @@ public class CouponListAdapter
 
 			if (coupon.minPrice > 0)
 			{
-				String strMinPrice = decimalFormat.format(coupon.minPrice);
-				minPriceTextView.setText(strMinPrice + mContext.getResources().getString(R.string.currency));
+//				String strMinPrice = decimalFormat.format(coupon.minPrice);
+//				minPriceTextView.setText(strMinPrice + mContext.getResources().getString(R.string.currency));
+
+				String strMinPrice = String.format("%,d원", coupon.minPrice);
+				minPriceTextView.setText(strMinPrice);
 			} else
 			{
 				minPriceTextView.setText("");
