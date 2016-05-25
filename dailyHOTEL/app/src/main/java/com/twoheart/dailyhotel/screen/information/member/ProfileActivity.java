@@ -197,27 +197,30 @@ public class ProfileActivity extends BaseActivity
     private ProfileNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ProfileNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String userIndex, String email, String name, String phoneNumber, boolean isPhoneVerified, String verifiedDate)
+        public void onUserInformation(String userIndex, String email, String name, String phoneNumber, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
         {
             mUserIndex = userIndex;
             String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
 
-            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), isPhoneVerified, verifiedDate);
+            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), isVerified, isPhoneVerified, verifiedDate);
 
             unLockUI();
 
-            if (isPhoneVerified == true)
+            if (isVerified == true)
             {
-                DailyPreference.getInstance(ProfileActivity.this).setVerification(true);
-            } else
-            {
-                // 인증 후 인증이 해지된 경우
-                if (DailyPreference.getInstance(ProfileActivity.this).isVerification() == true)
+                if (isPhoneVerified == true)
                 {
-                    showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
-                }
+                    DailyPreference.getInstance(ProfileActivity.this).setVerification(true);
+                } else
+                {
+                    // 인증 후 인증이 해지된 경우
+                    if (DailyPreference.getInstance(ProfileActivity.this).isVerification() == true)
+                    {
+                        showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+                    }
 
-                DailyPreference.getInstance(ProfileActivity.this).setVerification(false);
+                    DailyPreference.getInstance(ProfileActivity.this).setVerification(false);
+                }
             }
         }
 
