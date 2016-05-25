@@ -26,14 +26,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="40dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
         android:layout_marginTop="33dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/kakaoMapLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="104dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_gravity="center"
@@ -43,12 +42,11 @@
             android:text="@string/label_share_daum_map"
             android:textColor="@color/default_text_c323232"
             android:textSize="11dp"
-            android:layout_weight="1"
             android:visibility="visible"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/naverMapLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="104dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
@@ -58,12 +56,11 @@
             android:text="@string/label_share_naver_map"
             android:textColor="@color/default_text_c323232"
             android:textSize="11dp"
-            android:layout_weight="1"
             android:visibility="visible"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/googleMapLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="104dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_gravity="center"
@@ -73,6 +70,6 @@
             android:text="@string/label_share_google_map"
             android:textColor="@color/default_text_c323232"
             android:textSize="11dp"
-            android:layout_weight="1"/>
+            />
     </LinearLayout>
 </LinearLayout>

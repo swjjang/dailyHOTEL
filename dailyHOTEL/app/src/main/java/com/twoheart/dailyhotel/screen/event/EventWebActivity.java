@@ -365,5 +365,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             });
         }
+
+        @JavascriptInterface
+        public void downloadCoupon(String couponIndex)
+        {
+        }
     }
 }
