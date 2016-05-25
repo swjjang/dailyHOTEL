@@ -326,6 +326,9 @@ public class MainActivity extends BaseActivity implements Constants
             return;
         }
 
+        mDelayTimeHandler.removeMessages(0);
+        unLockUI();
+
         if (mSettingNetworkDialog != null)
         {
             if (mSettingNetworkDialog.isShowing() == true)
@@ -498,6 +501,8 @@ public class MainActivity extends BaseActivity implements Constants
         public void onErrorResponse(VolleyError volleyError)
         {
             mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             MainActivity.this.onErrorResponse(volleyError);
         }
 
@@ -505,6 +510,8 @@ public class MainActivity extends BaseActivity implements Constants
         public void onError(Exception e)
         {
             mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             MainActivity.this.onError(e);
         }
 
@@ -512,6 +519,8 @@ public class MainActivity extends BaseActivity implements Constants
         public void onErrorPopupMessage(int magCode, String message)
         {
             mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             MainActivity.this.onErrorPopupMessage(magCode, message);
         }
 
@@ -519,12 +528,17 @@ public class MainActivity extends BaseActivity implements Constants
         public void onErrorToastMessage(String message)
         {
             mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             MainActivity.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onCheckServerResponse(String title, String message)
         {
+            mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
             {
                 @Override
@@ -547,6 +561,7 @@ public class MainActivity extends BaseActivity implements Constants
             if (minVersion > currentVersion)
             {
                 mDelayTimeHandler.removeMessages(0);
+                unLockUI();
 
                 View.OnClickListener posListener = new View.OnClickListener()
                 {
@@ -581,6 +596,7 @@ public class MainActivity extends BaseActivity implements Constants
             } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
             {
                 mDelayTimeHandler.removeMessages(0);
+                unLockUI();
 
                 View.OnClickListener posListener = new View.OnClickListener()
                 {
