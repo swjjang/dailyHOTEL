@@ -62,7 +62,7 @@
 
 						<com.twoheart.dailyhotel.widget.DailyTextView
 							android:id="@+id/loginTextView"
-							android:layout_width="47dp"
+							android:layout_width="wrap_content"
 							android:layout_height="21dp"
 							android:layout_marginRight="5dp"
 							android:background="@drawable/more_btn_padding"
@@ -74,7 +74,7 @@
 
 						<com.twoheart.dailyhotel.widget.DailyTextView
 							android:id="@+id/signupTextView"
-							android:layout_width="70dp"
+							android:layout_width="wrap_content"
 							android:layout_height="21dp"
 							android:background="@drawable/more_btn_padding"
 							android:gravity="center"
@@ -85,7 +85,7 @@
 
 						<com.twoheart.dailyhotel.widget.DailyTextView
 							android:id="@+id/editProfileTextView"
-							android:layout_width="57dp"
+							android:layout_width="wrap_content"
 							android:layout_height="21dp"
 							android:background="@drawable/more_btn_padding"
 							android:gravity="center"
@@ -97,7 +97,7 @@
 
 					<com.twoheart.dailyhotel.widget.DailyTextView
 						android:id="@+id/profileTextView"
-						android:layout_width="wrap_content"
+						android:layout_width="match_parent"
 						android:layout_height="25dp"
 						android:layout_toLeftOf="@id/buttonLayout"
 						android:ellipsize="end"
