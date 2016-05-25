@@ -744,21 +744,22 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 user.setPhone(response.getString("phone"));
                 user.setUserIdx(response.getString("idx"));
 
-                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
                 boolean isVerified = response.getBoolean("is_verified");
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
 
                 if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                 {
+                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                } else
+                {
+                    // 기존에 인증이 되었는데 인증이 해지되었다.
                     if (isVerified == true && isPhoneVerified == false)
                     {
                         moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
                     } else
                     {
-                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
+                        processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
                     }
-                } else
-                {
-                    processBooking(mPlaceDetail, mSelectedTicketInformation, mCheckInSaleTime, false);
                 }
             } catch (Exception e)
             {

@@ -7,6 +7,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class GourmetDaysListFragment extends GourmetListFragment
 {
@@ -17,7 +18,7 @@ public class GourmetDaysListFragment extends GourmetListFragment
 
         SaleTime saleTime = mSaleTime.getClone(0);
 
-        Intent intent = GourmetCalendarActivity.newInstance(getContext(), saleTime);
+        Intent intent = GourmetCalendarActivity.newInstance(getContext(), saleTime, AnalyticsManager.ValueType.LIST);
         getParentFragment().startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 

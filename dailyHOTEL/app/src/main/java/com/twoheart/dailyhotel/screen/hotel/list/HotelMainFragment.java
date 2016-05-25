@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
+import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -237,9 +238,15 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     return;
                 }
 
-                lockUiComponent();
+                Province province = getProvince();
 
-                Intent intent = HotelCurationActivity.newInstance(baseActivity, getProvince().isOverseas, mViewType, mCurationOption);
+                if (province == null)
+                {
+                    releaseUiComponent();
+                    return;
+                }
+
+                Intent intent = HotelCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
                 baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
@@ -372,7 +379,14 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    HotelCurationOption curationOption = data.getParcelableExtra(HotelCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+                    PlaceCurationOption placeCurationOption = data.getParcelableExtra(HotelCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
+
+                    if (placeCurationOption instanceof HotelCurationOption == false)
+                    {
+                        return;
+                    }
+
+                    HotelCurationOption curationOption = (HotelCurationOption) placeCurationOption;
 
                     if (curationOption != null)
                     {

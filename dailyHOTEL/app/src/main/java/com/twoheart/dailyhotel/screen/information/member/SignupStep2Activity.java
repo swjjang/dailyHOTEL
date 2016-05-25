@@ -148,7 +148,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void doSignUp(String verificationNumber)
+        public void doSignUp(String verificationNumber, String phoneNumber)
         {
             if (Util.isTextEmpty(verificationNumber) == true)
             {
@@ -163,7 +163,7 @@ public class SignupStep2Activity extends BaseActivity
 
             lockUI();
 
-            mNetworkController.requestSingUp(mSignupKey, verificationNumber);
+            mNetworkController.requestSingUp(mSignupKey, verificationNumber, phoneNumber);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.REGISTRATION_CLICKED, AnalyticsManager.Label.AGREE_AND_REGISTER, null);
@@ -195,6 +195,8 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void onSignUp(int notificationUid, String gcmRegisterId)
         {
+            DailyPreference.getInstance(SignupStep2Activity.this).setVerification(true);
+
             if (notificationUid > 0)
             {
                 DailyPreference.getInstance(SignupStep2Activity.this).setNotificationUid(notificationUid);
@@ -260,6 +262,22 @@ public class SignupStep2Activity extends BaseActivity
                         mSignupStep2Layout.resetPhoneNumber();
                     }
                 });
+        }
+
+        @Override
+        public void onInvalidPhoneNumber(String message)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+        }
+
+        @Override
+        public void onInvalidVerificationNumber(String message)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override

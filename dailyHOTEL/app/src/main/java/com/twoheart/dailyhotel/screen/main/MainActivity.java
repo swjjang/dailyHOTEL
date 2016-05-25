@@ -19,8 +19,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.android.volley.VolleyError;
-import com.appboy.Appboy;
-import com.appboy.enums.NotificationSubscriptionType;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -34,6 +32,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -142,10 +141,10 @@ public class MainActivity extends BaseActivity implements Constants
 
         if (DailyPreference.getInstance(this).isAllowPush() == true)
         {
-            Appboy.getInstance(this).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.OPTED_IN);
+            AppboyManager.setPushEnabled(this, true);
         } else
         {
-            Appboy.getInstance(this).getCurrentUser().setPushNotificationSubscriptionType(NotificationSubscriptionType.UNSUBSCRIBED);
+            AppboyManager.setPushEnabled(this, false);
         }
     }
 
@@ -216,13 +215,6 @@ public class MainActivity extends BaseActivity implements Constants
         {
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
                 mNetworkController.requestGourmetIsExistRating();
-                break;
-
-            case CODE_REQUEST_ACTIVITY_LOGIN:
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
-                }
                 break;
 
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
@@ -333,6 +325,9 @@ public class MainActivity extends BaseActivity implements Constants
         {
             return;
         }
+
+        mDelayTimeHandler.removeMessages(0);
+        unLockUI();
 
         if (mSettingNetworkDialog != null)
         {
@@ -506,6 +501,8 @@ public class MainActivity extends BaseActivity implements Constants
         public void onErrorResponse(VolleyError volleyError)
         {
             mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             MainActivity.this.onErrorResponse(volleyError);
         }
 
@@ -513,6 +510,8 @@ public class MainActivity extends BaseActivity implements Constants
         public void onError(Exception e)
         {
             mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             MainActivity.this.onError(e);
         }
 
@@ -520,6 +519,8 @@ public class MainActivity extends BaseActivity implements Constants
         public void onErrorPopupMessage(int magCode, String message)
         {
             mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             MainActivity.this.onErrorPopupMessage(magCode, message);
         }
 
@@ -527,12 +528,17 @@ public class MainActivity extends BaseActivity implements Constants
         public void onErrorToastMessage(String message)
         {
             mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             MainActivity.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onCheckServerResponse(String title, String message)
         {
+            mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
             showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
             {
                 @Override
@@ -554,6 +560,9 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (minVersion > currentVersion)
             {
+                mDelayTimeHandler.removeMessages(0);
+                unLockUI();
+
                 View.OnClickListener posListener = new View.OnClickListener()
                 {
                     @Override
@@ -586,6 +595,9 @@ public class MainActivity extends BaseActivity implements Constants
 
             } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
             {
+                mDelayTimeHandler.removeMessages(0);
+                unLockUI();
+
                 View.OnClickListener posListener = new View.OnClickListener()
                 {
                     @Override
@@ -700,8 +712,6 @@ public class MainActivity extends BaseActivity implements Constants
                     mNetworkController.requestUserInformation();
                 } else
                 {
-                    AnalyticsManager.getInstance(MainActivity.this).setUserIndex(null);
-
                     Util.requestGoogleCloudMessaging(MainActivity.this, new Util.OnGoogleCloudMessagingListener()
                     {
                         @Override

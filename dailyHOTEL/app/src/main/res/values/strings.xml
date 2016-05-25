@@ -294,6 +294,7 @@
     <string name="kakaolink_msg_prefix">좋은 어플 추천해 드려요~\n오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.추천인코드 : </string>
     <string name="kakaolink_msg_suffix">을 입력하면 5,000원 바로 할인!</string>
     <string name="kakaolink_msg_invited_friend">%1$s님이 데일리호텔 적립금 5,000원을 보내셨습니다!\n\n회원가입시 추천인코드 [ %2$s ] 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n데일리호텔에서 4,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 가격으로 즐겨보세요!\n\n추천인코드: [ %3$s ]</string>
+    <string name="kakaolink_msg_none_name_invited_friend">데일리호텔이 적립금 5,000원을 보내셨습니다!\n\n회원가입시 추천인코드 [ %1$s ] 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n데일리호텔에서 4,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 가격으로 즐겨보세요!\n\n추천인코드: [ %2$s ]</string>
 
     <!-- Alarm Message -->
     <string name="alarm_title">DAILYHOTEL</string>
@@ -399,10 +400,10 @@
     <string name="act_profile_contact">휴대폰 번호</string>
     <string name="act_profile_modify">수정</string>
     <string name="act_profile_btn_logout">로그아웃</string>
-    <string name="act_profile_input_name">이름을 입력해주세요.</string>
+    <string name="act_profile_input_name">이름을 등록해주세요.</string>
     <string name="act_profile_input_password">비밀번호를 입력해주세요.</string>
-    <string name="act_profile_input_contact">연락처를 입력해주세요.</string>
-    <string name="act_profile_input_email">이메일이 없습니다.</string>
+    <string name="act_profile_input_contact">휴대폰 번호를 등록해주세요.</string>
+    <string name="act_profile_input_email">이메일을 등록해주세요.</string>
     <string name="label_confirm_phone">이메일 설정 완료</string>
     <string name="label_confirm_phonenumber">휴대폰 번호 설정 완료</string>
     <string name="label_confirm_name">이름 설정 완료</string>
@@ -413,7 +414,7 @@
     <string name="message_edit_email_guide">이메일 주소를 입력하신 후 [이메일 설정 완료] 버튼을 눌 러주세요.</string>
     <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
     <string name="message_edit_phone_social_guide">휴대폰 번호를 입력하신 후 [휴대폰 번호 설정 완료] 버튼을 눌러주세요.</string>
-    <string name="message_edit_name_guide">20자 이내의 이름을 입력하신 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_edit_name_guide">상품 예약 확인 시 필요한 정보이므로 실명으로 입력 하신 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_password_guide">4자 이상 비밀번호를 입력하신 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_add_profile_guide">신속한 예약확인 및 안내를 위해 추가 정보를 등록해 주세요.</string>
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>

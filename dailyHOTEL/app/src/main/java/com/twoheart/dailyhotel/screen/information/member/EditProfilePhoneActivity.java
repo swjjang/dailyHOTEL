@@ -168,7 +168,7 @@ public class EditProfilePhoneActivity extends BaseActivity
 
             if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == true)
             {
-                mNetworkController.requestUpdateDailyUserInformation(phoneNumber);
+                finish();
             } else
             {
                 mNetworkController.requestUpdateSocialUserInformation(mUserIndex, phoneNumber);
@@ -238,6 +238,8 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void onConfirm()
         {
+            DailyPreference.getInstance(EditProfilePhoneActivity.this).setVerification(true);
+
             showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_phonenumber), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {
                 @Override
@@ -255,6 +257,22 @@ public class EditProfilePhoneActivity extends BaseActivity
                     finish();
                 }
             });
+        }
+
+        @Override
+        public void onInvalidPhoneNumber(String message)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+        }
+
+        @Override
+        public void onInvalidVerificationNumber(String message)
+        {
+            unLockUI();
+
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
         }
 
         @Override

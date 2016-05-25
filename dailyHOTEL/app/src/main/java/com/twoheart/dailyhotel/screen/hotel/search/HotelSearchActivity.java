@@ -233,7 +233,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onShowCalendar()
         {
-            Intent intent = HotelCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime.getClone(0));
+            Intent intent = HotelCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime.getClone(0), AnalyticsManager.ValueType.SEARCH);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 

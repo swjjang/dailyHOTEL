@@ -17,8 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="28dp">
+            android:orientation="vertical">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
@@ -140,8 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/confirmPasswordView"

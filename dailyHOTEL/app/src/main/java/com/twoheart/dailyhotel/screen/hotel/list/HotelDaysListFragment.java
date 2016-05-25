@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class HotelDaysListFragment extends HotelListFragment
 {
@@ -16,7 +17,7 @@ public class HotelDaysListFragment extends HotelListFragment
 
         SaleTime saleTime = mCheckInSaleTime.getClone(0);
 
-        Intent intent = HotelCalendarActivity.newInstance(getContext(), saleTime);
+        Intent intent = HotelCalendarActivity.newInstance(getContext(), saleTime, AnalyticsManager.ValueType.LIST);
         getParentFragment().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 

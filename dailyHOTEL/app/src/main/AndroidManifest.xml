@@ -155,7 +155,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"/>
+            android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
             android:name=".screen.information.member.SignupStep2Activity"
             android:launchMode="singleTop"

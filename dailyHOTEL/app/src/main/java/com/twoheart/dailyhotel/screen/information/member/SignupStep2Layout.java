@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class SignupStep2Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
+    private static final int VERIFICATION_NUMBER_LENGTH = 4;
+
     private View mVerificationLayout, mSignUpView, mCertificationNumberView;
     private View mCountryView, mPhoneView, mVerificationView;
     private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
@@ -31,7 +34,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
         void doVerification(String phoneNumber);
 
-        void doSignUp(String verificationNumber);
+        void doSignUp(String verificationNumber, String phoneNumber);
     }
 
     public SignupStep2Layout(Context context, OnEventListener mOnEventListener)
@@ -131,6 +134,32 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
         mVerificationEditText = (EditText) mVerificationLayout.findViewById(R.id.verificationEditText);
         mVerificationEditText.setOnFocusChangeListener(this);
+
+        mVerificationEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (s.length() >= VERIFICATION_NUMBER_LENGTH)
+                {
+                    InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(mVerificationEditText.getWindowToken(), 0);
+                }
+            }
+        });
+
         mVerificationEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -239,11 +268,16 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mPhoneEditText.setText(null);
     }
 
+    public void resetVerificationNumber()
+    {
+        mVerificationEditText.setText(null);
+    }
+
     private void doSignUp()
     {
         String verificationNumber = mVerificationEditText.getText().toString().trim();
 
-        ((OnEventListener) mOnEventListener).doSignUp(verificationNumber);
+        ((OnEventListener) mOnEventListener).doSignUp(verificationNumber, getPhoneNumber());
     }
 
     private void resetFocus()

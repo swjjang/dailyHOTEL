@@ -7,8 +7,7 @@
     <!-- 예약자 정보 -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"
-        >
+        android:layout_height="25dp">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="match_parent"
@@ -42,12 +41,12 @@
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="28dp"
                 android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
                 android:background="@color/curation_title_text"
                 android:gravity="center"
                 android:text="@string/act_profile_modify"
                 android:textColor="@color/calendar_month_line"
-                android:textSize="10dp"
-                android:layout_gravity="center_vertical"/>
+                android:textSize="10dp"/>
         </FrameLayout>
     </RelativeLayout>
 
@@ -55,22 +54,22 @@
         android:id="@+id/guideNameMemoView"
         android:layout_width="match_parent"
         android:layout_height="35dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
         android:text="@string/message_guide_name_memo"
         android:textColor="@color/curation_title_text"
         android:textSize="11dp"
-        android:visibility="gone"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"/>
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingBottom="10dp"
         android:paddingTop="10dp">
 
         <LinearLayout
@@ -138,8 +137,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </FrameLayout>
-
-
         </LinearLayout>
 
         <LinearLayout

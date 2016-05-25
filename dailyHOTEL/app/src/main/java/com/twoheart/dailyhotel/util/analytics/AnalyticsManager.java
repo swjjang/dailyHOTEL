@@ -674,10 +674,13 @@ public class AnalyticsManager
         public static final String REFERRAL_CODE = "referral_code";
         public static final String POPUP_STATUS = "popup_status";
         public static final String SELECTED_RESPONSE_ITEM = "selected_response_Item";
+        public static final String SCREEN = "screen";
     }
 
     public static class ValueType
     {
         public static final String EMPTY = "null";
+        public static final String LIST = "list";
+        public static final String SEARCH = "search";
     }
 }

@@ -43,6 +43,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -142,6 +143,11 @@ public class Util implements Constants
 
     public static int dpToPx(Context context, double dp)
     {
+        if (context == null)
+        {
+            context = DailyHotel.getGlobalApplicationContext();
+        }
+
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }

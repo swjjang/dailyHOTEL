@@ -79,11 +79,9 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         logoutView.setOnClickListener(this);
     }
 
-    public void updateUserInformation(String userType, String email, String name, String phone, boolean isPhoneVerified, String verifiedDate)
+    public void updateUserInformation(String userType, String email, String name, String phone, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
     {
-        boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(userType);
-
-        if (isDailyUser == true)
+        if (Constants.DAILY_USER.equalsIgnoreCase(userType) == true)
         {
             updateDailyUserInformation(email, name, phone, isPhoneVerified, verifiedDate);
         } else

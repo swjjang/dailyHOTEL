@@ -25,6 +25,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class EditProfilePhoneLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
+    private static final int VERIFICATION_NUMBER_LENGTH = 4;
+
     private View mCertificationLayout;
     private View mVerificationLayout, mConfirm, mCertificationNumberView;
     private View mCountryView, mPhoneView, mVerificationView;
@@ -146,6 +148,32 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
         mVerificationEditText = (EditText) mVerificationLayout.findViewById(R.id.verificationEditText);
         mVerificationEditText.setOnFocusChangeListener(this);
+
+        mVerificationEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (s.length() >= VERIFICATION_NUMBER_LENGTH)
+                {
+                    InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(mVerificationEditText.getWindowToken(), 0);
+                }
+            }
+        });
+
         mVerificationEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -327,6 +355,11 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     public void resetPhoneNumber()
     {
         mPhoneEditText.setText(null);
+    }
+
+    public void resetVerificationNumber()
+    {
+        mVerificationEditText.setText(null);
     }
 
     private void resetFocus()
