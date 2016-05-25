@@ -334,6 +334,7 @@
     <string name="frag_view_bonus">적립금</string>
     <string name="frag_view_creditcard">결제카드 관리</string>
     <string name="frag_count_text">(%1$s개)</string>
+    <string name="frag_currency_text">(%1$s원)</string>
     <string name="frag_recommend_text">친구추천하고 5,000원 받기</string>
     <string name="frag_about_business_license01">(주)데일리 ㅣ 대표 %1$s ㅣ 사업자등록번호 : %2$sㅣ 대표연락처 : %3$s</string>
     <string name="frag_about_business_license02">통신판매업 신고번호 : %1$s</string>
@@ -820,5 +821,4 @@
     <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다</string>
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">기간만료</string>
-
 </resources>

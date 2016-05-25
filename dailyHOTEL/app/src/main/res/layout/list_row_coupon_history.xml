@@ -26,11 +26,9 @@
 		android:paddingLeft="7dp"
 		android:paddingRight="7dp"
 		android:paddingTop="3dp"
-		android:text="@string/coupon_history_use_text"
 		android:textColor="@color/white"
 		android:textSize="11dp"
-		dailyFont:style="Medium"
-		/>
+		dailyFont:style="Medium"/>
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -70,7 +68,7 @@
 			android:layout_marginTop="3dp"
 			android:ellipsize="end"
 			android:gravity="left|center_vertical"
-			android:singleLine="true"
+			android:maxLines="2"
 			android:textColor="@color/coupon_expire_text"
 			android:textSize="11dp"
 			/>

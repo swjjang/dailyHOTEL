@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 
 /**
- * Created by iseung-won on 2016. 5. 19..
+ * Created by Sam Lee on 2016. 5. 19..
  */
 public class CouponListActivity extends BaseActivity
 {

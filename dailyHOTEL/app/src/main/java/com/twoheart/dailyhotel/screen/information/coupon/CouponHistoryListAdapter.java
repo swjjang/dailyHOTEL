@@ -9,12 +9,13 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- * Created by iseung-won on 2016. 5. 23..
+ * Created by Sam Lee on 2016. 5. 23..
  */
 public class CouponHistoryListAdapter
 		extends RecyclerView.Adapter<CouponHistoryListAdapter.CouponViewHolder>
@@ -72,7 +73,30 @@ public class CouponHistoryListAdapter
 
 		holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
 
+		int resId;
+		String strPrefixExpire;
+		if (coupon.state == 0)
+		{
+			resId = R.string.coupon_history_use_text;
+			strPrefixExpire = "사용일:";
+		} else
+		{
+			resId = R.string.coupon_history_expire_text;
+			strPrefixExpire = "만료일:";
+		}
+		holder.stateTextView.setText(resId);
+
 		// 사용기간 및 사용일자 또는 만료일자 구현 필요
+		String strExpire = coupon.expiredTime;
+		if (Util.getLCDWidth(mContext) < 720)
+		{
+			strExpire += "\n";
+		} else
+		{
+			strExpire += " | ";
+		}
+		strExpire += strPrefixExpire + coupon.dueDate;
+		holder.expireTextView.setText(strExpire);
 	}
 
 	protected class CouponViewHolder extends RecyclerView.ViewHolder
@@ -82,6 +106,7 @@ public class CouponHistoryListAdapter
 		TextView priceTextView;
 		TextView descriptionTextView;
 		TextView expireTextView;
+		TextView stateTextView;
 		View upperLine;
 
 		public CouponViewHolder(View itemView)
@@ -92,6 +117,7 @@ public class CouponHistoryListAdapter
 			priceTextView = (TextView) itemView.findViewById(R.id.priceTextView);
 			descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
 			expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
+			stateTextView = (TextView) itemView.findViewById(R.id.stateTextView);
 			upperLine = itemView.findViewById(R.id.upperLineView);
 		}
 	}

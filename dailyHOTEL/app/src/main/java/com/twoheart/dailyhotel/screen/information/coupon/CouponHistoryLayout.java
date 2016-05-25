@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iseung-won on 2016. 5. 23..
+ * Created by Sam Lee on 2016. 5. 23..
  */
 public class CouponHistoryLayout extends BaseLayout
 {

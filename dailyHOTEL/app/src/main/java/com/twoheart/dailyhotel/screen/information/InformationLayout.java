@@ -301,7 +301,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             newBonusIconView.setVisibility(hasNewBonus ? View.VISIBLE : View.GONE);
 
             couponCountTextView.setText(mContext.getResources().getString(R.string.frag_count_text, couponCountString));
-            bonusCountTextView.setText(mContext.getResources().getString(R.string.frag_count_text, bonusCountString));
+            bonusCountTextView.setText(mContext.getResources().getString(R.string.frag_currency_text, bonusCountString));
 
         } else
         {
