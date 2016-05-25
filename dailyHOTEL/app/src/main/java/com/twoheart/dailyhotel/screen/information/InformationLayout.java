@@ -432,4 +432,5 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 break;
         }
     }
+
 }
