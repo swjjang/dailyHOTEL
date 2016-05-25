@@ -5,21 +5,16 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
@@ -119,8 +114,8 @@ public class VolleyHttpClient implements Constants
 
             try
             {
-                //                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
-                TrustManager[] trustManagers = newTrustManager(context);
+                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
+                //                TrustManager[] trustManagers = newTrustManager(context);
 
                 sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(null, trustManagers, null);
@@ -150,28 +145,28 @@ public class VolleyHttpClient implements Constants
             return mOkUrlFactory.open(url);
         }
 
-        private TrustManager[] newTrustManager(Context context)
-        {
-            try
-            {
-                KeyStore trusted = KeyStore.getInstance("BKS");
-                InputStream in = context.getResources().openRawResource(R.raw.daily);
-
-                try
-                {
-                    trusted.load(in, DailyHotelRequest.getUrlDecoderEx(KEY).toCharArray());
-                } finally
-                {
-                    in.close();
-                }
-
-                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                trustManagerFactory.init(trusted);
-                return trustManagerFactory.getTrustManagers();
-            } catch (Exception e)
-            {
-                throw new AssertionError(e);
-            }
-        }
+        //        private TrustManager[] newTrustManager(Context context)
+        //        {
+        //            try
+        //            {
+        //                KeyStore trusted = KeyStore.getInstance("BKS");
+        //                InputStream in = context.getResources().openRawResource(R.raw.daily);
+        //
+        //                try
+        //                {
+        //                    trusted.load(in, DailyHotelRequest.getUrlDecoderEx(KEY).toCharArray());
+        //                } finally
+        //                {
+        //                    in.close();
+        //                }
+        //
+        //                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        //                trustManagerFactory.init(trusted);
+        //                return trustManagerFactory.getTrustManagers();
+        //            } catch (Exception e)
+        //            {
+        //                throw new AssertionError(e);
+        //            }
+        //        }
     }
 }
