@@ -342,9 +342,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this, messageResIds);
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
-        final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
+        final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
-        agreeLayout.setEnabled(false);
+        confirmTextView.setEnabled(false);
 
         finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
         {
@@ -378,11 +378,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                 agreeSinatureTextView.startAnimation(animation);
 
-                TransitionDrawable transition = (TransitionDrawable) agreeLayout.getBackground();
-                transition.startTransition(500);
+//                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
+//                transition.startTransition(500);
 
-                agreeLayout.setEnabled(true);
-                agreeLayout.setOnClickListener(new View.OnClickListener()
+                confirmTextView.setEnabled(true);
+                confirmTextView.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -507,7 +507,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             messageLayout.addView(messageRow);
         }
 
-        View agreeLayout = view.findViewById(R.id.agreeLayout);
+        View confirmTextView = view.findViewById(R.id.confirmTextView);
 
         View.OnClickListener buttonOnClickListener = new View.OnClickListener()
         {
@@ -534,7 +534,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             }
         };
 
-        agreeLayout.setOnClickListener(buttonOnClickListener);
+        confirmTextView.setOnClickListener(buttonOnClickListener);
 
         dialog.setContentView(view);
 

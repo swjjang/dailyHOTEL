@@ -187,6 +187,8 @@ public class MainActivity extends BaseActivity implements Constants
         {
             if (VolleyHttpClient.isAvailableNetwork(this) == false)
             {
+                mDelayTimeHandler.removeMessages(0);
+
                 showDisabledNetworkPopup();
             }
         } else

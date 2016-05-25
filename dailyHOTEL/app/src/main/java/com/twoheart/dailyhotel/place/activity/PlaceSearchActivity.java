@@ -108,9 +108,6 @@ public abstract class PlaceSearchActivity extends BaseActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
 
-        ImageView titleIconView = (ImageView) dialogView.findViewById(R.id.titleIconView);
-        titleIconView.setImageResource(R.drawable.popup_ic_location);
-
         // 상단
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
@@ -177,8 +174,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
             }
         });
 
-        confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
-        confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
+//        confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
+//        confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
 
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {

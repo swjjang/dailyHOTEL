@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * RatingHotelFragment (호텔 만족도 조사 화면)
- * <p>
+ * <p/>
  * 호텔 만족도 조사를 위한 화면
  */
 package com.twoheart.dailyhotel.screen.common;
@@ -469,7 +469,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             }
         }
 
-        final TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
+        final TextView confirmTextView = (TextView) view.findViewById(R.id.confirmTextView);
 
         mCommentsView.setUsedImeActionSend(true);
         mCommentsView.setImeOptions(EditorInfo.IME_ACTION_SEND);
@@ -480,14 +480,14 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             {
                 if (actionId == EditorInfo.IME_ACTION_SEND)
                 {
-                    positiveTextView.performClick();
+                    confirmTextView.performClick();
                 }
 
                 return false;
             }
         });
 
-        positiveTextView.setOnClickListener(new View.OnClickListener()
+        confirmTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

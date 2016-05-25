@@ -361,11 +361,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screen.common.push.PushDialogActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
-        <activity
             android:name=".screen.common.push.PushLockDialogActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
