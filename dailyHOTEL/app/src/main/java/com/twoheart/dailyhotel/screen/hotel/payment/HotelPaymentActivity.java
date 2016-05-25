@@ -583,9 +583,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this, messageResIds);
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
-        final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
+        final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
-        agreeLayout.setEnabled(false);
+        confirmTextView.setEnabled(false);
 
         finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
         {
@@ -619,11 +619,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                 agreeSinatureTextView.startAnimation(animation);
 
-                TransitionDrawable transition = (TransitionDrawable) agreeLayout.getBackground();
-                transition.startTransition(500);
+//                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
+//                transition.startTransition(500);
 
-                agreeLayout.setEnabled(true);
-                agreeLayout.setOnClickListener(new OnClickListener()
+                confirmTextView.setEnabled(true);
+                confirmTextView.setOnClickListener(new OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -754,7 +754,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             messageLayout.addView(messageRow);
         }
 
-        View agreeLayout = view.findViewById(R.id.agreeLayout);
+        View confirmTextView = view.findViewById(R.id.confirmTextView);
 
         OnClickListener buttonOnClickListener = new OnClickListener()
         {
@@ -781,7 +781,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             }
         };
 
-        agreeLayout.setOnClickListener(buttonOnClickListener);
+        confirmTextView.setOnClickListener(buttonOnClickListener);
 
         dialog.setContentView(view);
 
