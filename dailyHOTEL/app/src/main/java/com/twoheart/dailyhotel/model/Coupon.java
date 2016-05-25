@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by iseung-won on 2016. 5. 19..
+ * Created by Sam Lee on 2016. 5. 19..
  *
  * 현재 임의로 만든 모델로 실제 서버에서 내려오는 값에 따라 변경 될 수 있음
  */

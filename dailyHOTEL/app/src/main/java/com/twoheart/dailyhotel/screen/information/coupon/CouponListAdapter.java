@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- * Created by iseung-won on 2016. 5. 20..
+ * Created by Sam Lee on 2016. 5. 20..
  */
 public class CouponListAdapter
 		extends RecyclerView.Adapter<RecyclerView.ViewHolder>

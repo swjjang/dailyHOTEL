@@ -7,7 +7,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 /**
- * Created by iseung-won on 2016. 5. 19..
+ * Created by Sam Lee on 2016. 5. 19..
  */
 public class InformationNetworkController extends BaseNetworkController
 {

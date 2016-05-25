@@ -819,5 +819,4 @@
     <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다</string>
     <string name="coupon_history_use_text">결제시 사용</string>
     <string name="coupon_history_expire_text">기간만료</string>
-
 </resources>
