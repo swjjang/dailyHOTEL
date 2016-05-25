@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
@@ -68,6 +69,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private com.kakao.usermgmt.LoginButton mKakaoLoginView;
     private SessionCallback mKakaoSessionCallback;
     private boolean mIsSocialSignUp;
+    private boolean mCertifyingTermination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -511,11 +513,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             @Override
             public void onErrorResponse(VolleyError arg0)
             {
-                unLockUI();
-
-                DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-                setResult(RESULT_OK);
-                finish();
+                loginAndFinish();
             }
         };
 
@@ -547,9 +545,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     ExLog.d(e.toString());
                 } finally
                 {
-                    DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-                    setResult(RESULT_OK);
-                    finish();
+                    loginAndFinish();
                 }
             }
         };
@@ -576,14 +572,44 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     registerNotificationId(registrationId, userIndex);
                 } else
                 {
-                    unLockUI();
+                    loginAndFinish();
+                }
+            }
+        });
+    }
 
+    private void loginAndFinish()
+    {
+        unLockUI();
+
+        if (mCertifyingTermination == true)
+        {
+            // 인증이 해지된 경우 알림 팝업을 띄운다.
+            showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
                     DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
                     setResult(RESULT_OK);
                     finish();
                 }
-            }
-        });
+            }, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            });
+        } else
+        {
+            DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     private class SessionCallback implements ISessionCallback
@@ -798,6 +824,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 if (isVerified == true && isPhoneVerified == true)
                 {
                     DailyPreference.getInstance(LoginActivity.this).setVerification(true);
+                } else if (isVerified == true && isPhoneVerified == false)
+                {
+                    // 로그인시에 인증이 해지된 경우 알림 팝업을 띄운다.
+                    mCertifyingTermination = true;
                 }
 
                 if (mIsSocialSignUp == true)
