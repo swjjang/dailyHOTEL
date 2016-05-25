@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * WebViewActivity
- * <p>
+ * <p/>
  * WebView를 사용하는 Activity를 위한 부모 클래스이다. 일괄적인 WebV
  * iew의 설정을 위해 설계된 클래스이다.
  *
@@ -109,10 +109,12 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
                 overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
                 browseToExternalBrowser(URL_STORE_T_DAILYHOTEL);
 
+            } else if (url.contains("market://") == true)
+            {
+                browseToExternalBrowser(url);
             } else if (url.contains("facebook.com") || url.contains("naver.com"))
             {
                 browseToExternalBrowser(url);
-
             } else if (url.contains("kakaoplus://"))
             {
 
@@ -135,7 +137,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
                         ExLog.e(e1.toString());
                     }
                 }
-            } else if (url.contains("call://"))
+            } else if (url.contains("call://") == true)
             {
 
             } else

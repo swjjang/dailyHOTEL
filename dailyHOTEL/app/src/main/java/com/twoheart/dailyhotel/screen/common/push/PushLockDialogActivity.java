@@ -24,9 +24,6 @@ import com.twoheart.dailyhotel.widget.FontManager;
  */
 public class PushLockDialogActivity extends Activity implements OnClickListener, Constants
 {
-    private TextView mPositiveView;
-    private TextView mNegativeView;
-
     private String mLink;
 
     @Override
@@ -79,13 +76,10 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
         TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
         titleTextView.setText(title);
 
-        messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
-
-        mPositiveView = (TextView) findViewById(R.id.positiveTextView);
-        mNegativeView = (TextView) findViewById(R.id.negativeTextView);
-
-        mPositiveView.setOnClickListener(this);
-        mNegativeView.setOnClickListener(this);
+        View positiveTextView = findViewById(R.id.positiveTextView);
+        View negativeTextView = findViewById(R.id.negativeTextView);
+        positiveTextView.setOnClickListener(this);
+        negativeTextView.setOnClickListener(this);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
@@ -95,21 +89,23 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == mPositiveView.getId())
+        switch (v.getId())
         {
-            Intent intent = new Intent(this, LauncherActivity.class);
+            case R.id.positiveTextView:
+                Intent intent = new Intent(this, LauncherActivity.class);
 
-            if (Util.isTextEmpty(mLink) == false)
-            {
-                intent.setData(Uri.parse(mLink));
-            }
+                if (Util.isTextEmpty(mLink) == false)
+                {
+                    intent.setData(Uri.parse(mLink));
+                }
 
-            startActivity(intent);
-            finish();
-        } else if (v.getId() == mNegativeView.getId())
-        {
-            finish();
+                startActivity(intent);
+                finish();
+                break;
+
+            case R.id.negativeTextView:
+                finish();
+                break;
         }
     }
-
 }

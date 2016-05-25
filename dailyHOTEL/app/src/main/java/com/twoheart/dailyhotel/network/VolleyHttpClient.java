@@ -119,8 +119,8 @@ public class VolleyHttpClient implements Constants
 
             try
             {
-                //                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
-                TrustManager[] trustManagers = newTrustManager(context);
+                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
+                //                TrustManager[] trustManagers = newTrustManager(context);
 
                 sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(null, trustManagers, null);

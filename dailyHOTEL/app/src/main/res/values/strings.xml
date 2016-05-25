@@ -31,9 +31,9 @@
     <string name="label_on">ON</string>
     <string name="label_off">OFF</string>
     <string name="label_version">Version %1$s</string>
-    <string name="label_share_kakao_map">다음 지도에서 보기</string>
-    <string name="label_share_naver_map">네이버 지도에서 보기</string>
-    <string name="label_share_google_map">구글 지도에서 보기</string>
+    <string name="label_share_daum_map">다음맵</string>
+    <string name="label_share_naver_map">네이버맵</string>
+    <string name="label_share_google_map">구글맵</string>
     <string name="label_completed">완료</string>
     <string name="label_copy_address">주소복사</string>
     <string name="label_copy_account_number">계좌번호 복사</string>

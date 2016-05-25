@@ -764,10 +764,7 @@ public class Util implements Constants
 
         // 버튼
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
-        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
         View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
-
-        twoButtonLayout.setVisibility(View.GONE);
         oneButtonLayout.setVisibility(View.VISIBLE);
 
         TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);

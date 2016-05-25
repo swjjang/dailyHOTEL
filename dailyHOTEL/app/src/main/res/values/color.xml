@@ -228,16 +228,17 @@
     <color name="payment_memo_hint">#d0d0d0</color>
 
     <!-- DEFAULT -->
-    <color name="default_background">#f8f8f9</color>
     <color name="default_text_c900034">#900034</color>
     <color name="default_text_c323232">#323232</color>
     <color name="default_text_c929292">#929292</color>
     <color name="default_text_cc5c5c5">#c5c5c5</color>
+    <color name="default_text_cd0d0d0">#d0d0d0</color>
     <color name="default_text_c66323232">#66323232</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
 
+    <color name="default_background">#f8f8f9</color>
     <color name="default_background_section_c323232">#323232</color>
     <color name="default_background_section_cf2f2f3">#f2f2f3</color>
     <color name="default_background_kakao">#f9ed00</color>
@@ -246,10 +247,19 @@
     <color name="default_background_cfafafb">#fafafb</color>
     <color name="default_background_disable_ce6e6e6">#e6e6e6</color>
 
+    <color name="default_popup_button_background_c900034">#900034</color>
+    <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
+
+    <color name="default_popup_button_text_cffffff">#ffffff</color>
+    <color name="default_popup_button_text_c323232">#323232</color>
+    <color name="default_popup_button_text_cc5c5c5">#c5c5c5</color>
+
     <color name="default_line_ce7e7e7">#e7e7e7</color>
     <color name="default_line_cdcdcdd">#dcdcdd</color>
     <color name="default_line_cebebeb">#ebebeb</color>
     <color name="default_line_ce6e6e6">#e6e6e6</color>
+    <color name="default_line_cd0d0d0">#d0d0d0</color>
+    <color name="default_line_c323232">#323232</color>
 
     <color name="over_scroll_edge">#dcdcdc</color>
 
