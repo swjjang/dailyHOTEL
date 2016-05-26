@@ -5,24 +5,30 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/curation_information_line"/>
+        android:layout_height="25dp">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:text="@string/label_foodtype"
-        android:textColor="@color/curation_title_text"
-        android:textSize="13dp"
-        android:background="@color/calendar_month_line"
-        android:gravity="center"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:background="@color/default_background_section_cf2f2f3"
+            android:text="@string/label_foodtype"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"
+            android:gravity="center"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/curation_information_line"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/default_line_ce7e7e7"/>
+    </RelativeLayout>
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/foodGridLayout"
@@ -33,24 +39,30 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"/>
 
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/curation_information_line"/>
+        android:layout_height="25dp">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:text="@string/label_time_range"
-        android:textColor="@color/curation_title_text"
-        android:textSize="13dp"
-        android:background="@color/calendar_month_line"
-        android:gravity="center"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:background="@color/default_background_section_cf2f2f3"
+            android:text="@string/label_time_range"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"
+            android:gravity="center"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/curation_information_line"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/default_line_ce7e7e7"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/timeRangeLayout"
@@ -117,24 +129,30 @@
             android:textSize="11dp"/>
     </LinearLayout>
 
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/curation_information_line"/>
+        android:layout_height="25dp">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:text="@string/label_amenities"
-        android:textColor="@color/curation_title_text"
-        android:textSize="13dp"
-        android:background="@color/calendar_month_line"
-        android:gravity="center"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:background="@color/default_background_section_cf2f2f3"
+            android:text="@string/label_amenities"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"
+            android:gravity="center"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/curation_information_line"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/default_line_ce7e7e7"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/amenitiesLayout"
