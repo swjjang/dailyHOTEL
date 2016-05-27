@@ -176,32 +176,32 @@ public class AppboyManager extends BaseAnalyticsManager
             searchCustomEvent(EventName.SEARCH_TERM, ValueName.DAILYGOURMET, params);
         } else if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
-            {
-                if (AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
-                {
-                    curationCustomEvent(EventName.LOWTOHIGH_PRICE_SORTED, ValueName.DAILYHOTEL, params);
-                } else if (AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE.equalsIgnoreCase(label) == true)
-                {
-                    curationCustomEvent(EventName.HIGHTOLOW_PRICE_SORTED, ValueName.DAILYHOTEL, params);
-                } else if (AnalyticsManager.Label.SORTFILTER_RATING.equalsIgnoreCase(label) == true)
-                {
-                    curationCustomEvent(EventName.RATING_SORTED, ValueName.DAILYHOTEL, params);
-                }
-            } else if (AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED.equalsIgnoreCase(action) == true//
-                && AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
-            {
-                if (AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
-                {
-                    curationCustomEvent(EventName.LOWTOHIGH_PRICE_SORTED, ValueName.DAILYGOURMET, params);
-                } else if (AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE.equalsIgnoreCase(label) == true)
-                {
-                    curationCustomEvent(EventName.HIGHTOLOW_PRICE_SORTED, ValueName.DAILYGOURMET, params);
-                } else if (AnalyticsManager.Label.SORTFILTER_RATING.equalsIgnoreCase(label) == true)
-                {
-                    curationCustomEvent(EventName.RATING_SORTED, ValueName.DAILYGOURMET, params);
-                }
-            } else if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
+            //            if (AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
+            //            {
+            //                if (AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
+            //                {
+            //                    curationCustomEvent(EventName.LOWTOHIGH_PRICE_SORTED, ValueName.DAILYHOTEL, params);
+            //                } else if (AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE.equalsIgnoreCase(label) == true)
+            //                {
+            //                    curationCustomEvent(EventName.HIGHTOLOW_PRICE_SORTED, ValueName.DAILYHOTEL, params);
+            //                } else if (AnalyticsManager.Label.SORTFILTER_RATING.equalsIgnoreCase(label) == true)
+            //                {
+            //                    curationCustomEvent(EventName.RATING_SORTED, ValueName.DAILYHOTEL, params);
+            //                }
+            //            } else if (AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED.equalsIgnoreCase(action) == true//
+            //                && AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
+            //            {
+            //                if (AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
+            //                {
+            //                    curationCustomEvent(EventName.LOWTOHIGH_PRICE_SORTED, ValueName.DAILYGOURMET, params);
+            //                } else if (AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE.equalsIgnoreCase(label) == true)
+            //                {
+            //                    curationCustomEvent(EventName.HIGHTOLOW_PRICE_SORTED, ValueName.DAILYGOURMET, params);
+            //                } else if (AnalyticsManager.Label.SORTFILTER_RATING.equalsIgnoreCase(label) == true)
+            //                {
+            //                    curationCustomEvent(EventName.RATING_SORTED, ValueName.DAILYGOURMET, params);
+            //                }
+            if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
             {
                 satisfactionCustomEvent(label);
             } else if (AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
@@ -232,6 +232,12 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     ExLog.d(TAG + " : " + EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE + ", " + appboyProperties.forJsonPut().toString());
                 }
+            } else if (AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                curationCustomEvent(EventName.STAY_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);
+            } else if (AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                curationCustomEvent(EventName.GOURMET_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);
             }
         } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
@@ -382,6 +388,31 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
         appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
         appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
+
+        Constants.SortType sortType = Constants.SortType.valueOf(params.get(AnalyticsManager.KeyType.SORTING));
+
+        switch (sortType)
+        {
+            case DEFAULT:
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.DISTRICT);
+                break;
+
+            case DISTANCE:
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.DISTANCE);
+                break;
+
+            case LOW_PRICE:
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.LOWTOHIGH_PRICE_SORTED);
+                break;
+
+            case HIGH_PRICE:
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.HIGHTOLOW_PRICE_SORTED);
+                break;
+
+            case SATISFACTION:
+                appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.RATING_SORTED);
+                break;
+        }
 
         mAppboy.logCustomEvent(eventName, appboyProperties);
 
@@ -550,9 +581,11 @@ public class AppboyManager extends BaseAnalyticsManager
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
+        String placeName = params.get(AnalyticsManager.KeyType.NAME);
+
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
         appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY));
-        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, placeName);
         appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
         appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
         appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
@@ -567,11 +600,12 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE))));
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
 
-            mAppboy.logPurchase(EventName.STAY_PURCHASE_COMPLETED, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), appboyProperties);
+            mAppboy.logPurchase("stay-" + placeName, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), 1, appboyProperties);
+            mAppboy.logCustomEvent(EventName.STAY_PURCHASE_COMPLETED, appboyProperties);
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + " : " + EventName.STAY_PURCHASE_COMPLETED + ", " + appboyProperties.forJsonPut().toString());
+                ExLog.d(TAG + " : " + placeName + ", " + appboyProperties.forJsonPut().toString());
             }
         } catch (NumberFormatException e)
         {
@@ -584,9 +618,11 @@ public class AppboyManager extends BaseAnalyticsManager
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
+        String placeName = params.get(AnalyticsManager.KeyType.NAME);
+
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
         appboyProperties.addProperty(AnalyticsManager.KeyType.GOURMET_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
-        appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, params.get(AnalyticsManager.KeyType.NAME));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, placeName);
         appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
         appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
         appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
@@ -601,11 +637,12 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_TICKETS, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
 
-            mAppboy.logPurchase(EventName.GOURMET_PURCHASE_COMPLETED, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)), appboyProperties);
+            mAppboy.logPurchase("gourmet-" + placeName, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)), 1, appboyProperties);
+            mAppboy.logCustomEvent(EventName.GOURMET_PURCHASE_COMPLETED, appboyProperties);
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + " : " + EventName.GOURMET_PURCHASE_COMPLETED + ", " + appboyProperties.forJsonPut().toString());
+                ExLog.d(TAG + " : " + placeName + ", " + appboyProperties.forJsonPut().toString());
             }
         } catch (NumberFormatException e)
         {
@@ -641,15 +678,13 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String SCREEN = "screen";
 
         public static final String SEARCH_TERM = "search_term";
-        public static final String LOWTOHIGH_PRICE_SORTED = "low_to_high_price_sorted";
-        public static final String HIGHTOLOW_PRICE_SORTED = "high_to_low_price_sorted";
-        public static final String RATING_SORTED = "rating_sorted";
         public static final String CURRENT_APP_VERSION = "current_app_version";
         public static final String REGISTERED_CARD_INFO = "registered_card_info";
         public static final String STAY_SELECTED_DATE = "stay_selected_date";
         public static final String STAY_DETAIL_CICKED = "stay_detail_clicked";
         public static final String STAY_BOOKING_INITIALISED = "stay_booking_initialised";
         public static final String STAY_PURCHASE_COMPLETED = "stay_purchase_completed";
+
         public static final String GOURMET_SELECTED_DATE = "gourmet_selected_date";
         public static final String GOURMET_DETAIL_CLICKED = "gourmet_detail_clicked";
         public static final String GOURMET_BOOKING_INITIALISED = "gourmet_booking_initialised";
@@ -660,7 +695,8 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String GOURMET_SATISFACTION_SURVEY = "gourmet_satisfaction_survey";
         public static final String GOURMET_DISSATISFACTION_DETAIL_RESPONSE = "gourmet_dissatisfaction_detail_response";
 
-
+        public static final String STAY_SORTFILTER_CLICKED = "stay_sortfilter_clicked";
+        public static final String GOURMET_SORTFILTER_CLICKED = "gourmet_sortfilter_clicked";
     }
 
     private static final class ValueName
@@ -670,5 +706,10 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String SATISFIED = "satisfied";
         public static final String DISSATISFIED = "dissatisfied";
         public static final String CLOSED = "closed";
+        public static final String DISTRICT = "district";
+        public static final String DISTANCE = "distance";
+        public static final String LOWTOHIGH_PRICE_SORTED = "low_to_high_price_sorted";
+        public static final String HIGHTOLOW_PRICE_SORTED = "high_to_low_price_sorted";
+        public static final String RATING_SORTED = "rating";
     }
 }
