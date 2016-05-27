@@ -94,7 +94,7 @@
                 android:layout_width="28dp"
                 android:layout_height="15dp"
                 android:background="@color/dh_theme_color"
-                android:text="@string/label_manager"
+                android:text="@string/label_register_card"
                 android:textColor="@color/white"
                 android:textSize="10dp"
                 android:layout_gravity="center_vertical|right"

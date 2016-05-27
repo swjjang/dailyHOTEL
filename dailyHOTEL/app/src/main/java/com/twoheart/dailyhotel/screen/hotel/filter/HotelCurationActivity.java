@@ -564,8 +564,26 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
     @Override
     protected void onComplete()
     {
+        Map<String, String> eventParmas = new HashMap<>();
+        Province province = mHotelCurationOption.getProvince();
+
+        eventParmas.put(AnalyticsManager.KeyType.SORTING, mHotelCurationOption.getSortType().name());
+
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        } else
+        {
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        }
+
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mHotelCurationOption.toString(), null);
+            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, mHotelCurationOption.toString(), eventParmas);
 
         if (DEBUG == true)
         {

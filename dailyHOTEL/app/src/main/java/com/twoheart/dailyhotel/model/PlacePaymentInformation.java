@@ -7,10 +7,12 @@ public abstract class PlacePaymentInformation implements Parcelable
 {
     public int placeIndex;
     public int bonus;
-    public boolean isEnabledBonus;
+    public boolean isUsedBonus;
+    public boolean isUsedCoupon;
     public PaymentType paymentType;
     public boolean isDBenefit;
 
+    private Coupon mCoupon;
     private Customer mCustomer;
     private Guest mGuest;
 
@@ -29,22 +31,24 @@ public abstract class PlacePaymentInformation implements Parcelable
     {
         dest.writeInt(placeIndex);
         dest.writeInt(bonus);
-        dest.writeInt(isEnabledBonus ? 1 : 0);
+        dest.writeInt(isUsedBonus ? 1 : 0);
         dest.writeString(paymentType.name());
         dest.writeInt(isDBenefit ? 1 : 0);
         dest.writeParcelable(mCustomer, flags);
         dest.writeParcelable(mGuest, flags);
+        dest.writeParcelable(mCoupon, flags);
     }
 
     protected void readFromParcel(Parcel in)
     {
         placeIndex = in.readInt();
         bonus = in.readInt();
-        isEnabledBonus = in.readInt() == 1;
+        isUsedBonus = in.readInt() == 1;
         paymentType = PaymentType.valueOf(in.readString());
         isDBenefit = in.readInt() == 1;
         mCustomer = in.readParcelable(Customer.class.getClassLoader());
         mGuest = in.readParcelable(Guest.class.getClassLoader());
+        mCoupon = in.readParcelable(Coupon.class.getClassLoader());
     }
 
     public Customer getCustomer()
@@ -55,6 +59,16 @@ public abstract class PlacePaymentInformation implements Parcelable
     public void setCustomer(Customer customer)
     {
         this.mCustomer = customer;
+    }
+
+    public Coupon getCoupon()
+    {
+        return mCoupon;
+    }
+
+    public void setCoupon(Coupon coupon)
+    {
+        mCoupon = coupon;
     }
 
     public Guest getGuest()
