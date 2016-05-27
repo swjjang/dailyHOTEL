@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -240,7 +239,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void updatePaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
+    protected void updateSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
         mGourmetPaymentLayout.updatePaymentInformation((GourmetPaymentInformation) paymentInformation, selectedCreditCard);
     }
@@ -273,12 +272,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     @Override
     protected void showWarningMessageDialog()
-    {
-
-    }
-
-    @Override
-    protected void checkChangedBonusSwitch()
     {
 
     }
@@ -1289,7 +1282,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         bonus = 0;
                     }
 
-                    if (mPaymentInformation.isEnabledBonus == true && bonus != mPaymentInformation.bonus)
+                    if (mPaymentInformation.isUsedBonus == true && bonus != mPaymentInformation.bonus)
                     {
                         // 보너스 값이 변경된 경우
                         mPaymentInformation.bonus = bonus;
