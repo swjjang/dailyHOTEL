@@ -160,6 +160,17 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         return mKeyword;
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mSaleTime == null)
+        {
+            Util.restartApp(this);
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
