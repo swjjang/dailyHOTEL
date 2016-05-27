@@ -100,7 +100,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         }
 
         holder.upperDivider.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
-        holder.bottomDivider.setVisibility((getItemCount() - 1 == position) ? View.GONE : View.VISIBLE);
+//        holder.bottomDivider.setVisibility((getItemCount() - 1 == position) ? View.GONE : View.VISIBLE);
 
         holder.listItemLayout.setOnClickListener(new View.OnClickListener()
         {
@@ -166,7 +166,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         TextView descriptionTextView;
         TextView expireTextView;
         TextView minPriceTextView;
-        View bottomDivider;
+//        View bottomDivider;
         View upperDivider;
 
 
@@ -183,7 +183,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
             minPriceTextView = (TextView) itemView.findViewById(R.id.minPriceTextView);
-            bottomDivider = itemView.findViewById(R.id.bottomDivider);
+//            bottomDivider = itemView.findViewById(R.id.bottomDivider);
             upperDivider = itemView.findViewById(R.id.upperDivider);
         }
     }
