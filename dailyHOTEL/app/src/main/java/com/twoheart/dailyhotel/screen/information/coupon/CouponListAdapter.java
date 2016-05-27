@@ -16,230 +16,226 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
  * Created by Sam Lee on 2016. 5. 20..
  */
-public class CouponListAdapter
-		extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-	private static final int VIEW_TYPE_HEADER = 1;
-	private static final int VIEW_TYPE_ITEM = 2;
+    private static final int VIEW_TYPE_HEADER = 1;
+    private static final int VIEW_TYPE_ITEM = 2;
 
-	private List<Coupon> mList;
-	private Context mContext;
-	private OnCouponItemListener mListener;
+    private List<Coupon> mList;
+    private Context mContext;
+    private OnCouponItemListener mListener;
 
-	public interface OnCouponItemListener
-	{
-		void startNotice();
+    public interface OnCouponItemListener
+    {
+        void startNotice();
 
-		void showNotice(View view, int position);
+        void showNotice(View view, int position);
 
-		void onDownloadClick(View view, int position);
-	}
+        void onDownloadClick(View view, int position);
+    }
 
-	public CouponListAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
-	{
-		mContext = context;
+    public CouponListAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
+    {
+        mContext = context;
 
-		if (list == null)
-		{
-			throw new IllegalArgumentException("couponList must not be null");
-		}
+        if (list == null)
+        {
+            throw new IllegalArgumentException("couponList must not be null");
+        }
 
-		mList = list;
-		mListener = listener;
-	}
+        mList = list;
+        mListener = listener;
+    }
 
-	/**
-	 * 쿠폰아이템
-	 * 
-	 * @param position
-	 *            실제 포지션에서 -1 된 값(헤더 사이즈 뺀값)
-	 * @return
-	 */
-	public Coupon getItem(int position)
-	{
-		return mList.get(position);
-	}
+    /**
+     * 쿠폰아이템
+     *
+     * @param position 실제 포지션에서 -1 된 값(헤더 사이즈 뺀값)
+     * @return
+     */
+    public Coupon getItem(int position)
+    {
+        return mList.get(position);
+    }
 
-	@Override
-	public int getItemCount()
-	{
-		return mList == null ? 0 : mList.size();
-	}
+    @Override
+    public int getItemCount()
+    {
+        return mList == null ? 0 : mList.size();
+    }
 
-	@Override
-	public int getItemViewType(int position)
-	{
-		return (position == 0) ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
-	}
+    @Override
+    public int getItemViewType(int position)
+    {
+        return (position == 0) ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
+    }
 
-	@Override
-	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-	{
-		if (viewType == VIEW_TYPE_HEADER)
-		{
-			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_couponlist_header, parent, false);
-			return new HeaderViewHolder(view);
-		} else
-		{
-			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_coupon, parent, false);
-			return new ItemViewHolder(view);
-		}
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+        if (viewType == VIEW_TYPE_HEADER)
+        {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_couponlist_header, parent, false);
+            return new HeaderViewHolder(view);
+        } else
+        {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_coupon, parent, false);
+            return new ItemViewHolder(view);
+        }
 
-	}
+    }
 
-	@Override
-	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
-	{
-		int viewType = getItemViewType(position);
-		if (viewType == VIEW_TYPE_HEADER)
-		{
-			// 헤더
-			((HeaderViewHolder) holder).onBindViewHolder();
-		} else
-		{
-			// 리스트 아이템
-			((ItemViewHolder) holder).onBindViewHolder(position);
-		}
-	}
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
+    {
+        int viewType = getItemViewType(position);
+        if (viewType == VIEW_TYPE_HEADER)
+        {
+            // 헤더
+            ((HeaderViewHolder) holder).onBindViewHolder();
+        } else
+        {
+            // 리스트 아이템
+            ((ItemViewHolder) holder).onBindViewHolder(position);
+        }
+    }
 
-	private class ItemViewHolder extends RecyclerView.ViewHolder
-	{
-		View rootView;
-		TextView couponPriceTextView;
-		TextView descriptionTextView;
-		TextView expireTextView;
-		DailyTextView dueDateTextView;
-		TextView useablePlaceTextView;
-		TextView minPriceTextView;
-		TextView useIconView;
-		TextView downloadIconView;
-		TextView noticeTextView;
+    private class ItemViewHolder extends RecyclerView.ViewHolder
+    {
+        View rootView;
+        TextView couponPriceTextView;
+        TextView descriptionTextView;
+        TextView expireTextView;
+        DailyTextView dueDateTextView;
+        TextView useablePlaceTextView;
+        TextView minPriceTextView;
+        TextView useIconView;
+        TextView downloadIconView;
+        TextView noticeTextView;
 
-		public ItemViewHolder(View itemView)
-		{
-			super(itemView);
+        public ItemViewHolder(View itemView)
+        {
+            super(itemView);
 
-			rootView = itemView;
-			couponPriceTextView = (TextView) itemView.findViewById(R.id.couponPriceTextView);
-			descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
-			expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
-			dueDateTextView = (DailyTextView) itemView.findViewById(R.id.dueDateTextView);
-			useablePlaceTextView = (TextView) itemView.findViewById(R.id.useablePlaceTextView);
-			minPriceTextView = (TextView) itemView.findViewById(R.id.minPriceTextView);
-			useIconView = (TextView) itemView.findViewById(R.id.useIconView);
-			downloadIconView = (TextView) itemView.findViewById(R.id.downloadIconView);
-			noticeTextView = (TextView) itemView.findViewById(R.id.noticeTextView);
-		}
+            rootView = itemView;
+            couponPriceTextView = (TextView) itemView.findViewById(R.id.couponPriceTextView);
+            descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
+            expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
+            dueDateTextView = (DailyTextView) itemView.findViewById(R.id.dueDateTextView);
+            useablePlaceTextView = (TextView) itemView.findViewById(R.id.useablePlaceTextView);
+            minPriceTextView = (TextView) itemView.findViewById(R.id.minPriceTextView);
+            useIconView = (TextView) itemView.findViewById(R.id.useIconView);
+            downloadIconView = (TextView) itemView.findViewById(R.id.downloadIconView);
+            noticeTextView = (TextView) itemView.findViewById(R.id.noticeTextView);
+        }
 
-		public void onBindViewHolder(final int position)
-		{
+        public void onBindViewHolder(final int position)
+        {
 
-			Coupon coupon = getItem(position);
+            Coupon coupon = getItem(position);
 
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            String strPrice = decimalFormat.format(coupon.price) + mContext.getResources().getString(R.string.currency);
+            couponPriceTextView.setText(strPrice);
 
-			String strPrice = String.format("%,d원", coupon.price);
-			couponPriceTextView.setText(strPrice);
+            descriptionTextView.setText(coupon.description);
+            expireTextView.setText(coupon.expiredTime);
 
-			descriptionTextView.setText(coupon.description);
-			expireTextView.setText(coupon.expiredTime);
+            if (coupon.dueDate > 0)
+            {
+                dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+                dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
+                String strDueDate = mContext.getResources().getString(R.string.coupon_duedate_text, coupon.dueDate);
+                dueDateTextView.setText(strDueDate);
+            } else
+            {
+                // 오늘까지
+                dueDateTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+                dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
+                dueDateTextView.setText(mContext.getResources().getString(R.string.coupon_today_text));
+            }
 
-			if (coupon.dueDate > 0)
-			{
-				dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
-				dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
-				String strDueDate = mContext.getResources().getString(R.string.coupon_duedate_text, coupon.dueDate);
-				dueDateTextView.setText(strDueDate);
-			} else
-			{
-				// 오늘까지
-				dueDateTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
-				dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
-				dueDateTextView.setText(mContext.getResources().getString(R.string.coupon_today_text));
-			}
+            if (coupon.minPrice > 0)
+            {
+                String strMinPrice = decimalFormat.format(coupon.price) + mContext.getResources().getString(R.string.currency);
+                minPriceTextView.setText(strMinPrice);
+            } else
+            {
+                minPriceTextView.setText("");
+            }
 
-			if (coupon.minPrice > 0)
-			{
-//				String strMinPrice = decimalFormat.format(coupon.minPrice);
-//				minPriceTextView.setText(strMinPrice + mContext.getResources().getString(R.string.currency));
+            useablePlaceTextView.setText(coupon.useablePlace);
 
-				String strMinPrice = String.format("%,d원", coupon.minPrice);
-				minPriceTextView.setText(strMinPrice);
-			} else
-			{
-				minPriceTextView.setText("");
-			}
+            if (coupon.state == 0)
+            {
+                //download
+                downloadIconView.setVisibility(View.VISIBLE);
+                useIconView.setVisibility(View.GONE);
+            } else
+            {
+                //useable
+                downloadIconView.setVisibility(View.GONE);
+                useIconView.setVisibility(View.VISIBLE);
+            }
 
-			useablePlaceTextView.setText(coupon.useablePlace);
+            CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
+            SpannableString spannableString = new SpannableString(charSequence);
+            spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            noticeTextView.setText(spannableString);
+            noticeTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mListener.showNotice(v, position);
+                }
+            });
 
-			if (coupon.state == 0)
-			{
-				//download
-				downloadIconView.setVisibility(View.VISIBLE);
-				useIconView.setVisibility(View.GONE);
-			} else
-			{
-				//useable
-				downloadIconView.setVisibility(View.GONE);
-				useIconView.setVisibility(View.VISIBLE);
-			}
+            downloadIconView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mListener.onDownloadClick(v, position);
+                }
+            });
+        }
+    }
 
-			CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
-			SpannableString spannableString = new SpannableString(charSequence);
-			spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			noticeTextView.setText(spannableString);
-			noticeTextView.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					mListener.showNotice(v, position);
-				}
-			});
+    private class HeaderViewHolder extends RecyclerView.ViewHolder
+    {
+        View rootView;
+        DailyTextView noticeView;
 
-			downloadIconView.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					mListener.onDownloadClick(v, position);
-				}
-			});
-		}
-	}
+        public HeaderViewHolder(View itemView)
+        {
+            super(itemView);
 
-	private class HeaderViewHolder extends RecyclerView.ViewHolder
-	{
-		View rootView;
-		DailyTextView noticeView;
+            rootView = itemView;
+            noticeView = (DailyTextView) itemView.findViewById(R.id.couponUseNoticeTextView);
+        }
 
-		public HeaderViewHolder(View itemView)
-		{
-			super(itemView);
+        public void onBindViewHolder()
+        {
+            SpannableString spannableString = new SpannableString(noticeView.getText());
+            spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            noticeView.setText(spannableString);
 
-			rootView = itemView;
-			noticeView = (DailyTextView) itemView.findViewById(R.id.couponUseNoticeTextView);
-		}
-
-		public void onBindViewHolder()
-		{
-			SpannableString spannableString = new SpannableString(noticeView.getText());
-			spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			noticeView.setText(spannableString);
-
-			noticeView.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					mListener.startNotice();
-				}
-			});
-		}
-	}
+            noticeView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mListener.startNotice();
+                }
+            });
+        }
+    }
 
 }

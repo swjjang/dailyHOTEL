@@ -22,134 +22,134 @@ import java.util.List;
 public class CouponListLayout extends BaseLayout implements View.OnClickListener
 {
 
-	private DailyTextView mHeaderTextView;
-	private RecyclerView mRecyclerView;
-	private View mEmptyView;
-	private CouponListAdapter mListAdapter;
+    private DailyTextView mHeaderTextView;
+    private RecyclerView mRecyclerView;
+    private View mEmptyView;
+    private CouponListAdapter mListAdapter;
 
-	public interface OnEventListener extends OnBaseEventListener
-	{
-		void startCouponHistory();
+    public interface OnEventListener extends OnBaseEventListener
+    {
+        void startCouponHistory();
 
-		void startNotice();
+        void startNotice();
 
-		void showListItemNotice(View view, int position, Coupon coupon);
+        void showListItemNotice(View view, int position, Coupon coupon);
 
-		void onListItemDownLoadClick(View view, int position, Coupon coupon);
+        void onListItemDownLoadClick(View view, int position, Coupon coupon);
 
-	}
+    }
 
-	public CouponListLayout(Context context, OnBaseEventListener listener)
-	{
-		super(context, listener);
-	}
+    public CouponListLayout(Context context, OnBaseEventListener listener)
+    {
+        super(context, listener);
+    }
 
-	@Override
-	protected void initLayout(View view)
-	{
-		initToolbar(view);
-		initListView(view);
+    @Override
+    protected void initLayout(View view)
+    {
+        initToolbar(view);
+        initListView(view);
 
-		mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
+        mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
 
-		View couponHistoryView = view.findViewById(R.id.couponHistoryTextView);
-		couponHistoryView.setOnClickListener(this);
+        View couponHistoryView = view.findViewById(R.id.couponHistoryTextView);
+        couponHistoryView.setOnClickListener(this);
 
-		updateHeaderTextView(0);
+        updateHeaderTextView(0);
 
-		setData(new ArrayList<Coupon>());
-	}
+        setData(new ArrayList<Coupon>());
+    }
 
-	private void initToolbar(View view)
-	{
-		View toolbar = view.findViewById(R.id.toolbar);
+    private void initToolbar(View view)
+    {
+        View toolbar = view.findViewById(R.id.toolbar);
 
-		DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-		dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_coupon_list), new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				mOnEventListener.finish();
-			}
-		});
-	}
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
+        dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_coupon_list), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnEventListener.finish();
+            }
+        });
+    }
 
-	private void initListView(View view)
-	{
-		mRecyclerView = (RecyclerView) view.findViewById(R.id.couponRecyclerView);
-		EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
+    private void initListView(View view)
+    {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
 
-		mEmptyView = view.findViewById(R.id.emptyView);
+        mEmptyView = view.findViewById(R.id.emptyView);
 
-		LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-		layoutManager.scrollToPosition(0);
-		mRecyclerView.setLayoutManager(layoutManager);
-	}
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.scrollToPosition(0);
+        mRecyclerView.setLayoutManager(layoutManager);
+    }
 
-	private void updateHeaderTextView(int count)
-	{
-		if (mContext == null)
-		{
-			return;
-		}
+    private void updateHeaderTextView(int count)
+    {
+        if (mContext == null)
+        {
+            return;
+        }
 
-		if (mHeaderTextView == null)
-		{
-			return;
-		}
+        if (mHeaderTextView == null)
+        {
+            return;
+        }
 
-		String text = mContext.getString(R.string.coupon_header_text, count);
-		mHeaderTextView.setText(text);
-	}
+        String text = mContext.getString(R.string.coupon_header_text, count);
+        mHeaderTextView.setText(text);
+    }
 
-	@Override
-	public void onClick(View v)
-	{
-		switch (v.getId())
-		{
-			case R.id.couponHistoryTextView:
-				((OnEventListener) mOnEventListener).startCouponHistory();
-				break;
-		}
-	}
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.couponHistoryTextView:
+                ((OnEventListener) mOnEventListener).startCouponHistory();
+                break;
+        }
+    }
 
-	public void setData(List<Coupon> list)
-	{
-		if (list != null && list.size() != 0)
-		{
-			mListAdapter = new CouponListAdapter(mContext, list, mCouponItemListener);
-			mEmptyView.setVisibility(View.GONE);
-		} else
-		{
-			mListAdapter = new CouponListAdapter(mContext, new ArrayList<Coupon>(), mCouponItemListener);
-			mEmptyView.setVisibility(View.VISIBLE);
-		}
+    public void setData(List<Coupon> list)
+    {
+        if (list != null && list.size() != 0)
+        {
+            mListAdapter = new CouponListAdapter(mContext, list, mCouponItemListener);
+            mEmptyView.setVisibility(View.GONE);
+        } else
+        {
+            mListAdapter = new CouponListAdapter(mContext, new ArrayList<Coupon>(), mCouponItemListener);
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
 
-		mRecyclerView.setAdapter(mListAdapter);
-	}
+        mRecyclerView.setAdapter(mListAdapter);
+    }
 
-	private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
-	{
-		@Override
-		public void startNotice()
-		{
-			((OnEventListener) mOnEventListener).startNotice();
-		}
+    private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
+    {
+        @Override
+        public void startNotice()
+        {
+            ((OnEventListener) mOnEventListener).startNotice();
+        }
 
-		@Override
-		public void showNotice(View view, int position)
-		{
-			Coupon coupon = mListAdapter.getItem(position);
-			((OnEventListener) mOnEventListener).showListItemNotice(view, position, coupon);
-		}
+        @Override
+        public void showNotice(View view, int position)
+        {
+            Coupon coupon = mListAdapter.getItem(position);
+            ((OnEventListener) mOnEventListener).showListItemNotice(view, position, coupon);
+        }
 
-		@Override
-		public void onDownloadClick(View view, int position)
-		{
-			Coupon coupon = mListAdapter.getItem(position);
-			((OnEventListener) mOnEventListener).onListItemDownLoadClick(view, position, coupon);
-		}
-	};
+        @Override
+        public void onDownloadClick(View view, int position)
+        {
+            Coupon coupon = mListAdapter.getItem(position);
+            ((OnEventListener) mOnEventListener).onListItemDownLoadClick(view, position, coupon);
+        }
+    };
 }
