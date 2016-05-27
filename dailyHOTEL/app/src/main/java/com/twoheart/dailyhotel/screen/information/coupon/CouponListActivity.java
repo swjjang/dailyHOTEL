@@ -64,12 +64,9 @@ public class CouponListActivity extends BaseActivity
                 return;
             }
 
-            //			Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
-            //			startActivity(intent);
-            //			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-            Intent intent = SelectCouponDialogActivity.newInstance(CouponListActivity.this);
-            startActivityForResult(intent, 1000);
+            Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
 
         @Override
