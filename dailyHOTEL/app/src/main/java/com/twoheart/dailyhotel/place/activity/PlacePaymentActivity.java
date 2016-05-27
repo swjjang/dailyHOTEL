@@ -39,6 +39,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 {
     protected static final int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
     protected static final int REQUEST_CODE_PAYMETRESULT_ACTIVITY = 10001;
+    protected static final int REQUEST_CODE_COUPONPOPUP_ACTIVITY = 10002;
 
     protected PlacePaymentInformation mPaymentInformation;
     protected CreditCard mSelectedCreditCard;
@@ -55,7 +56,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
-    protected abstract void updatePaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
+    protected abstract void updateSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
 
     protected abstract void updateGuestInformation(String phoneNumber);
 
@@ -66,8 +67,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected abstract boolean hasWarningMessage();
 
     protected abstract void showWarningMessageDialog();
-
-    protected abstract void checkChangedBonusSwitch();
 
     protected abstract void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
@@ -255,6 +254,14 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 mDontReload = true;
 
                 onActivityPaymentResult(requestCode, resultCode, intent);
+                break;
+            }
+
+            case REQUEST_CODE_COUPONPOPUP_ACTIVITY:
+            {
+                mDontReload = true;
+
+                unLockUI();
                 break;
             }
 
@@ -502,7 +509,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         }, null, false);
     }
 
-    protected void showCreditCardList()
+    protected void startCreditCardList()
     {
         Intent intent = new Intent(this, CreditCardListActivity.class);
         intent.setAction(Intent.ACTION_PICK);
@@ -515,7 +522,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             , Action.EDIT_BUTTON_CLICKED, Label.PAYMENT_CARD_EDIT, null);
     }
 
-    protected void showInputMobileNumberDialog(String mobileNumber)
+    protected void startInputMobileNumberDialog(String mobileNumber)
     {
         Intent intent = InputMobileNumberDialogActivity.newInstance(this, mobileNumber);
         startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
@@ -557,7 +564,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 if (length == 0)
                 {
                     mSelectedCreditCard = null;
-                    updatePaymentInformation(mPaymentInformation, null);
+                    updateSimpleCardInformation(mPaymentInformation, null);
                 } else
                 {
                     if (mSelectedCreditCard == null)
@@ -589,7 +596,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         }
                     }
 
-                    updatePaymentInformation(mPaymentInformation, mSelectedCreditCard);
+                    updateSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
                 }
 
                 // 호텔 가격 정보가 변경되었습니다.
@@ -610,7 +617,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 finish();
             } finally
             {
-                checkChangedBonusSwitch();
                 unLockUI();
             }
         }
@@ -638,13 +644,13 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 if (length == 0)
                 {
                     mSelectedCreditCard = null;
-                    updatePaymentInformation(mPaymentInformation, null);
+                    updateSimpleCardInformation(mPaymentInformation, null);
                 } else
                 {
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
 
                     mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                    updatePaymentInformation(mPaymentInformation, mSelectedCreditCard);
+                    updateSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
 
                     // final check 결제 화면을 보여준다.
                     showAgreeTermDialog(PlacePaymentInformation.PaymentType.EASY_CARD);

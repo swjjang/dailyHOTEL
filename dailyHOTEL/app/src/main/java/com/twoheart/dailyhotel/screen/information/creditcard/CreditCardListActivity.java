@@ -105,6 +105,13 @@ public class CreditCardListActivity extends BaseActivity
     }
 
     @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD)

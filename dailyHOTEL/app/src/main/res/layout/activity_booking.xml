@@ -37,19 +37,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <!--<include-->
-            <!--layout="@layout/layout_booking_memo"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"/>-->
+            <!-- 예약 메모 -->
+            <include
+                layout="@layout/layout_booking_memo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-            <!-- 결제 -->
+            <!-- 할인 정보 -->
+            <include
+                layout="@layout/layout_booking_discount_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 결제 정보 -->
             <include
                 layout="@layout/layout_booking_hotel_payment_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <!-- 결제 버튼 -->
+            <!-- 결제 수단 선택 -->
+            <include
+                layout="@layout/layout_booking_hotel_select_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
+            <!-- 결제 버튼 -->
             <RelativeLayout
                 android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"

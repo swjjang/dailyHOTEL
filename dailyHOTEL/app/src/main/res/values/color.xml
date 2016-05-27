@@ -40,7 +40,7 @@
     <color name="vpi_fillcolor">#99000000</color>
     <color name="vpi_pagecolor">#33000000</color>
 
-    <color name="grade_business">#576071</color>
+    <color name="grade_business">#78554a</color>
     <color name="grade_boutique">#615060</color>
     <color name="grade_design">#bd7171</color>
     <color name="grade_residence">#576071</color>
@@ -232,6 +232,7 @@
     <color name="default_text_c323232">#323232</color>
     <color name="default_text_c929292">#929292</color>
     <color name="default_text_cc5c5c5">#c5c5c5</color>
+    <color name="default_text_cc2c2c2">#c2c2c2</color>
     <color name="default_text_cd0d0d0">#d0d0d0</color>
     <color name="default_text_c66323232">#66323232</color>
 
@@ -245,6 +246,8 @@
     <color name="default_background_button_in_section">#a6a6a8</color>
     <color name="default_background_cd1d1d1">#d1d1d1</color>
     <color name="default_background_cfafafb">#fafafb</color>
+    <color name="default_background_ca6a6a8">#a6a6a8</color>
+    <color name="default_background_disable_cccffffff">#ccffffff</color>
     <color name="default_background_disable_ce6e6e6">#e6e6e6</color>
 
     <color name="default_popup_button_background_c900034">#900034</color>

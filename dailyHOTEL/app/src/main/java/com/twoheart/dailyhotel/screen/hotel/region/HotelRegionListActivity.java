@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
@@ -198,6 +199,12 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void requestRegionList()
     {
+        if (mNetworkController == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         mNetworkController.requestRegionList();
     }
 

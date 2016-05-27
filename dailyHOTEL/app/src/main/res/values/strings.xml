@@ -7,6 +7,7 @@
     <string name="homepage">http://dailyhotel.kr</string>
     <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
+    <string name="currency_format">###,##0원</string>
     <string name="label_map">지도</string>
     <string name="label_list">목록</string>
     <string name="label_dailychoice">데일리초이스</string>
@@ -38,6 +39,7 @@
     <string name="label_copy_address">주소복사</string>
     <string name="label_copy_account_number">계좌번호 복사</string>
     <string name="label_restaurant_information">레스토랑 정보</string>
+    <string name="label_register_card">카드 등록하기</string>
     <string name="label_manager">관리</string>
 
     <string name="label_cardcd01">외환</string>
@@ -440,11 +442,12 @@
     <string name="act_booking_reserver">투숙자</string>
     <string name="act_booking_mobile">연락처</string>
     <string name="act_booking_email">이메일</string>
-    <string name="act_booking_payment">결제</string>
+    <string name="act_booking_payment">결제 정보</string>
+    <string name="act_booking_select_payment_type">결제 수단 선택</string>
     <string name="act_booking_credit_use">적립금 사용</string>
-    <string name="act_booking_price">비용</string>
-    <string name="act_booking_credit_discount">적립금 할인</string>
-    <string name="act_booking_price_real">결제금액(VAT 포함)</string>
+    <string name="act_booking_price">예약 금액</string>
+    <string name="act_booking_credit_discount">할인 금액</string>
+    <string name="act_booking_price_real">총 결제금액(VAT 포함)</string>
     <string name="act_booking_pay_card">결제카드 일반결제</string>
     <string name="act_booking_pay_mobile">휴대폰</string>
     <string name="act_booking_pay_account">계좌이체</string>
@@ -455,6 +458,9 @@
     <string name="act_booking_payment_info03">으로 전화주세요.</string>
     <string name="action_booking_cardmanager">카드관리</string>
     <string name="label_booking_easypayment">결제카드 간편결제</string>
+    <string name="label_booking_used_bonus">적립금 사용</string>
+    <string name="label_booking_used_coupon">할인쿠폰 사용</string>
+    <string name="label_booking_select_coupon">할인쿠폰 선택</string>
     <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>
     <string name="label_booking_confirm_signature">고객님, 확인하셨나요?</string>
     <string name="label_booking_room_info">객실 정보</string>
@@ -469,10 +475,15 @@
     <string name="label_booking_count">%1$d개</string>
     <string name="label_booking_select">선택하세요</string>
     <string name="label_booking_corporate_card">(법인카드 가능)</string>
+    <string name="label_booking_own_bonus">(보유: %1$s)</string>
     <string name="label_booking_memo">예약시 요청사항</string>
+    <string name="label_booking_discount_information">할인 정보</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>
+    <string name="message_discount_memo">적립금, 할인 쿠폰은 중복 사용 할 수 없습니다.</string>
     <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
     <string name="message_gourmet_please_input_guest">예약자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
+    <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
+    <string name="message_booking_cancel_bonus">적립금 적용을 취소할까요?</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
