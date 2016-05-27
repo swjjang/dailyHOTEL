@@ -99,6 +99,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             setSelectLayout(holder, position);
         }
 
+        holder.upperDivider.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
         holder.bottomDivider.setVisibility((getItemCount() - 1 == position) ? View.GONE : View.VISIBLE);
 
         holder.listItemLayout.setOnClickListener(new View.OnClickListener()
@@ -109,13 +110,14 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
                 Coupon coupon = getItem(position);
                 if (coupon.state == 0)
                 {
+                    mSelectPosition = -1;
                     mListener.onDownloadClick(position);
                 } else
                 {
                     mSelectPosition = position;
-                    notifyDataSetChanged();
                 }
 
+                notifyDataSetChanged();
                 mListener.updatePositiveButton();
             }
         });
@@ -124,15 +126,9 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
 
     private void setDownLoadLayout(SelectViewHolder holder, int position)
     {
-        Coupon coupon = getItem(position);
-
-        if (coupon.state != 0)
-        {
-            return;
-        }
-
         holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_dimmed);
         holder.iconImageView.setImageResource(R.drawable.coupon_ic_download);
+        holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.select_coupon_vertical_line_dimmed));
         holder.iconImageView.setSelected(false);
         holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
         holder.downloadTextView.setVisibility(View.VISIBLE);
@@ -143,18 +139,12 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
 
     private void setSelectLayout(SelectViewHolder holder, int position)
     {
-        Coupon coupon = getItem(position);
-
-        if (coupon.state != 0)
-        {
-            return;
-        }
-
         holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_default);
         holder.iconImageView.setImageResource(R.drawable.selector_radio_button);
+        holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cd0d0d0));
         holder.iconImageView.setSelected((mSelectPosition == position) ? true : false);
         holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.black));
-        holder.downloadTextView.setVisibility(View.VISIBLE);
+        holder.downloadTextView.setVisibility(View.GONE);
         holder.descriptionTextView.setTextColor(mContext.getResources().getColor(R.color.black));
         holder.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
         holder.minPriceTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
@@ -169,7 +159,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
     {
         View rootView;
         View listItemLayout;
-        View selectLayout;
+        View verticalLine;
         TextView priceTextView;
         ImageView iconImageView;
         TextView downloadTextView;
@@ -177,6 +167,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         TextView expireTextView;
         TextView minPriceTextView;
         View bottomDivider;
+        View upperDivider;
 
 
         public SelectViewHolder(View itemView)
@@ -185,14 +176,15 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
 
             rootView = itemView;
             listItemLayout = itemView.findViewById(R.id.listItemLayout);
-            selectLayout = itemView.findViewById(R.id.selectLayout);
-            priceTextView = (TextView) itemView.findViewById(R.id.couponPriceTextView);
+            verticalLine = itemView.findViewById(R.id.vericalLine);
+            priceTextView = (TextView) itemView.findViewById(R.id.priceTextView);
             iconImageView = (ImageView) itemView.findViewById(R.id.iconImageView);
-            downloadTextView = (TextView) itemView.findViewById(R.id.downloadIconView);
+            downloadTextView = (TextView) itemView.findViewById(R.id.downloadTextView);
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
             minPriceTextView = (TextView) itemView.findViewById(R.id.minPriceTextView);
             bottomDivider = itemView.findViewById(R.id.bottomDivider);
+            upperDivider = itemView.findViewById(R.id.upperDivider);
         }
     }
 
