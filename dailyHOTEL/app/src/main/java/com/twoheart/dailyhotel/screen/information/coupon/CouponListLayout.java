@@ -77,7 +77,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
 	private void initListView(View view)
 	{
-		mRecyclerView = (RecyclerView) view.findViewById(R.id.couponRecyclerView);
+		mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 		EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
 
 		mEmptyView = view.findViewById(R.id.emptyView);

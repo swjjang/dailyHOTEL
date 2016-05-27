@@ -17,108 +17,106 @@ import java.util.List;
 /**
  * Created by Sam Lee on 2016. 5. 23..
  */
-public class CouponHistoryListAdapter
-		extends RecyclerView.Adapter<CouponHistoryListAdapter.CouponViewHolder>
+public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistoryListAdapter.CouponViewHolder>
 {
-	private Context mContext;
-	private List<Coupon> mCouponList;
+    private Context mContext;
+    private List<Coupon> mCouponList;
 
-	public CouponHistoryListAdapter(Context context, List<Coupon> list)
-	{
-		mContext = context;
+    public CouponHistoryListAdapter(Context context, List<Coupon> list)
+    {
+        mContext = context;
 
-		if (list == null)
-		{
-			throw new IllegalArgumentException("couponList must not be null");
-		}
+        if (list == null)
+        {
+            throw new IllegalArgumentException("couponList must not be null");
+        }
 
-		mCouponList = list;
-	}
+        mCouponList = list;
+    }
 
-	/**
-	 * 쿠폰아이템
-	 *
-	 * @param position
-	 *            실제 포지션에서 -1 된 값(헤더 사이즈 뺀값)
-	 * @return
-	 */
-	public Coupon getItem(int position)
-	{
-		return mCouponList.get(position);
-	}
+    /**
+     * 쿠폰아이템
+     *
+     * @param position 실제 포지션에서 -1 된 값(헤더 사이즈 뺀값)
+     * @return
+     */
+    public Coupon getItem(int position)
+    {
+        return mCouponList.get(position);
+    }
 
-	@Override
-	public int getItemCount()
-	{
-		return mCouponList == null ? 0 : mCouponList.size();
-	}
+    @Override
+    public int getItemCount()
+    {
+        return mCouponList == null ? 0 : mCouponList.size();
+    }
 
-	@Override
-	public CouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-	{
-		View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_coupon_history, parent, false);
-		return new CouponViewHolder(view);
-	}
+    @Override
+    public CouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_coupon_history, parent, false);
+        return new CouponViewHolder(view);
+    }
 
-	@Override
-	public void onBindViewHolder(CouponViewHolder holder, int position)
-	{
-		Coupon coupon = getItem(position);
+    @Override
+    public void onBindViewHolder(CouponViewHolder holder, int position)
+    {
+        Coupon coupon = getItem(position);
 
-		DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-		String strPrice = decimalFormat.format(coupon.price);
-		holder.priceTextView.setText(strPrice + mContext.getResources().getString(R.string.currency));
+        DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+        String strPrice = decimalFormat.format(coupon.price);
+        holder.priceTextView.setText(strPrice + mContext.getResources().getString(R.string.currency));
 
-		holder.descriptionTextView.setText(coupon.description);
+        holder.descriptionTextView.setText(coupon.description);
 
-		holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
+        holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
 
-		int resId;
-		String strPrefixExpire;
-		if (coupon.state == 0)
-		{
-			resId = R.string.coupon_history_use_text;
-			strPrefixExpire = "사용일:";
-		} else
-		{
-			resId = R.string.coupon_history_expire_text;
-			strPrefixExpire = "만료일:";
-		}
-		holder.stateTextView.setText(resId);
+        int resId;
+        String strPrefixExpire;
+        if (coupon.state == 0)
+        {
+            resId = R.string.coupon_history_use_text;
+            strPrefixExpire = "사용일:";
+        } else
+        {
+            resId = R.string.coupon_history_expire_text;
+            strPrefixExpire = "만료일:";
+        }
+        holder.stateTextView.setText(resId);
 
-		// 사용기간 및 사용일자 또는 만료일자 구현 필요
-		String strExpire = coupon.expiredTime;
-		if (Util.getLCDWidth(mContext) < 720)
-		{
-			strExpire += "\n";
-		} else
-		{
-			strExpire += " | ";
-		}
-		strExpire += strPrefixExpire + coupon.dueDate;
-		holder.expireTextView.setText(strExpire);
-	}
+        // 사용기간 및 사용일자 또는 만료일자 구현 필요
+        String strExpire = coupon.expiredTime;
+        if (Util.getLCDWidth(mContext) < 720)
+        {
+            strExpire += "\n";
+        } else
+        {
+            strExpire += " | ";
+        }
+        strExpire += strPrefixExpire + coupon.dueDate;
+        holder.expireTextView.setText(strExpire);
+    }
 
-	protected class CouponViewHolder extends RecyclerView.ViewHolder
-	{
+    protected class CouponViewHolder extends RecyclerView.ViewHolder
+    {
 
-		View rootView;
-		TextView priceTextView;
-		TextView descriptionTextView;
-		TextView expireTextView;
-		TextView stateTextView;
-		View upperLine;
+        View rootView;
+        TextView priceTextView;
+        TextView descriptionTextView;
+        TextView expireTextView;
+        TextView stateTextView;
+        View upperLine;
 
-		public CouponViewHolder(View itemView)
-		{
-			super(itemView);
+        public CouponViewHolder(View itemView)
+        {
+            super(itemView);
 
-			rootView = itemView;
-			priceTextView = (TextView) itemView.findViewById(R.id.priceTextView);
-			descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
-			expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
-			stateTextView = (TextView) itemView.findViewById(R.id.stateTextView);
-			upperLine = itemView.findViewById(R.id.upperLineView);
-		}
-	}
+            rootView = itemView;
+            priceTextView = (TextView) itemView.findViewById(R.id.priceTextView);
+            descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
+            expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
+            stateTextView = (TextView) itemView.findViewById(R.id.stateTextView);
+            upperLine = itemView.findViewById(R.id.upperLineView);
+        }
+    }
 }
