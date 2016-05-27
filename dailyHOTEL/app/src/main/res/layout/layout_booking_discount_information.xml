@@ -15,7 +15,7 @@
             android:background="@color/default_background_section_cf2f2f3"
             android:gravity="left|center_vertical"
             android:paddingLeft="15dp"
-            android:text="@string/label_booking_sale_information"
+            android:text="@string/label_booking_discount_information"
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
 
@@ -41,7 +41,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:text="@string/message_sale_memo"
+        android:text="@string/message_discount_memo"
         android:textColor="@color/default_text_c929292"
         android:textSize="11dp"/>
 
@@ -55,6 +55,7 @@
         android:paddingBottom="10dp">
 
         <RelativeLayout
+            android:id="@+id/bonusLayout"
             android:layout_width="match_parent"
             android:layout_height="35dp">
 
@@ -83,7 +84,6 @@
                     android:id="@+id/bonusTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_booking_own_bonus"
                     android:textColor="@color/default_text_cc5c5c5"
                     android:textSize="12dp"/>
             </LinearLayout>
@@ -101,19 +101,21 @@
                     android:layout_height="25dp"
                     android:background="@drawable/payment_ic_amount_time_bg"
                     android:gravity="center"
-                    android:textColor="@color/curation_information_text"
+                    android:text="@string/label_booking_used_bonus"
+                    android:textColor="@drawable/selector_text_color_c323232_cc2c2c2"
                     android:textSize="13dp"/>
 
                 <ImageView
                     android:id="@+id/usedBonusTab"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/payment_ic_right_on"/>
+                    android:src="@drawable/selector_booking_used_button"/>
 
             </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/couponLayout"
             android:layout_width="match_parent"
             android:layout_height="35dp">
 
@@ -146,14 +148,15 @@
                     android:layout_height="25dp"
                     android:background="@drawable/payment_ic_amount_time_bg"
                     android:gravity="center"
-                    android:textColor="@color/curation_information_text"
+                    android:text="@string/label_booking_select_coupon"
+                    android:textColor="@drawable/selector_text_color_c323232_cc2c2c2"
                     android:textSize="13dp"/>
 
                 <ImageView
                     android:id="@+id/usedCouponTab"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/payment_ic_right_on"/>
+                    android:src="@drawable/selector_booking_used_button"/>
 
             </LinearLayout>
         </RelativeLayout>

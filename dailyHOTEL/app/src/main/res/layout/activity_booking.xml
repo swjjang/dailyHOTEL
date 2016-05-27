@@ -43,13 +43,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- 할인 정보 -->
+            <include
+                layout="@layout/layout_booking_discount_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <!-- 결제 정보 -->
             <include
                 layout="@layout/layout_booking_hotel_payment_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <!-- 결제 정보 -->
+            <!-- 결제 수단 선택 -->
             <include
                 layout="@layout/layout_booking_hotel_select_payment"
                 android:layout_width="match_parent"

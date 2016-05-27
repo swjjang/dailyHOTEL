@@ -66,7 +66,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:duplicateParentState="true"
-                    android:text="@string/act_booking_0won"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"/>
             </RelativeLayout>
@@ -92,7 +91,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:duplicateParentState="true"
-                    android:text="@string/act_booking_0won"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"/>
             </RelativeLayout>
@@ -122,7 +120,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:gravity="right|center_vertical"
-                    android:text="@string/act_booking_0won"
                     android:textColor="@color/default_text_c900034"
                     android:textSize="14dp"
                     dailyFont:style="Bold"/>

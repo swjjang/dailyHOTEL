@@ -8,17 +8,13 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,12 +27,9 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -45,6 +38,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
@@ -74,7 +68,6 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -84,19 +77,42 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})
-public class HotelPaymentActivity extends PlacePaymentActivity implements OnClickListener, OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener
+public class HotelPaymentActivity extends PlacePaymentActivity implements OnClickListener
 {
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
     private TextView mCheckinDayTextView, mCheckoutDayTextView;
-    private View mPriceLayout, mBonusLayout;
-    private TextView mPriceTextView, mBonusTextView, mFinalPaymentTextView;
-    private SwitchCompat mBonusSwitch;
+    private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
     private EditText mReservationName, mReservationPhone, mReservationEmail;
+    private EditText mMemoEditText;
     private Drawable[] mEditTextBackground;
-    private RadioGroup mPaymentRadioGroup;
-    private RadioButton mAccountPaymentButton, mCardPaymentButton, mHpPaymentButton, mEasyPaymentButton;
-    private View mCardManagerButton;
+
+    // 할인 정보
+    private ImageView mBonusRadioButton;
+    private View mDiscountBonusLayout;
+    private TextView mUsedBonusTextView;
+    private TextView mBonusTextView;
+    private View mUsedBonusTab;
+
+    private ImageView mCouponRadioButton;
+    private View mDiscountCouponLayout;
+    private TextView mUsedCouponTextView;
+    private View mUsedCouponTab;
+
+    // 결제 수단 선택
+    private View mSimpleCardLayout;
+    private ImageView mSimpleCardImageView;
+    private TextView mSimpleCardTextView;
+    private View mCardLayout;
+    private View mPhoneLayout;
+    private View mTransferLayout;
+
+    private View mDisableSimpleCardView;
+    private View mDisableCardView;
+
+    private View mCardManagerLayout;
+    private TextView mCardManagerTextView;
+
     //
     private boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
@@ -200,6 +216,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         initHotelInformation();
         initGuestInformation();
+        initBookingMemo();
+        initDiscountInformation();
         initPaymentInformation();
         initPaymentTypeInformation();
     }
@@ -254,138 +272,317 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         editLinearLayout.setOnClickListener(mOnEditInfoOnClickListener);
     }
 
+    private void initBookingMemo()
+    {
+        mMemoEditText = (EditText) findViewById(R.id.memoEditText);
+    }
+
+    private void initDiscountInformation()
+    {
+        mBonusRadioButton = (ImageView) findViewById(R.id.bonusRadioButton);
+        mDiscountBonusLayout = findViewById(R.id.bonusLayout);
+        mUsedBonusTextView = (TextView) findViewById(R.id.usedBonusTextView);
+        mBonusTextView = (TextView) findViewById(R.id.bonusTextView);
+        mUsedBonusTab = findViewById(R.id.usedBonusTab);
+
+        mDiscountBonusLayout.setOnClickListener(this);
+
+        mCouponRadioButton = (ImageView) findViewById(R.id.couponRadioButton);
+        mDiscountCouponLayout = findViewById(R.id.couponLayout);
+        mUsedCouponTextView = (TextView) findViewById(R.id.usedCouponTextView);
+        mUsedCouponTab = findViewById(R.id.usedCouponTab);
+
+        mDiscountCouponLayout.setOnClickListener(this);
+    }
+
     private void initPaymentInformation()
     {
-        mPriceLayout = findViewById(R.id.priceLayout);
-        mBonusLayout = findViewById(R.id.bonusLayout);
         mPriceTextView = (TextView) findViewById(R.id.tv_hotel_payment_original_price_value);
-        mBonusTextView = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
+        mDiscountPriceTextView = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
         mFinalPaymentTextView = (TextView) findViewById(R.id.tv_hotel_payment_price);
-        View payButton = findViewById(R.id.btn_hotel_payment);
 
-        mBonusSwitch = (SwitchCompat) findViewById(R.id.btn_on_off);
-
-        payButton.setOnClickListener(this);
-
-        mBonusSwitch.setOnCheckedChangeListener(this);
-        mBonusSwitch.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mBonusSwitch.isChecked() == true)
-                {
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                        , Action.USING_CREDIT_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
-                } else
-                {
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                        , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
-                }
-            }
-        });
-
-        // 적립금 부분 기본 통화 표기.
-        mBonusTextView.setText("0" + getString(R.string.currency));
+        mDiscountPriceTextView.setText(Util.getPriceFormat(this, 0));
     }
 
     private void initPaymentTypeInformation()
     {
-        mPaymentRadioGroup = (RadioGroup) findViewById(R.id.rg_payment_method);
+        mSimpleCardLayout = findViewById(R.id.simpleCardLayout);
+        mSimpleCardImageView = (ImageView) mSimpleCardLayout.findViewById(R.id.simpleCardImageView);
+        mSimpleCardTextView = (TextView) mSimpleCardLayout.findViewById(R.id.simpleCardTextView);
+        mDisableSimpleCardView = mSimpleCardLayout.findViewById(R.id.disableSimpleCardView);
+        mCardManagerLayout = findViewById(R.id.cardManagerLayout);
+        mCardManagerTextView = (TextView) mCardManagerLayout.findViewById(R.id.cardManagerTextView);
 
-        mEasyPaymentButton = (RadioButton) findViewById(R.id.easyPaymentRadioButton);
-        mAccountPaymentButton = (RadioButton) findViewById(R.id.rb_payment_account);
-        mCardPaymentButton = (RadioButton) findViewById(R.id.rb_payment_card);
-        mHpPaymentButton = (RadioButton) findViewById(R.id.rb_payment_hp);
-        mCardManagerButton = findViewById(R.id.cardManagerButton);
-        mCardManagerButton.setOnClickListener(this);
+        mCardLayout = findViewById(R.id.cardLayout);
+        mDisableCardView = mCardLayout.findViewById(R.id.disableCardView);
 
-        OnClickListener radioOnClickListener = new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                    , Action.PAYMENT_TYPE_ITEM_CLICKED, mPaymentInformation.paymentType.getName(), null);
-            }
-        };
+        mPhoneLayout = findViewById(R.id.phoneLayout);
+        mTransferLayout = findViewById(R.id.transferLayout);
 
-        mAccountPaymentButton.setOnClickListener(radioOnClickListener);
-        mCardPaymentButton.setOnClickListener(radioOnClickListener);
-        mHpPaymentButton.setOnClickListener(radioOnClickListener);
-        mEasyPaymentButton.setOnClickListener(radioOnClickListener);
+        mCardManagerLayout.setOnClickListener(this);
+        mSimpleCardLayout.setOnClickListener(this);
+        mCardLayout.setOnClickListener(this);
+        mPhoneLayout.setOnClickListener(this);
+        mTransferLayout.setOnClickListener(this);
 
-        mPaymentRadioGroup.setOnCheckedChangeListener(this);
+        // 결제하기
+        View payButton = findViewById(R.id.btn_hotel_payment);
 
-        // 법인 카드 가능 추가
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
-
-        String info01 = getString(R.string.label_booking_easypayment) + "\n";
-        String info02 = getString(R.string.label_booking_corporate_card);
-
-        stringBuilder.append(info01);
-        stringBuilder.append(info02);
-
-        stringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.textView_textColor_section))//
-            , info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        payButton.setOnClickListener(this);
 
 
-        stringBuilder.setSpan(new RelativeSizeSpan(Util.dpToPx(this, 12.5f))//
-            , info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mEasyPaymentButton.setText(stringBuilder);
-
-        mPaymentRadioGroup.check(mEasyPaymentButton.getId());
+        //        mPaymentRadioGroup = (RadioGroup) findViewById(R.id.rg_payment_method);
+        //
+        //        mEasyPaymentButton = (RadioButton) findViewById(R.id.easyPaymentRadioButton);
+        //        mAccountPaymentButton = (RadioButton) findViewById(R.id.rb_payment_account);
+        //        mCardPaymentButton = (RadioButton) findViewById(R.id.rb_payment_card);
+        //        mHpPaymentButton = (RadioButton) findViewById(R.id.rb_payment_hp);
+        //        mCardManagerLayout = findViewById(R.id.cardManagerButton);
+        //        mCardManagerLayout.setOnClickListener(this);
+        //
+        //        OnClickListener radioOnClickListener = new OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+        //                    , Action.PAYMENT_TYPE_ITEM_CLICKED, mPaymentInformation.paymentType.getName(), null);
+        //            }
+        //        };
+        //
+        //        mAccountPaymentButton.setOnClickListener(radioOnClickListener);
+        //        mCardPaymentButton.setOnClickListener(radioOnClickListener);
+        //        mHpPaymentButton.setOnClickListener(radioOnClickListener);
+        //        mEasyPaymentButton.setOnClickListener(radioOnClickListener);
+        //
+        //        mPaymentRadioGroup.setOnCheckedChangeListener(this);
+        //
+        //        // 법인 카드 가능 추가
+        //        SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
+        //
+        //        String info01 = getString(R.string.label_booking_easypayment) + "\n";
+        //        String info02 = getString(R.string.label_booking_corporate_card);
+        //
+        //        stringBuilder.append(info01);
+        //        stringBuilder.append(info02);
+        //
+        //        stringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.textView_textColor_section))//
+        //            , info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //
+        //
+        //        stringBuilder.setSpan(new RelativeSizeSpan(Util.dpToPx(this, 12.5f))//
+        //            , info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //
+        //        mEasyPaymentButton.setText(stringBuilder);
+        //
+        //        mPaymentRadioGroup.check(mEasyPaymentButton.getId());
     }
 
-    private void updatePayPrice(HotelPaymentInformation hotelPaymentInformation, boolean applyCredit)
+    private void updatePaymentPrice(HotelPaymentInformation hotelPaymentInformation)
     {
-        int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
-        int payPrice = originalPrice;
-        int credit = hotelPaymentInformation.bonus;
-
-        DecimalFormat comma = new DecimalFormat("###,##0");
-
-        mPriceTextView.setText(comma.format(originalPrice) + getString(R.string.currency));
-
-        if (applyCredit && credit > 0)
+        if (hotelPaymentInformation == null)
         {
-            if (credit < originalPrice)
-            {
-                payPrice = originalPrice - credit;
-            } else
-            {
-                payPrice = 0;
-                credit = originalPrice;
-            }
-
-            mBonusTextView.setText("-" + comma.format(credit) + getString(R.string.currency));
-        } else
-        {
-            mBonusTextView.setText("0" + getString(R.string.currency));
+            return;
         }
 
-        mFinalPaymentTextView.setText(comma.format(payPrice) + getString(R.string.currency));
+        int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
+        int payPrice = originalPrice;
+
+        mPriceTextView.setText(Util.getPriceFormat(this, originalPrice));
+
+        if (hotelPaymentInformation.isUsedBonus == true)
+        {
+            int discountPrice = hotelPaymentInformation.bonus;
+
+            if (discountPrice > 0)
+            {
+                setBonusEnabled(true);
+
+                if (discountPrice < originalPrice)
+                {
+                    payPrice = originalPrice - discountPrice;
+                } else
+                {
+                    payPrice = 0;
+                    discountPrice = originalPrice;
+                }
+
+                String priceFormat = Util.getPriceFormat(this, discountPrice);
+
+                mUsedBonusTextView.setText(priceFormat);
+                mDiscountPriceTextView.setText(priceFormat);
+            } else
+            {
+                mUsedBonusTextView.setText(R.string.label_booking_used_bonus);
+
+                setBonusEnabled(false);
+            }
+        } else if (hotelPaymentInformation.isUsedCoupon == true)
+        {
+            Coupon coupon = hotelPaymentInformation.getCoupon();
+
+            if (coupon == null)
+            {
+                mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
+            } else
+            {
+                int discountPrice = coupon.price;
+
+                if (coupon.price < originalPrice)
+                {
+                    discountPrice = originalPrice - coupon.price;
+                } else
+                {
+                    payPrice = 0;
+                    discountPrice = originalPrice;
+                }
+
+                mUsedCouponTextView.setText(Util.getPriceFormat(this, coupon.price));
+                mDiscountPriceTextView.setText(Util.getPriceFormat(this, discountPrice));
+            }
+        } else
+        {
+            if (hotelPaymentInformation.bonus <= 0)
+            {
+                setBonusEnabled(false);
+            }
+
+            mDiscountPriceTextView.setText(Util.getPriceFormat(this, 0));
+        }
+
+        setBonusTextView(hotelPaymentInformation.bonus);
+        mFinalPaymentTextView.setText(Util.getPriceFormat(this, payPrice));
 
         // 1000원 미만 결제시에 간편/일반 결제 불가
         if (payPrice < 1000)
         {
-            mEasyPaymentButton.setEnabled(false);
-            mCardPaymentButton.setEnabled(false);
-
-            mPaymentRadioGroup.check(mHpPaymentButton.getId());
+            //            mEasyPaymentButton.setEnabled(false);
+            //            mCardPaymentButton.setEnabled(false);
+            //
+            //            mPaymentRadioGroup.check(mHpPaymentButton.getId());
         } else
         {
-            if (mEasyPaymentButton.isEnabled() == false)
-            {
-                mPaymentRadioGroup.check(mEasyPaymentButton.getId());
-            }
-
-            mEasyPaymentButton.setEnabled(true);
-            mCardPaymentButton.setEnabled(true);
+            //            if (mEasyPaymentButton.isEnabled() == false)
+            //            {
+            //                mPaymentRadioGroup.check(mEasyPaymentButton.getId());
+            //            }
+            //
+            //            mEasyPaymentButton.setEnabled(true);
+            //            mCardPaymentButton.setEnabled(true);
         }
     }
 
+    /**
+     * 내가 보유한 적립금 작게 나오는 부분(보유: x원)
+     *
+     * @param bonus
+     */
+    private void setBonusTextView(int bonus)
+    {
+        String priceFormat = Util.getPriceFormat(this, bonus);
+        String text = getString(R.string.label_booking_own_bonus, priceFormat);
+        int startIndex = text.indexOf(priceFormat);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
+
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.default_text_c323232)), //
+            startIndex, text.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mBonusTextView.setText(spannableStringBuilder);
+    }
+
+    private void setBonusSelected(boolean isSelected)
+    {
+        //selected가 true enabled가 false일수는 없다.
+        if (mDiscountBonusLayout.isEnabled() == false)
+        {
+            return;
+        }
+
+        if (isSelected == true)
+        {
+            mBonusRadioButton.setSelected(true);
+            mDiscountBonusLayout.setSelected(true);
+            mDiscountBonusLayout.setOnClickListener(null);
+
+            mUsedBonusTab.setOnClickListener(this);
+            mUsedBonusTab.setSelected(true);
+
+            mPaymentInformation.isUsedBonus = true;
+        } else
+        {
+            mBonusRadioButton.setSelected(false);
+            mDiscountBonusLayout.setSelected(false);
+            mDiscountBonusLayout.setOnClickListener(this);
+
+            mUsedBonusTextView.setText(R.string.label_booking_used_bonus);
+
+            mUsedBonusTab.setOnClickListener(null);
+            mUsedBonusTab.setSelected(false);
+
+            mPaymentInformation.isUsedBonus = false;
+        }
+
+        updatePaymentPrice((HotelPaymentInformation) mPaymentInformation);
+    }
+
+    /**
+     * selected가 true enabled가 false일수는 없다.
+     *
+     * @param isEnabled
+     */
+    private void setBonusEnabled(boolean isEnabled)
+    {
+        mBonusRadioButton.setEnabled(isEnabled);
+        mDiscountBonusLayout.setEnabled(isEnabled);
+        mUsedBonusTextView.setEnabled(isEnabled);
+        mUsedBonusTab.setEnabled(isEnabled);
+
+        if (isEnabled == true)
+        {
+
+        } else
+        {
+            mPaymentInformation.isUsedBonus = false;
+        }
+    }
+
+    private void setCouponSelected(boolean isSelected)
+    {
+        if (isSelected == true)
+        {
+            mCouponRadioButton.setSelected(true);
+            mDiscountCouponLayout.setSelected(true);
+            mDiscountCouponLayout.setOnClickListener(null);
+
+            mUsedCouponTextView.setOnClickListener(this);
+            mUsedCouponTab.setOnClickListener(this);
+            mUsedCouponTab.setSelected(true);
+
+            mPaymentInformation.isUsedCoupon = true;
+        } else
+        {
+            mCouponRadioButton.setSelected(false);
+            mDiscountCouponLayout.setSelected(false);
+            mDiscountCouponLayout.setOnClickListener(this);
+
+            mUsedCouponTab.setOnClickListener(null);
+            mUsedCouponTab.setSelected(false);
+
+            mPaymentInformation.isUsedCoupon = false;
+        }
+
+        updatePaymentPrice((HotelPaymentInformation) mPaymentInformation);
+    }
+
+    private void startCouponPopup()
+    {
+        //        startActivityForResult(null, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
+    }
+
+    private void setPaymentType()
+    {
+
+    }
 
     @Override
     protected void requestUserInformationForPayment()
@@ -414,7 +611,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         String bonus = "0"; // 적립금
 
-        if (paymentInformation.isEnabledBonus == true)
+        if (paymentInformation.isUsedBonus == true)
         {
             bonus = String.valueOf(paymentInformation.bonus);
         }
@@ -452,16 +649,21 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     }
 
     @Override
-    protected void updatePaymentInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
+    protected void updateSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
         if (selectedCreditCard == null)
         {
-            mCardManagerButton.setVisibility(View.INVISIBLE);
-            mEasyPaymentButton.setText(R.string.label_booking_easypayment);
+            ((View) mSimpleCardLayout.getParent()).setSelected(false);
+            mSimpleCardLayout.setSelected(false);
+
+            mCardManagerTextView.setText(R.string.label_register_card);
+            mSimpleCardImageView.setImageResource(R.drawable.payment_ic_01_add_card_plus);
+            mSimpleCardTextView.setText(R.string.label_booking_easypayment);
         } else
         {
-            mCardManagerButton.setVisibility(View.VISIBLE);
-            mEasyPaymentButton.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
+            mCardManagerTextView.setText(R.string.label_manager);
+            mSimpleCardImageView.setImageResource(R.drawable.selector_simplecard_button);
+            mSimpleCardTextView.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
         }
     }
 
@@ -481,20 +683,44 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         switch (paymentType)
         {
             case EASY_CARD:
-                mPaymentRadioGroup.check(mEasyPaymentButton.getId());
+            {
+                ((View) mSimpleCardLayout.getParent()).setSelected(true);
+                mSimpleCardLayout.setSelected(true);
+                mCardLayout.setSelected(false);
+                mPhoneLayout.setSelected(false);
+                mTransferLayout.setSelected(false);
                 break;
+            }
 
             case CARD:
-                mPaymentRadioGroup.check(mCardPaymentButton.getId());
+            {
+                ((View) mSimpleCardLayout.getParent()).setSelected(false);
+                mSimpleCardLayout.setSelected(false);
+                mCardLayout.setSelected(true);
+                mPhoneLayout.setSelected(false);
+                mTransferLayout.setSelected(false);
                 break;
+            }
 
             case PHONE_PAY:
-                mPaymentRadioGroup.check(mHpPaymentButton.getId());
+            {
+                ((View) mSimpleCardLayout.getParent()).setSelected(false);
+                mSimpleCardLayout.setSelected(false);
+                mCardLayout.setSelected(false);
+                mPhoneLayout.setSelected(true);
+                mTransferLayout.setSelected(false);
                 break;
+            }
 
             case VBANK:
-                mPaymentRadioGroup.check(mAccountPaymentButton.getId());
+            {
+                ((View) mSimpleCardLayout.getParent()).setSelected(false);
+                mSimpleCardLayout.setSelected(false);
+                mCardLayout.setSelected(false);
+                mPhoneLayout.setSelected(false);
+                mTransferLayout.setSelected(true);
                 break;
+            }
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
@@ -524,12 +750,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 mWarningDialogMessage = "";
             }
         });
-    }
-
-    @Override
-    protected void checkChangedBonusSwitch()
-    {
-        onCheckedChanged(mBonusSwitch, mBonusSwitch.isChecked());
     }
 
     @Override
@@ -619,8 +839,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                 agreeSinatureTextView.startAnimation(animation);
 
-//                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
-//                transition.startTransition(500);
+                //                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
+                //                transition.startTransition(500);
 
                 confirmTextView.setEnabled(true);
                 confirmTextView.setOnClickListener(new OnClickListener()
@@ -1000,6 +1220,109 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         switch (v.getId())
         {
+            case R.id.usedBonusTab:
+            {
+                // 적립금 삭제
+                setBonusSelected(false);
+
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                    , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
+                break;
+            }
+
+            case R.id.usedCouponTab:
+            {
+                // 쿠폰 삭제
+                setCouponSelected(false);
+                break;
+            }
+
+            case R.id.usedCouponTextView:
+            {
+                // 이미 쿠폰이 선택되어 있는 상태임
+                // 쿠폰 선택
+                startCouponPopup();
+                break;
+            }
+
+            case R.id.bonusLayout:
+            {
+                if (mPaymentInformation.isUsedCoupon == true)
+                {
+                    showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setCouponSelected(false);
+                            setBonusSelected(true);
+
+                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                                , Action.USING_CREDIT_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
+                        }
+                    }, null);
+                } else
+                {
+                    setBonusSelected(true);
+
+                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                        , Action.USING_CREDIT_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
+                }
+                break;
+            }
+
+            case R.id.couponLayout:
+            {
+                if (mPaymentInformation.isUsedBonus == true)
+                {
+                    showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setBonusSelected(false);
+                            setCouponSelected(true);
+                            startCouponPopup();
+                        }
+                    }, null);
+                } else
+                {
+                    setCouponSelected(true);
+                    startCouponPopup();
+                }
+                break;
+            }
+
+            case R.id.simpleCardLayout:
+            {
+                if (mSelectedCreditCard == null)
+                {
+                    startCreditCardList();
+                } else
+                {
+                    changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
+                }
+                break;
+            }
+
+            case R.id.cardLayout:
+            {
+                changedPaymentType(PlacePaymentInformation.PaymentType.CARD, mSelectedCreditCard);
+                break;
+            }
+
+            case R.id.phoneLayout:
+            {
+                changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY, mSelectedCreditCard);
+                break;
+            }
+
+            case R.id.transferLayout:
+            {
+                changedPaymentType(PlacePaymentInformation.PaymentType.VBANK, mSelectedCreditCard);
+                break;
+            }
+
             case R.id.btn_hotel_payment:
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
@@ -1053,7 +1376,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 }
 
                 //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
-                if (hotelPaymentInformation.isEnabledBonus && (hotelPaymentInformation.originalPrice <= DEFAULT_AVAILABLE_RESERVES) && hotelPaymentInformation.bonus != 0)
+                if (hotelPaymentInformation.isUsedBonus && (hotelPaymentInformation.originalPrice <= DEFAULT_AVAILABLE_RESERVES) && hotelPaymentInformation.bonus != 0)
                 {
                     v.setClickable(false);
                     v.setEnabled(false);
@@ -1067,7 +1390,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         @Override
                         public void onClick(View view)
                         {
-                            mBonusSwitch.setChecked(false);
+                            //                            mBonusSwitch.setChecked(false);
                         }
                     }, new OnDismissListener()
                     {
@@ -1135,7 +1458,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 break;
             }
 
-            case R.id.cardManagerButton:
+            case R.id.cardManagerLayout:
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
                 {
@@ -1149,7 +1472,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     guest.email = mReservationEmail.getText().toString();
                 }
 
-                showCreditCardList();
+                startCreditCardList();
                 break;
             }
         }
@@ -1211,58 +1534,58 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         return messages;
     }
 
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId)
-    {
-        if (group.getId() == mPaymentRadioGroup.getId())
-        {
-            if (checkedId == mEasyPaymentButton.getId())
-            {
-                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.EASY_CARD;
-            } else if (checkedId == mCardPaymentButton.getId())
-            {
-                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.CARD;
-            } else if (checkedId == mHpPaymentButton.getId())
-            {
-                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.PHONE_PAY;
-            } else if (checkedId == mAccountPaymentButton.getId())
-            {
-                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.VBANK;
-            }
-        }
-    }
+    //    @Override
+    //    public void onCheckedChanged(RadioGroup group, int checkedId)
+    //    {
+    //        if (group.getId() == mPaymentRadioGroup.getId())
+    //        {
+    //            if (checkedId == mEasyPaymentButton.getId())
+    //            {
+    //                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.EASY_CARD;
+    //            } else if (checkedId == mCardPaymentButton.getId())
+    //            {
+    //                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.CARD;
+    //            } else if (checkedId == mHpPaymentButton.getId())
+    //            {
+    //                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.PHONE_PAY;
+    //            } else if (checkedId == mAccountPaymentButton.getId())
+    //            {
+    //                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.VBANK;
+    //            }
+    //        }
+    //    }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-    {
-        // 앱 메모리 삭제하고 복귀하는 경우 에러가 생기는 경우가 발생하여
-        // 앱을 재부팅하는 코드 추가.
-        try
-        {
-            if (buttonView.getId() == mBonusSwitch.getId())
-            {
-                if (!isChecked)
-                {
-                    // 사용안함으로 변경
-                    mPriceLayout.setEnabled(false);
-                    mBonusLayout.setEnabled(false);
-                } else
-                {
-                    // 사용함으로 변경
-                    mPriceLayout.setEnabled(true);
-                    mBonusLayout.setEnabled(true);
-                }
-
-                mPaymentInformation.isEnabledBonus = isChecked;
-                updatePayPrice((HotelPaymentInformation) mPaymentInformation, isChecked);
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-
-            restartExpiredSession();
-        }
-    }
+    //    @Override
+    //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    //    {
+    //        // 앱 메모리 삭제하고 복귀하는 경우 에러가 생기는 경우가 발생하여
+    //        // 앱을 재부팅하는 코드 추가.
+    //        try
+    //        {
+    //            if (buttonView.getId() == mBonusSwitch.getId())
+    //            {
+    //                if (!isChecked)
+    //                {
+    //                    // 사용안함으로 변경
+    //                    mPriceLayout.setEnabled(false);
+    //                    mBonusLayout.setEnabled(false);
+    //                } else
+    //                {
+    //                    // 사용함으로 변경
+    //                    mPriceLayout.setEnabled(true);
+    //                    mBonusLayout.setEnabled(true);
+    //                }
+    //
+    //                mPaymentInformation.isUsedBonus = isChecked;
+    //                updatePaymentPrice((HotelPaymentInformation) mPaymentInformation, isChecked);
+    //            }
+    //        } catch (Exception e)
+    //        {
+    //            ExLog.d(e.toString());
+    //
+    //            restartExpiredSession();
+    //        }
+    //    }
 
     @Override
     protected void onStart()
@@ -1301,7 +1624,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-            if (hotelPaymentInformation.isEnabledBonus == true)
+            if (hotelPaymentInformation.isUsedBonus == true)
             {
                 int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
                 int bonus;
@@ -1491,7 +1814,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                     if (hasFocus == true)
                     {
-                        showInputMobileNumberDialog(mReservationPhone.getText().toString());
+                        startInputMobileNumberDialog(mReservationPhone.getText().toString());
                     } else
                     {
                         mReservationPhone.setSelected(false);
@@ -1509,7 +1832,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 {
                     if (mReservationPhone.isSelected() == true)
                     {
-                        showInputMobileNumberDialog(mReservationPhone.getText().toString());
+                        startInputMobileNumberDialog(mReservationPhone.getText().toString());
                     } else
                     {
                         mReservationPhone.requestFocus();
@@ -1605,21 +1928,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                 HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
                 hotelPaymentInformation.bonus = bonus;
+                hotelPaymentInformation.originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
 
-                if (hotelPaymentInformation.isEnabledBonus == true)
-                {
-                    updatePayPrice(hotelPaymentInformation, true);
-                }
-
-                int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
-                DecimalFormat comma = new DecimalFormat("###,##0");
-
-                mPriceTextView.setText(comma.format(originalPrice) + getString(R.string.currency));
+                updatePaymentPrice(hotelPaymentInformation);
 
                 // 적림금 on/off에 따라서 가격이 다를수 있어 나중에 보이도록 수정
                 //                        mFinalPaymentTextView.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
-                hotelPaymentInformation.originalPrice = originalPrice;
 
                 Customer buyer = new Customer();
                 buyer.setEmail(email);
@@ -2054,7 +2369,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                 HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-                if (hotelPaymentInformation.isEnabledBonus == true && bonus != hotelPaymentInformation.bonus)
+                if (hotelPaymentInformation.isUsedBonus == true && bonus != hotelPaymentInformation.bonus)
                 {
                     hotelPaymentInformation.bonus = bonus;
                     showChangedBonusDialog();
