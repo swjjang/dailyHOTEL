@@ -528,5 +528,5 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestOwnCouponList(Object tag,Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCouponList(Object tag,Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 }
