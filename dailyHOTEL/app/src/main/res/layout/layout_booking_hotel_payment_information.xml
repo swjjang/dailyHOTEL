@@ -61,7 +61,7 @@
                     android:textSize="13dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/tv_hotel_payment_original_price_value"
+                    android:id="@+id/originalPriceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -86,7 +86,7 @@
                     android:textSize="13dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/tv_hotel_payment_credit_value"
+                    android:id="@+id/discountPriceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -115,7 +115,7 @@
                     dailyFont:style="Bold"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/tv_hotel_payment_price"
+                    android:id="@+id/totalPaymentPriceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

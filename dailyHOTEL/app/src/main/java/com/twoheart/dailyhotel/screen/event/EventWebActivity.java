@@ -367,7 +367,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         @JavascriptInterface
-        public void downloadCoupon(String couponIndex)
+        public void downloadCoupon(String couponIndex, String deepLink)
         {
         }
     }

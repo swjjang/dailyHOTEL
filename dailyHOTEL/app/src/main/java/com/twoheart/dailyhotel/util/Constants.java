@@ -65,6 +65,13 @@ public interface Constants
         GONE // 목록이 비어있는 경우.
     }
 
+    public enum UserInformationType
+    {
+        NAME,
+        PHONE,
+        EMAIL
+    }
+
     public static String DAILY_USER = "normal";
     public static String KAKAO_USER = "kakao_talk";
     public static String FACEBOOK_USER = "facebook";
