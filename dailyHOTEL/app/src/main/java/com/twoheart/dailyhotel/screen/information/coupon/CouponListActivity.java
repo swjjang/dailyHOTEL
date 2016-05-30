@@ -10,6 +10,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 
+import java.util.List;
+
 /**
  * Created by Sam Lee on 2016. 5. 19..
  */
@@ -35,9 +37,12 @@ public class CouponListActivity extends BaseActivity
     }
 
     @Override
-    protected void onResume()
+    public void onResume()
     {
         super.onResume();
+
+        lockUI();
+        mCouponListNetworkController.requestCouponList();
     }
 
     @Override
@@ -99,6 +104,14 @@ public class CouponListActivity extends BaseActivity
     // ///////////////////////////////////////////////////
     private CouponListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new CouponListNetworkController.OnNetworkControllerListener()
     {
+
+        @Override
+        public void onCouponList(List<Coupon> list)
+        {
+            mCouponListLayout.setData(list);
+
+            unLockUI();
+        }
 
         @Override
         public void onErrorResponse(VolleyError volleyError)

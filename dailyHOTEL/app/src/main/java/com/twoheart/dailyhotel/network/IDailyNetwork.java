@@ -518,4 +518,15 @@ interface IDailyNetwork
      * @param errorListener
      */
     void requestKakaoUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     * /api/v3/users/coupons
+     * 자신이 소유한 Coupon List
+     *
+     * @param tag
+     * @param params
+     * @param listener
+     * @param errorListener
+     */
+    void requestOwnCouponList(Object tag,Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 }

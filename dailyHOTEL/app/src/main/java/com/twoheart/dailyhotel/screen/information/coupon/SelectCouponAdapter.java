@@ -76,31 +76,31 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         Coupon coupon = getItem(position);
 
         DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-        String strPrice = decimalFormat.format(coupon.price) + mContext.getResources().getString(R.string.currency);
-        holder.priceTextView.setText(strPrice);
+        String strAmount = decimalFormat.format(coupon.amount) + mContext.getResources().getString(R.string.currency);
+        holder.priceTextView.setText(strAmount);
 
-        holder.descriptionTextView.setText(coupon.description);
-        holder.expireTextView.setText(coupon.expiredTime);
+        holder.descriptionTextView.setText(coupon.title);
+        holder.expireTextView.setText(coupon.getExpiredString(coupon.validFrom, coupon.validTo));
 
-        if (coupon.minPrice > 0)
+        if (coupon.amountMinimum > 0)
         {
-            String strMinPrice = decimalFormat.format(coupon.price) + mContext.getResources().getString(R.string.currency);
-            holder.minPriceTextView.setText(strMinPrice);
+            String strAmountMinimum = decimalFormat.format(coupon.amountMinimum) + mContext.getResources().getString(R.string.currency);
+            holder.minPriceTextView.setText(strAmountMinimum);
         } else
         {
             holder.minPriceTextView.setText("");
         }
 
-        if (coupon.state == 0)
-        {
-            setDownLoadLayout(holder, position);
-        } else
+        if ("Y".equalsIgnoreCase(coupon.isDownloaded))
         {
             setSelectLayout(holder, position);
+        } else
+        {
+            setDownLoadLayout(holder, position);
         }
 
         holder.upperDivider.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
-//        holder.bottomDivider.setVisibility((getItemCount() - 1 == position) ? View.GONE : View.VISIBLE);
+        //        holder.bottomDivider.setVisibility((getItemCount() - 1 == position) ? View.GONE : View.VISIBLE);
 
         holder.listItemLayout.setOnClickListener(new View.OnClickListener()
         {
@@ -108,13 +108,13 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             public void onClick(View v)
             {
                 Coupon coupon = getItem(position);
-                if (coupon.state == 0)
+                if ("Y".equalsIgnoreCase(coupon.isDownloaded))
+                {
+                    mSelectPosition = position;
+                } else
                 {
                     mSelectPosition = -1;
                     mListener.onDownloadClick(position);
-                } else
-                {
-                    mSelectPosition = position;
                 }
 
                 notifyDataSetChanged();
@@ -166,7 +166,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         TextView descriptionTextView;
         TextView expireTextView;
         TextView minPriceTextView;
-//        View bottomDivider;
+        //        View bottomDivider;
         View upperDivider;
 
 
@@ -183,7 +183,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
             minPriceTextView = (TextView) itemView.findViewById(R.id.minPriceTextView);
-//            bottomDivider = itemView.findViewById(R.id.bottomDivider);
+            //            bottomDivider = itemView.findViewById(R.id.bottomDivider);
             upperDivider = itemView.findViewById(R.id.upperDivider);
         }
     }

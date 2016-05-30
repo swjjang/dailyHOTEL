@@ -890,4 +890,22 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestOwnCouponList(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    {
+
+        final String URL = Constants.UNENCRYPTED_URL ? "/api/v3/users/coupons" : "MiQzNCQzMiQ2OCQ3NSQ=$MTJREMjI1QkJGQjVCRDQyOEJFNUVCMUVYGMIkUzRTkyOEJEMjA4MzdGNzVCNEM1OTVCOSDgyNkFVCNDhEN0QxN0VENQ==$";
+
+        String strParams = "";
+        if (params != null && params.isEmpty() == false)
+        {
+            // 결제시 사용할 수 있는 쿠폰리스트
+        }
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL + strParams, null, listener, errorListener);
+        dailyHotelJsonRequest.setUsedAuthorization(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
 }

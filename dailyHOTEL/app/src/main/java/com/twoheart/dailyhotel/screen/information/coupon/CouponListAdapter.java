@@ -31,6 +31,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mContext;
     private OnCouponItemListener mListener;
 
+    private long mCurrentTimeMillis; // 현재 시간 -  계산되는 현재시간을 통일 하기 위해 어뎁터 생성시 현재시간으로 통일
+
     public interface OnCouponItemListener
     {
         void startNotice();
@@ -51,6 +53,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mList = list;
         mListener = listener;
+        mCurrentTimeMillis = System.currentTimeMillis();
     }
 
     /**
@@ -141,17 +144,19 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Coupon coupon = getItem(position);
 
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            String strPrice = decimalFormat.format(coupon.price) + mContext.getResources().getString(R.string.currency);
-            couponPriceTextView.setText(strPrice);
+            String strAmount = decimalFormat.format(coupon.amount) + mContext.getResources().getString(R.string.currency);
+            couponPriceTextView.setText(strAmount);
 
-            descriptionTextView.setText(coupon.description);
-            expireTextView.setText(coupon.expiredTime);
+            descriptionTextView.setText(coupon.title);
+            expireTextView.setText(coupon.getExpiredString(coupon.validFrom, coupon.validTo));
 
-            if (coupon.dueDate > 0)
+            int dueDate = coupon.getDueDate(mContext, mCurrentTimeMillis, coupon.validTo);
+
+            if (dueDate > 0)
             {
                 dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
                 dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
-                String strDueDate = mContext.getResources().getString(R.string.coupon_duedate_text, coupon.dueDate);
+                String strDueDate = mContext.getResources().getString(R.string.coupon_duedate_text, dueDate);
                 dueDateTextView.setText(strDueDate);
             } else
             {
@@ -161,10 +166,10 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 dueDateTextView.setText(mContext.getResources().getString(R.string.coupon_today_text));
             }
 
-            if (coupon.minPrice > 0)
+            if (coupon.amountMinimum > 0)
             {
-                String strMinPrice = decimalFormat.format(coupon.price) + mContext.getResources().getString(R.string.currency);
-                minPriceTextView.setText(strMinPrice);
+                String strAmountMinimum = decimalFormat.format(coupon.amountMinimum) + mContext.getResources().getString(R.string.currency);
+                minPriceTextView.setText(strAmountMinimum);
             } else
             {
                 minPriceTextView.setText("");
@@ -172,16 +177,16 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             useablePlaceTextView.setText(coupon.useablePlace);
 
-            if (coupon.state == 0)
-            {
-                //download
-                downloadIconView.setVisibility(View.VISIBLE);
-                useIconView.setVisibility(View.GONE);
-            } else
+            if ("Y".equalsIgnoreCase(coupon.isDownloaded))
             {
                 //useable
                 downloadIconView.setVisibility(View.GONE);
                 useIconView.setVisibility(View.VISIBLE);
+            } else
+            {
+                //download
+                downloadIconView.setVisibility(View.VISIBLE);
+                useIconView.setVisibility(View.GONE);
             }
 
             CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();

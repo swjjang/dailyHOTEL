@@ -21,6 +21,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 {
     private Context mContext;
     private List<Coupon> mCouponList;
+    private long mCurrentTimeMillis; // 현재 시간 -  계산되는 현재시간을 통일 하기 위해 어뎁터 생성시 현재시간으로 통일
 
     public CouponHistoryListAdapter(Context context, List<Coupon> list)
     {
@@ -32,6 +33,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         }
 
         mCouponList = list;
+
+        mCurrentTimeMillis = System.currentTimeMillis();
     }
 
     /**
@@ -64,28 +67,28 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         Coupon coupon = getItem(position);
 
         DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-        String strPrice = decimalFormat.format(coupon.price);
-        holder.priceTextView.setText(strPrice + mContext.getResources().getString(R.string.currency));
+        String strAmout = decimalFormat.format(coupon.amount);
+        holder.priceTextView.setText(strAmout + mContext.getResources().getString(R.string.currency));
 
-        holder.descriptionTextView.setText(coupon.description);
+        holder.descriptionTextView.setText(coupon.title);
 
         holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
 
         int resId;
         String strPrefixExpire;
-        if (coupon.state == 0)
-        {
-            resId = R.string.coupon_history_use_text;
-            strPrefixExpire = "사용일:";
-        } else
+        if ("Y".equalsIgnoreCase(coupon.isDownloaded))
         {
             resId = R.string.coupon_history_expire_text;
             strPrefixExpire = "만료일:";
+        } else
+        {
+            resId = R.string.coupon_history_use_text;
+            strPrefixExpire = "사용일:";
         }
         holder.stateTextView.setText(resId);
 
         // 사용기간 및 사용일자 또는 만료일자 구현 필요
-        String strExpire = coupon.expiredTime;
+        String strExpire = coupon.getExpiredString(coupon.validFrom, coupon.validTo);
         if (Util.getLCDWidth(mContext) < 720)
         {
             strExpire += "\n";
@@ -93,7 +96,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         {
             strExpire += " | ";
         }
-        strExpire += strPrefixExpire + coupon.dueDate;
+        strExpire += strPrefixExpire + coupon.getDueDate(mContext, mCurrentTimeMillis, coupon.validTo);
         holder.expireTextView.setText(strExpire);
     }
 
