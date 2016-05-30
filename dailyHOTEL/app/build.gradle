@@ -70,7 +70,6 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.10.0'
     compile 'com.kakao.sdk:kakaolink:1.1.10'
     compile 'com.kakao.sdk:kakaotalk:1.1.10'
-    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
     compile 'com.appboy:android-sdk-ui:1.13.4'
     compile 'com.android.support:multidex:1.0.1'
 
@@ -80,6 +79,7 @@ dependencies {
 
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
+    compile project(':facebook')
 
     compile files('libs/MobileAppTracker.jar')
     compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')
