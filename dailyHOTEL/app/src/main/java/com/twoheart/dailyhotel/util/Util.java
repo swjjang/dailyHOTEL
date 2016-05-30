@@ -104,14 +104,6 @@ public class Util implements Constants
         }
 
         Fresco.initialize(context, imagePipelineConfig);
-
-        try
-        {
-            Fresco.getImagePipelineFactory().getMainFileCache().clearAll();
-        } catch (UnsatisfiedLinkError e)
-        {
-            ExLog.e(e.toString());
-        }
     }
 
     public static void requestImageResize(Context context, com.facebook.drawee.view.SimpleDraweeView simpleDraweeView, String imageUrl)

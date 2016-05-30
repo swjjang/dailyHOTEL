@@ -49,7 +49,6 @@ public class DailyViewPagerIndicator extends RelativeLayout
     {
         mDescriptionTextView = new DailyTextView(context);
         mPageTextView = new DailyTextView(context);
-        mPageTextView.setId(mPageTextView.getClass().hashCode());
 
         RelativeLayout.LayoutParams descLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         mDescriptionTextView.setTextColor(getResources().getColor(R.color.hoteldetail_image_tag_text));
@@ -61,9 +60,6 @@ public class DailyViewPagerIndicator extends RelativeLayout
 
         descLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         descLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        descLayoutParams.addRule(RelativeLayout.LEFT_OF, mPageTextView.getId());
-        descLayoutParams.leftMargin = Util.dpToPx(context, 15);
-        descLayoutParams.rightMargin = Util.dpToPx(context, 5);
 
         mDescriptionTextView.setLayoutParams(descLayoutParams);
         addView(mDescriptionTextView);
@@ -86,15 +82,6 @@ public class DailyViewPagerIndicator extends RelativeLayout
 
     public void setImageInformation(String description, int position)
     {
-        if (Util.isTextEmpty(description) == false)
-        {
-            mDescriptionTextView.setVisibility(View.VISIBLE);
-            mDescriptionTextView.setText(description);
-        } else
-        {
-            mDescriptionTextView.setVisibility(View.INVISIBLE);
-        }
-
         if (mTotalCount == 0)
         {
             mPageTextView.setVisibility(View.INVISIBLE);
@@ -102,6 +89,26 @@ public class DailyViewPagerIndicator extends RelativeLayout
         {
             mPageTextView.setVisibility(View.VISIBLE);
             mPageTextView.setText(String.format("%d/%d", position + 1, mTotalCount));
+        }
+
+        if (Util.isTextEmpty(description) == false)
+        {
+            mDescriptionTextView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    RelativeLayout.LayoutParams layoutParam = (RelativeLayout.LayoutParams) mDescriptionTextView.getLayoutParams();
+                    layoutParam.leftMargin = layoutParam.rightMargin = mPageTextView.getWidth() + Util.dpToPx(getContext(), 13);
+                    mDescriptionTextView.setLayoutParams(layoutParam);
+                }
+            });
+
+            mDescriptionTextView.setVisibility(View.VISIBLE);
+            mDescriptionTextView.setText(description);
+        } else
+        {
+            mDescriptionTextView.setVisibility(View.INVISIBLE);
         }
     }
 

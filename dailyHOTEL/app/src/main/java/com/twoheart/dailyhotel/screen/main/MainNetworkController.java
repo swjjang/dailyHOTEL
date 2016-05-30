@@ -37,6 +37,10 @@ public class MainNetworkController extends BaseNetworkController
         void onAppVersionResponse(int maxVersion, int minVersion);
 
         void onConfigurationResponse();
+
+        void onNoticeAgreement(String message01, String message02, String cancelMessage01, String cancelMessage02);
+
+        void onBenefitAgreement(String message01, String message02);
     }
 
     public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -168,6 +172,15 @@ public class MainNetworkController extends BaseNetworkController
         }
     }
 
+    public void requestNoticeAgreement()
+    {
+        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mNoticeAgreementJsonResponseListener);
+    }
+
+    public void requestBenefitAgreement(boolean agreement)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mBenefitAgreementJsonResponseListener);
+    }
 
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -366,6 +379,10 @@ public class MainNetworkController extends BaseNetworkController
                     int reservationIndex = jsonObject.getInt("reservation_rec_idx");
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onSatisfactionGourmet(ticketName, reservationIndex, checkInTime);
+                } else
+                {
+                    // 고메 이벤트까지 없으면 첫구매 이벤트 확인한다.
+                    requestNoticeAgreement();
                 }
             } catch (Exception e)
             {
@@ -387,9 +404,9 @@ public class MainNetworkController extends BaseNetworkController
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0 && response.has("data") == true)
+                if (msgCode == 0 && response.has("data") == true)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
@@ -448,6 +465,65 @@ public class MainNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mNoticeAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 0 && response.has("data") == true)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String message01 = dataJSONObject.getString("beforeDescription1");
+                    String message02 = dataJSONObject.getString("beforeDescription2");
+                    String cancelMessage01 = dataJSONObject.getString("afterDescription1");
+                    String cancelMessage02 = dataJSONObject.getString("afterDescription2");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreement(message01, message02, cancelMessage01, cancelMessage02);
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mBenefitAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 0 && response.has("data") == true)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(null, null);
+                }
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

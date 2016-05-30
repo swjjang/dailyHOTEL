@@ -78,7 +78,7 @@ public class SelectCouponDialogActivity extends BaseActivity
         @Override
         public void finish()
         {
-           SelectCouponDialogActivity.this.finish();
+            SelectCouponDialogActivity.this.finish();
         }
     };
 

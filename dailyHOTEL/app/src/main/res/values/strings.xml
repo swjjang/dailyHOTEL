@@ -202,7 +202,7 @@
     <string name="dialog_msg_please_update_new_version">DAILYHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요.</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요.</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message01">선택하신 상품의 &lt;b&gt;취소, 환불 규정&lt;/b&gt;을 다시 한번 확인해주시기 바랍니다.</string>
+    <string name="dialog_msg_hotel_payment_message01">선택하신 상품의 &lt;b&gt;취소, 환불 규정을 다시 한번 확인&lt;/b&gt;해주시기 바랍니다.</string>
     <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'타입을 구매 하신 경우 2인 기준의 더블 또는 트윈 객실로 랜덤 배정 해드려요.</string>
     <string name="dialog_msg_hotel_payment_message03">미성년자는 보호자 동반시 투숙 가능합니다.</string>
     <string name="dialog_msg_hotel_payment_message04">휴대폰 결제는 월 30만원이 한도입니다.</string>
@@ -215,7 +215,7 @@
     <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message13">이곳에 서명해주세요.</string>
-    <string name="dialog_msg_hotel_payment_message14">환불 불가 표시 상품의 경우 취소, 변경, 환불이 절대 불가하며 체크인 3일 전~체크인 당일에는 취소수수료가 100% 부과됩니다.</string>
+    <string name="dialog_msg_hotel_payment_message14">환불 불가 표시 상품의 경우 규정과 상관없이 취소, 변경, 환불이 &lt;b&gt;절대 불가&lt;/b&gt;합니다.</string>
 
     <string name="dialog_msg_gourmet_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품이에요!</string>
     <string name="dialog_msg_gourmet_payment_message02">특정 좌석과 뷰를 보장해드리기 어려운 점 양해 부탁드려요.</string>
@@ -839,4 +839,9 @@
     <string name="message_select_coupon_selected">사용하실 쿠폰을 선택해 주세요.</string>
     <string name="message_select_coupon_empty">사용 가능한 할인 쿠폰이 없습니다.</string>
     <string name="message_select_coupon_download">다운로드 받기</string>
+
+    <!-- Benefit Alarm -->
+    <string name="label_setting_alarm">알림 설정</string>
+    <string name="label_after_setting_alarm">나중에 설정</string>
+    <string name="label_now_setting_alarm">알림 설정하고 혜택받기</string>
 </resources>

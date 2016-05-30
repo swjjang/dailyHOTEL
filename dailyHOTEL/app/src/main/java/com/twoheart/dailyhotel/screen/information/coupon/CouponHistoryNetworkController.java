@@ -11,22 +11,21 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
  */
 public class CouponHistoryNetworkController extends BaseNetworkController
 {
-	protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
-	{
+    protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
+    {
 
 
+    }
 
-	}
 
+    public CouponHistoryNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    {
+        super(context, networkTag, listener);
+    }
 
-	public CouponHistoryNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
-	{
-		super(context, networkTag, listener);
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError volleyError)
-	{
-		mOnNetworkControllerListener.onErrorResponse(volleyError);
-	}
+    @Override
+    public void onErrorResponse(VolleyError volleyError)
+    {
+        mOnNetworkControllerListener.onErrorResponse(volleyError);
+    }
 }

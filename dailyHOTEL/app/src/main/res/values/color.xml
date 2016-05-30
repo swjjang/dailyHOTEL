@@ -243,6 +243,7 @@
     <color name="default_background_section_c323232">#323232</color>
     <color name="default_background_section_cf2f2f3">#f2f2f3</color>
     <color name="default_background_kakao">#f9ed00</color>
+    <color name="default_background_facebook">#3b5998</color>
     <color name="default_background_button_in_section">#a6a6a8</color>
     <color name="default_background_cd1d1d1">#d1d1d1</color>
     <color name="default_background_cfafafb">#fafafb</color>
