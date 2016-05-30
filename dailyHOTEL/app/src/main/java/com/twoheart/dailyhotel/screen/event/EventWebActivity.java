@@ -12,12 +12,16 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -26,6 +30,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -39,6 +45,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
     private SourceType mSourceType;
     private SaleTime mSaleTime;
     private String mEventName;
+
+    private String mCouponCode;
+    private String mDeepLinkUrl;
 
     public enum SourceType
     {
@@ -187,6 +196,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    downloadCoupon(mCouponCode, mDeepLinkUrl);
+                }
+                break;
+            }
         }
     }
 
@@ -272,6 +290,80 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         return result;
+    }
+
+    private void startLogin()
+    {
+        showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(EventWebActivity.this, LoginActivity.class);
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+            }
+        }, null);
+    }
+
+    private void downloadCoupon(String couponCode, final String deepLink)
+    {
+        if (Util.isTextEmpty(couponCode, deepLink) == true)
+        {
+            return;
+        }
+
+        DailyNetworkAPI.getInstance(this).requestDownloadCoupon(mNetworkTag, couponCode, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    String message = null;
+
+                    showSimpleDialog(null, message, getString(R.string.label_eventweb_now_used), getString(R.string.dialog_btn_text_close), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
+                            dailyDeepLink.setDeepLink(Uri.parse(deepLink));
+
+                            if (dailyDeepLink.isHotelDetailView() == true)
+                            {
+                                if (deepLinkHotelDetail(mSaleTime) == true)
+                                {
+                                    return;
+                                }
+                            } else if (dailyDeepLink.isGourmetDetailView() == true)
+                            {
+                                if (deepLinkGourmetDetail(mSaleTime) == true)
+                                {
+                                    return;
+                                }
+                            } else
+                            {
+                                Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.setData(Uri.parse(deepLink));
+
+                                startActivity(intent);
+                            }
+                        }
+                    }, null);
+                } catch (Exception e)
+                {
+                    onError(e);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                onErrorResponse(volleyError);
+            }
+        });
     }
 
     /**
@@ -368,14 +460,22 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         @JavascriptInterface
-        public void downloadCoupon(String couponIndex, String deepLink)
+        public void downloadCoupon(String couponCode, String deepLink)
         {
+            if (Util.isTextEmpty(couponCode, deepLink) == true)
+            {
+                return;
+            }
+
+            mCouponCode = couponCode;
+            mDeepLinkUrl = deepLink;
+
             if (Util.isTextEmpty(DailyPreference.getInstance(EventWebActivity.this).getAuthorization()) == true)
             {
-
+                startLogin();
             } else
             {
-
+                downloadCoupon(couponCode, deepLink);
             }
         }
     }

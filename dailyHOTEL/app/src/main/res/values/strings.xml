@@ -844,4 +844,8 @@
     <string name="label_setting_alarm">알림 설정</string>
     <string name="label_after_setting_alarm">나중에 설정</string>
     <string name="label_now_setting_alarm">알림 설정하고 혜택받기</string>
+
+    <!-- Event Web -->
+    <string name="label_eventweb_now_used">지금 사용하기</string>
+    <string name="message_eventweb_do_login_download_coupon">할인쿠폰 다운로드를 위해 데일리호텔 앱 로그인이 필요합니다. 로그인 할까요?</string>
 </resources>

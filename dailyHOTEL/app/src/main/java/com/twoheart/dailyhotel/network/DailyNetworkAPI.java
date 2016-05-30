@@ -925,4 +925,16 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         mQueue.add(dailyHotelJsonRequest);
     }
+
+    @Override
+    public void requestDownloadCoupon(Object tag, String couponCode, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? " api/v3/users/coupons/download" : "";
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SESSION_SERVER + URL, null, listener);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+
 }
