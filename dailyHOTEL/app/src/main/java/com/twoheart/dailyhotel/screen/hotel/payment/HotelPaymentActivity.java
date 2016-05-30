@@ -770,8 +770,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         window.setAttributes(layoutParams);
 
         int[] messageResIds = {R.string.dialog_msg_hotel_payment_message01//
-            , R.string.dialog_msg_hotel_payment_message14
-            , R.string.dialog_msg_hotel_payment_message02//
+            , R.string.dialog_msg_hotel_payment_message14, R.string.dialog_msg_hotel_payment_message02//
             , R.string.dialog_msg_hotel_payment_message03//
             , R.string.dialog_msg_hotel_payment_message08, R.string.dialog_msg_hotel_payment_message07};
 
@@ -870,8 +869,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             // 신용카드 일반 결제
             case CARD:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14
-                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message14, R.string.dialog_msg_hotel_payment_message02//
                     , R.string.dialog_msg_hotel_payment_message03//
                     , R.string.dialog_msg_hotel_payment_message06};
 
@@ -881,8 +879,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             // 핸드폰 결제
             case PHONE_PAY:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14
-                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message14, R.string.dialog_msg_hotel_payment_message02//
                     , R.string.dialog_msg_hotel_payment_message03//
                     , R.string.dialog_msg_hotel_payment_message04//
                     , R.string.dialog_msg_hotel_payment_message06};
@@ -893,8 +890,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             // 계좌 이체
             case VBANK:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14
-                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message14, R.string.dialog_msg_hotel_payment_message02//
                     , R.string.dialog_msg_hotel_payment_message03//
                     , R.string.dialog_msg_hotel_payment_message05//
                     , R.string.dialog_msg_hotel_payment_message06};

@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity implements Constants
         super.onCreate(savedInstanceState);
 
         // URL 만들때 사용
-//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
@@ -130,6 +130,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             DailyPreference.getInstance(this).setAppVersion(currentVersion);
             AnalyticsManager.getInstance(this).currentAppVersion(currentVersion);
+            DailyPreference.getInstance(this).setShowBenefitAlarm(false);
         }
 
         initLayout();
@@ -139,7 +140,8 @@ public class MainActivity extends BaseActivity implements Constants
         // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
         mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
 
-        if (DailyPreference.getInstance(this).isAllowPush() == true)
+        // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
+        if (DailyPreference.getInstance(this).isUserBenefitAlarm() == true)
         {
             AppboyManager.setPushEnabled(this, true);
         } else
@@ -217,6 +219,10 @@ public class MainActivity extends BaseActivity implements Constants
         {
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
                 mNetworkController.requestGourmetIsExistRating();
+                break;
+
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+                mNetworkController.requestNoticeAgreement();
                 break;
 
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
@@ -714,6 +720,7 @@ public class MainActivity extends BaseActivity implements Constants
                     mNetworkController.requestUserInformation();
                 } else
                 {
+                    // GCM 등록
                     Util.requestGoogleCloudMessaging(MainActivity.this, new Util.OnGoogleCloudMessagingListener()
                     {
                         @Override
@@ -727,8 +734,81 @@ public class MainActivity extends BaseActivity implements Constants
                             mNetworkController.registerNotificationId(registrationId, null);
                         }
                     });
+
+                    // 헤택이 Off 되어있는 경우 On으로 수정
+                    if (DailyPreference.getInstance(MainActivity.this).isAllowBenefitAlarm() == false//
+                        && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
+                    {
+                        mNetworkController.requestNoticeAgreement();
+                    }
                 }
             }
+        }
+
+        @Override
+        public void onNoticeAgreement(String message01, String message02, String cancelMessage01, String cancelMessage02)
+        {
+            String message = message01 + "\n\n" + message02;
+            final String cancelMessage = cancelMessage01 + "\n\n" + cancelMessage02;
+
+            // 혜택
+            showSimpleDialog(getString(R.string.label_setting_alarm), message, getString(R.string.label_now_setting_alarm), getString(R.string.label_after_setting_alarm)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(true);
+                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(false);
+                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(false);
+                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                    }
+                }, null, true);
+        }
+
+        @Override
+        public void onBenefitAgreement(String message01, String message02)
+        {
+            String message = message01 + "\n\n" + message02;
+
+            // 혜택
+            showSimpleDialog(getString(R.string.label_setting_alarm), message, getString(R.string.label_now_setting_alarm), getString(R.string.label_after_setting_alarm)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                    }
+                }, null, true);
         }
     };
 }

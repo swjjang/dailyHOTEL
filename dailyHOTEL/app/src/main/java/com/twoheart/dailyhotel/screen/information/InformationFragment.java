@@ -337,16 +337,16 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            boolean onOff = DailyPreference.getInstance(baseActivity).isAllowPush();
+            boolean onOff = DailyPreference.getInstance(baseActivity).isShowBenefitAlarm();
 
             if (onOff == true)
             {
-                DailyPreference.getInstance(baseActivity).setAllowPush(false);
+                DailyPreference.getInstance(baseActivity).setShowBenefitAlarm(false);
                 AppboyManager.setPushEnabled(baseActivity, false);
 
             } else
             {
-                DailyPreference.getInstance(baseActivity).setAllowPush(true);
+                DailyPreference.getInstance(baseActivity).setShowBenefitAlarm(true);
                 AppboyManager.setPushEnabled(baseActivity, true);
             }
 
