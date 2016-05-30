@@ -528,7 +528,7 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestOwnCouponList(Object tag,Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestOwnCouponList(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * 혜택 알림을 받아야 하는지 알려준다.
@@ -544,4 +544,11 @@ interface IDailyNetwork
      * @param listener
      */
     void requestBenefitAgreement(Object tag, boolean agreement, DailyHotelJsonResponseListener listener);
+
+    /**
+     * @param tag
+     * @param couponCode
+     * @param listener
+     */
+    void requestDownloadCoupon(Object tag, String couponCode, DailyHotelJsonResponseListener listener);
 }
