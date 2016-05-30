@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,15 +39,14 @@ import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -73,25 +71,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private Province mProvince;
     private String mArea; // Analytics용 소지역
 
-    public interface OnUserActionListener
-    {
-        void selectTicketTime(String selectedTime);
-
-        void plusTicketCount();
-
-        void minusTicketCount();
-
-        void editUserInformation();
-
-        void showCreditCardManager();
-
-        void changedPaymentType(PlacePaymentInformation.PaymentType type);
-
-        void doPayment();
-
-        void showInputMobileNumberDialog(String mobileNumber);
-    }
-
     public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime//
         , String imageUrl, String category, int gourmetIndex, boolean isDBenefit, Province province, String area)
     {
@@ -112,7 +91,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_booking_place);
+        mGourmetPaymentLayout = new GourmetPaymentLayout(this, mOnEventListener);
+
+        setContentView(mGourmetPaymentLayout.onCreateView(R.layout.activity_booking_place));
 
         Intent intent = getIntent();
 
@@ -143,46 +124,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         mIsChangedPrice = false;
         mIsChangedTime = false;
 
-        initToolbar(gourmetPaymentInformation.getTicketInformation().placeName);
-        initLayout();
+        mGourmetPaymentLayout.setToolbarTitle(gourmetPaymentInformation.getTicketInformation().placeName);
+        changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
     }
 
-    private void initToolbar(String title)
-    {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                finish();
-            }
-        });
-
-        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
-        dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                showCallDialog();
-            }
-        });
-    }
-
-    private void initLayout()
-    {
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.default_over_scroll_edge));
-
-        mGourmetPaymentLayout = new GourmetPaymentLayout(this, scrollView, mOnUserActionListener);
-    }
 
     @Override
     protected void requestUserInformationForPayment()
@@ -241,21 +186,21 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void updateSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
-        mGourmetPaymentLayout.updatePaymentInformation((GourmetPaymentInformation) paymentInformation, selectedCreditCard);
+        mGourmetPaymentLayout.setPaymentInformation((GourmetPaymentInformation) paymentInformation, selectedCreditCard);
     }
 
     @Override
     protected void updateGuestInformation(String phoneNumber)
     {
         mPaymentInformation.getGuest().phone = phoneNumber;
-        mGourmetPaymentLayout.updateUserInformationLayout(phoneNumber);
+        mGourmetPaymentLayout.setUserPhoneInformation(phoneNumber);
     }
 
     @Override
     protected void changedPaymentType(PlacePaymentInformation.PaymentType paymentType, CreditCard creditCard)
     {
         mSelectedCreditCard = creditCard;
-        mOnUserActionListener.changedPaymentType(paymentType);
+        mOnEventListener.changedPaymentType(paymentType);
     }
 
     @Override
@@ -371,8 +316,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                 agreeSinatureTextView.startAnimation(animation);
 
-//                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
-//                transition.startTransition(500);
+                //                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
+                //                transition.startTransition(500);
 
                 confirmTextView.setEnabled(true);
                 confirmTextView.setOnClickListener(new View.OnClickListener()
@@ -826,7 +771,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     // User ActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+    private GourmetPaymentLayout.OnEventListener mOnEventListener = new GourmetPaymentLayout.OnEventListener()
     {
         @Override
         public void selectTicketTime(String selectedTime)
@@ -892,7 +837,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, gourmetPaymentInformation);
+                mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
             }
         }
 
@@ -913,7 +858,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 mGourmetPaymentLayout.setTicketCountPlusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, gourmetPaymentInformation);
+                mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
             }
         }
 
@@ -930,7 +875,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void showCreditCardManager()
+        public void startCreditCardManager()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -990,7 +935,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.NAME);
+                    mGourmetPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.NAME);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.message_gourmet_please_input_guest, Toast.LENGTH_SHORT);
                     return;
@@ -998,7 +943,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.PHONE);
+                    mGourmetPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.PHONE);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
                     return;
@@ -1006,7 +951,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.EMAIL);
+                    mGourmetPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.EMAIL);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                     return;
@@ -1014,7 +959,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 {
                     releaseUiComponent();
 
-                    mGourmetPaymentLayout.requestUserInformationFocus(GourmetPaymentLayout.UserInformationType.EMAIL);
+                    mGourmetPaymentLayout.requestUserInformationFocus(Constants.UserInformationType.EMAIL);
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
@@ -1067,6 +1012,18 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             Intent intent = InputMobileNumberDialogActivity.newInstance(GourmetPaymentActivity.this, mobileNumber);
             startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
+        }
+
+        @Override
+        public void showCallPopup()
+        {
+            showCallPopup();
+        }
+
+        @Override
+        public void finish()
+        {
+            GourmetPaymentActivity.this.finish();
         }
     };
 
@@ -1240,9 +1197,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         requestValidateTicketPayment(gourmetPaymentInformation, mCheckInSaleTime);
                     }
 
-                    mGourmetPaymentLayout.updateTicketInformationLayout(GourmetPaymentActivity.this, gourmetPaymentInformation);
-                    mGourmetPaymentLayout.updateUserInformationLayout(gourmetPaymentInformation);
-                    mGourmetPaymentLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, gourmetPaymentInformation);
+                    mGourmetPaymentLayout.setTicketInformation(gourmetPaymentInformation);
+                    mGourmetPaymentLayout.setUserInformation(gourmetPaymentInformation);
+                    mGourmetPaymentLayout.setPaymentInformation(gourmetPaymentInformation);
 
                     recordAnalyticsPayment(gourmetPaymentInformation);
                 } else

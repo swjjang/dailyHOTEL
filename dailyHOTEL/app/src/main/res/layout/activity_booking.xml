@@ -75,7 +75,7 @@
                     android:background="@color/default_line_ce7e7e7"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/btn_hotel_payment"
+                    android:id="@+id/doPaymentView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"

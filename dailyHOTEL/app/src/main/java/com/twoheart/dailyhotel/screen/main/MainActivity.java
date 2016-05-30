@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity implements Constants
         super.onCreate(savedInstanceState);
 
         // URL 만들때 사용
-        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+//        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(this, mNetworkTag, mOnNetworkControllerListener);

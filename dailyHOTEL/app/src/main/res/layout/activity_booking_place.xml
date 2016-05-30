@@ -33,9 +33,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <!-- 결제 -->
+            <!-- 예약 메모 -->
+            <include
+                layout="@layout/layout_booking_memo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 결제 정보 -->
             <include
                 layout="@layout/layout_booking_gourmet_payment_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 결제 수단 선택 -->
+            <include
+                layout="@layout/layout_booking_gourmet_select_payment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -54,7 +66,7 @@
                     android:background="@color/default_line_ce7e7e7"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/payButton"
+                    android:id="@+id/doPaymentView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
