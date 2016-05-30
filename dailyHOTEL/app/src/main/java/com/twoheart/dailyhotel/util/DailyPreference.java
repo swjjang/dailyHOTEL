@@ -36,7 +36,8 @@ public class DailyPreference
     private static final String KEY_OPENING_ALARM = "1"; // 알람
     private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
-    private static final String KEY_ALLOW_PUSH = "5";
+    //    private static final String KEY_ALLOW_PUSH = "5";
+    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
 
     private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
@@ -51,6 +52,8 @@ public class DailyPreference
     private static final String KEY_AGREE_TERMS_OF_LOCATION = "21"; // 위치 약관 동의 여부
     private static final String KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE = "22"; // 운영시간 문구
     private static final String KEY_APP_VERSION = "23";
+
+    private static final String KEY_SHOW_BENEFIT_ALARM = "24";
 
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
@@ -96,6 +99,7 @@ public class DailyPreference
     private static final String KEY_PREFERENCE_USER_TYPE = "USER_TYPE";
     private static final String KEY_PREFERENCE_USER_NAME = "USER_NAME";
     private static final String KEY_PREFERENCE_USER_RECOMMENDER = "USER_RECOMMENDER";
+    private static final String KEY_PREFERENCE_USER_BENEFIT_ALARM = "USER_BENEFIT_ALARM";
 
     // Version
     private static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
@@ -172,6 +176,9 @@ public class DailyPreference
         return mInstance;
     }
 
+    /**
+     * 앱 삭제시에도 해당 데이터는 남기도록 한다.
+     */
     public void clear()
     {
         // 회사 정보는 삭제되면 안된다
@@ -183,6 +190,9 @@ public class DailyPreference
         String phoneNumber = getCompanyPhoneNumber();
         String fax = getCompanyFax();
         String privacyEmail = getCompanyPrivacyEmail();
+
+        // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
+        boolean isUserBenefitAlarm = isUserBenefitAlarm();
 
         if (mEditor != null)
         {
@@ -203,6 +213,7 @@ public class DailyPreference
         }
 
         setCompanyInformation(name, ceo, bizRegNumber, itcRegNumber, address, phoneNumber, fax, privacyEmail);
+        setUserBenefitAlarm(isUserBenefitAlarm);
     }
 
     private String getValue(SharedPreferences sharedPreferences, String key, String defaultValue)
@@ -352,14 +363,14 @@ public class DailyPreference
         setValue(mEditor, KEY_SHOW_GUIDE, value);
     }
 
-    public boolean isAllowPush()
+    public boolean isAllowBenefitAlarm()
     {
-        return getValue(mPreferences, KEY_ALLOW_PUSH, true);
+        return getValue(mPreferences, KEY_ALLOW_BENEFIT_ALARM, false);
     }
 
-    public void setAllowPush(boolean value)
+    public void setAllowBenefitAlarm(boolean value)
     {
-        setValue(mEditor, KEY_ALLOW_PUSH, value);
+        setValue(mEditor, KEY_ALLOW_BENEFIT_ALARM, value);
     }
 
     public void setCompanyInformation(String name, String ceo, String bizRegNumber//
@@ -543,6 +554,17 @@ public class DailyPreference
         return getValue(mPreferences, KEY_APP_VERSION, null);
     }
 
+    public void setShowBenefitAlarm(boolean value)
+    {
+        setValue(mEditor, KEY_SHOW_BENEFIT_ALARM, value);
+    }
+
+    public boolean isShowBenefitAlarm()
+    {
+        return getValue(mPreferences, KEY_SHOW_BENEFIT_ALARM, false);
+    }
+
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -675,6 +697,16 @@ public class DailyPreference
     public String getUserRecommender()
     {
         return getValue(mOldPreferences, KEY_PREFERENCE_USER_RECOMMENDER, null);
+    }
+
+    public boolean isUserBenefitAlarm()
+    {
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_BENEFIT_ALARM, false);
+    }
+
+    public void setUserBenefitAlarm(boolean value)
+    {
+        setValue(mOldEditor, KEY_PREFERENCE_USER_BENEFIT_ALARM, value);
     }
 
     public void setUserInformation(String type, String email, String name, String recommender)

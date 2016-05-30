@@ -15,7 +15,6 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -174,8 +173,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
             }
         });
 
-//        confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
-//        confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
+        //        confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
+        //        confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
 
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
