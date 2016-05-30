@@ -675,6 +675,7 @@ public class AnalyticsManager
         public static final String POPUP_STATUS = "popup_status";
         public static final String SELECTED_RESPONSE_ITEM = "selected_response_Item";
         public static final String SCREEN = "screen";
+        public static final String SORTING = "sorting";
     }
 
     public static class ValueType

@@ -54,6 +54,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 import net.simonvt.numberpicker.NumberPicker;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -1125,5 +1126,11 @@ public class Util implements Constants
                 DailyToast.showToast(context, R.string.toast_message_failed_install, Toast.LENGTH_SHORT);
             }
         }
+    }
+
+    public static String getPriceFormat(Context context, int price)
+    {
+        DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format));
+        return decimalFormat.format(price);
     }
 }

@@ -817,7 +817,7 @@ public class DailyPreference
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKIN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKOUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-            if (hotelPaymentInformation.isEnabledBonus == true)
+            if (hotelPaymentInformation.isUsedBonus == true)
             {
                 int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
                 int bonus;

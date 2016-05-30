@@ -9,9 +9,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -22,197 +20,157 @@ import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseLayout;
+import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class GourmetPaymentLayout implements OnCheckedChangeListener
+public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener
 {
-    private BaseActivity mActivity;
-
-    private TextView mTicketCountTextView, mTicketTimeTextView;
+    private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
     private EditText mUserNameEditText, mUserPhoneEditText, mUserEmailEditText;
+    private EditText mMemoEditText;
     private Drawable[] mEditTextBackgrounds;
-
-    private TextView mTicketPaymentTextView;
-    private RadioGroup mPaymentGroup;
-    private RadioButton mEasyPaymentButton, mCardPaymentButton, mHpPaymentButton, mAccountPaymentButton;
-    private View mCardManagerButton;
-    private View mTicketCountMinusButton, mTicketCountPlusButton;
-
+    private View mFakeMobileEditView;
     private ScrollView mScrollLayout;
 
-    private GourmetPaymentActivity.OnUserActionListener mOnUserActionListener;
+    private TextView mPriceTextView, mFinalPaymentTextView;
+    private View mTicketCountMinusButton, mTicketCountPlusButton;
 
-    public GourmetPaymentLayout(BaseActivity activity, ScrollView scrollLayout, GourmetPaymentActivity.OnUserActionListener listener)
+    private DailyToolbarLayout mDailyToolbarLayout;
+
+    // 결제 수단 선택
+    private View mSimpleCardLayout;
+    private ImageView mSimpleCardImageView;
+    private TextView mSimpleCardTextView;
+    private View mCardLayout;
+    private View mPhoneLayout;
+    private View mTransferLayout;
+
+    private View mCardManagerLayout;
+    private TextView mCardManagerTextView;
+
+    public interface OnEventListener extends OnBaseEventListener
     {
-        mActivity = activity;
-        mScrollLayout = scrollLayout;
-        mOnUserActionListener = listener;
+        void selectTicketTime(String selectedTime);
 
-        initLayout(activity, mScrollLayout);
+        void plusTicketCount();
+
+        void minusTicketCount();
+
+        void editUserInformation();
+
+        void startCreditCardManager();
+
+        void changedPaymentType(PlacePaymentInformation.PaymentType paymentType);
+
+        void doPayment();
+
+        void showInputMobileNumberDialog(String mobileNumber);
+
+        void showCallPopup();
     }
 
-    private void initLayout(BaseActivity activity, View rootLayout)
+    public GourmetPaymentLayout(Context context, OnEventListener mOnEventListener)
     {
-        initTicketInformationLayout(activity, rootLayout);
-        initUserInformationLayout(activity, rootLayout);
-        initPaymentInformationLayout(activity, rootLayout);
+        super(context, mOnEventListener);
+    }
 
-        View payButton = rootLayout.findViewById(R.id.payButton);
-        payButton.setOnClickListener(new View.OnClickListener()
+    @Override
+    protected void initLayout(View view)
+    {
+        initToolbar(view);
+
+        mScrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(mScrollLayout, view.getResources().getColor(R.color.default_over_scroll_edge));
+
+        initTicketInformationLayout(view);
+        initUserInformationLayout(view);
+        initBookingMemo(view);
+        initPaymentInformation(view);
+        initPaymentTypeInformation(view);
+
+        View doPaymentView = view.findViewById(R.id.doPaymentView);
+        doPaymentView.setOnClickListener(this);
+    }
+
+    private void initToolbar(View view)
+    {
+        View toolbar = view.findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
+        mDailyToolbarLayout.initToolbar(null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.doPayment();
-                }
+                mOnEventListener.finish();
+            }
+        });
+
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).showCallPopup();
             }
         });
     }
 
-    public void updatePaymentInformation(GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
+    public void setToolbarTitle(String title)
     {
-        updatePaymentInformationLayout(mActivity, gourmetPaymentInformation, selectedCreditCard);
+        mDailyToolbarLayout.setToolbarText(title);
     }
 
-    private void initTicketInformationLayout(BaseActivity activity, View viewRoot)
+    private void initTicketInformationLayout(View view)
     {
-        if (activity == null || viewRoot == null)
-        {
-            return;
-        }
-
-        // 타입
-        //		TextView ticketTypeTextView = (TextView) viewRoot.findViewById(R.id.ticketTypeTextView);
-
-        // 날짜
-        //		TextView ticketDateTextView = (TextView) viewRoot.findViewById(R.id.ticketDateTextView);
-
+        mTicketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
+        mTicketDateTextView = (TextView) view.findViewById(R.id.ticketDateTextView);
 
         // 방문 시간
-        mTicketTimeTextView = (TextView) viewRoot.findViewById(R.id.ticketTimeTextView);
+        mTicketTimeTextView = (TextView) view.findViewById(R.id.ticketTimeTextView);
         mTicketTimeTextView.setText(R.string.label_booking_select);
-        mTicketTimeTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.selectTicketTime(mTicketTimeTextView.getText().toString());
-                }
-            }
-        });
+        mTicketTimeTextView.setOnClickListener(this);
 
-        View ticketTimeTab = viewRoot.findViewById(R.id.ticketTimeTab);
-        ticketTimeTab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mTicketTimeTextView.performClick();
-            }
-        });
+        View ticketTimeTab = view.findViewById(R.id.ticketTimeTab);
+        ticketTimeTab.setOnClickListener(this);
 
         // 수량
-        mTicketCountTextView = (TextView) viewRoot.findViewById(R.id.ticketCountTextView);
+        mTicketCountTextView = (TextView) view.findViewById(R.id.ticketCountTextView);
 
-        mTicketCountMinusButton = viewRoot.findViewById(R.id.ticketCountMinus);
-        mTicketCountPlusButton = viewRoot.findViewById(R.id.ticketCountPlus);
+        mTicketCountMinusButton = view.findViewById(R.id.ticketCountMinus);
+        mTicketCountPlusButton = view.findViewById(R.id.ticketCountPlus);
 
         setTicketCountMinusButtonEnabled(false);
         setTicketCountPlusButtonEnabled(true);
 
-        mTicketCountMinusButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.minusTicketCount();
-                }
-            }
-        });
-
-        mTicketCountPlusButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.plusTicketCount();
-                }
-            }
-        });
+        mTicketCountMinusButton.setOnClickListener(this);
+        mTicketCountPlusButton.setOnClickListener(this);
     }
 
-    public void updateTicketInformationLayout(BaseActivity activity, GourmetPaymentInformation gourmetPaymentInformation)
+    private void initUserInformationLayout(View view)
     {
-        if (activity == null || gourmetPaymentInformation == null)
-        {
-            return;
-        }
-
-        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
-
-        if (ticketInformation == null)
-        {
-            return;
-        }
-
-        // 타입
-        TextView ticketTypeTextView = (TextView) mScrollLayout.findViewById(R.id.ticketTypeTextView);
-        ticketTypeTextView.setText(ticketInformation.name);
-
-        // 날짜
-        TextView ticketDateTextView = (TextView) mScrollLayout.findViewById(R.id.ticketDateTextView);
-        ticketDateTextView.setText(gourmetPaymentInformation.checkInTime);
-
-        if (gourmetPaymentInformation.ticketTime != 0)
-        {
-            Calendar calendarTime = DailyCalendar.getInstance();
-            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-            calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
-
-            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            // 방문시간
-            mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
-        }
-
-        // 수량
-        mTicketCountTextView.setText(activity.getString(R.string.label_booking_count, gourmetPaymentInformation.ticketCount));
-    }
-
-    private void initUserInformationLayout(BaseActivity activity, View viewRoot)
-    {
-        if (activity == null || viewRoot == null)
-        {
-            return;
-        }
+        mFakeMobileEditView = view.findViewById(R.id.fakeMobileEditView);
 
         // 예약자
-        mUserNameEditText = (EditText) viewRoot.findViewById(R.id.userNameEditText);
+        mUserNameEditText = (EditText) view.findViewById(R.id.userNameEditText);
 
         // 연락처
-        mUserPhoneEditText = (EditText) viewRoot.findViewById(R.id.userPhoneEditText);
+        mUserPhoneEditText = (EditText) view.findViewById(R.id.userPhoneEditText);
 
         // 이메일
-        mUserEmailEditText = (EditText) viewRoot.findViewById(R.id.userEmailEditText);
+        mUserEmailEditText = (EditText) view.findViewById(R.id.userEmailEditText);
 
         mEditTextBackgrounds = new Drawable[3];
         mEditTextBackgrounds[0] = mUserNameEditText.getBackground();
@@ -230,23 +188,78 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         mUserPhoneEditText.setCursorVisible(false);
 
         // 수정
-        View editLayout = viewRoot.findViewById(R.id.editLinearLayout);
-        editLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                v.setVisibility(View.INVISIBLE);
-
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.editUserInformation();
-                }
-            }
-        });
+        View editLayout = view.findViewById(R.id.editLinearLayout);
+        editLayout.setOnClickListener(this);
     }
 
-    protected void updateUserInformationLayout(GourmetPaymentInformation gourmetPaymentInformation)
+    private void initBookingMemo(View view)
+    {
+        mMemoEditText = (EditText) view.findViewById(R.id.memoEditText);
+    }
+
+    private void initPaymentInformation(View view)
+    {
+        mPriceTextView = (TextView) view.findViewById(R.id.originalPriceTextView);
+        mFinalPaymentTextView = (TextView) view.findViewById(R.id.totalPaymentPriceTextView);
+    }
+
+    private void initPaymentTypeInformation(View view)
+    {
+        mSimpleCardLayout = view.findViewById(R.id.simpleCardLayout);
+        mSimpleCardImageView = (ImageView) mSimpleCardLayout.findViewById(R.id.simpleCardImageView);
+        mSimpleCardTextView = (TextView) mSimpleCardLayout.findViewById(R.id.simpleCardTextView);
+        mCardManagerLayout = view.findViewById(R.id.cardManagerLayout);
+        mCardManagerTextView = (TextView) mCardManagerLayout.findViewById(R.id.cardManagerTextView);
+
+        mCardLayout = view.findViewById(R.id.cardLayout);
+        mPhoneLayout = view.findViewById(R.id.phoneLayout);
+        mTransferLayout = view.findViewById(R.id.transferLayout);
+
+        mCardManagerLayout.setOnClickListener(this);
+        mSimpleCardLayout.setOnClickListener(this);
+        mCardLayout.setOnClickListener(this);
+        mPhoneLayout.setOnClickListener(this);
+        mTransferLayout.setOnClickListener(this);
+    }
+
+    public void setTicketInformation(GourmetPaymentInformation gourmetPaymentInformation)
+    {
+        if (gourmetPaymentInformation == null)
+        {
+            return;
+        }
+
+        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+
+        if (ticketInformation == null)
+        {
+            return;
+        }
+
+        // 타입
+        mTicketTypeTextView.setText(ticketInformation.name);
+
+        // 날짜
+        mTicketDateTextView.setText(gourmetPaymentInformation.checkInTime);
+
+        if (gourmetPaymentInformation.ticketTime != 0)
+        {
+            Calendar calendarTime = DailyCalendar.getInstance();
+            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+            calendarTime.setTimeInMillis(gourmetPaymentInformation.ticketTime);
+
+            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            // 방문시간
+            mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
+        }
+
+        // 수량
+        mTicketCountTextView.setText(mContext.getString(R.string.label_booking_count, gourmetPaymentInformation.ticketCount));
+    }
+
+    protected void setUserInformation(GourmetPaymentInformation gourmetPaymentInformation)
     {
         if (gourmetPaymentInformation == null)
         {
@@ -264,7 +277,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         mUserNameEditText.setText(guest.name);
 
         // 연락처
-        mUserPhoneEditText.setText(Util.addHippenMobileNumber(mActivity, guest.phone));
+        mUserPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
 
         // 이메일
         mUserEmailEditText.setText(guest.email);
@@ -273,108 +286,48 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
     /**
      * @param mobileNumber
      */
-    public void updateUserInformationLayout(String mobileNumber)
+    public void setUserPhoneInformation(String mobileNumber)
     {
-        mUserPhoneEditText.setText(Util.addHippenMobileNumber(mActivity, mobileNumber));
+        mUserPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
     }
 
-    private void initPaymentInformationLayout(BaseActivity activity, View viewRoot)
+    public void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
     {
-        if (activity == null || viewRoot == null)
+        if (gourmetPaymentInformation == null)
         {
             return;
         }
 
-        // 결제금액
-        mTicketPaymentTextView = (TextView) viewRoot.findViewById(R.id.ticketPaymentTextView);
+        setPaymentInformation(gourmetPaymentInformation);
 
-        // 라디오 그룹
-        mPaymentGroup = (RadioGroup) viewRoot.findViewById(R.id.paymentRadioGroup);
-
-        mEasyPaymentButton = (RadioButton) viewRoot.findViewById(R.id.easyPaymentRadioButton);
-        mCardPaymentButton = (RadioButton) viewRoot.findViewById(R.id.cardPaymentRadionButton);
-        mHpPaymentButton = (RadioButton) viewRoot.findViewById(R.id.hpPaymentRadioButton);
-        mAccountPaymentButton = (RadioButton) viewRoot.findViewById(R.id.accountPaymentRadioButton);
-
-        // 간편결제 관리
-        mCardManagerButton = viewRoot.findViewById(R.id.cardManagerButton);
-        mCardManagerButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.showCreditCardManager();
-                }
-            }
-        });
-
-        mPaymentGroup.check(mEasyPaymentButton.getId());
-        mEasyPaymentButton.setText(R.string.label_booking_easypayment);
-
-        mPaymentGroup.setOnCheckedChangeListener(this);
-    }
-
-    public void updatePaymentInformationLayout(BaseActivity activity, GourmetPaymentInformation gourmetPaymentInformation, CreditCard selectedCreditCard)
-    {
-        if (activity == null || gourmetPaymentInformation == null)
-        {
-            return;
-        }
-
-        updatePaymentInformationLayout(activity, gourmetPaymentInformation);
-
-        // 라디오 그룹
-
-        // 간편결제 관리
         if (selectedCreditCard == null)
         {
-            // 카드 관리 관련 화면을 보여주지 않는다.
-            mCardManagerButton.setVisibility(View.INVISIBLE);
-            mEasyPaymentButton.setText(R.string.label_booking_easypayment);
+            ((View) mSimpleCardLayout.getParent()).setSelected(false);
+            mSimpleCardLayout.setSelected(false);
+
+            mCardManagerTextView.setText(R.string.label_register_card);
+            mSimpleCardImageView.setImageResource(R.drawable.payment_ic_01_add_card_plus);
+            mSimpleCardTextView.setText(R.string.label_booking_easypayment);
         } else
         {
-            mCardManagerButton.setVisibility(View.VISIBLE);
-            mEasyPaymentButton.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
+            mCardManagerTextView.setText(R.string.label_manager);
+            mSimpleCardImageView.setImageResource(R.drawable.selector_simplecard_button);
+            mSimpleCardTextView.setText(String.format("%s %s", selectedCreditCard.name.replace("카드", ""), selectedCreditCard.number));
         }
     }
 
-    public void updatePaymentInformationLayout(BaseActivity activity, GourmetPaymentInformation gourmetPaymentInformation)
+    public void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
     {
-        if (activity == null || gourmetPaymentInformation == null)
+        if (gourmetPaymentInformation == null)
         {
             return;
         }
-
-        DecimalFormat comma = new DecimalFormat("###,##0");
-        String price = comma.format(gourmetPaymentInformation.getPaymentToPay()) + activity.getString(R.string.currency);
 
         // 결제금액
-        mTicketPaymentTextView.setText(price);
-    }
+        String price = Util.getPriceFormat(mContext, gourmetPaymentInformation.getPaymentToPay());
 
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId)
-    {
-        if (mOnUserActionListener == null)
-        {
-            return;
-        }
-
-        if (checkedId == mEasyPaymentButton.getId())
-        {
-            mOnUserActionListener.changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
-        } else if (checkedId == mCardPaymentButton.getId())
-        {
-            mOnUserActionListener.changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
-        } else if (checkedId == mHpPaymentButton.getId())
-        {
-            mOnUserActionListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
-        } else if (checkedId == mAccountPaymentButton.getId())
-        {
-            mOnUserActionListener.changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
-        }
+        mPriceTextView.setText(price);
+        mFinalPaymentTextView.setText(price);
     }
 
     public void setTicketCount(int count)
@@ -384,7 +337,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
             return;
         }
 
-        mTicketCountTextView.setText(mActivity.getString(R.string.label_booking_count, count));
+        mTicketCountTextView.setText(mContext.getString(R.string.label_booking_count, count));
     }
 
     public void setTicketCountMinusButtonEnabled(boolean isEnabled)
@@ -445,7 +398,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         return guest;
     }
 
-    public void requestUserInformationFocus(UserInformationType type)
+    public void requestUserInformationFocus(Constants.UserInformationType type)
     {
         switch (type)
         {
@@ -470,7 +423,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
             mUserNameEditText.setEnabled(true);
 
             // 회원 가입시 이름 필터 적용.
-            StringFilter stringFilter = new StringFilter(mActivity);
+            StringFilter stringFilter = new StringFilter(mContext);
             InputFilter[] allowAlphanumericHangul = new InputFilter[2];
             allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
             allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
@@ -504,17 +457,9 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
                 @Override
                 public void onFocusChange(View v, boolean hasFocus)
                 {
-                    if (mActivity.isFinishing() == true)
-                    {
-                        return;
-                    }
-
                     if (hasFocus == true)
                     {
-                        if (mOnUserActionListener != null)
-                        {
-                            mOnUserActionListener.showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
-                        }
+                        ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
                     } else
                     {
                         mUserPhoneEditText.setSelected(false);
@@ -522,32 +467,8 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
                 }
             });
 
-            View fakeMobileEditView = mScrollLayout.findViewById(R.id.fakeMobileEditView);
-
-            fakeMobileEditView.setFocusable(true);
-            fakeMobileEditView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (mActivity.isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    if (mUserPhoneEditText.isSelected() == true)
-                    {
-                        if (mOnUserActionListener != null)
-                        {
-                            mOnUserActionListener.showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
-                        }
-                    } else
-                    {
-                        mUserPhoneEditText.requestFocus();
-                        mUserPhoneEditText.setSelected(true);
-                    }
-                }
-            });
+            mFakeMobileEditView.setFocusable(true);
+            mFakeMobileEditView.setOnClickListener(this);
         }
 
         if (mUserEmailEditText != null && mUserEmailEditText.isEnabled() == false)
@@ -571,12 +492,7 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
                     {
                         textView.clearFocus();
 
-                        if (mActivity.getWindow() == null || mActivity.getWindow().getDecorView() == null || mActivity.getWindow().getDecorView().getWindowToken() == null)
-                        {
-                            return false;
-                        }
-
-                        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
                         return true;
                     } else
@@ -588,34 +504,53 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         }
     }
 
-    public void checkPaymentType(PlacePaymentInformation.PaymentType type)
+    public void checkPaymentType(PlacePaymentInformation.PaymentType paymentType)
     {
-        if (mPaymentGroup == null || type == null)
-        {
-            return;
-        }
-
-        switch (type)
+        switch (paymentType)
         {
             case EASY_CARD:
-                mPaymentGroup.check(mEasyPaymentButton.getId());
+            {
+                ((View) mSimpleCardLayout.getParent()).setSelected(true);
+                mSimpleCardLayout.setSelected(true);
+                mCardLayout.setSelected(false);
+                mPhoneLayout.setSelected(false);
+                mTransferLayout.setSelected(false);
                 break;
+            }
 
             case CARD:
-                mPaymentGroup.check(mCardPaymentButton.getId());
+            {
+                ((View) mSimpleCardLayout.getParent()).setSelected(false);
+                mSimpleCardLayout.setSelected(false);
+                mCardLayout.setSelected(true);
+                mPhoneLayout.setSelected(false);
+                mTransferLayout.setSelected(false);
                 break;
+            }
 
             case PHONE_PAY:
-                mPaymentGroup.check(mHpPaymentButton.getId());
+            {
+                ((View) mSimpleCardLayout.getParent()).setSelected(false);
+                mSimpleCardLayout.setSelected(false);
+                mCardLayout.setSelected(false);
+                mPhoneLayout.setSelected(true);
+                mTransferLayout.setSelected(false);
                 break;
+            }
 
             case VBANK:
-                mPaymentGroup.check(mAccountPaymentButton.getId());
+            {
+                ((View) mSimpleCardLayout.getParent()).setSelected(false);
+                mSimpleCardLayout.setSelected(false);
+                mCardLayout.setSelected(false);
+                mPhoneLayout.setSelected(false);
+                mTransferLayout.setSelected(true);
                 break;
+            }
         }
 
-        AnalyticsManager.getInstance(mActivity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-            , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, type.getName(), null);
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+            , AnalyticsManager.Action.PAYMENT_TYPE_ITEM_CLICKED, paymentType.getName(), null);
     }
 
     public void scrollTop()
@@ -628,11 +563,67 @@ public class GourmetPaymentLayout implements OnCheckedChangeListener
         mScrollLayout.scrollTo(0, 0);
     }
 
-
-    public enum UserInformationType
+    @Override
+    public void onClick(View v)
     {
-        NAME,
-        PHONE,
-        EMAIL
+        switch (v.getId())
+        {
+            case R.id.fakeMobileEditView:
+            {
+                if (mUserPhoneEditText.isSelected() == true)
+                {
+                    ((OnEventListener) mOnEventListener).showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
+                } else
+                {
+                    mUserPhoneEditText.requestFocus();
+                    mUserPhoneEditText.setSelected(true);
+                }
+                break;
+            }
+
+            case R.id.editLinearLayout:
+                ((OnEventListener) mOnEventListener).editUserInformation();
+                break;
+
+            case R.id.ticketCountMinus:
+                ((OnEventListener) mOnEventListener).minusTicketCount();
+                break;
+
+            case R.id.ticketCountPlus:
+                ((OnEventListener) mOnEventListener).plusTicketCount();
+                break;
+
+            case R.id.ticketTimeTab:
+                mTicketTimeTextView.performClick();
+                break;
+
+            case R.id.ticketTimeTextView:
+                ((OnEventListener) mOnEventListener).selectTicketTime(mTicketTimeTextView.getText().toString());
+                break;
+
+            case R.id.simpleCardLayout:
+                ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
+                break;
+
+            case R.id.cardLayout:
+                ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.CARD);
+                break;
+
+            case R.id.phoneLayout:
+                ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
+                break;
+
+            case R.id.transferLayout:
+                ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.VBANK);
+                break;
+
+            case R.id.doPaymentView:
+                ((OnEventListener) mOnEventListener).doPayment();
+                break;
+
+            case R.id.cardManagerLayout:
+                ((OnEventListener) mOnEventListener).startCreditCardManager();
+                break;
+        }
     }
 }

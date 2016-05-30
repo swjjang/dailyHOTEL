@@ -65,6 +65,13 @@ public interface Constants
         GONE // 목록이 비어있는 경우.
     }
 
+    public enum UserInformationType
+    {
+        NAME,
+        PHONE,
+        EMAIL
+    }
+
     public static String DAILY_USER = "normal";
     public static String KAKAO_USER = "kakao_talk";
     public static String FACEBOOK_USER = "facebook";
@@ -96,7 +103,7 @@ public interface Constants
     public static final String URL_WEB_ABOUT = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/about/" : "OTkkMjQkMjQkNjAkNjgk$Mjc3NTgwNDUzNTEwQzdERkM1WYQzMyQkIxNzhENTk0N0M3RjdFMzYyMDJBNDKc2MjM3NJkU1NzhBOERDMzUyRUZDNzZDODUxNDQ5QkMUzQzMwQkJERTZFNDY4NTU1RDJEODFD$";
     public static final String URL_WEB_LOCATION_TERMS = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/location/" : "NDAkNDYkMTA1JDExNiQ1MyQ=$RTZFQTM1NkJCOEQzMEJCNDZFQTYwOUUzMkJEQzEzTMEQzNFjk4NzAA2NjZDNEY5REUxMzAxMTg1QjhFMUU2QzkyRUMwRDFCMDExRjExN0IG5RkFERkY0RBjM0NERBNEIyMjNB$";
     public static final String URL_WEB_CHILD_PROTECT_TERMS = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/child_protect_160404/" : "MTE5JDEyNCQxMzIkOTYkNjgk$RTM2QTgwQUFEQTA3QjZENzA5NDAxMkQ4NDk4QUI0MjFGQjQ1MEQ1MzZDRDk1QUU5QzhCFOTcwNTI0Q0UyNDI5N0QxRUE0Mjk4NQ0JGQUJDNkMyOTEzOTA1QkIBwN0EJ3QjFEQzWJGM0I1Mjk3NUJCREQ5QzExMDJERjM4REZCOEI4REM=$";
-    public static final String URL_WEB_BONUS_TERMS = UNENCRYPTED_URL ? "http://14.63.184.15:5027/webview_cnote/bonus" : "NTYkNjAkMTQkMTUkMTYk$N0FGMDU3MDkzMzEFElBRkYwREM5QjJCQ0QwNDcyNjk4NEQwMURBQTQ1MzhGGMzQM2RkE5NzhGQTA2NEMwNTYyRjMyMjUzMUFDQTMxMENBNkNDMjFBQzZBQjkyRDIwRDE2RDNE$";
+    public static final String URL_WEB_BONUS_TERMS = UNENCRYPTED_URL ? "http://dailyhotel.kr/webview_cnote/bonus" : "MjYkMTkkOTAkNDckNiQ=$NjU1QzDlCRUYyOENCOUYW4MTdDMDZFFNEVFRjQwNTZCMkMyNYjg1OTg1OTlDNTdGOUM0MkQxNTg0MTE4QzdDQTMyQzk5WMDI0MjBENjYzQzIyMUQ0MDlFRDMxRDA5MDQwMUU3$";
 
     // Payment App GoogleStore URL
     public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";

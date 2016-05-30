@@ -107,7 +107,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
      */
     public int getPaymentToPay()
     {
-        int price = (mTicketInformation.discountPrice * ticketCount) - (isEnabledBonus ? bonus : 0);
+        int price = (mTicketInformation.discountPrice * ticketCount) - (isUsedBonus ? bonus : 0);
 
         if (price < 0)
         {
