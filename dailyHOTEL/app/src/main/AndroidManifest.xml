@@ -312,6 +312,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Dialog"/>
         <activity
+            android:name=".screen.information.coupon.CouponTermActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.event.EventListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

@@ -27,6 +27,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_ITEM = 2;
 
+    private static final int HEADER_COUNT = 1;
+
     private List<Coupon> mList;
     private Context mContext;
     private OnCouponItemListener mListener;
@@ -64,13 +66,17 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     public Coupon getItem(int position)
     {
+        if (position > 0)
+        {
+            position = position - HEADER_COUNT;
+        }
         return mList.get(position);
     }
 
     @Override
     public int getItemCount()
     {
-        return mList == null ? 0 : mList.size();
+        return mList == null ? 0 : mList.size() + HEADER_COUNT;
     }
 
     @Override
