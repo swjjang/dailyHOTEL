@@ -33,7 +33,7 @@ public class CouponListNetworkController extends BaseNetworkController
      */
     public void requestCouponList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestOwnCouponList(mNetworkTag, null, mCouponListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, null, mCouponListJsonResponseListener, this);
     }
 
     private ArrayList<Coupon> makeCouponList(JSONArray jsonArray) throws JSONException
