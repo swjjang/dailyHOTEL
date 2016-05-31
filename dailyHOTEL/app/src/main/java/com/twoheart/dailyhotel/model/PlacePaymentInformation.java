@@ -5,11 +5,11 @@ import android.os.Parcelable;
 
 public abstract class PlacePaymentInformation implements Parcelable
 {
-    public int placeIndex;
-    public int bonus;
-    public boolean isUsedBonus;
-    public boolean isUsedCoupon;
-    public PaymentType paymentType;
+    public int placeIndex; // 호텔 호텔인덱스 고메 고메 인덱스
+    public int bonus; // 적립금
+    public boolean isUsedBonus; // 적립금을 사용할 경우
+    public boolean isUsedCoupon; // 쿠폰을 사용할 경우
+    public PaymentType paymentType; //
     public boolean isDBenefit;
 
     private Coupon mCoupon;
