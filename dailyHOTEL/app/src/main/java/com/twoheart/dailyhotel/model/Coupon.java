@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,14 +50,26 @@ public class Coupon implements Parcelable
 
     public String getExpiredString(String startTime, String endTime)
     {
-        Date startDate = new Date(startTime);
-        Date endDate = new Date(endTime);
+        String expireString = "";
+        try
+        {
+            Date startDate = Util.getISO8601Date(startTime);
+            Date endDate = Util.getISO8601Date(startTime);
+
+            //        Date startDate = new Date(startTime);
+            //        Date endDate = new Date(endTime);
 
 
+            String strStart = getTimezoneDateFormat("yyyy.MM.dd").format(startDate);
+            String strEnd = getTimezoneDateFormat("yyyy.MM.dd").format(endDate);
+            expireString = strStart + " ~ " + strEnd;
 
-        String strStart = getTimezoneDateFormat("yyyy.MM.dd").format(startDate);
-        String strEnd = getTimezoneDateFormat("yyyy.MM.dd").format(endDate);
-        return strStart + " ~ " + strEnd;
+        } catch (Exception e)
+        {
+            ExLog.e(e.getMessage());
+        }
+
+        return expireString;
     }
 
     /**
@@ -70,9 +83,19 @@ public class Coupon implements Parcelable
     public int getDueDate(Context context, String currentTime, String endTime)
     {
         int dayCount = -1;
+        Date currentDate;
+        Date endDate;
+        try
+        {
+            currentDate = Util.getISO8601Date(currentTime);
+            endDate = Util.getISO8601Date(endTime);
+        } catch (Exception e) {
+            ExLog.e(e.getMessage());
 
-        Date currentDate = new Date(currentTime);
-        Date endDate = new Date(endTime);
+            currentDate = new Date();
+            endDate = new Date();
+        }
+
         long gap = endDate.getTime() - currentDate.getTime();
 
         if (gap <= 0)

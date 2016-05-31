@@ -67,8 +67,8 @@ public class CouponHistoryNetworkController extends BaseNetworkController
         try
         {
             String code = jsonObject.getString("code"); // 쿠폰 별칭 코드
-            Long validFrom = jsonObject.getLong("validFrom"); // 쿠폰 시작 시간
-            Long validTo = jsonObject.getLong("validTo"); // 유효기간, 만료일, 쿠폰 만료시간
+            String validFrom = jsonObject.getString("validFrom"); // 쿠폰 시작 시간
+            String validTo = jsonObject.getString("validTo"); // 유효기간, 만료일, 쿠폰 만료시간
             String title = jsonObject.getString("title");
             String warning = jsonObject.getString("warning"); // 유의사항
             int amount = jsonObject.getInt("amount"); // 쿠폰가격
@@ -111,7 +111,7 @@ public class CouponHistoryNetworkController extends BaseNetworkController
                     JSONObject data = response.getJSONObject("data");
                     if (data != null)
                     {
-                        JSONArray couponList = response.getJSONArray("coupons");
+                        JSONArray couponList = data.getJSONArray("coupons");
 
                         list = makeCouponHistoryList(couponList);
 
