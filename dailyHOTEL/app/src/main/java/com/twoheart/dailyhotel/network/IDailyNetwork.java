@@ -528,5 +528,15 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestCouponList(Object tag,Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCouponList(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     * /api/v3/users/coupons/history
+     * 자신이 소유한 Coupon List
+     *
+     * @param tag
+     * @param listener
+     * @param errorListener
+     */
+    void requestCouponHistoryList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 }

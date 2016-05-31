@@ -6,7 +6,10 @@ import android.os.Bundle;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+
+import java.util.List;
 
 /**
  * Created by Sam Lee on 2016. 5. 23..
@@ -36,6 +39,10 @@ public class CouponHistoryActivity extends BaseActivity
     protected void onResume()
     {
         super.onResume();
+
+        lockUI();
+
+        mCouponHistoryNetworkController.requestCouponHistoryList();
     }
 
     @Override
@@ -64,6 +71,14 @@ public class CouponHistoryActivity extends BaseActivity
     // ///////////////////////////////////////////////////
     private CouponHistoryNetworkController.OnNetworkControllerListener mNetworkControllerListener = new CouponHistoryNetworkController.OnNetworkControllerListener()
     {
+
+        @Override
+        public void onCouponHistoryList(List<Coupon> list)
+        {
+            mCouponHistoryLayout.setData(list);
+
+            unLockUI();
+        }
 
         @Override
         public void onErrorResponse(VolleyError volleyError)
