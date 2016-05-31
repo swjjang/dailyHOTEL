@@ -675,7 +675,9 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
                 } else if (DailyDeepLink.getInstance().isEventView() == true//
-                    || DailyDeepLink.getInstance().isBonusView() == true)
+                    || DailyDeepLink.getInstance().isBonusView() == true//
+                    || DailyDeepLink.getInstance().isEventDetailView() == true//
+                    || DailyDeepLink.getInstance().isCouponView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)
