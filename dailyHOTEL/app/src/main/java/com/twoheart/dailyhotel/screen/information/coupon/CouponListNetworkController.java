@@ -114,16 +114,19 @@ public class CouponListNetworkController extends BaseNetworkController
                 {
                     boolean hasData = response.has("data");
 
-                    if (hasData == true) {
-
+                    if (hasData == true)
+                    {
                         JSONObject data = response.getJSONObject("data");
                         if (data != null)
                         {
                             JSONArray couponList = data.getJSONArray("coupons");
 
                             list = makeCouponList(couponList);
-
                         }
+
+                    } else
+                    {
+                        ExLog.d("response has not data");
                     }
 
                 } else

@@ -28,7 +28,8 @@ public class CouponHistoryNetworkController extends BaseNetworkController
 
     }
 
-    public void requestCouponHistoryList() {
+    public void requestCouponHistoryList()
+    {
         DailyNetworkAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, mCouponHistoryJsonResponseListener, this);
     }
 
@@ -108,13 +109,21 @@ public class CouponHistoryNetworkController extends BaseNetworkController
 
                 if (msgCode == 100)
                 {
-                    JSONObject data = response.getJSONObject("data");
-                    if (data != null)
+                    boolean hasData = response.has("data");
+
+                    if (hasData == true)
                     {
-                        JSONArray couponList = data.getJSONArray("coupons");
+                        JSONObject data = response.getJSONObject("data");
+                        if (data != null)
+                        {
+                            JSONArray couponList = data.getJSONArray("coupons");
 
-                        list = makeCouponHistoryList(couponList);
+                            list = makeCouponHistoryList(couponList);
+                        }
 
+                    } else
+                    {
+                        ExLog.d("response has not data");
                     }
 
                 } else

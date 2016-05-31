@@ -40,8 +40,6 @@ public class CouponHistoryLayout extends BaseLayout
     {
         initToolbar(view);
         initListView(view);
-
-        setData(new ArrayList<Coupon>());
     }
 
     private void initToolbar(View view)
