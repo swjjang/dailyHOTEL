@@ -544,6 +544,16 @@ interface IDailyNetwork
     void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
+     * /api/v3/users/coupons/history
+     * 자신이 소유한 Coupon List
+     *
+     * @param tag
+     * @param listener
+     * @param errorListener
+     */
+    void requestCouponHistoryList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
      * 혜택 알림을 받아야 하는지 알려준다.
      *
      * @param tag

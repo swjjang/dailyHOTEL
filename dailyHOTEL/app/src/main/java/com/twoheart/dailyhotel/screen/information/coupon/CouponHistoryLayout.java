@@ -83,7 +83,6 @@ public class CouponHistoryLayout extends BaseLayout
         {
             mListAdapter = new CouponHistoryListAdapter(mContext, new ArrayList<Coupon>());
             mEmptyView.setVisibility(View.VISIBLE);
-
         }
 
         mRecyclerView.setAdapter(mListAdapter);
