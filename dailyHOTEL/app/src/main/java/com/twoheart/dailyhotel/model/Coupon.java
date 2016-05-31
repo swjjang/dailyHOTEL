@@ -8,8 +8,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by Sam Lee on 2016. 5. 19..
@@ -24,8 +22,8 @@ public class Coupon implements Parcelable
     public String code; // 쿠폰 별칭 코드
     public int amount; // 쿠폰금액
     public String title; //설명 ??  있을지수도 있고 없을수도 있음???
-    public long validFrom; // 시작시간
-    public long validTo; // 만료시간
+    public String validFrom; // 시작시간
+    public String validTo; // 만료시간
     public int amountMinimum; // 최소주문금액
     public String isDownloaded; // 상태표시
     public String useablePlace; // 사용가능처
@@ -36,7 +34,7 @@ public class Coupon implements Parcelable
         readFromParcel(in);
     }
 
-    public Coupon(String code, int amount, String title, long validFrom, long validTo, int amountMinimum, String isDownloaded, String useablePlace, String warring)
+    public Coupon(String code, int amount, String title, String validFrom, String validTo, int amountMinimum, String isDownloaded, String useablePlace, String warring)
     {
         this.code = code;
         this.amount = amount;
@@ -49,10 +47,12 @@ public class Coupon implements Parcelable
         this.warring = warring;
     }
 
-    public String getExpiredString(long startTime, long endTime)
+    public String getExpiredString(String startTime, String endTime)
     {
         Date startDate = new Date(startTime);
         Date endDate = new Date(endTime);
+
+
 
         String strStart = getTimezoneDateFormat("yyyy.MM.dd").format(startDate);
         String strEnd = getTimezoneDateFormat("yyyy.MM.dd").format(endDate);
@@ -67,11 +67,13 @@ public class Coupon implements Parcelable
      * @param endTime     쿠폰 만료일
      * @return -1 기간만료, 0 당일만료, 그 이외 숫자 남은 일자
      */
-    public int getDueDate(Context context, long currentTime, long endTime)
+    public int getDueDate(Context context, String currentTime, String endTime)
     {
         int dayCount = -1;
 
-        long gap = endTime - currentTime;
+        Date currentDate = new Date(currentTime);
+        Date endDate = new Date(endTime);
+        long gap = endDate.getTime() - currentDate.getTime();
 
         if (gap <= 0)
         {
@@ -88,9 +90,12 @@ public class Coupon implements Parcelable
 
     public SimpleDateFormat getTimezoneDateFormat(String datePattern)
     {
-        SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
-        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sFormat;
+
+        SimpleDateFormat format = new SimpleDateFormat(datePattern);
+        return format;
+//        SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
+//        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        return sFormat;
     }
 
 
@@ -100,8 +105,8 @@ public class Coupon implements Parcelable
         dest.writeString(code);
         dest.writeInt(amount);
         dest.writeString(title);
-        dest.writeLong(validFrom);
-        dest.writeLong(validTo);
+        dest.writeString(validFrom);
+        dest.writeString(validTo);
         dest.writeInt(amountMinimum);
         dest.writeString(isDownloaded);
         dest.writeString(useablePlace);
@@ -113,8 +118,8 @@ public class Coupon implements Parcelable
         code = in.readString();
         amount = in.readInt();
         title = in.readString();
-        validFrom = in.readLong();
-        validTo = in.readLong();
+        validFrom = in.readString();
+        validTo = in.readString();
         amountMinimum = in.readInt();
         isDownloaded = in.readString();
         useablePlace = in.readString();

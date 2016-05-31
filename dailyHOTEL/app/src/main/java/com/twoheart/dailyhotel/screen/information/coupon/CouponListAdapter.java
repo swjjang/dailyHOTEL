@@ -33,7 +33,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mContext;
     private OnCouponItemListener mListener;
 
-    private long mCurrentTimeMillis; // 현재 시간 -  계산되는 현재시간을 통일 하기 위해 어뎁터 생성시 현재시간으로 통일
+    private String mCurrentTimeMillis; // 현재 시간 -  계산되는 현재시간을 통일 하기 위해 어뎁터 생성시 현재시간으로 통일 type ISO-8601 타입의 String
 
     public interface OnCouponItemListener
     {
@@ -55,7 +55,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mList = list;
         mListener = listener;
-        mCurrentTimeMillis = System.currentTimeMillis();
+        mCurrentTimeMillis = Util.getISO8601String(System.currentTimeMillis());
     }
 
     /**
