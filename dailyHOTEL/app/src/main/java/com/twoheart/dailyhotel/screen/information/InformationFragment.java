@@ -76,14 +76,20 @@ public class InformationFragment extends BaseFragment implements Constants
         {
             if (DailyDeepLink.getInstance().isEventView() == true)
             {
-                startActivity(new Intent(getContext(), EventListActivity.class));
+                mOnEventListener.startEvent();
             } else if (DailyDeepLink.getInstance().isBonusView() == true)
             {
-                startActivity(new Intent(getContext(), BonusActivity.class));
+                mOnEventListener.startBonusList();
             } else if (DailyDeepLink.getInstance().isSingUpView() == true)
             {
-                Intent intent = SignupStep1Activity.newInstance(getContext(), DailyDeepLink.getInstance().getRecommenderCode());
-                startActivity(intent);
+                startSignUp(DailyDeepLink.getInstance().getRecommenderCode());
+            } else if (DailyDeepLink.getInstance().isCouponView() == true)
+            {
+                mOnEventListener.startCouponList();
+            } else if (DailyDeepLink.getInstance().isEventDetailView() == true)
+            {
+                mOnEventListener.startEvent();
+                return;
             }
 
             DailyDeepLink.getInstance().clear();
@@ -113,6 +119,31 @@ public class InformationFragment extends BaseFragment implements Constants
         unregisterReceiver();
     }
 
+    private void startSignUp(String recommenderCode)
+    {
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        Intent intent;
+
+        if (Util.isTextEmpty(recommenderCode) == true)
+        {
+            intent = SignupStep1Activity.newInstance(baseActivity);
+        } else
+        {
+            intent = SignupStep1Activity.newInstance(baseActivity, recommenderCode);
+        }
+
+        startActivity(intent);
+        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+    }
+
     /////////////////////////////////////////////////////////////////
     // EventListener
     /////////////////////////////////////////////////////////////////
@@ -140,17 +171,7 @@ public class InformationFragment extends BaseFragment implements Constants
         @Override
         public void startSignUp()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            Intent intent = SignupStep1Activity.newInstance(baseActivity);
-            startActivity(intent);
+            InformationFragment.this.startSignUp(null);
         }
 
         @Override
