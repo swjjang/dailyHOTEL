@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spannable;
@@ -18,6 +19,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -52,6 +54,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -62,6 +65,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -551,7 +555,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private void startCouponPopup()
     {
-        //        startActivityForResult(null, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
+        Intent intent = SelectCouponDialogActivity.newInstance(this);
+
+        startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
     }
 
     private void setPaymentType()
@@ -781,6 +787,39 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setEnabled(false);
+
+        // 화면이 작은 곳에서 스크롤 뷰가 들어가면서 발생하는 이슈
+        final DailyScrollView scrollLayout = (DailyScrollView) finalCheckLayout.findViewById(R.id.scrollLayout);
+
+        if (scrollLayout != null)
+        {
+            View dailySignatureView = finalCheckLayout.getDailySignatureView();
+
+            dailySignatureView.setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v, MotionEvent event)
+                {
+                    switch (event.getAction() & MotionEventCompat.ACTION_MASK)
+                    {
+                        case MotionEvent.ACTION_DOWN:
+                        {
+                            scrollLayout.setScrollingEnabled(false);
+                            break;
+                        }
+
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                        {
+                            scrollLayout.setScrollingEnabled(true);
+                            break;
+                        }
+                    }
+
+                    return false;
+                }
+            });
+        }
 
         finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
         {
@@ -1463,6 +1502,31 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         String label = String.format("%s-%s", hotelPaymentInformation.getSaleRoomInformation().hotelName, hotelPaymentInformation.getSaleRoomInformation().roomName);
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.PAYMENT_CLICKED, label, null);
+    }
+
+    @Override
+    protected void setCoupon(final Coupon coupon)
+    {
+        final HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+
+        int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
+
+        if (coupon.amount > originalPrice)
+        {
+            showSimpleDialog(null, getString(R.string.message_over_coupon_price), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    setCouponSelected(true);
+                    hotelPaymentInformation.setCoupon(coupon);
+                }
+            }, null);
+        } else
+        {
+            setCouponSelected(true);
+            hotelPaymentInformation.setCoupon(coupon);
+        }
     }
 
     private int[] paymentDialogMessage(int messageType, int[] currentMessages)
