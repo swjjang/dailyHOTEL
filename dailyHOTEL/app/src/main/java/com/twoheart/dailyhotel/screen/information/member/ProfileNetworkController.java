@@ -7,6 +7,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -64,8 +65,7 @@ public class ProfileNetworkController extends BaseNetworkController
 
                 if (isVerified == true && isPhoneVerified == true)
                 {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
-                    Date date = simpleDateFormat.parse(response.getString("phone_verified_at"));
+                    Date date = Util.getISO8601Date(response.getString("phone_verified_at"));
 
                     SimpleDateFormat verifiedSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
                     verifiedDate = verifiedSimpleDateFormat.format(date);

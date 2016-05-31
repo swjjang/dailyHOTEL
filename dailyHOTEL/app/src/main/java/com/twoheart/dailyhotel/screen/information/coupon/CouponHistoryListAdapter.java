@@ -21,7 +21,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 {
     private Context mContext;
     private List<Coupon> mCouponList;
-    private long mCurrentTimeMillis; // 현재 시간 -  계산되는 현재시간을 통일 하기 위해 어뎁터 생성시 현재시간으로 통일
+    private String mCurrentTimeMillis; // 현재 시간 -  계산되는 현재시간을 통일 하기 위해 어뎁터 생성시 현재시간으로 통일 type ISO-8601타입의 String
 
     public CouponHistoryListAdapter(Context context, List<Coupon> list)
     {
@@ -34,7 +34,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         mCouponList = list;
 
-        mCurrentTimeMillis = System.currentTimeMillis();
+        mCurrentTimeMillis = Util.getISO8601String(System.currentTimeMillis());
     }
 
     /**
