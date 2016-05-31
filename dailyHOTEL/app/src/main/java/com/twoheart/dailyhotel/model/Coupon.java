@@ -89,7 +89,8 @@ public class Coupon implements Parcelable
         {
             currentDate = Util.getISO8601Date(currentTime);
             endDate = Util.getISO8601Date(endTime);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             ExLog.e(e.getMessage());
 
             currentDate = new Date();
@@ -116,9 +117,9 @@ public class Coupon implements Parcelable
 
         SimpleDateFormat format = new SimpleDateFormat(datePattern);
         return format;
-//        SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
-//        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-//        return sFormat;
+        //        SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
+        //        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //        return sFormat;
     }
 
 

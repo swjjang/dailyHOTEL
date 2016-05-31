@@ -119,7 +119,6 @@ public class SelectCouponNetworkController extends BaseNetworkController
                         list = makeCouponList(couponList);
 
                     }
-
                 } else
                 {
                     String message = response.getString("msg");

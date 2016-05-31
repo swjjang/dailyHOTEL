@@ -59,6 +59,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -1133,26 +1134,48 @@ public class Util implements Constants
 
     public static Date getISO8601Date(String time) throws ParseException, NullPointerException
     {
-        if (isTextEmpty(time))
+        if (isTextEmpty(time) == true)
         {
             throw new NullPointerException("time is empty");
         }
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
-        Date date = simpleDateFormat.parse(time);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-        return date;
+        return simpleDateFormat.parse(time);
     }
 
     public static String getISO8601String(long time)
     {
-
         Date date = new Date(time);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
-        String strDate = simpleDateFormat.format(date);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-        return strDate;
+        return simpleDateFormat.format(date);
+    }
+
+    public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException,  NullPointerException
+    {
+        if(Util.isTextEmpty(iso8601, format) == true)
+        {
+            throw new NullPointerException("iso8601, format is empty");
+        }
+
+        Date date = getISO8601Date(iso8601);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+        return simpleDateFormat.format(date);
+    }
+
+    public static String getISO8601String(Date date)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+        return simpleDateFormat.format(date);
     }
 
     public static String getISO8601String(String strTime) throws NumberFormatException, NullPointerException
