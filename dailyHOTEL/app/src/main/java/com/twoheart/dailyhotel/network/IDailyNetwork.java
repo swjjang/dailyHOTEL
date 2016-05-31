@@ -19,9 +19,8 @@ interface IDailyNetwork
      *
      * @param tag
      * @param listener
-     * @param errorListener
      */
-    void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * common/ver_dual
@@ -29,7 +28,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * api/common/code/review
@@ -536,8 +535,8 @@ interface IDailyNetwork
      * @param tag
      * @param hotelIdx
      * @param roomIdx
-     * @param checkIn ISO-8601
-     * @param checkOut ISO-8601
+     * @param checkIn       ISO-8601
+     * @param checkOut      ISO-8601
      * @param listener
      * @param errorListener
      */
@@ -557,9 +556,19 @@ interface IDailyNetwork
      * 혜택 알림을 받아야 하는지 알려준다.
      *
      * @param tag
+     * @param isAuthorization
      * @param listener
      */
-    void requestNoticeAgreement(Object tag, DailyHotelJsonResponseListener listener);
+    void requestNoticeAgreement(Object tag, boolean isAuthorization, DailyHotelJsonResponseListener listener);
+
+    /**
+     * 혜택 알림을 받아야 하는지 알려준다.
+     *
+     * @param tag
+     * @param isAuthorization
+     * @param listener
+     */
+    void requestNoticeAgreementResult(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag

@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.main;
 
 import android.content.Context;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -10,6 +9,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -38,9 +39,9 @@ public class MainNetworkController extends BaseNetworkController
 
         void onConfigurationResponse();
 
-        void onNoticeAgreement(String message01, String message02, String cancelMessage01, String cancelMessage02);
+        void onNoticeAgreement(String message, boolean isFirstTimeBuyer);
 
-        void onBenefitAgreement(String message01, String message02);
+        void onNoticeAgreementResult(String agreeMessage, String cancelMessage);
     }
 
     public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -57,24 +58,17 @@ public class MainNetworkController extends BaseNetworkController
     protected void requestCheckServer()
     {
         // 서버 상태 체크
-        DailyNetworkAPI.getInstance(mContext).requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, this);
-            }
-        });
+        DailyNetworkAPI.getInstance(mContext).requestCheckServer(mNetworkTag, mStatusHealthCheckJsonResponseListener);
     }
 
     public void requestConfiguration()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCompanyInformation(mNetworkTag, mCompanyInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestCompanyInformation(mNetworkTag, mCompanyInformationJsonResponseListener, mCompanyInformationJsonResponseListener);
     }
 
     public void requestUserInformation()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInfomationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInfomationJsonResponseListener, mUserInfomationJsonResponseListener);
     }
 
     /**
@@ -115,9 +109,15 @@ public class MainNetworkController extends BaseNetworkController
 
                 long lastLookupDateTime = DailyPreference.getInstance(mContext).getNewEventTime();
 
+                currentDateTime -= 3600 * 1000 * 9;
+
                 DailyPreference.getInstance(mContext).setLookUpEventTime(currentDateTime);
 
-                DailyNetworkAPI.getInstance(mContext).requestEventNewCount(mNetworkTag, Long.toString(lastLookupDateTime), mDailyEventCountJsonResponseListener, null);
+                Calendar calendar = DailyCalendar.getInstance();
+                calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+                calendar.setTimeInMillis(currentDateTime);
+
+                DailyNetworkAPI.getInstance(mContext).requestEventNewCount(mNetworkTag, Util.getISO8601String(calendar.getTime()), mDailyEventCountJsonResponseListener, null);
             }
         }, null);
     }
@@ -172,24 +172,18 @@ public class MainNetworkController extends BaseNetworkController
         }
     }
 
-    public void requestNoticeAgreement()
+    public void requestNoticeAgreement(boolean isAuthorization)
     {
-        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mNoticeAgreementJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, isAuthorization, mNoticeAgreementJsonResponseListener);
     }
 
-    public void requestBenefitAgreement(boolean agreement)
+    public void requestNoticeAgreementResult(boolean isAuthorization, boolean isAgree)
     {
-        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, mBenefitAgreementJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAuthorization, isAgree, mNoticeAgreementResultJsonResponseListener);
     }
 
     private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -211,7 +205,7 @@ public class MainNetworkController extends BaseNetworkController
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
                     } else
                     {
-                        DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener, MainNetworkController.this);
+                        DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener);
                     }
                 }
             } catch (Exception e)
@@ -219,16 +213,16 @@ public class MainNetworkController extends BaseNetworkController
                 ExLog.d(e.toString());
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            DailyNetworkAPI.getInstance(mContext).requestCommonVer(mNetworkTag, mAppVersionJsonResponseListener);
+        }
     };
 
     private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -268,16 +262,16 @@ public class MainNetworkController extends BaseNetworkController
                 mOnNetworkControllerListener.onError(e);
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+        }
     };
 
     private DailyHotelJsonResponseListener mCompanyInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -308,6 +302,12 @@ public class MainNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
         }
     };
 
@@ -382,7 +382,7 @@ public class MainNetworkController extends BaseNetworkController
                 } else
                 {
                     // 고메 이벤트까지 없으면 첫구매 이벤트 확인한다.
-                    requestNoticeAgreement();
+                    requestNoticeAgreement(true);
                 }
             } catch (Exception e)
             {
@@ -432,12 +432,6 @@ public class MainNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserInfomationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -466,6 +460,12 @@ public class MainNetworkController extends BaseNetworkController
                 mOnNetworkControllerListener.onError(e);
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+        }
     };
 
     private DailyHotelJsonResponseListener mNoticeAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -473,7 +473,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
 
         @Override
@@ -483,16 +483,17 @@ public class MainNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0 && response.has("data") == true)
+                if (msgCode == 0)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    String message01 = dataJSONObject.getString("beforeDescription1");
-                    String message02 = dataJSONObject.getString("beforeDescription2");
-                    String cancelMessage01 = dataJSONObject.getString("afterDescription1");
-                    String cancelMessage02 = dataJSONObject.getString("afterDescription2");
+                    String message01 = dataJSONObject.getString("description1");
+                    String message02 = dataJSONObject.getString("description2");
+                    boolean isFirstTimeBuyer = dataJSONObject.getBoolean("isFirstTimeBuyer");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreement(message01, message02, cancelMessage01, cancelMessage02);
+                    String message = message01 + "\n\n" + message02;
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreement(message, isFirstTimeBuyer);
                 }
             } catch (Exception e)
             {
@@ -501,8 +502,14 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private DailyHotelJsonResponseListener mBenefitAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mNoticeAgreementResultJsonResponseListener = new DailyHotelJsonResponseListener()
     {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -510,20 +517,25 @@ public class MainNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0 && response.has("data") == true)
+                if (msgCode == 0)
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(null, null);
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String agreeAt = dataJSONObject.getString("agreeAt");
+                    String description1InAgree = dataJSONObject.getString("description1InAgree");
+                    String description2InAgree = dataJSONObject.getString("description2InAgree");
+                    String description1InReject = dataJSONObject.getString("description1InReject");
+                    String description2InReject = dataJSONObject.getString("description2InReject");
+
+                    String agreeMessage = description1InAgree.replace("{{DATE}}", agreeAt) + "\n\n" + description2InAgree;
+                    String cancelMessage = description1InReject.replace("{{DATE}}", agreeAt) + "\n\n" + description2InReject;
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreementResult(agreeMessage, cancelMessage);
                 }
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
             }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

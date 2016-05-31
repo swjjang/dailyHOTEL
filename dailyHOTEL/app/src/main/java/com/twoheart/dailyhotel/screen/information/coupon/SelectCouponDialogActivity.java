@@ -51,7 +51,8 @@ public class SelectCouponDialogActivity extends BaseActivity
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
         Intent intent = getIntent();
-        if (intent == null) {
+        if (intent == null)
+        {
             finish();
         }
 
