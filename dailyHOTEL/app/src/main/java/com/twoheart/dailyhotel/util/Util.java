@@ -55,6 +55,9 @@ import net.simonvt.numberpicker.NumberPicker;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -64,6 +67,8 @@ import okhttp3.OkHttpClient;
 public class Util implements Constants
 {
     public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
+
+    private static final String ISO_8601_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     private static String MEMORY_CLEAR;
 
@@ -1124,5 +1129,41 @@ public class Util implements Constants
     {
         DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format));
         return decimalFormat.format(price);
+    }
+
+    public static Date getISO8601Date(String time) throws ParseException, NullPointerException
+    {
+        if (isTextEmpty(time))
+        {
+            throw new NullPointerException("time is empty");
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        Date date = simpleDateFormat.parse(time);
+
+        return date;
+    }
+
+    public static String getISO8601String(long time)
+    {
+
+        Date date = new Date(time);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        String strDate = simpleDateFormat.format(date);
+
+        return strDate;
+    }
+
+    public static String getISO8601String(String strTime) throws NumberFormatException, NullPointerException
+    {
+        if (isTextEmpty(strTime))
+        {
+            throw new NullPointerException("time is empty");
+        }
+
+        long time = Long.parseLong(strTime);
+
+        return getISO8601String(time);
     }
 }

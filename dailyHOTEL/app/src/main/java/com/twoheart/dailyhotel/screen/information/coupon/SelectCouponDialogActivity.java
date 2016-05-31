@@ -10,6 +10,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 
+import java.util.List;
+
 /**
  * Created by android_sam on 2016. 5. 26..
  */
@@ -17,15 +19,28 @@ public class SelectCouponDialogActivity extends BaseActivity
 {
 
     public static final String INTENT_EXTRA_SELECT_COUPON = "selectCoupon";
-
+    public static final String INTENT_EXTRA_HOTEL_IDX = "hotelIdx";
+    public static final String INTENT_EXTRA_ROOM_IDX = "roomIdx";
+    public static final String INTENT_EXTRA_CHECK_IN_DATE = "checkInDate";
+    public static final String INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate";
 
     private SelectCouponDialogLayout mLayout;
     private SelectCouponNetworkController mNetworkController;
 
+    private int mHotelIdx;
+    private int mRoomIdx;
+    private String mCheckInDate;
+    private String mCheckOutDate;
 
-    public static Intent newInstance(Context context)
+
+    public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, String checkOutDate)
     {
         Intent intent = new Intent(context, SelectCouponDialogActivity.class);
+        intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
+        intent.putExtra(INTENT_EXTRA_ROOM_IDX, roomIdx);
+        intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(INTENT_EXTRA_CHECK_OUT_DATE, checkOutDate);
+
         return intent;
     }
 
@@ -35,11 +50,20 @@ public class SelectCouponDialogActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        Intent intent = getIntent();
+        if (intent == null) {
+            finish();
+        }
+
+        mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
+        mRoomIdx = intent.getIntExtra(INTENT_EXTRA_ROOM_IDX, -1);
+        mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
+        mCheckOutDate = intent.getStringExtra(INTENT_EXTRA_CHECK_OUT_DATE);
+
         mLayout = new SelectCouponDialogLayout(this, getWindow(), mOnEventListener);
         mNetworkController = new SelectCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mLayout.onCreateView(R.layout.activity_select_coupon_dialog));
-
     }
 
 
@@ -47,6 +71,10 @@ public class SelectCouponDialogActivity extends BaseActivity
     protected void onResume()
     {
         super.onResume();
+
+        lockUI();
+
+        mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
     }
 
     @Override
@@ -87,6 +115,13 @@ public class SelectCouponDialogActivity extends BaseActivity
     // ///////////////////////////////////////////////////
     private SelectCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new SelectCouponNetworkController.OnNetworkControllerListener()
     {
+        @Override
+        public void onCouponList(List<Coupon> list)
+        {
+            mLayout.setData(list);
+
+            unLockUI();
+        }
 
         @Override
         public void onErrorResponse(VolleyError volleyError)
