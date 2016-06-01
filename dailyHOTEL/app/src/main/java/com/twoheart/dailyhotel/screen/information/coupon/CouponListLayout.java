@@ -131,6 +131,8 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
             mEmptyView.setVisibility(View.VISIBLE);
         }
 
+        updateHeaderTextView(list.size());
+
         if (mListAdapter == null)
         {
             mListAdapter = new CouponListAdapter(mContext, list, mCouponItemListener);
