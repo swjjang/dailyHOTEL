@@ -277,6 +277,7 @@
     <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_issuing_account">가상계좌가 발급되었습니다.\n입금 대기 내역을 확인해주세요.</string>
     <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n아침 %1$d시 ~ 익일 새벽 %2$d시입니다.</string>
+    <string name="dialog_message_coupon_list_login">쿠폰함 확인을 위해\n데일리호텔 앱 로그인이 필요합니다.\n로그인 할까요?</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="menu_item_title_hotel">데일리호텔</string>
