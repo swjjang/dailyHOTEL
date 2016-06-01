@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -113,6 +114,17 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
                 ((OnEventListener) mOnEventListener).startCouponHistory();
                 break;
         }
+    }
+
+    public void updateListItemDownloadFlag(int position, String isDownloaded) {
+        Coupon coupon = mListAdapter.getItem(position);
+        if (Util.isTextEmpty(isDownloaded)) {
+            isDownloaded = "N";
+        }
+
+        coupon.isDownloaded = isDownloaded;
+
+        mListAdapter.notifyDataSetChanged();
     }
 
     public void setData(List<Coupon> list)

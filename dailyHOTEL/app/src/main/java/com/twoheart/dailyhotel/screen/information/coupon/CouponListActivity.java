@@ -97,6 +97,12 @@ public class CouponListActivity extends BaseActivity
         public void onListItemDownLoadClick(View view, int position, Coupon coupon)
         {
             // 리스트 아이템 쿠폰 다운로드
+            if (coupon == null)
+            {
+                return;
+            }
+
+            mCouponListNetworkController.requestDownloadCoupon(position, coupon.code);
         }
 
         @Override
@@ -111,6 +117,14 @@ public class CouponListActivity extends BaseActivity
     // ///////////////////////////////////////////////////
     private CouponListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new CouponListNetworkController.OnNetworkControllerListener()
     {
+
+        @Override
+        public void onDownloadCoupon(int position, String isDownloaded)
+        {
+            mCouponListLayout.updateListItemDownloadFlag(position, isDownloaded);
+
+            unLockUI();
+        }
 
         @Override
         public void onCouponList(List<Coupon> list)

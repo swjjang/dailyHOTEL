@@ -22,10 +22,19 @@ import java.util.List;
  */
 public class CouponListNetworkController extends BaseNetworkController
 {
+
+    private int mSelectPosition = -1;
+
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onCouponList(List<Coupon> list);
 
+        /**
+         * 쿠폰 다운로드 결과
+         * @param position 리스트 포지션
+         * @param isDownloaded 다운로드 여부 Y or N
+         */
+        void onDownloadCoupon(int position, String isDownloaded);
     }
 
     /**
@@ -34,6 +43,14 @@ public class CouponListNetworkController extends BaseNetworkController
     public void requestCouponList()
     {
         DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, mCouponListJsonResponseListener, this);
+    }
+
+    public void requestDownloadCoupon(int position, String couponCode)
+    {
+
+        mSelectPosition = position;
+
+        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, couponCode, mDownloadCouponJsonResponseListener);
     }
 
     private ArrayList<Coupon> makeCouponList(JSONArray jsonArray) throws JSONException
@@ -146,6 +163,39 @@ public class CouponListNetworkController extends BaseNetworkController
         public void onErrorResponse(VolleyError volleyError)
         {
 
+        }
+    };
+
+    DailyHotelJsonResponseListener mDownloadCouponJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    boolean hasData = response.has("data");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(mSelectPosition, "Y");
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
+
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }
