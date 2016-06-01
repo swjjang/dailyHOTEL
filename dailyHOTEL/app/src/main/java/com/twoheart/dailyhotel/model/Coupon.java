@@ -22,7 +22,7 @@ public class Coupon implements Parcelable
     public static final String CODE = "code";
 
     // coupon object type
-    public static final String VALID_TO = "=validTo";
+    public static final String VALID_TO = "validTo";
 
     // coupon object type
     public static final String VALID_FROM = "validFrom";
@@ -133,6 +133,7 @@ public class Coupon implements Parcelable
     public String getExpiredString(String startTime, String endTime)
     {
         String expireString = "";
+
         try
         {
             String strStart = Util.simpleDateFormatISO8601toFormat(startTime, "yyyy.MM.dd");

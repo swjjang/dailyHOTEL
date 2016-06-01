@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -86,15 +88,31 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         holder.priceTextView.setText(strAmount);
 
         holder.descriptionTextView.setText(coupon.getTitle());
-        holder.expireTextView.setText(coupon.getExpiredString(coupon.getValidFrom(), coupon.getValidTo()));
+
+        try
+        {
+            String expireText = Util.simpleDateFormatISO8601toFormat(coupon.getValidTo(), "yyyy.MM.dd");
+            expireText = String.format("(~%s)", expireText);
+            holder.expireTextView.setText(expireText);
+            holder.expireTextView.setVisibility(View.VISIBLE);
+        } catch (ParseException e)
+        {
+            ExLog.d(e.getMessage());
+            holder.expireTextView.setVisibility(View.GONE);
+        }
 
         if (coupon.getAmountMinimum() > 0)
         {
-            String strAmountMinimum = decimalFormat.format(coupon.getAmountMinimum()) + mContext.getResources().getString(R.string.currency);
+            String strAmountMinimum = mContext.getResources().getString( //
+                R.string.coupon_min_price_text, //
+                decimalFormat.format(coupon.getAmountMinimum()));
+
             holder.minPriceTextView.setText(strAmountMinimum);
+            holder.minPriceTextView.setVisibility(View.VISIBLE);
         } else
         {
             holder.minPriceTextView.setText("");
+            holder.minPriceTextView.setVisibility(View.GONE);
         }
 
         if (Util.parseBoolean(coupon.isDownloaded()) == true)

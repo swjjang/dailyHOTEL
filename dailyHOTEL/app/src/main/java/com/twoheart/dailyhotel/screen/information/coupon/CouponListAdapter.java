@@ -176,7 +176,10 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (coupon.getAmountMinimum() > 0)
             {
-                String strAmountMinimum = decimalFormat.format(coupon.getAmountMinimum()) + mContext.getResources().getString(R.string.currency);
+                String strAmountMinimum = mContext.getResources().getString( //
+                    R.string.coupon_min_price_text, //
+                    decimalFormat.format(coupon.getAmountMinimum()));
+
                 minPriceTextView.setText(strAmountMinimum);
             } else
             {
