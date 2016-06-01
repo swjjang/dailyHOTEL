@@ -589,13 +589,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             guest.email = mReservationEmail.getText().toString().trim();
         }
 
-        String bonus = "0"; // 적립금
-
-        if (paymentInformation.isUsedBonus == true)
-        {
-            bonus = String.valueOf(paymentInformation.bonus);
-        }
-
         SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
 
         Map<String, String> params = new HashMap<>();
@@ -603,7 +596,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
         params.put("nights", String.valueOf(saleRoomInformation.nights));
         params.put("billkey", mSelectedCreditCard.billingkey);
-        params.put("bonus", bonus);
+
+        if (paymentInformation.isUsedBonus == true)
+        {
+            String bonus = String.valueOf(paymentInformation.bonus);
+            params.put("bonus", bonus);
+        } else if(paymentInformation.isUsedCoupon == true)
+        {
+            Coupon coupon = paymentInformation.getCoupon();
+            params.put("coupon_code", coupon.code);
+        }
+
         params.put("guest_name", guest.name);
         params.put("guest_phone", guest.phone.replace("-", ""));
         params.put("guest_email", guest.email);

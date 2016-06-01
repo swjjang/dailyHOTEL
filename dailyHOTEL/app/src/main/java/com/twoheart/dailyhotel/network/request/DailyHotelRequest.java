@@ -290,10 +290,9 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
         if(mIsUsedAccept == true)
         {
-            map.put("Accept", "application/json");
-            map.put("Content-Type", "application/json");
+            map.put("accept", "application/json");
+            map.put("content-type", "application/json");
         }
-
 
         if (mIsUsedAuthorization == true && Util.isTextEmpty(DailyHotel.AUTHORIZATION) == false)
         {
