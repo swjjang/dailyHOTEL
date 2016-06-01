@@ -1178,18 +1178,6 @@ public class Util implements Constants
         return simpleDateFormat.format(date);
     }
 
-    public static String getISO8601String(String strTime) throws NumberFormatException, NullPointerException
-    {
-        if (isTextEmpty(strTime))
-        {
-            throw new NullPointerException("time is empty");
-        }
-
-        long time = Long.parseLong(strTime);
-
-        return getISO8601String(time);
-    }
-
     /**
      * String value 값 중 "true", "1", "Y", "y" 값을 true로 바꿔 주는 메소드
      *

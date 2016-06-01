@@ -67,16 +67,16 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         Coupon coupon = getItem(position);
 
         DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-        String strAmout = decimalFormat.format(coupon.amount);
+        String strAmout = decimalFormat.format(coupon.getAmount());
         holder.priceTextView.setText(strAmout + mContext.getResources().getString(R.string.currency));
 
-        holder.descriptionTextView.setText(coupon.title);
+        holder.descriptionTextView.setText(coupon.getTitle());
 
         holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
 
         int resId;
         String strPrefixExpire;
-        if ("Y".equalsIgnoreCase(coupon.isDownloaded))
+        if ("Y".equalsIgnoreCase(coupon.isDownloaded()))
         {
             resId = R.string.coupon_history_expire_text;
             strPrefixExpire = "만료일:";
@@ -88,7 +88,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         holder.stateTextView.setText(resId);
 
         // 사용기간 및 사용일자 또는 만료일자 구현 필요
-        String strExpire = coupon.getExpiredString(coupon.validFrom, coupon.validTo);
+        String strExpire = coupon.getExpiredString(coupon.getValidFrom(), coupon.getValidTo());
         if (Util.getLCDWidth(mContext) < 720)
         {
             strExpire += "\n";
@@ -96,7 +96,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         {
             strExpire += " | ";
         }
-        strExpire += strPrefixExpire + coupon.getDueDate(mContext, mCurrentTimeMillis, coupon.validTo);
+        strExpire += strPrefixExpire + coupon.getDueDate(coupon);
         holder.expireTextView.setText(strExpire);
     }
 

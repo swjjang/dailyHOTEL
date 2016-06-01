@@ -1,18 +1,16 @@
 package com.twoheart.dailyhotel.model;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by Sam Lee on 2016. 5. 19..
- * <p>
+ * <p/>
  * 현재 임의로 만든 모델로 실제 서버에서 내려오는 값에 따라 변경 될 수 있음
  */
 public class Coupon implements Parcelable
@@ -20,22 +18,55 @@ public class Coupon implements Parcelable
     // 하루
     public static final long MILLISECOND_IN_A_DAY = 3600 * 24 * 1000;
 
-    public String code; // 쿠폰 별칭 코드
-    public int amount; // 쿠폰금액
-    public String title; //설명 ??  있을지수도 있고 없을수도 있음???
-    public String validFrom; // 시작시간
-    public String validTo; // 만료시간
-    public int amountMinimum; // 최소주문금액
-    public String isDownloaded; // 상태표시
-    public String useablePlace; // 사용가능처
-    public String warring; // 유의사항 , 노출여부로만 사용될수도...
+    // coupon object type
+    public static final String CODE = "code";
+
+    // coupon object type
+    public static final String VALID_TO = "=validTo";
+
+    // coupon object type
+    public static final String VALID_FROM = "validFrom";
+
+    // coupon object type
+    public static final String TITLE = "title";
+
+    // coupon object type
+    public static final String WARNING = "warning";
+
+    // coupon object type
+    public static final String AMOUNT = "amount";
+
+    // coupon object type
+    public static final String AMOUNT_MINIMUM = "amountMinimum";
+
+    // coupon object type
+    public static final String IS_DOWNLOADED = "isDownloaded";
+
+    // coupon object type
+    public static final String SERVER_DATE = "serverDate";
+
+    // coupon object type
+    public static final String USE_PLACE = "usePlace";
+
+    private String code; // 쿠폰 별칭 코드
+    private int amount; // 쿠폰금액
+    private String title; //설명 ??  있을지수도 있고 없을수도 있음???
+    private String validFrom; // 시작시간
+    private String validTo; // 만료시간
+    private int amountMinimum; // 최소주문금액
+    private String isDownloaded; // 상태표시
+    private String useablePlace; // 사용가능처
+    private String warring; // 유의사항 , 노출여부로만 사용될수도...
+    private String serverDate; // 서버시간
 
     public Coupon(Parcel in)
     {
         readFromParcel(in);
     }
 
-    public Coupon(String code, int amount, String title, String validFrom, String validTo, int amountMinimum, String isDownloaded, String useablePlace, String warring)
+    public Coupon(String code, int amount, String title, String validFrom, String validTo, //
+                  int amountMinimum, String isDownloaded, String useablePlace, String warring, //
+                  String serverDate)
     {
         this.code = code;
         this.amount = amount;
@@ -46,6 +77,57 @@ public class Coupon implements Parcelable
         this.isDownloaded = isDownloaded;
         this.useablePlace = useablePlace;
         this.warring = warring;
+        this.serverDate = serverDate;
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public int getAmount()
+    {
+        return amount;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public String getValidFrom()
+    {
+        return validFrom;
+    }
+
+    public String getValidTo()
+    {
+        return validTo;
+    }
+
+    public int getAmountMinimum()
+    {
+        return amountMinimum;
+    }
+
+    public String isDownloaded()
+    {
+        return isDownloaded;
+    }
+
+    public String getUseablePlace()
+    {
+        return useablePlace;
+    }
+
+    public String getWarring()
+    {
+        return warring;
+    }
+
+    public String getServerDate()
+    {
+        return serverDate;
     }
 
     public String getExpiredString(String startTime, String endTime)
@@ -53,16 +135,9 @@ public class Coupon implements Parcelable
         String expireString = "";
         try
         {
-            Date startDate = Util.getISO8601Date(startTime);
-            Date endDate = Util.getISO8601Date(startTime);
-
-            //        Date startDate = new Date(startTime);
-            //        Date endDate = new Date(endTime);
-
-
-            String strStart = getTimezoneDateFormat("yyyy.MM.dd").format(startDate);
-            String strEnd = getTimezoneDateFormat("yyyy.MM.dd").format(endDate);
-            expireString = strStart + " ~ " + strEnd;
+            String strStart = Util.simpleDateFormatISO8601toFormat(startTime, "yyyy.MM.dd");
+            String strEnd = Util.simpleDateFormatISO8601toFormat(endTime, "yyyy.MM.dd");
+            expireString = String.format("%s ~ %s", strStart, strEnd);
 
         } catch (Exception e)
         {
@@ -75,29 +150,27 @@ public class Coupon implements Parcelable
     /**
      * 남은 날 수를 리턴하는 메소드
      *
-     * @param context
-     * @param currentTime 현재시간
-     * @param endTime     쿠폰 만료일
+     * @param coupon
      * @return -1 기간만료, 0 당일만료, 그 이외 숫자 남은 일자
      */
-    public int getDueDate(Context context, String currentTime, String endTime)
+    public int getDueDate(Coupon coupon)
     {
         int dayCount = -1;
-        Date currentDate;
+        Date serverDate;
         Date endDate;
         try
         {
-            currentDate = Util.getISO8601Date(currentTime);
-            endDate = Util.getISO8601Date(endTime);
+            serverDate = Util.getISO8601Date(coupon.serverDate);
+            endDate = Util.getISO8601Date(coupon.validTo);
         } catch (Exception e)
         {
             ExLog.e(e.getMessage());
 
-            currentDate = new Date();
+            serverDate = new Date();
             endDate = new Date();
         }
 
-        long gap = endDate.getTime() - currentDate.getTime();
+        long gap = endDate.getTime() - serverDate.getTime();
 
         if (gap <= 0)
         {
@@ -111,18 +184,6 @@ public class Coupon implements Parcelable
         }
     }
 
-
-    public SimpleDateFormat getTimezoneDateFormat(String datePattern)
-    {
-
-        SimpleDateFormat format = new SimpleDateFormat(datePattern);
-        return format;
-        //        SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
-        //        sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //        return sFormat;
-    }
-
-
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -135,6 +196,7 @@ public class Coupon implements Parcelable
         dest.writeString(isDownloaded);
         dest.writeString(useablePlace);
         dest.writeString(warring);
+        dest.writeString(serverDate);
     }
 
     private void readFromParcel(Parcel in)
@@ -148,6 +210,7 @@ public class Coupon implements Parcelable
         isDownloaded = in.readString();
         useablePlace = in.readString();
         warring = in.readString();
+        serverDate = in.readString();
     }
 
     @Override

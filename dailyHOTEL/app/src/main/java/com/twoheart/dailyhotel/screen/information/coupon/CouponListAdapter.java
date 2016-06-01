@@ -33,8 +33,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mContext;
     private OnCouponItemListener mListener;
 
-    private String mCurrentTimeMillis; // 현재 시간 -  계산되는 현재시간을 통일 하기 위해 어뎁터 생성시 현재시간으로 통일 type ISO-8601 타입의 String
-
     public interface OnCouponItemListener
     {
         void startNotice();
@@ -55,7 +53,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mList = list;
         mListener = listener;
-        mCurrentTimeMillis = Util.getISO8601String(System.currentTimeMillis());
     }
 
     /**
@@ -155,13 +152,13 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Coupon coupon = getItem(position);
 
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            String strAmount = decimalFormat.format(coupon.amount) + mContext.getResources().getString(R.string.currency);
+            String strAmount = decimalFormat.format(coupon.getAmount()) + mContext.getResources().getString(R.string.currency);
             couponPriceTextView.setText(strAmount);
 
-            descriptionTextView.setText(coupon.title);
-            expireTextView.setText(coupon.getExpiredString(coupon.validFrom, coupon.validTo));
+            descriptionTextView.setText(coupon.getTitle());
+            expireTextView.setText(coupon.getExpiredString(coupon.getValidFrom(), coupon.getValidTo()));
 
-            int dueDate = coupon.getDueDate(mContext, mCurrentTimeMillis, coupon.validTo);
+            int dueDate = coupon.getDueDate(coupon);
 
             if (dueDate > 0)
             {
@@ -177,18 +174,18 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 dueDateTextView.setText(mContext.getResources().getString(R.string.coupon_today_text));
             }
 
-            if (coupon.amountMinimum > 0)
+            if (coupon.getAmountMinimum() > 0)
             {
-                String strAmountMinimum = decimalFormat.format(coupon.amountMinimum) + mContext.getResources().getString(R.string.currency);
+                String strAmountMinimum = decimalFormat.format(coupon.getAmountMinimum()) + mContext.getResources().getString(R.string.currency);
                 minPriceTextView.setText(strAmountMinimum);
             } else
             {
                 minPriceTextView.setText("");
             }
 
-            useablePlaceTextView.setText(coupon.useablePlace);
+            useablePlaceTextView.setText(coupon.getUseablePlace());
 
-            if (Util.parseBoolean(coupon.isDownloaded) == true)
+            if (Util.parseBoolean(coupon.isDownloaded()) == true)
             {
                 //useable
                 downloadIconView.setVisibility(View.GONE);

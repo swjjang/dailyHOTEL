@@ -99,7 +99,9 @@ interface IDailyNetwork
 
     /**
      * @param tag
-     * @param params
+     * @param userIdx
+     * @param changedRegistrationId
+     * @param uid
      * @param listener
      * @param errorListener
      */
@@ -524,9 +526,8 @@ interface IDailyNetwork
      *
      * @param tag
      * @param listener
-     * @param errorListener
      */
-    void requestCouponList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCouponList(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * /api/v3/users/coupons
@@ -538,9 +539,8 @@ interface IDailyNetwork
      * @param checkIn       ISO-8601
      * @param checkOut      ISO-8601
      * @param listener
-     * @param errorListener
      */
-    void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener);
 
     /**
      * /api/v3/users/coupons/history

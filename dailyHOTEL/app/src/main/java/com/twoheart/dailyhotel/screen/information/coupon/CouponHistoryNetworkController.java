@@ -65,18 +65,67 @@ public class CouponHistoryNetworkController extends BaseNetworkController
     private Coupon makeCouponHistory(JSONObject jsonObject)
     {
         Coupon coupon = null;
+
+        String code = null; // 쿠폰 별칭 코드
+        String validFrom = null; // 쿠폰 시작 시간
+        String validTo = null; // 유효기간, 만료일, 쿠폰 만료시간
+        String title = null;
+        String warning = null; // 유의사항
+        int amount = 0; // 쿠폰가격
+        int amountMinimum = 0; // 최소 결제 금액
+        String isDownloaded = null; // 다운로드 여부 Y or N
+        String serverDate = null; // 서버시간
+
         try
         {
-            String code = jsonObject.getString("code"); // 쿠폰 별칭 코드
-            String validFrom = jsonObject.getString("validFrom"); // 쿠폰 시작 시간
-            String validTo = jsonObject.getString("validTo"); // 유효기간, 만료일, 쿠폰 만료시간
-            String title = jsonObject.getString("title");
-            String warning = jsonObject.getString("warning"); // 유의사항
-            int amount = jsonObject.getInt("amount"); // 쿠폰가격
-            int amountMinimum = jsonObject.getInt("amountMinimum"); // 최소 결제 금액
-            String isDownloaded = jsonObject.getString("isDownloaded"); // 다운로드 여부 Y or N
 
-            coupon = new Coupon(code, amount, title, validFrom, validTo, amountMinimum, isDownloaded, "사용가능처", warning);
+            if (jsonObject.has(Coupon.CODE))
+            {
+                code = jsonObject.getString(Coupon.CODE); // 쿠폰 별칭 코드
+            }
+
+            if (jsonObject.has(Coupon.VALID_FROM))
+            {
+                validFrom = jsonObject.getString(Coupon.VALID_FROM); // 쿠폰 시작 시간
+            }
+
+            if (jsonObject.has(Coupon.VALID_TO))
+            {
+                validTo = jsonObject.getString(Coupon.VALID_TO); // 유효기간, 만료일, 쿠폰 만료시간
+            }
+
+            if (jsonObject.has(Coupon.TITLE))
+            {
+                title = jsonObject.getString(Coupon.TITLE);
+            }
+
+            if (jsonObject.has(Coupon.WARNING))
+            {
+                warning = jsonObject.getString(Coupon.WARNING); // 유의사항
+            }
+
+            if (jsonObject.has(Coupon.AMOUNT))
+            {
+                amount = jsonObject.getInt(Coupon.AMOUNT); // 쿠폰가격
+            }
+
+            if (jsonObject.has(Coupon.AMOUNT_MINIMUM))
+            {
+                amountMinimum = jsonObject.getInt(Coupon.AMOUNT_MINIMUM); // 최소 결제 금액
+            }
+
+            if (jsonObject.has(Coupon.IS_DOWNLOADED))
+            {
+                isDownloaded = jsonObject.getString(Coupon.IS_DOWNLOADED); // 다운로드 여부 Y or N
+            }
+
+            if (jsonObject.has(Coupon.SERVER_DATE))
+            {
+                serverDate = jsonObject.getString(Coupon.SERVER_DATE); // 서버시간
+            }
+
+            coupon = new Coupon(code, amount, title, validFrom, validTo, amountMinimum, isDownloaded, "사용가능처", warning, serverDate);
+
         } catch (Exception e)
         {
             ExLog.e(e.getMessage());

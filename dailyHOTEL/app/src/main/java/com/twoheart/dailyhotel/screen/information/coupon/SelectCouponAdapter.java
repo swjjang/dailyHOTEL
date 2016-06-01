@@ -81,22 +81,22 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         Coupon coupon = getItem(position);
 
         DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-        String strAmount = decimalFormat.format(coupon.amount) + mContext.getResources().getString(R.string.currency);
+        String strAmount = decimalFormat.format(coupon.getAmount()) + mContext.getResources().getString(R.string.currency);
         holder.priceTextView.setText(strAmount);
 
-        holder.descriptionTextView.setText(coupon.title);
-        holder.expireTextView.setText(coupon.getExpiredString(coupon.validFrom, coupon.validTo));
+        holder.descriptionTextView.setText(coupon.getTitle());
+        holder.expireTextView.setText(coupon.getExpiredString(coupon.getValidFrom(), coupon.getValidTo()));
 
-        if (coupon.amountMinimum > 0)
+        if (coupon.getAmountMinimum() > 0)
         {
-            String strAmountMinimum = decimalFormat.format(coupon.amountMinimum) + mContext.getResources().getString(R.string.currency);
+            String strAmountMinimum = decimalFormat.format(coupon.getAmountMinimum()) + mContext.getResources().getString(R.string.currency);
             holder.minPriceTextView.setText(strAmountMinimum);
         } else
         {
             holder.minPriceTextView.setText("");
         }
 
-        if ("Y".equalsIgnoreCase(coupon.isDownloaded))
+        if ("Y".equalsIgnoreCase(coupon.isDownloaded()))
         {
             setSelectLayout(holder, position);
         } else
@@ -113,7 +113,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             public void onClick(View v)
             {
                 Coupon coupon = getItem(position);
-                if ("Y".equalsIgnoreCase(coupon.isDownloaded))
+                if ("Y".equalsIgnoreCase(coupon.isDownloaded()))
                 {
                     mSelectPosition = position;
                 } else

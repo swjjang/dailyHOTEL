@@ -897,15 +897,14 @@ public class DailyNetworkAPI implements IDailyNetwork
      *
      * @param tag
      * @param listener
-     * @param errorListener
      */
     @Override
-    public void requestCouponList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestCouponList(Object tag, DailyHotelJsonResponseListener listener)
     {
 
         final String URL = Constants.UNENCRYPTED_URL ? "/api/v3/users/coupons" : "MiQzNCQzMiQ2OCQ3NSQ=$MTJREMjI1QkJGQjVCRDQyOEJFNUVCMUVYGMIkUzRTkyOEJEMjA4MzdGNzVCNEM1OTVCOSDgyNkFVCNDhEN0QxN0VENQ==$";
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL, null, listener, errorListener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL, null, listener);
         dailyHotelJsonRequest.setUsedAuthorization(true);
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
@@ -922,16 +921,15 @@ public class DailyNetworkAPI implements IDailyNetwork
      * @param checkIn       ISO-8601
      * @param checkOut      ISO-8601
      * @param listener
-     * @param errorListener
      */
     @Override
-    public void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "/api/v3/users/coupons" : "MiQzNCQzMiQ2OCQ3NSQ=$MTJREMjI1QkJGQjVCRDQyOEJFNUVCMUVYGMIkUzRTkyOEJEMjA4MzdGNzVCNEM1OTVCOSDgyNkFVCNDhEN0QxN0VENQ==$";
 
         String params = String.format("?hotelIdx=%d&roomIdx=%d&checkIn=%s&checkOut=%s", hotelIdx, roomIdx, checkIn, checkOut);
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL + params, null, listener, errorListener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL + params, null, listener);
         dailyHotelJsonRequest.setUsedAuthorization(true);
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
