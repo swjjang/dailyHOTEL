@@ -99,9 +99,10 @@ public class SelectCouponDialogActivity extends BaseActivity
         }
 
         @Override
-        public void onCouponDownloadClick(int position)
+        public void onCouponDownloadClick(Coupon coupon)
         {
             // 쿠폰 다운로드 시도!
+            mNetworkController.requestDownloadCoupon(coupon);
         }
 
         @Override
@@ -122,6 +123,22 @@ public class SelectCouponDialogActivity extends BaseActivity
             mLayout.setData(list);
 
             unLockUI();
+        }
+
+        @Override
+        public void onDownloadCoupon(boolean isSuccess)
+        {
+
+            if (isSuccess == true)
+            {
+                lockUI();
+
+                mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
+
+            } else
+            {
+                unLockUI();
+            }
         }
 
         @Override

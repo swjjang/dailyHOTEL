@@ -23,18 +23,16 @@ import java.util.List;
 public class CouponListNetworkController extends BaseNetworkController
 {
 
-    private int mSelectPosition = -1;
-
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onCouponList(List<Coupon> list);
 
         /**
          * 쿠폰 다운로드 결과
-         * @param position 리스트 포지션
-         * @param isDownloaded 다운로드 여부 Y or N
+         *
+         * @param isSuccess 성공 여부
          */
-        void onDownloadCoupon(int position, String isDownloaded);
+        void onDownloadCoupon(boolean isSuccess);
     }
 
     /**
@@ -45,12 +43,16 @@ public class CouponListNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, mCouponListJsonResponseListener, this);
     }
 
-    public void requestDownloadCoupon(int position, String couponCode)
+    public void requestDownloadCoupon(Coupon coupon)
     {
 
-        mSelectPosition = position;
+        if (coupon == null)
+        {
+            ExLog.e("coupon is null");
+            return;
+        }
 
-        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, couponCode, mDownloadCouponJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.code, mDownloadJsonResponseListener);
     }
 
     private ArrayList<Coupon> makeCouponList(JSONArray jsonArray) throws JSONException
@@ -166,25 +168,23 @@ public class CouponListNetworkController extends BaseNetworkController
         }
     };
 
-    DailyHotelJsonResponseListener mDownloadCouponJsonResponseListener = new DailyHotelJsonResponseListener()
+    DailyHotelJsonResponseListener mDownloadJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
+                boolean isSuccess = false;
+
                 int msgCode = response.getInt("msgCode");
 
                 if (msgCode == 100)
                 {
-                    boolean hasData = response.has("data");
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(mSelectPosition, "Y");
-                } else
-                {
-                    String message = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    isSuccess = true;
                 }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(isSuccess);
 
             } catch (Exception e)
             {

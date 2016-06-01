@@ -85,6 +85,11 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (position == 0) ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
     }
 
+    public void setData(List<Coupon> list)
+    {
+        mList = list;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -183,7 +188,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             useablePlaceTextView.setText(coupon.useablePlace);
 
-            if ("Y".equalsIgnoreCase(coupon.isDownloaded))
+            if (Util.parseBoolean(coupon.isDownloaded) == true)
             {
                 //useable
                 downloadIconView.setVisibility(View.GONE);

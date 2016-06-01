@@ -25,14 +25,37 @@ public class SelectCouponNetworkController extends BaseNetworkController
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onCouponList(List<Coupon> list);
+
+        /**
+         * 쿠폰 다운로드 결과
+         *
+         * @param isSuccess 성공 여부
+         */
+        void onDownloadCoupon(boolean isSuccess);
     }
 
     /**
-     * 소유자의 전체 쿠폰리스트
+     * 결제화면의 소유자의 전체 쿠폰리스트
      */
     public void requestCouponList(int hotelIdx, int roomIdx, String checkIn, String checkOut)
     {
         DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, hotelIdx, roomIdx, checkIn, checkOut, mCouponListJsonResponseListener, this);
+    }
+
+    /**
+     * 쿠폰 다운로드 시도
+     *
+     * @param coupon
+     */
+    public void requestDownloadCoupon(Coupon coupon)
+    {
+        if (coupon == null)
+        {
+            ExLog.e("coupon is null");
+            return;
+        }
+
+        DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.code, mDownloadJsonResponseListener);
     }
 
     private ArrayList<Coupon> makeCouponList(JSONArray jsonArray) throws JSONException
@@ -135,7 +158,38 @@ public class SelectCouponNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
+            SelectCouponNetworkController.this.onErrorResponse(volleyError);
+        }
+    };
 
+    DailyHotelJsonResponseListener mDownloadJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                boolean isSuccess = false;
+
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
+                {
+                    isSuccess = true;
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(isSuccess);
+
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            SelectCouponNetworkController.this.onErrorResponse(volleyError);
         }
     };
 }

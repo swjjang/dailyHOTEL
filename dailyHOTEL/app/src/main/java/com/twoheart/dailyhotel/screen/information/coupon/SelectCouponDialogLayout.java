@@ -28,7 +28,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     {
         void setResult(Coupon coupon);
 
-        void onCouponDownloadClick(int position);
+        void onCouponDownloadClick(Coupon coupon);
     }
 
     private View mDialogLayout;
@@ -113,7 +113,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mRecyclerView.setLayoutManager(layoutManager);
     }
 
-    public void updateLayout(List<Coupon> list)
+    private void updateLayout(List<Coupon> list)
     {
         boolean isEmpty = isEmpty(list);
 
@@ -161,19 +161,24 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     public void setData(List<Coupon> list)
     {
 
-        if (isEmpty(list) == false)
+        if (isEmpty(list) == true)
         {
-            mListAdapter = new SelectCouponAdapter(mContext, list, mCouponItemListener);
-        } else
-        {
-            mListAdapter = new SelectCouponAdapter(mContext, new ArrayList<Coupon>(), mCouponItemListener);
+            list = new ArrayList<>();
         }
 
         updateDialogLayout(true);
         updateLayout(list);
-        mRecyclerView.setAdapter(mListAdapter);
-    }
 
+        if (mListAdapter == null)
+        {
+            mListAdapter = new SelectCouponAdapter(mContext, list, mCouponItemListener);
+            mRecyclerView.setAdapter(mListAdapter);
+        } else
+        {
+            mListAdapter.setData(list);
+            mListAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onClick(View v)
@@ -200,7 +205,8 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         @Override
         public void onDownloadClick(int position)
         {
-            ((OnEventListener) mOnEventListener).onCouponDownloadClick(position);
+            Coupon coupon = mListAdapter.getItem(position);
+            ((OnEventListener) mOnEventListener).onCouponDownloadClick(coupon);
         }
 
         @Override

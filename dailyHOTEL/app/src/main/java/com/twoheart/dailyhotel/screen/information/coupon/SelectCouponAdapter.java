@@ -63,6 +63,11 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         return mList == null ? 0 : mList.size();
     }
 
+    public void setData(List<Coupon> list)
+    {
+        mList = list;
+    }
+
     @Override
     public SelectViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {

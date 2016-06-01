@@ -10,7 +10,6 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -105,6 +104,11 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         mHeaderTextView.setText(text);
     }
 
+    private boolean isEmpty(List<Coupon> list)
+    {
+        return (list != null && list.size() != 0) ? false : true;
+    }
+
     @Override
     public void onClick(View v)
     {
@@ -116,30 +120,26 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         }
     }
 
-    public void updateListItemDownloadFlag(int position, String isDownloaded) {
-        Coupon coupon = mListAdapter.getItem(position);
-        if (Util.isTextEmpty(isDownloaded)) {
-            isDownloaded = "N";
-        }
-
-        coupon.isDownloaded = isDownloaded;
-
-        mListAdapter.notifyDataSetChanged();
-    }
-
     public void setData(List<Coupon> list)
     {
-        if (list != null && list.size() != 0)
+        if (isEmpty(list) == false)
         {
-            mListAdapter = new CouponListAdapter(mContext, list, mCouponItemListener);
             mEmptyView.setVisibility(View.GONE);
         } else
         {
-            mListAdapter = new CouponListAdapter(mContext, new ArrayList<Coupon>(), mCouponItemListener);
+            list = new ArrayList<>();
             mEmptyView.setVisibility(View.VISIBLE);
         }
 
-        mRecyclerView.setAdapter(mListAdapter);
+        if (mListAdapter == null)
+        {
+            mListAdapter = new CouponListAdapter(mContext, list, mCouponItemListener);
+            mRecyclerView.setAdapter(mListAdapter);
+        } else
+        {
+            mListAdapter.setData(list);
+            mListAdapter.notifyDataSetChanged();
+        }
     }
 
     private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
