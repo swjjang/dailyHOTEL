@@ -526,7 +526,7 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestCouponList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCouponList(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * /api/v3/users/coupons
@@ -540,7 +540,7 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener);
 
     /**
      * /api/v3/users/coupons/history

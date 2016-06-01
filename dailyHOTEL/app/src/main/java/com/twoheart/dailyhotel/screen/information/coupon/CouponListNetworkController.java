@@ -40,7 +40,7 @@ public class CouponListNetworkController extends BaseNetworkController
      */
     public void requestCouponList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, mCouponListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, mCouponListJsonResponseListener);
     }
 
     public void requestDownloadCoupon(Coupon coupon)

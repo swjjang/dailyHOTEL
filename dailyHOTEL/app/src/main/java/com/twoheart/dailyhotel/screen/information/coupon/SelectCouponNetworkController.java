@@ -39,7 +39,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
      */
     public void requestCouponList(int hotelIdx, int roomIdx, String checkIn, String checkOut)
     {
-        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, hotelIdx, roomIdx, checkIn, checkOut, mCouponListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestCouponList(mNetworkTag, hotelIdx, roomIdx, checkIn, checkOut, mCouponListJsonResponseListener);
     }
 
     /**

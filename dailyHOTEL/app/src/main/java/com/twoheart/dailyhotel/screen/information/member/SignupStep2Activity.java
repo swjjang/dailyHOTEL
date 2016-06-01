@@ -113,6 +113,9 @@ public class SignupStep2Activity extends BaseActivity
 
     private void signupAndFinish()
     {
+        DailyPreference.getInstance(this).setUserBenefitAlarm(false);
+        DailyPreference.getInstance(this).setShowBenefitAlarm(false);
+
         DailyToast.showToast(SignupStep2Activity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
 
         setResult(RESULT_OK);

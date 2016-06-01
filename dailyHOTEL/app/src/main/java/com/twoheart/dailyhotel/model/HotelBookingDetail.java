@@ -17,6 +17,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public String hotelPhone;
     public Hotel.HotelGrade grade;
     public String roomName;
+    public int bonus;
+    public int coupon;
 
     public HotelBookingDetail()
     {
@@ -76,6 +78,9 @@ public class HotelBookingDetail extends PlaceBookingDetail
         {
             hotelPhone = phone3;
         }
+
+        bonus = jsonObject.getInt("bonus");
+        coupon = jsonObject.getInt("coupon_amount");
 
         //        paymentDate;
         //        price;
