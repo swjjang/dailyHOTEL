@@ -76,7 +76,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         int resId;
         String strPrefixExpire;
-        if ("Y".equalsIgnoreCase(coupon.isDownloaded()))
+        if (Util.parseBoolean(coupon.isDownloaded()) == true)
         {
             resId = R.string.coupon_history_expire_text;
             strPrefixExpire = "만료일:";

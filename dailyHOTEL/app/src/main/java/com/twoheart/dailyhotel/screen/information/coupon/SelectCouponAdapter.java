@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -96,7 +97,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             holder.minPriceTextView.setText("");
         }
 
-        if ("Y".equalsIgnoreCase(coupon.isDownloaded()))
+        if (Util.parseBoolean(coupon.isDownloaded()) == true)
         {
             setSelectLayout(holder, position);
         } else
@@ -113,7 +114,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             public void onClick(View v)
             {
                 Coupon coupon = getItem(position);
-                if ("Y".equalsIgnoreCase(coupon.isDownloaded()))
+                if (Util.parseBoolean(coupon.isDownloaded()) == true)
                 {
                     mSelectPosition = position;
                 } else
