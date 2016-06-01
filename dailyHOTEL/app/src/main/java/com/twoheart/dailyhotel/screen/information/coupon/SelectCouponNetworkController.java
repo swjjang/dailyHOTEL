@@ -58,7 +58,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.getCode(), mDownloadJsonResponseListener);
     }
 
-    private ArrayList<Coupon> makeCouponList(JSONArray jsonArray) throws JSONException
+    private ArrayList<Coupon> makeCouponList(JSONArray jsonArray, String serverDate) throws JSONException
     {
         if (jsonArray == null)
         {
@@ -74,7 +74,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
 
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-            Coupon coupon = makeCoupon(jsonObject);
+            Coupon coupon = makeCoupon(jsonObject, serverDate);
             if (coupon == null)
             {
                 ExLog.w("coupon is not create, index : " + i);
@@ -87,7 +87,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
         return list;
     }
 
-    private Coupon makeCoupon(JSONObject jsonObject)
+    private Coupon makeCoupon(JSONObject jsonObject, String serverDate)
     {
         Coupon coupon = null;
 
@@ -99,7 +99,8 @@ public class SelectCouponNetworkController extends BaseNetworkController
         int amount = 0; // 쿠폰가격
         int amountMinimum = 0; // 최소 결제 금액
         String isDownloaded = null; // 다운로드 여부 Y or N
-        String serverDate = null; // 서버시간
+        String availableItem = null; // 사용가능처
+
 
         try
         {
@@ -144,12 +145,12 @@ public class SelectCouponNetworkController extends BaseNetworkController
                 isDownloaded = jsonObject.getString(Coupon.IS_DOWNLOADED); // 다운로드 여부 Y or N
             }
 
-            if (jsonObject.has(Coupon.SERVER_DATE))
+            if (jsonObject.has(Coupon.AVAILABLE_ITEM))
             {
-                serverDate = jsonObject.getString(Coupon.SERVER_DATE); // 서버시간
+                availableItem = jsonObject.getString(Coupon.AVAILABLE_ITEM); // 사용가능처
             }
 
-            coupon = new Coupon(code, amount, title, validFrom, validTo, amountMinimum, isDownloaded, "사용가능처", warning, serverDate);
+            coupon = new Coupon(code, amount, title, validFrom, validTo, amountMinimum, isDownloaded, availableItem, warning, serverDate);
         } catch (Exception e)
         {
             ExLog.e(e.getMessage());
@@ -185,9 +186,15 @@ public class SelectCouponNetworkController extends BaseNetworkController
                     JSONObject data = response.getJSONObject("data");
                     if (data != null)
                     {
+                        String serverDate = "";
+
+                        if (data.has(Coupon.SERVER_DATE) == true) {
+                            serverDate = data.getString(Coupon.SERVER_DATE);
+                        }
+
                         JSONArray couponList = data.getJSONArray("coupons");
 
-                        list = makeCouponList(couponList);
+                        list = makeCouponList(couponList, serverDate);
 
                     }
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list);

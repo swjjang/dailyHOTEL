@@ -989,7 +989,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestBenefitAgreement(Object tag, boolean agreement, DailyHotelJsonResponseListener listener)
+    public void requestBenefitMessage(Object tag, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit" : "";
 

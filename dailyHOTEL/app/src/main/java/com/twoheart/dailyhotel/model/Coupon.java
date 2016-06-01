@@ -46,7 +46,7 @@ public class Coupon implements Parcelable
     public static final String SERVER_DATE = "serverDate";
 
     // coupon object type
-    public static final String USE_PLACE = "usePlace";
+    public static final String AVAILABLE_ITEM = "availableItem";
 
     private String code; // 쿠폰 별칭 코드
     private int amount; // 쿠폰금액
@@ -55,7 +55,7 @@ public class Coupon implements Parcelable
     private String validTo; // 만료시간
     private int amountMinimum; // 최소주문금액
     private String isDownloaded; // 상태표시
-    private String useablePlace; // 사용가능처
+    private String availableItem; // 사용가능처
     private String warring; // 유의사항 , 노출여부로만 사용될수도...
     private String serverDate; // 서버시간
 
@@ -65,7 +65,7 @@ public class Coupon implements Parcelable
     }
 
     public Coupon(String code, int amount, String title, String validFrom, String validTo, //
-                  int amountMinimum, String isDownloaded, String useablePlace, String warring, //
+                  int amountMinimum, String isDownloaded, String availableItem, String warring, //
                   String serverDate)
     {
         this.code = code;
@@ -75,7 +75,7 @@ public class Coupon implements Parcelable
         this.validTo = validTo;
         this.amountMinimum = amountMinimum;
         this.isDownloaded = isDownloaded;
-        this.useablePlace = useablePlace;
+        this.availableItem = availableItem;
         this.warring = warring;
         this.serverDate = serverDate;
     }
@@ -115,9 +115,9 @@ public class Coupon implements Parcelable
         return isDownloaded;
     }
 
-    public String getUseablePlace()
+    public String getAvailableItem()
     {
-        return useablePlace;
+        return availableItem;
     }
 
     public String getWarring()
@@ -195,7 +195,7 @@ public class Coupon implements Parcelable
         dest.writeString(validTo);
         dest.writeInt(amountMinimum);
         dest.writeString(isDownloaded);
-        dest.writeString(useablePlace);
+        dest.writeString(availableItem);
         dest.writeString(warring);
         dest.writeString(serverDate);
     }
@@ -209,7 +209,7 @@ public class Coupon implements Parcelable
         validTo = in.readString();
         amountMinimum = in.readInt();
         isDownloaded = in.readString();
-        useablePlace = in.readString();
+        availableItem = in.readString();
         warring = in.readString();
         serverDate = in.readString();
     }

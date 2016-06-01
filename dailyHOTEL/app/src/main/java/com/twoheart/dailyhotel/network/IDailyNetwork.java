@@ -572,10 +572,9 @@ interface IDailyNetwork
 
     /**
      * @param tag
-     * @param agreement
      * @param listener
      */
-    void requestBenefitAgreement(Object tag, boolean agreement, DailyHotelJsonResponseListener listener);
+    void requestBenefitMessage(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag
