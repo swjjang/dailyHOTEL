@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +24,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
  */
 public class InformationLayout extends BaseLayout implements View.OnClickListener
 {
+
+    private static final float DEFAULT_PROFILE_TEXT_SIZE_DP = 18.0f;
+    private static final float SMALL_PROFILE_TEXT_SIZE_DP = 12.0f;
 
     private View mProfileLayout;
     private View mAccountInfoLayout;
@@ -135,6 +139,13 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View loginView = view.findViewById(R.id.loginTextView);
         View signUpView = view.findViewById(R.id.signupTextView);
         View editProfileView = view.findViewById(R.id.editProfileTextView);
+        TextView profileTextView = (TextView) view.findViewById(R.id.profileTextView);
+
+        if (Util.getLCDWidth(mContext) < 720) {
+            profileTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, SMALL_PROFILE_TEXT_SIZE_DP);
+        } else {
+            profileTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_PROFILE_TEXT_SIZE_DP);
+        }
 
         loginView.setOnClickListener(this);
         signUpView.setOnClickListener(this);
