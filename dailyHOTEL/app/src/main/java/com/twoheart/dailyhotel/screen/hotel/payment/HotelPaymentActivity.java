@@ -604,7 +604,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         } else if(paymentInformation.isUsedCoupon == true)
         {
             Coupon coupon = paymentInformation.getCoupon();
-            params.put("coupon_code", coupon.code);
+            params.put("coupon_code", coupon.getCode());
         }
 
         params.put("guest_name", guest.name);

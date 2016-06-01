@@ -28,8 +28,10 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonArrayResponseListe
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
@@ -904,7 +906,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     public void requestCouponList(Object tag, DailyHotelJsonResponseListener listener)
     {
 
-        final String URL = Constants.UNENCRYPTED_URL ? "/api/v3/users/coupons" : "MiQzNCQzMiQ2OCQ3NSQ=$MTJREMjI1QkJGQjVCRDQyOEJFNUVCMUVYGMIkUzRTkyOEJEMjA4MzdGNzVCNEM1OTVCOSDgyNkFVCNDhEN0QxN0VENQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons" : "";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL, null, listener);
         dailyHotelJsonRequest.setUsedAuthorization(true);
@@ -920,14 +922,23 @@ public class DailyNetworkAPI implements IDailyNetwork
      * @param tag
      * @param hotelIdx
      * @param roomIdx
-     * @param checkIn       ISO-8601
-     * @param checkOut      ISO-8601
+     * @param checkIn  ISO-8601
+     * @param checkOut ISO-8601
      * @param listener
      */
     @Override
     public void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "/api/v3/users/coupons" : "MiQzNCQzMiQ2OCQ3NSQ=$MTJREMjI1QkJGQjVCRDQyOEJFNUVCMUVYGMIkUzRTkyOEJEMjA4MzdGNzVCNEM1OTVCOSDgyNkFVCNDhEN0QxN0VENQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons" : "";
+
+        try
+        {
+            checkIn = URLEncoder.encode(checkIn, "UTF-8");
+            checkOut = URLEncoder.encode(checkIn, "UTF-8");
+        } catch (UnsupportedEncodingException e)
+        {
+            ExLog.w(e.getMessage());
+        }
 
         String params = String.format("?hotelIdx=%d&roomIdx=%d&checkIn=%s&checkOut=%s", hotelIdx, roomIdx, checkIn, checkOut);
 
@@ -942,7 +953,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     public void requestCouponHistoryList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
 
-        final String URL = Constants.UNENCRYPTED_URL ? "/api/v3/users/coupons/history" : "MTIkNzEkNDgkMzkkOCQ=$Q0FBN0Q5WNDcwBMjIzQ0M5M0QzQ0EzNkRBQzFCNUUJBODY4OTlBDNDZGNTFCMUYzOTAzNDgyMTBBCNUQ1NDlGNjg3NQ==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/history" : "MTIkNzEkNDgkMzkkOCQ=$Q0FBN0Q5WNDcwBMjIzQ0M5M0QzQ0EzNkRBQzFCNUUJBODY4OTlBDNDZGNTFCMUYzOTAzNDgyMTBBCNUQ1NDlGNjg3NQ==$";
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL, null, listener, errorListener);
         dailyHotelJsonRequest.setUsedAuthorization(true);

@@ -190,13 +190,13 @@ public class SelectCouponNetworkController extends BaseNetworkController
                         list = makeCouponList(couponList);
 
                     }
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list);
                 } else
                 {
                     String message = response.getString("msg");
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
