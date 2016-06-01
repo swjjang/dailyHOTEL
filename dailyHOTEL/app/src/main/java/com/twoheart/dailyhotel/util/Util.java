@@ -1155,9 +1155,9 @@ public class Util implements Constants
         return simpleDateFormat.format(date);
     }
 
-    public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException,  NullPointerException
+    public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException, NullPointerException
     {
-        if(Util.isTextEmpty(iso8601, format) == true)
+        if (Util.isTextEmpty(iso8601, format) == true)
         {
             throw new NullPointerException("iso8601, format is empty");
         }
@@ -1189,4 +1189,50 @@ public class Util implements Constants
 
         return getISO8601String(time);
     }
+
+    /**
+     * String value 값 중 "true", "1", "Y", "y" 값을 true로 바꿔 주는 메소드
+     *
+     * @param value
+     * @return boolean value
+     */
+    public static boolean parseBoolean(String value)
+    {
+        if (isTextEmpty(value))
+        {
+            return false;
+        }
+
+        value = value.toLowerCase();
+
+        if ("true".equalsIgnoreCase(value))
+        {
+            return true;
+        } else if ("1".equalsIgnoreCase(value))
+        {
+            return true;
+        } else if ("Y".equalsIgnoreCase(value))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * int value 값을 true로 바꿔 주는 메소드
+     *
+     * @param value int value
+     * @return boolean value
+     */
+    public static boolean parseBoolean(int value)
+    {
+        if (1 == value)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 }
