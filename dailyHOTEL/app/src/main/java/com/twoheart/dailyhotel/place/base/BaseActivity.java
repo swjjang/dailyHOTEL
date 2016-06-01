@@ -761,6 +761,132 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
     }
 
+    /**
+     * 버튼이 상하로 되어있는데 팝업
+     * @param titleText
+     * @param msg
+     * @param positive
+     * @param negative
+     * @param positiveListener
+     * @param negativeListener
+     * @param cancelListener
+     * @param dismissListener
+     * @param isCancelable
+     */
+    public void showSimpleDialogType01(String titleText, String msg, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
+                                 DialogInterface.OnDismissListener dismissListener, //
+                                 boolean isCancelable)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        if (mDialog != null)
+        {
+            if (mDialog.isShowing())
+            {
+                mDialog.dismiss();
+            }
+
+            mDialog = null;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_button_up_down_layout, null, false);
+
+        mDialog = new Dialog(this);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+
+        if (Util.isTextEmpty(titleText) == true)
+        {
+            titleTextView.setText(getString(R.string.dialog_notice2));
+        } else
+        {
+            titleTextView.setText(titleText);
+        }
+
+        // 메시지
+        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        messageTextView.setText(msg);
+        messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+        if (Util.isTextEmpty(positive) == false && Util.isTextEmpty(negative) == false)
+        {
+            twoButtonLayout.setVisibility(View.VISIBLE);
+
+            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+            negativeTextView.setText(negative);
+            negativeTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mDialog != null && mDialog.isShowing())
+                    {
+                        mDialog.dismiss();
+                    }
+
+                    if (negativeListener != null)
+                    {
+                        negativeListener.onClick(v);
+                    }
+                }
+            });
+
+            positiveTextView.setText(positive);
+            positiveTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mDialog != null && mDialog.isShowing())
+                    {
+                        mDialog.dismiss();
+                    }
+
+                    if (positiveListener != null)
+                    {
+                        positiveListener.onClick(v);
+                    }
+                }
+            });
+        }
+
+        if (cancelListener != null)
+        {
+            mDialog.setOnCancelListener(cancelListener);
+        }
+
+        if (dismissListener != null)
+        {
+            mDialog.setOnDismissListener(dismissListener);
+        }
+
+        mDialog.setCancelable(isCancelable);
+
+        try
+        {
+            mDialog.setContentView(dialogView);
+            mDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
     protected void startLoginActivity()
     {
         DailyToast.showToast(this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);

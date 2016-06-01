@@ -478,13 +478,24 @@ public class MainActivity extends BaseActivity implements Constants
     private MainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new MainNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void updateNewEvent()
+        public void updateNewEvent(boolean isNew)
         {
-            if (DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
+            long currentDateTime = DailyPreference.getInstance(MainActivity.this).getLookUpEventTime();
+
+            if (isNew == true)
             {
+                DailyPreference.getInstance(MainActivity.this).setNewEvent(true);
+                DailyPreference.getInstance(MainActivity.this).setNewEventTime(currentDateTime);
+
                 mMenuBarLayout.setNewIconVisible(true);
             } else
             {
+                if (currentDateTime == 0)
+                {
+                    DailyPreference.getInstance(MainActivity.this).setNewEvent(false);
+                    DailyPreference.getInstance(MainActivity.this).setNewEventTime(currentDateTime);
+                }
+
                 mMenuBarLayout.setNewIconVisible(false);
             }
 
@@ -767,7 +778,7 @@ public class MainActivity extends BaseActivity implements Constants
             }
 
             // 혜택
-            showSimpleDialog(getString(R.string.label_setting_alarm), message, getString(R.string.label_now_setting_alarm), getString(R.string.label_after_setting_alarm)//
+            showSimpleDialogType01(getString(R.string.label_setting_alarm), message, getString(R.string.label_now_setting_alarm), getString(R.string.label_after_setting_alarm)//
                 , new View.OnClickListener()
                 {
                     @Override

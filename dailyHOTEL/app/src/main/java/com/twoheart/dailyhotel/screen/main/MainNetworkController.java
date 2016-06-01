@@ -27,7 +27,7 @@ public class MainNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void updateNewEvent();
+        void updateNewEvent(boolean isNew);
 
         void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime);
 
@@ -115,7 +115,7 @@ public class MainNetworkController extends BaseNetworkController
 
                 Calendar calendar = DailyCalendar.getInstance();
                 calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-                calendar.setTimeInMillis(currentDateTime);
+                calendar.setTimeInMillis(lastLookupDateTime);
 
                 DailyNetworkAPI.getInstance(mContext).requestEventNewCount(mNetworkTag, Util.getISO8601String(calendar.getTime()), mDailyEventCountJsonResponseListener, null);
             }
@@ -142,9 +142,9 @@ public class MainNetworkController extends BaseNetworkController
             {
                 try
                 {
-                    int msg_code = response.getInt("msgCode");
+                    int msgCode = response.getInt("msgCode");
 
-                    if (msg_code == 100 && response.has("data") == true)
+                    if (msgCode == 100 && response.has("data") == true)
                     {
                         JSONObject jsonObject = response.getJSONObject("data");
 
@@ -324,30 +324,18 @@ public class MainNetworkController extends BaseNetworkController
         {
             try
             {
-                int msgCode = response.getInt("msg_code");
+                boolean isNew = false;
 
-                if (msgCode == 0)
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
-                    int count = jsonObject.getInt("count");
-                    long currentDateTime = DailyPreference.getInstance(mContext).getLookUpEventTime();
-
-                    if (count > 0)
-                    {
-                        DailyPreference.getInstance(mContext).setNewEvent(true);
-                        DailyPreference.getInstance(mContext).setNewEventTime(currentDateTime);
-                    } else
-                    {
-                        if (currentDateTime == 0)
-                        {
-                            DailyPreference.getInstance(mContext).setNewEvent(false);
-                            DailyPreference.getInstance(mContext).setNewEventTime(currentDateTime);
-                        }
-                    }
+                    isNew = jsonObject.getBoolean("isNew");
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent();
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent(isNew);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -483,13 +471,13 @@ public class MainNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0)
+                if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
                     String message01 = dataJSONObject.getString("description1");
                     String message02 = dataJSONObject.getString("description2");
-                    boolean isFirstTimeBuyer = dataJSONObject.getBoolean("isFirstTimeBuyer");
+                    boolean isFirstTimeBuyer = dataJSONObject.getBoolean("firstTimeBuyer");
 
                     String message = message01 + "\n\n" + message02;
 
@@ -497,7 +485,6 @@ public class MainNetworkController extends BaseNetworkController
                 }
             } catch (Exception e)
             {
-                mOnNetworkControllerListener.onError(e);
             }
         }
     };
@@ -517,18 +504,20 @@ public class MainNetworkController extends BaseNetworkController
             {
                 int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0)
+                if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    String agreeAt = dataJSONObject.getString("agreeAt");
+                    String agreeAt = dataJSONObject.getString("agreedAt");
                     String description1InAgree = dataJSONObject.getString("description1InAgree");
                     String description2InAgree = dataJSONObject.getString("description2InAgree");
                     String description1InReject = dataJSONObject.getString("description1InReject");
                     String description2InReject = dataJSONObject.getString("description2InReject");
 
-                    String agreeMessage = description1InAgree.replace("{{DATE}}", agreeAt) + "\n\n" + description2InAgree;
-                    String cancelMessage = description1InReject.replace("{{DATE}}", agreeAt) + "\n\n" + description2InReject;
+                    agreeAt = Util.simpleDateFormatISO8601toFormat(agreeAt, "yyyy년 MM월 dd일");
+
+                    String agreeMessage = description1InAgree.replace("{{DATE}}", "\n" + agreeAt) + "\n\n" + description2InAgree;
+                    String cancelMessage = description1InReject.replace("{{DATE}}", "\n" + agreeAt) + "\n\n" + description2InReject;
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onNoticeAgreementResult(agreeMessage, cancelMessage);
                 }
