@@ -1198,7 +1198,7 @@ public class Util implements Constants
      */
     public static boolean parseBoolean(String value)
     {
-        if (isTextEmpty(value))
+        if (isTextEmpty(value) == true)
         {
             return false;
         }
