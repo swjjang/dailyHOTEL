@@ -827,7 +827,7 @@
     <string name="coupon_notice_text">주의사항\n확인하기</string>
     <string name="coupon_duedate_text">(%1$s일 남음)</string>
     <string name="coupon_today_text">오늘까지</string>
-    <string name="coupon_description_text">사용가능처 %1$s</string>
+    <string name="coupon_available_item_text">사용가능처: %1$s</string>
     <string name="coupon_download_text">다운로드</string>
     <string name="coupon_useable_text">사용가능</string>
     <string name="coupon_min_price_text">%1$s원 이상 사용가능</string>

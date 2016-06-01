@@ -186,7 +186,18 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 minPriceTextView.setText("");
             }
 
-            useablePlaceTextView.setText(coupon.getUseablePlace());
+            if (Util.isTextEmpty(coupon.getAvailableItem()))
+            {
+
+                useablePlaceTextView.setText("");
+            } else
+            {
+                String availableText = mContext.getResources().getString( //
+                    R.string.coupon_available_item_text, coupon.getAvailableItem());
+
+                useablePlaceTextView.setText(coupon.getAvailableItem());
+            }
+
 
             if (Util.parseBoolean(coupon.isDownloaded()) == true)
             {
