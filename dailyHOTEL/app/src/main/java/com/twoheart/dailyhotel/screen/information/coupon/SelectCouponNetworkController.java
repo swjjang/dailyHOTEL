@@ -185,7 +185,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
                     JSONObject data = response.getJSONObject("data");
                     if (data != null)
                     {
-                        JSONArray couponList = response.getJSONArray("coupons");
+                        JSONArray couponList = data.getJSONArray("coupons");
 
                         list = makeCouponList(couponList);
 

@@ -560,7 +560,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         String checkInDate = hotelPaymentInformation.checkInDateFormat;
         String checkOutDate = hotelPaymentInformation.checkOutDateFormat;
 
-        Intent intent = SelectCouponDialogActivity.newInstance(this, placeIndex, roomIndex, checkInDate, checkInDate);
+        Intent intent = SelectCouponDialogActivity.newInstance(this, placeIndex, roomIndex, checkInDate, checkOutDate);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
     }
 

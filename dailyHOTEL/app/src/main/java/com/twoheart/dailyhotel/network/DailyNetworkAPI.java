@@ -934,7 +934,7 @@ public class DailyNetworkAPI implements IDailyNetwork
         try
         {
             checkIn = URLEncoder.encode(checkIn, "UTF-8");
-            checkOut = URLEncoder.encode(checkIn, "UTF-8");
+            checkOut = URLEncoder.encode(checkOut, "UTF-8");
         } catch (UnsupportedEncodingException e)
         {
             ExLog.w(e.getMessage());
