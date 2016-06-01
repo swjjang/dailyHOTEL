@@ -47,6 +47,7 @@ public class MainActivity extends BaseActivity implements Constants
     private View mSplashLayout;
 
     private boolean mIsInitialization;
+    private boolean mIsBenefitAlarm;
     private Handler mDelayTimeHandler = new Handler()
     {
         @Override
@@ -130,7 +131,6 @@ public class MainActivity extends BaseActivity implements Constants
         {
             DailyPreference.getInstance(this).setAppVersion(currentVersion);
             AnalyticsManager.getInstance(this).currentAppVersion(currentVersion);
-            DailyPreference.getInstance(this).setShowBenefitAlarm(false);
         }
 
         initLayout();
@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity implements Constants
                 break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
-                mNetworkController.requestNoticeAgreement();
+                mNetworkController.requestNoticeAgreement(true);
                 break;
 
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
@@ -741,17 +741,30 @@ public class MainActivity extends BaseActivity implements Constants
                     if (DailyPreference.getInstance(MainActivity.this).isAllowBenefitAlarm() == false//
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
-                        mNetworkController.requestNoticeAgreement();
+                        mNetworkController.requestNoticeAgreement(false);
                     }
                 }
             }
         }
 
         @Override
-        public void onNoticeAgreement(String message01, String message02, String cancelMessage01, String cancelMessage02)
+        public void onNoticeAgreement(String message, boolean isFirstTimeBuyer)
         {
-            String message = message01 + "\n\n" + message02;
-            final String cancelMessage = cancelMessage01 + "\n\n" + cancelMessage02;
+            final boolean isLogined = Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false;
+
+            if (isLogined == true)
+            {
+                if (isFirstTimeBuyer == false || DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == true)
+                {
+                    return;
+                }
+            } else
+            {
+                if (DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == true)
+                {
+                    return;
+                }
+            }
 
             // 혜택
             showSimpleDialog(getString(R.string.label_setting_alarm), message, getString(R.string.label_now_setting_alarm), getString(R.string.label_after_setting_alarm)//
@@ -760,57 +773,44 @@ public class MainActivity extends BaseActivity implements Constants
                     @Override
                     public void onClick(View v)
                     {
-                        DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(true);
-                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                        mIsBenefitAlarm = true;
+                        mNetworkController.requestNoticeAgreementResult(isLogined, true);
                     }
                 }, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-                        DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(false);
-                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                        mIsBenefitAlarm = false;
+                        mNetworkController.requestNoticeAgreementResult(isLogined, false);
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
                     @Override
                     public void onCancel(DialogInterface dialog)
                     {
-                        DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(false);
-                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+                        mIsBenefitAlarm = false;
+                        mNetworkController.requestNoticeAgreementResult(isLogined, false);
                     }
                 }, null, true);
         }
 
         @Override
-        public void onBenefitAgreement(String message01, String message02)
+        public void onNoticeAgreementResult(final String agreeMessage, final String cancelMessage)
         {
-            String message = message01 + "\n\n" + message02;
+            DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
 
-            // 혜택
-            showSimpleDialog(getString(R.string.label_setting_alarm), message, getString(R.string.label_now_setting_alarm), getString(R.string.label_after_setting_alarm)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
-                    }
-                }, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
-                    }
-                }, null, true);
+            if(mIsBenefitAlarm == true)
+            {
+                DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(true);
+
+                showSimpleDialog(getString(R.string.label_setting_alarm), agreeMessage, getString(R.string.dialog_btn_text_confirm), null);
+            } else
+            {
+                DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(false);
+
+                showSimpleDialog(getString(R.string.label_setting_alarm), cancelMessage, getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
     };
 }

@@ -58,7 +58,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
 
         updateHeaderTextView(0);
 
-//        setData(new ArrayList<Coupon>());
+        //        setData(new ArrayList<Coupon>());
     }
 
     private void initToolbar(View view)

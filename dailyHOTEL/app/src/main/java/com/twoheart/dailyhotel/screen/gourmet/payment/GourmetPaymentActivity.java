@@ -7,11 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
@@ -45,6 +48,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -283,6 +287,39 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setEnabled(false);
+
+        // 화면이 작은 곳에서 스크롤 뷰가 들어가면서 발생하는 이슈
+        final DailyScrollView scrollLayout = (DailyScrollView) finalCheckLayout.findViewById(R.id.scrollLayout);
+
+        if (scrollLayout != null)
+        {
+            View dailySignatureView = finalCheckLayout.getDailySignatureView();
+
+            dailySignatureView.setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v, MotionEvent event)
+                {
+                    switch (event.getAction() & MotionEventCompat.ACTION_MASK)
+                    {
+                        case MotionEvent.ACTION_DOWN:
+                        {
+                            scrollLayout.setScrollingEnabled(false);
+                            break;
+                        }
+
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                        {
+                            scrollLayout.setScrollingEnabled(true);
+                            break;
+                        }
+                    }
+
+                    return false;
+                }
+            });
+        }
 
         finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
         {
@@ -642,6 +679,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
             , getMapPaymentInformation((GourmetPaymentInformation) paymentInformation));
+    }
+
+    @Override
+    protected void setCoupon(Coupon coupon)
+    {
+
     }
 
     private void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime checkInSaleTime)

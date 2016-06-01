@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -48,6 +50,7 @@ public class InformationFragment extends BaseFragment implements Constants
     private InformationLayout mInformationLayout;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
+    private boolean mIsBenefitAlarm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -94,6 +97,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             DailyDeepLink.getInstance().clear();
         }
+
+        boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
+        mInformationLayout.updateNewIconView(hasNewEvent);
     }
 
     @Override
@@ -119,6 +125,24 @@ public class InformationFragment extends BaseFragment implements Constants
         unregisterReceiver();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode)
+        {
+            case CODE_REQEUST_ACTIVITY_SIGNUP:
+            {
+                if(resultCode == Activity.RESULT_OK && DailyPreference.getInstance(getContext()).isUserBenefitAlarm() == false)
+                {
+                    DailyNetworkAPI.getInstance(getContext()).requestNoticeAgreement(mNetworkTag, true, mNoticeAgreementJsonResponseListener);
+                }
+                break;
+            }
+        }
+    }
+
     private void startSignUp(String recommenderCode)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
@@ -140,7 +164,7 @@ public class InformationFragment extends BaseFragment implements Constants
             intent = SignupStep1Activity.newInstance(baseActivity, recommenderCode);
         }
 
-        startActivity(intent);
+        startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
         baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
@@ -655,4 +679,140 @@ public class InformationFragment extends BaseFragment implements Constants
         }
     };
 
+    private DailyHotelJsonResponseListener mNoticeAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 0)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String message01 = dataJSONObject.getString("description1");
+                    String message02 = dataJSONObject.getString("description2");
+                    boolean isFirstTimeBuyer = dataJSONObject.getBoolean("isFirstTimeBuyer");
+
+                    String message = message01 + "\n\n" + message02;
+
+                    onNoticeAgreement(message, isFirstTimeBuyer);
+                }
+            } catch (Exception e)
+            {
+            }
+        }
+
+        public void onNoticeAgreement(String message, boolean isFirstTimeBuyer)
+        {
+            final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            final boolean isLogined = Util.isTextEmpty(DailyPreference.getInstance(baseActivity).getAuthorization()) == false;
+
+            if (isLogined == true)
+            {
+                if (isFirstTimeBuyer == false || DailyPreference.getInstance(baseActivity).isShowBenefitAlarm() == true)
+                {
+                    return;
+                }
+            } else
+            {
+                if (DailyPreference.getInstance(baseActivity).isShowBenefitAlarm() == true)
+                {
+                    return;
+                }
+            }
+
+            // 혜택
+            baseActivity.showSimpleDialog(getString(R.string.label_setting_alarm), message, getString(R.string.label_now_setting_alarm), getString(R.string.label_after_setting_alarm)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mIsBenefitAlarm = true;
+                        DailyNetworkAPI.getInstance(baseActivity).requestNoticeAgreementResult(mNetworkTag, isLogined, true, mNoticeAgreementResultJsonResponseListener);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mIsBenefitAlarm = false;
+                        DailyNetworkAPI.getInstance(baseActivity).requestNoticeAgreementResult(mNetworkTag, isLogined, false, mNoticeAgreementResultJsonResponseListener);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        mIsBenefitAlarm = false;
+                        DailyNetworkAPI.getInstance(baseActivity).requestNoticeAgreementResult(mNetworkTag, isLogined, false, mNoticeAgreementResultJsonResponseListener);
+                    }
+                }, null, true);
+        }
+    };
+
+    private DailyHotelJsonResponseListener mNoticeAgreementResultJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+
+                if (msgCode == 0)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    String agreeAt = dataJSONObject.getString("agreeAt");
+                    String description1InAgree = dataJSONObject.getString("description1InAgree");
+                    String description2InAgree = dataJSONObject.getString("description2InAgree");
+                    String description1InReject = dataJSONObject.getString("description1InReject");
+                    String description2InReject = dataJSONObject.getString("description2InReject");
+
+                    String agreeMessage = description1InAgree.replace("{{DATE}}", agreeAt) + "\n\n" + description2InAgree;
+                    String cancelMessage = description1InReject.replace("{{DATE}}", agreeAt) + "\n\n" + description2InReject;
+
+                    onNoticeAgreementResult(agreeMessage, cancelMessage);
+                }
+            } catch (Exception e)
+            {
+
+            }
+        }
+
+        public void onNoticeAgreementResult(final String agreeMessage, final String cancelMessage)
+        {
+            final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            DailyPreference.getInstance(baseActivity).setShowBenefitAlarm(true);
+
+            if(mIsBenefitAlarm == true)
+            {
+                DailyPreference.getInstance(baseActivity).setUserBenefitAlarm(true);
+
+                baseActivity.showSimpleDialog(getString(R.string.label_setting_alarm), agreeMessage, getString(R.string.dialog_btn_text_confirm), null);
+            } else
+            {
+                DailyPreference.getInstance(baseActivity).setUserBenefitAlarm(false);
+
+                baseActivity.showSimpleDialog(getString(R.string.label_setting_alarm), cancelMessage, getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }
+    };
 }

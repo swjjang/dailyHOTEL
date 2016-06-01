@@ -5,10 +5,13 @@ import android.os.Parcelable;
 
 public class HotelPaymentInformation extends PlacePaymentInformation
 {
-    public int originalPrice;
     private SaleRoomInformation mSaleRoomInformation;
     //
     public String checkInOutDate; // Thankyou에 넘기기 위한 데이터 저장
+
+    // None Parcelable
+    public String checkInDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
+    public String checkOutDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
 
     public HotelPaymentInformation()
     {
@@ -25,7 +28,6 @@ public class HotelPaymentInformation extends PlacePaymentInformation
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeInt(originalPrice);
         dest.writeParcelable(mSaleRoomInformation, flags);
 
     }
@@ -35,7 +37,6 @@ public class HotelPaymentInformation extends PlacePaymentInformation
     {
         super.readFromParcel(in);
 
-        originalPrice = in.readInt();
         mSaleRoomInformation = in.readParcelable(SaleRoomInformation.class.getClassLoader());
     }
 

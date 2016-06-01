@@ -14,12 +14,14 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
@@ -79,6 +81,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected abstract void onActivityPaymentResult(int requestCode, int resultCode, Intent intent);
 
     protected abstract void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation);
+
+    protected abstract void setCoupon(Coupon coupon);
 
     @Override
     protected void onResume()
@@ -262,6 +266,13 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 mDontReload = true;
 
                 unLockUI();
+
+                if (resultCode == Activity.RESULT_OK && intent != null)
+                {
+                    Coupon coupon = intent.getParcelableExtra(SelectCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+
+                    setCoupon(coupon);
+                }
                 break;
             }
 
