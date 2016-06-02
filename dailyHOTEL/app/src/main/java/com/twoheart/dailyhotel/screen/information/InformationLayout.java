@@ -19,6 +19,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by sam on 2016. 5. 18..
  */
@@ -33,6 +35,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private View mNewEventIconView;
 
     private TextView mPushTextView;
+    private TextView mPushBenefitTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -114,6 +117,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mPushTextView = (TextView) view.findViewById(R.id.pushTextView);
         mPushTextView.setOnClickListener(this);
 
+        mPushBenefitTextView = (TextView) view.findViewById(R.id.pushBenefitTextView);
+
         initSnsLayout(view);
         initBusinessLayout(baseActivity, view);
         initTermsLayout(baseActivity, view);
@@ -121,8 +126,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
         versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION));
 
-        updateLoginLayout(false);
-        updateAccountLayout(false);
+        updateLoginLayout(false, true);
+        updateAccountLayout(false, 0, 0);
         updatePushIcon(false);
         updateNewIconView(false);
     }
@@ -141,9 +146,11 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View editProfileView = view.findViewById(R.id.editProfileTextView);
         TextView profileTextView = (TextView) view.findViewById(R.id.profileTextView);
 
-        if (Util.getLCDWidth(mContext) < 720) {
+        if (Util.getLCDWidth(mContext) < 720)
+        {
             profileTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, SMALL_PROFILE_TEXT_SIZE_DP);
-        } else {
+        } else
+        {
             profileTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_PROFILE_TEXT_SIZE_DP);
         }
 
@@ -251,7 +258,11 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         }
     }
 
-    public void updateLoginLayout(boolean isLogin)
+    /**
+     * @param isLogin
+     * @param isInitialize 초기화 여부 초기화시 Analytics 보내지 않기 위해
+     */
+    public void updateLoginLayout(boolean isLogin, boolean isInitialize)
     {
         TextView profileTextView = (TextView) mProfileLayout.findViewById(R.id.profileTextView);
         TextView loginMessageTextView = (TextView) mProfileLayout.findViewById(R.id.loginMessageTextView);
@@ -264,7 +275,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         if (isLogin == true)
         {
-            AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNIN);
+            if (isInitialize == false)
+            {
+                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNIN);
+            }
 
             String userName = DailyPreference.getInstance(mContext).getUserName();
             String userEmail = DailyPreference.getInstance(mContext).getUserEmail();
@@ -278,7 +292,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             profileImageView.setImageResource(R.drawable.more_ic_mydaily_02_login);
         } else
         {
-            AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNOUT);
+            if (isInitialize == false)
+            {
+                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNOUT);
+            }
 
             profileTextView.setText(R.string.frag_need_login);
             loginMessageTextView.setText(R.string.frag_login_message);
@@ -291,7 +308,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         }
     }
 
-    public void updateAccountLayout(boolean isLogin)
+    public void updateAccountLayout(boolean isLogin, int bonus, int couponCount)
     {
         View newCouponIconView = mAccountInfoLayout.findViewById(R.id.newCounponIconView);
         View newBonusIconView = mAccountInfoLayout.findViewById(R.id.newBonusIconView);
@@ -301,8 +318,11 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         boolean hasNewCoupon = false;
         boolean hasNewBonus = false;
 
-        String couponCountString = "0";
-        String bonusCountString = "0";
+        DecimalFormat bonusFormat = new DecimalFormat(mContext.getResources().getString(R.string.frag_currency_decimal_format));
+        String bonusString = bonusFormat.format(bonus);
+
+        DecimalFormat countFormat = new DecimalFormat(mContext.getResources().getString(R.string.frag_count_decimal_format));
+        String couponCountString = countFormat.format(couponCount);
 
         if (isLogin == true)
         {
@@ -311,8 +331,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             newCouponIconView.setVisibility(hasNewCoupon ? View.VISIBLE : View.GONE);
             newBonusIconView.setVisibility(hasNewBonus ? View.VISIBLE : View.GONE);
 
-            couponCountTextView.setText(mContext.getResources().getString(R.string.frag_count_text, couponCountString));
-            bonusCountTextView.setText(mContext.getResources().getString(R.string.frag_currency_text, bonusCountString));
+            couponCountTextView.setText(couponCountString);
+            bonusCountTextView.setText(bonusString);
 
         } else
         {

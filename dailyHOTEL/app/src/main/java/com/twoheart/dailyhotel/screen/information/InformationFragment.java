@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.information;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -48,14 +46,15 @@ import org.json.JSONObject;
 public class InformationFragment extends BaseFragment implements Constants
 {
     private InformationLayout mInformationLayout;
+    private InformationNetworkController mNetworkController;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
-    private boolean mIsBenefitAlarm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         mInformationLayout = new InformationLayout(getActivity(), mOnEventListener);
+        mNetworkController = new InformationNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
 
         return mInformationLayout.onCreateView(R.layout.fragment_information);
     }
@@ -107,14 +106,30 @@ public class InformationFragment extends BaseFragment implements Constants
     {
         super.onResume();
 
-        unLockUI();
+        registerReceiver();
+
+        // 우선 혜택 알림 메세지 가져와야 함
+
 
         boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
 
-        mInformationLayout.updateLoginLayout(isLogin);
-        mInformationLayout.updateAccountLayout(isLogin);
+        if (isLogin)
+        {
+            // 적립금 및 쿠폰 개수 가져와야 함
+            lockUI();
 
-        registerReceiver();
+            mNetworkController.requestUserInformation();
+
+        } else
+        {
+            // 비로그인 상태
+
+            unLockUI();
+
+            mInformationLayout.updateLoginLayout(isLogin, false);
+            mInformationLayout.updateAccountLayout(isLogin, 0, 0);
+        }
+
     }
 
     @Override
@@ -130,7 +145,7 @@ public class InformationFragment extends BaseFragment implements Constants
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode)
+        switch (requestCode)
         {
             case CODE_REQEUST_ACTIVITY_SIGNUP:
             {
@@ -672,6 +687,51 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 unLockUI();
             }
+        }
+    };
+
+    /**
+     * 유저 정보 리스너
+     */
+    private InformationNetworkController.OnNetworkControllerListener mNetworkControllerListener //
+        = new InformationNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount)
+        {
+            DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
+
+            unLockUI();
+
+            boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
+
+            mInformationLayout.updateLoginLayout(isLogin, false);
+            mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            InformationFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            InformationFragment.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            InformationFragment.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            InformationFragment.this.onErrorToastMessage(message);
         }
     };
 }

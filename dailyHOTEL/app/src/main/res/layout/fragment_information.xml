@@ -131,7 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
                 android:background="@color/white"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/couponLayout"
@@ -179,7 +179,6 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="1px"
                             android:gravity="center_vertical"
-                            android:text="@string/frag_count_text"
                             android:textColor="@color/information_count_text"
                             android:textSize="11dp"/>
                     </LinearLayout>
@@ -237,7 +236,6 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="1px"
                             android:gravity="center_vertical"
-                            android:text="@string/frag_count_text"
                             android:textColor="@color/information_count_text"
                             android:textSize="11dp"/>
                     </LinearLayout>
@@ -507,11 +505,13 @@
                     dailyFont:style="Medium"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/pushBenefitTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="23dp"
                     android:layout_below="@id/pushTitleTextView"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="3dp"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:text="@string/frag_push_alert_subtext"
                     android:textColor="@color/information_push_subtext"
