@@ -44,14 +44,14 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
 
-        initLayout(HotelCalendarActivity.this, dailyTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+        initLayout(R.layout.activity_calendar, dailyTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
     }
 
     @Override
-    protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
-        super.initLayout(context, dailyTime, enableDayCountOfMax, dayCountOfMax);
+        super.initLayout(layoutResID, dailyTime, enableDayCountOfMax, dayCountOfMax);
 
         mConfirmView = findViewById(R.id.confirmView);
         mConfirmView.setVisibility(View.VISIBLE);

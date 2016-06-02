@@ -1480,7 +1480,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mOnCommunicateListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected();
+            fragment.onPageSelected(tab.getText().toString());
 
             //            mOnCommunicateListener.refreshAll(true);
             DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
@@ -1516,7 +1516,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mOnCommunicateListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected();
+            fragment.onPageSelected(null);
 
             //            // Google Analytics
             //            if (mSelectedProvince != null)

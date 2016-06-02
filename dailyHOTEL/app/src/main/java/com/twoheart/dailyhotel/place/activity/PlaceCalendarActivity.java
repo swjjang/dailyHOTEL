@@ -32,9 +32,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected TextView[] mDailyTextViews;
     private DailyToolbarLayout mDailyToolbarLayout;
 
-    protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
-        setContentView(R.layout.activity_calendar);
+        setContentView(layoutResID);
 
         ViewGroup calendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
         ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
@@ -63,7 +63,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            calendarsLayout.addView(getMonthCalendarView(context, dailyTime.getClone(dayCount)//
+            calendarsLayout.addView(getMonthCalendarView(this, dailyTime.getClone(dayCount)//
                 , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1, enableDayCount));
 
             dayCount += maxDayOfMonth - day + 1;

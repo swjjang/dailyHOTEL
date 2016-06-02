@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black_a67">
+
+    <View
+        android:id="@+id/exitView"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"/>
+
+    <RelativeLayout
+        android:id="@+id/animationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/exitView">
+
+        <RelativeLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/closeView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="right"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/navibar_ic_x"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/titleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/curation_information_text"
+                android:textSize="13dp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/weekLayout"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_below="@+id/toolbarLayout"
+            android:background="@color/white">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/sunTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_sunday"
+                android:textColor="@color/calendar_sunday_text_default"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/monTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_monday"
+                android:textColor="@color/calendar_week_text_default"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/tueTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_tuesday"
+                android:textColor="@color/calendar_week_text_default"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/wedTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_wednesday"
+                android:textColor="@color/calendar_week_text_default"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/thuTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_thursday"
+                android:textColor="@color/calendar_week_text_default"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/friTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_friday"
+                android:textColor="@color/calendar_week_text_default"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/satTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_saturday"
+                android:textColor="@color/calendar_week_text_default"
+                android:textSize="11dp"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/lineView"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/weekLayout"
+            android:background="@color/calendar_month_line"/>
+
+        <ScrollView
+            android:id="@+id/calendarScrollLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/confirmView"
+            android:layout_below="@+id/lineView"
+            android:fadingEdge="none"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/calendarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="38dp"/>
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/toastLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/shape_calendar_toast_background"
+            android:padding="15dp"
+            android:visibility="gone">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/toastTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="@string/message_searchcalendar_reset"
+                android:textColor="@color/white"
+                android:textSize="15dp"/>
+
+        </FrameLayout>
+
+        <View
+            android:id="@+id/cancelView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/confirmView"
+            android:layout_alignParentBottom="false"
+            android:layout_below="@+id/lineView"
+            android:visibility="gone"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/confirmView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/selector_button_background_color"
+            android:gravity="center"
+            android:text="@string/label_searchcalendar_search_selected_date"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/disableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>

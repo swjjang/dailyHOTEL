@@ -40,14 +40,14 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
 
-        initLayout(GourmetCalendarActivity.this, dailyTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+        initLayout(R.layout.activity_calendar, dailyTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_gourmet_select));
     }
 
     @Override
-    protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
-        super.initLayout(context, dailyTime, enableDayCountOfMax, dayCountOfMax);
+        super.initLayout(layoutResID, dailyTime, enableDayCountOfMax, dayCountOfMax);
 
         View confirmView = findViewById(R.id.confirmView);
         confirmView.setVisibility(View.GONE);
