@@ -95,4 +95,9 @@ public class FinalCheckLayout extends FrameLayout
             mDailySignatureView.setOnUserActionListener(listener);
         }
     }
+
+    public DailySignatureView getDailySignatureView()
+    {
+        return mDailySignatureView;
+    }
 }

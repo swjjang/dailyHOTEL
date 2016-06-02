@@ -2,11 +2,13 @@ package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.ScrollView;
 
 public class DailyScrollView extends ScrollView
 {
     private OnScrollChangedListener mOnScrollChangedListener;
+    private boolean mScrollable = true;
 
     public interface OnScrollChangedListener
     {
@@ -47,5 +49,45 @@ public class DailyScrollView extends ScrollView
         }
 
         super.onScrollChanged(l, t, oldl, oldt);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev)
+    {
+        switch (ev.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:
+                // if we can scroll pass the event to the superclass
+                if (mScrollable)
+                {
+                    return super.onTouchEvent(ev);
+                }
+                // only continue to handle the touch event if scrolling enabled
+                return mScrollable; // mScrollable is always false at this point
+            default:
+                return super.onTouchEvent(ev);
+        }
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev)
+    {
+        if (mScrollable == false)
+        {
+            return false;
+        } else
+        {
+            return super.onInterceptTouchEvent(ev);
+        }
+    }
+
+    public void setScrollingEnabled(boolean enabled)
+    {
+        mScrollable = enabled;
+    }
+
+    public boolean isScrollable()
+    {
+        return mScrollable;
     }
 }
