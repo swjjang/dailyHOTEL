@@ -514,6 +514,9 @@ public class AnalyticsManager
         public static final String GOURMET_BOOKING_CALENDAR_CLICKED = "GourmetBookingCalendarClicked";
         public static final String GOURMET_BOOKING_CALENDAR_POPPEDUP = "GourmetBookingCalendarPoppedup";
         public static final String GOURMET_BOOKING_CALENDAR_POPPEDUP_CLOSED = "GourmetBookingCalendarPoppedupClosed";
+        //
+        public static final String HOTEL_BOOKING_DATE_CONFIRMED = "HotelBookingDateConfirmed";
+        public static final String HOTEL_BOOKING_DATE_CHANGED = "HotelBookingDateChanged";
     }
 
     public static class Category

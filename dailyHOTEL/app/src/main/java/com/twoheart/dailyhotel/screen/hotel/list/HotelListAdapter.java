@@ -276,14 +276,8 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
 
         if (Util.isTextEmpty(hotel.dBenefitText) == false)
         {
-            if (Category.ALL.code.equalsIgnoreCase(mCategory.code) == true && BOUTIQUE.equalsIgnoreCase(hotel.categoryCode) == true)
-            {
-                holder.dBenefitLayout.setVisibility(View.GONE);
-            } else
-            {
-                holder.dBenefitLayout.setVisibility(View.VISIBLE);
-                holder.dBenefitTextView.setText(hotel.dBenefitText);
-            }
+            holder.dBenefitLayout.setVisibility(View.VISIBLE);
+            holder.dBenefitTextView.setText(hotel.dBenefitText);
         } else
         {
             holder.dBenefitLayout.setVisibility(View.GONE);

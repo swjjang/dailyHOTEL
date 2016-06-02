@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -143,6 +144,12 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void requestRegionList()
     {
+        if (mNetworkController == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         mNetworkController.requestRegionList();
     }
 

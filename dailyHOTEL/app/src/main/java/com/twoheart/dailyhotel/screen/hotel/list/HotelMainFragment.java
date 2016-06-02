@@ -356,6 +356,30 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                         mOnCommunicateListener.refreshAll(true);
                     }
+                } else if (resultCode == Activity.RESULT_FIRST_USER && data != null)
+                {
+                    // 날짜 선택 화면으로 이동한다.
+                    clearCurationOption();
+                    updateFilteredFloatingActionButton();
+                    mOnCommunicateListener.setScrollListTop(true);
+
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
+                    {
+                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+
+                        setProvince(province);
+
+                        if (mTabLayout.getSelectedTabPosition() == 2)
+                        {
+                            mOnTabSelectedListener.onTabReselected(mTabLayout.getTabAt(2));
+                        } else
+                        {
+                            mTabLayout.setScrollPosition(2, 0f, true);
+                            mViewPager.setCurrentItem(2);
+                        }
+
+                        mOnCommunicateListener.refreshAll(true);
+                    }
                 }
 
                 mOnCommunicateListener.expandedAppBar(true, false);
