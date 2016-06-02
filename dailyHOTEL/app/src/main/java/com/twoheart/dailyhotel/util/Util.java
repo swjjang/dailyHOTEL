@@ -1152,7 +1152,9 @@ public class Util implements Constants
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-        return simpleDateFormat.format(date);
+        String formatString = simpleDateFormat.format(date);
+
+        return checkTimeZone(formatString);
     }
 
     public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException, NullPointerException
@@ -1167,7 +1169,9 @@ public class Util implements Constants
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-        return simpleDateFormat.format(date);
+        String formatString = simpleDateFormat.format(date);
+
+        return checkTimeZone(formatString);
     }
 
     public static String getISO8601String(Date date)
@@ -1175,7 +1179,67 @@ public class Util implements Constants
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-        return simpleDateFormat.format(date);
+        String formatString = simpleDateFormat.format(date);
+
+        return checkTimeZone(formatString);
+    }
+
+    private static String checkTimeZone(String iso8601) throws NullPointerException
+    {
+        if (Util.isTextEmpty(iso8601) == true)
+        {
+            throw new NullPointerException("iso8601, format is empty");
+        }
+
+        if (iso8601.contains("GMT"))
+        {
+            iso8601 = iso8601.replaceAll("GMT", "");
+        }
+
+        int length = iso8601.length();
+
+        // 우선 GMT 기준으로 + 인 시간 찾고 없으면 - 인 시간 확인!
+        int index = iso8601.lastIndexOf("+");
+        if (index == -1)
+        {
+            index = iso8601.lastIndexOf("-");
+        }
+
+        if (index != -1)
+        {
+            if (index < length - 1)
+            {
+                String timeZone = iso8601.substring(index + 1);
+                if (timeZone.contains(":"))
+                {
+                    // 정상
+                    ExLog.d("iso8601 is good format");
+                } else if (timeZone.length() == 4)
+                {
+                    iso8601 = new StringBuilder(iso8601.substring(0, index + 1)) //
+                        .append(timeZone.substring(0, 2)).append(":") //
+                        .append(timeZone.substring(2)).toString();
+                } else
+                {
+                    // 비정상 텍스트
+                    ExLog.d("iso8601 is wrong format");
+                }
+            } else
+            {
+                // 비정상 텍스트
+                ExLog.d("iso8601 is wrong format, timezone size zero,  set text '+09:00'");
+                iso8601 = iso8601.substring(0, index) + "+09:00";
+
+            }
+        } else
+        {
+            // 비정상 텍스트
+            ExLog.d("iso8601 is wrong format, not find character '+' or '-', so add text '+09:00'");
+            iso8601 = iso8601 + "+09:00";
+
+        }
+
+        return iso8601;
     }
 
     /**
