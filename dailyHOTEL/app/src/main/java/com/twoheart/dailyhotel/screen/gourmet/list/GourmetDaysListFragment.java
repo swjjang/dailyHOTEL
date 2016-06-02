@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -13,13 +15,18 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 public class GourmetDaysListFragment extends GourmetListFragment
 {
     @Override
-    public void onPageSelected()
+    public void onPageSelected(String tabText)
     {
-        super.onPageSelected();
+        super.onPageSelected(tabText);
 
-        SaleTime saleTime = mSaleTime.getClone(0);
+        boolean isSelected = true;
 
-        Intent intent = GourmetCalendarActivity.newInstance(getContext(), saleTime, AnalyticsManager.ValueType.LIST);
+        if (getString(R.string.label_selecteday).equalsIgnoreCase(tabText) == true)
+        {
+            isSelected = false;
+        }
+
+        Intent intent = GourmetCalendarActivity.newInstance(getContext(), mSaleTime, AnalyticsManager.ValueType.LIST, isSelected, true);
         getParentFragment().startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 

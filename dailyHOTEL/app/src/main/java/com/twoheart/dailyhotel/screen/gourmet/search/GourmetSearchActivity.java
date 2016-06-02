@@ -9,10 +9,9 @@ import android.os.Message;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -226,7 +225,7 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         @Override
         public void onShowCalendar(boolean isAnimation)
         {
-            Intent intent = GourmetSearchCalendarActivity.newInstance(GourmetSearchActivity.this, mSaleTime, AnalyticsManager.ValueType.SEARCH);
+            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchActivity.this, mSaleTime, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 

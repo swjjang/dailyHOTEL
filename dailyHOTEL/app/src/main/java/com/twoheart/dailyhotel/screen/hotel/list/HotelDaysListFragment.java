@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -25,7 +25,7 @@ public class HotelDaysListFragment extends HotelListFragment
 
         int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
 
-        Intent intent = HotelSearchCalendarActivity.newInstance(getContext(), mCheckInSaleTime, nights, AnalyticsManager.ValueType.LIST, isSelected, true);
+        Intent intent = HotelCalendarActivity.newInstance(getContext(), mCheckInSaleTime, nights, AnalyticsManager.ValueType.LIST, isSelected, true);
         getParentFragment().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 

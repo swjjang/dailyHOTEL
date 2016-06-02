@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.TypedValue;
@@ -7,6 +9,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -17,7 +21,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,10 +30,38 @@ import java.util.TimeZone;
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
     public static final String INTENT_EXTRA_DATA_SCREEN = "screen";
+    public static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
+    public static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
 
     protected View mCancelView, mToastView;
     protected TextView[] mDailyTextViews;
-    private DailyToolbarLayout mDailyToolbarLayout;
+
+    protected View mAnimationLayout; // 애니메이션 되는 뷰
+    protected View mExitView; // 상단 빈공간
+    private View mDisableLayout; // 전체 화면을 덮는 뷰
+    private View mBackgroundView; // 뒷배경
+
+    private TextView mTitleTextView;
+
+    private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+    private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
+    private ObjectAnimator mObjectAnimator;
+    private AlphaAnimation mAlphaAnimation;
+
+    private enum ANIMATION_STATE
+    {
+        START,
+        END,
+        CANCEL
+    }
+
+    private enum ANIMATION_STATUS
+    {
+        SHOW,
+        HIDE,
+        SHOW_END,
+        HIDE_END
+    }
 
     protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
@@ -40,12 +71,22 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.over_scroll_edge));
 
+        View closeView = findViewById(R.id.closeView);
+        closeView.setOnClickListener(this);
+
+        mExitView = findViewById(R.id.exitView);
+        mExitView.setOnClickListener(this);
+
         mCancelView = findViewById(R.id.cancelView);
         mCancelView.setVisibility(View.GONE);
         mCancelView.setOnClickListener(this);
 
         mToastView = findViewById(R.id.toastLayout);
         mToastView.setVisibility(View.GONE);
+
+        mAnimationLayout = findViewById(R.id.animationLayout);
+        mDisableLayout = findViewById(R.id.disableLayout);
+        mBackgroundView = (View) mExitView.getParent();
 
         mDailyTextViews = new DailyTextView[dayCountOfMax];
 
@@ -79,37 +120,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected void initToolbar(String title)
     {
-        View toolbar = findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                finish();
-            }
-        });
+        mTitleTextView = (TextView) findViewById(R.id.titleTextView);
+        setToolbarText(title);
     }
 
     protected void setToolbarText(String title)
     {
-        if (mDailyToolbarLayout == null)
-        {
-            initToolbar(title);
-        } else
-        {
-            mDailyToolbarLayout.setToolbarText(title);
-        }
-    }
-
-    protected void setToolbarMenuEnable(boolean enableMenu1, boolean enableMenu2)
-    {
-        if (mDailyToolbarLayout == null)
-        {
-            return;
-        }
-
-        mDailyToolbarLayout.setToolbarMenuEnable(enableMenu1, enableMenu2);
+        mTitleTextView.setText(title);
     }
 
     protected void setCancelViewVisibility(int visibility)
@@ -251,6 +268,276 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             return lastMonth - currentMonth;
         }
+    }
+
+    protected void setTouchEnabled(boolean enabled)
+    {
+        if (enabled == true)
+        {
+
+            mDisableLayout.setVisibility(View.GONE);
+            mDisableLayout.setOnClickListener(null);
+        } else
+        {
+            mDisableLayout.setVisibility(View.VISIBLE);
+            mDisableLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+
+                }
+            });
+        }
+    }
+
+    protected void showAnimation()
+    {
+        if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        if (Util.isOverAPI12() == true)
+        {
+            final float y = mAnimationLayout.getBottom();
+
+            if (mObjectAnimator != null)
+            {
+                if (mObjectAnimator.isRunning() == true)
+                {
+                    mObjectAnimator.cancel();
+                    mObjectAnimator.removeAllListeners();
+                }
+
+                mObjectAnimator = null;
+            }
+
+            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+            int height = mAnimationLayout.getHeight();
+
+            mAnimationLayout.setTranslationY(Util.dpToPx(this, height));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
+            mObjectAnimator.setDuration(300);
+
+            mObjectAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    if (mAnimationLayout.getVisibility() != View.VISIBLE)
+                    {
+                        mAnimationLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    setTouchEnabled(false);
+
+                    mAnimationState = ANIMATION_STATE.START;
+                    mAnimationStatus = ANIMATION_STATUS.SHOW;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = ANIMATION_STATUS.SHOW_END;
+                        mAnimationState = ANIMATION_STATE.END;
+                    }
+
+                    setTouchEnabled(true);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = ANIMATION_STATE.CANCEL;
+
+                    setTouchEnabled(true);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mObjectAnimator.start();
+
+            showAnimationFadeOut();
+        } else
+        {
+            if (mAnimationLayout != null && mAnimationLayout.getVisibility() != View.VISIBLE)
+            {
+                mAnimationLayout.setVisibility(View.VISIBLE);
+
+                mAnimationStatus = ANIMATION_STATUS.SHOW_END;
+                mAnimationState = ANIMATION_STATE.END;
+            }
+        }
+    }
+
+    protected void hideAnimation()
+    {
+        if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.HIDE)
+        {
+            return;
+        }
+
+        if (Util.isOverAPI12() == true)
+        {
+            final float y = mAnimationLayout.getTop();
+
+            if (mObjectAnimator != null)
+            {
+                if (mObjectAnimator.isRunning() == true)
+                {
+                    mObjectAnimator.cancel();
+                    mObjectAnimator.removeAllListeners();
+                }
+
+                mObjectAnimator = null;
+            }
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
+            mObjectAnimator.setDuration(300);
+
+            mObjectAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+
+                    mAnimationState = ANIMATION_STATE.START;
+                    mAnimationStatus = ANIMATION_STATUS.HIDE;
+
+                    setTouchEnabled(false);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+                        mAnimationState = ANIMATION_STATE.END;
+
+                        mBackgroundView.setVisibility(View.GONE);
+
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = ANIMATION_STATE.CANCEL;
+
+                    mBackgroundView.setVisibility(View.GONE);
+
+                    finish();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+                }
+            });
+
+            mObjectAnimator.start();
+
+            showAnimationFadeIn();
+        } else
+        {
+            mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+            mAnimationState = ANIMATION_STATE.END;
+
+            finish();
+        }
+    }
+
+    /**
+     * 점점 밝아짐.
+     */
+    private void showAnimationFadeIn()
+    {
+        if (mAlphaAnimation != null)
+        {
+            if (mAlphaAnimation.hasEnded() == false)
+            {
+                mAlphaAnimation.cancel();
+            }
+
+            mAlphaAnimation = null;
+        }
+
+        mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setFillBefore(true);
+        mAlphaAnimation.setFillAfter(true);
+
+        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
+        });
+
+        mBackgroundView.startAnimation(mAlphaAnimation);
+    }
+
+    /**
+     * 점점 어두워짐.
+     */
+    private void showAnimationFadeOut()
+    {
+        if (mAlphaAnimation != null)
+        {
+            if (mAlphaAnimation.hasEnded() == false)
+            {
+                mAlphaAnimation.cancel();
+            }
+
+            mAlphaAnimation = null;
+        }
+
+        mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setFillBefore(true);
+        mAlphaAnimation.setFillAfter(true);
+
+        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
+        });
+
+        mBackgroundView.startAnimation(mAlphaAnimation);
     }
 
     protected static class Day

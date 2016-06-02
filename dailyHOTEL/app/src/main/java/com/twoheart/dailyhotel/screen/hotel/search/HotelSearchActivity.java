@@ -7,13 +7,11 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.screen.hotel.list.HotelCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -239,7 +237,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onShowCalendar(boolean isAnimation)
         {
-            Intent intent = HotelSearchCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+            Intent intent = HotelCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 
