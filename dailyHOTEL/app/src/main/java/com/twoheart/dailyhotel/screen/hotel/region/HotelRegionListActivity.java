@@ -18,12 +18,15 @@ import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class HotelRegionListActivity extends PlaceRegionListActivity
@@ -143,8 +146,6 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
         {
             if (mSelectedProvince instanceof Area)
             {
-                // 어디선가에서 Proince가 누락되는데 찾을수가 없음ㅜㅜd
-
                 Area area = ((Area) mSelectedProvince);
 
                 if (area.getProvince() == null)
@@ -198,6 +199,12 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void requestRegionList()
     {
+        if (mNetworkController == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         mNetworkController.requestRegionList();
     }
 
@@ -230,23 +237,109 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
                 , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, label, null);
         }
 
-        @Override
-        public void onRegionClick(Province province)
+        private String convertLabelFormatAnalytics(Province province)
         {
-            Intent intent = new Intent();
+            String label;
 
-            if (province == null)
+            if (province instanceof Area)
             {
-                setResult(RESULT_CANCELED, intent);
+                Area area = (Area) province;
+
+                if (area.index == -1)
+                {
+                    label = String.format("%s-%s-None", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                        , area.getProvince().name);
+                } else
+                {
+                    label = String.format("%s-%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                        , area.getProvince().name, area.name);
+                }
             } else
             {
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-                setResult(RESULT_OK, intent);
-
-                recordEvent(province);
+                label = String.format("%s-%s-None", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                    , province.name);
             }
 
-            finish();
+            return label;
+        }
+
+        private String getRegionAnalytics(Province previousProvince, Province selectedProvince, SaleTime checkInTime, SaleTime checkOutTime)
+        {
+            String previousLabel = convertLabelFormatAnalytics(previousProvince);
+            String selectedLabel = convertLabelFormatAnalytics(selectedProvince);
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+
+            String checkInDate = checkInTime.getDayOfDaysDateFormat("yyyyMMdd");
+            String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyyMMdd");
+
+            return previousLabel + "-" + selectedLabel + "-" + checkInDate + "-" + checkOutDate + "-" + simpleDateFormat.format(new Date());
+        }
+
+        @Override
+        public void onRegionClick(final Province province)
+        {
+            if (province == null)
+            {
+                Intent intent = new Intent();
+                setResult(RESULT_CANCELED, intent);
+                finish();
+            } else
+            {
+                if (mSelectedProvince.isOverseas != province.isOverseas//
+                    || mSelectedProvince.getProvinceIndex() != province.getProvinceIndex())
+                {
+                    String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+
+                    SaleTime checkOutTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
+                    String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+
+                    String message = checkInDate + "-" + checkOutDate + "\n" + getString(R.string.message_region_search_date);
+
+                    final String analyticsLabel = getRegionAnalytics(mSelectedProvince, province, mSaleTime, checkOutTime);
+
+                    showSimpleDialog(getString(R.string.label_visit_date), message, getString(R.string.dialog_btn_text_yes), getString(R.string.label_region_change_date), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            AnalyticsManager.getInstance(HotelRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CHANGED, analyticsLabel, null);
+
+                            Intent intent = new Intent();
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+                            setResult(RESULT_OK, intent);
+
+                            recordEvent(province);
+                            finish();
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            AnalyticsManager.getInstance(HotelRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CONFIRMED, analyticsLabel, null);
+
+                            // 날짜 선택 화면으로 이동한다.
+                            Intent intent = new Intent();
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+                            setResult(RESULT_FIRST_USER, intent);
+
+                            recordEvent(province);
+                            finish();
+                        }
+                    }, false);
+                } else
+                {
+                    Intent intent = new Intent();
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+                    setResult(RESULT_OK, intent);
+
+                    recordEvent(province);
+                    finish();
+                }
+            }
         }
     };
 

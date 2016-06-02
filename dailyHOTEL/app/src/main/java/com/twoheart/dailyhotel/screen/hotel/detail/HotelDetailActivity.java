@@ -817,7 +817,7 @@ public class HotelDetailActivity extends BaseActivity
                 if (DEBUG == false)
                 {
                     String message = url + " : " + response.toString();
-                    Crashlytics.logException(new JSONException(message));
+                    Crashlytics.log(10, "HotelDetailActivity", message);
                 }
 
                 onError(e);

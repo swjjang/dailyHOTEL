@@ -73,6 +73,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private boolean mIsEditMode;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
+    private Dialog mTimeDialog;
 
     public interface OnUserActionListener
     {
@@ -146,6 +147,17 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         initToolbar(gourmetPaymentInformation.getTicketInformation().placeName);
         initLayout();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (mTimeDialog != null && mTimeDialog.isShowing() == true)
+        {
+            mTimeDialog.cancel();
+        }
     }
 
     private void initToolbar(String title)
@@ -845,7 +857,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             final GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
-            Dialog dialog = Util.showDatePickerDialog(GourmetPaymentActivity.this//
+            mTimeDialog = Util.showDatePickerDialog(GourmetPaymentActivity.this//
                 , getString(R.string.label_booking_select_ticket_time)//
                 , gourmetPaymentInformation.getTicketTimes(), selectedTime, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
                 {
@@ -853,6 +865,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     public void onClick(View v)
                     {
                         int select = (Integer) v.getTag();
+
+                        if (gourmetPaymentInformation.ticketTimes.length - 1 < select)
+                        {
+                            return;
+                        }
 
                         try
                         {
@@ -867,13 +884,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     }
                 });
 
-            if (dialog != null)
+            if (mTimeDialog != null)
             {
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+                mTimeDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
+                        mTimeDialog = null;
                         releaseUiComponent();
                     }
                 });
