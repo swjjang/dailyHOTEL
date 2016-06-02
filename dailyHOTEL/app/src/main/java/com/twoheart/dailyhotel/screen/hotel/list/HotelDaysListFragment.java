@@ -21,6 +21,10 @@ public class HotelDaysListFragment extends HotelListFragment
         if (getString(R.string.label_selecteday).equalsIgnoreCase(tabText) == true)
         {
             isSelected = false;
+        } else
+        {
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
         }
 
         int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();

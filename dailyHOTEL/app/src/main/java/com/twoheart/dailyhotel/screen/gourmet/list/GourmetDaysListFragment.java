@@ -22,6 +22,10 @@ public class GourmetDaysListFragment extends GourmetListFragment
         if (getString(R.string.label_selecteday).equalsIgnoreCase(tabText) == true)
         {
             isSelected = false;
+        } else
+        {
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
         }
 
         Intent intent = GourmetCalendarActivity.newInstance(getContext(), mSaleTime, AnalyticsManager.ValueType.LIST, isSelected, true);

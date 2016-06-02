@@ -237,6 +237,12 @@ public class HotelSearchActivity extends PlaceSearchActivity
         @Override
         public void onShowCalendar(boolean isAnimation)
         {
+            if (isAnimation == true)
+            {
+                AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
+            }
+
             Intent intent = HotelCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }

@@ -27,6 +27,8 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
     private View mConfirmView;
     private String mCallByScreen;
 
+    private boolean mIsAnimation;
+    private boolean mIsChanged;
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String screen, boolean isSelected, boolean isAnimation)
     {
@@ -51,7 +53,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
         int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
-        boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
+        mIsAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
@@ -61,7 +63,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
             setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
         }
 
-        if (isAnimation == true)
+        if (mIsAnimation == true)
         {
             mAnimationLayout.setVisibility(View.INVISIBLE);
             mAnimationLayout.post(new Runnable()
@@ -115,6 +117,17 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
     @Override
     public void onBackPressed()
     {
+        // 일단은 애니메이션으로 검색 선택시에 Analytics를 구분하도록 한다.
+        if (mIsAnimation == true)
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
+        } else
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_POPPEDUP_CLOSED, AnalyticsManager.Label.HOTEL_CLOSE_BUTTON_CLICKED, null);
+        }
+
         hideAnimation();
     }
 
@@ -125,6 +138,17 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         {
             case R.id.exitView:
             case R.id.closeView:
+
+                if (mIsAnimation == true)
+                {
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_POPPEDUP_CLOSED, AnalyticsManager.Label.HOTEL_CLOSE_BUTTON_CLICKED, null);
+                }
+
                 hideAnimation();
                 break;
 
@@ -155,7 +179,8 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                 params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mCheckOutDay.dayTime.getOffsetDailyDay() - mCheckInDay.dayTime.getOffsetDailyDay()));
                 params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED, checkInDate + "-" + checkOutDate, params);
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED//
+                    , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + checkInDate + "-" + checkOutDate, params);
 
                 Intent intent = new Intent();
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInDay.dayTime);
@@ -301,6 +326,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
 
     private void reset()
     {
+        mIsChanged = true;
         mCheckInDay = null;
 
         for (TextView textview : mDailyTextViews)
