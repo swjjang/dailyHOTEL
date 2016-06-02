@@ -81,63 +81,30 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 
         convertView.setTag(parent.getId(), R.layout.list_row_area);
 
-        View areaLayout1 = convertView.findViewById(R.id.areaLayout1);
-        View areaLayout2 = convertView.findViewById(R.id.areaLayout2);
+        TextView areaTextView1 = (TextView) convertView.findViewById(R.id.areaTextView1);
+        TextView areaTextView2 = (TextView) convertView.findViewById(R.id.areaTextView2);
 
-        TextView areaTextView1 = (TextView) areaLayout1.findViewById(R.id.areaTextView1);
-        TextView areaSubTextView1 = (TextView) areaLayout1.findViewById(R.id.areaSubTextView1);
+        areaTextView1.setOnClickListener(mOnItemclickListener);
+        areaTextView2.setOnClickListener(mOnItemclickListener);
 
-        TextView areaTextView2 = (TextView) areaLayout2.findViewById(R.id.areaTextView2);
-        TextView areaSubTextView2 = (TextView) areaLayout2.findViewById(R.id.areaSubTextView2);
-
-        areaLayout1.setOnClickListener(mOnItemclickListener);
-        areaLayout2.setOnClickListener(mOnItemclickListener);
-
-        areaLayout1.setTag(area[0]);
-        areaLayout1.setTag(areaLayout1.getId(), groupPosition);
-
-        if (childPosition == 0)
-        {
-            areaTextView1.setText(area[0].tag);
-            areaSubTextView1.setVisibility(View.GONE);
-        } else
-        {
-            areaTextView1.setText(area[0].name);
-            areaSubTextView1.setText(area[0].tag);
-
-            if (Util.isTextEmpty(area[0].tag) == false)
-            {
-                areaSubTextView1.setVisibility(View.VISIBLE);
-            } else
-            {
-                areaSubTextView1.setVisibility(View.GONE);
-            }
-        }
+        areaTextView1.setTag(area[0]);
+        areaTextView1.setTag(areaTextView1.getId(), groupPosition);
+        areaTextView1.setText(area[0].tag);
 
         if (area[1] != null)
         {
-            areaLayout2.setTag(area[1]);
-            areaLayout2.setTag(areaLayout2.getId(), groupPosition);
-            areaLayout2.setEnabled(true);
+            areaTextView2.setTag(area[1]);
+            areaTextView2.setTag(areaTextView2.getId(), groupPosition);
+            areaTextView2.setEnabled(true);
 
-            areaTextView2.setText(area[1].name);
-            areaSubTextView2.setText(area[1].tag);
-
-            if (Util.isTextEmpty(area[1].tag) == false)
-            {
-                areaSubTextView2.setVisibility(View.VISIBLE);
-            } else
-            {
-                areaSubTextView2.setVisibility(View.GONE);
-            }
+            areaTextView2.setText(area[1].tag);
         } else
         {
-            areaLayout2.setTag(null);
-            areaLayout2.setTag(areaLayout2.getId(), null);
-            areaLayout2.setEnabled(false);
+            areaTextView2.setTag(null);
+            areaTextView2.setTag(areaTextView2.getId(), null);
+            areaTextView2.setEnabled(false);
 
             areaTextView2.setText(null);
-            areaSubTextView2.setText(null);
         }
 
         return convertView;
