@@ -160,7 +160,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         return true;
     }
 
-    public void onPageSelected()
+    public void onPageSelected(String tabText)
     {
     }
 

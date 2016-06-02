@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -54,6 +54,8 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         mNetworkController = new GourmetSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setDateText(mSaleTime);
+
+        mOnEventListener.onShowCalendar(false);
     }
 
     @Override
@@ -221,9 +223,9 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         }
 
         @Override
-        public void onShowCalendar()
+        public void onShowCalendar(boolean isAnimation)
         {
-            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchActivity.this, mSaleTime.getClone(0), AnalyticsManager.ValueType.SEARCH);
+            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchActivity.this, mSaleTime, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 

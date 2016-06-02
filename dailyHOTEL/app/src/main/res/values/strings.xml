@@ -704,7 +704,6 @@
     <string name="message_calendar_reset">재설정 하시려면 다른 날짜를 선택해 주세요.</string>
     <string name="label_selected_date">날짜 선택 완료</string>
 
-
     <string name="label_monday">월</string>
     <string name="label_tuesday">화</string>
     <string name="label_wednesday">수</string>
@@ -780,4 +779,8 @@
     <string name="label_searchresult_research">다시 검색하기</string>
     <string name="label_searchresult_call_customercenter">고객센터로 전화하기</string>
     <string name="label_map_searchmap">지도앱에서 길찾기</string>
+    //
+    <!-- Search Calendar -->
+    <string name="label_searchcalendar_search_selected_date">날짜 선택 완료</string>
+    <string name="message_searchcalendar_reset">방문하실 날짜를 확인해 주세요.\n재설정을 하시려면 다른 날짜를 선택해주세요.</string>
 </resources>

@@ -1,14 +1,16 @@
-package com.twoheart.dailyhotel.screen.hotel.list;
+package com.twoheart.dailyhotel.screen.hotel.filter;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -25,11 +27,15 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
     private View mConfirmView;
     private String mCallByScreen;
 
-    public static Intent newInstance(Context context, SaleTime dailyTime, String screen)
+
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, HotelCalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
 
         return intent;
     }
@@ -41,22 +47,53 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
 
         Intent intent = getIntent();
 
-        SaleTime dailyTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME);
+        SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
+        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
+        boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
-        initLayout(HotelCalendarActivity.this, dailyTime, ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+        initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
+
+        if (isSelected == true)
+        {
+            setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
+        }
+
+        if (isAnimation == true)
+        {
+            mAnimationLayout.setVisibility(View.INVISIBLE);
+            mAnimationLayout.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    showAnimation();
+                }
+            });
+        } else
+        {
+            setTouchEnabled(true);
+        }
     }
 
     @Override
-    protected void initLayout(Context context, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {
-        super.initLayout(context, dailyTime, enableDayCountOfMax, dayCountOfMax);
+        super.initLayout(layoutResID, dailyTime, enableDayCountOfMax, dayCountOfMax);
+
 
         mConfirmView = findViewById(R.id.confirmView);
         mConfirmView.setVisibility(View.VISIBLE);
         mConfirmView.setOnClickListener(this);
         mConfirmView.setEnabled(false);
+
+        if (AnalyticsManager.ValueType.LIST.equalsIgnoreCase(mCallByScreen) == true)
+        {
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(this, 83));
+            mExitView.setLayoutParams(layoutParams);
+        }
     }
 
     @Override
@@ -68,10 +105,40 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
     }
 
     @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        hideAnimation();
+    }
+
+    @Override
     public void onClick(View view)
     {
         switch (view.getId())
         {
+            case R.id.exitView:
+            case R.id.closeView:
+                hideAnimation();
+                break;
+
+            case R.id.cancelView:
+            {
+                if (mCheckInDay == null)
+                {
+                    return;
+                }
+
+                reset();
+                break;
+            }
+
             case R.id.confirmView:
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
@@ -95,18 +162,7 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, mCheckOutDay.dayTime);
 
                 setResult(RESULT_OK, intent);
-                finish();
-                break;
-            }
-
-            case R.id.cancelView:
-            {
-                if (mCheckInDay == null)
-                {
-                    return;
-                }
-
-                reset();
+                hideAnimation();
                 break;
             }
 
@@ -134,19 +190,6 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                     mDailyTextViews[mDailyTextViews.length - 1].setEnabled(true);
                 } else
                 {
-                    //                    if (mCheckInDay.dayTime == day.dayTime)
-                    //                    {
-                    //                        mCheckInDay = null;
-                    //                        view.setSelected(false);
-                    //                        dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
-                    //
-                    //                        setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));
-                    //                        setRangePreviousDaysEnable(view, true);
-                    //                        mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
-                    //                        releaseUiComponent();
-                    //                        return;
-                    //                    }
-
                     if (mCheckInDay.dayTime.getOffsetDailyDay() >= day.dayTime.getOffsetDailyDay())
                     {
                         releaseUiComponent();
@@ -159,7 +202,8 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
 
                     String checkInDate = mCheckInDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd");
                     String checkOutDate = mCheckOutDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd");
-                    String title = String.format("%s-%s(%d박)", checkInDate, checkOutDate, (mCheckOutDay.dayTime.getOffsetDailyDay() - mCheckInDay.dayTime.getOffsetDailyDay()));
+                    String title = String.format("%s - %s(%d박)", checkInDate, checkOutDate, //
+                        (mCheckOutDay.dayTime.getOffsetDailyDay() - mCheckInDay.dayTime.getOffsetDailyDay()));
                     setToolbarText(title);
 
                     setRangeDaysAlpha(view);
@@ -170,6 +214,28 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                 }
 
                 releaseUiComponent();
+                break;
+            }
+        }
+    }
+
+    private void setSelectedRangeDay(SaleTime checkInTime, SaleTime checkOutTime)
+    {
+        if (checkInTime == null || checkOutTime == null)
+        {
+            return;
+        }
+
+        for (TextView dayTextView : mDailyTextViews)
+        {
+            Day day = (Day) dayTextView.getTag();
+
+            if (checkInTime.isDayOfDaysDateEquals(day.dayTime) == true)
+            {
+                dayTextView.performClick();
+            } else if (checkOutTime.isDayOfDaysDateEquals(day.dayTime) == true)
+            {
+                dayTextView.performClick();
                 break;
             }
         }

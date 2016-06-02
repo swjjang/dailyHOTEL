@@ -78,6 +78,11 @@ public class SaleTime implements Parcelable
         return sFormat;
     }
 
+    public boolean isDayOfDaysDateEquals(SaleTime saleTime)
+    {
+        return mDailyTime.getTime() == saleTime.mDailyTime.getTime() && mDayOfDays == saleTime.mDayOfDays;
+    }
+
     public void setCurrentTime(long currentTime)
     {
         mCurrentTime = new Date(currentTime);

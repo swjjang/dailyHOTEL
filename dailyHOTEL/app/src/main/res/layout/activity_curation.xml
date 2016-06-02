@@ -14,8 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_above="@+id/contentScrollView"
-        android:background="@color/white"
-        >
+        android:background="@color/white">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/resetCurationView"

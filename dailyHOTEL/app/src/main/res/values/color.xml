@@ -61,6 +61,7 @@
 
     <color name="black">#000000</color>
     <color name="black_a80">#cc000000</color>
+    <color name="black_a67">#ab000000</color>
     <color name="black_a40">#66000000</color>
     <color name="black_a25">#40000000</color>
     <color name="black_a14">#24000000</color>
