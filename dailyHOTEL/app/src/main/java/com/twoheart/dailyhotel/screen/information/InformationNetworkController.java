@@ -18,6 +18,8 @@ public class InformationNetworkController extends BaseNetworkController
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount);
+
+        void onPushBenefitMessage(String title, String message);
     }
 
     public InformationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -31,6 +33,11 @@ public class InformationNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
     }
 
+    public void requestPushBenefitText()
+    {
+        DailyNetworkAPI.getInstance(mContext).requestBenefitMessage(mNetworkTag, mBenefitMessageJsonResponseListener);
+    }
+
     @Override
     public void onErrorResponse(VolleyError volleyError)
     {
@@ -40,7 +47,7 @@ public class InformationNetworkController extends BaseNetworkController
     /**
      * 쿠폰 갯수 적립금 등
      */
-    DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
@@ -72,23 +79,25 @@ public class InformationNetworkController extends BaseNetworkController
     /**
      * 혜택 알림
      */
-    DailyHotelJsonResponseListener mBenefitMessageJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mBenefitMessageJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                boolean isSuccess = false;
+                String title = null;
+                String message = null;
 
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                if (response.has("data") == true)
                 {
-                    isSuccess = true;
+                    JSONObject data = response.getJSONObject("data");
+
+                    title = data.getString("title");
+                    message = data.getString("body");
                 }
 
-                //                ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(isSuccess);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(title, message);
 
             } catch (Exception e)
             {

@@ -108,9 +108,6 @@ public class InformationFragment extends BaseFragment implements Constants
 
         registerReceiver();
 
-        // 우선 혜택 알림 메세지 가져와야 함
-
-
         boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
 
         if (isLogin)
@@ -129,6 +126,9 @@ public class InformationFragment extends BaseFragment implements Constants
             mInformationLayout.updateLoginLayout(isLogin, false);
             mInformationLayout.updateAccountLayout(isLogin, 0, 0);
         }
+
+        // 혜택 알림 메세지 가져오기
+        mNetworkController.requestPushBenefitText();
 
     }
 
@@ -701,13 +701,21 @@ public class InformationFragment extends BaseFragment implements Constants
         {
             DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
 
-            unLockUI();
-
             boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
 
             mInformationLayout.updateLoginLayout(isLogin, false);
             mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);
 
+            unLockUI();
+
+        }
+
+        @Override
+        public void onPushBenefitMessage(String title, String message)
+        {
+            mInformationLayout.updatePushText(title, message);
+
+            unLockUI();
         }
 
         @Override

@@ -35,6 +35,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private View mNewEventIconView;
 
     private TextView mPushTextView;
+    private TextView mPushTitleTextView;
     private TextView mPushBenefitTextView;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -117,6 +118,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mPushTextView = (TextView) view.findViewById(R.id.pushTextView);
         mPushTextView.setOnClickListener(this);
 
+        mPushTitleTextView = (TextView) view.findViewById(R.id.pushTitleTextView);
         mPushBenefitTextView = (TextView) view.findViewById(R.id.pushBenefitTextView);
 
         initSnsLayout(view);
@@ -130,6 +132,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         updateAccountLayout(false, 0, 0);
         updatePushIcon(false);
         updateNewIconView(false);
+        updatePushText(null, null);
     }
 
     private void initToolbar(Context context, View view)
@@ -338,6 +341,22 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         {
             mAccountInfoLayout.setVisibility(View.GONE);
         }
+    }
+
+    public void updatePushText(String title, String message)
+    {
+        if (Util.isTextEmpty(title))
+        {
+            title = mContext.getResources().getString(R.string.frag_push_alert);
+        }
+
+        if (Util.isTextEmpty(message))
+        {
+            message = mContext.getResources().getString(R.string.frag_push_alert_subtext);
+        }
+
+        mPushTitleTextView.setText(title);
+        mPushBenefitTextView.setText(message);
     }
 
     @Override
