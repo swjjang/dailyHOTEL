@@ -209,10 +209,19 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     private void reset()
     {
-        for (TextView textview : mDailyTextViews)
+        int lenght = mDailyTextViews.length;
+
+        for (int i = 0; i < lenght; i++)
         {
-            textview.setEnabled(true);
-            textview.setSelected(false);
+            if (i < ENABLE_DAYCOUNT_OF_MAX)
+            {
+                mDailyTextViews[i].setEnabled(true);
+            } else
+            {
+                mDailyTextViews[i].setEnabled(false);
+            }
+
+            mDailyTextViews[i].setSelected(false);
         }
 
         setToolbarText(getString(R.string.label_calendar_gourmet_select));
