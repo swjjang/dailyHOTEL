@@ -26,6 +26,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     private String mCallByScreen;
     private View mConfirmView;
 
+    private boolean mIsAnimation;
+    private boolean mIsChanged;
+
     public static Intent newInstance(Context context, SaleTime saleTime, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetCalendarActivity.class);
@@ -47,7 +50,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
         boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
-        boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
+        mIsAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_gourmet_select));
@@ -57,7 +60,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             setSelectedDay(saleTime);
         }
 
-        if (isAnimation == true)
+        if (mIsAnimation == true)
         {
             mAnimationLayout.setVisibility(View.INVISIBLE);
             mAnimationLayout.post(new Runnable()
@@ -108,12 +111,41 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+        // 일단은 애니메이션으로 검색 선택시에 Analytics를 구분하도록 한다.
+        if (mIsAnimation == true)
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
+        } else
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_POPPEDUP_CLOSED, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
+        }
+
+        hideAnimation();
+    }
+
+    @Override
     public void onClick(View view)
     {
         switch (view.getId())
         {
             case R.id.exitView:
             case R.id.closeView:
+
+                // 일단은 애니메이션으로 검색 선택시에 Analytics를 구분하도록 한다.
+                if (mIsAnimation == true)
+                {
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_POPPEDUP_CLOSED, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
+                }
+
                 hideAnimation();
                 break;
 
@@ -136,7 +168,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mDay.dayTime.getDayOfDaysDate().getTime()));
                 params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED, date, params);
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
+                    , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + date, params);
 
                 Intent intent = new Intent();
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mDay.dayTime);
@@ -209,9 +242,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     private void reset()
     {
-        int lenght = mDailyTextViews.length;
+        mIsChanged = true;
 
-        for (int i = 0; i < lenght; i++)
+        int length = mDailyTextViews.length;
+
+        for (int i = 0; i < length; i++)
         {
             if (i < ENABLE_DAYCOUNT_OF_MAX)
             {

@@ -225,6 +225,12 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         @Override
         public void onShowCalendar(boolean isAnimation)
         {
+            if (isAnimation == true)
+            {
+                AnalyticsManager.getInstance(GourmetSearchActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
+            }
+
             Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchActivity.this, mSaleTime, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
