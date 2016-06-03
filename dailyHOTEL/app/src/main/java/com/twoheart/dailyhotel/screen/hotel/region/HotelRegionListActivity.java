@@ -31,8 +31,8 @@ import java.util.List;
 
 public class HotelRegionListActivity extends PlaceRegionListActivity
 {
-    private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
-    private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
+    public static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
+    public static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
     private static final int HOTEL_TAB_COUNT = 2;
 
@@ -324,6 +324,8 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
                             // 날짜 선택 화면으로 이동한다.
                             Intent intent = new Intent();
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+                            intent.putExtra(INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+                            intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, mNights);
                             setResult(RESULT_FIRST_USER, intent);
 
                             recordEvent(province);
