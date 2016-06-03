@@ -1154,7 +1154,7 @@ public class Util implements Constants
 
         String formatString = simpleDateFormat.format(date);
 
-        return checkTimeZone(formatString);
+        return checkISO8601TimeZone(formatString);
     }
 
     public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException, NullPointerException
@@ -1164,14 +1164,14 @@ public class Util implements Constants
             throw new NullPointerException("iso8601, format is empty");
         }
 
+        iso8601 = checkISO8601TimeZone(iso8601);
+
         Date date = getISO8601Date(iso8601);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-        String formatString = simpleDateFormat.format(date);
-
-        return checkTimeZone(formatString);
+        return simpleDateFormat.format(date);
     }
 
     public static String getISO8601String(Date date)
@@ -1181,10 +1181,10 @@ public class Util implements Constants
 
         String formatString = simpleDateFormat.format(date);
 
-        return checkTimeZone(formatString);
+        return checkISO8601TimeZone(formatString);
     }
 
-    private static String checkTimeZone(String iso8601) throws NullPointerException
+    private static String checkISO8601TimeZone(String iso8601) throws NullPointerException
     {
         if (Util.isTextEmpty(iso8601) == true)
         {
