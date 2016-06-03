@@ -603,7 +603,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         {
             String bonus = String.valueOf(paymentInformation.bonus);
             params.put("bonus", bonus);
-        } else if(paymentInformation.isUsedCoupon == true)
+        } else if (paymentInformation.isUsedCoupon == true)
         {
             Coupon coupon = paymentInformation.getCoupon();
             params.put("coupon_code", coupon.getCode());
@@ -1508,7 +1508,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         if (coupon.getAmount() > originalPrice)
         {
-            showSimpleDialog(null, getString(R.string.message_over_coupon_price), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
+            String difference = Util.getPriceFormat(this, (coupon.getAmount() - originalPrice));
+
+            showSimpleDialog(null, getString(R.string.message_over_coupon_price, difference), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
             {
                 @Override
                 public void onClick(View v)
