@@ -371,7 +371,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 String priceFormat = Util.getPriceFormat(this, discountPrice);
 
                 mUsedBonusTextView.setText(priceFormat);
-                mDiscountPriceTextView.setText(priceFormat);
+                mDiscountPriceTextView.setText("- " + priceFormat);
             } else
             {
                 mUsedBonusTextView.setText(R.string.label_booking_used_bonus);
@@ -401,7 +401,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 String priceFormat = Util.getPriceFormat(this, discountPrice);
 
                 mUsedCouponTextView.setText(priceFormat);
-                mDiscountPriceTextView.setText(priceFormat);
+                mDiscountPriceTextView.setText("- " + priceFormat);
             }
         } else
         {
