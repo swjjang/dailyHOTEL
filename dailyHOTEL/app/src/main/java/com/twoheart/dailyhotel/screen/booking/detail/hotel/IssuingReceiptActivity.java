@@ -113,27 +113,26 @@ public class IssuingReceiptActivity extends BaseActivity
         try
         {
             // 영숭증
-            JSONObject receipt = jsonObject.getJSONObject("receipt");
+            JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
             String reservationIndex = jsonObject.getString("reservation_idx");
-            String userName = receipt.getString("user_name");
-            String userPhone = receipt.getString("user_phone");
-            String checkin = receipt.getString("checkin");
-            String checkout = receipt.getString("checkout");
-            int nights = receipt.getInt("nights");
-            int rooms = receipt.getInt("rooms");
-            String hotelName = receipt.getString("hotel_name");
-            String hotelAddress = receipt.getString("hotel_address");
-            String valueDate = receipt.getString("value_date");
-            String currency = receipt.getString("currency");
-            int discount = receipt.getInt("discount");
-            int vat = receipt.getInt("vat");
-            int supoplyValue = receipt.getInt("supply_value");
-            String paymentName = receipt.getString("payment_name");
+            String userName = receiptJSONObject.getString("user_name");
+            String userPhone = receiptJSONObject.getString("user_phone");
+            String checkin = receiptJSONObject.getString("checkin");
+            String checkout = receiptJSONObject.getString("checkout");
+            int nights = receiptJSONObject.getInt("nights");
+            int rooms = receiptJSONObject.getInt("rooms");
+            String hotelName = receiptJSONObject.getString("hotel_name");
+            String hotelAddress = receiptJSONObject.getString("hotel_address");
+            String valueDate = receiptJSONObject.getString("value_date");
+            String currency = receiptJSONObject.getString("currency");
+            int discount = receiptJSONObject.getInt("discount");
+            int vat = receiptJSONObject.getInt("vat");
+            int supoplyValue = receiptJSONObject.getInt("supply_value");
+            String paymentName = receiptJSONObject.getString("payment_name");
 
-            int bonus = 0;
-            int counpon = 0;
-            int totalPayment = 0;
+            int bonus = receiptJSONObject.getInt("bonus");
+            int counpon = receiptJSONObject.getInt("coupon_amount");
 
             // **예약 세부 정보**
             View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
@@ -210,7 +209,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
                 // 총 입금 금액
                 TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-                totalPaymentTextView.setText("₩ " + comma.format(totalPayment));
+                totalPaymentTextView.setText("₩ " + comma.format(discount - counpon - bonus));
             }
 
             // **공급자**

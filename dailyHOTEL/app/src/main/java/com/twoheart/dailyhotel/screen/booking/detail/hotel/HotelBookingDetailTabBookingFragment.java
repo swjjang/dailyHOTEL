@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * HotelBookingDetailTabBookingFragment (예약한 호텔의 예약 탭)
- * <p>
+ * <p/>
  * 예약한 호텔 탭 중 예약 탭 프래그먼트
  */
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
@@ -25,7 +25,6 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -137,14 +136,21 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-        // Check In
-        String checkInDay = simpleDateFormat.format(new Date(bookingDetail.checkInDate));
+        try
+        {
+            // Check In
+            String checkInDay = Util.simpleDateFormatISO8601toFormat(bookingDetail.checkInDate, "yyyy.MM.dd(EEE) HH:mm");
 
-        // Check Out
-        String checkOutDay = simpleDateFormat.format(new Date(bookingDetail.checkOutDate));
+            // Check Out
+            String checkOutDay = Util.simpleDateFormatISO8601toFormat(bookingDetail.checkOutDate, "yyyy.MM.dd(EEE) HH:mm");
 
-        tvCheckIn.setText(checkInDay);
-        tvCheckOut.setText(checkOutDay);
+            tvCheckIn.setText(checkInDay);
+            tvCheckOut.setText(checkOutDay);
+        } catch (Exception e)
+        {
+            tvCheckIn.setText(null);
+            tvCheckOut.setText(null);
+        }
     }
 
     private void initGuestInformationLayout(View view, HotelBookingDetail bookingDetail)
@@ -167,6 +173,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
         TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
 
-
+        priceTextView.setText(bookingDetail.price);
+        bonusTextView.setText(bookingDetail.bonus);
+        couponTextView.setText(bookingDetail.coupon);
+        totalPriceTextView.setText(bookingDetail.totalPrice);
     }
 }

@@ -55,7 +55,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeInt(price);
         dest.writeInt(bonus);
         dest.writeInt(coupon);
-        dest.writeInt(coupon);
+        dest.writeInt(totalPrice);
     }
 
     protected void readFromParcel(Parcel in)
