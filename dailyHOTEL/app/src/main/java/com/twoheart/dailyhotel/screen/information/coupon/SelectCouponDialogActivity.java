@@ -91,6 +91,8 @@ public class SelectCouponDialogActivity extends BaseActivity
         @Override
         public void setResult(Coupon coupon)
         {
+            lockUI();
+
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_SELECT_COUPON, coupon);
 
