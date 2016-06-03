@@ -365,15 +365,24 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
                     {
                         Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+                        SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+                        int nights = data.getIntExtra(HotelRegionListActivity.INTENT_EXTRA_DATA_NIGHTS, 1);
 
                         setProvince(province);
 
-                        // 임시 버전 추후에 수정 되도록 한다.
-                        // 캘린더를 띄울때 강제로 탭이름이 "날짜 선택"인 경우에는 선택이 안되어서 되도록 수정한다.
-                        if (getString(R.string.label_selecteday).equalsIgnoreCase(mTabLayout.getTabAt(2).getText().toString()) == true)
-                        {
-                            mTabLayout.getTabAt(2).setText("");
-                        }
+                        // 상단탭을 바꾼다.
+                        SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
+
+                        // 선택탭의 이름을 수정한다.
+                        mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
+                        mTabLayout.getTabAt(2).setText(makeTabDateFormat(checkInSaleTime, checkOutSaleTime));
+
+                        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+
+                        // 날짜를 바꾸어 준다.
+                        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(2);
+                        hotelListFragment.setCheckInSaleTime(checkInSaleTime);
+                        hotelListFragment.setCheckOutSaleTime(checkOutSaleTime);
 
                         if (mTabLayout.getSelectedTabPosition() == 2)
                         {
@@ -383,8 +392,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                             mTabLayout.setScrollPosition(2, 0f, true);
                             mViewPager.setCurrentItem(2);
                         }
-
-                        mOnCommunicateListener.refreshAll(true);
                     }
                 }
 
