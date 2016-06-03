@@ -157,6 +157,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         if (mTimeDialog != null && mTimeDialog.isShowing() == true)
         {
             mTimeDialog.cancel();
+            mTimeDialog = null;
         }
     }
 
@@ -856,6 +857,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             }
 
             final GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+            if (mTimeDialog != null)
+            {
+                mTimeDialog.cancel();
+                mTimeDialog = null;
+            }
 
             mTimeDialog = Util.showDatePickerDialog(GourmetPaymentActivity.this//
                 , getString(R.string.label_booking_select_ticket_time)//

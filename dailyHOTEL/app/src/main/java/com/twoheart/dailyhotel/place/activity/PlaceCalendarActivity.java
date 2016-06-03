@@ -34,6 +34,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     public static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
     public static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
 
+    private static final int ANIMATION_DEALY = 200;
+
     protected View mCancelView, mToastView;
     protected TextView[] mDailyTextViews;
 
@@ -305,7 +307,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             mAnimationLayout.setTranslationY(Util.dpToPx(this, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
-            mObjectAnimator.setDuration(300);
+            mObjectAnimator.setDuration(ANIMATION_DEALY);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
             {
@@ -388,7 +390,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             }
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
-            mObjectAnimator.setDuration(300);
+            mObjectAnimator.setDuration(ANIMATION_DEALY);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
             {
@@ -460,7 +462,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setDuration(ANIMATION_DEALY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 
@@ -501,7 +503,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setDuration(ANIMATION_DEALY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 

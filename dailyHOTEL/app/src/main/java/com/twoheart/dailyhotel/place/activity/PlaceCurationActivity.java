@@ -2,9 +2,7 @@ package com.twoheart.dailyhotel.place.activity;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.TypedValue;
@@ -28,6 +26,8 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 {
     private static final int HANDLE_MESSAGE_RESULT = 1;
     private static final int HANDLE_MESSAGE_DELAYTIME = 750;
+
+    private static final int ANIMATION_DEALY = 200;
 
     private TextView mResultCountView;
     private View mConfirmView;
@@ -241,7 +241,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
             mAnimationLayout.setTranslationY(Util.dpToPx(this, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
-            mObjectAnimator.setDuration(300);
+            mObjectAnimator.setDuration(ANIMATION_DEALY);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
             {
@@ -324,7 +324,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
             }
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
-            mObjectAnimator.setDuration(300);
+            mObjectAnimator.setDuration(ANIMATION_DEALY);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
             {
@@ -396,7 +396,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         }
 
         mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setDuration(ANIMATION_DEALY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 
@@ -437,7 +437,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         }
 
         mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setDuration(ANIMATION_DEALY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 
