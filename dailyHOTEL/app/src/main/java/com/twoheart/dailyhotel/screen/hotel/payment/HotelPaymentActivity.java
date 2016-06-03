@@ -349,7 +349,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         mPriceTextView.setText(Util.getPriceFormat(this, originalPrice));
 
-        if (hotelPaymentInformation.isUsedBonus == true)
+        if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
         {
             hotelPaymentInformation.setCoupon(null);
 
@@ -378,7 +378,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                 setBonusEnabled(false);
             }
-        } else if (hotelPaymentInformation.isUsedCoupon == true)
+        } else if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
         {
             Coupon coupon = hotelPaymentInformation.getCoupon();
 
@@ -490,7 +490,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mUsedBonusTab.setOnClickListener(this);
             mUsedBonusTab.setSelected(true);
 
-            mPaymentInformation.isUsedBonus = true;
+            mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.BONUS;
         } else
         {
             mBonusRadioButton.setSelected(false);
@@ -502,7 +502,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mUsedBonusTab.setOnClickListener(null);
             mUsedBonusTab.setSelected(false);
 
-            mPaymentInformation.isUsedBonus = false;
+            mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         }
 
         updatePaymentPrice((HotelPaymentInformation) mPaymentInformation);
@@ -525,7 +525,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         } else
         {
-            mPaymentInformation.isUsedBonus = false;
+            mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         }
     }
 
@@ -541,7 +541,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mUsedCouponTab.setOnClickListener(this);
             mUsedCouponTab.setSelected(true);
 
-            mPaymentInformation.isUsedCoupon = true;
+            mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.COUPON;
         } else
         {
             mCouponRadioButton.setSelected(false);
@@ -552,7 +552,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mUsedCouponTab.setOnClickListener(null);
             mUsedCouponTab.setSelected(false);
 
-            mPaymentInformation.isUsedCoupon = false;
+            mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         }
 
         updatePaymentPrice((HotelPaymentInformation) mPaymentInformation);
@@ -602,11 +602,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         params.put("nights", String.valueOf(saleRoomInformation.nights));
         params.put("billkey", mSelectedCreditCard.billingkey);
 
-        if (paymentInformation.isUsedBonus == true)
+        if (paymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
         {
             String bonus = String.valueOf(paymentInformation.bonus);
             params.put("bonus", bonus);
-        } else if (paymentInformation.isUsedCoupon == true)
+        } else if (paymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
         {
             Coupon coupon = paymentInformation.getCoupon();
             params.put("coupon_code", coupon.getCode());
@@ -1267,7 +1267,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
             case R.id.bonusLayout:
             {
-                if (mPaymentInformation.isUsedCoupon == true)
+                if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
                     showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
                     {
@@ -1293,7 +1293,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
             case R.id.couponLayout:
             {
-                if (mPaymentInformation.isUsedBonus == true)
+                if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
                 {
                     showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
                     {
@@ -1396,7 +1396,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 }
 
                 //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
-                if (hotelPaymentInformation.isUsedBonus == true//
+                if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
                     && (hotelPaymentInformation.getSaleRoomInformation().totalDiscount <= DEFAULT_AVAILABLE_RESERVES) //
                     && hotelPaymentInformation.bonus != 0)
                 {
@@ -1664,7 +1664,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-            if (hotelPaymentInformation.isUsedBonus == true)
+            if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
             {
                 int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
                 int bonus;
@@ -2410,7 +2410,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
                 HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-                if (hotelPaymentInformation.isUsedBonus == true && bonus != hotelPaymentInformation.bonus)
+                if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
+                    && bonus != hotelPaymentInformation.bonus)
                 {
                     hotelPaymentInformation.bonus = bonus;
                     showChangedBonusDialog();

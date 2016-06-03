@@ -7,18 +7,18 @@ public abstract class PlacePaymentInformation implements Parcelable
 {
     public int placeIndex; // 호텔 호텔인덱스 고메 고메 인덱스
     public int bonus; // 적립금
-    public boolean isUsedBonus; // 적립금을 사용할 경우
-    public boolean isUsedCoupon; // 쿠폰을 사용할 경우
+    public DiscountType discountType; // 할인 타입!
     public PaymentType paymentType; //
     public boolean isDBenefit;
 
-    private Coupon mCoupon;
     private Customer mCustomer;
     private Guest mGuest;
+    private Coupon mCoupon;
 
     public PlacePaymentInformation()
     {
         paymentType = PaymentType.EASY_CARD;
+        discountType = DiscountType.NONE;
     }
 
     public PlacePaymentInformation(Parcel in)
@@ -31,7 +31,7 @@ public abstract class PlacePaymentInformation implements Parcelable
     {
         dest.writeInt(placeIndex);
         dest.writeInt(bonus);
-        dest.writeInt(isUsedBonus ? 1 : 0);
+        dest.writeString(discountType.name());
         dest.writeString(paymentType.name());
         dest.writeInt(isDBenefit ? 1 : 0);
         dest.writeParcelable(mCustomer, flags);
@@ -43,7 +43,7 @@ public abstract class PlacePaymentInformation implements Parcelable
     {
         placeIndex = in.readInt();
         bonus = in.readInt();
-        isUsedBonus = in.readInt() == 1;
+        discountType = DiscountType.valueOf(in.readString());
         paymentType = PaymentType.valueOf(in.readString());
         isDBenefit = in.readInt() == 1;
         mCustomer = in.readParcelable(Customer.class.getClassLoader());
@@ -98,6 +98,28 @@ public abstract class PlacePaymentInformation implements Parcelable
         private String mName;
 
         PaymentType(String name)
+        {
+            mName = name;
+        }
+
+        public String getName()
+        {
+            return mName;
+        }
+    }
+
+    /**
+     * 할인 타입 , NONE, BONUS, COUPON
+     */
+    public enum DiscountType
+    {
+        NONE("None"),
+        BONUS("Bonus"),
+        COUPON("Coupon");
+
+        private String mName;
+
+        DiscountType(String name)
         {
             mName = name;
         }

@@ -1282,7 +1282,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         bonus = 0;
                     }
 
-                    if (mPaymentInformation.isUsedBonus == true && bonus != mPaymentInformation.bonus)
+                    if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
+                        && bonus != mPaymentInformation.bonus)
                     {
                         // 보너스 값이 변경된 경우
                         mPaymentInformation.bonus = bonus;

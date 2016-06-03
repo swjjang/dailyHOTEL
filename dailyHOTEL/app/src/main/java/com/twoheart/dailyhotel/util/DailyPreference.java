@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
@@ -849,7 +850,7 @@ public class DailyPreference
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKIN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             mVBankEditor.putString(KEY_PREFERENCE_VBANK_CHECKOUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-            if (hotelPaymentInformation.isUsedBonus == true)
+            if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
             {
                 int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
                 int bonus;
