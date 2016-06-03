@@ -48,6 +48,19 @@ public class Coupon implements Parcelable
     // coupon object type
     public static final String AVAILABLE_ITEM = "availableItem";
 
+    // coupon object type
+    public static final String DESCRIPTION = "description";
+
+    // coupon object type
+    public static final String IS_INVALID_DATE = "isInvalidDate";
+
+    // coupon object type
+    public static final String IS_REDEEMED = "isRedeemed";
+
+    // coupon object type
+    public static final String REDEEMED_AT = "redeemedAt";
+
+
     private String code; // 쿠폰 별칭 코드
     private int amount; // 쿠폰금액
     private String title; //설명 ??  있을지수도 있고 없을수도 있음???
@@ -58,6 +71,11 @@ public class Coupon implements Parcelable
     private String availableItem; // 사용가능처
     private String warring; // 유의사항 , 노출여부로만 사용될수도...
     private String serverDate; // 서버시간
+    private String description; // ??? - CouponHistory
+    private boolean isInvalidDate; // 유효기간 만료 여부
+    private boolean isRedeemed; // 사용 여부
+    private String redeemedAt; // 사용한 날짜 (ISO-8601)
+
 
     public Coupon(Parcel in)
     {
@@ -66,7 +84,8 @@ public class Coupon implements Parcelable
 
     public Coupon(String code, int amount, String title, String validFrom, String validTo, //
                   int amountMinimum, String isDownloaded, String availableItem, String warring, //
-                  String serverDate)
+                  String serverDate, String description, boolean isInvalidDate, boolean isRedeemed, //
+                  String redeemedAt)
     {
         this.code = code;
         this.amount = amount;
@@ -78,6 +97,10 @@ public class Coupon implements Parcelable
         this.availableItem = availableItem;
         this.warring = warring;
         this.serverDate = serverDate;
+        this.description = description;
+        this.isInvalidDate = isInvalidDate;
+        this.isRedeemed = isRedeemed;
+        this.redeemedAt = redeemedAt;
     }
 
     public String getCode()
@@ -128,6 +151,31 @@ public class Coupon implements Parcelable
     public String getServerDate()
     {
         return serverDate;
+    }
+
+    public String getIsDownloaded()
+    {
+        return isDownloaded;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public boolean isInvalidDate()
+    {
+        return isInvalidDate;
+    }
+
+    public boolean isRedeemed()
+    {
+        return isRedeemed;
+    }
+
+    public String getRedeemedAt()
+    {
+        return redeemedAt;
     }
 
     public String getExpiredString(String startTime, String endTime)
@@ -198,6 +246,10 @@ public class Coupon implements Parcelable
         dest.writeString(availableItem);
         dest.writeString(warring);
         dest.writeString(serverDate);
+        dest.writeString(description);
+        dest.writeInt(isInvalidDate == true ? 1 : 0);
+        dest.writeInt(isRedeemed == true ? 1 : 0);
+        dest.writeString(redeemedAt);
     }
 
     private void readFromParcel(Parcel in)
@@ -212,6 +264,10 @@ public class Coupon implements Parcelable
         availableItem = in.readString();
         warring = in.readString();
         serverDate = in.readString();
+        description = in.readString();
+        isInvalidDate = in.readInt() == 1 ? true : false;
+        isRedeemed = in.readInt() == 1 ? true : false;
+        redeemedAt = in.readString();
     }
 
     @Override

@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -63,38 +63,56 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     {
         Coupon coupon = getItem(position);
 
-        DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-        String strAmout = decimalFormat.format(coupon.getAmount());
-        holder.priceTextView.setText(strAmout + mContext.getResources().getString(R.string.currency));
+        String strAmount = Util.getPriceFormat(mContext, coupon.getAmount());
+        holder.priceTextView.setText(strAmount);
 
         holder.descriptionTextView.setText(coupon.getTitle());
 
         holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
 
         int resId;
-        String strPrefixExpire;
-        if (Util.parseBoolean(coupon.isDownloaded()) == true)
-        {
-            resId = R.string.coupon_history_expire_text;
-            strPrefixExpire = "만료일:";
-        } else
+        if (coupon.isRedeemed() == true)
         {
             resId = R.string.coupon_history_use_text;
-            strPrefixExpire = "사용일:";
+        } else
+        {
+            resId = R.string.coupon_history_expire_text;
         }
+
         holder.stateTextView.setText(resId);
 
         // 사용기간 및 사용일자 또는 만료일자 구현 필요
         String strExpire = coupon.getExpiredString(coupon.getValidFrom(), coupon.getValidTo());
-        if (Util.getLCDWidth(mContext) < 720)
+
+        StringBuilder builder = new StringBuilder();
+
+        try
         {
-            strExpire += "\n";
-        } else
+            if (Util.getLCDWidth(mContext) < 720)
+            {
+                builder.append("\n");
+            } else
+            {
+                builder.append(" | ");
+            }
+
+            if (coupon.isRedeemed() == true)
+            {
+                builder.append("사용일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.getRedeemedAt(), "yyyy.MM.dd"));
+            } else
+            {
+                builder.append("만료일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.getValidTo(), "yyyy.MM.dd"));
+            }
+
+        } catch (Exception e)
         {
-            strExpire += " | ";
+            ExLog.e(e.getMessage());
+
+            builder.setLength(0);
         }
-        strExpire += strPrefixExpire + coupon.getDueDate(coupon);
-        holder.expireTextView.setText(strExpire);
+
+
+        holder.expireTextView.setText(strExpire + builder.toString());
     }
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder

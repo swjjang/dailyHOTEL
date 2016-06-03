@@ -1202,7 +1202,13 @@ public class Util implements Constants
         int index = iso8601.lastIndexOf("+");
         if (index == -1)
         {
+            int timeIndex = iso8601.lastIndexOf("T");
             index = iso8601.lastIndexOf("-");
+
+            if (timeIndex >= index) {
+                // 타임 값보다 적은 경우 인덱스 초기화
+                index = -1;
+            }
         }
 
         if (index != -1)
@@ -1235,7 +1241,7 @@ public class Util implements Constants
         {
             // 비정상 텍스트
             ExLog.d("iso8601 is wrong format, not find character '+' or '-', so add text '+09:00'");
-            iso8601 = iso8601 + "+09:00";
+            iso8601 = iso8601.replaceAll("Z", "") + "+09:00";
 
         }
 
@@ -1286,5 +1292,4 @@ public class Util implements Constants
 
         return false;
     }
-
 }

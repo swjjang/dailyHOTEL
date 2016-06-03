@@ -100,7 +100,10 @@ public class SelectCouponNetworkController extends BaseNetworkController
         int amountMinimum = 0; // 최소 결제 금액
         String isDownloaded = null; // 다운로드 여부 Y or N
         String availableItem = null; // 사용가능처
-
+        String description = null; // ??? - CouponHistory
+        boolean isInvalidDate = false; // 유효기간 만료 여부
+        boolean isRedeemed = false; // 사용 여부
+        String redeemedAt = null; // 사용한 날짜 (ISO-8601)
 
         try
         {
@@ -150,7 +153,30 @@ public class SelectCouponNetworkController extends BaseNetworkController
                 availableItem = jsonObject.getString(Coupon.AVAILABLE_ITEM); // 사용가능처
             }
 
-            coupon = new Coupon(code, amount, title, validFrom, validTo, amountMinimum, isDownloaded, availableItem, warning, serverDate);
+            if (jsonObject.has(Coupon.DESCRIPTION))
+            {
+                description = jsonObject.getString(Coupon.DESCRIPTION); // ?? - CouponHistory
+            }
+
+            if (jsonObject.has(Coupon.IS_INVALID_DATE))
+            {
+                isInvalidDate = jsonObject.getBoolean(Coupon.IS_INVALID_DATE); // 유효기간 만료 여부
+            }
+
+            if (jsonObject.has(Coupon.IS_REDEEMED))
+            {
+                isRedeemed = jsonObject.getBoolean(Coupon.IS_REDEEMED); // 사용 여부
+            }
+
+            if (jsonObject.has(Coupon.REDEEMED_AT))
+            {
+                redeemedAt = jsonObject.getString(Coupon.REDEEMED_AT); // 사용한 날짜 (ISO-8601)
+            }
+
+            coupon = new Coupon(code, amount, title, validFrom, validTo, amountMinimum, //
+                isDownloaded, availableItem, warning, serverDate, description, isInvalidDate, //
+                isRedeemed, redeemedAt);
+
         } catch (Exception e)
         {
             ExLog.e(e.getMessage());
@@ -188,7 +214,8 @@ public class SelectCouponNetworkController extends BaseNetworkController
                     {
                         String serverDate = "";
 
-                        if (data.has(Coupon.SERVER_DATE) == true) {
+                        if (data.has(Coupon.SERVER_DATE) == true)
+                        {
                             serverDate = data.getString(Coupon.SERVER_DATE);
                         }
 
