@@ -415,8 +415,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 return;
             }
 
-            view.setSelected(true);
-
             if (area.index == -1)
             {
                 if (mOnUserActionListener != null)

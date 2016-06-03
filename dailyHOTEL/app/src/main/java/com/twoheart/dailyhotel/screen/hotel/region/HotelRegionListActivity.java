@@ -268,10 +268,10 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
             String previousLabel = convertLabelFormatAnalytics(previousProvince);
             String selectedLabel = convertLabelFormatAnalytics(selectedProvince);
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
 
-            String checkInDate = checkInTime.getDayOfDaysDateFormat("yyyyMMdd");
-            String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyyMMdd");
+            String checkInDate = checkInTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+            String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
             return previousLabel + "-" + selectedLabel + "-" + checkInDate + "-" + checkOutDate + "-" + simpleDateFormat.format(new Date());
         }
@@ -329,7 +329,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
                             recordEvent(province);
                             finish();
                         }
-                    }, false);
+                    }, true);
                 } else
                 {
                     Intent intent = new Intent();
