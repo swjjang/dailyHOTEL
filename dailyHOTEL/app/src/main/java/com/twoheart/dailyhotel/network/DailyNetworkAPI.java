@@ -622,14 +622,15 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestDepositWaitDetailInformation(Object tag, int payType, String tid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestDepositWaitDetailInformation(Object tag, String tid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/account" : "";
 
-        String params = String.format("/%d/%s", payType, tid);
+        String params = String.format("/%s", tid);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL + params, null, listener, errorListener);
         dailyHotelJsonRequest.setUsedAuthorization(true);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }

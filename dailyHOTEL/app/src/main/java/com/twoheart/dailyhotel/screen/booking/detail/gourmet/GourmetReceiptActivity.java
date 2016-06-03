@@ -76,19 +76,17 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
         paymentDayTextView.setText(valueDate);
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
-
         // 지불 방식
         TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
         paymentTypeTextView.setText(paymentName);
 
         // 소계
         TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-        supplyValueTextView.setText("₩ " + comma.format(supoplyValue));
+        supplyValueTextView.setText(Util.getPriceFormat(this, supoplyValue, true));
 
         // 세금 및 수수료
         TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
-        vatTextView.setText("₩ " + comma.format(vat));
+        vatTextView.setText(Util.getPriceFormat(this, vat, true));
 
         View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
 
@@ -98,26 +96,26 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
             // 총 입금 금액
             TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText("₩ " + comma.format(discount));
+            totalPaymentTextView.setText(Util.getPriceFormat(this, discount, true));
         } else
         {
             saleLayout.setVisibility(View.VISIBLE);
 
             // 총금액
             TextView discountTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-            discountTextView.setText("₩ " + comma.format(discount));
+            discountTextView.setText(Util.getPriceFormat(this, discount, true));
 
             // 적립금 사용
             TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
-            bonusTextView.setText("₩ " + comma.format(bonus));
+            bonusTextView.setText(Util.getPriceFormat(this, bonus, true));
 
             // 할인쿠폰 사용
             TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
-            couponTextView.setText("₩ " + comma.format(counpon));
+            couponTextView.setText(Util.getPriceFormat(this, counpon, true));
 
             // 총 입금 금액
             TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText("₩ " + comma.format(totalPayment));
+            totalPaymentTextView.setText(Util.getPriceFormat(this, totalPayment, true));
         }
 
         // **공급자**

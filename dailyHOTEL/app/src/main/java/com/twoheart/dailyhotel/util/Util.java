@@ -1126,10 +1126,17 @@ public class Util implements Constants
         }
     }
 
-    public static String getPriceFormat(Context context, int price)
+    public static String getPriceFormat(Context context, int price, boolean isPrefixType)
     {
-        DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format));
-        return decimalFormat.format(price);
+        if (isPrefixType == true)
+        {
+            DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format_prefix));
+            return decimalFormat.format(price);
+        } else
+        {
+            DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format));
+            return decimalFormat.format(price);
+        }
     }
 
     public static Date getISO8601Date(String time) throws ParseException, NullPointerException

@@ -321,7 +321,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
 
         // 결제금액
-        String price = Util.getPriceFormat(mContext, gourmetPaymentInformation.getPaymentToPay());
+        String price = Util.getPriceFormat(mContext, gourmetPaymentInformation.getPaymentToPay(), false);
 
         mPriceTextView.setText(price);
         mFinalPaymentTextView.setText(price);

@@ -341,7 +341,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestDepositWaitDetailInformation(Object tag, int payType, String tid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestDepositWaitDetailInformation(Object tag, String tid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**

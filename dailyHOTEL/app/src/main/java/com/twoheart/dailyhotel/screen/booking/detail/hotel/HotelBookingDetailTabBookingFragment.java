@@ -173,9 +173,9 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
         TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
 
-        priceTextView.setText(bookingDetail.price);
-        bonusTextView.setText(bookingDetail.bonus);
-        couponTextView.setText(bookingDetail.coupon);
-        totalPriceTextView.setText(bookingDetail.totalPrice);
+        priceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.price, false));
+        bonusTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.bonus, false));
+        couponTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.coupon, false));
+        totalPriceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.totalPrice, false));
     }
 }
