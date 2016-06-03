@@ -1,77 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/black_a67">
 
     <View
         android:id="@+id/exitView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/informationLayout"/>
+        android:layout_height="83dp"/>
 
     <RelativeLayout
-        android:id="@+id/informationLayout"
+        android:id="@+id/animationLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_above="@+id/contentScrollView"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/exitView">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/resetCurationView"
-            android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:gravity="center_vertical"
-            android:paddingRight="10dp"
-            android:text="@string/label_reset"
-            android:textColor="@color/curation_information_text"
-            android:textSize="13dp"
-            android:paddingLeft="10dp"/>
+        <RelativeLayout
+            android:id="@+id/informationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/closeView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:src="@drawable/navibar_ic_x"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"/>
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/resetCurationView"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/label_reset"
+                android:textColor="@color/curation_information_text"
+                android:textSize="13dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/resultCountView"
+            <ImageView
+                android:id="@+id/closeView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="right"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/navibar_ic_x"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/resultCountView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/closeView"
+                android:layout_toRightOf="@+id/resetCurationView"
+                android:gravity="center"
+                android:textColor="@color/curation_information_text"
+                android:textSize="13dp"/>
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/contentScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/closeView"
-            android:layout_toRightOf="@+id/resetCurationView"
+            android:layout_above="@+id/confirmView"
+            android:layout_below="@+id/informationLayout"
+            android:background="@color/white"
+            android:fadingEdge="none">
+
+            <LinearLayout
+                android:id="@+id/contentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+        </ScrollView>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/confirmView"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/selector_curation_confirm_background_color"
             android:gravity="center"
-            android:textColor="@color/curation_information_text"
-            android:textSize="13dp"/>
+            android:text="@string/label_apply_completed"
+            android:textColor="@drawable/selector_curation_confirm_text_color"
+            android:textSize="20dp"/>
     </RelativeLayout>
 
-    <ScrollView
-        android:id="@+id/contentScrollView"
+    <View
+        android:id="@+id/disableLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fadingEdge="none"
-        android:layout_above="@+id/confirmView">
-
-        <LinearLayout
-            android:id="@+id/contentLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"/>
-    </ScrollView>
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/confirmView"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/selector_curation_confirm_background_color"
-        android:gravity="center"
-        android:text="@string/label_apply_completed"
-        android:textColor="@drawable/selector_curation_confirm_text_color"
-        android:textSize="20dp"/>
+        android:layout_height="match_parent"/>
 </RelativeLayout>

@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,10 +11,14 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -28,6 +34,15 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     private Handler mHandler;
 
+    protected View mAnimationLayout; // 애니메이션 되는 뷰
+    private View mDisableLayout; // 전체 화면을 덮는 뷰
+    private View mBackgroundView; // 뒷배경
+
+    private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+    private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
+    private ObjectAnimator mObjectAnimator;
+    private AlphaAnimation mAlphaAnimation;
+
     protected abstract void initContentLayout(ViewGroup contentLayout);
 
     protected abstract void onComplete();
@@ -37,14 +52,6 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     protected abstract void onReset();
 
     protected abstract void updateResultMessage();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        mIsShowStatusBar = false;
-
-        super.onCreate(savedInstanceState);
-    }
 
     protected void initLayout()
     {
@@ -56,25 +63,8 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         mConfirmView = findViewById(R.id.confirmView);
         setConfirmOnClickListener(this);
 
-        final View contentScrollView = findViewById(R.id.contentScrollView);
-        contentScrollView.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Rect rect = new Rect();
-                getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-                int scrollViewHeight = Util.getLCDHeight(PlaceCurationActivity.this) - Util.dpToPx(PlaceCurationActivity.this, 55)//
-                    - Util.dpToPx(PlaceCurationActivity.this, 50) - Util.dpToPx(PlaceCurationActivity.this, 47) - Util.dpToPx(PlaceCurationActivity.this, 36) - rect.top;
-
-                if (contentScrollView.getHeight() > scrollViewHeight)
-                {
-                    ViewGroup.LayoutParams layoutParams = contentScrollView.getLayoutParams();
-                    layoutParams.height = scrollViewHeight;
-                    contentScrollView.setLayoutParams(layoutParams);
-                }
-            }
-        });
+        ScrollView contentScrollView = (ScrollView)findViewById(R.id.contentScrollView);
+        EdgeEffectColor.setEdgeGlowColor(contentScrollView, getResources().getColor(R.color.over_scroll_edge));
 
         View exitView = findViewById(R.id.exitView);
         exitView.setOnClickListener(this);
@@ -86,6 +76,10 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         closeView.setOnClickListener(this);
 
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
+
+        mAnimationLayout = findViewById(R.id.animationLayout);
+        mDisableLayout = findViewById(R.id.disableLayout);
+        mBackgroundView = (View) exitView.getParent();
 
         initContentLayout(contentLayout);
     }
@@ -139,7 +133,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     {
         super.finish();
 
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -147,7 +141,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     {
         setResult(RESULT_CANCELED);
 
-        super.onBackPressed();
+        hideAnimation();
     }
 
     @Override
@@ -196,6 +190,276 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         dailyTextView.setLayoutParams(layoutParams);
 
         return dailyTextView;
+    }
+
+    protected void setTouchEnabled(boolean enabled)
+    {
+        if (enabled == true)
+        {
+
+            mDisableLayout.setVisibility(View.GONE);
+            mDisableLayout.setOnClickListener(null);
+        } else
+        {
+            mDisableLayout.setVisibility(View.VISIBLE);
+            mDisableLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+
+                }
+            });
+        }
+    }
+
+    protected void showAnimation()
+    {
+        if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        if (Util.isOverAPI12() == true)
+        {
+            final float y = mAnimationLayout.getBottom();
+
+            if (mObjectAnimator != null)
+            {
+                if (mObjectAnimator.isRunning() == true)
+                {
+                    mObjectAnimator.cancel();
+                    mObjectAnimator.removeAllListeners();
+                }
+
+                mObjectAnimator = null;
+            }
+
+            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+            int height = mAnimationLayout.getHeight();
+
+            mAnimationLayout.setTranslationY(Util.dpToPx(this, height));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
+            mObjectAnimator.setDuration(300);
+
+            mObjectAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    if (mAnimationLayout.getVisibility() != View.VISIBLE)
+                    {
+                        mAnimationLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    setTouchEnabled(false);
+
+                    mAnimationState = ANIMATION_STATE.START;
+                    mAnimationStatus = ANIMATION_STATUS.SHOW;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = ANIMATION_STATUS.SHOW_END;
+                        mAnimationState = ANIMATION_STATE.END;
+                    }
+
+                    setTouchEnabled(true);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = ANIMATION_STATE.CANCEL;
+
+                    setTouchEnabled(true);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mObjectAnimator.start();
+
+            showAnimationFadeOut();
+        } else
+        {
+            if (mAnimationLayout != null && mAnimationLayout.getVisibility() != View.VISIBLE)
+            {
+                mAnimationLayout.setVisibility(View.VISIBLE);
+
+                mAnimationStatus = ANIMATION_STATUS.SHOW_END;
+                mAnimationState = ANIMATION_STATE.END;
+            }
+        }
+    }
+
+    protected void hideAnimation()
+    {
+        if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.HIDE)
+        {
+            return;
+        }
+
+        if (Util.isOverAPI12() == true)
+        {
+            final float y = mAnimationLayout.getTop();
+
+            if (mObjectAnimator != null)
+            {
+                if (mObjectAnimator.isRunning() == true)
+                {
+                    mObjectAnimator.cancel();
+                    mObjectAnimator.removeAllListeners();
+                }
+
+                mObjectAnimator = null;
+            }
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
+            mObjectAnimator.setDuration(300);
+
+            mObjectAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+
+                    mAnimationState = ANIMATION_STATE.START;
+                    mAnimationStatus = ANIMATION_STATUS.HIDE;
+
+                    setTouchEnabled(false);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+                        mAnimationState = ANIMATION_STATE.END;
+
+                        mBackgroundView.setVisibility(View.GONE);
+
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = ANIMATION_STATE.CANCEL;
+
+                    mBackgroundView.setVisibility(View.GONE);
+
+                    finish();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+                }
+            });
+
+            mObjectAnimator.start();
+
+            showAnimationFadeIn();
+        } else
+        {
+            mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+            mAnimationState = ANIMATION_STATE.END;
+
+            finish();
+        }
+    }
+
+    /**
+     * 점점 밝아짐.
+     */
+    private void showAnimationFadeIn()
+    {
+        if (mAlphaAnimation != null)
+        {
+            if (mAlphaAnimation.hasEnded() == false)
+            {
+                mAlphaAnimation.cancel();
+            }
+
+            mAlphaAnimation = null;
+        }
+
+        mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setFillBefore(true);
+        mAlphaAnimation.setFillAfter(true);
+
+        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
+        });
+
+        mBackgroundView.startAnimation(mAlphaAnimation);
+    }
+
+    /**
+     * 점점 어두워짐.
+     */
+    private void showAnimationFadeOut()
+    {
+        if (mAlphaAnimation != null)
+        {
+            if (mAlphaAnimation.hasEnded() == false)
+            {
+                mAlphaAnimation.cancel();
+            }
+
+            mAlphaAnimation = null;
+        }
+
+        mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setFillBefore(true);
+        mAlphaAnimation.setFillAfter(true);
+
+        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
+        });
+
+        mBackgroundView.startAnimation(mAlphaAnimation);
     }
 
     private static class UpdateHandler extends Handler

@@ -634,7 +634,7 @@
     <string name="act_list_region_japan">일본</string>
     <string name="label_visit_date">방문 날짜 확인</string>
     <string name="label_region_change_date">날짜 변경하기</string>
-    <string name="message_region_search_date">이 날짜로 숙소를 찾을까요?</string>
+    <string name="message_region_search_date">방문하실 날짜가 맞나요?</string>
 
     <!-- Main Tab -->
     <string name="label_today">오늘</string>

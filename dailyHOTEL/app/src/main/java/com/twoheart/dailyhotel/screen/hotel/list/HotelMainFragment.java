@@ -248,7 +248,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 Intent intent = HotelCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
-                baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
                 String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
@@ -368,6 +367,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
                         setProvince(province);
+
+                        // 임시 버전 추후에 수정 되도록 한다.
+                        // 캘린더를 띄울때 강제로 탭이름이 "날짜 선택"인 경우에는 선택이 안되어서 되도록 수정한다.
+                        if (getString(R.string.label_selecteday).equalsIgnoreCase(mTabLayout.getTabAt(2).getText().toString()) == true)
+                        {
+                            mTabLayout.getTabAt(2).setText("");
+                        }
 
                         if (mTabLayout.getSelectedTabPosition() == 2)
                         {
@@ -505,6 +511,27 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
     }
 
+    private String makeTabDateFormat(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    {
+        String dateFormat;
+        String tabDateFormat;
+
+        if (Util.getLCDWidth(getContext()) < 720)
+        {
+            dateFormat = "M.d";
+            tabDateFormat = "%s - %s";
+        } else
+        {
+            dateFormat = "M월d일";
+            tabDateFormat = "%s-%s";
+        }
+
+        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
+        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
+
+        return String.format(tabDateFormat, checkInDay, checkOutDay);
+    }
+
     private void makeDateTabLayout()
     {
         //탭에 들어갈 날짜를 만든다.
@@ -552,24 +579,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             if (currentFragment instanceof HotelDaysListFragment)
             {
-                String dateFormat;
-                String tabDateFormat;
-
-                if (Util.getLCDWidth(getContext()) < 720)
-                {
-                    dateFormat = "M.d";
-                    tabDateFormat = "%s - %s";
-                } else
-                {
-                    dateFormat = "M월d일";
-                    tabDateFormat = "%s-%s";
-                }
-
-                String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
-                String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
-
                 // 선택탭의 이름을 수정한다.
-                days = String.format(tabDateFormat, checkInDay, checkOutDay);
+                days = makeTabDateFormat(checkInSaleTime, checkOutSaleTime);
 
                 FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
@@ -1689,25 +1700,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             lockUiComponent();
 
-            String dateFormat;
-            String tabDateFormat;
-
-            if (Util.getLCDWidth(getContext()) < 720)
-            {
-                dateFormat = "M.d";
-                tabDateFormat = "%s - %s";
-            } else
-            {
-                dateFormat = "M월d일";
-                tabDateFormat = "%s-%s";
-            }
-
-            String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
-            String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
-
             // 선택탭의 이름을 수정한다.
             mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
-            mTabLayout.getTabAt(2).setText(String.format(tabDateFormat, checkInDay, checkOutDay));
+            mTabLayout.getTabAt(2).setText(makeTabDateFormat(checkInSaleTime, checkOutSaleTime));
 
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 

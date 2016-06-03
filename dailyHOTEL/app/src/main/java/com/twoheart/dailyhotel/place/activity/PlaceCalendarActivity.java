@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -37,8 +38,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected TextView[] mDailyTextViews;
 
     protected View mAnimationLayout; // 애니메이션 되는 뷰
-    protected View mExitView; // 상단 빈공간
     private View mDisableLayout; // 전체 화면을 덮는 뷰
+    protected View mExitView;
     private View mBackgroundView; // 뒷배경
 
     private TextView mTitleTextView;
@@ -47,21 +48,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
-
-    private enum ANIMATION_STATE
-    {
-        START,
-        END,
-        CANCEL
-    }
-
-    private enum ANIMATION_STATUS
-    {
-        SHOW,
-        HIDE,
-        SHOW_END,
-        HIDE_END
-    }
 
     protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
     {

@@ -244,7 +244,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 Intent intent = GourmetCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
-                baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
                 String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
