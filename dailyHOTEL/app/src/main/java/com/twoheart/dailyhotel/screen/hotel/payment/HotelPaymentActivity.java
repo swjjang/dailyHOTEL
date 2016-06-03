@@ -351,6 +351,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         if (hotelPaymentInformation.isUsedBonus == true)
         {
+            hotelPaymentInformation.setCoupon(null);
+
             int discountPrice = hotelPaymentInformation.bonus;
 
             if (discountPrice > 0)
@@ -546,6 +548,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountCouponLayout.setSelected(false);
             mDiscountCouponLayout.setOnClickListener(this);
 
+            mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
             mUsedCouponTab.setOnClickListener(null);
             mUsedCouponTab.setSelected(false);
 
@@ -1521,8 +1524,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             }, null);
         } else
         {
-            setCouponSelected(true);
+            // 호텔 결제 정보에 쿠폰 가격 넣고 텍스트 업데이트 필요
             hotelPaymentInformation.setCoupon(coupon);
+            setCouponSelected(true);
         }
     }
 
