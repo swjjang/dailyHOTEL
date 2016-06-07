@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.SimpleDateFormat;
@@ -120,10 +121,13 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         ticketTypeTextView.setText(bookingDetail.ticketName);
         ticketCountTextView.setText(getString(R.string.label_booking_count, bookingDetail.ticketCount));
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        dateTextView.setText(simpleDateFormat.format(new Date(bookingDetail.reservationTime)));
+        try
+        {
+            dateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.reservationTime, "yyyy.MM.dd(EEE) HH:mm"));
+        }catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void initGuestInformationLayout(View view, GourmetBookingDetail bookingDetail)

@@ -234,7 +234,7 @@ public class PaymentWaitActivity extends BaseActivity
         }
     }
 
-    private void setReservationData(JSONObject jsonObject) throws JSONException, ParseException
+    private void setHotelReservationData(JSONObject jsonObject) throws JSONException, ParseException
     {
         String accountNumber = jsonObject.getString("vactNum");
         mAccountTextView.setText(jsonObject.getString("bankName") + ", " + accountNumber);
@@ -284,6 +284,31 @@ public class PaymentWaitActivity extends BaseActivity
         setGuideText(mGuide1Layout, msg2.split("\\."), true);
     }
 
+    private void setGourmetReservationData(JSONObject jsonObject) throws JSONException
+    {
+        String accountNumber = jsonObject.getString("account_num");
+        mAccountTextView.setText(jsonObject.getString("bank_name") + ", " + accountNumber);
+        mAccountTextView.setTag(accountNumber);
+
+        mDailyTextView.setText(jsonObject.getString("name"));
+
+        int paymetPrice = jsonObject.getInt("amt");
+        mPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
+
+        String date = jsonObject.getString("date").replaceAll("/", ".");
+        String[] timeSlice = jsonObject.getString("time").split(":");
+
+        mDeadlineTextView.setText(String.format("%s %s:%s까지", date, timeSlice[0], timeSlice[1]));
+
+        String msg1 = jsonObject.getString("msg1");
+        setGuideText(mGuide1Layout, msg1.split("\\."), false);
+
+        String msg2 = getString(R.string.message__wait_payment03);
+        setGuideText(mGuide1Layout, msg2.split("\\."), true);
+
+        mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,7 +332,7 @@ public class PaymentWaitActivity extends BaseActivity
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    setReservationData(dataJSONObject.getJSONObject("reservation"));
+                    setHotelReservationData(dataJSONObject.getJSONObject("reservation"));
                 } else
                 {
                     Intent intent = new Intent();
@@ -346,7 +371,7 @@ public class PaymentWaitActivity extends BaseActivity
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
-                    setReservationData(jsonObject);
+                    setGourmetReservationData(jsonObject);
                 } else
                 {
                     Intent intent = new Intent();

@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -138,15 +139,18 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
             case 2:
             {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                try
+                {
+                    String reservationTime = Util.simpleDateFormatISO8601toFormat(mGourmetBookingDetail.reservationTime, "yyMMdd");
+                    String label = String.format("Gourmet-%s-%s", mGourmetBookingDetail.placeName, reservationTime);
 
-                String reservationTime = simpleDateFormat.format(new Date(mGourmetBookingDetail.reservationTime));
-                String label = String.format("Gourmet-%s-%s", mGourmetBookingDetail.placeName, reservationTime);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                    , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
-                    , label, null);
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
+                        , label, null);
+                } catch (ParseException e)
+                {
+                    ExLog.d(e.toString());
+                }
                 break;
             }
         }
@@ -251,7 +255,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             {
                 int msgCode = response.getInt("msg_code");
 
-                if (msgCode == 0)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 
