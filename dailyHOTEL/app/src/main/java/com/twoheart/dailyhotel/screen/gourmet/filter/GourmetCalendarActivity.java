@@ -23,8 +23,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     private static final int ENABLE_DAYCOUNT_OF_MAX = 14;
 
     private Day mDay;
+    private TextView mConfirmTextView;
+    private TextView mToastTextView;
     private String mCallByScreen;
-    private View mConfirmView;
 
     private boolean mIsAnimation;
     private boolean mIsChanged;
@@ -82,15 +83,22 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     {
         super.initLayout(layoutResID, dailyTime, enableDayCountOfMax, dayCountOfMax);
 
-        mConfirmView = findViewById(R.id.confirmView);
-        mConfirmView.setVisibility(View.VISIBLE);
-        mConfirmView.setOnClickListener(this);
-        mConfirmView.setEnabled(false);
+        mConfirmTextView = (TextView) findViewById(R.id.confirmView);
+        mConfirmTextView.setVisibility(View.VISIBLE);
+        mConfirmTextView.setOnClickListener(this);
+        mConfirmTextView.setEnabled(false);
 
         if (AnalyticsManager.ValueType.LIST.equalsIgnoreCase(mCallByScreen) == true)
         {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(this, 83));
             mExitView.setLayoutParams(layoutParams);
+        } else
+        {
+            // 문구 내용을 변경한다.
+            mToastTextView = (TextView) mToastView.findViewById(R.id.toastTextView);
+
+            mConfirmTextView.setText(R.string.label_calendar_search_selected_date);
+            mToastTextView.setText(R.string.message_calendar_search_reset);
         }
     }
 
@@ -201,7 +209,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 setDaysEnable(view, false);
                 setCancelViewVisibility(View.VISIBLE);
-                mConfirmView.setEnabled(true);
+                mConfirmTextView.setEnabled(true);
                 setToastVisibility(View.VISIBLE);
 
                 releaseUiComponent();
@@ -260,7 +268,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         }
 
         setToolbarText(getString(R.string.label_calendar_gourmet_select));
-        mConfirmView.setEnabled(false);
+        mConfirmTextView.setEnabled(false);
 
         setCancelViewVisibility(View.GONE);
         mDailyTextViews[mDailyTextViews.length - 1].setEnabled(false);
