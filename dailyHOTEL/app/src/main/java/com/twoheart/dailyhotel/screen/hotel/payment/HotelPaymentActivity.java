@@ -616,6 +616,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         params.put("guest_phone", guest.phone.replace("-", ""));
         params.put("guest_email", guest.email);
 
+        String memo = mMemoEditText.getText().toString();
+        if (Util.isTextEmpty(memo) == false)
+        {
+            params.put("guest_msg", memo);
+        }
+
         //            if (DEBUG == true)
         //            {
         //                showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
