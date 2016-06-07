@@ -601,14 +601,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         params.put("nights", String.valueOf(saleRoomInformation.nights));
         params.put("billkey", mSelectedCreditCard.billingkey);
 
-        if (paymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
+        switch(paymentInformation.discountType)
         {
-            String bonus = String.valueOf(paymentInformation.bonus);
-            params.put("bonus", bonus);
-        } else if (paymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
-        {
-            Coupon coupon = paymentInformation.getCoupon();
-            params.put("coupon_code", coupon.getCode());
+            case BONUS:
+                String bonus = String.valueOf(paymentInformation.bonus);
+                params.put("bonus", bonus);
+                break;
+
+            case COUPON:
+                Coupon coupon = paymentInformation.getCoupon();
+                params.put("coupon_code", coupon.getCode());
+                break;
         }
 
         params.put("guest_name", guest.name);
