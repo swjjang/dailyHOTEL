@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
@@ -9,23 +10,37 @@
         android:layout_height="match_parent"
         android:visibility="visible">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/addCreditCardButton"
+        <RelativeLayout
+            android:id="@+id/bottomLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="64dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/dh_theme_color"
-            android:gravity="center"
-            android:text="@string/label_add_creditcard"
-            android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:visibility="invisible"/>
+            android:background="@color/white"
+            android:visibility="invisible">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/default_line_ce7e7e7"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/addCreditCardButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_normal_gradation"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="17dp"
+                android:text="@string/label_add_creditcard"
+                dailyFont:style="Medium"/>
+        </RelativeLayout>
 
         <ListView
             android:id="@+id/creditcardListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/addCreditCardButton"
+            android:layout_above="@id/bottomLayout"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@null"
             android:paddingBottom="10dp"/>
@@ -36,7 +51,7 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:layout_above="@+id/addCreditCardButton"
+            android:layout_above="@+id/bottomLayout"
             android:visibility="invisible">
 
             <RelativeLayout
