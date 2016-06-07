@@ -384,14 +384,14 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         hotelListFragment.setCheckInSaleTime(checkInSaleTime);
                         hotelListFragment.setCheckOutSaleTime(checkOutSaleTime);
 
-                        if (mTabLayout.getSelectedTabPosition() == 2)
-                        {
-                            mOnTabSelectedListener.onTabReselected(mTabLayout.getTabAt(2));
-                        } else
-                        {
-                            mTabLayout.setScrollPosition(2, 0f, true);
-                            mViewPager.setCurrentItem(2);
-                        }
+                        mTabLayout.setOnTabSelectedListener(null);
+                        mTabLayout.setScrollPosition(2, 0f, true);
+                        mViewPager.setCurrentItem(2);
+                        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+
+                        hotelListFragment.onPageSelected(mTabLayout.getTabAt(2).getText().toString());
+
+                        mOnCommunicateListener.refreshAll(true);
                     }
                 }
 
@@ -1799,6 +1799,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     Map<String, String> parmas = new HashMap<>();
                     Province province = mCurationOption.getProvince();
+
+                    if (province == null)
+                    {
+                        Util.restartApp(getContext());
+                        return;
+                    }
 
                     if (province instanceof Area)
                     {

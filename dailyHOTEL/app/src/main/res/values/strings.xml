@@ -783,6 +783,8 @@
     <string name="label_map_searchmap">지도앱에서 길찾기</string>
     //
     <!-- Search Calendar -->
-    <string name="label_searchcalendar_search_selected_date">날짜 선택 완료</string>
-    <string name="message_searchcalendar_reset">방문하실 날짜를 확인해 주세요.\n재설정을 하시려면 다른 날짜를 선택해주세요.</string>
+    <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>
+    <string name="message_calendar_placelist_reset">방문하실 날짜를 확인해 주세요.\n재설정을 하시려면 다른 날짜를 선택해주세요.</string>
+    <string name="label_calendar_search_selected_date">선택 날짜로 검색하기</string>
+    <string name="message_calendar_search_reset">검색하실 날짜를 확인해 주세요.\n재설정을 하시려면 다른 날짜를 선택해주세요.</string>
 </resources>

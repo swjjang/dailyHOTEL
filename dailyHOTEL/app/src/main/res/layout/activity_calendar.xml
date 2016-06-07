@@ -169,7 +169,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
-                android:text="@string/message_searchcalendar_reset"
+                android:text="@string/message_calendar_placelist_reset"
                 android:textColor="@color/white"
                 android:textSize="15dp"/>
 
@@ -191,7 +191,7 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/selector_button_background_color"
             android:gravity="center"
-            android:text="@string/label_searchcalendar_search_selected_date"
+            android:text="@string/label_calendar_placelist_confirm_selected_date"
             android:textColor="@android:color/white"
             android:textSize="20dp"/>
     </RelativeLayout>
