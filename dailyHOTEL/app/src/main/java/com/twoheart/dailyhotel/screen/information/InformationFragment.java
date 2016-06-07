@@ -394,17 +394,10 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             boolean onOff = DailyPreference.getInstance(baseActivity).isShowBenefitAlarm();
+            onOff = !onOff; // 클릭이므로 상태값 변경!
 
-            if (onOff == true)
-            {
-                DailyPreference.getInstance(baseActivity).setShowBenefitAlarm(false);
-                AppboyManager.setPushEnabled(baseActivity, false);
-
-            } else
-            {
-                DailyPreference.getInstance(baseActivity).setShowBenefitAlarm(true);
-                AppboyManager.setPushEnabled(baseActivity, true);
-            }
+            DailyPreference.getInstance(baseActivity).setShowBenefitAlarm(onOff);
+            AppboyManager.setPushEnabled(baseActivity, onOff);
 
             mInformationLayout.updatePushIcon(onOff);
 
@@ -697,11 +690,18 @@ public class InformationFragment extends BaseFragment implements Constants
         = new InformationNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount)
+        public void onUserInformation(String type, String email, String name, String recommender, //
+                                      int bonus, int couponTotalCount, boolean isAgreedBenefit)
         {
             DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
 
             boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
+
+            if (isLogin == true)
+            {
+                DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
+                mInformationLayout.updatePushIcon(isAgreedBenefit);
+            }
 
             mInformationLayout.updateLoginLayout(isLogin, false);
             mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);

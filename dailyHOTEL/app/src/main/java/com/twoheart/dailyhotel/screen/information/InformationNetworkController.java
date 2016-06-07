@@ -17,7 +17,7 @@ public class InformationNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount);
+        void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount, boolean isAgreedBenefit);
 
         void onPushBenefitMessage(String title, String message);
     }
@@ -60,9 +60,11 @@ public class InformationNetworkController extends BaseNetworkController
                 String userType = response.getString("user_type");
                 int bonus = response.getInt("bonus");
                 int couponTotalCount = response.getInt("coupon_total_count");
+                boolean isAgreedBenefit = response.getBoolean("isAgreedBenefit");
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener) //
-                    .onUserInformation(userType, email, name, ownRecommender, bonus, couponTotalCount);
+                    .onUserInformation(userType, email, name, ownRecommender, bonus, //
+                        couponTotalCount, isAgreedBenefit);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

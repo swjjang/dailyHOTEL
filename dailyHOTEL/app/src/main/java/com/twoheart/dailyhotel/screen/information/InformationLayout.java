@@ -242,7 +242,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             return;
         }
 
-        mPushTextView.setText(onOff ? R.string.label_off : R.string.label_on);
+        mPushTextView.setText(onOff == false ? R.string.label_off : R.string.label_on);
     }
 
     public void updateNewIconView(boolean hasNewEvent)
