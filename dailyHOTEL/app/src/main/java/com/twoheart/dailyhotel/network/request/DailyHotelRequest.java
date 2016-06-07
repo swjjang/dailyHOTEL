@@ -288,7 +288,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         map.put("Os-Type", "android");
         map.put("App-Version", DailyHotel.VERSION);
 
-        if(mIsUsedAccept == true)
+        if (mIsUsedAccept == true)
         {
             map.put("accept", "application/json");
             map.put("content-type", "application/json");
