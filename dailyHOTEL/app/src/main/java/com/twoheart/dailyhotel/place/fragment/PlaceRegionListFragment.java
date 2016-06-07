@@ -351,7 +351,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 {
                     mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition));
                 }
-
                 return true;
             }
 
@@ -414,8 +413,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             {
                 return;
             }
-
-            view.setSelected(true);
 
             if (area.index == -1)
             {

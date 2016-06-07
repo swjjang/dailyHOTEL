@@ -248,7 +248,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 Intent intent = HotelCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
-                baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
                 String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
@@ -353,6 +352,44 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 
                         setProvince(province);
+
+                        mOnCommunicateListener.refreshAll(true);
+                    }
+                } else if (resultCode == Activity.RESULT_FIRST_USER && data != null)
+                {
+                    // 날짜 선택 화면으로 이동한다.
+                    clearCurationOption();
+                    updateFilteredFloatingActionButton();
+                    mOnCommunicateListener.setScrollListTop(true);
+
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
+                    {
+                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+                        SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+                        int nights = data.getIntExtra(HotelRegionListActivity.INTENT_EXTRA_DATA_NIGHTS, 1);
+
+                        setProvince(province);
+
+                        // 상단탭을 바꾼다.
+                        SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
+
+                        // 선택탭의 이름을 수정한다.
+                        mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
+                        mTabLayout.getTabAt(2).setText(makeTabDateFormat(checkInSaleTime, checkOutSaleTime));
+
+                        FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+
+                        // 날짜를 바꾸어 준다.
+                        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(2);
+                        hotelListFragment.setCheckInSaleTime(checkInSaleTime);
+                        hotelListFragment.setCheckOutSaleTime(checkOutSaleTime);
+
+                        mTabLayout.setOnTabSelectedListener(null);
+                        mTabLayout.setScrollPosition(2, 0f, true);
+                        mViewPager.setCurrentItem(2);
+                        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
+
+                        hotelListFragment.onPageSelected(mTabLayout.getTabAt(2).getText().toString());
 
                         mOnCommunicateListener.refreshAll(true);
                     }
@@ -481,6 +518,27 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
     }
 
+    private String makeTabDateFormat(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    {
+        String dateFormat;
+        String tabDateFormat;
+
+        if (Util.getLCDWidth(getContext()) < 720)
+        {
+            dateFormat = "M.d";
+            tabDateFormat = "%s - %s";
+        } else
+        {
+            dateFormat = "M월d일";
+            tabDateFormat = "%s-%s";
+        }
+
+        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
+        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
+
+        return String.format(tabDateFormat, checkInDay, checkOutDay);
+    }
+
     private void makeDateTabLayout()
     {
         //탭에 들어갈 날짜를 만든다.
@@ -528,24 +586,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             if (currentFragment instanceof HotelDaysListFragment)
             {
-                String dateFormat;
-                String tabDateFormat;
-
-                if (Util.getLCDWidth(getContext()) < 720)
-                {
-                    dateFormat = "M.d";
-                    tabDateFormat = "%s - %s";
-                } else
-                {
-                    dateFormat = "M월d일";
-                    tabDateFormat = "%s-%s";
-                }
-
-                String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
-                String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
-
                 // 선택탭의 이름을 수정한다.
-                days = String.format(tabDateFormat, checkInDay, checkOutDay);
+                days = makeTabDateFormat(checkInSaleTime, checkOutSaleTime);
 
                 FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
@@ -1441,11 +1483,17 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         case LIST:
                             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                                 , Action.HOTEL_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_LIST, null);
+
+                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , Action.HOTEL_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.HOTEL_LIST, null);
                             break;
 
                         case MAP:
                             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                                 , Action.HOTEL_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_MAP, null);
+
+                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , Action.HOTEL_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.HOTEL_MAP, null);
                             break;
                     }
                     break;
@@ -1480,7 +1528,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mOnCommunicateListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected();
+            fragment.onPageSelected(tab.getText().toString());
 
             //            mOnCommunicateListener.refreshAll(true);
             DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
@@ -1516,7 +1564,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mOnCommunicateListener.expandedAppBar(true, true);
 
             HotelListFragment fragment = (HotelListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected();
+            fragment.onPageSelected(null);
 
             //            // Google Analytics
             //            if (mSelectedProvince != null)
@@ -1659,25 +1707,9 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
             lockUiComponent();
 
-            String dateFormat;
-            String tabDateFormat;
-
-            if (Util.getLCDWidth(getContext()) < 720)
-            {
-                dateFormat = "M.d";
-                tabDateFormat = "%s - %s";
-            } else
-            {
-                dateFormat = "M월d일";
-                tabDateFormat = "%s-%s";
-            }
-
-            String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(dateFormat);
-            String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(dateFormat);
-
             // 선택탭의 이름을 수정한다.
             mTabLayout.getTabAt(2).setTag(getString(R.string.label_selecteday));
-            mTabLayout.getTabAt(2).setText(String.format(tabDateFormat, checkInDay, checkOutDay));
+            mTabLayout.getTabAt(2).setText(makeTabDateFormat(checkInSaleTime, checkOutSaleTime));
 
             FontManager.apply(mTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
 
@@ -1767,6 +1799,12 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                     Map<String, String> parmas = new HashMap<>();
                     Province province = mCurationOption.getProvince();
+
+                    if (province == null)
+                    {
+                        Util.restartApp(getContext());
+                        return;
+                    }
 
                     if (province instanceof Area)
                     {

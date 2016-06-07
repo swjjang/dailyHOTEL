@@ -124,7 +124,7 @@
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
     <string name="actionbar_title_creditcard_activity">결제카드 관리</string>
     <string name="actionbar_title_hoteldetailinfo_activity">호텔 정보</string>
-    <string name="actionbar_title_event_list_frag">이벤트</string>
+    <string name="actionbar_title_event_list_frag">이벤트 및 공지사항</string>
     <string name="actionbar_title_edit_email">이메일 설정</string>
     <string name="actionbar_title_edit_name">이름 설정</string>
     <string name="actionbar_title_edit_password">비밀번호 설정</string>
@@ -202,6 +202,7 @@
     <string name="dialog_msg_network_unstable_retry_or_set_wifi">인터넷 연결을 할 수 없습니다.\n재시도 혹은 네트워크 설정을 확인해주세요.</string>
     <string name="dialog_msg_please_update_new_version">DAILYHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요.</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요.</string>
+    <string name="dialog_msg_do_not_support_dailyhotel">데일리호텔앱은 Android  2.3.x 버전 이하 운영체제를 지원하지 않습니다.</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
     <string name="dialog_msg_hotel_payment_message01">선택하신 상품의 &lt;b&gt;취소, 환불 규정을 다시 한번 확인&lt;/b&gt;해주시기 바랍니다.</string>
     <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'타입을 구매 하신 경우 2인 기준의 더블 또는 트윈 객실로 랜덤 배정 해드려요.</string>
@@ -669,8 +670,9 @@
     <string name="act_list_region_title">지역 설정</string>
     <string name="act_list_region_korea">대한민국</string>
     <string name="act_list_region_japan">일본</string>
-    <string name="title_activity_paypal">PaypalActivity</string>
-    <string name="title_activity_sample">SampleActivity</string>
+    <string name="label_visit_date">방문 날짜 확인</string>
+    <string name="label_region_change_date">날짜 변경하기</string>
+    <string name="message_region_search_date">방문하실 날짜가 맞나요?</string>
 
     <!-- Main Tab -->
     <string name="label_today">오늘</string>
@@ -743,7 +745,6 @@
     <string name="label_calendar_gourmet_select">날짜 선택</string>
     <string name="message_calendar_reset">재설정 하시려면 다른 날짜를 선택해 주세요.</string>
     <string name="label_selected_date">날짜 선택 완료</string>
-
 
     <string name="label_monday">월</string>
     <string name="label_tuesday">화</string>
@@ -849,4 +850,10 @@
     <!-- Event Web -->
     <string name="label_eventweb_now_used">지금 사용하기</string>
     <string name="message_eventweb_do_login_download_coupon">할인쿠폰 다운로드를 위해 데일리호텔 앱 로그인이 필요합니다. 로그인 할까요?</string>
+    //
+    <!-- Search Calendar -->
+    <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>
+    <string name="message_calendar_placelist_reset">방문하실 날짜를 확인해 주세요.\n재설정을 하시려면 다른 날짜를 선택해주세요.</string>
+    <string name="label_calendar_search_selected_date">선택 날짜로 검색하기</string>
+    <string name="message_calendar_search_reset">검색하실 날짜를 확인해 주세요.\n재설정을 하시려면 다른 날짜를 선택해주세요.</string>
 </resources>

@@ -72,6 +72,21 @@ public interface Constants
         EMAIL
     }
 
+    public enum ANIMATION_STATE
+    {
+        START,
+        END,
+        CANCEL
+    }
+
+    public enum ANIMATION_STATUS
+    {
+        SHOW,
+        HIDE,
+        SHOW_END,
+        HIDE_END
+    }
+
     public static String DAILY_USER = "normal";
     public static String KAKAO_USER = "kakao_talk";
     public static String FACEBOOK_USER = "facebook";

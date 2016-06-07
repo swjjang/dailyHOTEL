@@ -504,6 +504,19 @@ public class AnalyticsManager
         public static final String PAST_BOOKING_MAP_VIEW_CLICKED = "PastBookingMapViewClicked";
         public static final String PAST_BOOKING_ADDRESS_COPY_CLICKED = "PastBookingAddressCopyClicked";
         public static final String PAST_BOOKING_NAVIGATION_APP_CLICKED = "PastBookingNavigationAppClicked";
+        //
+        public static final String HOTEL_BOOKING_CALENDAR_CLOSED = "HotelBookingCalendarClosed";
+        public static final String HOTEL_BOOKING_CALENDAR_CLICKED = "HotelBookingCalendarClicked";
+        public static final String HOTEL_BOOKING_CALENDAR_POPPEDUP = "HotelBookingCalendarPoppedup";
+        public static final String HOTEL_BOOKING_CALENDAR_POPPEDUP_CLOSED = "HotelBookingCalendarPoppedupClosed";
+
+        public static final String GOURMET_BOOKING_CALENDAR_CLOSED = "GourmetBookingCalendarClosed";
+        public static final String GOURMET_BOOKING_CALENDAR_CLICKED = "GourmetBookingCalendarClicked";
+        public static final String GOURMET_BOOKING_CALENDAR_POPPEDUP = "GourmetBookingCalendarPoppedup";
+        public static final String GOURMET_BOOKING_CALENDAR_POPPEDUP_CLOSED = "GourmetBookingCalendarPoppedupClosed";
+        //
+        public static final String HOTEL_BOOKING_DATE_CONFIRMED = "HotelBookingDateConfirmed";
+        public static final String HOTEL_BOOKING_DATE_CHANGED = "HotelBookingDateChanged";
     }
 
     public static class Category
@@ -683,5 +696,7 @@ public class AnalyticsManager
         public static final String EMPTY = "null";
         public static final String LIST = "list";
         public static final String SEARCH = "search";
+        public static final String CHANGED = "Changed";
+        public static final String NONE = "None";
     }
 }

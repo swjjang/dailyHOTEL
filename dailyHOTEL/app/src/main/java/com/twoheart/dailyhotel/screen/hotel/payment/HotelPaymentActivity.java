@@ -797,35 +797,32 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         // 화면이 작은 곳에서 스크롤 뷰가 들어가면서 발생하는 이슈
         final DailyScrollView scrollLayout = (DailyScrollView) finalCheckLayout.findViewById(R.id.scrollLayout);
 
-        if (scrollLayout != null)
+        View dailySignatureView = finalCheckLayout.getDailySignatureView();
+
+        dailySignatureView.setOnTouchListener(new View.OnTouchListener()
         {
-            View dailySignatureView = finalCheckLayout.getDailySignatureView();
-
-            dailySignatureView.setOnTouchListener(new View.OnTouchListener()
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
             {
-                @Override
-                public boolean onTouch(View v, MotionEvent event)
+                switch (event.getAction() & MotionEventCompat.ACTION_MASK)
                 {
-                    switch (event.getAction() & MotionEventCompat.ACTION_MASK)
+                    case MotionEvent.ACTION_DOWN:
                     {
-                        case MotionEvent.ACTION_DOWN:
-                        {
-                            scrollLayout.setScrollingEnabled(false);
-                            break;
-                        }
-
-                        case MotionEvent.ACTION_UP:
-                        case MotionEvent.ACTION_CANCEL:
-                        {
-                            scrollLayout.setScrollingEnabled(true);
-                            break;
-                        }
+                        scrollLayout.setScrollingEnabled(false);
+                        break;
                     }
 
-                    return false;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                    {
+                        scrollLayout.setScrollingEnabled(true);
+                        break;
+                    }
                 }
-            });
-        }
+
+                return false;
+            }
+        });
 
         finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
         {
@@ -914,7 +911,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             // 신용카드 일반 결제
             case CARD:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14, R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message14//
+                    , R.string.dialog_msg_hotel_payment_message02//
                     , R.string.dialog_msg_hotel_payment_message03//
                     , R.string.dialog_msg_hotel_payment_message06};
 
@@ -924,7 +922,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             // 핸드폰 결제
             case PHONE_PAY:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14, R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message14//
+                    , R.string.dialog_msg_hotel_payment_message02//
                     , R.string.dialog_msg_hotel_payment_message03//
                     , R.string.dialog_msg_hotel_payment_message04//
                     , R.string.dialog_msg_hotel_payment_message06};
@@ -935,7 +934,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             // 계좌 이체
             case VBANK:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                    , R.string.dialog_msg_hotel_payment_message14, R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message14//
+                    , R.string.dialog_msg_hotel_payment_message02//
                     , R.string.dialog_msg_hotel_payment_message03//
                     , R.string.dialog_msg_hotel_payment_message05//
                     , R.string.dialog_msg_hotel_payment_message06};

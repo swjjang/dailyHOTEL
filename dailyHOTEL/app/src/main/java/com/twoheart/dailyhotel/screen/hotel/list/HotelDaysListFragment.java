@@ -4,20 +4,32 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class HotelDaysListFragment extends HotelListFragment
 {
     @Override
-    public void onPageSelected()
+    public void onPageSelected(String tabText)
     {
-        super.onPageSelected();
+        super.onPageSelected(tabText);
 
-        SaleTime saleTime = mCheckInSaleTime.getClone(0);
+        boolean isSelected = true;
 
-        Intent intent = HotelCalendarActivity.newInstance(getContext(), saleTime, AnalyticsManager.ValueType.LIST);
+        if (getString(R.string.label_selecteday).equalsIgnoreCase(tabText) == true)
+        {
+            isSelected = false;
+        } else
+        {
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
+        }
+
+        int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+
+        Intent intent = HotelCalendarActivity.newInstance(getContext(), mCheckInSaleTime, nights, AnalyticsManager.ValueType.LIST, isSelected, true);
         getParentFragment().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 

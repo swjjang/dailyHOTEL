@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.screen.hotel.list.HotelCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -58,6 +58,8 @@ public class HotelSearchActivity extends PlaceSearchActivity
         mNetworkController = new HotelSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setDateText(mSaleTime, mNights);
+
+        mOnEventListener.onShowCalendar(false);
     }
 
     @Override
@@ -89,6 +91,8 @@ public class HotelSearchActivity extends PlaceSearchActivity
 
                     mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
                 }
+
+                mPlaceSearchLayout.showSearchKeyboard();
                 break;
             }
         }
@@ -231,9 +235,15 @@ public class HotelSearchActivity extends PlaceSearchActivity
         }
 
         @Override
-        public void onShowCalendar()
+        public void onShowCalendar(boolean isAnimation)
         {
-            Intent intent = HotelCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime.getClone(0), AnalyticsManager.ValueType.SEARCH);
+            if (isAnimation == true)
+            {
+                AnalyticsManager.getInstance(HotelSearchActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
+            }
+
+            Intent intent = HotelCalendarActivity.newInstance(HotelSearchActivity.this, mSaleTime, mNights, AnalyticsManager.ValueType.SEARCH, true, isAnimation);
             startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 
