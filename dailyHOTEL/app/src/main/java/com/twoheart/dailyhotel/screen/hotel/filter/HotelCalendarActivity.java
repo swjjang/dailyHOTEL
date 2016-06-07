@@ -14,6 +14,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -177,8 +179,8 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                     return;
                 }
 
-                String checkInDate = mCheckInDay.dayTime.getDayOfDaysDateFormat("yyyyMMdd");
-                String checkOutDate = mCheckOutDay.dayTime.getDayOfDaysDateFormat("yyyyMMdd");
+                String checkInDate = mCheckInDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+                String checkOutDate = mCheckOutDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInDay.dayTime.getDayOfDaysDate().getTime()));
@@ -186,8 +188,11 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                 params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mCheckOutDay.dayTime.getOffsetDailyDay() - mCheckInDay.dayTime.getOffsetDailyDay()));
                 params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
+                String phoneDate = simpleDateFormat.format(new Date());
+
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED//
-                    , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + checkInDate + "-" + checkOutDate, params);
+                    , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + checkInDate + "-" + checkOutDate + "-" + phoneDate, params);
 
                 Intent intent = new Intent();
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInDay.dayTime);

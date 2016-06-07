@@ -14,6 +14,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -170,14 +172,17 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                     return;
                 }
 
-                String date = mDay.dayTime.getDayOfDaysDateFormat("yyyyMMdd");
+                String date = mDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mDay.dayTime.getDayOfDaysDate().getTime()));
                 params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
+                String phoneDate = simpleDateFormat.format(new Date());
+
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
-                    , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + date, params);
+                    , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + date + "-" + phoneDate, params);
 
                 Intent intent = new Intent();
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mDay.dayTime);
