@@ -176,26 +176,41 @@ public class SignupStep2NetworkController extends BaseNetworkController
                 int msgCode = jsonObject.getInt("msgCode");
                 String message = jsonObject.getString("msg");
 
-                if (volleyError.networkResponse.statusCode == 422)
+                switch (volleyError.networkResponse.statusCode)
                 {
-                    switch (msgCode)
+                    case 422:
                     {
-                        // 동일한 전화번호로 인증 받은 사용자가
-                        case 2001:
+                        switch (msgCode)
                         {
-                            JSONObject dataJONObject = jsonObject.getJSONObject("data");
-                            String phoneNumber = dataJONObject.getString("phone");
+                            // 동일한 전화번호로 인증 받은 사용자가
+                            case 2001:
+                            {
+                                JSONObject dataJONObject = jsonObject.getJSONObject("data");
+                                String phoneNumber = dataJONObject.getString("phone");
 
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
-                            return;
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
+                                return;
+                            }
+
+                            // 전화번호가 유효하지 않을 때
+                            case 2003:
+                            {
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                return;
+                            }
                         }
+                        break;
+                    }
 
-                        // 전화번호가 유효하지 않을 때
-                        case 2003:
+                    case 400:
+                    {
+                        switch (msgCode)
                         {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
-                            return;
+                            case 2004:
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                break;
                         }
+                        break;
                     }
                 }
 

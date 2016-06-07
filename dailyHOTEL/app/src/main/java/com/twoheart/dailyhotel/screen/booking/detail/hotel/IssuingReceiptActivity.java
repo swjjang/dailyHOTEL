@@ -113,26 +113,26 @@ public class IssuingReceiptActivity extends BaseActivity
         try
         {
             // 영숭증
-            JSONObject receipt = jsonObject.getJSONObject("receipt");
+            JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
             String reservationIndex = jsonObject.getString("reservation_idx");
-            String userName = receipt.getString("user_name");
-            String userPhone = receipt.getString("user_phone");
-            String checkin = receipt.getString("checkin");
-            String checkout = receipt.getString("checkout");
-            int nights = receipt.getInt("nights");
-            int rooms = receipt.getInt("rooms");
-            String hotelName = receipt.getString("hotel_name");
-            String hotelAddress = receipt.getString("hotel_address");
-            String valueDate = receipt.getString("value_date");
-            String currency = receipt.getString("currency");
-            int discount = receipt.getInt("discount");
-            int vat = receipt.getInt("vat");
-            int supoplyValue = receipt.getInt("supply_value");
-            String paymentName = receipt.getString("payment_name");
+            String userName = receiptJSONObject.getString("user_name");
+            String userPhone = receiptJSONObject.getString("user_phone");
+            String checkin = receiptJSONObject.getString("checkin");
+            String checkout = receiptJSONObject.getString("checkout");
+            int nights = receiptJSONObject.getInt("nights");
+            int rooms = receiptJSONObject.getInt("rooms");
+            String hotelName = receiptJSONObject.getString("hotel_name");
+            String hotelAddress = receiptJSONObject.getString("hotel_address");
+            String valueDate = receiptJSONObject.getString("value_date");
+            String currency = receiptJSONObject.getString("currency");
+            int discount = receiptJSONObject.getInt("discount");
+            int vat = receiptJSONObject.getInt("vat");
+            int supoplyValue = receiptJSONObject.getInt("supply_value");
+            String paymentName = receiptJSONObject.getString("payment_name");
 
-            int bonus = 0;
-            int counpon = 0;
+            int bonus = receiptJSONObject.getInt("bonus");
+            int counpon = receiptJSONObject.getInt("coupon_amount");
             int totalPayment = 0;
 
             // **예약 세부 정보**
@@ -169,49 +169,36 @@ public class IssuingReceiptActivity extends BaseActivity
             TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
             paymentDayTextView.setText(valueDate);
 
-            DecimalFormat comma = new DecimalFormat("###,##0");
-
             // 지불 방식
             TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
             paymentTypeTextView.setText(paymentName);
 
             // 소계
             TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-            supplyValueTextView.setText("₩ " + comma.format(supoplyValue));
+            supplyValueTextView.setText(Util.getPriceFormat(this, supoplyValue, true));
 
             // 세금 및 수수료
             TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
-            vatTextView.setText("₩ " + comma.format(vat));
+            vatTextView.setText(Util.getPriceFormat(this, vat, true));
 
             View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
+            saleLayout.setVisibility(View.VISIBLE);
 
-            if (bonus == 0 && counpon == 0)
-            {
-                saleLayout.setVisibility(View.GONE);
+            // 총금액
+            TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
+            totalPriceTextView.setText(Util.getPriceFormat(this, discount, true));
 
-                // 총 입금 금액
-                TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-                totalPaymentTextView.setText("₩ " + comma.format(discount));
-            } else
-            {
-                saleLayout.setVisibility(View.VISIBLE);
+            // 적립금 사용
+            TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
+            bonusTextView.setText("- " + Util.getPriceFormat(this, bonus, true));
 
-                // 총금액
-                TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-                totalPriceTextView.setText("₩ " + comma.format(discount));
+            // 할인쿠폰 사용
+            TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
+            couponTextView.setText("- " + Util.getPriceFormat(this, counpon, true));
 
-                // 적립금 사용
-                TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
-                bonusTextView.setText("₩ " + comma.format(bonus));
-
-                // 할인쿠폰 사용
-                TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
-                couponTextView.setText("₩ " + comma.format(counpon));
-
-                // 총 입금 금액
-                TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-                totalPaymentTextView.setText("₩ " + comma.format(totalPayment));
-            }
+            // 총 입금 금액
+            TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
+            totalPaymentTextView.setText(Util.getPriceFormat(this, discount - counpon - bonus, true));
 
             // **공급자**
 
@@ -333,9 +320,9 @@ public class IssuingReceiptActivity extends BaseActivity
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     if (makeLayout(response.getJSONObject("data")) == false)
                     {

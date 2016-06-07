@@ -8,6 +8,7 @@
     <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
     <string name="currency_format">###,##0원</string>
+    <string name="currency_format_prefix">₩ ###,##0</string>
     <string name="label_map">지도</string>
     <string name="label_list">목록</string>
     <string name="label_dailychoice">데일리초이스</string>
@@ -128,9 +129,9 @@
     <string name="actionbar_title_edit_name">이름 설정</string>
     <string name="actionbar_title_edit_password">비밀번호 설정</string>
     <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
-	<string name="actionbar_title_coupon_list">할인쿠폰함</string>
-	<string name="actionbar_title_common_coupon_term_activity">할인쿠폰 공통 유의사항</string>
-	<string name="actionbar_title_each_coupon_term_activity">할인쿠폰별 유의사항</string>
+    <string name="actionbar_title_coupon_list">할인쿠폰함</string>
+    <string name="actionbar_title_common_coupon_term_activity">할인쿠폰 공통 유의사항</string>
+    <string name="actionbar_title_each_coupon_term_activity">할인쿠폰별 유의사항</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -652,9 +653,6 @@
     <string name="act_wait_payment_msg2">10분이내에 예약완료 문자가 도착합니다.</string>
     <string name="label_wait_payment_price_information">결제 금액 정보</string>
     <string name="message__wait_payment03">입금이 완료되면 자동으로 예약이 완료됩니다.</string>
-
-
-
 
 
     <!-- Facebook -->
