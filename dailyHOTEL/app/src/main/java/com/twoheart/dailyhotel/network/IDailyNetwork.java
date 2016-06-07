@@ -536,8 +536,8 @@ interface IDailyNetwork
      * @param tag
      * @param hotelIdx
      * @param roomIdx
-     * @param checkIn       ISO-8601
-     * @param checkOut      ISO-8601
+     * @param checkIn  ISO-8601
+     * @param checkOut ISO-8601
      * @param listener
      */
     void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener);

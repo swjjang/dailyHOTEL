@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p/>
+ * <p>
  * VolleyHttpClient
- * <p/>
+ * <p>
  * 네트워크 이미지 처리 및 네트워크 처리 작업을 담당하는 외부 라이브러리 Vol
  * ley를 네트워크 처리 작업을 목적으로 사용하기 위해 설정하는 유틸 클래스이다.
  *
@@ -428,11 +428,13 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestGourmetBookingDetailInformation(Object tag, int index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/booking/detail" : "OTEkNDMkNjEkNCQ0NSQ=$Mzk1LREFENEREODg4Qzg1QzE2NDBDMDFGMTFEMERCRDgBLwMTdGOUJDQkU3RkFGWRTg4NjVFODQ3NkI5NzJDMzMzNTEzNjVJGMTNENUM2RTExMkI5NjNEREREOUZEMTg0REM0$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb" : "";
 
-        String params = String.format("?reservation_rec_idx=%d", index);
+        String params = String.format("/%d", index);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SESSION_SERVER + URL + params, null, listener, errorListener);
+        dailyHotelJsonRequest.setUsedAuthorization(true);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }
@@ -675,7 +677,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestHotelBookingDetailInformation(Object tag, int index, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel" : "";
 
         String params = String.format("/%d", index);
 

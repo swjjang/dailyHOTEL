@@ -37,11 +37,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -150,7 +146,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                         , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
                         , label, null);
-                }catch(Exception e)
+                } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }

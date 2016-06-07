@@ -338,6 +338,7 @@
                         android:background="@color/default_line_ce6e6e6"/>
 
                     <RelativeLayout
+                        android:id="@+id/bonusLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/issuingreceipt_linespacing">
@@ -360,6 +361,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/couponLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/issuingreceipt_linespacing">

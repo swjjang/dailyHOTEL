@@ -15,8 +15,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
-
 public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
     private void makeLayout(JSONObject jsonObject) throws Exception
