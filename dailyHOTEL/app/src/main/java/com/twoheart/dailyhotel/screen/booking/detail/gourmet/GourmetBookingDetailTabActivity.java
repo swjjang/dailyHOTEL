@@ -38,11 +38,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 import org.json.JSONObject;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -253,7 +249,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         {
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
                 if (msgCode == 100)
                 {

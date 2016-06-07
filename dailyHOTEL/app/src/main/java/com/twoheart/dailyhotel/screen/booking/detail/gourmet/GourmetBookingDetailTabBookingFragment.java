@@ -25,11 +25,6 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
 public class GourmetBookingDetailTabBookingFragment extends BaseFragment implements Constants
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
@@ -124,7 +119,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         try
         {
             dateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.reservationTime, "yyyy.MM.dd(EEE) HH:mm"));
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
@@ -150,6 +145,20 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
         TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
 
+        try
+        {
+            paymentDateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.paymentDate, "yyyy.MM.dd"));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
+        String price = Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false);
+
+        priceTextView.setText(price);
+        totalPriceTextView.setText(price);
+
+        bonusLayout.setVisibility(View.GONE);
+        couponLayout.setVisibility(View.GONE);
     }
 }
