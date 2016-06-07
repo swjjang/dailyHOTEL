@@ -351,7 +351,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 {
                     mOnUserActionListener.onRegionClick(mAdapter.getGroup(groupPosition));
                 }
-
                 return true;
             }
 

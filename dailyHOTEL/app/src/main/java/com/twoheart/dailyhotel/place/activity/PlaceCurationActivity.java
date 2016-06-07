@@ -63,7 +63,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         mConfirmView = findViewById(R.id.confirmView);
         setConfirmOnClickListener(this);
 
-        ScrollView contentScrollView = (ScrollView)findViewById(R.id.contentScrollView);
+        ScrollView contentScrollView = (ScrollView) findViewById(R.id.contentScrollView);
         EdgeEffectColor.setEdgeGlowColor(contentScrollView, getResources().getColor(R.color.over_scroll_edge));
 
         View exitView = findViewById(R.id.exitView);

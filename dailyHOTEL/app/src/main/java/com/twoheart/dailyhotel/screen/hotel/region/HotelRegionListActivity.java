@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.hotel.region;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -330,6 +331,20 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
 
                             recordEvent(province);
                             finish();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            unLockUI();
+                        }
+                    }, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+
                         }
                     }, true);
                 } else
