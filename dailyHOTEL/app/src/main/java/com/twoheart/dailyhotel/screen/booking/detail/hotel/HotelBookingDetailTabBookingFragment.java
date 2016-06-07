@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.SimpleDateFormat;
@@ -173,9 +174,35 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
         TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
 
+        try
+        {
+            paymentDateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.paymentDate, "yyyy.MM.dd"));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         priceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.price, false));
-        bonusTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.bonus, false));
-        couponTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.coupon, false));
-        totalPriceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.totalPrice, false));
+
+
+        if (bookingDetail.bonus > 0)
+        {
+            bonusLayout.setVisibility(View.VISIBLE);
+            bonusTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.bonus, false));
+        } else
+        {
+            bonusLayout.setVisibility(View.GONE);
+        }
+
+        if (bookingDetail.coupon > 0)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+            couponTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.coupon, false));
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
+
+        totalPriceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false));
     }
 }

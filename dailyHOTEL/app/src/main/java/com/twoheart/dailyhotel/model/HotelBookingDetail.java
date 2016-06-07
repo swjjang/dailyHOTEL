@@ -77,6 +77,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
             hotelPhone = phone3;
         }
 
+        price = jsonObject.getInt("priceTotal");
+
         if (jsonObject.has("bonus") == true)
         {
             bonus = jsonObject.getInt("bonus");
@@ -86,6 +88,9 @@ public class HotelBookingDetail extends PlaceBookingDetail
         {
             coupon = jsonObject.getInt("couponAmount");
         }
+
+        paymentPrice = jsonObject.getInt("discountTotal");
+        paymentDate = jsonObject.getString("paidAt");
     }
 
     @Override

@@ -320,9 +320,9 @@ public class IssuingReceiptActivity extends BaseActivity
 
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     if (makeLayout(response.getJSONObject("data")) == false)
                     {

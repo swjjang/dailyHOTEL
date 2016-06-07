@@ -27,7 +27,7 @@ public abstract class PlaceBookingDetail implements Parcelable
     public int price;
     public int bonus;
     public int coupon;
-    public int totalPrice;
+    public int paymentPrice;
 
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
@@ -55,7 +55,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeInt(price);
         dest.writeInt(bonus);
         dest.writeInt(coupon);
-        dest.writeInt(totalPrice);
+        dest.writeInt(paymentPrice);
     }
 
     protected void readFromParcel(Parcel in)
@@ -75,7 +75,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         price = in.readInt();
         bonus = in.readInt();
         coupon = in.readInt();
-        totalPrice = in.readInt();
+        paymentPrice = in.readInt();
     }
 
     public Map<String, List<String>> getSpecification()
