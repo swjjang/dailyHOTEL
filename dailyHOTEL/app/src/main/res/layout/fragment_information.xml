@@ -131,7 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
                 android:background="@color/white"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <RelativeLayout
                     android:id="@+id/couponLayout"
@@ -180,7 +180,8 @@
                             android:layout_marginLeft="1px"
                             android:gravity="center_vertical"
                             android:textColor="@color/information_count_text"
-                            android:textSize="11dp"/>
+                            android:textSize="11dp"
+                            dailyFont:style="Medium"/>
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -237,7 +238,8 @@
                             android:layout_marginLeft="1px"
                             android:gravity="center_vertical"
                             android:textColor="@color/information_count_text"
-                            android:textSize="11dp"/>
+                            android:textSize="11dp"
+                            dailyFont:style="Medium"/>
                     </LinearLayout>
                 </RelativeLayout>
 
