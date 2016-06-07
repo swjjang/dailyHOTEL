@@ -174,17 +174,18 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("payment_type", hotelPaymentInformation.paymentType.name());
         builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
         builder.add("nights", String.valueOf(saleRoomInformation.nights));
-        builder.add("bonus", String.valueOf( //
-            hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
-                ? hotelPaymentInformation.bonus : 0));
 
-        String couponCode = "0";
-        if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
+
+        switch(hotelPaymentInformation.discountType)
         {
-            Coupon coupon = hotelPaymentInformation.getCoupon();
-            couponCode = coupon.getCode();
+            case BONUS:
+                builder.add("bonus", Integer.toString(hotelPaymentInformation.bonus));
+                break;
+
+            case COUPON:
+                builder.add("bonus", hotelPaymentInformation.getCoupon().getCode());
+                break;
         }
-        builder.add("coupon_code", couponCode);
 
         builder.add("guest_name", guest.name);
         builder.add("guest_phone", guest.phone.replace("-", ""));
