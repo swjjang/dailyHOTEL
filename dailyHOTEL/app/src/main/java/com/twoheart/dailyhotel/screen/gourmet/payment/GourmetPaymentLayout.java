@@ -391,6 +391,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         guest.name = mUserNameEditText.getText().toString().trim();
         guest.phone = mUserPhoneEditText.getText().toString().trim();
         guest.email = mUserEmailEditText.getText().toString().trim();
+        guest.message = mMemoEditText.getText().toString().trim();
 
         return guest;
     }

@@ -170,6 +170,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
         params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+        params.put("customer_msg", guest.message);
 
         //        if (DEBUG == true)
         //        {
@@ -1134,6 +1135,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     guest.name = name;
                     guest.phone = phone;
                     guest.email = email;
+                    guest.message = "";
 
                     gourmetPaymentInformation.setGuest(guest);
                 }

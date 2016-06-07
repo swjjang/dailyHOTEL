@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -175,10 +176,20 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("nights", String.valueOf(saleRoomInformation.nights));
         builder.add("bonus", String.valueOf( //
             hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
-            ? hotelPaymentInformation.bonus : 0));
+                ? hotelPaymentInformation.bonus : 0));
+
+        String couponCode = "0";
+        if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
+        {
+            Coupon coupon = hotelPaymentInformation.getCoupon();
+            couponCode = coupon.getCode();
+        }
+        builder.add("coupon_code", couponCode);
+
         builder.add("guest_name", guest.name);
         builder.add("guest_phone", guest.phone.replace("-", ""));
         builder.add("guest_email", guest.email);
+        builder.add("guest_msg", guest.message);
 
         String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)//
             + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);

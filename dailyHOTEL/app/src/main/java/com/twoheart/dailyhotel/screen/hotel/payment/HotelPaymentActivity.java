@@ -592,6 +592,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             guest.name = mReservationName.getText().toString().trim();
             guest.phone = mReservationPhone.getText().toString().trim();
             guest.email = mReservationEmail.getText().toString().trim();
+            guest.message = mMemoEditText.getText().toString().trim();
         }
 
         SaleRoomInformation saleRoomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
@@ -615,12 +616,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         params.put("guest_name", guest.name);
         params.put("guest_phone", guest.phone.replace("-", ""));
         params.put("guest_email", guest.email);
-
-        String memo = mMemoEditText.getText().toString();
-        if (Util.isTextEmpty(memo) == false)
-        {
-            params.put("guest_msg", memo);
-        }
+        params.put("guest_msg", guest.message);
 
         //            if (DEBUG == true)
         //            {
@@ -1363,6 +1359,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     guest.name = mReservationName.getText().toString().trim();
                     guest.phone = mReservationPhone.getText().toString().trim();
                     guest.email = mReservationEmail.getText().toString().trim();
+                    guest.message = mMemoEditText.getText().toString().trim();
 
                     releaseUiComponent();
 
@@ -1488,6 +1485,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     guest.name = mReservationName.getText().toString();
                     guest.phone = mReservationPhone.getText().toString();
                     guest.email = mReservationEmail.getText().toString();
+                    guest.message = mMemoEditText.getText().toString();
                 }
 
                 startCreditCardList();
@@ -1987,6 +1985,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 guest.name = name;
                 guest.phone = phone;
                 guest.email = email;
+                guest.message = "";
 
                 hotelPaymentInformation.setCustomer(buyer);
                 hotelPaymentInformation.setGuest(guest);
@@ -2292,6 +2291,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
                         SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+
+                        String memo = mMemoEditText.getText().toString().trim();
+                        hotelPaymentInformation.getGuest().message = memo;
 
                         // 가격이 변동 되었다.
                         if (saleRoomInformation.totalDiscount != discount)

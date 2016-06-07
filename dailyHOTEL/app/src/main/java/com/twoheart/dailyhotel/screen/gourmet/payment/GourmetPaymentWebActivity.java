@@ -175,6 +175,8 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         builder.add("customer_phone", guest.phone.replace("-", ""));
         builder.add("customer_email", guest.email);
         builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+        builder.add("customer_msg", guest.message);
+
 
         String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)//
             + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
