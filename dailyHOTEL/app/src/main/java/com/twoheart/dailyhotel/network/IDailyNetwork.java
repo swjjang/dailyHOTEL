@@ -571,6 +571,7 @@ interface IDailyNetwork
     void requestNoticeAgreementResult(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener);
 
     /**
+     * api/v1/notice/benefit - GET
      * @param tag
      * @param listener
      */
@@ -582,4 +583,12 @@ interface IDailyNetwork
      * @param listener
      */
     void requestDownloadCoupon(Object tag, String couponCode, DailyHotelJsonResponseListener listener);
+
+    /**
+     * api/v1/notice/benefit - PUT
+     * @param tag
+     * @param isAgreed required
+     * @param listener
+     */
+    void requestUpdateBenefitAgreement(Object tag, boolean isAgreed, DailyHotelJsonResponseListener listener);
 }

@@ -845,6 +845,9 @@
     <string name="label_setting_alarm">알림 설정</string>
     <string name="label_after_setting_alarm">나중에 설정</string>
     <string name="label_now_setting_alarm">알림 설정하고 혜택받기</string>
+    <string name="message_benefit_alarm_off">수신 거부 시\n특별 할인쿠폰, 다양한 상품 정보 등의\n주요 혜택 알림 메시지를 받을 수 없습니다.\n그래도 알림을 끄시겠어요?</string>
+    <string name="message_benefit_alarm_off_confirm_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보 등\n혜택 알림 수신에 동의하지 않으셨습니다.\n\n%s</string>
+    <string name="message_benefit_alarm_on_confirm_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보 등\n혜택 알림 수신에 동의하였습니다.\n\n%s</string>
 
     <!-- Event Web -->
     <string name="label_eventweb_now_used">지금 사용하기</string>

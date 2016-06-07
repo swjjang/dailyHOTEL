@@ -38,7 +38,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
@@ -392,16 +391,29 @@ public class InformationFragment extends BaseFragment implements Constants
 
             lockUiComponent();
 
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            boolean onOff = DailyPreference.getInstance(baseActivity).isShowBenefitAlarm();
-            onOff = !onOff; // 클릭이므로 상태값 변경!
+            final BaseActivity baseActivity = (BaseActivity) getActivity();
+            final boolean onOff = !DailyPreference.getInstance(baseActivity).isShowBenefitAlarm(); // 클릭이므로 상태값 변경!
 
-            DailyPreference.getInstance(baseActivity).setShowBenefitAlarm(onOff);
-            AppboyManager.setPushEnabled(baseActivity, onOff);
+            if (onOff == true)
+            {
+                mNetworkController.requestPushBenefit(onOff);
 
-            mInformationLayout.updatePushIcon(onOff);
+            } else
+            {
+                String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
+                final String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_off);
+                String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_yes);
+                String negative = baseActivity.getResources().getString(R.string.dialog_btn_text_no);
 
-            releaseUiComponent();
+                baseActivity.showSimpleDialog(title, message, positive, negative, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mNetworkController.requestPushBenefit(onOff);
+                    }
+                }, null);
+            }
         }
 
         @Override
@@ -716,6 +728,56 @@ public class InformationFragment extends BaseFragment implements Constants
             mInformationLayout.updatePushText(title, message);
 
             unLockUI();
+        }
+
+        @Override
+        public void onBenefitAgreement(final boolean isAgreed, String updateDate)
+        {
+            lockUiComponent();
+
+            final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (isAgreed == true)
+            {
+                // 혜택 알림 설정이 off --> on 일때
+                String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
+                String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
+                String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);
+
+                baseActivity.showSimpleDialog(title, message, positive, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        lockUiComponent();
+
+                        DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreed);
+                        mInformationLayout.updatePushIcon(isAgreed);
+
+                        releaseUiComponent();
+                    }
+                });
+            } else
+            {
+                // 혜택 알림 설정이 on --> off 일때
+                String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
+                String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_off_confirm_format, updateDate);
+                String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);
+
+                baseActivity.showSimpleDialog(title, message, positive, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        lockUiComponent();
+
+                        DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreed);
+                        mInformationLayout.updatePushIcon(isAgreed);
+
+                        releaseUiComponent();
+                    }
+                });
+            }
         }
 
         @Override

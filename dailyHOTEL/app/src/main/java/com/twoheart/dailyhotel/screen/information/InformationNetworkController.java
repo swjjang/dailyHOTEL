@@ -1,12 +1,14 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -20,6 +22,8 @@ public class InformationNetworkController extends BaseNetworkController
         void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount, boolean isAgreedBenefit);
 
         void onPushBenefitMessage(String title, String message);
+
+        void onBenefitAgreement(boolean isAgreed, String updateDate);
     }
 
     public InformationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -36,6 +40,11 @@ public class InformationNetworkController extends BaseNetworkController
     public void requestPushBenefitText()
     {
         DailyNetworkAPI.getInstance(mContext).requestBenefitMessage(mNetworkTag, mBenefitMessageJsonResponseListener);
+    }
+
+    public void requestPushBenefit(boolean isAgreed)
+    {
+        DailyNetworkAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAgreed, mUpdateBenefitJsonResponseListener);
     }
 
     @Override
@@ -79,7 +88,7 @@ public class InformationNetworkController extends BaseNetworkController
     };
 
     /**
-     * 혜택 알림
+     * 혜택 알림 - 문구
      */
     private DailyHotelJsonResponseListener mBenefitMessageJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -100,6 +109,43 @@ public class InformationNetworkController extends BaseNetworkController
                 }
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(title, message);
+
+            } catch (Exception e)
+            {
+                mOnNetworkControllerListener.onError(e);
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            InformationNetworkController.this.onErrorResponse(volleyError);
+        }
+    };
+
+    /**
+     * 혜택 알림 - 설정 상태 업데이트!
+     */
+    private DailyHotelJsonResponseListener mUpdateBenefitJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                int msgCode = response.getInt("msgCode");
+                if (msgCode == 100)
+                {
+                    boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgreed", false);
+
+                    String updateDate = Util.simpleDateFormatISO8601toFormat("2016-06-07T19:13:12+09:00", "yyyy년 MM월 dd일");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, updateDate);
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
 
             } catch (Exception e)
             {
