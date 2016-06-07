@@ -78,7 +78,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onSearch(String text, Keyword keyword);
 
-        void onShowCalendar();
+        void onShowCalendar(boolean isAnimation);
     }
 
     protected abstract String getAroundPlaceText();
@@ -229,6 +229,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 inputMethodManager.showSoftInput(mSearchEditText, InputMethodManager.SHOW_IMPLICIT);
             }
         }, 500);
+    }
+
+    public void hideSearchKeyboard()
+    {
+        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void initCalendarLayout(View view)
@@ -661,7 +667,16 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         {
             case R.id.calendarLayout:
             {
-                ((OnEventListener) mOnEventListener).onShowCalendar();
+                hideSearchKeyboard();
+
+                mSearchEditText.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        ((OnEventListener) mOnEventListener).onShowCalendar(true);
+                    }
+                }, 100);
                 break;
             }
 

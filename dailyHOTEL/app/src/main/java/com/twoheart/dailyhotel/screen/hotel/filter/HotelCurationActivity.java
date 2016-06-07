@@ -59,8 +59,6 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        mIsShowStatusBar = false;
-
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -76,6 +74,16 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         mHotelCurationOption = intent.getParcelableExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS);
 
         initLayout();
+
+        mAnimationLayout.setVisibility(View.INVISIBLE);
+        mAnimationLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                showAnimation();
+            }
+        });
     }
 
     @Override
@@ -594,7 +602,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, mHotelCurationOption);
 
         setResult(RESULT_OK, intent);
-        finish();
+        hideAnimation();
     }
 
     @Override
@@ -603,7 +611,7 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
 
-        finish();
+        hideAnimation();
     }
 
     @Override

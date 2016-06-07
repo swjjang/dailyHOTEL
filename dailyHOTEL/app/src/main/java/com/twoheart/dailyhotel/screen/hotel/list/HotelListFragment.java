@@ -160,7 +160,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         return true;
     }
 
-    public void onPageSelected()
+    public void onPageSelected(String tabText)
     {
     }
 
@@ -630,7 +630,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 }
             }
 
-            mHotelAdapter.addAll(hotelListViewItemList, sortType);
+            mHotelAdapter.addAll(hotelListViewItemList, sortType, mOnCommunicateListener.getCurationOption().getCategory());
             mHotelAdapter.notifyDataSetChanged();
 
             if (mScrollListTop == true)

@@ -328,9 +328,9 @@ public class Util implements Constants
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
 
-    public static boolean isOverAPI14()
+    public static boolean isOverAPI15()
     {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
     }
 
     public static boolean isOverAPI19()
@@ -1212,7 +1212,8 @@ public class Util implements Constants
             int timeIndex = iso8601.lastIndexOf("T");
             index = iso8601.lastIndexOf("-");
 
-            if (timeIndex >= index) {
+            if (timeIndex >= index)
+            {
                 // 타임 값보다 적은 경우 인덱스 초기화
                 index = -1;
             }

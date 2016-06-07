@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -69,27 +70,12 @@ public class GourmetDetailLayout
     private View mBottomLayout;
     private View mTicketTypeBackgroundView;
     private View mImageViewBlur;
-    private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
-    private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
+    private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+    private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
     private int mStatusBarHeight;
     private float mLastFactor;
-
-    private enum ANIMATION_STATE
-    {
-        START,
-        END,
-        CANCEL
-    }
-
-    private enum ANIMATION_STATUS
-    {
-        SHOW,
-        HIDE,
-        SHOW_END,
-        HIDE_END
-    }
 
     public GourmetDetailLayout(BaseActivity activity, String defaultImageUrl)
     {
@@ -417,12 +403,12 @@ public class GourmetDetailLayout
             mTicketTypeLayout.setVisibility(View.GONE);
         }
 
-        mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
     }
 
     public void showAnimationTicketInformationLayout()
     {
-        if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.SHOW)
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
         {
             return;
         }
@@ -462,17 +448,17 @@ public class GourmetDetailLayout
                         mTicketTypeLayout.setVisibility(View.VISIBLE);
                     }
 
-                    mAnimationState = ANIMATION_STATE.START;
-                    mAnimationStatus = ANIMATION_STATUS.SHOW;
+                    mAnimationState = Constants.ANIMATION_STATE.START;
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    if (mAnimationState != ANIMATION_STATE.CANCEL)
+                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
-                        mAnimationStatus = ANIMATION_STATUS.SHOW_END;
-                        mAnimationState = ANIMATION_STATE.END;
+                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                        mAnimationState = Constants.ANIMATION_STATE.END;
 
                         setTicketInformationLayoutEnabled(true);
 
@@ -483,7 +469,7 @@ public class GourmetDetailLayout
                 @Override
                 public void onAnimationCancel(Animator animation)
                 {
-                    mAnimationState = ANIMATION_STATE.CANCEL;
+                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
                 }
 
                 @Override
@@ -500,8 +486,8 @@ public class GourmetDetailLayout
             {
                 mTicketTypeLayout.setVisibility(View.VISIBLE);
 
-                mAnimationStatus = ANIMATION_STATUS.SHOW_END;
-                mAnimationState = ANIMATION_STATE.END;
+                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                mAnimationState = Constants.ANIMATION_STATE.END;
 
                 setTicketInformationLayoutEnabled(true);
 
@@ -514,7 +500,7 @@ public class GourmetDetailLayout
 
     public void hideAnimationTicketInformationLayout()
     {
-        if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.HIDE)
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
         {
             return;
         }
@@ -544,8 +530,8 @@ public class GourmetDetailLayout
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    mAnimationState = ANIMATION_STATE.START;
-                    mAnimationStatus = ANIMATION_STATUS.HIDE;
+                    mAnimationState = Constants.ANIMATION_STATE.START;
+                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
 
                     setTicketInformationLayoutEnabled(false);
                 }
@@ -553,10 +539,10 @@ public class GourmetDetailLayout
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    if (mAnimationState != ANIMATION_STATE.CANCEL)
+                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
-                        mAnimationStatus = ANIMATION_STATUS.HIDE_END;
-                        mAnimationState = ANIMATION_STATE.END;
+                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+                        mAnimationState = Constants.ANIMATION_STATE.END;
 
                         hideTicketInformationLayout();
 
@@ -567,7 +553,7 @@ public class GourmetDetailLayout
                 @Override
                 public void onAnimationCancel(Animator animation)
                 {
-                    mAnimationState = ANIMATION_STATE.CANCEL;
+                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
                 }
 
                 @Override
@@ -583,8 +569,8 @@ public class GourmetDetailLayout
         {
             setTicketInformationLayoutEnabled(false);
 
-            mAnimationStatus = ANIMATION_STATUS.HIDE_END;
-            mAnimationState = ANIMATION_STATE.END;
+            mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+            mAnimationState = Constants.ANIMATION_STATE.END;
 
             hideTicketInformationLayout();
 
@@ -639,10 +625,6 @@ public class GourmetDetailLayout
             mTicketTypeBackgroundView.startAnimation(mAlphaAnimation);
         }
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * 점점 어두워짐.

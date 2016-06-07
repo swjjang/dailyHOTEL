@@ -13,7 +13,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
     public Place.Grade grade;
     public int ticketCount;
     public String ticketName;
-    public long reservationTime;
+    public String reservationTime;
     public String category;
 
     public GourmetBookingDetail()
@@ -33,7 +33,7 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         dest.writeString(grade.name());
         dest.writeInt(ticketCount);
         dest.writeString(ticketName);
-        dest.writeLong(reservationTime);
+        dest.writeString(reservationTime);
         dest.writeString(category);
     }
 
@@ -44,23 +44,23 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         grade = Place.Grade.valueOf(in.readString());
         ticketCount = in.readInt();
         ticketName = in.readString();
-        reservationTime = in.readLong();
+        reservationTime = in.readString();
         category = in.readString();
     }
 
     public void setData(JSONObject jsonObject) throws Exception
     {
-        address = jsonObject.getString("address");
+        address = jsonObject.getString("restaurantAddress");
         latitude = jsonObject.getDouble("latitude");
         longitude = jsonObject.getDouble("longitude");
-        placeName = jsonObject.getString("restaurant_name");
+        placeName = jsonObject.getString("restaurantName");
 
         grade = Place.Grade.gourmet;
         category = jsonObject.getString("category");
-        guestName = jsonObject.getString("customer_name");
-        guestPhone = jsonObject.getString("customer_phone");
-        guestEmail = jsonObject.getString("customer_email");
-        addressSummary = jsonObject.getString("customer_email");
+        guestName = jsonObject.getString("customerName");
+        guestPhone = jsonObject.getString("customerPhone");
+        guestEmail = jsonObject.getString("customerEmail");
+        addressSummary = jsonObject.getString("addrSummary");
 
         //
         JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("description"));
@@ -68,18 +68,18 @@ public class GourmetBookingDetail extends PlaceBookingDetail
 
         setSpecification(jsonArray);
 
-        ticketCount = jsonObject.getInt("ticket_count");
-        ticketName = jsonObject.getString("ticket_name");
-        reservationTime = jsonObject.getLong("arrival_time");
+        ticketCount = jsonObject.getInt("ticketCount");
+        ticketName = jsonObject.getString("ticketName");
+        reservationTime = jsonObject.getString("arrivalTime");
 
         // phone1은 프론트
-        String phone1 = jsonObject.getString("phone1");
+        String phone1 = jsonObject.getString("restaurantPhone1");
 
         // phone2는 예약실
-        String phone2 = jsonObject.getString("phone2");
+        String phone2 = jsonObject.getString("restaurantPhone2");
 
         // phone3은 사용하지 않음
-        String phone3 = jsonObject.getString("phone3");
+        String phone3 = jsonObject.getString("restaurantPhone3");
 
         if (Util.isTextEmpty(phone2) == false)
         {
@@ -91,6 +91,9 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         {
             gourmetPhone = phone3;
         }
+
+        paymentPrice = jsonObject.getInt("discountTotal");
+        paymentDate = jsonObject.getString("paidAt");
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

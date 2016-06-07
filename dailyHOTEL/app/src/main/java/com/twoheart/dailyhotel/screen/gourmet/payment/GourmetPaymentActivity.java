@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,12 +46,14 @@ import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialog
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -74,6 +77,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private boolean mIsEditMode;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
+    private Dialog mTimeDialog;
 
     public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime//
         , String imageUrl, String category, int gourmetIndex, boolean isDBenefit, Province province, String area)
@@ -132,6 +136,17 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
     }
 
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (mTimeDialog != null && mTimeDialog.isShowing() == true)
+        {
+            mTimeDialog.cancel();
+            mTimeDialog = null;
+        }
+    }
 
     @Override
     protected void requestUserInformationForPayment()
@@ -827,7 +842,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             final GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
-            Dialog dialog = Util.showDatePickerDialog(GourmetPaymentActivity.this//
+            if (mTimeDialog != null)
+            {
+                mTimeDialog.cancel();
+                mTimeDialog = null;
+            }
+
+            mTimeDialog = Util.showDatePickerDialog(GourmetPaymentActivity.this//
                 , getString(R.string.label_booking_select_ticket_time)//
                 , gourmetPaymentInformation.getTicketTimes(), selectedTime, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
                 {
@@ -835,6 +856,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     public void onClick(View v)
                     {
                         int select = (Integer) v.getTag();
+
+                        if (gourmetPaymentInformation.ticketTimes.length - 1 < select)
+                        {
+                            return;
+                        }
 
                         try
                         {
@@ -849,13 +875,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     }
                 });
 
-            if (dialog != null)
+            if (mTimeDialog != null)
             {
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+                mTimeDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
+                        mTimeDialog = null;
                         releaseUiComponent();
                     }
                 });

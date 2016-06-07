@@ -244,7 +244,6 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 Intent intent = GourmetCurationActivity.newInstance(baseActivity, province.isOverseas, mViewType, mCurationOption);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
-                baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 
                 String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
@@ -1226,11 +1225,17 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         case LIST:
                             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                                 , Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LIST, null);
+
+                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , Action.GOURMET_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.GOURMET_LIST, null);
                             break;
 
                         case MAP:
                             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                                 , Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_MAP, null);
+
+                            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , Action.GOURMET_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.GOURMET_MAP, null);
                             break;
                     }
                     break;
@@ -1266,7 +1271,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected();
+            fragment.onPageSelected(tab.getText().toString());
 
             //            mOnCommunicateListener.refreshAll(true);
             DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mSimpleDateTimeJsonResponseListener, baseActivity);
@@ -1302,7 +1307,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             GourmetListFragment fragment = (GourmetListFragment) mFragmentPagerAdapter.getItem(tab.getPosition());
-            fragment.onPageSelected();
+            fragment.onPageSelected(null);
 
             //            if (mSelectedProvince != null)
             //            {
