@@ -138,7 +138,7 @@ public class GcmIntentService extends IntentService implements Constants
                     case PUSH_TYPE_NOTICE:
                     {
                         // 푸쉬 알림을 해지하면 푸쉬를 받지 않는다
-                        if (DailyPreference.getInstance(this).isAllowBenefitAlarm() == false)
+                        if (DailyPreference.getInstance(this).isUserBenefitAlarm() == false)
                         {
                             return;
                         }

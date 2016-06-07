@@ -38,7 +38,7 @@ public class DailyPreference
     private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     //    private static final String KEY_ALLOW_PUSH = "5";
-    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
+//    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
 
     private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
@@ -362,16 +362,6 @@ public class DailyPreference
     public void setShowGuide(boolean value)
     {
         setValue(mEditor, KEY_SHOW_GUIDE, value);
-    }
-
-    public boolean isAllowBenefitAlarm()
-    {
-        return getValue(mPreferences, KEY_ALLOW_BENEFIT_ALARM, false);
-    }
-
-    public void setAllowBenefitAlarm(boolean value)
-    {
-        setValue(mEditor, KEY_ALLOW_BENEFIT_ALARM, value);
     }
 
     public void setCompanyInformation(String name, String ceo, String bizRegNumber//

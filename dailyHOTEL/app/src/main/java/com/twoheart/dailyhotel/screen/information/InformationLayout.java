@@ -131,7 +131,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(mContext).getAuthorization()) == false;
         updateLoginLayout(isLogin, true);
         updateAccountLayout(isLogin, -1, -1);
-        updatePushIcon(false);
+
+        boolean isAllowBenefitAlarm = DailyPreference.getInstance(mContext).isUserBenefitAlarm();
+        updatePushIcon(isAllowBenefitAlarm);
+
         updateNewIconView(false);
         updatePushText(null, null);
     }

@@ -392,7 +392,11 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             final BaseActivity baseActivity = (BaseActivity) getActivity();
-            final boolean onOff = !DailyPreference.getInstance(baseActivity).isShowBenefitAlarm(); // 클릭이므로 상태값 변경!
+            boolean isBenefitAlarm = DailyPreference.getInstance(baseActivity).isUserBenefitAlarm(); // 클릭이므로 상태값 변경!
+
+            final boolean onOff = !isBenefitAlarm; // 클릭이므로 상태값 변경!
+
+
 
             if (onOff == true)
             {
@@ -412,8 +416,16 @@ public class InformationFragment extends BaseFragment implements Constants
                     {
                         mNetworkController.requestPushBenefit(onOff);
                     }
-                }, null);
+                }, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        releaseUiComponent();
+                    }
+                }, true);
             }
+
         }
 
         @Override
@@ -737,26 +749,25 @@ public class InformationFragment extends BaseFragment implements Constants
 
             final BaseActivity baseActivity = (BaseActivity) getActivity();
 
+            DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreed);
+            mInformationLayout.updatePushIcon(isAgreed);
+
             if (isAgreed == true)
             {
                 // 혜택 알림 설정이 off --> on 일때
+
                 String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
                 String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
                 String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);
 
-                baseActivity.showSimpleDialog(title, message, positive, new View.OnClickListener()
+                baseActivity.showSimpleDialog(title, message, positive, null , null, null, null, new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View v)
+                    public void onDismiss(DialogInterface dialog)
                     {
-                        lockUiComponent();
-
-                        DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreed);
-                        mInformationLayout.updatePushIcon(isAgreed);
-
                         releaseUiComponent();
                     }
-                });
+                }, true);
             } else
             {
                 // 혜택 알림 설정이 on --> off 일때
@@ -764,19 +775,14 @@ public class InformationFragment extends BaseFragment implements Constants
                 String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_off_confirm_format, updateDate);
                 String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);
 
-                baseActivity.showSimpleDialog(title, message, positive, new View.OnClickListener()
+                baseActivity.showSimpleDialog(title, message, positive, null , null, null, null, new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View v)
+                    public void onDismiss(DialogInterface dialog)
                     {
-                        lockUiComponent();
-
-                        DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreed);
-                        mInformationLayout.updatePushIcon(isAgreed);
-
                         releaseUiComponent();
                     }
-                });
+                }, true);
             }
         }
 

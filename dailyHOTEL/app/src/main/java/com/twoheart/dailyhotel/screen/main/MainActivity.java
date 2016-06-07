@@ -793,7 +793,7 @@ public class MainActivity extends BaseActivity implements Constants
                     });
 
                     // 헤택이 Off 되어있는 경우 On으로 수정
-                    if (DailyPreference.getInstance(MainActivity.this).isAllowBenefitAlarm() == false//
+                    if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == false//
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
                         mNetworkController.requestNoticeAgreement(false);
