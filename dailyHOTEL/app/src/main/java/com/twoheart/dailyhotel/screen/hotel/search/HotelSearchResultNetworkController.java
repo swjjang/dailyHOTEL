@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelSearch;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -222,6 +223,13 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
                 {
                     String message = response.getString("msg");
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                }
+            } catch (JSONException e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    String message = url + " : " + response.toString();
+                    Crashlytics.log(10, "HotelSearchResultNetworkController", message);
                 }
             } catch (Exception e)
             {
