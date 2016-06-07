@@ -128,8 +128,9 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
         versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION));
 
-        updateLoginLayout(false, true);
-        updateAccountLayout(false, 0, 0);
+        boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(mContext).getAuthorization()) == false;
+        updateLoginLayout(isLogin, true);
+        updateAccountLayout(isLogin, -1, -1);
         updatePushIcon(false);
         updateNewIconView(false);
         updatePushText(null, null);
@@ -311,6 +312,13 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         }
     }
 
+    /**
+     * 적립금, 쿠폰, 결제 카드관리 레이아웃
+     *
+     * @param isLogin     로그인 여부
+     * @param bonus       최초 진입시 -1
+     * @param couponCount 최초 진입시 -1
+     */
     public void updateAccountLayout(boolean isLogin, int bonus, int couponCount)
     {
         View newCouponIconView = mAccountInfoLayout.findViewById(R.id.newCounponIconView);
@@ -320,6 +328,27 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         boolean hasNewCoupon = false;
         boolean hasNewBonus = false;
+
+        bonusCountTextView.setVisibility(bonus == -1 ? View.GONE : View.VISIBLE);
+        couponCountTextView.setVisibility(couponCount == -1 ? View.GONE : View.VISIBLE);
+
+        if (bonus == -1)
+        {
+            bonusCountTextView.setVisibility(View.GONE);
+            bonus = 0;
+        } else
+        {
+            bonusCountTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (couponCount == -1)
+        {
+            couponCountTextView.setVisibility(View.GONE);
+            couponCount = 0;
+        } else
+        {
+            couponCountTextView.setVisibility(View.VISIBLE);
+        }
 
         DecimalFormat bonusFormat = new DecimalFormat(mContext.getResources().getString(R.string.frag_currency_decimal_format));
         String bonusString = bonusFormat.format(bonus);
