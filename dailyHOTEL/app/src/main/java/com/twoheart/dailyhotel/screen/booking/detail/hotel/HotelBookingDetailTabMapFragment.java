@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * HotelBookingDetailTabMapFragment (지도 탭)
- * <p>
+ * <p/>
  * 호텔 탭 중 지도 탭 프래그먼트
  */
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
@@ -116,16 +116,22 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-                String checkInDay = simpleDateFormat.format(new Date(mBookingDetail.checkInDate));
-                String checkOutDay = simpleDateFormat.format(new Date(mBookingDetail.checkOutDate));
+                try
+                {
+                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkInDate, "yyMMdd");
+                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkOutDate, "yyMMdd");
 
-                String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
+                    String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
 
-                Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
-                    , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0//
-                    , AnalyticsManager.Category.BOOKING_STATUS//
-                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
-                    , label);
+                    Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
+                        , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0//
+                        , AnalyticsManager.Category.BOOKING_STATUS//
+                        , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
+                        , label);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
             }
         });
 

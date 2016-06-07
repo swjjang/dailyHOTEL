@@ -12,13 +12,11 @@ import org.json.JSONObject;
 public class HotelBookingDetail extends PlaceBookingDetail
 {
     public int isOverseas; // 0 : 국내 , 1 : 해외
-    public long checkInDate;
-    public long checkOutDate;
+    public String checkInDate;
+    public String checkOutDate;
     public String hotelPhone;
     public Hotel.HotelGrade grade;
     public String roomName;
-    public int bonus;
-    public int coupon;
 
     public HotelBookingDetail()
     {
@@ -31,42 +29,42 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
     public void setData(JSONObject jsonObject) throws Exception
     {
-        placeName = jsonObject.getString("hotel_name");
+        placeName = jsonObject.getString("hotelName");
 
         try
         {
-            grade = HotelGrade.valueOf(jsonObject.getString("cat"));
+            grade = HotelGrade.valueOf(jsonObject.getString("hotelGrade"));
         } catch (Exception e)
         {
             grade = HotelGrade.etc;
         }
 
-        address = jsonObject.getString("address");
+        address = jsonObject.getString("hotelAddress");
 
         //
-        JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("spec"));
+        JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("hotelSpec"));
         JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
 
         setSpecification(jsonArray);
 
-        latitude = jsonObject.getDouble("lat");
-        longitude = jsonObject.getDouble("lng");
+        latitude = jsonObject.getDouble("latitude");
+        longitude = jsonObject.getDouble("longitude");
 
-        roomName = jsonObject.getString("room_name");
-        guestPhone = jsonObject.getString("guest_phone");
-        guestName = jsonObject.getString("guest_name");
+        roomName = jsonObject.getString("roomName");
+        guestPhone = jsonObject.getString("guestPhone");
+        guestName = jsonObject.getString("guestName");
 
-        checkInDate = jsonObject.getLong("checkin_date");
-        checkOutDate = jsonObject.getLong("checkout_date");
+        checkInDate = jsonObject.getString("checkIn");
+        checkOutDate = jsonObject.getString("checkOut");
 
         // phone1은 프론트
-        String phone1 = jsonObject.getString("phone1");
+        String phone1 = jsonObject.getString("hotelPhone1");
 
         // phone2는 예약실
-        String phone2 = jsonObject.getString("phone2");
+        String phone2 = jsonObject.getString("hotelPhone2");
 
         // phone3은 사용하지 않음
-        String phone3 = jsonObject.getString("phone3");
+        String phone3 = jsonObject.getString("hotelPhone3");
 
         if (Util.isTextEmpty(phone2) == false)
         {
@@ -79,14 +77,20 @@ public class HotelBookingDetail extends PlaceBookingDetail
             hotelPhone = phone3;
         }
 
-        bonus = jsonObject.getInt("bonus");
-        coupon = jsonObject.getInt("coupon_amount");
+        price = jsonObject.getInt("priceTotal");
 
-        //        paymentDate;
-        //        price;
-        //        bonus;
-        //        coupon;
-        //        totalPrice;
+        if (jsonObject.has("bonus") == true)
+        {
+            bonus = jsonObject.getInt("bonus");
+        }
+
+        if (jsonObject.has("couponAmount") == true)
+        {
+            coupon = jsonObject.getInt("couponAmount");
+        }
+
+        paymentPrice = jsonObject.getInt("discountTotal");
+        paymentDate = jsonObject.getString("paidAt");
     }
 
     @Override
@@ -96,10 +100,12 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         dest.writeInt(isOverseas);
         dest.writeString(roomName);
-        dest.writeLong(checkInDate);
-        dest.writeLong(checkOutDate);
+        dest.writeString(checkInDate);
+        dest.writeString(checkOutDate);
         dest.writeString(hotelPhone);
         dest.writeString(grade.name());
+        dest.writeInt(bonus);
+        dest.writeInt(coupon);
     }
 
     public void readFromParcel(Parcel in)
@@ -108,10 +114,12 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         isOverseas = in.readInt();
         roomName = in.readString();
-        checkInDate = in.readLong();
-        checkOutDate = in.readLong();
+        checkInDate = in.readString();
+        checkOutDate = in.readString();
         hotelPhone = in.readString();
         grade = HotelGrade.valueOf(in.readString());
+        bonus = in.readInt();
+        coupon = in.readInt();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

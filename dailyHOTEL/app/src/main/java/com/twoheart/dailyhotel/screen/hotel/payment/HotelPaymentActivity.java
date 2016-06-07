@@ -309,7 +309,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         mDiscountPriceTextView = (TextView) findViewById(R.id.discountPriceTextView);
         mFinalPaymentTextView = (TextView) findViewById(R.id.totalPaymentPriceTextView);
 
-        mDiscountPriceTextView.setText(Util.getPriceFormat(this, 0));
+        mDiscountPriceTextView.setText(Util.getPriceFormat(this, 0, false));
     }
 
     private void initPaymentTypeInformation()
@@ -347,7 +347,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
         int payPrice = originalPrice;
 
-        mPriceTextView.setText(Util.getPriceFormat(this, originalPrice));
+        mPriceTextView.setText(Util.getPriceFormat(this, originalPrice, false));
 
         if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
         {
@@ -368,7 +368,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     discountPrice = originalPrice;
                 }
 
-                String priceFormat = Util.getPriceFormat(this, discountPrice);
+                String priceFormat = Util.getPriceFormat(this, discountPrice, false);
 
                 mUsedBonusTextView.setText(priceFormat);
                 mDiscountPriceTextView.setText("- " + priceFormat);
@@ -398,10 +398,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     discountPrice = originalPrice;
                 }
 
-                String priceFormat = Util.getPriceFormat(this, discountPrice);
-
-                mUsedCouponTextView.setText(priceFormat);
-                mDiscountPriceTextView.setText("- " + priceFormat);
+                mUsedCouponTextView.setText(Util.getPriceFormat(this, coupon.getAmount(), false));
+                mDiscountPriceTextView.setText(Util.getPriceFormat(this, discountPrice, false));
             }
         } else
         {
@@ -410,11 +408,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 setBonusEnabled(false);
             }
 
-            mDiscountPriceTextView.setText(Util.getPriceFormat(this, 0));
+            mDiscountPriceTextView.setText(Util.getPriceFormat(this, 0, false));
         }
 
         setBonusTextView(hotelPaymentInformation.bonus);
-        mFinalPaymentTextView.setText(Util.getPriceFormat(this, payPrice));
+        mFinalPaymentTextView.setText(Util.getPriceFormat(this, payPrice, false));
 
         // 1000원 미만 결제시에 간편/일반 결제 불가
         if (payPrice < 1000)
@@ -462,7 +460,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
      */
     private void setBonusTextView(int bonus)
     {
-        String priceFormat = Util.getPriceFormat(this, bonus);
+        String priceFormat = Util.getPriceFormat(this, bonus, false);
         String text = getString(R.string.label_booking_own_bonus, priceFormat);
         int startIndex = text.indexOf(priceFormat);
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);

@@ -811,7 +811,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
 
-            if(mIsBenefitAlarm == true)
+            if (mIsBenefitAlarm == true)
             {
                 DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(true);
 

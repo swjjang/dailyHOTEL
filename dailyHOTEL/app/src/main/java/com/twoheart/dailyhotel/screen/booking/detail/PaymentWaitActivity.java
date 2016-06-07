@@ -38,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 
 public class PaymentWaitActivity extends BaseActivity
 {
@@ -154,7 +155,7 @@ public class PaymentWaitActivity extends BaseActivity
                 placeInformationView.setText(R.string.actionbar_title_hoteldetailinfo_activity);
                 placeNameView.setText(R.string.label_receipt_hotelname);
 
-                DailyNetworkAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.payType, booking.tid, mHotelReservationJsonResponseListener, this);
+                DailyNetworkAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationJsonResponseListener, this);
                 break;
             }
 
@@ -233,49 +234,47 @@ public class PaymentWaitActivity extends BaseActivity
         }
     }
 
-    private void setReservationData(JSONObject jsonObject) throws JSONException
+    private void setReservationData(JSONObject jsonObject) throws JSONException, ParseException
     {
-        String accountNumber = jsonObject.getString("account_num");
-        mAccountTextView.setText(jsonObject.getString("bank_name") + ", " + accountNumber);
+        String accountNumber = jsonObject.getString("vactNum");
+        mAccountTextView.setText(jsonObject.getString("bankName") + ", " + accountNumber);
         mAccountTextView.setTag(accountNumber);
 
-        mDailyTextView.setText(jsonObject.getString("name"));
-
-        String date = jsonObject.getString("date").replaceAll("/", ".");
-        String[] timeSlice = jsonObject.getString("time").split(":");
+        mDailyTextView.setText(jsonObject.getString("userName"));
 
         // 입금기한
-        mDeadlineTextView.setText(String.format("%s %s:%s까지", date, timeSlice[0], timeSlice[1]));
+        String validToDate = Util.simpleDateFormatISO8601toFormat(jsonObject.getString("validTo"), "yyyy.MM.dd HH:mm 까지");
+        mDeadlineTextView.setText(validToDate);
 
         // 결재 금액 정보
         DecimalFormat comma = new DecimalFormat("###,##0");
-        mPriceTextView.setText(comma.format(jsonObject.getInt("amt")) + getString(R.string.currency));
+        mPriceTextView.setText(comma.format(jsonObject.getInt("amtTotal")) + getString(R.string.currency));
 
-        if (jsonObject.has("적립금 사용") == true)
+        int bonus = jsonObject.getInt("bonus");
+
+        if (bonus > 0)
         {
             mBonusLayout.setVisibility(View.VISIBLE);
-            mBonusTextView.setText(comma.format(jsonObject.getInt("적립금 사용")) + getString(R.string.currency));
+            mBonusTextView.setText(Util.getPriceFormat(this, bonus, false));
         } else
         {
             mBonusLayout.setVisibility(View.GONE);
         }
 
-        if (jsonObject.has("할인쿠폰 사용") == true)
+        int coupon = jsonObject.getInt("couponAmount");
+
+        if (coupon > 0)
         {
             mCouponLayout.setVisibility(View.VISIBLE);
-            mCouponTextView.setText(comma.format(jsonObject.getInt("할인쿠폰 사용")) + getString(R.string.currency));
+            mCouponTextView.setText(Util.getPriceFormat(this, coupon, false));
         } else
         {
             mCouponLayout.setVisibility(View.GONE);
         }
 
-        if (jsonObject.has("총 금액") == true)
-        {
-            mTotlalPriceTextView.setText(comma.format(jsonObject.getInt("총 금액")) + getString(R.string.currency));
-        } else
-        {
-            mTotlalPriceTextView.setText(comma.format(jsonObject.getInt("amt")) + getString(R.string.currency));
-        }
+        int paymetPrice = jsonObject.getInt("amt");
+
+        mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
 
         // 확인 사항
         String msg1 = jsonObject.getString("msg1");
@@ -302,18 +301,22 @@ public class PaymentWaitActivity extends BaseActivity
         {
             try
             {
-                if (response.getBoolean("result") == false)
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+
+                    setReservationData(dataJSONObject.getJSONObject("reservation"));
+                } else
                 {
                     Intent intent = new Intent();
                     intent.putExtra("msg", response.getString("msg"));
                     setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
                     finish();
                     return;
-                } else
-                {
-                    setReservationData(response);
                 }
-            } catch (JSONException e)
+            } catch (Exception e)
             {
                 ExLog.e(e.toString());
                 finish();
@@ -337,9 +340,9 @@ public class PaymentWaitActivity extends BaseActivity
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code == 0)
+                if (msgCode == 0)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 

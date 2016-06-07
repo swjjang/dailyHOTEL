@@ -763,6 +763,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     /**
      * 버튼이 상하로 되어있는데 팝업
+     *
      * @param titleText
      * @param msg
      * @param positive
@@ -774,8 +775,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
      * @param isCancelable
      */
     public void showSimpleDialogType01(String titleText, String msg, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
-                                 DialogInterface.OnDismissListener dismissListener, //
-                                 boolean isCancelable)
+                                       DialogInterface.OnDismissListener dismissListener, //
+                                       boolean isCancelable)
     {
         if (isFinishing())
         {
