@@ -1513,7 +1513,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         if (coupon.getAmount() > originalPrice)
         {
-            String difference = Util.getPriceFormat(this, (coupon.getAmount() - originalPrice));
+            String difference = Util.getPriceFormat(this, (coupon.getAmount() - originalPrice), false);
 
             showSimpleDialog(null, getString(R.string.message_over_coupon_price, difference), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
             {
