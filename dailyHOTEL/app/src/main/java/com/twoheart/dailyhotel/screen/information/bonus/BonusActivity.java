@@ -54,7 +54,7 @@ public class BonusActivity extends BaseActivity
         } else
         {
             lockUI();
-            mNetworkController.requestUserInformation();
+            mNetworkController.requestBonus();
         }
     }
 
@@ -112,17 +112,11 @@ public class BonusActivity extends BaseActivity
     {
 
         @Override
-        public void onUserInformation(String recommendCode, String name, boolean isVerified, boolean isPhoneVerified)
+        public void onUserInformation(String recommendCode, String name, boolean isExceedBonus)
         {
             mName = name;
             mRecommendCode = recommendCode;
-
-            if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(BonusActivity.this).isVerification() == true)
-            {
-                showSimpleDialog(null, getString(R.string.message_invalid_verification), null, null);
-
-                DailyPreference.getInstance(BonusActivity.this).setVerification(false);
-            }
+            mBonusLayout.setBottomLayoutVisible(isExceedBonus);
         }
 
         @Override
