@@ -167,6 +167,15 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
                     String message = response.getString("msg");
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
+            } catch (JSONException e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    String message = url + " : " + response.toString();
+                    Crashlytics.log(10, "HotelSearchResultNetworkController", message);
+                }
+
+                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
@@ -229,8 +238,10 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
                 if (Constants.DEBUG == false)
                 {
                     String message = url + " : " + response.toString();
-                    Crashlytics.log(10, "HotelSearchResultNetworkController", message);
+                    Crashlytics.log(10, "HotelLocationSearchResultNetworkController", message);
                 }
+
+                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

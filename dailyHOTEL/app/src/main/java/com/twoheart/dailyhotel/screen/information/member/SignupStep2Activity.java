@@ -115,6 +115,7 @@ public class SignupStep2Activity extends BaseActivity
     {
         DailyPreference.getInstance(this).setUserBenefitAlarm(false);
         DailyPreference.getInstance(this).setShowBenefitAlarm(false);
+        DailyPreference.getInstance(this).setLastestCouponTime("");
 
         DailyToast.showToast(SignupStep2Activity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
 

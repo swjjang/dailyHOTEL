@@ -87,6 +87,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = getIntent();
 
         String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
+        //        url = "http://mobile.dailyhotel.co.kr/link_test.html";
 
         try
         {
@@ -214,25 +215,45 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
-            int index = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             long dailyTime = saleTime.getDailyTime();
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
 
             String date = DailyDeepLink.getInstance().getDate();
-            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-            Date schemeDate = format.parse(date);
-            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+            int datePlus = DailyDeepLink.getInstance().getDatePlus();
+            int dailyDayOfDays = 0;
 
-            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-            if (nights <= 0 || dailyDayOfDays < 0)
+            if (Util.isTextEmpty(date) == true)
             {
-                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+                if (datePlus >= 0)
+                {
+                    dailyDayOfDays = datePlus;
+
+                    if (nights <= 0 || dailyDayOfDays < 0)
+                    {
+                        throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+                    }
+                } else
+                {
+                    throw new NullPointerException("datePlus < 0");
+                }
+            } else
+            {
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date schemeDate = format.parse(date);
+                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+                dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                if (nights <= 0 || dailyDayOfDays < 0)
+                {
+                    throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+                }
             }
 
             Intent intent = new Intent(EventWebActivity.this, HotelDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, index);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
@@ -256,25 +277,40 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
-            int index = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             long dailyTime = saleTime.getDailyTime();
             int nights = 1;
 
             String date = DailyDeepLink.getInstance().getDate();
-            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-            Date schemeDate = format.parse(date);
-            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+            int datePlus = DailyDeepLink.getInstance().getDatePlus();
+            int dailyDayOfDays = 0;
 
-            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-            if (dailyDayOfDays < 0)
+            if (Util.isTextEmpty(date) == true)
             {
-                throw new NullPointerException("dailyDayOfDays < 0");
+                if (datePlus >= 0)
+                {
+                    dailyDayOfDays = datePlus;
+                } else
+                {
+                    throw new NullPointerException("datePlus < 0");
+                }
+            } else
+            {
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date schemeDate = format.parse(date);
+                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+                dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                if (dailyDayOfDays < 0)
+                {
+                    throw new NullPointerException("dailyDayOfDays < 0");
+                }
             }
 
             Intent intent = new Intent(EventWebActivity.this, GourmetDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, fnbIndex);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
@@ -320,38 +356,45 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 try
                 {
-                    String message = null;
+                    int msgCode = response.getInt("msgCode");
+                    String message = response.getString("msg");
 
-                    showSimpleDialog(null, message, getString(R.string.label_eventweb_now_used), getString(R.string.dialog_btn_text_close), new View.OnClickListener()
+                    if (msgCode == 100)
                     {
-                        @Override
-                        public void onClick(View v)
+                        showSimpleDialog(null, message, getString(R.string.label_eventweb_now_used), getString(R.string.dialog_btn_text_close), new View.OnClickListener()
                         {
-                            DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
-                            dailyDeepLink.setDeepLink(Uri.parse(deepLink));
+                            @Override
+                            public void onClick(View v)
+                            {
+                                DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
+                                dailyDeepLink.setDeepLink(Uri.parse(deepLink));
 
-                            if (dailyDeepLink.isHotelDetailView() == true)
-                            {
-                                if (deepLinkHotelDetail(mSaleTime) == true)
+                                if (dailyDeepLink.isHotelDetailView() == true)
                                 {
-                                    return;
-                                }
-                            } else if (dailyDeepLink.isGourmetDetailView() == true)
-                            {
-                                if (deepLinkGourmetDetail(mSaleTime) == true)
+                                    if (deepLinkHotelDetail(mSaleTime) == true)
+                                    {
+                                        return;
+                                    }
+                                } else if (dailyDeepLink.isGourmetDetailView() == true)
                                 {
-                                    return;
-                                }
-                            } else
-                            {
-                                Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setData(Uri.parse(deepLink));
+                                    if (deepLinkGourmetDetail(mSaleTime) == true)
+                                    {
+                                        return;
+                                    }
+                                } else
+                                {
+                                    Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setData(Uri.parse(deepLink));
 
-                                startActivity(intent);
+                                    startActivity(intent);
+                                }
                             }
-                        }
-                    }, null);
+                        }, null);
+                    } else
+                    {
+                        onErrorPopupMessage(msgCode, message, null);
+                    }
                 } catch (Exception e)
                 {
                     onError(e);
@@ -475,7 +518,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 startLogin();
             } else
             {
-                downloadCoupon(couponCode, deepLink);
+                EventWebActivity.this.downloadCoupon(couponCode, deepLink);
             }
         }
     }

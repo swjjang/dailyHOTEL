@@ -734,13 +734,13 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestEventNewCount(Object tag, String dateFormat, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+    public void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/new" : "";
 
-        String params = String.format("?userDate=%s", URLEncoder.encode(dateFormat));
+        String params = String.format("?eventLatestDate=%s&couponLatestDate=%s", URLEncoder.encode(eventLatestDate), URLEncoder.encode(couponLatestDate));
 
-        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener, errorListener);
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);

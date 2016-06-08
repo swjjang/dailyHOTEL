@@ -9,7 +9,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.BonusTermActivity;
-import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.List;
 
