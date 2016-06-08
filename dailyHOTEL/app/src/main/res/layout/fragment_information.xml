@@ -48,9 +48,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/iconImageView"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_toRightOf="@id/iconImageView">
+                    android:layout_marginRight="15dp">
 
                     <LinearLayout
                         android:id="@+id/buttonLayout"
@@ -98,14 +98,14 @@
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/profileTextView"
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
+                        android:layout_height="24dp"
                         android:layout_toLeftOf="@id/buttonLayout"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:lines="1"
                         android:text="@string/frag_need_login"
                         android:textColor="@color/information_title"
-                        android:textSize="18dp"/>
+                        android:textSize="16dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/loginMessageTextView"

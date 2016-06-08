@@ -48,6 +48,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private String mCouponCode;
     private String mDeepLinkUrl;
+    private String mConfirmText;
 
     public enum SourceType
     {
@@ -361,7 +362,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                     if (msgCode == 100)
                     {
-                        showSimpleDialog(null, message, getString(R.string.label_eventweb_now_used), getString(R.string.dialog_btn_text_close), new View.OnClickListener()
+                        if (Util.isTextEmpty(mConfirmText) == true)
+                        {
+                            mConfirmText = getString(R.string.label_eventweb_now_used);
+                        }
+
+                        showSimpleDialog(null, message, mConfirmText, getString(R.string.dialog_btn_text_close), new View.OnClickListener()
                         {
                             @Override
                             public void onClick(View v)
@@ -503,7 +509,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         @JavascriptInterface
-        public void downloadCoupon(String couponCode, String deepLink)
+        public void downloadCoupon(String couponCode, String confirmText, String deepLink)
         {
             if (Util.isTextEmpty(couponCode, deepLink) == true)
             {
@@ -511,6 +517,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             mCouponCode = couponCode;
+            mConfirmText = confirmText;
             mDeepLinkUrl = deepLink;
 
             if (Util.isTextEmpty(DailyPreference.getInstance(EventWebActivity.this).getAuthorization()) == true)
