@@ -81,8 +81,8 @@ public class DailyPreference
 
     // Event
     private static final String RESULT_ACTIVITY_SPLASH_NEW_EVENT = "NEW_EVENT";
-    private static final String KEY_PREFERENCE_LOOKUP_EVENT_TIME = "LOOKUP_EVENT_TIME";
-    private static final String KEY_PREFERENCE_NEW_EVENT_TIME = "NEW_EVENT_TIME";
+    private static final String KEY_PREFERENCE_LASTEST_EVENT_TIME = "LATEST_EVENT_TIME";
+    private static final String KEY_PREFERENCE_LASTEST_COUPON_TIME = "LATEST_COUPON_TIME";
 
     // Region
     private static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
@@ -581,24 +581,24 @@ public class DailyPreference
         setValue(mOldEditor, KEY_PREFERENCE_GCM_ID, value);
     }
 
-    public long getLookUpEventTime()
+    public String getLastestEventTime()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0L);
+        return getValue(mOldPreferences, KEY_PREFERENCE_LASTEST_EVENT_TIME, null);
     }
 
-    public void setLookUpEventTime(long value)
+    public void setLastestEventTime(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_LOOKUP_EVENT_TIME, value);
+        setValue(mOldEditor, KEY_PREFERENCE_LASTEST_EVENT_TIME, value);
     }
 
-    public long getNewEventTime()
+    public String getLastestCouponTime()
     {
-        return getValue(mOldPreferences, KEY_PREFERENCE_NEW_EVENT_TIME, 0L);
+        return getValue(mOldPreferences, KEY_PREFERENCE_LASTEST_COUPON_TIME, null);
     }
 
-    public void setNewEventTime(long value)
+    public void setLastestCouponTime(String value)
     {
-        setValue(mOldEditor, KEY_PREFERENCE_NEW_EVENT_TIME, value);
+        setValue(mOldEditor, KEY_PREFERENCE_LASTEST_COUPON_TIME, value);
     }
 
     public String getSelectedRegion(Constants.PlaceType placeType)

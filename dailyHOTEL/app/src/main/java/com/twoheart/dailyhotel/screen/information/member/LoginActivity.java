@@ -821,6 +821,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     if (isSignin == true)
                     {
+                        DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+
                         String userIndex = storeLoginInformation(response);
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
@@ -870,6 +872,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                 if (isSignin == true)
                 {
+                    DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+
                     String userIndex = storeLoginInformation(response);
 
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);

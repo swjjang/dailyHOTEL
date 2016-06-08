@@ -415,7 +415,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventNewCount(Object tag, String timeMillis, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, DailyHotelJsonResponseListener listener);
 
     /**
      * api/daily/event/page
