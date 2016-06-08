@@ -398,8 +398,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     discountPrice = originalPrice;
                 }
 
-                mUsedCouponTextView.setText(Util.getPriceFormat(this, coupon.getAmount(), false));
-                mDiscountPriceTextView.setText(Util.getPriceFormat(this, discountPrice, false));
+                String priceFormat = Util.getPriceFormat(this, discountPrice, false);
+
+                mUsedCouponTextView.setText(priceFormat);
+                mDiscountPriceTextView.setText("- " + priceFormat);
             }
         } else
         {
