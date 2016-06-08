@@ -1397,6 +1397,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     {
                         DailyPreference.getInstance(HotelPaymentActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
                     }
+                } else
+                {
+                    // 사용자 요청 메세지 추가
+                    guest.message = mMemoEditText.getText().toString().trim();
+
+                    hotelPaymentInformation.setGuest(guest);
                 }
 
                 //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
@@ -1986,7 +1992,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 guest.name = name;
                 guest.phone = phone;
                 guest.email = email;
-                guest.message = "";
+                guest.message = mMemoEditText.getText().toString().trim();
 
                 hotelPaymentInformation.setCustomer(buyer);
                 hotelPaymentInformation.setGuest(guest);
@@ -2292,9 +2298,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
                         SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
-
-                        String memo = mMemoEditText.getText().toString().trim();
-                        hotelPaymentInformation.getGuest().message = memo;
 
                         // 가격이 변동 되었다.
                         if (saleRoomInformation.totalDiscount != discount)

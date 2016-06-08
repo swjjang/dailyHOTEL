@@ -281,6 +281,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         // 이메일
         mUserEmailEditText.setText(guest.email);
+
+        // 사용자 요청사항
+        mMemoEditText.setText(guest.message);
     }
 
     /**
@@ -394,6 +397,11 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         guest.message = mMemoEditText.getText().toString().trim();
 
         return guest;
+    }
+
+    public String getMemoEditText()
+    {
+        return mMemoEditText.getText().toString().trim();
     }
 
     public void requestUserInformationFocus(Constants.UserInformationType type)

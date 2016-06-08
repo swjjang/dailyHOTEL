@@ -21,7 +21,6 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,14 +45,12 @@ import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialog
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -185,7 +182,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
         params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
-        params.put("customer_msg", guest.message);
+        params.put("guest_msg", guest.message);
 
         //        if (DEBUG == true)
         //        {
@@ -958,6 +955,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 // 현재 수정 사항을 기억한다.
                 Guest editGuest = mGourmetPaymentLayout.getGuest();
                 mPaymentInformation.setGuest(editGuest);
+            } else
+            {
+                // 사용자 요청 메세지 추가
+                Guest guest = mPaymentInformation.getGuest();
+                guest.message = mGourmetPaymentLayout.getMemoEditText();
+
+                mPaymentInformation.setGuest(guest);
             }
 
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
@@ -1035,6 +1039,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
+
+                gourmetPaymentInformation.setGuest(guest);
+            } else
+            {
+                // 사용자 요청 메세지 추가
+                Guest guest = gourmetPaymentInformation.getGuest();
+                guest.message = mGourmetPaymentLayout.getMemoEditText();
 
                 gourmetPaymentInformation.setGuest(guest);
             }
@@ -1162,7 +1173,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     guest.name = name;
                     guest.phone = phone;
                     guest.email = email;
-                    guest.message = "";
+                    guest.message = mGourmetPaymentLayout.getMemoEditText();
 
                     gourmetPaymentInformation.setGuest(guest);
                 }
