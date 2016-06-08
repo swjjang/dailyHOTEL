@@ -58,6 +58,12 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         mIsAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
+        if (saleTime == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
 

@@ -485,6 +485,8 @@ public class MainActivity extends BaseActivity implements Constants
             if (isNew == true)
             {
                 DailyPreference.getInstance(MainActivity.this).setNewEvent(true);
+                DailyPreference.getInstance(MainActivity.this).setNewCoupon(true);
+
                 DailyPreference.getInstance(MainActivity.this).setNewEventTime(currentDateTime);
 
                 mMenuBarLayout.setNewIconVisible(true);

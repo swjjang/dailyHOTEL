@@ -19,7 +19,7 @@ public class InformationNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount, boolean isAgreedBenefit);
+        void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount, boolean isAgreedBenefit, boolean isExceedBonus);
 
         void onPushBenefitMessage(String title, String message);
 
@@ -69,11 +69,12 @@ public class InformationNetworkController extends BaseNetworkController
                 String userType = response.getString("user_type");
                 int bonus = response.getInt("bonus");
                 int couponTotalCount = response.getInt("coupon_total_count");
-                boolean isAgreedBenefit = response.getBoolean("isAgreedBenefit");
+                boolean isAgreedBenefit = response.getBoolean("is_agreed_benefit");
+                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener) //
                     .onUserInformation(userType, email, name, ownRecommender, bonus, //
-                        couponTotalCount, isAgreedBenefit);
+                        couponTotalCount, isAgreedBenefit, isExceedBonus);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
@@ -97,19 +98,17 @@ public class InformationNetworkController extends BaseNetworkController
         {
             try
             {
-                String title = null;
-                String message = null;
+                int msgCode = response.getInt("msgCode");
 
-                if (response.has("data") == true)
+                if (msgCode == 100)
                 {
                     JSONObject data = response.getJSONObject("data");
 
-                    title = data.getString("title");
-                    message = data.getString("body");
+                    String title = data.getString("title");
+                    String message = data.getString("body");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(title, message);
                 }
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(title, message);
-
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
@@ -134,13 +133,16 @@ public class InformationNetworkController extends BaseNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
+
                 if (msgCode == 100)
                 {
+
+                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    String serverDate = dataJSONObject.getString("serverDate");
+
                     boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgreed", false);
 
-                    String updateDate = Util.simpleDateFormatISO8601toFormat("2016-06-07T19:13:12+09:00", "yyyy년 MM월 dd일");
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, updateDate);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, Util.simpleDateFormatISO8601toFormat(serverDate, "yyyy년 MM월 dd일"));
                 } else
                 {
                     String message = response.getString("msg");

@@ -38,7 +38,7 @@ public class DailyPreference
     private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     //    private static final String KEY_ALLOW_PUSH = "5";
-//    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
+    //    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
 
     private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
@@ -47,6 +47,7 @@ public class DailyPreference
     private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
 
     private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
+    private static final String KEY_NEW_COUPON = "15"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
 
     private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
 
@@ -332,6 +333,16 @@ public class DailyPreference
     public void setNewEvent(boolean value)
     {
         setValue(mEditor, KEY_NEW_EVENT, value);
+    }
+
+    public boolean hasNewCoupon()
+    {
+        return getValue(mPreferences, KEY_NEW_COUPON, false);
+    }
+
+    public void setNewCoupon(boolean value)
+    {
+        setValue(mEditor, KEY_NEW_COUPON, value);
     }
 
     public int getNotificationUid()

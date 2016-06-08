@@ -601,7 +601,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         params.put("nights", String.valueOf(saleRoomInformation.nights));
         params.put("billkey", mSelectedCreditCard.billingkey);
 
-        switch(paymentInformation.discountType)
+        switch (paymentInformation.discountType)
         {
             case BONUS:
                 String bonus = String.valueOf(paymentInformation.bonus);
