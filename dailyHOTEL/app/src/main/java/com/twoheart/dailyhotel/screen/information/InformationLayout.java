@@ -134,9 +134,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         boolean isAllowBenefitAlarm = DailyPreference.getInstance(mContext).isUserBenefitAlarm();
         updatePushIcon(isAllowBenefitAlarm);
-
-        updateNewIconView(false, false);
-        updatePushText(null);
     }
 
     private void initToolbar(Context context, View view)
@@ -258,12 +255,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             return;
         }
 
-        if (hasNewEvent)
+        if (hasNewEvent == true)
         {
             mNewEventIconView.setVisibility(View.VISIBLE);
         } else
         {
-            mNewEventIconView.setVisibility(View.INVISIBLE);
+            mNewEventIconView.setVisibility(View.GONE);
         }
 
         if (mNewCouponIconView == null)
@@ -271,12 +268,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             return;
         }
 
-        if (hasNewCoupon)
+        if (hasNewCoupon == true)
         {
             mNewCouponIconView.setVisibility(View.VISIBLE);
         } else
         {
-            mNewCouponIconView.setVisibility(View.INVISIBLE);
+            mNewCouponIconView.setVisibility(View.GONE);
         }
     }
 
@@ -344,13 +341,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
      */
     public void updateAccountLayout(boolean isLogin, int bonus, int couponCount)
     {
-        View newCouponIconView = mAccountInfoLayout.findViewById(R.id.newCounponIconView);
-        View newBonusIconView = mAccountInfoLayout.findViewById(R.id.newBonusIconView);
         TextView couponCountTextView = (TextView) mAccountInfoLayout.findViewById(R.id.couponCountTextView);
         TextView bonusCountTextView = (TextView) mAccountInfoLayout.findViewById(R.id.bonusCountTextView);
-
-        boolean hasNewCoupon = false;
-        boolean hasNewBonus = false;
 
         bonusCountTextView.setVisibility(bonus == -1 ? View.GONE : View.VISIBLE);
         couponCountTextView.setVisibility(couponCount == -1 ? View.GONE : View.VISIBLE);
@@ -382,9 +374,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         if (isLogin == true)
         {
             mAccountInfoLayout.setVisibility(View.VISIBLE);
-
-            newCouponIconView.setVisibility(hasNewCoupon ? View.VISIBLE : View.GONE);
-            newBonusIconView.setVisibility(hasNewBonus ? View.VISIBLE : View.GONE);
 
             couponCountTextView.setText(couponCountString);
             bonusCountTextView.setText(bonusString);

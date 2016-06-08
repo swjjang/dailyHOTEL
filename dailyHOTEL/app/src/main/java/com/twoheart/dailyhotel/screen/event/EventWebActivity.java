@@ -358,7 +358,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 try
                 {
                     int msgCode = response.getInt("msgCode");
-                    String message = response.getString("msg");
 
                     if (msgCode == 100)
                     {
@@ -366,6 +365,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         {
                             mConfirmText = getString(R.string.label_eventweb_now_used);
                         }
+
+                        JSONObject dataJSONObject = response.getJSONObject("data");
+
+                        String validTo = dataJSONObject.getString("validTo");
+                        String validFrom = dataJSONObject.getString("validFrom");
+
+                        String message = getString(R.string.message_eventweb_download_coupon//
+                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd")//
+                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd"));
 
                         showSimpleDialog(null, message, mConfirmText, getString(R.string.dialog_btn_text_close), new View.OnClickListener()
                         {
@@ -399,6 +407,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         }, null);
                     } else
                     {
+                        String message = response.getString("msg");
                         onErrorPopupMessage(msgCode, message, null);
                     }
                 } catch (Exception e)
@@ -509,7 +518,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         @JavascriptInterface
-        public void downloadCoupon(String couponCode, String confirmText, String deepLink)
+        public void downloadCoupon(String couponCode, String deepLink, String confirmText)
         {
             if (Util.isTextEmpty(couponCode, deepLink) == true)
             {
@@ -517,8 +526,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             mCouponCode = couponCode;
-            mConfirmText = confirmText;
             mDeepLinkUrl = deepLink;
+            mConfirmText = confirmText;
 
             if (Util.isTextEmpty(DailyPreference.getInstance(EventWebActivity.this).getAuthorization()) == true)
             {

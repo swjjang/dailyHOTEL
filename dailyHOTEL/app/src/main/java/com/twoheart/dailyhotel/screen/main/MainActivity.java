@@ -27,12 +27,19 @@ import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AppboyManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -197,7 +204,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             if (mIsInitialization == false)
             {
-                mNetworkController.requestEvent();
+                mNetworkController.requestCommonDatetime();
             }
         }
     }
@@ -418,7 +425,7 @@ public class MainActivity extends BaseActivity implements Constants
         mDelayTimeHandler.removeMessages(0);
         mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
         mIsInitialization = false;
-        mNetworkController.requestEvent();
+        mNetworkController.requestCommonDatetime();
     }
 
     private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
@@ -858,6 +865,52 @@ public class MainActivity extends BaseActivity implements Constants
 
                 showSimpleDialog(getString(R.string.label_setting_alarm), cancelMessage, getString(R.string.dialog_btn_text_confirm), null);
             }
+        }
+
+        @Override
+        public void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime)
+        {
+            try
+            {
+                // 요청하면서 CS운영시간도 같이 받아온다.
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                String text = getString(R.string.dialog_message_cs_operating_time //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(openDateTime))) //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(closeDateTime))));
+
+                DailyPreference.getInstance(MainActivity.this).setOperationTimeMessage(text);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            String viewedEventTime = DailyPreference.getInstance(MainActivity.this).getViewedEventTime();
+            String viewedCouponTime = DailyPreference.getInstance(MainActivity.this).getViewedCouponTime();
+
+            currentDateTime -= 3600 * 1000 * 9;
+
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+            calendar.setTimeInMillis(currentDateTime);
+
+            String lastestTime = Util.getISO8601String(calendar.getTime());
+
+            DailyPreference.getInstance(MainActivity.this).setLastestEventTime(lastestTime);
+            DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(lastestTime);
+
+            if (Util.isTextEmpty(viewedEventTime) == true)
+            {
+                viewedEventTime = Util.getISO8601String(new Date(0L));
+            }
+
+            if (Util.isTextEmpty(viewedCouponTime) == true)
+            {
+                viewedCouponTime = Util.getISO8601String(new Date(0L));
+            }
+
+            mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime);
         }
     };
 }

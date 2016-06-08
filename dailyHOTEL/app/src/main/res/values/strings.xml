@@ -854,6 +854,7 @@
     <!-- Event Web -->
     <string name="label_eventweb_now_used">지금 사용하기</string>
     <string name="message_eventweb_do_login_download_coupon">할인쿠폰 다운로드를 위해 데일리호텔 앱 로그인이 필요합니다. 로그인 할까요?</string>
+    <string name="message_eventweb_download_coupon">할인쿠폰을 다운로드 받았습니다.\n유효기간 : %1$s - %2$s\n(다운로드 받은 할인쿠폰은\n더보기 > 쿠폰함에서 확인해보세요!)</string>
     //
     <!-- Search Calendar -->
     <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>

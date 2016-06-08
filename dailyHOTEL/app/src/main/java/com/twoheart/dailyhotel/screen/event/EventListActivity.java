@@ -39,6 +39,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         mEventListNetworkController = new EventListNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         DailyPreference.getInstance(this).setNewEvent(false);
+        DailyPreference.getInstance(this).setViewedEventTime(DailyPreference.getInstance(this).getLastestEventTime());
 
         initToolbar();
         initLayout();

@@ -9,19 +9,12 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class MainNetworkController extends BaseNetworkController
 {
@@ -42,6 +35,8 @@ public class MainNetworkController extends BaseNetworkController
         void onNoticeAgreement(String message, boolean isFirstTimeBuyer);
 
         void onNoticeAgreementResult(String agreeMessage, String cancelMessage);
+
+        void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime);
     }
 
     public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -74,7 +69,7 @@ public class MainNetworkController extends BaseNetworkController
     /**
      * 이벤트가 있는지를 요청한다
      */
-    protected void requestEvent()
+    protected void requestCommonDatetime()
     {
         DailyNetworkAPI.getInstance(mContext).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
         {
@@ -87,53 +82,30 @@ public class MainNetworkController extends BaseNetworkController
             @Override
             public void onResponse(String url, JSONObject response)
             {
-                long currentDateTime = 0L;
-
                 try
                 {
-                    currentDateTime = response.getLong("currentDateTime");
+                    long currentDateTime = response.getLong("currentDateTime");
+                    long openDateTime = response.getLong("openDateTime");
+                    long closeDateTime = response.getLong("closeDateTime");
 
-                    // 요청하면서 CS운영시간도 같이 받아온다.
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
 
-                    String text = mContext.getString(R.string.dialog_message_cs_operating_time //
-                        , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("openDateTime")))) //
-                        , Integer.parseInt(simpleDateFormat.format(new Date(response.getLong("closeDateTime")))));
-
-                    DailyPreference.getInstance(mContext).setOperationTimeMessage(text);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }
-
-                String lastEventTime = DailyPreference.getInstance(mContext).getLastestEventTime();
-                String lastCouponTime = DailyPreference.getInstance(mContext).getLastestCouponTime();
-
-                currentDateTime -= 3600 * 1000 * 9;
-
-                Calendar calendar = DailyCalendar.getInstance();
-                calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-                calendar.setTimeInMillis(currentDateTime);
-
-                String lastestTime = Util.getISO8601String(calendar.getTime());
-
-                DailyPreference.getInstance(mContext).setLastestEventTime(lastestTime);
-                DailyPreference.getInstance(mContext).setLastestCouponTime(lastestTime);
-
-                if (Util.isTextEmpty(lastEventTime) == true)
-                {
-                    lastEventTime = Util.getISO8601String(new Date(0L));
-                }
-
-                if (Util.isTextEmpty(lastCouponTime) == true)
-                {
-                    lastCouponTime = Util.getISO8601String(new Date(0L));
-                }
-
-                DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, mDailyEventCountJsonResponseListener);
             }
         }, null);
+    }
+
+    protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime)
+    {
+        if (Util.isTextEmpty(lastEventTime, lastCouponTime) == true)
+        {
+            return;
+        }
+
+        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, mDailyEventCountJsonResponseListener);
     }
 
     protected void requestGourmetIsExistRating()
