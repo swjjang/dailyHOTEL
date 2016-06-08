@@ -414,8 +414,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         setBonusTextView(hotelPaymentInformation.bonus);
         mFinalPaymentTextView.setText(Util.getPriceFormat(this, payPrice, false));
 
-        // 1000원 미만 결제시에 간편/일반 결제 불가
-        if (payPrice < 1000)
+        // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
+        if (payPrice > 0 && payPrice < 1000)
         {
             mDisableSimpleCardView.setVisibility(View.VISIBLE);
             mDisableCardView.setVisibility(View.VISIBLE);
