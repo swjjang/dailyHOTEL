@@ -74,7 +74,7 @@ public class CouponTermActivity extends WebViewActivity
     private void initToolbar()
     {
         int titleString = R.string.actionbar_title_common_coupon_term_activity;
-        if (Util.isTextEmpty(mCouponIdx) == true)
+        if (Util.isTextEmpty(mCouponIdx) == false)
         {
             titleString = R.string.actionbar_title_each_coupon_term_activity;
         }
