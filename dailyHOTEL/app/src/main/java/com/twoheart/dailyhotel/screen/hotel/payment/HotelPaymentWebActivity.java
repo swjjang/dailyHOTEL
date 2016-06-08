@@ -181,7 +181,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 break;
 
             case COUPON:
-                builder.add("bonus", hotelPaymentInformation.getCoupon().getCode());
+                builder.add("coupon_code", hotelPaymentInformation.getCoupon().getCode());
                 break;
         }
 
