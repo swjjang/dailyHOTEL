@@ -254,7 +254,7 @@ public class PaymentWaitActivity extends BaseActivity
         if (bonus > 0)
         {
             mBonusLayout.setVisibility(View.VISIBLE);
-            mBonusTextView.setText(Util.getPriceFormat(this, bonus, false));
+            mBonusTextView.setText("-" + Util.getPriceFormat(this, bonus, false));
         } else
         {
             mBonusLayout.setVisibility(View.GONE);
@@ -265,7 +265,7 @@ public class PaymentWaitActivity extends BaseActivity
         if (coupon > 0)
         {
             mCouponLayout.setVisibility(View.VISIBLE);
-            mCouponTextView.setText(Util.getPriceFormat(this, coupon, false));
+            mCouponTextView.setText("-" + Util.getPriceFormat(this, coupon, false));
         } else
         {
             mCouponLayout.setVisibility(View.GONE);
