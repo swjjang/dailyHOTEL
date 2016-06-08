@@ -73,9 +73,15 @@ public class CouponTermActivity extends WebViewActivity
 
     private void initToolbar()
     {
+        int titleString = R.string.actionbar_title_common_coupon_term_activity;
+        if (Util.isTextEmpty(mCouponIdx) == true)
+        {
+            titleString = R.string.actionbar_title_each_coupon_term_activity;
+        }
+
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_bonus_term_activity), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(titleString), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
