@@ -742,6 +742,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
+        dailyHotelJsonRequest.setUsedAuthorization(true);
 
         mQueue.add(dailyHotelJsonRequest);
     }

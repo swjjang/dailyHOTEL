@@ -84,6 +84,8 @@ public class DailyPreference
     private static final String RESULT_ACTIVITY_SPLASH_NEW_EVENT = "NEW_EVENT";
     private static final String KEY_PREFERENCE_LASTEST_EVENT_TIME = "LATEST_EVENT_TIME";
     private static final String KEY_PREFERENCE_LASTEST_COUPON_TIME = "LATEST_COUPON_TIME";
+    private static final String KEY_PREFERENCE_VIEWED_EVENT_TIME = "VIEWED_EVENT_TIME";
+    private static final String KEY_PREFERENCE_VIEWED_COUPON_TIME = "VIEWED_COUPON_TIME";
 
     // Region
     private static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
@@ -610,6 +612,26 @@ public class DailyPreference
     public void setLastestCouponTime(String value)
     {
         setValue(mOldEditor, KEY_PREFERENCE_LASTEST_COUPON_TIME, value);
+    }
+
+    public String getViewedEventTime()
+    {
+        return getValue(mOldPreferences, KEY_PREFERENCE_VIEWED_EVENT_TIME, null);
+    }
+
+    public void setViewedEventTime(String value)
+    {
+        setValue(mOldEditor, KEY_PREFERENCE_VIEWED_EVENT_TIME, value);
+    }
+
+    public String getViewedCouponTime()
+    {
+        return getValue(mOldPreferences, KEY_PREFERENCE_VIEWED_COUPON_TIME, null);
+    }
+
+    public void setViewedCouponTime(String value)
+    {
+        setValue(mOldEditor, KEY_PREFERENCE_VIEWED_COUPON_TIME, value);
     }
 
     public String getSelectedRegion(Constants.PlaceType placeType)

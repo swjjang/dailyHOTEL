@@ -274,7 +274,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
                     Coupon coupon = intent.getParcelableExtra(SelectCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
 
                     setCoupon(coupon);
-                } else {
+                } else
+                {
                     setCancelCoupon();
                 }
                 break;

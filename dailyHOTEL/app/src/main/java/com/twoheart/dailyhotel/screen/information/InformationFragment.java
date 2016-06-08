@@ -52,19 +52,7 @@ public class InformationFragment extends BaseFragment implements Constants
         mInformationLayout = new InformationLayout(getActivity(), mOnEventListener);
         mNetworkController = new InformationNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
 
-        View view = mInformationLayout.onCreateView(R.layout.fragment_information);
-
-        String benefitMessage = DailyPreference.getInstance(getContext()).getBenefitAlarmMessage();
-
-        if (Util.isTextEmpty(benefitMessage) == true)
-        {
-            benefitMessage = getResources().getString(R.string.frag_push_alert_subtext);
-            DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(benefitMessage);
-        }
-
-        mInformationLayout.updatePushText(benefitMessage);
-
-        return view;
+        return mInformationLayout.onCreateView(R.layout.fragment_information);
     }
 
     @Override
@@ -116,11 +104,13 @@ public class InformationFragment extends BaseFragment implements Constants
     {
         super.onResume();
 
+        checkInformation();
+
         registerReceiver();
 
         boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
 
-        if (isLogin)
+        if (isLogin == true)
         {
             // 적립금 및 쿠폰 개수 가져와야 함
             lockUI();
@@ -188,6 +178,24 @@ public class InformationFragment extends BaseFragment implements Constants
 
         startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
         baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+    }
+
+    private void checkInformation()
+    {
+        String benefitMessage = DailyPreference.getInstance(getContext()).getBenefitAlarmMessage();
+
+        if (Util.isTextEmpty(benefitMessage) == true)
+        {
+            benefitMessage = getResources().getString(R.string.frag_push_alert_subtext);
+            DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(benefitMessage);
+        }
+
+        mInformationLayout.updatePushText(benefitMessage);
+
+        boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
+        boolean hasNewCoupon = DailyPreference.getInstance(getContext()).hasNewCoupon();
+
+        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -711,7 +719,6 @@ public class InformationFragment extends BaseFragment implements Constants
             mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);
 
             unLockUI();
-
         }
 
         @Override
