@@ -53,7 +53,7 @@ public class CouponTermActivity extends WebViewActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_coupon_term);
+        setContentView(R.layout.activity_bonus_n_coupon_term);
 
         Intent intent = getIntent();
 

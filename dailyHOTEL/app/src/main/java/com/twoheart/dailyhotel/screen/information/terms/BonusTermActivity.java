@@ -16,7 +16,7 @@ public class BonusTermActivity extends WebViewActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_bonus_term);
+        setContentView(R.layout.activity_bonus_n_coupon_term);
 
         initToolbar();
     }
