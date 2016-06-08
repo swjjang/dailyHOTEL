@@ -33,6 +33,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private View mProfileLayout;
     private View mAccountInfoLayout;
     private View mNewEventIconView;
+    private View mNewCouponIconView;
+    private View mRecommendLayout;
 
     private TextView mPushTextView;
     private TextView mPushTitleTextView;
@@ -102,13 +104,13 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         initAccountInfoLayout(baseActivity, view);
 
         View eventLayout = view.findViewById(R.id.eventLayout);
-        View recommendLayout = view.findViewById(R.id.recommendLayout);
+        mRecommendLayout = view.findViewById(R.id.recommendLayout);
         View callLayout = view.findViewById(R.id.callLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
 
         eventLayout.setOnClickListener(this);
-        recommendLayout.setOnClickListener(this);
+        mRecommendLayout.setOnClickListener(this);
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
@@ -135,7 +137,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         boolean isAllowBenefitAlarm = DailyPreference.getInstance(mContext).isUserBenefitAlarm();
         updatePushIcon(isAllowBenefitAlarm);
 
-        updateNewIconView(false);
+        updateNewIconView(false, false);
         updatePushText(null, null);
     }
 
@@ -175,6 +177,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         couponLayout.setOnClickListener(this);
         bonusLayout.setOnClickListener(this);
         creditCardLayout.setOnClickListener(this);
+
+        mNewCouponIconView = couponLayout.findViewById(R.id.newCounponIconView);
     }
 
     private void initSnsLayout(View view)
@@ -249,7 +253,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mPushTextView.setText(onOff == false ? R.string.label_off : R.string.label_on);
     }
 
-    public void updateNewIconView(boolean hasNewEvent)
+    public void updateNewIconView(boolean hasNewEvent, boolean hasNewCoupon)
     {
         if (mNewEventIconView == null)
         {
@@ -263,6 +267,24 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         {
             mNewEventIconView.setVisibility(View.INVISIBLE);
         }
+
+        if (mNewCouponIconView == null)
+        {
+            return;
+        }
+
+        if (hasNewCoupon)
+        {
+            mNewCouponIconView.setVisibility(View.VISIBLE);
+        } else
+        {
+            mNewCouponIconView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void setRecommendFriendsVisible(boolean visible)
+    {
+        mRecommendLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
     }
 
     /**

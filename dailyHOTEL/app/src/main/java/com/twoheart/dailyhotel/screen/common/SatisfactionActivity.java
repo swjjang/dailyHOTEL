@@ -37,7 +37,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

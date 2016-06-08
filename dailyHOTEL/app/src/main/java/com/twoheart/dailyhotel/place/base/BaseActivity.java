@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 public abstract class BaseActivity extends AppCompatActivity implements Constants, ErrorListener
 {

@@ -23,7 +23,7 @@ public class BonusNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String name, String recommendCode, boolean isVerified, boolean isPhoneVerified);
+        void onUserInformation(String name, String recommendCode, boolean isExceedBonus);
 
         void onBonusHistoryList(List<Bonus> list);
 
@@ -44,11 +44,6 @@ public class BonusNetworkController extends BaseNetworkController
     public void requestBonus()
     {
         DailyNetworkAPI.getInstance(mContext).requestBonus(mNetworkTag, mReserveSavedMoneyStringResponseListener, this);
-    }
-
-    public void requestUserInformation()
-    {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,8 +105,9 @@ public class BonusNetworkController extends BaseNetworkController
                 String name = response.getString("name");
                 boolean isPhoneVerified = response.getBoolean("is_phone_verified");
                 boolean isVerified = response.getBoolean("is_verified");
+                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isVerified, isPhoneVerified);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isExceedBonus);
 
                 // 적립금 목록 요청.
                 DailyNetworkAPI.getInstance(mContext).requestUserBonus(mNetworkTag, mUserBonusListResponseListener, BonusNetworkController.this);

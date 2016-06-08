@@ -23,6 +23,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     private TextView mBonusTextView;
     private ListView mListView;
     private View mFooterView;
+    private View mBottomLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -63,6 +64,8 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
         mFooterView = LayoutInflater.from(mContext).inflate(R.layout.list_row_bonus_footer, mListView, false);
         mListView.addFooterView(mFooterView);
+
+        mBottomLayout = view.findViewById(R.id.bottomLayout);
     }
 
     private void initToolbar(View view)
@@ -95,6 +98,16 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     {
         DecimalFormat decimalFormat = new DecimalFormat("###,##0원");
         mBonusTextView.setText(decimalFormat.format(bonus));
+    }
+
+    public void setBottomLayoutVisible(boolean visible)
+    {
+        if (mBottomLayout == null)
+        {
+            return;
+        }
+
+        mBottomLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
     }
 
     public void setData(List<Bonus> list)

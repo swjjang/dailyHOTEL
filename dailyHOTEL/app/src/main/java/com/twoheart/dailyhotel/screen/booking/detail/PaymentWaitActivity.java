@@ -37,7 +37,6 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 
 public class PaymentWaitActivity extends BaseActivity

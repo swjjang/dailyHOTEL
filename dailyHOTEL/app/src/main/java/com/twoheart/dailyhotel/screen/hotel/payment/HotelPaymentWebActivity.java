@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -175,7 +174,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
         builder.add("nights", String.valueOf(saleRoomInformation.nights));
 
-        switch(hotelPaymentInformation.discountType)
+        switch (hotelPaymentInformation.discountType)
         {
             case BONUS:
                 builder.add("bonus", Integer.toString(hotelPaymentInformation.bonus));

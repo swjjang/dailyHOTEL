@@ -572,6 +572,7 @@ interface IDailyNetwork
 
     /**
      * api/v1/notice/benefit - GET
+     *
      * @param tag
      * @param listener
      */
@@ -586,6 +587,7 @@ interface IDailyNetwork
 
     /**
      * api/v1/notice/benefit - PUT
+     *
      * @param tag
      * @param isAgreed required
      * @param listener

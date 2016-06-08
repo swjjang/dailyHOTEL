@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
@@ -39,8 +38,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.widget.DailyToast;
-
-import org.json.JSONObject;
 
 public class InformationFragment extends BaseFragment implements Constants
 {
@@ -97,7 +94,9 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
-        mInformationLayout.updateNewIconView(hasNewEvent);
+        boolean hasNewCoupon = DailyPreference.getInstance(getContext()).hasNewCoupon();
+
+        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
     }
 
     @Override
@@ -124,6 +123,7 @@ public class InformationFragment extends BaseFragment implements Constants
 
             mInformationLayout.updateLoginLayout(isLogin, false);
             mInformationLayout.updateAccountLayout(isLogin, 0, 0);
+            mInformationLayout.setRecommendFriendsVisible(true);
         }
 
         // 혜택 알림 메세지 가져오기
@@ -397,7 +397,6 @@ public class InformationFragment extends BaseFragment implements Constants
             final boolean onOff = !isBenefitAlarm; // 클릭이므로 상태값 변경!
 
 
-
             if (onOff == true)
             {
                 mNetworkController.requestPushBenefit(onOff);
@@ -651,7 +650,9 @@ public class InformationFragment extends BaseFragment implements Constants
                 }
 
                 boolean hasNewEvent = DailyPreference.getInstance(context).hasNewEvent();
-                mInformationLayout.updateNewIconView(hasNewEvent);
+                boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
+
+                mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
             }
         };
 
@@ -673,40 +674,6 @@ public class InformationFragment extends BaseFragment implements Constants
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                JSONObject jsonObject = response.getJSONObject("data");
-
-                boolean result = jsonObject.getBoolean("is_success");
-                int msgCode = response.getInt("msg_code");
-
-                if (result == true)
-                {
-                } else
-                {
-                    DailyToast.showToast(getContext(), response.getString("msg"), Toast.LENGTH_LONG);
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-
     /**
      * 유저 정보 리스너
      */
@@ -715,7 +682,7 @@ public class InformationFragment extends BaseFragment implements Constants
     {
         @Override
         public void onUserInformation(String type, String email, String name, String recommender, //
-                                      int bonus, int couponTotalCount, boolean isAgreedBenefit)
+                                      int bonus, int couponTotalCount, boolean isAgreedBenefit, boolean isExceedBonus)
         {
             DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
 
@@ -725,6 +692,7 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
+                mInformationLayout.setRecommendFriendsVisible(isExceedBonus);
             }
 
             mInformationLayout.updateLoginLayout(isLogin, false);
@@ -760,7 +728,7 @@ public class InformationFragment extends BaseFragment implements Constants
                 String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
                 String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);
 
-                baseActivity.showSimpleDialog(title, message, positive, null , null, null, null, new DialogInterface.OnDismissListener()
+                baseActivity.showSimpleDialog(title, message, positive, null, null, null, null, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
@@ -775,7 +743,7 @@ public class InformationFragment extends BaseFragment implements Constants
                 String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_off_confirm_format, updateDate);
                 String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);
 
-                baseActivity.showSimpleDialog(title, message, positive, null , null, null, null, new DialogInterface.OnDismissListener()
+                baseActivity.showSimpleDialog(title, message, positive, null, null, null, null, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
@@ -801,7 +769,7 @@ public class InformationFragment extends BaseFragment implements Constants
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            InformationFragment.this.onErrorPopupMessage(msgCode, message);
+            InformationFragment.this.onErrorPopupMessage(msgCode, message, null);
         }
 
         @Override

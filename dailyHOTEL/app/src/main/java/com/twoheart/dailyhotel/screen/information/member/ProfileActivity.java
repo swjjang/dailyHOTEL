@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -154,6 +155,8 @@ public class ProfileActivity extends BaseActivity
                 public void onClick(View view)
                 {
                     DailyPreference.getInstance(ProfileActivity.this).clear();
+
+                    DailyHotel.AUTHORIZATION = null;
 
                     try
                     {
