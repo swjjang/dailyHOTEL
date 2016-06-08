@@ -37,6 +37,8 @@ public class CouponListActivity extends BaseActivity
         mCouponListLayout = new CouponListLayout(this, mOnEventListener);
         mCouponListNetworkController = new CouponListNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
+        DailyPreference.getInstance(this).setNewCoupon(false);
+
         setContentView(mCouponListLayout.onCreateView(R.layout.activity_coupon_list));
     }
 
