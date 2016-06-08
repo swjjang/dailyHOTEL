@@ -934,7 +934,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     @Override
     public void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons" : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/coupons" : "";
 
         try
         {
