@@ -127,7 +127,6 @@ public abstract class PlaceSearchActivity extends BaseActivity
         spannableStringBuilder.setSpan(new UnderlineSpan(), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         messageTextView.setText(spannableStringBuilder);
-        messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
         messageTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override

@@ -28,7 +28,7 @@ import java.util.Collection;
 public class CreditCardLayout extends FrameLayout
 {
     private ViewGroup mLogingLayout, mIntroductionLayout;
-    private TextView mAddCreditCardButton;
+    private View mBottomLayout;
     private ListView mListView;
     private CreditCardListAdapter mAdapter;
 
@@ -82,13 +82,13 @@ public class CreditCardLayout extends FrameLayout
         mIntroductionLayout = (ViewGroup) mLogingLayout.findViewById(R.id.introductionLayout);
         mIntroductionLayout.setOnClickListener(mAddCreditCardClickListener);
 
-        mAddCreditCardButton = (TextView) view.findViewById(R.id.addCreditCardButton);
-        mAddCreditCardButton = (TextView) view.findViewById(R.id.addCreditCardButton);
+        mBottomLayout = view.findViewById(R.id.bottomLayout);
+        View addCreditCardButton = view.findViewById(R.id.addCreditCardButton);
 
         mListView = (ListView) view.findViewById(R.id.creditcardListView);
         EdgeEffectColor.setEdgeGlowColor(mListView, context.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mAddCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
+        addCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
 
         View emptyCardLayout = view.findViewById(R.id.emptyCardLayout);
         emptyCardLayout.setOnClickListener(mAddCreditCardClickListener);
@@ -129,11 +129,11 @@ public class CreditCardLayout extends FrameLayout
         if (arrayList == null || arrayList.size() == 0)
         {
             mIntroductionLayout.setVisibility(View.VISIBLE);
-            mAddCreditCardButton.setVisibility(View.INVISIBLE);
+            mBottomLayout.setVisibility(View.INVISIBLE);
         } else
         {
             mIntroductionLayout.setVisibility(View.GONE);
-            mAddCreditCardButton.setVisibility(View.VISIBLE);
+            mBottomLayout.setVisibility(View.VISIBLE);
         }
 
         mAdapter.clear();

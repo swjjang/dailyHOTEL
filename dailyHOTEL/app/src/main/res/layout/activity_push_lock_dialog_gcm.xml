@@ -62,7 +62,7 @@
                     android:gravity="center"
                     android:text="@string/dialog_btn_text_close"
                     android:textColor="@drawable/selector_dialog_text_color02"
-                    android:textSize="17dp"
+                    android:textSize="14dp"
                     dailyFont:style="Medium"/>
 
                 <View
@@ -78,7 +78,7 @@
                     android:gravity="center"
                     android:text="@string/dialog_btn_text_see"
                     android:textColor="@drawable/selector_dialog_text_color01"
-                    android:textSize="17dp"
+                    android:textSize="14dp"
                     dailyFont:style="Medium"/>
             </LinearLayout>
         </RelativeLayout>

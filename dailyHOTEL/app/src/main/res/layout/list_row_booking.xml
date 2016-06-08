@@ -3,8 +3,7 @@
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="202dp"
-                android:background="@drawable/dim_center">
+                android:layout_height="202dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/hotelImage"
@@ -13,7 +12,8 @@
         android:adjustViewBounds="true"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/img_placeholder"
-        fresco:placeholderImageScaleType="centerCrop"/>
+        fresco:placeholderImageScaleType="centerCrop"
+        fresco:overlayImage="@drawable/dim_center"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/waitAccountTextView"

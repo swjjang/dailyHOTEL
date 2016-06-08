@@ -175,7 +175,6 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
         builder.add("nights", String.valueOf(saleRoomInformation.nights));
 
-
         switch(hotelPaymentInformation.discountType)
         {
             case BONUS:

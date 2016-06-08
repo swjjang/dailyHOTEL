@@ -193,9 +193,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         TextView ratingPeriod = (TextView) view.findViewById(R.id.periodTextView);
         TextView ratingHotelName = (TextView) view.findViewById(R.id.hotelNameTextView);
-
-        ratingPeriod.setTypeface(FontManager.getInstance(this).getMediumTypeface());
-
         TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
         TextView negativeTextView = (TextView) view.findViewById(R.id.negativeTextView);
 

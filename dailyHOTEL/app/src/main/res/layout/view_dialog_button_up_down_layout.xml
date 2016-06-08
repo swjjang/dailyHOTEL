@@ -51,7 +51,7 @@
                 android:background="@drawable/selector_dialog_button02"
                 android:gravity="center"
                 android:textColor="@drawable/selector_dialog_text_color02"
-                android:textSize="17dp"
+                android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
             <View
@@ -66,7 +66,7 @@
                 android:background="@drawable/selector_dialog_button01"
                 android:gravity="center"
                 android:textColor="@drawable/selector_dialog_text_color01"
-                android:textSize="17dp"
+                android:textSize="14dp"
                 dailyFont:style="Medium"/>
         </LinearLayout>
     </RelativeLayout>
