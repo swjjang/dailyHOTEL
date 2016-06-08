@@ -21,7 +21,7 @@ public class InformationNetworkController extends BaseNetworkController
     {
         void onUserInformation(String type, String email, String name, String recommender, int bonus, int couponTotalCount, boolean isAgreedBenefit, boolean isExceedBonus);
 
-        void onPushBenefitMessage(String title, String message);
+        void onPushBenefitMessage(String message);
 
         void onBenefitAgreement(boolean isAgreed, String updateDate);
     }
@@ -107,7 +107,7 @@ public class InformationNetworkController extends BaseNetworkController
                     String title = data.getString("title");
                     String message = data.getString("body");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(title, message);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(message);
                 }
             } catch (Exception e)
             {

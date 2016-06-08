@@ -56,6 +56,7 @@ public class DailyPreference
     private static final String KEY_APP_VERSION = "23";
 
     private static final String KEY_SHOW_BENEFIT_ALARM = "24";
+    private static final String KEY_BENEFIT_ALARM_MESSAGE = "25";
 
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
@@ -564,6 +565,16 @@ public class DailyPreference
     public boolean isShowBenefitAlarm()
     {
         return getValue(mPreferences, KEY_SHOW_BENEFIT_ALARM, false);
+    }
+
+    public void setBenefitAlarmMessage(String value)
+    {
+        setValue(mEditor, KEY_BENEFIT_ALARM_MESSAGE, value);
+    }
+
+    public String getBenefitAlarmMessage()
+    {
+        return getValue(mPreferences, KEY_BENEFIT_ALARM_MESSAGE, null);
     }
 
 
