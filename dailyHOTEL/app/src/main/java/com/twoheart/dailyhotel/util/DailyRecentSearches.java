@@ -71,12 +71,8 @@ public class DailyRecentSearches
 
         for (Keyword keyword : mKeywordList)
         {
-            if (result.length() != 0)
-            {
-                result.append(KEYWORD_DELIMITER);
-            }
-
             result.append(String.format("%d%c%s", keyword.icon, ICON_DELIMITER, keyword.name));
+            result.append(KEYWORD_DELIMITER);
         }
 
         return result.toString();
@@ -131,7 +127,28 @@ public class DailyRecentSearches
             return;
         }
 
-        String[] keywords = text.split(KEYWORD_DELIMITER);
+        int count = 0;
+        int startIndex = 0;
+
+        while ((startIndex = text.indexOf(KEYWORD_DELIMITER, startIndex)) > 0)
+        {
+            startIndex += KEYWORD_DELIMITER.length();
+            count++;
+        }
+
+        String[] keywords = new String[count];
+        int endIndex = 0;
+        startIndex = 0;
+
+        for (int i = 0; i < count; i++)
+        {
+            endIndex = text.indexOf(KEYWORD_DELIMITER, startIndex);
+
+            keywords[i] = text.substring(startIndex, endIndex);
+
+            startIndex = endIndex + KEYWORD_DELIMITER.length();
+        }
+
         String[] values;
 
         for (String keyword : keywords)

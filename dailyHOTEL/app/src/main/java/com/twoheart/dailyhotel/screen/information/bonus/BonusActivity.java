@@ -54,7 +54,7 @@ public class BonusActivity extends BaseActivity
         } else
         {
             lockUI();
-            mNetworkController.requestBonus();
+            mNetworkController.requestUserInformation();
         }
     }
 
