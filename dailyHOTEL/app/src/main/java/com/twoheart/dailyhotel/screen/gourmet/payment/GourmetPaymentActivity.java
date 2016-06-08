@@ -697,7 +697,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void setCoupon(Coupon coupon)
     {
+        // do nothing.
+    }
 
+    @Override
+    protected void setCancelCoupon()
+    {
+        // do nothing.
     }
 
     private void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime checkInSaleTime)

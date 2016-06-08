@@ -84,6 +84,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void setCoupon(Coupon coupon);
 
+    protected abstract void setCancelCoupon();
+
     @Override
     protected void onResume()
     {
@@ -272,6 +274,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
                     Coupon coupon = intent.getParcelableExtra(SelectCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
 
                     setCoupon(coupon);
+                } else {
+                    setCancelCoupon();
                 }
                 break;
             }
