@@ -47,7 +47,7 @@ public class CouponHistoryLayout extends BaseLayout
         View toolbar = view.findViewById(R.id.toolbar);
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-        dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_coupon_list), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_coupon_history), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

@@ -130,6 +130,7 @@
     <string name="actionbar_title_edit_password">비밀번호 설정</string>
     <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
     <string name="actionbar_title_coupon_list">할인쿠폰함</string>
+    <string name="actionbar_title_coupon_history">쿠폰 사용내역</string>
     <string name="actionbar_title_common_coupon_term_activity">할인쿠폰 공통 유의사항</string>
     <string name="actionbar_title_each_coupon_term_activity">할인쿠폰별 유의사항</string>
 
