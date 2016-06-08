@@ -77,9 +77,10 @@ dependencies {
         transitive = true;
     }
 
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
+
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
-    compile project(':facebook')
 
     compile files('libs/MobileAppTracker.jar')
     compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')

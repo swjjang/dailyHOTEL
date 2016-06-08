@@ -32,6 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -830,6 +831,30 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         // 화면이 작은 곳에서 스크롤 뷰가 들어가면서 발생하는 이슈
         final DailyScrollView scrollLayout = (DailyScrollView) finalCheckLayout.findViewById(R.id.scrollLayout);
+        final View buttonLayout = finalCheckLayout.findViewById(R.id.buttonLayout);
+
+        scrollLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                View contentLayout = scrollLayout.findViewById(R.id.contentsLayout);
+
+                // 스크롤이 안되는 경우
+                if (scrollLayout.getHeight() >= contentLayout.getHeight())
+                {
+                    RelativeLayout.LayoutParams scrollLayoutParam = (RelativeLayout.LayoutParams) scrollLayout.getLayoutParams();
+                    RelativeLayout.LayoutParams buttonLayoutParam = (RelativeLayout.LayoutParams) buttonLayout.getLayoutParams();
+
+                    scrollLayoutParam.removeRule(RelativeLayout.ABOVE);
+                    scrollLayout.setLayoutParams(scrollLayoutParam);
+
+                    buttonLayoutParam.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    buttonLayoutParam.addRule(RelativeLayout.BELOW, scrollLayout.getId());
+                    buttonLayout.setLayoutParams(buttonLayoutParam);
+                }
+            }
+        });
 
         View dailySignatureView = finalCheckLayout.getDailySignatureView();
 
