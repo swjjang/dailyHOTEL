@@ -478,28 +478,18 @@ public class MainActivity extends BaseActivity implements Constants
     private MainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new MainNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void updateNewEvent(boolean isNew)
+        public void updateNewEvent(boolean isNewEvent, boolean isNewCoupon)
         {
-            long currentDateTime = DailyPreference.getInstance(MainActivity.this).getLookUpEventTime();
-
-            if (isNew == true)
+            if (isNewEvent == false && isNewCoupon == false)
             {
-                DailyPreference.getInstance(MainActivity.this).setNewEvent(true);
-                DailyPreference.getInstance(MainActivity.this).setNewCoupon(true);
-
-                DailyPreference.getInstance(MainActivity.this).setNewEventTime(currentDateTime);
-
-                mMenuBarLayout.setNewIconVisible(true);
+                mMenuBarLayout.setNewIconVisible(false);
             } else
             {
-                if (currentDateTime == 0)
-                {
-                    DailyPreference.getInstance(MainActivity.this).setNewEvent(false);
-                    DailyPreference.getInstance(MainActivity.this).setNewEventTime(currentDateTime);
-                }
-
-                mMenuBarLayout.setNewIconVisible(false);
+                mMenuBarLayout.setNewIconVisible(true);
             }
+
+            DailyPreference.getInstance(MainActivity.this).setNewEvent(isNewEvent);
+            DailyPreference.getInstance(MainActivity.this).setNewCoupon(isNewCoupon);
 
             LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(BROADCAST_EVENT_UPDATE));
         }

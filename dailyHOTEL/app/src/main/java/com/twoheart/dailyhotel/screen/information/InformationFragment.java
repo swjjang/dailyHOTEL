@@ -52,7 +52,19 @@ public class InformationFragment extends BaseFragment implements Constants
         mInformationLayout = new InformationLayout(getActivity(), mOnEventListener);
         mNetworkController = new InformationNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
 
-        return mInformationLayout.onCreateView(R.layout.fragment_information);
+        View view = mInformationLayout.onCreateView(R.layout.fragment_information);
+
+        String benefitMessage = DailyPreference.getInstance(getContext()).getBenefitAlarmMessage();
+
+        if (Util.isTextEmpty(benefitMessage) == true)
+        {
+            benefitMessage = getResources().getString(R.string.frag_push_alert_subtext);
+            DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(benefitMessage);
+        }
+
+        mInformationLayout.updatePushText(benefitMessage);
+
+        return view;
     }
 
     @Override
@@ -703,9 +715,11 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void onPushBenefitMessage(String title, String message)
+        public void onPushBenefitMessage(String message)
         {
-            mInformationLayout.updatePushText(title, message);
+            DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(message);
+
+            mInformationLayout.updatePushText(message);
 
             unLockUI();
         }

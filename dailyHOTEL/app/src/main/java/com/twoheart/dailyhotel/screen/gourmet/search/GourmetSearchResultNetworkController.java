@@ -173,6 +173,8 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
                     String message = url + " : " + response.toString();
                     Crashlytics.log(10, "GourmetSearchResultNetworkController", message);
                 }
+
+                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
@@ -229,6 +231,15 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
                     String message = response.getString("msg");
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
+            } catch (JSONException e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    String message = url + " : " + response.toString();
+                    Crashlytics.log(10, "GourmetLocationSearchResultNetworkController", message);
+                }
+
+                mOnNetworkControllerListener.onError(e);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

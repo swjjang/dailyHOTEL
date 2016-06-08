@@ -27,7 +27,7 @@ public class MainNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void updateNewEvent(boolean isNew);
+        void updateNewEvent(boolean isNewEvent, boolean isNewCoupon);
 
         void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime);
 
@@ -107,17 +107,31 @@ public class MainNetworkController extends BaseNetworkController
                     ExLog.d(e.toString());
                 }
 
-                long lastLookupDateTime = DailyPreference.getInstance(mContext).getNewEventTime();
+                String lastEventTime = DailyPreference.getInstance(mContext).getLastestEventTime();
+                String lastCouponTime = DailyPreference.getInstance(mContext).getLastestCouponTime();
 
                 currentDateTime -= 3600 * 1000 * 9;
 
-                DailyPreference.getInstance(mContext).setLookUpEventTime(currentDateTime);
-
                 Calendar calendar = DailyCalendar.getInstance();
                 calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-                calendar.setTimeInMillis(lastLookupDateTime);
+                calendar.setTimeInMillis(currentDateTime);
 
-                DailyNetworkAPI.getInstance(mContext).requestEventNewCount(mNetworkTag, Util.getISO8601String(calendar.getTime()), mDailyEventCountJsonResponseListener, null);
+                String lastestTime = Util.getISO8601String(calendar.getTime());
+
+                DailyPreference.getInstance(mContext).setLastestEventTime(lastestTime);
+                DailyPreference.getInstance(mContext).setLastestCouponTime(lastestTime);
+
+                if (Util.isTextEmpty(lastEventTime) == true)
+                {
+                    lastEventTime = Util.getISO8601String(new Date(0L));
+                }
+
+                if (Util.isTextEmpty(lastCouponTime) == true)
+                {
+                    lastCouponTime = Util.getISO8601String(new Date(0L));
+                }
+
+                DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, mDailyEventCountJsonResponseListener);
             }
         }, null);
     }
@@ -324,18 +338,20 @@ public class MainNetworkController extends BaseNetworkController
         {
             try
             {
-                boolean isNew = false;
+                boolean isExistNewEvent = false;
+                boolean isExistNewCoupon = false;
 
                 int msgCode = response.getInt("msgCode");
 
                 if (msgCode == 100)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject datJSONObject = response.getJSONObject("data");
 
-                    isNew = jsonObject.getBoolean("isNew");
+                    isExistNewEvent = datJSONObject.getBoolean("isExistNewEvent");
+                    isExistNewCoupon = datJSONObject.getBoolean("isExistNewCoupon");
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent(isNew);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).updateNewEvent(isExistNewEvent, isExistNewCoupon);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
