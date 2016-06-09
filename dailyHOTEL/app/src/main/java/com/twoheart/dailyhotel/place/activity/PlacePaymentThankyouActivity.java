@@ -47,7 +47,6 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     private void initToolbar()
     {
         View closeView = findViewById(R.id.closeView);
-
         closeView.setOnClickListener(this);
     }
 

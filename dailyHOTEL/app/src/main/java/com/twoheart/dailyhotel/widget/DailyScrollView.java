@@ -8,7 +8,7 @@ import android.widget.ScrollView;
 public class DailyScrollView extends ScrollView
 {
     private OnScrollChangedListener mOnScrollChangedListener;
-    private boolean mScrollable = true;
+    private boolean mIsScrollable = true;
 
     public interface OnScrollChangedListener
     {
@@ -58,12 +58,12 @@ public class DailyScrollView extends ScrollView
         {
             case MotionEvent.ACTION_DOWN:
                 // if we can scroll pass the event to the superclass
-                if (mScrollable)
+                if (mIsScrollable)
                 {
                     return super.onTouchEvent(ev);
                 }
                 // only continue to handle the touch event if scrolling enabled
-                return mScrollable; // mScrollable is always false at this point
+                return mIsScrollable; // mIsScrollable is always false at this point
             default:
                 return super.onTouchEvent(ev);
         }
@@ -72,7 +72,7 @@ public class DailyScrollView extends ScrollView
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev)
     {
-        if (mScrollable == false)
+        if (mIsScrollable == false)
         {
             return false;
         } else
@@ -83,11 +83,11 @@ public class DailyScrollView extends ScrollView
 
     public void setScrollingEnabled(boolean enabled)
     {
-        mScrollable = enabled;
+        mIsScrollable = enabled;
     }
 
     public boolean isScrollable()
     {
-        return mScrollable;
+        return mIsScrollable;
     }
 }

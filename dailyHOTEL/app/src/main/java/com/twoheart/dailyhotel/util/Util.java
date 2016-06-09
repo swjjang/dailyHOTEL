@@ -780,7 +780,7 @@ public class Util implements Constants
             @Override
             public void onClick(View v)
             {
-                if (dialog != null && dialog.isShowing())
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -1230,9 +1230,9 @@ public class Util implements Constants
                     ExLog.d("iso8601 is good format");
                 } else if (timeZone.length() == 4)
                 {
-                    iso8601 = new StringBuilder(iso8601.substring(0, index + 1)) //
-                        .append(timeZone.substring(0, 2)).append(":") //
-                        .append(timeZone.substring(2)).toString();
+                    iso8601 = iso8601.substring(0, index + 1) + //
+                        timeZone.substring(0, 2) + ":" + //
+                        timeZone.substring(2);
                 } else
                 {
                     // 비정상 텍스트

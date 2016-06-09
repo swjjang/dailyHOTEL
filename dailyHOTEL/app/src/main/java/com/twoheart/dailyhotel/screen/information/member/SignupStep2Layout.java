@@ -24,7 +24,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     private static final int VERIFICATION_NUMBER_LENGTH = 4;
 
     private View mVerificationLayout, mSignUpView, mCertificationNumberView;
-    private View mCountryView, mPhoneView, mVerificationView;
+    private View mPhoneView, mVerificationView;
     private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextWatcher mTextWatcher;
 
@@ -65,7 +65,6 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutForm(View view)
     {
-        mCountryView = view.findViewById(R.id.countryView);
         mCountryEditText = (EditText) view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);

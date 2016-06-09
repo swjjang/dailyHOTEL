@@ -58,7 +58,6 @@ public class CouponHistoryActivity extends BaseActivity
     // ////////////////////////////////////////////////////////
     private CouponHistoryLayout.OnEventListener mOnEventListener = new CouponHistoryLayout.OnEventListener()
     {
-
         @Override
         public void finish()
         {

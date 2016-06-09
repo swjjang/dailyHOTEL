@@ -120,11 +120,10 @@ public class InformationFragment extends BaseFragment implements Constants
         } else
         {
             // 비로그인 상태
-
             unLockUI();
 
-            mInformationLayout.updateLoginLayout(isLogin, false);
-            mInformationLayout.updateAccountLayout(isLogin, 0, 0);
+            mInformationLayout.updateLoginLayout(false, false);
+            mInformationLayout.updateAccountLayout(false, 0, 0);
             mInformationLayout.setRecommendFriendsVisible(true);
         }
 
@@ -413,14 +412,12 @@ public class InformationFragment extends BaseFragment implements Constants
 
             final BaseActivity baseActivity = (BaseActivity) getActivity();
             boolean isBenefitAlarm = DailyPreference.getInstance(baseActivity).isUserBenefitAlarm(); // 클릭이므로 상태값 변경!
-
-            final boolean onOff = !isBenefitAlarm; // 클릭이므로 상태값 변경!
-
+            boolean onOff = !isBenefitAlarm; // 클릭이므로 상태값 변경!
+            final boolean isAuthorization = Util.isTextEmpty(DailyPreference.getInstance(baseActivity).getAuthorization()) == false;
 
             if (onOff == true)
             {
-                mNetworkController.requestPushBenefit(onOff);
-
+                mNetworkController.requestPushBenefit(isAuthorization, true);
             } else
             {
                 String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
@@ -433,7 +430,7 @@ public class InformationFragment extends BaseFragment implements Constants
                     @Override
                     public void onClick(View v)
                     {
-                        mNetworkController.requestPushBenefit(onOff);
+                        mNetworkController.requestPushBenefit(isAuthorization, false);
                     }
                 }, null, null, new DialogInterface.OnDismissListener()
                 {

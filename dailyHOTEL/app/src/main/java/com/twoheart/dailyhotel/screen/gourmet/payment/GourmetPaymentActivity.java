@@ -1103,9 +1103,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void showCallPopup()
+        public void showCallDialog()
         {
-            showCallPopup();
+            GourmetPaymentActivity.this.showCallDialog();
         }
 
         @Override

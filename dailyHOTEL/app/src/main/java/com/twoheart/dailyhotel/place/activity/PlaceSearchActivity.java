@@ -155,7 +155,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (dialog != null && dialog.isShowing())
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }

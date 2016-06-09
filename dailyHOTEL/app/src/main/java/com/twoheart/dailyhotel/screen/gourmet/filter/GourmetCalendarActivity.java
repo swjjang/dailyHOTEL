@@ -26,7 +26,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     private Day mDay;
     private TextView mConfirmTextView;
-    private TextView mToastTextView;
     private String mCallByScreen;
 
     private boolean mIsAnimation;
@@ -103,10 +102,10 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         } else
         {
             // 문구 내용을 변경한다.
-            mToastTextView = (TextView) mToastView.findViewById(R.id.toastTextView);
+            TextView toastTextView = (TextView) mToastView.findViewById(R.id.toastTextView);
 
             mConfirmTextView.setText(R.string.label_calendar_search_selected_date);
-            mToastTextView.setText(R.string.message_calendar_search_reset);
+            toastTextView.setText(R.string.message_calendar_search_reset);
         }
     }
 

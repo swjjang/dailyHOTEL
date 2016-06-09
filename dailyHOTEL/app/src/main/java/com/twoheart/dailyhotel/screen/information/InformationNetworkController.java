@@ -42,9 +42,9 @@ public class InformationNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestBenefitMessage(mNetworkTag, mBenefitMessageJsonResponseListener);
     }
 
-    public void requestPushBenefit(boolean isAgreed)
+    public void requestPushBenefit(boolean isAuthorization, boolean isAgree)
     {
-        DailyNetworkAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAgreed, mUpdateBenefitJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAuthorization, isAgree, mUpdateBenefitJsonResponseListener);
     }
 
     @Override

@@ -399,10 +399,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                     updateLayout(true, bookingArrayList);
 
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST);
-
                     Map<String, String> params = new HashMap<>();
                     params.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
+
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, params);
                 }
 
                 // 사용자 정보 요청.
