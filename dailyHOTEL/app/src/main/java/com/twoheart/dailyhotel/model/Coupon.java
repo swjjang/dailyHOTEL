@@ -19,7 +19,7 @@ public class Coupon implements Parcelable
     public static final long MILLISECOND_IN_A_DAY = 3600 * 24 * 1000;
 
     // coupon object type
-    public static final String CODE = "code";
+    public static final String CODE = "userCouponCode";
 
     // coupon object type
     public static final String VALID_TO = "validTo";

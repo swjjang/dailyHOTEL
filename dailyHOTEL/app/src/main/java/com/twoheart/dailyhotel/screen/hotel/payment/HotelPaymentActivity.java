@@ -642,7 +642,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
             case COUPON:
                 Coupon coupon = paymentInformation.getCoupon();
-                params.put("coupon_code", coupon.getCode());
+                params.put("user_coupon_code", coupon.getCode());
                 break;
         }
 

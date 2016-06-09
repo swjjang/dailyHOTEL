@@ -732,16 +732,16 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void onBenefitAgreement(final boolean isAgreed, String updateDate)
+        public void onBenefitAgreement(final boolean isAgree, String updateDate)
         {
             lockUiComponent();
 
             final BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreed);
-            mInformationLayout.updatePushIcon(isAgreed);
+            DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgree);
+            mInformationLayout.updatePushIcon(isAgree);
 
-            if (isAgreed == true)
+            if (isAgree == true)
             {
                 // 혜택 알림 설정이 off --> on 일때
 

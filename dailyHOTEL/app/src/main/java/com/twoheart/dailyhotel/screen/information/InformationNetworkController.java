@@ -23,7 +23,7 @@ public class InformationNetworkController extends BaseNetworkController
 
         void onPushBenefitMessage(String message);
 
-        void onBenefitAgreement(boolean isAgreed, String updateDate);
+        void onBenefitAgreement(boolean isAgree, String updateDate);
     }
 
     public InformationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -42,9 +42,9 @@ public class InformationNetworkController extends BaseNetworkController
         DailyNetworkAPI.getInstance(mContext).requestBenefitMessage(mNetworkTag, mBenefitMessageJsonResponseListener);
     }
 
-    public void requestPushBenefit(boolean isAgreed)
+    public void requestPushBenefit(boolean isAgree)
     {
-        DailyNetworkAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAgreed, mUpdateBenefitJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAgree, mUpdateBenefitJsonResponseListener);
     }
 
     @Override
@@ -104,7 +104,6 @@ public class InformationNetworkController extends BaseNetworkController
                 {
                     JSONObject data = response.getJSONObject("data");
 
-                    String title = data.getString("title");
                     String message = data.getString("body");
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onPushBenefitMessage(message);
@@ -140,7 +139,7 @@ public class InformationNetworkController extends BaseNetworkController
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     String serverDate = dataJSONObject.getString("serverDate");
 
-                    boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgreed", false);
+                    boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgree", false);
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, Util.simpleDateFormatISO8601toFormat(serverDate, "yyyy년 MM월 dd일"));
                 } else
