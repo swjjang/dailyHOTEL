@@ -20,7 +20,7 @@ public interface Constants
 {
     // 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다.
     public static final boolean DEBUG = BuildConfig.DEBUG;
-    public static final boolean UNENCRYPTED_URL = true;
+    public static final boolean UNENCRYPTED_URL = false;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
 
     // 스토어 선택.
@@ -125,7 +125,7 @@ public interface Constants
     public static final String URL_WEB_BONUS_TERMS = UNENCRYPTED_URL ? "http://dailyhotel.kr/webview_cnote/bonus" : "MjYkMTkkOTAkNDckNiQ=$NjU1QzDlCRUYyOENCOUYW4MTdDMDZFFNEVFRjQwNTZCMkMyNYjg1OTg1OTlDNTdGOUM0MkQxNTg0MTE4QzdDQTMyQzk5WMDI0MjBENjYzQzIyMUQ0MDlFRDMxRDA5MDQwMUU3$";
     public static final String URL_WEB_COMMON_COUPON_TERMS = UNENCRYPTED_URL ? "http://dailyhotel.kr/webview_cnote/coupon" : "MTAxJDEyMiQ1NSQ5NiQxMTUk$OTNEMkZBMDQ0REUzNjE3MzQ0NDkzMjQxMEI5REZDMkI5QjE3MjQ2NkNYGNDlEOUY0QTQ0RDVFMEJBOTdCODJBOTBDNTVENTVEGM0Q2MNDMyQzdEQUQxTNjkzNjdGQDjE2NDdF$";
     public static final String URL_WEB_EACH_COUPON_TERMS = UNENCRYPTED_URL ? "http://dailyhotel.kr/webview_coupon_note/" : "NTgkNjAkNDIkNyQzMSQ=$NUM3MjZNBNUJBRDg3RkM0RjU3NTg2RUGM4NDBBNTFGMDRc0OENCOEYzNzExNkMIMxOEEwNEJEMjZBMjg4OUQzMUY3QkVBOEVEQUE3OEY4M0ZEODExMDlFNjYwMDdEOTdDQjND$";
-    public static final String URL_WEB_EACH_COUPON_TERMS_FOR_DEV = UNENCRYPTED_URL ? "http://14.63.184.15:5027//webview_coupon_note/" : "NTgkNjAkNDIkNyQzMSQ=$NUM3MjZNBNUJBRDg3RkM0RjU3NTg2RUGM4NDBBNTFGMDRc0OENCOEYzNzExNkMIMxOEEwNEJEMjZBMjg4OUQzMUY3QkVBOEVEQUE3OEY4M0ZEODExMDlFNjYwMDdEOTdDQjND$";
+    public static final String URL_WEB_EACH_COUPON_TERMS_FOR_DEV = UNENCRYPTED_URL ? "http://14.63.184.15:5027/webview_coupon_note/" : "NzkkOSQ1OCQyOCQzMSQ=$MThCQ0ZBNU0E4NjY0Q0M0MzdBNUQCwNHzZCMjAwMjE3RDhCMDUzQjI0NkQwRDTExNERCRTE5QUQyQ0ZCMTQQzQzE5QjFDQ0NFOUNFMzc1OTY1OEMwNzlCRjgxMkIxRUJBMkFD$";
 
     // Payment App GoogleStore URL
     public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";

@@ -266,15 +266,21 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
 
         private String getRegionAnalytics(Province previousProvince, Province selectedProvince, SaleTime checkInTime, SaleTime checkOutTime)
         {
-            String previousLabel = convertLabelFormatAnalytics(previousProvince);
-            String selectedLabel = convertLabelFormatAnalytics(selectedProvince);
+            try
+            {
+                String previousLabel = convertLabelFormatAnalytics(previousProvince);
+                String selectedLabel = convertLabelFormatAnalytics(selectedProvince);
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
 
-            String checkInDate = checkInTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-            String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+                String checkInDate = checkInTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+                String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
-            return previousLabel + "-" + selectedLabel + "-" + checkInDate + "-" + checkOutDate + "-" + simpleDateFormat.format(new Date());
+                return previousLabel + "-" + selectedLabel + "-" + checkInDate + "-" + checkOutDate + "-" + simpleDateFormat.format(new Date());
+            } catch (Exception e)
+            {
+                return null;
+            }
         }
 
         @Override
@@ -304,8 +310,11 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
                         @Override
                         public void onClick(View v)
                         {
-                            AnalyticsManager.getInstance(HotelRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                                , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CHANGED, analyticsLabel, null);
+                            if (analyticsLabel != null)
+                            {
+                                AnalyticsManager.getInstance(HotelRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                    , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CHANGED, analyticsLabel, null);
+                            }
 
                             Intent intent = new Intent();
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
@@ -319,8 +328,11 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
                         @Override
                         public void onClick(View v)
                         {
-                            AnalyticsManager.getInstance(HotelRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                                , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CONFIRMED, analyticsLabel, null);
+                            if (analyticsLabel != null)
+                            {
+                                AnalyticsManager.getInstance(HotelRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                    , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CONFIRMED, analyticsLabel, null);
+                            }
 
                             // 날짜 선택 화면으로 이동한다.
                             Intent intent = new Intent();

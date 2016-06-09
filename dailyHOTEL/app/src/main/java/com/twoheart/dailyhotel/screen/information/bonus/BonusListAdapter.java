@@ -50,10 +50,10 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
 
         if (bonus.bonus > 0)
         {
-            format = "+###,##0";
+            format = "+ ###,##0";
         } else
         {
-            format = "-###,##0";
+            format = "- ###,##0";
         }
 
         DecimalFormat comma = new DecimalFormat(format);
