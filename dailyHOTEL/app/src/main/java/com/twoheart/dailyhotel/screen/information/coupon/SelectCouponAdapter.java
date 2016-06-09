@@ -82,14 +82,14 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
     {
         Coupon coupon = getItem(position);
 
-        String strAmount = Util.getPriceFormat(mContext, coupon.getAmount(), false);
+        String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
 
-        holder.descriptionTextView.setText(coupon.getTitle());
+        holder.descriptionTextView.setText(coupon.title);
 
         try
         {
-            String expireText = Util.simpleDateFormatISO8601toFormat(coupon.getValidTo(), "yyyy.MM.dd");
+            String expireText = Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyy.MM.dd");
             expireText = String.format("(~%s)", expireText);
             holder.expireTextView.setText(expireText);
             holder.expireTextView.setVisibility(View.VISIBLE);
@@ -99,11 +99,11 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             holder.expireTextView.setVisibility(View.GONE);
         }
 
-        if (coupon.getAmountMinimum() > 0)
+        if (coupon.amountMinimum > 0)
         {
             String strAmountMinimum = mContext.getResources().getString( //
                 R.string.coupon_min_price_text, //
-                Util.getPriceFormat(mContext, coupon.getAmountMinimum(), false));
+                Util.getPriceFormat(mContext, coupon.amountMinimum, false));
 
             holder.minPriceTextView.setText(strAmountMinimum);
             holder.minPriceTextView.setVisibility(View.VISIBLE);
@@ -113,7 +113,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             holder.minPriceTextView.setVisibility(View.GONE);
         }
 
-        if (Util.parseBoolean(coupon.isDownloaded()) == true)
+        if (coupon.isDownloaded == true)
         {
             setSelectLayout(holder, position);
         } else
@@ -130,7 +130,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             public void onClick(View v)
             {
                 Coupon coupon = getItem(position);
-                if (Util.parseBoolean(coupon.isDownloaded()) == true)
+                if (coupon.isDownloaded == true)
                 {
                     mSelectPosition = position;
                 } else

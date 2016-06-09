@@ -388,11 +388,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
             } else
             {
-                int discountPrice = coupon.getAmount();
+                int discountPrice = coupon.amount;
 
                 if (discountPrice < originalPrice)
                 {
-                    payPrice = originalPrice - coupon.getAmount();
+                    payPrice = originalPrice - coupon.amount;
                 } else
                 {
                     payPrice = 0;
@@ -642,7 +642,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
             case COUPON:
                 Coupon coupon = paymentInformation.getCoupon();
-                params.put("user_coupon_code", coupon.getCode());
+                params.put("user_coupon_code", coupon.userCouponCode);
                 break;
         }
 
@@ -1577,9 +1577,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
 
-        if (coupon.getAmount() > originalPrice)
+        if (coupon.amount > originalPrice)
         {
-            String difference = Util.getPriceFormat(this, (coupon.getAmount() - originalPrice), false);
+            String difference = Util.getPriceFormat(this, (coupon.amount - originalPrice), false);
 
             showSimpleDialog(null, getString(R.string.message_over_coupon_price, difference), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
             {

@@ -151,13 +151,13 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         {
             Coupon coupon = getItem(position);
 
-            String strAmount = Util.getPriceFormat(mContext, coupon.getAmount(), false);
+            String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
             couponPriceTextView.setText(strAmount);
 
-            descriptionTextView.setText(coupon.getTitle());
-            expireTextView.setText(coupon.getExpiredString(coupon.getValidFrom(), coupon.getValidTo()));
+            descriptionTextView.setText(coupon.title);
+            expireTextView.setText(Coupon.getAvailableDatesString(coupon.validFrom, coupon.validTo));
 
-            int dueDate = coupon.getDueDate(coupon);
+            int dueDate = Coupon.getDueDateCount(coupon);
             if (dueDate > 0)
             {
                 dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
@@ -172,11 +172,11 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 dueDateTextView.setText(mContext.getResources().getString(R.string.coupon_today_text));
             }
 
-            if (coupon.getAmountMinimum() > 0)
+            if (coupon.amountMinimum > 0)
             {
                 String strAmountMinimum = mContext.getResources().getString( //
                     R.string.coupon_min_price_text, //
-                    Util.getPriceFormat(mContext, coupon.getAmountMinimum(), false));
+                    Util.getPriceFormat(mContext, coupon.amountMinimum, false));
 
                 minPriceTextView.setText(strAmountMinimum);
             } else
@@ -184,19 +184,19 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 minPriceTextView.setText("");
             }
 
-            if (Util.isTextEmpty(coupon.getAvailableItem()))
+            if (Util.isTextEmpty(coupon.availableItem))
             {
                 useablePlaceTextView.setText("");
             } else
             {
                 String availableText = mContext.getResources().getString( //
-                    R.string.coupon_available_item_text, coupon.getAvailableItem());
+                    R.string.coupon_available_item_text, coupon.availableItem);
 
                 useablePlaceTextView.setText(availableText);
             }
 
 
-            if (Util.parseBoolean(coupon.isDownloaded()) == true)
+            if (coupon.isDownloaded == true)
             {
                 //useable
                 downloadIconView.setVisibility(View.GONE);

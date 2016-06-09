@@ -63,15 +63,15 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     {
         Coupon coupon = getItem(position);
 
-        String strAmount = Util.getPriceFormat(mContext, coupon.getAmount(), false);
+        String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
 
-        holder.descriptionTextView.setText(coupon.getTitle());
+        holder.descriptionTextView.setText(coupon.title);
 
         holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
 
         int resId;
-        if (coupon.isRedeemed() == true)
+        if (coupon.isRedeemed == true)
         {
             resId = R.string.coupon_history_use_text;
         } else
@@ -82,7 +82,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         holder.stateTextView.setText(resId);
 
         // 사용기간 및 사용일자 또는 만료일자 구현 필요
-        String strExpire = coupon.getExpiredString(coupon.getValidFrom(), coupon.getValidTo());
+        String strExpire = Coupon.getAvailableDatesString(coupon.validFrom, coupon.validTo);
 
         StringBuilder builder = new StringBuilder();
 
@@ -96,12 +96,12 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
                 builder.append(" | ");
             }
 
-            if (coupon.isRedeemed() == true)
+            if (coupon.isRedeemed == true)
             {
-                builder.append("사용일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.getRedeemedAt(), "yyyy.MM.dd"));
+                builder.append("사용일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.redeemedAt, "yyyy.MM.dd"));
             } else
             {
-                builder.append("만료일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.getValidTo(), "yyyy.MM.dd"));
+                builder.append("만료일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyy.MM.dd"));
             }
 
         } catch (Exception e)
