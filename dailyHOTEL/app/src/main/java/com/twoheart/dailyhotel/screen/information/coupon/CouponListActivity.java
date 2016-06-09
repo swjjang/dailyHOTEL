@@ -165,7 +165,7 @@ public class CouponListActivity extends BaseActivity
         {
             // 리스트 아이템 쿠폰 유의사항 팝업
             // 쿠폰 사용시 유의사항 안내
-            Intent intent = CouponTermActivity.newInstance(CouponListActivity.this, coupon.userCouponCode);
+            Intent intent = CouponTermActivity.newInstance(CouponListActivity.this, coupon.couponCode);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
         }
