@@ -345,12 +345,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private void downloadCoupon(String couponCode, final String deepLink)
     {
-        if (Util.isTextEmpty(couponCode, deepLink) == true)
+        if (Util.isTextEmpty(couponCode, deepLink) == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        DailyNetworkAPI.getInstance(this).requestDownloadCoupon(mNetworkTag, couponCode, new DailyHotelJsonResponseListener()
+        DailyNetworkAPI.getInstance(this).requestDownloadEventCoupon(mNetworkTag, couponCode, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, JSONObject response)
@@ -368,12 +368,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                         JSONObject dataJSONObject = response.getJSONObject("data");
 
-                        String validTo = dataJSONObject.getString("validTo");
                         String validFrom = dataJSONObject.getString("validFrom");
+                        String validTo = dataJSONObject.getString("validTo");
 
                         String message = getString(R.string.message_eventweb_download_coupon//
-                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd")//
-                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd"));
+                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
+                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
 
                         showSimpleDialog(null, message, mConfirmText, getString(R.string.dialog_btn_text_close), new View.OnClickListener()
                         {
@@ -413,6 +413,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 } catch (Exception e)
                 {
                     onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
             }
 

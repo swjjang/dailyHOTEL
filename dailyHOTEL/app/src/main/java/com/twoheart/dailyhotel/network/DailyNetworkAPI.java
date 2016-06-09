@@ -1010,6 +1010,20 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
+    public void requestDownloadEventCoupon(Object tag, String couponCode, DailyHotelJsonResponseListener listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/download" : "MTIkNjkkNDUkODgkNDgk$NzgxM0RFRkMyLMTE1QjRCMkVFRTdDOEQyN0YyMkI3MzJFSNjQEwNDQ3QzQxQjBENzEwREEyGMUEwOEEzRTREMDUwNEg==$";
+
+        String params = String.format("?couponCode=%s", couponCode);
+
+        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.PUT, URL_DAILYHOTEL_SESSION_SERVER + URL + params, null, listener);
+        dailyHotelJsonRequest.setUsedAuthorization(true);
+        dailyHotelJsonRequest.setIsUsedAccept(true);
+
+        mQueue.add(dailyHotelJsonRequest);
+    }
+
+    @Override
     public void requestUpdateBenefitAgreement(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit" : "MjYkODQkMjUkNTEkNyQ=$NzRGREQHxNjZENkJENTY1ODNGNUUYFDOERBRDE0QTU1QjAyOTgxRTDRCNkMwRUZBMEM0QjI0QUVBNkU2MTBGNDNUFMg==$";

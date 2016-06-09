@@ -583,7 +583,14 @@ interface IDailyNetwork
      * @param couponCode
      * @param listener
      */
-    void requestDownloadCoupon(Object tag, String couponCode, DailyHotelJsonResponseListener listener);
+    void requestDownloadCoupon(Object tag, String userCouponCode, DailyHotelJsonResponseListener listener);
+
+    /**
+     * @param tag
+     * @param couponCode
+     * @param listener
+     */
+    void requestDownloadEventCoupon(Object tag, String couponCode, DailyHotelJsonResponseListener listener);
 
     /**
      * api/v1/notice/benefit - PUT
