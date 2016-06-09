@@ -465,7 +465,7 @@ public class MainNetworkController extends BaseNetworkController
 
                     String message01 = dataJSONObject.getString("description1");
                     String message02 = dataJSONObject.getString("description2");
-                    boolean isFirstTimeBuyer = dataJSONObject.getBoolean("firstTimeBuyer");
+                    boolean isFirstTimeBuyer = dataJSONObject.getBoolean("isFirstTimeBuyer");
 
                     String message = message01 + "\n\n" + message02;
 

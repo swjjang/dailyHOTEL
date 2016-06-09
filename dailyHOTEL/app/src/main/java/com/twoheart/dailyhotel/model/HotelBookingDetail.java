@@ -43,7 +43,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         //
         JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("hotelSpec"));
-        JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
+        JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap"); // 해당 코드 없음
 
         setSpecification(jsonArray);
 
@@ -89,7 +89,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
             coupon = jsonObject.getInt("couponAmount");
         }
 
-        paymentPrice = jsonObject.getInt("discountTotal");
+        paymentPrice = jsonObject.getInt("discountTotal"); // 해당 값없음
         paymentDate = jsonObject.getString("paidAt");
     }
 
