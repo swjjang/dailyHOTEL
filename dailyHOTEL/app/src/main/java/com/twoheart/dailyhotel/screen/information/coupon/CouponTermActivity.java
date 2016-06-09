@@ -108,7 +108,8 @@ public class CouponTermActivity extends WebViewActivity
             setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
         {
-            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+//            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS_FOR_DEV) + mCouponIdx);
         }
     }
 }
