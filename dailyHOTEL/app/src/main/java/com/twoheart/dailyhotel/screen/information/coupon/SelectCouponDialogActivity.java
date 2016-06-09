@@ -54,6 +54,7 @@ public class SelectCouponDialogActivity extends BaseActivity
         if (intent == null)
         {
             finish();
+            return;
         }
 
         mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);

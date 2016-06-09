@@ -35,8 +35,6 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     private DailyTextView mMessageTextView;
     private View mOneButtonLayout;
     private View mTwoButtonLayout;
-    private View mConfirmView;
-    private View mNegativeView;
     private View mPositiveView;
 
 
@@ -66,15 +64,15 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mMessageTextView = (DailyTextView) view.findViewById(R.id.messageTextView);
         mOneButtonLayout = view.findViewById(R.id.oneButtonLayout);
         mTwoButtonLayout = view.findViewById(R.id.twoButtonLayout);
-        mNegativeView = view.findViewById(R.id.negativeTextView);
+        View negativeView = view.findViewById(R.id.negativeTextView);
         mPositiveView = view.findViewById(R.id.positiveTextView);
-        mConfirmView = view.findViewById(R.id.confirmTextView);
+        View confirmView = view.findViewById(R.id.confirmTextView);
 
         mPositiveView.setEnabled(false);
 
-        mNegativeView.setOnClickListener(this);
+        negativeView.setOnClickListener(this);
         mPositiveView.setOnClickListener(this);
-        mConfirmView.setOnClickListener(this);
+        confirmView.setOnClickListener(this);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 

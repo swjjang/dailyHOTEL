@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class CouponHistoryLayout extends BaseLayout
 {
-
     private RecyclerView mRecyclerView;
     private View mEmptyView;
     private CouponHistoryListAdapter mListAdapter;

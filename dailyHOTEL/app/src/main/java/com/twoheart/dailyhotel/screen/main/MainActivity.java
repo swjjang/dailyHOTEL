@@ -202,10 +202,7 @@ public class MainActivity extends BaseActivity implements Constants
             }
         } else
         {
-            if (mIsInitialization == false)
-            {
-                mNetworkController.requestCommonDatetime();
-            }
+            mNetworkController.requestCommonDatetime();
         }
     }
 

@@ -1020,14 +1020,14 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestUpdateBenefitAgreement(Object tag, boolean isAgreed, DailyHotelJsonResponseListener listener)
+    public void requestUpdateBenefitAgreement(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit" : "";
 
-        String params = String.format("?isAgreed=%b", isAgreed);
+        String params = String.format("?isAgree=%b", isAgree);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.PUT, URL_DAILYHOTEL_SESSION_SERVER + URL + params, null, listener);
-        dailyHotelJsonRequest.setUsedAuthorization(true);
+        dailyHotelJsonRequest.setUsedAuthorization(isAuthorization);
         dailyHotelJsonRequest.setIsUsedAccept(true);
 
         mQueue.add(dailyHotelJsonRequest);

@@ -419,7 +419,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             @Override
             public void onErrorResponse(VolleyError volleyError)
             {
-                onErrorResponse(volleyError);
+                EventWebActivity.this.onErrorResponse(volleyError);
             }
         });
     }

@@ -88,6 +88,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
 
+        // 추후 쿠폰 지원을 위해서..
         if (bonus == 0 && counpon == 0)
         {
             saleLayout.setVisibility(View.GONE);

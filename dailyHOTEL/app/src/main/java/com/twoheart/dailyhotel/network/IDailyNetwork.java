@@ -592,5 +592,5 @@ interface IDailyNetwork
      * @param isAgreed required
      * @param listener
      */
-    void requestUpdateBenefitAgreement(Object tag, boolean isAgreed, DailyHotelJsonResponseListener listener);
+    void requestUpdateBenefitAgreement(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener);
 }

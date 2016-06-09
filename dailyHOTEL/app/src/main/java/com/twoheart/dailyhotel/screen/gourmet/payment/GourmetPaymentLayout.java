@@ -78,7 +78,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         void showInputMobileNumberDialog(String mobileNumber);
 
-        void showCallPopup();
+        void showCallDialog();
     }
 
     public GourmetPaymentLayout(Context context, OnEventListener mOnEventListener)
@@ -123,7 +123,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).showCallPopup();
+                ((OnEventListener) mOnEventListener).showCallDialog();
             }
         });
     }

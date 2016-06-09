@@ -660,7 +660,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private FacebookCallback facebookCallback = new FacebookCallback<LoginResult>()
+    private FacebookCallback facebookCallback = new FacebookCallback<com.facebook.login.LoginResult>()
     {
         @Override
         public void onSuccess(LoginResult result)

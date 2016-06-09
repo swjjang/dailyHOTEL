@@ -59,7 +59,7 @@ public class AddProfileSocialActivity extends BaseActivity
 
         mUserIdx = mCustomer.getUserIdx();
 
-        if (Util.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
+        if (Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
         {
             mAddProfileSocialLayout.showPhoneLayout();
 

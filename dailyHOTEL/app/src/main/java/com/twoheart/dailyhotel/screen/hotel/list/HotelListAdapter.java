@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -33,7 +32,6 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
     private static final String BOUTIQUE = "boutique";
 
     private Constants.SortType mSortType;
-    private Category mCategory;
     private View.OnClickListener mOnClickListener;
     private View.OnClickListener mOnEventBannerClickListener;
     private int mLastEventBannerPosition;
@@ -52,13 +50,11 @@ public class HotelListAdapter extends PlaceListAdapter implements PinnedSectionR
         setSortType(Constants.SortType.DEFAULT);
     }
 
-    public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType, Category category)
+    public void addAll(Collection<? extends PlaceViewItem> collection, Constants.SortType sortType)
     {
         addAll(collection);
 
         setSortType(sortType);
-
-        mCategory = category;
     }
 
     public void setSortType(Constants.SortType sortType)
