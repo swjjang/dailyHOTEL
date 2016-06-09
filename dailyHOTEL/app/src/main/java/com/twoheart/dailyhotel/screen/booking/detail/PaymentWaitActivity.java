@@ -243,7 +243,7 @@ public class PaymentWaitActivity extends BaseActivity
         mDailyTextView.setText(reservationJSONObject.getString("userName"));
 
         // 입금기한
-        String validToDate = Util.simpleDateFormatISO8601toFormat(reservationJSONObject.getString("validTo"), "yyyy년 MM월 dd일 HH시mm분 까지");
+        String validToDate = Util.simpleDateFormatISO8601toFormat(reservationJSONObject.getString("paidAt"), "yyyy년 MM월 dd일 HH시 mm분 까지");
         mDeadlineTextView.setText(validToDate);
 
         // 결재 금액 정보
