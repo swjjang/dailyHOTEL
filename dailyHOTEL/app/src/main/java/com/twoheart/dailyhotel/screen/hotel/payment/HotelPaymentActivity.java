@@ -590,6 +590,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             @Override
             public void onClick(View v)
             {
+                mPaymentInformation.setCoupon(null);
                 setCouponSelected(false);
                 setBonusSelected(true);
 
@@ -1338,6 +1339,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 } else
                 {
                     // 쿠폰 삭제
+                    mPaymentInformation.setCoupon(null);
                     setCouponSelected(false);
                 }
                 break;
@@ -1586,10 +1588,20 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 @Override
                 public void onClick(View v)
                 {
-                    setCouponSelected(true);
                     hotelPaymentInformation.setCoupon(coupon);
+                    setCouponSelected(true);
                 }
-            }, null);
+            }, null, new DialogInterface.OnCancelListener()
+            {
+
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    hotelPaymentInformation.setCoupon(null);
+                    setCouponSelected(false);
+                }
+            }, null, true);
+
         } else
         {
             // 호텔 결제 정보에 쿠폰 가격 넣고 텍스트 업데이트 필요
@@ -1602,6 +1614,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     protected void setCancelCoupon()
     {
         // 쿠폰 삭제 - 쿠폰 선택 팝업에서 Cancel 시 처리
+        mPaymentInformation.setCoupon(null);
         setCouponSelected(false);
     }
 
