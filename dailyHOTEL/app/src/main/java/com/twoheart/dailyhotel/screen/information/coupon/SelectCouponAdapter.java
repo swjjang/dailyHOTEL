@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.List;
 
@@ -83,8 +82,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
     {
         Coupon coupon = getItem(position);
 
-        DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-        String strAmount = decimalFormat.format(coupon.getAmount()) + mContext.getResources().getString(R.string.currency);
+        String strAmount = Util.getPriceFormat(mContext, coupon.getAmount(), false);
         holder.priceTextView.setText(strAmount);
 
         holder.descriptionTextView.setText(coupon.getTitle());
@@ -105,7 +103,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         {
             String strAmountMinimum = mContext.getResources().getString( //
                 R.string.coupon_min_price_text, //
-                decimalFormat.format(coupon.getAmountMinimum()));
+                Util.getPriceFormat(mContext, coupon.getAmountMinimum(), false));
 
             holder.minPriceTextView.setText(strAmountMinimum);
             holder.minPriceTextView.setVisibility(View.VISIBLE);

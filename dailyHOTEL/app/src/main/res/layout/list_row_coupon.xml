@@ -12,6 +12,7 @@
         android:layout_alignParentBottom="true"/>
 
     <RelativeLayout
+        android:id="@+id/listItemLayout"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_above="@id/bottomDivider"
@@ -51,6 +52,7 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/black"
+            dailyFont:style="Medium"
             android:textSize="13dp"/>
 
         <LinearLayout
@@ -68,7 +70,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:textColor="@color/coupon_expire_text"
-                android:textSize="13dp"/>
+                android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/dueDateTextView"
@@ -78,12 +80,12 @@
                 android:layout_toLeftOf="@id/vericalLine"
                 android:gravity="center_vertical"
                 android:textColor="@color/coupon_red_wine_text"
-                android:textSize="13dp"
+                android:textSize="12dp"
                 dailyFont:style="Medium"/>
         </LinearLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/useablePlaceTextView"
+            android:id="@+id/minPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
             android:layout_alignLeft="@id/couponPriceTextView"
@@ -94,11 +96,11 @@
             android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/minPriceTextView"
+            android:id="@+id/useablePlaceTextView"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
-            android:layout_above="@id/useablePlaceTextView"
             android:layout_alignLeft="@id/couponPriceTextView"
+            android:layout_above="@id/minPriceTextView"
             android:gravity="center_vertical"
             android:textColor="@color/coupon_description_text"
             android:textSize="11dp"/>
@@ -118,7 +120,7 @@
                 android:drawableTop="@drawable/more_ic_coupon_01"
                 android:gravity="center"
                 android:text="@string/coupon_useable_text"
-                android:textColor="@color/coupon_useable_icon_text"
+                android:textColor="@color/default_line_c323232"
                 android:textSize="11dp"
                 android:visibility="gone"
                 dailyFont:style="Medium"/>
@@ -132,7 +134,7 @@
                 android:drawableTop="@drawable/more_ic_coupon_02"
                 android:gravity="center"
                 android:text="@string/coupon_download_text"
-                android:textColor="@color/coupon_red_wine_text"
+                android:textColor="@color/white"
                 android:textSize="11dp"
                 android:visibility="gone"
                 dailyFont:style="Medium"/>

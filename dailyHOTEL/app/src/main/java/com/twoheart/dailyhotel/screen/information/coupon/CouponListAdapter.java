@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -120,6 +119,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class ItemViewHolder extends RecyclerView.ViewHolder
     {
         View rootView;
+        View listItemLayout;
         TextView couponPriceTextView;
         TextView descriptionTextView;
         TextView expireTextView;
@@ -135,6 +135,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
 
             rootView = itemView;
+            listItemLayout = itemView.findViewById(R.id.listItemLayout);
             couponPriceTextView = (TextView) itemView.findViewById(R.id.couponPriceTextView);
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
@@ -148,18 +149,15 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public void onBindViewHolder(final int position)
         {
-
             Coupon coupon = getItem(position);
 
-            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            String strAmount = decimalFormat.format(coupon.getAmount()) + mContext.getResources().getString(R.string.currency);
+            String strAmount = Util.getPriceFormat(mContext, coupon.getAmount(), false);
             couponPriceTextView.setText(strAmount);
 
             descriptionTextView.setText(coupon.getTitle());
             expireTextView.setText(coupon.getExpiredString(coupon.getValidFrom(), coupon.getValidTo()));
 
             int dueDate = coupon.getDueDate(coupon);
-
             if (dueDate > 0)
             {
                 dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
@@ -178,7 +176,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             {
                 String strAmountMinimum = mContext.getResources().getString( //
                     R.string.coupon_min_price_text, //
-                    decimalFormat.format(coupon.getAmountMinimum()));
+                    Util.getPriceFormat(mContext, coupon.getAmountMinimum(), false));
 
                 minPriceTextView.setText(strAmountMinimum);
             } else
@@ -188,14 +186,13 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (Util.isTextEmpty(coupon.getAvailableItem()))
             {
-
                 useablePlaceTextView.setText("");
             } else
             {
                 String availableText = mContext.getResources().getString( //
                     R.string.coupon_available_item_text, coupon.getAvailableItem());
 
-                useablePlaceTextView.setText(coupon.getAvailableItem());
+                useablePlaceTextView.setText(availableText);
             }
 
 
@@ -204,11 +201,15 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 //useable
                 downloadIconView.setVisibility(View.GONE);
                 useIconView.setVisibility(View.VISIBLE);
+                listItemLayout.setBackgroundResource(R.drawable.more_coupon_bg);
+                noticeTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
             } else
             {
                 //download
                 downloadIconView.setVisibility(View.VISIBLE);
                 useIconView.setVisibility(View.GONE);
+                listItemLayout.setBackgroundResource(R.drawable.more_coupon_download_bg);
+                noticeTextView.setTextColor(mContext.getResources().getColor(R.color.white_a80));
             }
 
             CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
