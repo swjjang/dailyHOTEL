@@ -271,9 +271,8 @@
     <!-- Coupon -->
     <color name="coupon_expire_text">#929292</color>
     <color name="coupon_red_wine_text">#900034</color>
-    <color name="coupon_vertical_line">#e0e0e0</color>
+    <color name="coupon_vertical_line">#d1d1d1</color>
     <color name="coupon_description_text">#b3b3b3</color>
-    <color name="coupon_useable_icon_text">#bda279</color>
     <color name="coupon_history_button_text">#828282</color>
     <color name="coupon_use_notice_text">#8f8f8f</color>
     <color name="coupon_history_state_button_background">#e6e6e6</color>

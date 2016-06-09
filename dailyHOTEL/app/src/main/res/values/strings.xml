@@ -830,7 +830,7 @@
     <string name="coupon_available_item_text">사용가능처: %1$s</string>
     <string name="coupon_download_text">다운로드</string>
     <string name="coupon_useable_text">사용가능</string>
-    <string name="coupon_min_price_text">%1$s원 이상 사용가능</string>
+    <string name="coupon_min_price_text">%1$s 이상 사용가능</string>
     <string name="coupon_header_text">사용가능한 쿠폰이 %1$d장 있습니다</string>
     <string name="coupon_use_notice_text">쿠폰 사용시 유의사항 안내</string>
     <string name="coupon_history_empty_message">쿠폰 사용내역이 없습니다</string>
