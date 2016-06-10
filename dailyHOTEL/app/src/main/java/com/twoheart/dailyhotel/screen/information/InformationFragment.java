@@ -70,6 +70,11 @@ public class InformationFragment extends BaseFragment implements Constants
 
         super.onStart();
 
+        boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
+        boolean hasNewCoupon = DailyPreference.getInstance(getContext()).hasNewCoupon();
+
+        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
+
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
             if (DailyDeepLink.getInstance().isEventView() == true)
@@ -88,18 +93,22 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startEvent();
                 return;
-            } else if(DailyDeepLink.getInstance().isInformationView() == true)
+            } else if (DailyDeepLink.getInstance().isInformationView() == true)
             {
 
+            } else if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
+            {
+                if (Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == true)
+                {
+                    mOnEventListener.startInviteFriend();
+                } else
+                {
+                    return;
+                }
             }
 
             DailyDeepLink.getInstance().clear();
         }
-
-        boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
-        boolean hasNewCoupon = DailyPreference.getInstance(getContext()).hasNewCoupon();
-
-        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
     }
 
     @Override
@@ -525,14 +534,37 @@ public class InformationFragment extends BaseFragment implements Constants
             try
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://blog.naver.com/dailyhotels"));
+                intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
                 startActivity(intent);
                 baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
             } catch (ActivityNotFoundException e)
             {
 
             }
+        }
 
+        @Override
+        public void startYouTube()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            try
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://www.youtube.com/channel/UCNJASbBThd0TFo3qLgl1wuw"));
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            } catch (ActivityNotFoundException e)
+            {
+
+            }
         }
 
         @Override
@@ -712,7 +744,18 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
-                mInformationLayout.setRecommendFriendsVisible(isExceedBonus);
+                mInformationLayout.setRecommendFriendsVisible(isExceedBonus == false);
+
+                // 딥링크로 진입한 경우
+                if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
+                {
+                    if (isExceedBonus == false)
+                    {
+                        mOnEventListener.startInviteFriend();
+                    }
+
+                    DailyDeepLink.getInstance().clear();
+                }
             }
 
             mInformationLayout.updateLoginLayout(isLogin, false);

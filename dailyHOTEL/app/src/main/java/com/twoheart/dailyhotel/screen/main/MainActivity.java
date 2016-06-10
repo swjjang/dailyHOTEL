@@ -729,7 +729,8 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isBonusView() == true//
                     || DailyDeepLink.getInstance().isEventDetailView() == true//
                     || DailyDeepLink.getInstance().isCouponView() == true //
-                    || DailyDeepLink.getInstance().isInformationView() == true)
+                    || DailyDeepLink.getInstance().isInformationView() == true //
+                    || DailyDeepLink.getInstance().isRecommendFriendView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)

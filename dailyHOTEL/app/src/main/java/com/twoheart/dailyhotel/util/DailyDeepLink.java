@@ -58,6 +58,7 @@ public class DailyDeepLink
     private static final String COUPON_V5_LIST = "cl";
     private static final String EVENT_V5_DETAIL = "ed";
     private static final String INFORMATION_V5 = "m"; // 더보기 화면
+    private static final String RECOMMEND_FRIEND_V5 = "rf"; // 친구 추천하기 화면
 
     private static final String V3 = "3";
     private static final String V4 = "4";
@@ -441,6 +442,20 @@ public class DailyDeepLink
         {
             case 5:
                 return INFORMATION_V5.equalsIgnoreCase(view);
+
+            default:
+                return false;
+        }
+    }
+
+    public boolean isRecommendFriendView()
+    {
+        String view = getView();
+
+        switch(mVersionCode)
+        {
+            case 5:
+                return RECOMMEND_FRIEND_V5.equalsIgnoreCase(view);
 
             default:
                 return false;
