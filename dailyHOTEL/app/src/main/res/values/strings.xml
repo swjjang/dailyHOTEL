@@ -219,6 +219,7 @@
     <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message13">이곳에 서명해주세요.</string>
     <string name="dialog_msg_hotel_payment_message14">환불 불가 표시 상품의 경우 규정과 상관없이 취소, 변경, 환불이 &lt;b&gt;절대 불가&lt;/b&gt;합니다.</string>
+    <string name="dialog_msg_hotel_payment_message15">펜션 특성 상, 상기 이미지와 다른 객실로 배정될 수 있습니다.</string>
 
     <string name="dialog_msg_gourmet_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품이에요!</string>
     <string name="dialog_msg_gourmet_payment_message02">특정 좌석과 뷰를 보장해드리기 어려운 점 양해 부탁드려요.</string>
