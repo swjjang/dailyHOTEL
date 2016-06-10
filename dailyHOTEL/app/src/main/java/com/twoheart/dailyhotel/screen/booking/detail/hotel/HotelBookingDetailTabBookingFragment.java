@@ -25,10 +25,6 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.TimeZone;
-
 public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
@@ -133,9 +129,6 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         TextView tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
         TextView tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         try
         {
