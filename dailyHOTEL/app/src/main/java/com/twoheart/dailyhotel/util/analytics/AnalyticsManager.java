@@ -527,6 +527,16 @@ public class AnalyticsManager
         //
         public static final String HOTEL_BOOKING_DATE_CONFIRMED = "HotelBookingDateConfirmed";
         public static final String HOTEL_BOOKING_DATE_CHANGED = "HotelBookingDateChanged";
+        //
+        public static final String NOTIFICATION_SETTING_CLICKED = "NotificationSettingClicked";
+        public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
+        public static final String REFERRAL_CODE_COPIED = "ReferralCodeCopied";
+        public static final String KAKAO_FRIEND_INVITED = "KakaoFriendInvited";
+        public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
+        public static final String Hotel_Coupon_Selected = "HotelCouponSelected";
+        public static final String HOTEL_USING_COUPON_CANCEL_CLICKED = "HotelUsingCouponCancelClicked";
+
+
     }
 
     public static class Category
@@ -538,6 +548,8 @@ public class AnalyticsManager
         public static final String HOTEL_SEARCH = "HotelSearches";
         public static final String GOURMET_SEARCH = "GourmetSearches";
         public static final String BOOKING_STATUS = "BookingStatus";
+        public static final String COUPON_BOX = "CouponBox";
+        public static final String INVITE_FRIEND = "InviteFriend";
     }
 
     public static class Label
@@ -563,7 +575,6 @@ public class AnalyticsManager
         public static final String AGREE_AND_REGISTER = "AgreeAndRegister";
         public static final String ADDING_CARD_ICON_CLICKED = "AddingCardIconClicked";
         public static final String ADDING_CARD_BUTTON_CLICKED = "AddingCardButtonClicked";
-        public static final String CREDIT_HISTORY_VIEW = "CreditHistoryView";
         //
         public static final String HOTEL_SATISFACTION = "HotelSatisfaction";
         public static final String HOTEL_DISSATISFACTION = "HotelDissatisfaction";
@@ -629,6 +640,14 @@ public class AnalyticsManager
         public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
         public static final String CALL_KEYWORD_HOTEL = "Call-KeywordHotel";
         public static final String CALL_KEYWORD_GOURMET = "Call-KeywordGourmet";
+        //
+        public static final String CREDIT_MANAGEMENT = "CreditManagement";
+        public static final String INVITE_FRIENDS = "InviteFriends";
+        public static final String ON = "On";
+        public static final String OFF = "Off";
+        public static final String REFERRAL_CODE_COPIED = "ReferralCodeCopied";
+        public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
+        public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
     }
 
     public static class UserType

@@ -107,6 +107,9 @@ public class SelectCouponDialogActivity extends BaseActivity
 
             SelectCouponDialogActivity.this.setResult(RESULT_OK, intent);
             SelectCouponDialogActivity.this.finish();
+
+            AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                AnalyticsManager.Action.Hotel_Coupon_Selected, coupon.title, null);
         }
 
         @Override

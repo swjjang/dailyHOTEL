@@ -566,6 +566,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         Intent intent = SelectCouponDialogActivity.newInstance(this, placeIndex, roomIndex, checkInDate, checkOutDate);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
+
+        AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+            Action.HOTEL_USING_COUPON_CLICKED, Label.HOTEL_USING_COUPON_CLICKED, null);
     }
 
     private void startCancelBonusPopup(final HotelPaymentInformation hotelPaymentInformation)
@@ -592,9 +595,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 mPaymentInformation.setCoupon(null);
                 setCouponSelected(false);
                 setBonusSelected(true);
-
-                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                    , Action.USING_CREDIT_CLICKED, Integer.toString(hotelPaymentInformation.bonus), null);
             }
         }, null);
     }

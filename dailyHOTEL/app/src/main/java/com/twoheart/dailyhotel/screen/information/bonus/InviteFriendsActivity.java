@@ -216,7 +216,8 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             String msg = getString(R.string.kakaolink_msg_invited_friend, name, recommendCode, recommendCode);
             KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
 
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.INVITE_FRIEND_CLICKED, mRecommendCode, null);
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND, //
+                Action.KAKAO_FRIEND_INVITED, mRecommendCode, null);
         } catch (Exception e)
         {
             try
@@ -269,6 +270,9 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
                 Util.clipText(this, mRecommendCode);
 
                 DailyToast.showToast(this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
+
+                AnalyticsManager.getInstance(InviteFriendsActivity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND, //
+                    Action.REFERRAL_CODE_COPIED, AnalyticsManager.Label.REFERRAL_CODE_COPIED, null);
 
                 releaseUiComponent();
                 break;

@@ -94,6 +94,9 @@ public class BonusActivity extends BaseActivity
             Intent intent = InviteFriendsActivity.newInstance(BonusActivity.this, mRecommendCode, mName);
             startActivityForResult(intent, REQUEST_ACTIVITY_INVITEFRIENDS);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(BonusActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                 AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT, null);
         }
 
         @Override

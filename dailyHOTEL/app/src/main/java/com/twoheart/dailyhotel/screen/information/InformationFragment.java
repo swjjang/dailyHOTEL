@@ -230,7 +230,8 @@ public class InformationFragment extends BaseFragment implements Constants
             baseActivity.startActivity(new Intent(baseActivity, LoginActivity.class));
             baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
         }
 
         @Override
@@ -270,6 +271,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             startActivity(new Intent(baseActivity, CouponListActivity.class));
             baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
+                Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
 
         }
 
@@ -335,6 +339,9 @@ public class InformationFragment extends BaseFragment implements Constants
             }
 
             baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.INVITE_FRIENDS, null);
         }
 
         @Override
@@ -800,6 +807,9 @@ public class InformationFragment extends BaseFragment implements Constants
                         releaseUiComponent();
                     }
                 }, true);
+
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                    Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
             } else
             {
                 // 혜택 알림 설정이 on --> off 일때
@@ -815,6 +825,9 @@ public class InformationFragment extends BaseFragment implements Constants
                         releaseUiComponent();
                     }
                 }, true);
+
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                    Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
             }
         }
 
