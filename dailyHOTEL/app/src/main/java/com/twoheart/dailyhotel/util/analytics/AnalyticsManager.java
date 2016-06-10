@@ -547,10 +547,8 @@ public class AnalyticsManager
         public static final String REFERRAL_CODE_COPIED = "ReferralCodeCopied";
         public static final String KAKAO_FRIEND_INVITED = "KakaoFriendInvited";
         public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
-        public static final String Hotel_Coupon_Selected = "HotelCouponSelected";
+        public static final String HOTEL_COUPON_SELECTED = "HotelCouponSelected";
         public static final String HOTEL_USING_COUPON_CANCEL_CLICKED = "HotelUsingCouponCancelClicked";
-
-
         //
         public static final String COUPON_DOWNLOAD_CLICKED = "CouponDownloadClicked";
     }
