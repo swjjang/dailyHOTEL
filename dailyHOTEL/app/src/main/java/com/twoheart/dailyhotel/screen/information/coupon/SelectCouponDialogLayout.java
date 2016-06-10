@@ -74,8 +74,6 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mPositiveView.setOnClickListener(this);
         confirmView.setOnClickListener(this);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-
         updateDialogLayout(false);
         updateLayout(null);
     }
