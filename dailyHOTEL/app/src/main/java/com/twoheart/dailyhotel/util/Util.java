@@ -1178,8 +1178,13 @@ public class Util implements Constants
         return simpleDateFormat(date, format);
     }
 
-    public static String simpleDateFormat(Date date, String format) throws ParseException, NullPointerException
+    public static String simpleDateFormat(Date date, String format)
     {
+        if(date == null || Util.isTextEmpty(format) == true)
+        {
+            return  null;
+        }
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 

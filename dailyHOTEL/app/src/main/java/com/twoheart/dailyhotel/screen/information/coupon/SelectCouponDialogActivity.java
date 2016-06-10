@@ -9,8 +9,14 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by android_sam on 2016. 5. 26..
@@ -129,12 +135,15 @@ public class SelectCouponDialogActivity extends BaseActivity
         }
 
         @Override
-        public void onDownloadCoupon(boolean isSuccess)
+        public void onDownloadCoupon(boolean isSuccess, String userCouponCode)
         {
 
             if (isSuccess == true)
             {
                 lockUI();
+
+                Coupon coupon = mLayout.getCoupon(userCouponCode);
+                recordAnalytics(coupon);
 
                 mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
 
@@ -149,7 +158,6 @@ public class SelectCouponDialogActivity extends BaseActivity
         {
             SelectCouponDialogActivity.this.onErrorResponse(volleyError);
             finish();
-
         }
 
         @Override
@@ -171,6 +179,25 @@ public class SelectCouponDialogActivity extends BaseActivity
         {
             SelectCouponDialogActivity.this.onErrorToastMessage(message);
             finish();
+        }
+
+        private void recordAnalytics(Coupon coupon)
+        {
+            try
+            {
+                Map<String, String> paramsMap = new HashMap<>();
+                paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                paramsMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                paramsMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+                paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
+                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
+
+                AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
+                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Booking" + coupon.title, paramsMap);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     };
 }

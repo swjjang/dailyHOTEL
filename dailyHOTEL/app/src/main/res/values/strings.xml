@@ -214,7 +214,7 @@
     <string name="dialog_msg_hotel_payment_message07">취소 불가 등 위 내용에 동의하시면 서명 후 결제완료 버튼을 눌러주세요.</string>
     <string name="dialog_msg_hotel_payment_message08">간편결제 시 일시불만 가능하므로 할부를 원하실 경우 일반결제를 선택해주세요.</string>
     <string name="dialog_msg_hotel_payment_message09">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 30분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 15분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
+    <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 30분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message13">이곳에 서명해주세요.</string>
@@ -327,7 +327,7 @@
     <string name="frag_notice">공지사항</string>
     <string name="frag_faqs">자주 묻는 질문</string>
     <string name="frag_info">소개</string>
-    <string name="frag_about">데일리호텔 이란?</string>
+    <string name="frag_about">데일리호텔이란?</string>
     <string name="frag_app">앱</string>
     <string name="frag_version_info">앱 버전정보</string>
     <string name="frag_push_alert">혜택 알림 받기</string>
@@ -645,7 +645,7 @@
     <!-- Wait Payment Activity -->
     <string name="act_wait_payment_payinfo">결제 정보 (가상계좌)</string>
     <string name="act_wait_payment_accounts_no">계좌번호</string>
-    <string name="act_wait_payment_name">입금주명</string>
+    <string name="act_wait_payment_name">예금주명</string>
     <string name="label_wait_payment_price">예약 금액</string>
     <string name="label_wait_payment_used_bonus">적립금 사용</string>
     <string name="label_wait_payment_used_coupon">할인쿠폰 사용</string>

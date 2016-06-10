@@ -413,7 +413,10 @@ public class MainNetworkController extends BaseNetworkController
             try
             {
                 final String userIndex = response.getString("idx");
+                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
+
                 AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
+                AnalyticsManager.getInstance(mContext).setExceedBonus(isExceedBonus);
 
                 Util.requestGoogleCloudMessaging(mContext, new Util.OnGoogleCloudMessagingListener()
                 {

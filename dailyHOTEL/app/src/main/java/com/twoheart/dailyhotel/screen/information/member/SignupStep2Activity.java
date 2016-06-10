@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SignupStep2Activity extends BaseActivity
@@ -116,6 +117,7 @@ public class SignupStep2Activity extends BaseActivity
         DailyPreference.getInstance(this).setUserBenefitAlarm(false);
         DailyPreference.getInstance(this).setShowBenefitAlarm(false);
         DailyPreference.getInstance(this).setLastestCouponTime("");
+        AppboyManager.setPushEnabled(this, false);
 
         DailyToast.showToast(SignupStep2Activity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
 
@@ -215,7 +217,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onLogin(String authorization, String userIndex, String email, String name, String recommender, String userType, String phoneNumber)
+        public void onLogin(String authorization, final String userIndex, final String email, final String name, String recommender, String userType, final String phoneNumber)
         {
             unLockUI();
 
@@ -223,13 +225,14 @@ public class SignupStep2Activity extends BaseActivity
             DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, recommender);
 
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserIndex(userIndex);
-            AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser(userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender);
 
             showSimpleDialog(null, getString(R.string.toast_msg_success_to_signup), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
+                    AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser(userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender);
+
                     signupAndFinish();
                 }
             }, new DialogInterface.OnCancelListener()
@@ -237,6 +240,8 @@ public class SignupStep2Activity extends BaseActivity
                 @Override
                 public void onCancel(DialogInterface dialog)
                 {
+                    AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser(userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender);
+
                     signupAndFinish();
                 }
             });

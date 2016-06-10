@@ -45,6 +45,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -826,6 +827,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         String userIndex = storeLoginInformation(response);
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
+                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
 
                         requestGoogleCloudMessagingId(userIndex);
                         return;
@@ -877,6 +879,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     String userIndex = storeLoginInformation(response);
 
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
+                    DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
 
                     // 소셜 신규 가입인 경우
                     if (mIsSocialSignUp == true)
@@ -905,6 +908,29 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 unLockUI();
                 ExLog.d(e.toString());
             }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                boolean isAgreedBenefit = response.getBoolean("is_agreed_benefit");
+
+                DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
+                AppboyManager.setPushEnabled(LoginActivity.this, isAgreedBenefit);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
         }
     };
 }

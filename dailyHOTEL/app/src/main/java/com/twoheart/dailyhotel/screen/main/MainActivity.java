@@ -852,16 +852,14 @@ public class MainActivity extends BaseActivity implements Constants
         public void onNoticeAgreementResult(final String agreeMessage, final String cancelMessage)
         {
             DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+            DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(mIsBenefitAlarm);
+            AppboyManager.setPushEnabled(MainActivity.this, mIsBenefitAlarm);
 
             if (mIsBenefitAlarm == true)
             {
-                DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(true);
-
                 showSimpleDialog(getString(R.string.label_setting_alarm), agreeMessage, getString(R.string.dialog_btn_text_confirm), null);
             } else
             {
-                DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(false);
-
                 showSimpleDialog(getString(R.string.label_setting_alarm), cancelMessage, getString(R.string.dialog_btn_text_confirm), null);
             }
         }

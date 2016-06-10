@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class InformationFragment extends BaseFragment implements Constants
@@ -743,6 +744,8 @@ public class InformationFragment extends BaseFragment implements Constants
             if (isLogin == true)
             {
                 DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
+                AppboyManager.setPushEnabled(getContext(), isAgreedBenefit);
+
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
                 mInformationLayout.setRecommendFriendsVisible(isExceedBonus == false);
 
@@ -760,6 +763,8 @@ public class InformationFragment extends BaseFragment implements Constants
 
             mInformationLayout.updateLoginLayout(isLogin, false);
             mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);
+
+            AnalyticsManager.getInstance(getContext()).setExceedBonus(isExceedBonus);
 
             unLockUI();
         }
@@ -783,11 +788,11 @@ public class InformationFragment extends BaseFragment implements Constants
 
             DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgree);
             mInformationLayout.updatePushIcon(isAgree);
+            AppboyManager.setPushEnabled(baseActivity, isAgree);
 
             if (isAgree == true)
             {
                 // 혜택 알림 설정이 off --> on 일때
-
                 String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
                 String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
                 String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);

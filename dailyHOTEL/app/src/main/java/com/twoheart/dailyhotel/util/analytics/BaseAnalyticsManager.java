@@ -20,6 +20,8 @@ public abstract class BaseAnalyticsManager
 
     abstract void setUserIndex(String index);
 
+    abstract void setExceedBonus(boolean isExceedBonus);
+
     abstract void onStart(Activity activity);
 
     abstract void onStop(Activity activity);
