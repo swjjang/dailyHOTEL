@@ -86,6 +86,24 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mList = list;
     }
 
+    public Coupon getCoupon(String userCouponCode)
+    {
+        if (mList == null)
+        {
+            return null;
+        }
+
+        for (Coupon coupon : mList)
+        {
+            if (coupon.userCouponCode.equalsIgnoreCase(userCouponCode) == true)
+            {
+                return coupon;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {

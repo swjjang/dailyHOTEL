@@ -176,6 +176,11 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         }
     }
 
+    public Coupon getCoupon(String userCouponCode)
+    {
+        return mListAdapter.getCoupon(userCouponCode);
+    }
+
     @Override
     public void onClick(View v)
     {

@@ -168,8 +168,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         try
         {
-            unLockUI();
-
             super.onPause();
 
             AnalyticsManager.getInstance(this).onPause(this);

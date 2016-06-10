@@ -200,7 +200,8 @@ public class ProfileActivity extends BaseActivity
     private ProfileNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ProfileNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String userIndex, String email, String name, String phoneNumber, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+        public void onUserInformation(String userIndex, String email, String name, String phoneNumber//
+            , boolean isVerified, boolean isPhoneVerified, String verifiedDate, boolean isExceedBonus)
         {
             mUserIndex = userIndex;
             String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
@@ -225,6 +226,8 @@ public class ProfileActivity extends BaseActivity
                     DailyPreference.getInstance(ProfileActivity.this).setVerification(false);
                 }
             }
+
+            AnalyticsManager.getInstance(ProfileActivity.this).setExceedBonus(isExceedBonus);
         }
 
         @Override

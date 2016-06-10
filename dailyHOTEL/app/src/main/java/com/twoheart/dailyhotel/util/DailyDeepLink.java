@@ -438,7 +438,7 @@ public class DailyDeepLink
     {
         String view = getView();
 
-        switch(mVersionCode)
+        switch (mVersionCode)
         {
             case 5:
                 return INFORMATION_V5.equalsIgnoreCase(view);
@@ -452,7 +452,7 @@ public class DailyDeepLink
     {
         String view = getView();
 
-        switch(mVersionCode)
+        switch (mVersionCode)
         {
             case 5:
                 return RECOMMEND_FRIEND_V5.equalsIgnoreCase(view);
