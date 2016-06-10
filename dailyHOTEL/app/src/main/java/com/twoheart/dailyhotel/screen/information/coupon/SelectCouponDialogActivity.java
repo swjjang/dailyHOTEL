@@ -74,6 +74,13 @@ public class SelectCouponDialogActivity extends BaseActivity
         setContentView(mLayout.onCreateView(R.layout.activity_select_coupon_dialog));
     }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
+    }
 
     @Override
     protected void onResume()

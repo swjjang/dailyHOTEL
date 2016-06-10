@@ -415,6 +415,16 @@ public class AnalyticsManager
         public static final String MENU_SETPROFILE_NAME = "Menu_SetProfileName";
         public static final String MENU_SETPROFILE_PASSWORD = "Menu_SetProfilePassword";
         public static final String MENU_SETPROFILE_PHONENUMBER = "Menu_SetProfilePhoneNumber";
+
+
+        public static final String MENU_COUPON_BOX = "Menu_CouponBox";
+        public static final String MENU_INVITE_FRIENDS_BEFORE_LOGIN = "Menu_InviteFriends_BeforeLogIn";
+        public static final String MENU_INVITE_FRIENDS = "Menu_InviteFriends";
+        public static final String MENU_COUPON_HISTORY = "Menu_CouponHistory";
+        public static final String MENU_COUPON_GENERAL_TERMS_OF_USE = "Menu_CouponGeneralTermsofUse";
+        public static final String MENU_COUPON_INDIVIDUAL_TERMS_OF_USE = "Menu_CouponIndividualTermsofUse";
+        public static final String DAILY_HOTEL_AVAILABLE_COUPON_LIST = "DailyHotel_AvailableCouponList";
+
     }
 
     public static class Action

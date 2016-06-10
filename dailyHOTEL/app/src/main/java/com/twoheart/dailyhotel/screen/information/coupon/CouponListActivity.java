@@ -53,6 +53,8 @@ public class CouponListActivity extends BaseActivity
     {
         super.onStart();
 
+        AnalyticsManager.getInstance(CouponListActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_BOX);
+
         if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
         {
             lockUI();
