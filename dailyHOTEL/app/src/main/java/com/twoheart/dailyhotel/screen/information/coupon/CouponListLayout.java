@@ -144,6 +144,11 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         }
     }
 
+    public Coupon getCoupon(String userCouponCode)
+    {
+        return mListAdapter.getCoupon(userCouponCode);
+    }
+
     private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
     {
         @Override

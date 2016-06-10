@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -30,7 +31,7 @@ public class CouponListNetworkController extends BaseNetworkController
          *
          * @param isSuccess 성공 여부
          */
-        void onDownloadCoupon(boolean isSuccess);
+        void onDownloadCoupon(boolean isSuccess, String userCouponCode);
     }
 
     /**
@@ -127,7 +128,10 @@ public class CouponListNetworkController extends BaseNetworkController
                     isSuccess = true;
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(isSuccess);
+                Uri uri = Uri.parse(url);
+                String userCouponCode = uri.getQueryParameter("userCouponCode");
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(isSuccess, userCouponCode);
 
             } catch (Exception e)
             {

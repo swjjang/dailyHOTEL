@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
@@ -15,7 +16,8 @@ public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String userIndex, String email, String name, String phoneNumber, boolean isVerified, boolean isPhoneVerified, String verifiedDate);
+        void onUserInformation(String userIndex, String email, String name, String phoneNumber//
+            , boolean isVerified, boolean isPhoneVerified, String verifiedDate, boolean isExceedBonus);
     }
 
     public ProfileNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -57,6 +59,7 @@ public class ProfileNetworkController extends BaseNetworkController
                 String userIndex = response.getString("idx");
                 boolean isVerified = response.getBoolean("is_verified");
                 boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
 
                 String verifiedDate = null;
 
@@ -66,7 +69,8 @@ public class ProfileNetworkController extends BaseNetworkController
                         response.getString("phone_verified_at"), "yyyy.MM.dd");
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone, isVerified, isPhoneVerified, verifiedDate);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex//
+                    , email, name, phone, isVerified, isPhoneVerified, verifiedDate, isExceedBonus);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

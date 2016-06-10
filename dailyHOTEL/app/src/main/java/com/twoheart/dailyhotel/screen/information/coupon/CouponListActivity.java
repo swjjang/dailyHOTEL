@@ -12,10 +12,14 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sam Lee on 2016. 5. 19..
@@ -192,16 +196,17 @@ public class CouponListActivity extends BaseActivity
     // ///////////////////////////////////////////////////
     private CouponListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new CouponListNetworkController.OnNetworkControllerListener()
     {
-
         @Override
-        public void onDownloadCoupon(boolean isSuccess)
+        public void onDownloadCoupon(boolean isSuccess, String userCouponCode)
         {
             if (isSuccess == true)
             {
                 lockUI();
 
-                mCouponListNetworkController.requestCouponList();
+                Coupon coupon = mCouponListLayout.getCoupon(userCouponCode);
+                recordAnalytics(coupon);
 
+                mCouponListNetworkController.requestCouponList();
             } else
             {
                 unLockUI();
@@ -238,6 +243,25 @@ public class CouponListActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             CouponListActivity.this.onErrorToastMessage(message);
+        }
+
+        private void recordAnalytics(Coupon coupon)
+        {
+            try
+            {
+                Map<String, String> paramsMap = new HashMap<>();
+                paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                paramsMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                paramsMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+                paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
+                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
+
+                AnalyticsManager.getInstance(CouponListActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
+                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "CouponBox" + coupon.title, paramsMap);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     };
 

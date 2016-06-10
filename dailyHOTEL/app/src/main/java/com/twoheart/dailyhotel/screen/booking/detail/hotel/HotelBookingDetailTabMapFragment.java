@@ -133,7 +133,8 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
             @Override
             public void onClick(View v)
             {
-                try {
+                try
+                {
                     BaseActivity baseActivity = (BaseActivity) getActivity();
 
                     Util.clipText(baseActivity, mBookingDetail.address);
@@ -148,7 +149,8 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                         , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_ADDRESS_COPY_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_ADDRESS_COPY_CLICKED//
                         , label, null);
-                } catch (Exception e) {
+                } catch (Exception e)
+                {
                     ExLog.d(e.toString());
                 }
 

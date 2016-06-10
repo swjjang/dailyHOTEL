@@ -90,7 +90,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     {
         long value = 0L;
 
-        if (Util.isTextEmpty(category, action, label) == true)
+        if (Util.isTextEmpty(category, action) == true)
         {
             return;
         }
@@ -132,6 +132,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         {
             mGoogleAnalyticsTracker.set("&uid", index);
         }
+    }
+
+    @Override
+    void setExceedBonus(boolean isExceedBonus)
+    {
+
     }
 
     @Override

@@ -1745,27 +1745,57 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-            if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
+            switch(hotelPaymentInformation.discountType)
             {
-                int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
-                int bonus;
+                case BONUS:
+                {
+                    int payPrice = saleRoomInformation.totalDiscount - hotelPaymentInformation.bonus;
+                    int bonus;
 
-                if (payPrice <= 0)
-                {
-                    payPrice = 0;
-                    bonus = saleRoomInformation.totalDiscount;
-                } else
-                {
-                    bonus = hotelPaymentInformation.bonus;
+                    if (payPrice <= 0)
+                    {
+                        payPrice = 0;
+                        bonus = saleRoomInformation.totalDiscount;
+                    } else
+                    {
+                        bonus = hotelPaymentInformation.bonus;
+                    }
+
+                    params.put(AnalyticsManager.KeyType.USED_BOUNS, Integer.toString(bonus));
+                    params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(payPrice));
+                    break;
                 }
 
-                params.put(AnalyticsManager.KeyType.USED_BOUNS, Integer.toString(bonus));
-                params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(payPrice));
+                case COUPON:
+                {
+                    Coupon coupon = hotelPaymentInformation.getCoupon();
+                    int payPrice = saleRoomInformation.totalDiscount - coupon.amount;
 
-            } else
-            {
-                params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
-                params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    if(payPrice < 0)
+                    {
+                        payPrice = 0;
+                    }
+
+                    params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(payPrice));
+                    params.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                    params.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                    params.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+
+                    String expireDate = Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm");
+                    params.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
+                    break;
+                }
+
+                default:
+                {
+                    params.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    params.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(saleRoomInformation.totalDiscount));
+                    break;
+                }
             }
 
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, hotelPaymentInformation.paymentType.getName());

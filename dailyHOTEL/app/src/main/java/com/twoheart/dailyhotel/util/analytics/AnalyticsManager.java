@@ -91,6 +91,20 @@ public class AnalyticsManager
         }
     }
 
+    public void setExceedBonus(boolean isExceedBonus)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.setExceedBonus(isExceedBonus);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
+
     public void onStart(Activity activity)
     {
         try
@@ -537,6 +551,8 @@ public class AnalyticsManager
         public static final String HOTEL_USING_COUPON_CANCEL_CLICKED = "HotelUsingCouponCancelClicked";
 
 
+        //
+        public static final String COUPON_DOWNLOAD_CLICKED = "CouponDownloadClicked";
     }
 
     public static class Category
@@ -718,6 +734,13 @@ public class AnalyticsManager
         public static final String SELECTED_RESPONSE_ITEM = "selected_response_Item";
         public static final String SCREEN = "screen";
         public static final String SORTING = "sorting";
+        public static final String COUPON_REDEEM = "coupon_redeem";
+        public static final String COUPON_NAME = "coupon_name";
+        public static final String COUPON_AVAILABLE_ITEM = "coupon_available_item";
+        public static final String PRICE_OFF = "price_off";
+        public static final String EXPIRATION_DATE = "expiration_date";
+        public static final String DOWNLOAD_DATE = "download_date";
+
     }
 
     public static class ValueType
