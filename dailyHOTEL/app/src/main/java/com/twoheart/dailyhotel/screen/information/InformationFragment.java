@@ -88,6 +88,9 @@ public class InformationFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startEvent();
                 return;
+            } else if(DailyDeepLink.getInstance().isInformationView() == true)
+            {
+
             }
 
             DailyDeepLink.getInstance().clear();
