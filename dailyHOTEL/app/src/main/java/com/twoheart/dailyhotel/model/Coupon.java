@@ -113,7 +113,7 @@ public class Coupon implements Parcelable
         {
             String strStart = Util.simpleDateFormatISO8601toFormat(startTime, "yyyy.MM.dd");
 
-            // 해당일 새벽 0시 0분 0초로 설정된 경우 -1을 해줘서 전일 23시 59분 59초 999 밀리 세컨드까지로 보정해서 보여줌
+            // 해당일 새벽 0시 0분 0초로 설정된 경우 -1을 해줘서 전일 23시 59분 59초 999 밀리 세컨드까지로 보정
             Date endDate = Util.getISO8601Date(endTime);
             long changedTime = endDate.getTime() - 1;
             endDate.setTime(changedTime);
