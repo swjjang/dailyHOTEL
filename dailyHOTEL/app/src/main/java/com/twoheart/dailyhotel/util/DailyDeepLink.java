@@ -57,6 +57,7 @@ public class DailyDeepLink
 
     private static final String COUPON_V5_LIST = "cl";
     private static final String EVENT_V5_DETAIL = "ed";
+    private static final String INFORMATION_V5 = "m"; // 더보기 화면
 
     private static final String V3 = "3";
     private static final String V4 = "4";
@@ -426,6 +427,20 @@ public class DailyDeepLink
         {
             case 5:
                 return EVENT_V5_DETAIL.equalsIgnoreCase(view);
+
+            default:
+                return false;
+        }
+    }
+
+    public boolean isInformationView()
+    {
+        String view = getView();
+
+        switch(mVersionCode)
+        {
+            case 5:
+                return INFORMATION_V5.equalsIgnoreCase(view);
 
             default:
                 return false;

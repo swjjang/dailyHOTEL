@@ -73,10 +73,14 @@ public class CouponTermActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        int titleString = R.string.actionbar_title_common_coupon_term_activity;
+        int titleString;
+
         if (Util.isTextEmpty(mCouponIdx) == false)
         {
             titleString = R.string.actionbar_title_each_coupon_term_activity;
+        } else
+        {
+            titleString = R.string.actionbar_title_common_coupon_term_activity;
         }
 
         View toolbar = findViewById(R.id.toolbar);
@@ -103,7 +107,8 @@ public class CouponTermActivity extends WebViewActivity
     protected void onResume()
     {
         super.onResume();
-        if (Util.isTextEmpty(mCouponIdx))
+
+        if (Util.isTextEmpty(mCouponIdx) == true)
         {
             setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
