@@ -141,6 +141,21 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == false)
+        {
+            AnalyticsManager.getInstance(InviteFriendsActivity.this).recordScreen(AnalyticsManager.Screen.MENU_INVITE_FRIENDS);
+        } else
+        {
+            AnalyticsManager.getInstance(InviteFriendsActivity.this).recordScreen(AnalyticsManager.Screen.MENU_INVITE_FRIENDS_BEFORE_LOGIN);
+        }
+
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();

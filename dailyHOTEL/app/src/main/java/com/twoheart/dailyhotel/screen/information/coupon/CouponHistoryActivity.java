@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 
@@ -33,6 +34,14 @@ public class CouponHistoryActivity extends BaseActivity
         mCouponHistoryNetworkController = new CouponHistoryNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mCouponHistoryLayout.onCreateView(R.layout.activity_coupon_history));
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(CouponHistoryActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_HISTORY);
     }
 
     @Override

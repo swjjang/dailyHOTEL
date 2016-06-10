@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 
@@ -47,6 +48,8 @@ public class CouponListActivity extends BaseActivity
     protected void onStart()
     {
         super.onStart();
+
+        AnalyticsManager.getInstance(CouponListActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_BOX);
 
         if (Util.isTextEmpty(DailyPreference.getInstance(this).getAuthorization()) == true)
         {

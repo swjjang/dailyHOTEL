@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.BonusTermActivity;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 
@@ -39,6 +40,14 @@ public class BonusActivity extends BaseActivity
         mNetworkController = new BonusNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mBonusLayout.onCreateView(R.layout.activity_bonus));
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(BonusActivity.this).recordScreen(AnalyticsManager.Screen.BONUS);
     }
 
     @Override

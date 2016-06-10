@@ -98,9 +98,16 @@ public class CouponTermActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFUSE);
-
         super.onStart();
+
+        if (Util.isTextEmpty(mCouponIdx) == true)
+        {
+            AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_GENERAL_TERMS_OF_USE);
+        } else
+        {
+            AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_INDIVIDUAL_TERMS_OF_USE);
+        }
+
     }
 
     @Override
@@ -113,7 +120,7 @@ public class CouponTermActivity extends WebViewActivity
             setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
         {
-//            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+            //            setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
             setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS_FOR_DEV) + mCouponIdx);
         }
     }

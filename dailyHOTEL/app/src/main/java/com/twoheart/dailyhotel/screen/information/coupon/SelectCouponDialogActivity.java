@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 
@@ -68,6 +69,13 @@ public class SelectCouponDialogActivity extends BaseActivity
         setContentView(mLayout.onCreateView(R.layout.activity_select_coupon_dialog));
     }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
+    }
 
     @Override
     protected void onResume()
