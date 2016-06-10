@@ -1175,6 +1175,11 @@ public class Util implements Constants
 
         Date date = getISO8601Date(iso8601);
 
+        return simpleDateFormat(date, format);
+    }
+
+    public static String simpleDateFormat(Date date, String format) throws ParseException, NullPointerException
+    {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
