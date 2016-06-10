@@ -32,7 +32,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -1567,7 +1566,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     hotelPaymentInformation.setCoupon(coupon);
                     setCouponSelected(true);
                 }
-            }, null, new DialogInterface.OnCancelListener()
+            }, new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    hotelPaymentInformation.setCoupon(null);
+                    setCouponSelected(false);
+                }
+            }, new DialogInterface.OnCancelListener()
             {
 
                 @Override
