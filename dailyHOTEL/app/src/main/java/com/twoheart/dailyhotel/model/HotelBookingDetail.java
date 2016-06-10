@@ -77,7 +77,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
             hotelPhone = phone3;
         }
 
-        price = jsonObject.getInt("priceTotal");
+        price = jsonObject.getInt("discountTotal");
 
         if (jsonObject.has("bonus") == true)
         {
@@ -89,7 +89,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
             coupon = jsonObject.getInt("couponAmount");
         }
 
-        paymentPrice = jsonObject.getInt("discountTotal"); // 해당 값없음
+        paymentPrice = jsonObject.getInt("priceTotal");
         paymentDate = jsonObject.getString("paidAt");
     }
 
