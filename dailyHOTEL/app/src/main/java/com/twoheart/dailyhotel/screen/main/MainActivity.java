@@ -226,7 +226,6 @@ public class MainActivity extends BaseActivity implements Constants
                 break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
-                mNetworkController.requestNoticeAgreement(true);
                 break;
 
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
@@ -807,7 +806,13 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (isLogined == true)
             {
-                if (isFirstTimeBuyer == false || DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == true)
+                if (isFirstTimeBuyer == true && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarmFirstBuyer() == false)
+                {
+                    DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarmFirstBuyer(true);
+                } else if (DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
+                {
+
+                } else
                 {
                     return;
                 }

@@ -57,6 +57,7 @@ public class DailyPreference
 
     private static final String KEY_SHOW_BENEFIT_ALARM = "24";
     private static final String KEY_BENEFIT_ALARM_MESSAGE = "25";
+    private static final String KEY_FIRST_BUYER = "26";
 
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
@@ -579,6 +580,15 @@ public class DailyPreference
         return getValue(mPreferences, KEY_BENEFIT_ALARM_MESSAGE, null);
     }
 
+    public void setShowBenefitAlarmFirstBuyer(boolean value)
+    {
+        setValue(mEditor, KEY_FIRST_BUYER, value);
+    }
+
+    public boolean isShowBenefitAlarmFirstBuyer()
+    {
+        return getValue(mPreferences, KEY_FIRST_BUYER, false);
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference
