@@ -6,8 +6,7 @@
         android:width="1px"
         android:color="@color/default_over_scroll_edge"/>
 
-    <corners
-        android:radius="2dp">
-    </corners>
+    <corners android:radius="2dp"/>
 
+    <solid android:color="@android:color/transparent" />
 </shape>

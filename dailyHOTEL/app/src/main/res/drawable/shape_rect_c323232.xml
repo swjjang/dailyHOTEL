@@ -7,4 +7,6 @@
     <stroke
         android:width="1dp"
         android:color="@color/default_line_c323232"/>
+
+    <solid android:color="@android:color/transparent" />
 </shape>

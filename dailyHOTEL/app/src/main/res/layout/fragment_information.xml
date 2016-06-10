@@ -562,6 +562,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:src="@drawable/more_sns_03"/>
+
+                    <ImageView
+                        android:id="@+id/youtubeLinkView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/more_sns_03"/>
                 </LinearLayout>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView

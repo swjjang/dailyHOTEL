@@ -71,6 +71,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startNaverBlog();
 
+        void startYouTube();
+
         void startTerms();
 
         void startPersonal();
@@ -181,10 +183,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View facebookView = view.findViewById(R.id.facebookLinkView);
         View instagramView = view.findViewById(R.id.instagramLinkView);
         View naverView = view.findViewById(R.id.naverLinkView);
+        View youtubeLinkView = view.findViewById(R.id.youtubeLinkView);
 
         facebookView.setOnClickListener(this);
         instagramView.setOnClickListener(this);
         naverView.setOnClickListener(this);
+        youtubeLinkView.setOnClickListener(this);
     }
 
     private void initBusinessLayout(BaseActivity baseActivity, View view)
@@ -486,6 +490,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             case R.id.naverLinkView:
             {
                 ((OnEventListener) mOnEventListener).startNaverBlog();
+                break;
+            }
+
+            case R.id.youtubeLinkView:
+            {
+                ((OnEventListener) mOnEventListener).startYouTube();
                 break;
             }
 

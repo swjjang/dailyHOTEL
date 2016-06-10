@@ -115,7 +115,7 @@ public class BonusActivity extends BaseActivity
         {
             mName = name;
             mRecommendCode = recommendCode;
-            mBonusLayout.setBottomLayoutVisible(isExceedBonus);
+            mBonusLayout.setBottomLayoutVisible(isExceedBonus == false);
         }
 
         @Override
