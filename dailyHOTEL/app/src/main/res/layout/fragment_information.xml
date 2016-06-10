@@ -517,12 +517,14 @@
                     android:text="@string/frag_push_alert_subtext"
                     android:textColor="@color/information_push_subtext"
                     android:textSize="9dp"
-                    android:layout_marginBottom="7dp"/>
+                    />
 
                 <View
+                    android:id="@+id/bottomBenefitLineView"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/pushBenefitTextView"
+                    android:layout_marginTop="7dp"
                     android:background="@color/information_round"/>
             </RelativeLayout>
 
