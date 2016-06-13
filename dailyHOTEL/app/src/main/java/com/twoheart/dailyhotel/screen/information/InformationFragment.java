@@ -99,13 +99,7 @@ public class InformationFragment extends BaseFragment implements Constants
 
             } else if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
             {
-                if (Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == true)
-                {
-                    mOnEventListener.startInviteFriend();
-                } else
-                {
-                    return;
-                }
+                mOnEventListener.startInviteFriend();
             }
 
             DailyDeepLink.getInstance().clear();
@@ -753,14 +747,6 @@ public class InformationFragment extends BaseFragment implements Constants
                 AppboyManager.setPushEnabled(getContext(), isAgreedBenefit);
 
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
-
-                // 딥링크로 진입한 경우
-                if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
-                {
-                    mOnEventListener.startInviteFriend();
-
-                    DailyDeepLink.getInstance().clear();
-                }
             }
 
             mInformationLayout.updateLoginLayout(isLogin, false);
