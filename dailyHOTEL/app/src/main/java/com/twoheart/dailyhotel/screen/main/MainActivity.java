@@ -802,11 +802,6 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onNoticeAgreement(String message, boolean isFirstTimeBuyer)
         {
-            if (DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == true)
-            {
-                return;
-            }
-
             final boolean isLogined = Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false;
 
             if (isLogined == true)
@@ -814,7 +809,16 @@ public class MainActivity extends BaseActivity implements Constants
                 if (isFirstTimeBuyer == true && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarmFirstBuyer() == false)
                 {
                     DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarmFirstBuyer(true);
+                } else if (DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
+                {
+
                 } else
+                {
+                    return;
+                }
+            } else
+            {
+                if (DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == true)
                 {
                     return;
                 }
