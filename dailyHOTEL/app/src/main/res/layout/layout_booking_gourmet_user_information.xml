@@ -58,11 +58,11 @@
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
         android:paddingRight="15dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="9dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="36dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.widget.DailyTextView

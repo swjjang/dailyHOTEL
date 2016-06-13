@@ -262,7 +262,7 @@ public class HotelDetailActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        releaseUiComponent();
+        unLockUI();
 
         switch (requestCode)
         {
@@ -817,14 +817,14 @@ public class HotelDetailActivity extends BaseActivity
                 if (DEBUG == false)
                 {
                     String message = url + " : " + response.toString();
-                    Crashlytics.log(10, "HotelDetailActivity", message);
+                    Crashlytics.logException(new JSONException(message));
                 }
 
                 onError(e);
                 finish();
             } catch (Exception e)
             {
-                onError(e);
+                onError();
                 finish();
             } finally
             {
