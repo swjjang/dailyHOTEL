@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -1654,59 +1655,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         return messages;
     }
-
-    //    @Override
-    //    public void onCheckedChanged(RadioGroup group, int checkedId)
-    //    {
-    //        if (group.getId() == mPaymentRadioGroup.getId())
-    //        {
-    //            if (checkedId == mEasyPaymentButton.getId())
-    //            {
-    //                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.EASY_CARD;
-    //            } else if (checkedId == mCardPaymentButton.getId())
-    //            {
-    //                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.CARD;
-    //            } else if (checkedId == mHpPaymentButton.getId())
-    //            {
-    //                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.PHONE_PAY;
-    //            } else if (checkedId == mAccountPaymentButton.getId())
-    //            {
-    //                mPaymentInformation.paymentType = PlacePaymentInformation.PaymentType.VBANK;
-    //            }
-    //        }
-    //    }
-
-    //    @Override
-    //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-    //    {
-    //        // 앱 메모리 삭제하고 복귀하는 경우 에러가 생기는 경우가 발생하여
-    //        // 앱을 재부팅하는 코드 추가.
-    //        try
-    //        {
-    //            if (buttonView.getId() == mBonusSwitch.getId())
-    //            {
-    //                if (!isChecked)
-    //                {
-    //                    // 사용안함으로 변경
-    //                    mPriceLayout.setEnabled(false);
-    //                    mBonusLayout.setEnabled(false);
-    //                } else
-    //                {
-    //                    // 사용함으로 변경
-    //                    mPriceLayout.setEnabled(true);
-    //                    mBonusLayout.setEnabled(true);
-    //                }
-    //
-    //                mPaymentInformation.isUsedBonus = isChecked;
-    //                updatePaymentPrice((HotelPaymentInformation) mPaymentInformation, isChecked);
-    //            }
-    //        } catch (Exception e)
-    //        {
-    //            ExLog.d(e.toString());
-    //
-    //            restartExpiredSession();
-    //        }
-    //    }
 
     @Override
     protected void onStart()

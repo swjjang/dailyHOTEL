@@ -262,7 +262,7 @@ public class HotelDetailActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        releaseUiComponent();
+        unLockUI();
 
         switch (requestCode)
         {

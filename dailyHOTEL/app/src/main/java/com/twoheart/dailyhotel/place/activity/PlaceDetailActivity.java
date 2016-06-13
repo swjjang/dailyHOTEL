@@ -268,10 +268,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockUI();
+
         try
         {
-            releaseUiComponent();
-
             switch (requestCode)
             {
                 case CODE_REQUEST_ACTIVITY_BOOKING:
