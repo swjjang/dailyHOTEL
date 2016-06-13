@@ -823,6 +823,7 @@
     <string name="label_searchresult_research">다시 검색하기</string>
     <string name="label_searchresult_call_customercenter">고객센터로 전화하기</string>
     <string name="label_map_searchmap">지도앱에서 길찾기</string>
+    <string name="label_googlemap">구글 지도</string>
 
     <!-- Coupon -->
     <string name="coupon_notice_text">주의사항\n확인하기</string>
