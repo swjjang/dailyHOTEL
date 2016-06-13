@@ -238,6 +238,7 @@
     <string name="dialog_btn_text_update">업데이트</string>
     <string name="dialog_btn_text_complete">완료</string>
     <string name="dialog_btn_text_confirm">확인</string>
+    <string name="dialog_btn_text_select">선택</string>
     <string name="dialog_btn_text_cancel">취소</string>
     <string name="dialog_btn_text_retry">재시도</string>
     <string name="dialog_btn_text_setting">설정</string>

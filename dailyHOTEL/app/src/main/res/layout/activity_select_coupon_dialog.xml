@@ -142,7 +142,7 @@
                     android:layout_toRightOf="@id/buttonVerticalLine"
                     android:background="@drawable/selector_dialog_button01"
                     android:gravity="center"
-                    android:text="@string/dialog_btn_text_confirm"
+                    android:text="@string/dialog_btn_text_select"
                     android:textColor="@drawable/selector_dialog_text_color01"
                     android:textSize="14dp"
                     dailyFont:style="Medium"/>
