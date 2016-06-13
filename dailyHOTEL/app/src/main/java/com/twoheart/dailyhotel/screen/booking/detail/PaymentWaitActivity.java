@@ -240,7 +240,7 @@ public class PaymentWaitActivity extends BaseActivity
         mAccountTextView.setText(reservationJSONObject.getString("bankName") + ", " + accountNumber);
         mAccountTextView.setTag(accountNumber);
 
-        mDailyTextView.setText(reservationJSONObject.getString("userName"));
+        mDailyTextView.setText(reservationJSONObject.getString("vactName"));
 
         // 입금기한
         String validToDate = Util.simpleDateFormatISO8601toFormat(reservationJSONObject.getString("validTo"), "yyyy년 MM월 dd일 HH시 mm분 까지");
