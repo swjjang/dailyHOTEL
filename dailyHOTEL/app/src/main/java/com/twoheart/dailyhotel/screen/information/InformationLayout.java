@@ -34,7 +34,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private View mAccountInfoLayout;
     private View mNewEventIconView;
     private View mNewCouponIconView;
-    private View mRecommendLayout;
 
     private TextView mPushTextView;
     private TextView mPushBenefitTextView;
@@ -105,13 +104,13 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         initAccountInfoLayout(baseActivity, view);
 
         View eventLayout = view.findViewById(R.id.eventLayout);
-        mRecommendLayout = view.findViewById(R.id.recommendLayout);
+        View recommendLayout = view.findViewById(R.id.recommendLayout);
         View callLayout = view.findViewById(R.id.callLayout);
         View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
 
         eventLayout.setOnClickListener(this);
-        mRecommendLayout.setOnClickListener(this);
+        recommendLayout.setOnClickListener(this);
         callLayout.setOnClickListener(this);
         mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
@@ -279,11 +278,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         {
             mNewCouponIconView.setVisibility(View.GONE);
         }
-    }
-
-    public void setRecommendFriendsVisible(boolean visible)
-    {
-        mRecommendLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
     }
 
     /**

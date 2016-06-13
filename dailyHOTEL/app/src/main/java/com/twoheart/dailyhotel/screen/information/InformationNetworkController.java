@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -71,6 +72,8 @@ public class InformationNetworkController extends BaseNetworkController
                 int couponTotalCount = response.getInt("coupon_total_count");
                 boolean isAgreedBenefit = response.getBoolean("is_agreed_benefit");
                 boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
+
+                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener) //
                     .onUserInformation(userType, email, name, ownRecommender, bonus, //

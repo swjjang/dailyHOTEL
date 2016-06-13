@@ -415,6 +415,8 @@ public class MainNetworkController extends BaseNetworkController
                 final String userIndex = response.getString("idx");
                 boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
 
+                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+
                 AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
                 AnalyticsManager.getInstance(mContext).setExceedBonus(isExceedBonus);
 

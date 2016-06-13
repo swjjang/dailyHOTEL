@@ -7,8 +7,8 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
@@ -60,6 +60,8 @@ public class ProfileNetworkController extends BaseNetworkController
                 boolean isVerified = response.getBoolean("is_verified");
                 boolean isPhoneVerified = response.getBoolean("is_phone_verified");
                 boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
+
+                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
 
                 String verifiedDate = null;
 

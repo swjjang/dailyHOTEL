@@ -35,6 +35,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
     private View mSigninButtonLayout, mNoSigninButtonLayout;
     private TextView mRecommendCodeTextView;
+    private TextView mExceedMessageTextView;
 
     public static final Intent newInstance(Context context, String code, String name)
     {
@@ -97,6 +98,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
     {
         mSigninButtonLayout = findViewById(R.id.signinButtonLayout);
         mNoSigninButtonLayout = findViewById(R.id.noSigninButtonLayout);
+        mExceedMessageTextView = (TextView) findViewById(R.id.exceedMessageTextView);
 
         initNoSigninLayout(mNoSigninButtonLayout);
         initSigninLayout(mSigninButtonLayout);
@@ -128,10 +130,16 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
         {
             mSigninButtonLayout.setVisibility(View.VISIBLE);
             mNoSigninButtonLayout.setVisibility(View.GONE);
+
+            boolean isExceedBonus = DailyPreference.getInstance(InviteFriendsActivity.this).isUserExceedBonus();
+
+            mExceedMessageTextView.setText(isExceedBonus == true ? //
+                R.string.act_credit_line4_is_exceed_bonus : R.string.act_credit_line4);
         } else
         {
             mSigninButtonLayout.setVisibility(View.GONE);
             mNoSigninButtonLayout.setVisibility(View.VISIBLE);
+            mExceedMessageTextView.setText(R.string.act_credit_line4);
         }
     }
 

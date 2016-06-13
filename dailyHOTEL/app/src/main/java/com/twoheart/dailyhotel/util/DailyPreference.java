@@ -106,6 +106,7 @@ public class DailyPreference
     private static final String KEY_PREFERENCE_USER_NAME = "USER_NAME";
     private static final String KEY_PREFERENCE_USER_RECOMMENDER = "USER_RECOMMENDER";
     private static final String KEY_PREFERENCE_USER_BENEFIT_ALARM = "USER_BENEFIT_ALARM";
+    private static final String KEY_PREFERENCE_USER_IS_EXCEED_BONUS = "USER_IS_EXCEED_BONUS";
 
     // Version
     private static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
@@ -752,6 +753,14 @@ public class DailyPreference
     public void setUserBenefitAlarm(boolean value)
     {
         setValue(mOldEditor, KEY_PREFERENCE_USER_BENEFIT_ALARM, value);
+    }
+
+    public boolean isUserExceedBonus() {
+        return getValue(mOldPreferences, KEY_PREFERENCE_USER_IS_EXCEED_BONUS, false);
+    }
+
+    public void setUserExceedBonus(boolean value) {
+        setValue(mOldEditor, KEY_PREFERENCE_USER_IS_EXCEED_BONUS, value);
     }
 
     public void setUserInformation(String type, String email, String name, String recommender)
