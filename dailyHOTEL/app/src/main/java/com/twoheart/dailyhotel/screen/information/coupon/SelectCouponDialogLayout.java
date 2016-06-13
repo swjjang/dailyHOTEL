@@ -118,7 +118,6 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mMessageTextView.setText(messageResId);
     }
 
-
     public void setData(List<Coupon> list)
     {
 
@@ -144,6 +143,10 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     public Coupon getCoupon(String userCouponCode)
     {
         return mListAdapter.getCoupon(userCouponCode);
+    }
+
+    public int getCouponCount() {
+        return mListAdapter.getCount();
     }
 
     @Override

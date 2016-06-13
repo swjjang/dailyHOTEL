@@ -8,6 +8,8 @@ import android.view.Window;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.model.HotelPaymentInformation;
+import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -24,28 +26,27 @@ import java.util.Map;
 public class SelectCouponDialogActivity extends BaseActivity
 {
 
+    public static final String INTENT_EXTRA_HOTEL_PAYMENT_INFOMATION = "hotelPaymentInfomation";
     public static final String INTENT_EXTRA_SELECT_COUPON = "selectCoupon";
-    public static final String INTENT_EXTRA_HOTEL_IDX = "hotelIdx";
-    public static final String INTENT_EXTRA_ROOM_IDX = "roomIdx";
-    public static final String INTENT_EXTRA_CHECK_IN_DATE = "checkInDate";
-    public static final String INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate";
 
     private SelectCouponDialogLayout mLayout;
     private SelectCouponNetworkController mNetworkController;
 
+    private boolean mIsSetOk = false;
+
     private int mHotelIdx;
     private int mRoomIdx;
+
+    private String mRoomPrice;
     private String mCheckInDate;
     private String mCheckOutDate;
+    private String mCategoryCode;
+    private String mHotelName;
 
-
-    public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, String checkOutDate)
+    public static Intent newInstance(Context context, HotelPaymentInformation information)
     {
         Intent intent = new Intent(context, SelectCouponDialogActivity.class);
-        intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
-        intent.putExtra(INTENT_EXTRA_ROOM_IDX, roomIdx);
-        intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
-        intent.putExtra(INTENT_EXTRA_CHECK_OUT_DATE, checkOutDate);
+        intent.putExtra(INTENT_EXTRA_HOTEL_PAYMENT_INFOMATION, information);
 
         return intent;
     }
@@ -63,10 +64,17 @@ public class SelectCouponDialogActivity extends BaseActivity
             return;
         }
 
-        mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
-        mRoomIdx = intent.getIntExtra(INTENT_EXTRA_ROOM_IDX, -1);
-        mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
-        mCheckOutDate = intent.getStringExtra(INTENT_EXTRA_CHECK_OUT_DATE);
+        HotelPaymentInformation hotelPaymentInformation = intent.getParcelableExtra(INTENT_EXTRA_HOTEL_PAYMENT_INFOMATION);
+        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+
+        mHotelIdx = hotelPaymentInformation.placeIndex;
+        mCheckInDate = hotelPaymentInformation.checkInDateFormat;
+        mCheckOutDate = hotelPaymentInformation.checkOutDateFormat;
+
+        mRoomIdx = saleRoomInformation.roomIndex;
+        mCategoryCode = saleRoomInformation.categoryCode;
+        mHotelName = saleRoomInformation.hotelName;
+        mRoomPrice = Integer.toString(saleRoomInformation.averageDiscount);
 
         mLayout = new SelectCouponDialogLayout(this, mOnEventListener);
         mNetworkController = new SelectCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
@@ -93,7 +101,27 @@ public class SelectCouponDialogActivity extends BaseActivity
     @Override
     public void finish()
     {
+        if (mIsSetOk == false) {
+            recordCancelAnalytics();
+        }
+
         super.finish();
+    }
+
+    private void recordCancelAnalytics()
+    {
+        if (mLayout.getCouponCount() == 0)
+        {
+            // empty list
+            String label = mCategoryCode + "-" + mHotelName + "-" + mRoomPrice;
+
+            AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null);
+        } else
+        {
+            AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CLICKED, null);
+        }
     }
 
     private SelectCouponDialogLayout.OnEventListener mOnEventListener = new SelectCouponDialogLayout.OnEventListener()
@@ -102,6 +130,8 @@ public class SelectCouponDialogActivity extends BaseActivity
         public void setResult(Coupon coupon)
         {
             lockUI();
+
+            mIsSetOk = true;
 
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_SELECT_COUPON, coupon);
