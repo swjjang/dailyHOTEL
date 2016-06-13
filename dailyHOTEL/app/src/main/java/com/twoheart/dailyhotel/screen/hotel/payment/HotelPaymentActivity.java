@@ -559,7 +559,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private void startCouponPopup(HotelPaymentInformation hotelPaymentInformation)
     {
-        Intent intent = SelectCouponDialogActivity.newInstance(this, hotelPaymentInformation);
+        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+
+        int hotelIdx = hotelPaymentInformation.placeIndex;
+        int roomIdx = saleRoomInformation.roomIndex;
+        String checkInDate = hotelPaymentInformation.checkInDateFormat;
+        String checkOutDate = hotelPaymentInformation.checkOutDateFormat;
+
+        String categoryCode = saleRoomInformation.categoryCode;
+        String hotelName = saleRoomInformation.hotelName;
+        String roomPrice = Integer.toString(saleRoomInformation.averageDiscount);
+
+        Intent intent = SelectCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
+            roomIdx, checkInDate, checkOutDate, categoryCode, hotelName, roomPrice);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 
         AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
@@ -1259,7 +1271,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
                     // 쿠폰 기 선택 상태 일때 쿠폰 선택 취소 팝업 생성 필요함 (">" 아이콘 이므로)
-                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation,  new OnClickListener()
+                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -1318,7 +1330,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 } else
                 {
                     // 쿠폰 삭제
-                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation,  new OnClickListener()
+                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -1335,7 +1347,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
-                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation,  new OnClickListener()
+                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)

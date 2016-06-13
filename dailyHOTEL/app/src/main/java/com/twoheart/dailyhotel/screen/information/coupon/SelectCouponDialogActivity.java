@@ -8,8 +8,6 @@ import android.view.Window;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
-import com.twoheart.dailyhotel.model.HotelPaymentInformation;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -26,8 +24,15 @@ import java.util.Map;
 public class SelectCouponDialogActivity extends BaseActivity
 {
 
-    public static final String INTENT_EXTRA_HOTEL_PAYMENT_INFOMATION = "hotelPaymentInfomation";
     public static final String INTENT_EXTRA_SELECT_COUPON = "selectCoupon";
+    public static final String INTENT_EXTRA_HOTEL_IDX = "hotelIdx";
+    public static final String INTENT_EXTRA_ROOM_IDX = "roomIdx";
+    public static final String INTENT_EXTRA_CHECK_IN_DATE = "checkInDate";
+    public static final String INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate";
+    public static final String INTENT_EXTRA_CATEGORY_CODE = "categoryCode";
+    public static final String INTENT_EXTRA_HOTEL_NAME = "hotelName";
+    public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
+
 
     private SelectCouponDialogLayout mLayout;
     private SelectCouponNetworkController mNetworkController;
@@ -43,10 +48,17 @@ public class SelectCouponDialogActivity extends BaseActivity
     private String mCategoryCode;
     private String mHotelName;
 
-    public static Intent newInstance(Context context, HotelPaymentInformation information)
+    public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, //
+                                     String checkOutDate, String categoryCode, String hotelName, String roomPrice)
     {
         Intent intent = new Intent(context, SelectCouponDialogActivity.class);
-        intent.putExtra(INTENT_EXTRA_HOTEL_PAYMENT_INFOMATION, information);
+        intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
+        intent.putExtra(INTENT_EXTRA_ROOM_IDX, roomIdx);
+        intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(INTENT_EXTRA_CHECK_OUT_DATE, checkOutDate);
+        intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
+        intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
+        intent.putExtra(INTENT_EXTRA_ROOM_PRICE, roomPrice);
 
         return intent;
     }
@@ -64,17 +76,14 @@ public class SelectCouponDialogActivity extends BaseActivity
             return;
         }
 
-        HotelPaymentInformation hotelPaymentInformation = intent.getParcelableExtra(INTENT_EXTRA_HOTEL_PAYMENT_INFOMATION);
-        SaleRoomInformation saleRoomInformation = hotelPaymentInformation.getSaleRoomInformation();
+        mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
+        mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
+        mCheckOutDate = intent.getStringExtra(INTENT_EXTRA_CHECK_OUT_DATE);
 
-        mHotelIdx = hotelPaymentInformation.placeIndex;
-        mCheckInDate = hotelPaymentInformation.checkInDateFormat;
-        mCheckOutDate = hotelPaymentInformation.checkOutDateFormat;
-
-        mRoomIdx = saleRoomInformation.roomIndex;
-        mCategoryCode = saleRoomInformation.categoryCode;
-        mHotelName = saleRoomInformation.hotelName;
-        mRoomPrice = Integer.toString(saleRoomInformation.averageDiscount);
+        mRoomIdx = intent.getIntExtra(INTENT_EXTRA_ROOM_IDX, -1);
+        mCategoryCode = intent.getStringExtra(INTENT_EXTRA_CATEGORY_CODE);
+        mHotelName = intent.getStringExtra(INTENT_EXTRA_HOTEL_NAME);
+        mRoomPrice = intent.getStringExtra(INTENT_EXTRA_ROOM_PRICE);
 
         mLayout = new SelectCouponDialogLayout(this, mOnEventListener);
         mNetworkController = new SelectCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
@@ -101,7 +110,8 @@ public class SelectCouponDialogActivity extends BaseActivity
     @Override
     public void finish()
     {
-        if (mIsSetOk == false) {
+        if (mIsSetOk == false)
+        {
             recordCancelAnalytics();
         }
 
