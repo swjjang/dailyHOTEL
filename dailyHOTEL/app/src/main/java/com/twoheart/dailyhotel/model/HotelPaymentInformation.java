@@ -69,25 +69,4 @@ public class HotelPaymentInformation extends PlacePaymentInformation
             return new HotelPaymentInformation[size];
         }
     };
-
-    // 명칭 변경하면 안됨 서버와 약속되어있음.
-    public enum PaymentType
-    {
-        EASY_CARD("EasyCardPay"),
-        CARD("CardPay"),
-        PHONE_PAY("PhoneBillPay"),
-        VBANK("VirtualAccountPay");
-
-        private String mName;
-
-        PaymentType(String name)
-        {
-            mName = name;
-        }
-
-        public String getName()
-        {
-            return mName;
-        }
-    }
 }
