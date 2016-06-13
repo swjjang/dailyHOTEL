@@ -142,7 +142,7 @@ public class InformationNetworkController extends BaseNetworkController
                     JSONObject dataJSONObject = response.getJSONObject("data");
                     String serverDate = dataJSONObject.getString("serverDate");
 
-                    boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgree", false);
+                    boolean isAgreed = Uri.parse(url).getBooleanQueryParameter("isAgreed", false);
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onBenefitAgreement(isAgreed, Util.simpleDateFormatISO8601toFormat(serverDate, "yyyy년 MM월 dd일"));
                 } else

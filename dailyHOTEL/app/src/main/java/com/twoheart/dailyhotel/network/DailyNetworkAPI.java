@@ -1026,7 +1026,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit" : "MjYkODQkMjUkNTEkNyQ=$NzRGREQHxNjZENkJENTY1ODNGNUUYFDOERBRDE0QTU1QjAyOTgxRTDRCNkMwRUZBMEM0QjI0QUVBNkU2MTBGNDNUFMg==$";
 
-        String params = String.format("?isAgree=%b", isAgree);
+        String params = String.format("?isAgreed=%b", isAgree);
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.PUT, URL_DAILYHOTEL_SESSION_SERVER + URL + params, null, listener);
         dailyHotelJsonRequest.setUsedAuthorization(isAuthorization);
