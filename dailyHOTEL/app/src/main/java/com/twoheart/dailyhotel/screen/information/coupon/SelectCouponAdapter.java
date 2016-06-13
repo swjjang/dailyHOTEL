@@ -162,6 +162,8 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
     public void setData(List<Coupon> list)
     {
         mList = list;
+        clear();
+        addAll(list);
     }
 
     public Coupon getCoupon(String userCouponCode)
