@@ -424,6 +424,7 @@ public class AnalyticsManager
         public static final String MENU_COUPON_GENERAL_TERMS_OF_USE = "Menu_CouponGeneralTermsofUse";
         public static final String MENU_COUPON_INDIVIDUAL_TERMS_OF_USE = "Menu_CouponIndividualTermsofUse";
         public static final String DAILY_HOTEL_AVAILABLE_COUPON_LIST = "DailyHotel_AvailableCouponList";
+        public static final String DAILY_HOTEL_UNAVAILABLE_COUPON_LIST = "DailyHotel_UnavailableCouponList";
 
     }
 

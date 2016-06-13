@@ -78,8 +78,6 @@ public class SelectCouponDialogActivity extends BaseActivity
     protected void onStart()
     {
         super.onStart();
-
-        AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
     }
 
     @Override
@@ -138,6 +136,16 @@ public class SelectCouponDialogActivity extends BaseActivity
         public void onCouponList(List<Coupon> list)
         {
             mLayout.setData(list);
+
+            if (list == null || list.size() == 0)
+            {
+                AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
+                    .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST);
+            } else
+            {
+                AnalyticsManager.getInstance(SelectCouponDialogActivity.this) //
+                    .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
+            }
 
             unLockUI();
         }
