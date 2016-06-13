@@ -1623,20 +1623,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         switch (mPensionPopupMessageType)
         {
             case 1:
+            case 2:
             case 10:
                 messages = new int[currentMessages.length + addMessagesCount];
                 messages[0] = currentMessages[0];
                 messages[1] = currentMessages[1];
                 messages[2] = R.string.dialog_msg_hotel_payment_message09;
-                messages[3] = R.string.dialog_msg_hotel_payment_message15;
-                System.arraycopy(currentMessages, startPosition, messages, startPosition + addMessagesCount, currentMessages.length - startPosition);
-                break;
-
-            case 2:
-                messages = new int[currentMessages.length + addMessagesCount];
-                messages[0] = currentMessages[0];
-                messages[1] = currentMessages[1];
-                messages[2] = R.string.dialog_msg_hotel_payment_message10;
                 messages[3] = R.string.dialog_msg_hotel_payment_message15;
                 System.arraycopy(currentMessages, startPosition, messages, startPosition + addMessagesCount, currentMessages.length - startPosition);
                 break;
