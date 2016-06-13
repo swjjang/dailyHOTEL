@@ -255,6 +255,7 @@
 
     <color name="default_popup_button_background_c900034">#900034</color>
     <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
+    <color name="default_popup_button_background_c5c93f8">#5c93f8</color>
 
     <color name="default_popup_button_text_cffffff">#ffffff</color>
     <color name="default_popup_button_text_c323232">#323232</color>

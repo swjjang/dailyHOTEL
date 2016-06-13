@@ -967,100 +967,129 @@ public class Util implements Constants
             return;
         }
 
-        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_searchmapdialog_layout, null, false);
-
+        View dialogView;
         final Dialog dialog = new Dialog(baseActivity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(true);
 
-        // 버튼
-        View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
-        View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
-        View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (isOverseas == true)
+        if (isOverseas == false)
         {
-            // 해외
-            kakaoMapLayoutLayout.setVisibility(View.GONE);
-            naverMapLayout.setVisibility(View.GONE);
+            dialogView = layoutInflater.inflate(R.layout.view_searchmap_dialog_layout01, null, false);
+
+            // 버튼
+            View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
+            View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
+            View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+
+            kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+
+            naverMapLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+
+            googleMapLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+        } else
+        {
+            dialogView = layoutInflater.inflate(R.layout.view_searchmap_dialog_layout02, null, false);
+
+            // 버튼
+            View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+
+            googleMapLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
         }
-
-        kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
-
-                if (Util.isTextEmpty(gaCategory) == false)
-                {
-                    if (Util.isTextEmpty(gaLabel) == true)
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
-                    }
-                }
-            }
-        });
-
-        naverMapLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
-
-                if (Util.isTextEmpty(gaCategory) == false)
-                {
-                    if (Util.isTextEmpty(gaLabel) == true)
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
-                    }
-                }
-            }
-        });
-
-        googleMapLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
-
-                if (Util.isTextEmpty(gaCategory) == false)
-                {
-                    if (Util.isTextEmpty(gaLabel) == true)
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
-                    }
-                }
-            }
-        });
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
         {
@@ -1180,9 +1209,9 @@ public class Util implements Constants
 
     public static String simpleDateFormat(Date date, String format)
     {
-        if(date == null || Util.isTextEmpty(format) == true)
+        if (date == null || Util.isTextEmpty(format) == true)
         {
-            return  null;
+            return null;
         }
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
