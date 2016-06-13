@@ -171,10 +171,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 if (DEBUG == false)
                 {
                     String message = url + " : " + response.toString();
-                    Crashlytics.log(10, "GourmetDetailActivity", message);
+                    Crashlytics.logException(new JSONException(message));
                 }
 
-                onError(e);
+                onError();
                 finish();
             } catch (Exception e)
             {
