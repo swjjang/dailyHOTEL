@@ -162,7 +162,8 @@ public class Coupon implements Parcelable
             return dayCount;
         } else
         {
-            dayCount = (int) (gap / MILLISECOND_IN_A_DAY);
+            // 금일 만료를 제외한 날짜의 경우 내일이 2일 남음이기때문에 1을 더해줘야 함
+            dayCount = (int) (gap / MILLISECOND_IN_A_DAY) + 1;
             return dayCount;
         }
     }

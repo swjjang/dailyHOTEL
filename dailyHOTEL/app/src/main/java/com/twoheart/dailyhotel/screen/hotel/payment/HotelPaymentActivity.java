@@ -570,12 +570,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
     private void startCouponPopup(HotelPaymentInformation hotelPaymentInformation)
     {
-        int placeIndex = hotelPaymentInformation.placeIndex;
-        int roomIndex = hotelPaymentInformation.getSaleRoomInformation().roomIndex;
-        String checkInDate = hotelPaymentInformation.checkInDateFormat;
-        String checkOutDate = hotelPaymentInformation.checkOutDateFormat;
-
-        Intent intent = SelectCouponDialogActivity.newInstance(this, placeIndex, roomIndex, checkInDate, checkOutDate);
+        Intent intent = SelectCouponDialogActivity.newInstance(this, hotelPaymentInformation);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 
         AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
