@@ -22,11 +22,10 @@
 
         <View
             android:id="@+id/vericalLine"
-            android:layout_width="1dp"
+            android:layout_width="1px"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="68dp"
-            android:background="@color/coupon_vertical_line"/>
+            android:layout_marginRight="68dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/couponPriceTextView"

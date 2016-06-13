@@ -200,6 +200,7 @@ public class DailyPreference
 
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
+        boolean isShowBenefitAlarm = isShowBenefitAlarm();
 
         if (mEditor != null)
         {
@@ -221,6 +222,7 @@ public class DailyPreference
 
         setCompanyInformation(name, ceo, bizRegNumber, itcRegNumber, address, phoneNumber, fax, privacyEmail);
         setUserBenefitAlarm(isUserBenefitAlarm);
+        setShowBenefitAlarm(isShowBenefitAlarm);
     }
 
     private String getValue(SharedPreferences sharedPreferences, String key, String defaultValue)
@@ -755,11 +757,13 @@ public class DailyPreference
         setValue(mOldEditor, KEY_PREFERENCE_USER_BENEFIT_ALARM, value);
     }
 
-    public boolean isUserExceedBonus() {
+    public boolean isUserExceedBonus()
+    {
         return getValue(mOldPreferences, KEY_PREFERENCE_USER_IS_EXCEED_BONUS, false);
     }
 
-    public void setUserExceedBonus(boolean value) {
+    public void setUserExceedBonus(boolean value)
+    {
         setValue(mOldEditor, KEY_PREFERENCE_USER_IS_EXCEED_BONUS, value);
     }
 
