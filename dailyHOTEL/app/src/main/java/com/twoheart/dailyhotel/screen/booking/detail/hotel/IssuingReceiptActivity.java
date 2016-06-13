@@ -131,7 +131,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             int bonus = receiptJSONObject.getInt("bonus");
             int counpon = receiptJSONObject.getInt("coupon_amount");
-            int totalPayment = 0;
+            int pricePayment = receiptJSONObject.getInt("price");
 
             // **예약 세부 정보**
             View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
@@ -220,9 +220,9 @@ public class IssuingReceiptActivity extends BaseActivity
                 saleLayout.setVisibility(View.GONE);
             }
 
-            // 총 입금 금액
+            // 총 입금(실 결제) 금액
             TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, discount - counpon - bonus, true));
+            totalPaymentTextView.setText(Util.getPriceFormat(this, pricePayment, true));
 
             // **공급자**
 
