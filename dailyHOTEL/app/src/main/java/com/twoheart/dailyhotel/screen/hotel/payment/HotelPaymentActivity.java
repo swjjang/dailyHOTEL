@@ -491,6 +491,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mUsedBonusLayout.setSelected(true);
 
             mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.BONUS;
+
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                , Action.USING_CREDIT_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
         } else
         {
             mBonusRadioButton.setSelected(false);
@@ -503,6 +506,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mUsedBonusLayout.setSelected(false);
 
             mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
+
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
         }
 
         updatePaymentPrice((HotelPaymentInformation) mPaymentInformation);
@@ -1286,9 +1292,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 {
                     // 아무것도 선택 되지 않은 상태 일때 bonusLayout 과 동일한 처리
                     setBonusSelected(true);
-
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                        , Action.USING_CREDIT_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
                 } else
                 {
                     // 적립금 삭제
@@ -1300,9 +1303,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             setBonusSelected(false);
                         }
                     });
-
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                        , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
                 }
                 break;
             }
@@ -1361,9 +1361,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 } else
                 {
                     setBonusSelected(true);
-
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                        , Action.USING_CREDIT_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
                 }
                 break;
             }
