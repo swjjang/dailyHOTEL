@@ -302,7 +302,7 @@
             android:name=".screen.information.coupon.SelectCouponDialogActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Dialog"/>
+            android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
             android:name=".screen.information.coupon.CouponTermActivity"
             android:launchMode="singleTop"

@@ -1,10 +1,10 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,14 +19,15 @@ import java.util.List;
 /**
  * Created by android_sam on 2016. 5. 26..
  */
-public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapter.SelectViewHolder>
+public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 {
 
-    private int mSelectPosition = -1;
+    private static final int RESOURCE_ID = R.layout.list_row_select_coupon;
 
-    private List<Coupon> mList;
     private Context mContext;
+    private List<Coupon> mList;
     private OnCouponItemListener mListener;
+    private int mSelectPosition = -1;
 
     public interface OnCouponItemListener
     {
@@ -35,69 +36,64 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         void updatePositiveButton();
     }
 
+
     public SelectCouponAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
     {
+        super(context, RESOURCE_ID, list);
+
         mContext = context;
-
-        if (list == null)
-        {
-            throw new IllegalArgumentException("couponList must not be null");
-        }
-
         mList = list;
         mListener = listener;
-    }
 
-    /**
-     * 쿠폰아이템
-     *
-     * @param position
-     * @return
-     */
-    public Coupon getItem(int position)
-    {
-        return mList.get(position);
     }
 
     @Override
-    public int getItemCount()
+    public View getView(int position, View convertView, ViewGroup parent)
     {
-        return mList == null ? 0 : mList.size();
-    }
+        convertView = newView(convertView);
 
-    public void setData(List<Coupon> list)
-    {
-        mList = list;
-    }
-
-    public Coupon getCoupon(String userCouponCode)
-    {
-        if (mList == null)
+        if (convertView != null)
         {
-            return null;
+            bindView(position, convertView);
+        }
+        return convertView;
+    }
+
+
+    private View newView(View convertView)
+    {
+        if (convertView != null)
+        {
+            return convertView;
         }
 
-        for (Coupon coupon : mList)
+        View view = LayoutInflater.from(mContext).inflate(RESOURCE_ID, null);
+
+        SelectViewHolder holder = new SelectViewHolder();
+        holder.listItemLayout = view.findViewById(R.id.listItemLayout);
+        holder.verticalLine = view.findViewById(R.id.vericalLine);
+        holder.priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+        holder.iconImageView = (ImageView) view.findViewById(R.id.iconImageView);
+        holder.downloadTextView = (TextView) view.findViewById(R.id.downloadTextView);
+        holder.descriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
+        holder.expireTextView = (TextView) view.findViewById(R.id.expireTextView);
+        holder.minPriceTextView = (TextView) view.findViewById(R.id.minPriceTextView);
+        holder.upperDivider = view.findViewById(R.id.upperDivider);
+        view.setTag(holder);
+
+        return view;
+    }
+
+    private void bindView(final int position, View convertView)
+    {
+        final Object tag = convertView.getTag();
+        if (tag == null || !(tag instanceof SelectViewHolder))
         {
-            if (coupon.userCouponCode.equalsIgnoreCase(userCouponCode) == true)
-            {
-                return coupon;
-            }
+            return;
         }
 
-        return null;
-    }
+        SelectViewHolder holder = (SelectViewHolder) convertView.getTag();
 
-    @Override
-    public SelectViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_select_coupon, parent, false);
-        return new SelectViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(SelectViewHolder holder, final int position)
-    {
         Coupon coupon = getItem(position);
 
         String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
@@ -136,7 +132,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             setSelectLayout(holder, position);
         } else
         {
-            setDownLoadLayout(holder, position);
+            setDownLoadLayout(holder);
         }
 
         holder.upperDivider.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
@@ -161,10 +157,37 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
                 mListener.updatePositiveButton();
             }
         });
-
     }
 
-    private void setDownLoadLayout(SelectViewHolder holder, int position)
+    public void setData(List<Coupon> list)
+    {
+        mList = list;
+    }
+
+    public Coupon getCoupon(String userCouponCode)
+    {
+        if (mList == null)
+        {
+            return null;
+        }
+
+        for (Coupon coupon : mList)
+        {
+            if (coupon.userCouponCode.equalsIgnoreCase(userCouponCode) == true)
+            {
+                return coupon;
+            }
+        }
+
+        return null;
+    }
+
+    public int getSelectPosition()
+    {
+        return mSelectPosition;
+    }
+
+    private void setDownLoadLayout(SelectViewHolder holder)
     {
         holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_dimmed);
         holder.iconImageView.setImageResource(R.drawable.coupon_ic_download);
@@ -190,14 +213,8 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         holder.minPriceTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
     }
 
-    public int getSelectPosition()
+    protected class SelectViewHolder
     {
-        return mSelectPosition;
-    }
-
-    protected class SelectViewHolder extends RecyclerView.ViewHolder
-    {
-        View rootView;
         View listItemLayout;
         View verticalLine;
         TextView priceTextView;
@@ -206,27 +223,6 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         TextView descriptionTextView;
         TextView expireTextView;
         TextView minPriceTextView;
-        //        View bottomDivider;
         View upperDivider;
-
-
-        public SelectViewHolder(View itemView)
-        {
-            super(itemView);
-
-            rootView = itemView;
-            listItemLayout = itemView.findViewById(R.id.listItemLayout);
-            verticalLine = itemView.findViewById(R.id.vericalLine);
-            priceTextView = (TextView) itemView.findViewById(R.id.priceTextView);
-            iconImageView = (ImageView) itemView.findViewById(R.id.iconImageView);
-            downloadTextView = (TextView) itemView.findViewById(R.id.downloadTextView);
-            descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
-            expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
-            minPriceTextView = (TextView) itemView.findViewById(R.id.minPriceTextView);
-            //            bottomDivider = itemView.findViewById(R.id.bottomDivider);
-            upperDivider = itemView.findViewById(R.id.upperDivider);
-        }
     }
-
-
 }

@@ -1,18 +1,14 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.ListView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
@@ -36,27 +32,21 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     private View mOneButtonLayout;
     private View mTwoButtonLayout;
     private View mPositiveView;
-
-
-    private RecyclerView mRecyclerView;
+    private ListView mListView;
     private SelectCouponAdapter mListAdapter;
 
-    private Window mWindow;
-
-
-    public SelectCouponDialogLayout(Context context, Window window, OnBaseEventListener listener)
+    public SelectCouponDialogLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
 
         mContext = context;
-        mWindow = window;
     }
 
 
     @Override
     protected void initLayout(View view)
     {
-        updateWindowHeight();
+
         initListView(view);
 
         mDialogLayout = view.findViewById(R.id.dialogLayout);
@@ -78,35 +68,10 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         updateLayout(null);
     }
 
-
-    private void updateWindowHeight()
-    {
-        int height = WindowManager.LayoutParams.WRAP_CONTENT;
-        //
-        //        if (listSize > 0)
-        //        {
-        //            height = Util.getLCDHeight(mContext) - Util.dpToPx(mContext, 96);
-        //        } else
-        //        {
-        //            height = WindowManager.LayoutParams.WRAP_CONTENT;
-        //        }
-
-        WindowManager.LayoutParams params = mWindow.getAttributes();
-        params.width = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 24);
-        params.height = height;
-
-        mWindow.setAttributes(params);
-    }
-
     private void initListView(View view)
     {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.over_scroll_edge));
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        layoutManager.scrollToPosition(0);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mListView = (ListView) view.findViewById(R.id.list);
+        EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.over_scroll_edge));
     }
 
     private void updateLayout(List<Coupon> list)
@@ -168,7 +133,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         if (mListAdapter == null)
         {
             mListAdapter = new SelectCouponAdapter(mContext, list, mCouponItemListener);
-            mRecyclerView.setAdapter(mListAdapter);
+            mListView.setAdapter(mListAdapter);
         } else
         {
             mListAdapter.setData(list);
