@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -488,6 +487,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountBonusLayout.setSelected(true);
             mDiscountBonusLayout.setOnClickListener(null);
 
+            mUsedBonusTextView.setOnClickListener(this);
+            mUsedBonusTextView.setSelected(true);
+
             mUsedBonusTab.setOnClickListener(this);
             mUsedBonusTab.setSelected(true);
 
@@ -499,6 +501,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountBonusLayout.setOnClickListener(this);
 
             mUsedBonusTextView.setText(R.string.label_booking_used_bonus);
+            mUsedBonusTextView.setOnClickListener(this);
+            mUsedBonusTextView.setSelected(false);
 
             mUsedBonusTab.setOnClickListener(this);
             mUsedBonusTab.setSelected(false);
@@ -538,6 +542,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountCouponLayout.setSelected(true);
             mDiscountCouponLayout.setOnClickListener(null);
 
+            mUsedCouponTextView.setOnClickListener(this);
+            mUsedCouponTextView.setSelected(true);
+
             mUsedCouponTab.setOnClickListener(this);
             mUsedCouponTab.setSelected(true);
 
@@ -549,6 +556,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountCouponLayout.setOnClickListener(this);
 
             mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
+            mUsedCouponTextView.setOnClickListener(this);
+            mUsedCouponTextView.setSelected(false);
+
             mUsedCouponTab.setOnClickListener(this);
             mUsedCouponTab.setSelected(false);
 
@@ -1276,6 +1286,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         switch (v.getId())
         {
+            case R.id.usedBonusTextView:
             case R.id.usedBonusTab:
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
@@ -1301,6 +1312,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 break;
             }
 
+            case R.id.usedCouponTextView:
             case R.id.usedCouponTab:
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
@@ -1693,7 +1705,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
-            switch(hotelPaymentInformation.discountType)
+            switch (hotelPaymentInformation.discountType)
             {
                 case BONUS:
                 {
@@ -1720,7 +1732,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     Coupon coupon = hotelPaymentInformation.getCoupon();
                     int payPrice = saleRoomInformation.totalDiscount - coupon.amount;
 
-                    if(payPrice < 0)
+                    if (payPrice < 0)
                     {
                         payPrice = 0;
                     }
