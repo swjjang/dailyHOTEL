@@ -68,7 +68,7 @@ public class SelectCouponDialogActivity extends BaseActivity
         mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
         mCheckOutDate = intent.getStringExtra(INTENT_EXTRA_CHECK_OUT_DATE);
 
-        mLayout = new SelectCouponDialogLayout(this, getWindow(), mOnEventListener);
+        mLayout = new SelectCouponDialogLayout(this, mOnEventListener);
         mNetworkController = new SelectCouponNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mLayout.onCreateView(R.layout.activity_select_coupon_dialog));
