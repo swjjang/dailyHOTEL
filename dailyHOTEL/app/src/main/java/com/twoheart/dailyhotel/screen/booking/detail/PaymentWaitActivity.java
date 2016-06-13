@@ -247,7 +247,7 @@ public class PaymentWaitActivity extends BaseActivity
         mDeadlineTextView.setText(validToDate);
 
         // 결재 금액 정보
-        mPriceTextView.setText(Util.getPriceFormat(this, reservationJSONObject.getInt("amtTotal"), false));
+        mPriceTextView.setText(Util.getPriceFormat(this, reservationJSONObject.getInt("amt"), false));
 
         int bonus = reservationJSONObject.getInt("bonus");
 
@@ -271,7 +271,7 @@ public class PaymentWaitActivity extends BaseActivity
             mCouponLayout.setVisibility(View.GONE);
         }
 
-        int paymetPrice = reservationJSONObject.getInt("amt");
+        int paymetPrice = reservationJSONObject.getInt("price");
 
         mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
 
