@@ -94,14 +94,14 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     // 할인 정보
     private ImageView mBonusRadioButton;
     private View mDiscountBonusLayout;
+    private View mUsedBonusLayout;
     private TextView mUsedBonusTextView;
     private TextView mBonusTextView;
-    private View mUsedBonusTab;
 
     private ImageView mCouponRadioButton;
     private View mDiscountCouponLayout;
+    private View mUsedCouponLayout;
     private TextView mUsedCouponTextView;
-    private View mUsedCouponTab;
 
     // 결제 수단 선택
     private View mSimpleCardLayout;
@@ -289,16 +289,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     {
         mBonusRadioButton = (ImageView) findViewById(R.id.bonusRadioButton);
         mDiscountBonusLayout = findViewById(R.id.bonusLayout);
+        mUsedBonusLayout = findViewById(R.id.usedBonusLayout);
         mUsedBonusTextView = (TextView) findViewById(R.id.usedBonusTextView);
         mBonusTextView = (TextView) findViewById(R.id.bonusTextView);
-        mUsedBonusTab = findViewById(R.id.usedBonusTab);
 
         mDiscountBonusLayout.setOnClickListener(this);
 
         mCouponRadioButton = (ImageView) findViewById(R.id.couponRadioButton);
         mDiscountCouponLayout = findViewById(R.id.couponLayout);
+        mUsedCouponLayout = findViewById(R.id.usedCouponLayout);
         mUsedCouponTextView = (TextView) findViewById(R.id.usedCouponTextView);
-        mUsedCouponTab = findViewById(R.id.usedCouponTab);
 
         mDiscountCouponLayout.setOnClickListener(this);
     }
@@ -487,11 +487,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountBonusLayout.setSelected(true);
             mDiscountBonusLayout.setOnClickListener(null);
 
-            mUsedBonusTextView.setOnClickListener(this);
-            mUsedBonusTextView.setSelected(true);
-
-            mUsedBonusTab.setOnClickListener(this);
-            mUsedBonusTab.setSelected(true);
+            mUsedBonusLayout.setOnClickListener(this);
+            mUsedBonusLayout.setSelected(true);
 
             mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.BONUS;
         } else
@@ -501,11 +498,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountBonusLayout.setOnClickListener(this);
 
             mUsedBonusTextView.setText(R.string.label_booking_used_bonus);
-            mUsedBonusTextView.setOnClickListener(this);
-            mUsedBonusTextView.setSelected(false);
 
-            mUsedBonusTab.setOnClickListener(this);
-            mUsedBonusTab.setSelected(false);
+            mUsedBonusLayout.setOnClickListener(this);
+            mUsedBonusLayout.setSelected(false);
 
             mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         }
@@ -522,8 +517,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     {
         mBonusRadioButton.setEnabled(isEnabled);
         mDiscountBonusLayout.setEnabled(isEnabled);
-        mUsedBonusTextView.setEnabled(isEnabled);
-        mUsedBonusTab.setEnabled(isEnabled);
+        mUsedBonusLayout.setEnabled(isEnabled);
 
         if (isEnabled == true)
         {
@@ -542,11 +536,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountCouponLayout.setSelected(true);
             mDiscountCouponLayout.setOnClickListener(null);
 
-            mUsedCouponTextView.setOnClickListener(this);
-            mUsedCouponTextView.setSelected(true);
-
-            mUsedCouponTab.setOnClickListener(this);
-            mUsedCouponTab.setSelected(true);
+            mUsedCouponLayout.setOnClickListener(this);
+            mUsedCouponLayout.setSelected(true);
 
             mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.COUPON;
         } else
@@ -556,11 +547,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDiscountCouponLayout.setOnClickListener(this);
 
             mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
-            mUsedCouponTextView.setOnClickListener(this);
-            mUsedCouponTextView.setSelected(false);
 
-            mUsedCouponTab.setOnClickListener(this);
-            mUsedCouponTab.setSelected(false);
+            mUsedCouponLayout.setOnClickListener(this);
+            mUsedCouponLayout.setSelected(false);
 
             mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         }
@@ -577,32 +566,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             Action.HOTEL_USING_COUPON_CLICKED, Label.HOTEL_USING_COUPON_CLICKED, null);
     }
 
-    private void startCancelBonusPopup(final HotelPaymentInformation hotelPaymentInformation)
+    private void startCancelBonusPopup(final HotelPaymentInformation hotelPaymentInformation, View.OnClickListener positiveListener)
     {
-        showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                setBonusSelected(false);
-                setCouponSelected(true);
-                startCouponPopup(hotelPaymentInformation);
-            }
-        }, null);
+        showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
+            getString(R.string.dialog_btn_text_no), positiveListener, null);
     }
 
-    private void startCancelCouponPopup(final HotelPaymentInformation hotelPaymentInformation)
+    private void startCancelCouponPopup(final HotelPaymentInformation hotelPaymentInformation, View.OnClickListener positiveListener)
     {
-        showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mPaymentInformation.setCoupon(null);
-                setCouponSelected(false);
-                setBonusSelected(true);
-            }
-        }, null);
+        showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
+            getString(R.string.dialog_btn_text_no), positiveListener, null);
     }
 
     @Override
@@ -1281,13 +1254,21 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         switch (v.getId())
         {
-            case R.id.usedBonusTextView:
-            case R.id.usedBonusTab:
+            case R.id.usedBonusLayout:
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
                     // 쿠폰 기 선택 상태 일때 쿠폰 선택 취소 팝업 생성 필요함 (">" 아이콘 이므로)
-                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation);
+                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation,  new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mPaymentInformation.setCoupon(null);
+                            setCouponSelected(false);
+                            setBonusSelected(true);
+                        }
+                    });
 
                 } else if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.NONE)
                 {
@@ -1299,7 +1280,14 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 } else
                 {
                     // 적립금 삭제
-                    setBonusSelected(false);
+                    startCancelBonusPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setBonusSelected(false);
+                        }
+                    });
 
                     AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                         , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
@@ -1307,13 +1295,21 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 break;
             }
 
-            case R.id.usedCouponTextView:
-            case R.id.usedCouponTab:
+            case R.id.usedCouponLayout:
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
                 {
                     // 적립금 기 선택 상태 일때 적립금 선택 취소 팝업 생성 필요함 (">" 아이콘 이므로)
-                    startCancelBonusPopup((HotelPaymentInformation) mPaymentInformation);
+                    startCancelBonusPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setBonusSelected(false);
+                            setCouponSelected(true);
+                            startCouponPopup((HotelPaymentInformation) mPaymentInformation);
+                        }
+                    });
                 } else if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.NONE)
                 {
                     // 아무것도 선택 되지 않은 상태 일때 couponLayout 과 동일한 처리
@@ -1322,8 +1318,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 } else
                 {
                     // 쿠폰 삭제
-                    mPaymentInformation.setCoupon(null);
-                    setCouponSelected(false);
+                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation,  new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mPaymentInformation.setCoupon(null);
+                            setCouponSelected(false);
+                        }
+                    });
                 }
                 break;
             }
@@ -1332,7 +1335,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.COUPON)
                 {
-                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation);
+                    startCancelCouponPopup((HotelPaymentInformation) mPaymentInformation,  new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mPaymentInformation.setCoupon(null);
+                            setCouponSelected(false);
+                            setBonusSelected(true);
+                        }
+                    });
 
                 } else
                 {
@@ -1348,7 +1360,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             {
                 if (mPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS)
                 {
-                    startCancelBonusPopup((HotelPaymentInformation) mPaymentInformation);
+                    startCancelBonusPopup((HotelPaymentInformation) mPaymentInformation, new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setBonusSelected(false);
+                            setCouponSelected(true);
+                            startCouponPopup((HotelPaymentInformation) mPaymentInformation);
+                        }
+                    });
 
                 } else
                 {
