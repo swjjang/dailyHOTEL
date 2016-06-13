@@ -137,7 +137,6 @@ public class InformationFragment extends BaseFragment implements Constants
 
             mInformationLayout.updateLoginLayout(false, false);
             mInformationLayout.updateAccountLayout(false, 0, 0);
-            mInformationLayout.setRecommendFriendsVisible(true);
         }
 
         // 혜택 알림 메세지 가져오기
@@ -754,15 +753,11 @@ public class InformationFragment extends BaseFragment implements Constants
                 AppboyManager.setPushEnabled(getContext(), isAgreedBenefit);
 
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
-                mInformationLayout.setRecommendFriendsVisible(isExceedBonus == false);
 
                 // 딥링크로 진입한 경우
                 if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
                 {
-                    if (isExceedBonus == false)
-                    {
-                        mOnEventListener.startInviteFriend();
-                    }
+                    mOnEventListener.startInviteFriend();
 
                     DailyDeepLink.getInstance().clear();
                 }

@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -106,6 +107,8 @@ public class BonusNetworkController extends BaseNetworkController
                 boolean isPhoneVerified = response.getBoolean("is_phone_verified");
                 boolean isVerified = response.getBoolean("is_verified");
                 boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
+
+                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
 
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isExceedBonus);
 
