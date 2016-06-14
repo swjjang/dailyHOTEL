@@ -615,9 +615,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             setResult(RESULT_OK);
             finish();
         }
-
-        // 로그인시에 첫구매시에 팝업이 뜬다
-        DailyPreference.getInstance(this).setShowBenefitAlarm(false);
     }
 
     private class SessionCallback implements ISessionCallback

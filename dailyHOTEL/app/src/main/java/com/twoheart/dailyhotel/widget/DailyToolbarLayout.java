@@ -261,6 +261,6 @@ public class DailyToolbarLayout
             return;
         }
 
-        mToolbar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        mToolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }

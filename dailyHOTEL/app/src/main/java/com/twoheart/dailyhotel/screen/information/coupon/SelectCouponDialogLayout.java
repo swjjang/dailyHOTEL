@@ -145,7 +145,13 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         return mListAdapter.getCoupon(userCouponCode);
     }
 
-    public int getCouponCount() {
+    public int getCouponCount()
+    {
+        if (mListAdapter == null)
+        {
+            return 0;
+        }
+
         return mListAdapter.getCount();
     }
 

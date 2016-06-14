@@ -116,6 +116,7 @@ public class SignupStep2Activity extends BaseActivity
     {
         DailyPreference.getInstance(this).setUserBenefitAlarm(false);
         DailyPreference.getInstance(this).setShowBenefitAlarm(false);
+        DailyPreference.getInstance(this).setShowBenefitAlarmFirstBuyer(false);
         DailyPreference.getInstance(this).setLastestCouponTime("");
         AppboyManager.setPushEnabled(this, false);
 

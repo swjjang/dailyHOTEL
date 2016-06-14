@@ -7,7 +7,7 @@ group = 'com.google.maps.android'
 
 dependencies {
     compile 'com.google.android.gms:play-services-maps:9.0.2'
-    compile 'com.android.support:support-v4:23.+'
+    compile 'com.android.support:support-v4:23.4.0'
 }
 
 

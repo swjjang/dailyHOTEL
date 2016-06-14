@@ -96,7 +96,7 @@ public class BonusActivity extends BaseActivity
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(BonusActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-                 AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT, null);
+                AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT, null);
         }
 
         @Override
@@ -141,6 +141,11 @@ public class BonusActivity extends BaseActivity
         @Override
         public void onBonus(int bonus)
         {
+            if (bonus < 0)
+            {
+                bonus = 0;
+            }
+
             mBonusLayout.setBonus(bonus);
         }
 

@@ -749,6 +749,11 @@ public class InformationFragment extends BaseFragment implements Constants
                 mInformationLayout.updatePushIcon(isAgreedBenefit);
             }
 
+            if (bonus < 0)
+            {
+                bonus = 0;
+            }
+
             mInformationLayout.updateLoginLayout(isLogin, false);
             mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);
 
