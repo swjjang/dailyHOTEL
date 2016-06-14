@@ -49,6 +49,7 @@
             <RelativeLayout
                 android:id="@+id/priceLayout"
                 android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
                 android:layout_height="35dp"
                 android:gravity="center_vertical">
 
