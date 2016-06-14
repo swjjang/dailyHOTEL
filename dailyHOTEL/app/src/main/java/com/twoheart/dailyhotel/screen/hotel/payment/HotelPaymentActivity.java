@@ -121,6 +121,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     private boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
     private boolean mIsEditMode;
+    private boolean mIsUnderPrice;
 
     // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
     // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
@@ -419,6 +420,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
         // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
         if (payPrice > 0 && payPrice < 1000)
         {
+            mIsUnderPrice = true;
+
             mDisableSimpleCardView.setVisibility(View.VISIBLE);
             mDisableCardView.setVisibility(View.VISIBLE);
 
@@ -450,8 +453,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             mDisableSimpleCardView.setVisibility(View.GONE);
             mDisableCardView.setVisibility(View.GONE);
 
-            // 기본이 간편카드 결제이다.
-            changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
+            // 1000원 이하였다가 되돌아 오는 경우 한번 간편결제로 바꾸어준다.
+            if (mIsUnderPrice == true)
+            {
+                mIsUnderPrice = false;
+
+                // 기본이 간편카드 결제이다.
+                changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
+            } else
+            {
+                changedPaymentType(mPaymentInformation.paymentType, mSelectedCreditCard);
+            }
         }
     }
 
