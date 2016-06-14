@@ -99,6 +99,7 @@
                     android:id="@+id/usedBonusTextView"
                     android:layout_width="95dp"
                     android:layout_height="25dp"
+                    android:duplicateParentState="true"
                     android:background="@drawable/payment_ic_amount_time_bg"
                     android:gravity="center"
                     android:text="@string/label_booking_used_bonus"
@@ -109,6 +110,7 @@
                     android:id="@+id/usedBonusTab"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:duplicateParentState="true"
                     android:src="@drawable/selector_booking_used_button"/>
 
             </LinearLayout>
