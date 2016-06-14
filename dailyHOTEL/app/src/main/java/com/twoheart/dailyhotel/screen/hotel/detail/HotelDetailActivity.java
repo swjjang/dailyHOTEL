@@ -21,7 +21,6 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
@@ -48,7 +47,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -268,13 +266,23 @@ public class HotelDetailActivity extends BaseActivity
         {
             case CODE_REQUEST_ACTIVITY_BOOKING:
             {
-                mDontReloadAtOnResume = true;
-
                 setResult(resultCode);
 
-                if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
+                switch (resultCode)
                 {
-                    finish();
+                    case RESULT_OK:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                        finish();
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                        mDontReloadAtOnResume = false;
+                        break;
+
+                    default:
+                        mDontReloadAtOnResume = true;
+                        break;
                 }
                 break;
             }
@@ -747,15 +755,25 @@ public class HotelDetailActivity extends BaseActivity
             {
                 int msgCode = response.getInt("msgCode");
 
-                // 0	성공
+                JSONObject dataJSONObject = null;
+
+                if (response.has("data") == true && response.isNull("data") == false)
+                {
+                    dataJSONObject = response.getJSONObject("data");
+                }
+
+                if (msgCode == 100 && dataJSONObject == null)
+                {
+                    msgCode = 4;
+                }
+
+                // 100	성공
                 // 4	데이터가 없을시
                 // 5	판매 마감시
                 switch (msgCode)
                 {
                     case 100:
                     {
-                        JSONObject dataJSONObject = response.getJSONObject("data");
-
                         mHotelDetail.setData(dataJSONObject);
 
                         if (mIsStartByShare == true)
@@ -786,6 +804,7 @@ public class HotelDetailActivity extends BaseActivity
                                 @Override
                                 public void onDismiss(DialogInterface dialog)
                                 {
+                                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
                                     finish();
                                 }
                             });
@@ -804,6 +823,7 @@ public class HotelDetailActivity extends BaseActivity
                             String msg = response.getString("msg");
 
                             DailyToast.showToast(HotelDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
                             finish();
                         } else
                         {
@@ -812,19 +832,10 @@ public class HotelDetailActivity extends BaseActivity
                         break;
                     }
                 }
-            } catch (JSONException e)
-            {
-                if (DEBUG == false)
-                {
-                    String message = url + " : " + response.toString();
-                    Crashlytics.logException(new JSONException(message));
-                }
-
-                onError(e);
-                finish();
             } catch (Exception e)
             {
                 onError();
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             } finally
             {

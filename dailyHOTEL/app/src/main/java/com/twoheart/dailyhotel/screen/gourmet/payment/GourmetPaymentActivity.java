@@ -104,6 +104,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         if (intent == null)
         {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
             return;
         }
@@ -122,6 +123,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         if (gourmetPaymentInformation.getTicketInformation() == null)
         {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
             return;
         }
@@ -676,6 +678,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 @Override
                 public void onClick(View view)
                 {
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     finish();
                 }
             };
@@ -1138,6 +1141,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         String msg = response.getString("msg");
 
                         DailyToast.showToast(GourmetPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
                         finish();
                         return;
                     } else

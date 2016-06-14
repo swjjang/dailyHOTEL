@@ -223,7 +223,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
             String message;
 
-            if(Util.isTextEmpty(name) == false)
+            if (Util.isTextEmpty(name) == false)
             {
                 message = getString(R.string.kakaolink_msg_invited_friend, name, recommendCode, recommendCode);
             } else

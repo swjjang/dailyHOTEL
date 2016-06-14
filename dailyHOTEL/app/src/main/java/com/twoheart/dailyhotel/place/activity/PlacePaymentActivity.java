@@ -155,6 +155,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     {
         super.onError();
 
+        setResult(CODE_RESULT_ACTIVITY_REFRESH);
         finish();
     }
 
@@ -326,6 +327,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     {
         if (paymentInformation == null || saleTime == null)
         {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
             return;
         }
@@ -492,7 +494,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                setResult(RESULT_CANCELED);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             }
         };
@@ -630,6 +632,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
                 ExLog.e(e.toString());
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             } finally
             {

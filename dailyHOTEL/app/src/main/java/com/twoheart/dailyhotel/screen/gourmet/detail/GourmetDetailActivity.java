@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.ImageInformation;
@@ -28,7 +27,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -133,15 +131,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             try
             {
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msg_code");
 
-                if (msg_code != 0)
+                JSONObject dataJSONObject = null;
+
+                if (response.has("data") == true && response.isNull("data") == false)
+                {
+                    dataJSONObject = response.getJSONObject("data");
+                }
+
+                if (msgCode != 0 || dataJSONObject == null)
                 {
                     if (response.has("msg") == true)
                     {
                         String msg = response.getString("msg");
 
                         DailyToast.showToast(GourmetDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
                         finish();
                         return;
                     } else
@@ -149,8 +155,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         throw new NullPointerException("response == null");
                     }
                 }
-
-                JSONObject dataJSONObject = response.getJSONObject("data");
 
                 mPlaceDetail.setData(dataJSONObject);
 
@@ -166,19 +170,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }
 
                 recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mPlaceDetail);
-            } catch (JSONException e)
-            {
-                if (DEBUG == false)
-                {
-                    String message = url + " : " + response.toString();
-                    Crashlytics.logException(new JSONException(message));
-                }
-
-                onError();
-                finish();
             } catch (Exception e)
             {
                 onError(e);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             } finally
             {
