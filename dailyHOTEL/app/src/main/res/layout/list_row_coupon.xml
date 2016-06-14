@@ -151,7 +151,6 @@
                 android:layout_above="@id/dummyView"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:lineSpacingMultiplier="1.1"
                 android:text="@string/coupon_notice_text"
                 android:textColor="@color/coupon_description_text"
                 android:textSize="11dp"/>

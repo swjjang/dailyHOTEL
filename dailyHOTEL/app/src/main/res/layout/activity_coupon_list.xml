@@ -44,7 +44,7 @@
 			android:gravity="center"
 			android:text="쿠폰 사용내역"
 			android:textColor="@color/coupon_history_button_text"
-			android:textSize="10dp"/>
+			android:textSize="11dp"/>
 
 		<View
 			android:layout_width="match_parent"
