@@ -37,7 +37,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
     private TextView mRecommendCodeTextView;
     private TextView mExceedMessageTextView;
 
-    public static final Intent newInstance(Context context, String code, String name)
+    public static Intent newInstance(Context context, String code, String name)
     {
         Intent intent = new Intent(context, InviteFriendsActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CODE, code);
@@ -46,7 +46,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
         return intent;
     }
 
-    public static final Intent newInstance(Context context)
+    public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, InviteFriendsActivity.class);
 

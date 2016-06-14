@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:duplicateParentState="true"
-                    android:src="@drawable/payment_ic_01_add_card_plus"/>
+                    android:src="@drawable/selector_simplecard_plus_button"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
