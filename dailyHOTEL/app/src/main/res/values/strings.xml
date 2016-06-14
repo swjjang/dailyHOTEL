@@ -304,8 +304,8 @@
     <!-- KaKaoLink Message -->
     <string name="kakaolink_msg_prefix">좋은 어플 추천해 드려요~\n오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.추천인코드 : </string>
     <string name="kakaolink_msg_suffix">을 입력하면 5,000원 바로 할인!</string>
-    <string name="kakaolink_msg_invited_friend">%1$s님이 데일리호텔 적립금 5,000원을 보내셨습니다!\n\n회원가입시 추천인코드 [ %2$s ] 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n데일리호텔에서 4,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 가격으로 즐겨보세요!\n\n추천인코드: [ %3$s ]</string>
-    <string name="kakaolink_msg_none_name_invited_friend">데일리호텔이 적립금 5,000원을 보내셨습니다!\n\n회원가입시 추천인코드 [ %1$s ] 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n데일리호텔에서 4,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 가격으로 즐겨보세요!\n\n추천인코드: [ %2$s ]</string>
+    <string name="kakaolink_msg_invited_friend">%1$s님이 추천하는\nNo.1 호텔예약앱 데일리호텔!\n\n회원가입시 추천인코드 [ %2$s ]를 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n추천인코드: [ %3$s ]\n\n데일리호텔에서 5,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 특가에 만나보세요!</string>
+    <string name="kakaolink_msg_none_name_invited_friend">No.1 호텔예약앱 데일리호텔!\n\n회원가입시 추천인코드 [ %1$s ]를 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n추천인코드: [ %2$s ]\n\n데일리호텔에서 5,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 특가에 만나보세요!</string>
 
     <!-- Alarm Message -->
     <string name="alarm_title">DAILYHOTEL</string>

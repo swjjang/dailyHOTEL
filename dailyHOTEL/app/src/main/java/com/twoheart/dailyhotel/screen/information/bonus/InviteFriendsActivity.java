@@ -221,8 +221,17 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             // 카카오톡 패키지 설치 여부
             getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            String msg = getString(R.string.kakaolink_msg_invited_friend, name, recommendCode, recommendCode);
-            KakaoLinkManager.newInstance(this).sendInviteKakaoLink(msg);
+            String message;
+
+            if(Util.isTextEmpty(name) == false)
+            {
+                message = getString(R.string.kakaolink_msg_invited_friend, name, recommendCode, recommendCode);
+            } else
+            {
+                message = getString(R.string.kakaolink_msg_none_name_invited_friend, recommendCode, recommendCode);
+            }
+
+            KakaoLinkManager.newInstance(this).sendInviteKakaoLink(message);
 
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND, //
                 Action.KAKAO_FRIEND_INVITED, mRecommendCode, null);
