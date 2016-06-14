@@ -87,7 +87,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:lineSpacingMultiplier="1.1"
                 android:maxLines="2"
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="12dp"/>
