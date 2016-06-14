@@ -157,6 +157,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         if (intent == null)
         {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
             return;
         }
@@ -174,6 +175,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
 
         if (hotelPaymentInformation.getSaleRoomInformation() == null)
         {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
             return;
         }
@@ -1256,6 +1258,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 @Override
                 public void onClick(View view)
                 {
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     finish();
                 }
             };
@@ -2045,6 +2048,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         String msg = response.getString("msg");
 
                         DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
                         finish();
                         return;
                     } else
@@ -2300,6 +2304,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             String msg = response.getString("msg");
 
                             DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
                             finish();
                         } else
                         {
@@ -2314,6 +2319,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 unLockUI();
                 onError(e);
 
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             }
         }
@@ -2449,6 +2455,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             String msg = response.getString("msg");
 
                             DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
                             finish();
                         } else
                         {
@@ -2462,6 +2469,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                 ExLog.e(e.toString());
 
                 onError(e);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             } finally
             {
@@ -2492,6 +2500,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         String msg = response.getString("msg");
 
                         DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
                         finish();
                         return;
                     } else
@@ -2587,6 +2596,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             } catch (Exception e)
             {
                 onError(e);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
             } finally
             {
