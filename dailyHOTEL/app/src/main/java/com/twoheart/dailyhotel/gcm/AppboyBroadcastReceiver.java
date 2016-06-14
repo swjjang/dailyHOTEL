@@ -56,16 +56,32 @@ public class AppboyBroadcastReceiver extends BroadcastReceiver
                 String deepLink = intent.getStringExtra(Constants.APPBOY_PUSH_DEEP_LINK_KEY);
                 if (!StringUtils.isNullOrBlank(deepLink))
                 {
-                    Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(deepLink)).putExtras(extras);
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-                    stackBuilder.addNextIntent(getStartActivityIntent(context, extras));
-                    stackBuilder.addNextIntent(uriIntent);
-                    try
+                    if (extras == null)
                     {
-                        stackBuilder.startActivities(extras);
-                    } catch (ActivityNotFoundException e)
+                        Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(deepLink));
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                        stackBuilder.addNextIntent(getStartActivityIntent(context, null));
+                        stackBuilder.addNextIntent(uriIntent);
+                        try
+                        {
+                            stackBuilder.startActivities();
+                        } catch (ActivityNotFoundException e)
+                        {
+                            ExLog.w(TAG + String.format("Could not find appropriate activity to open for deep link %s.", deepLink));
+                        }
+                    } else
                     {
-                        ExLog.w(TAG + String.format("Could not find appropriate activity to open for deep link %s.", deepLink));
+                        Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(deepLink)).putExtras(extras);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                        stackBuilder.addNextIntent(getStartActivityIntent(context, extras));
+                        stackBuilder.addNextIntent(uriIntent);
+                        try
+                        {
+                            stackBuilder.startActivities(extras);
+                        } catch (ActivityNotFoundException e)
+                        {
+                            ExLog.w(TAG + String.format("Could not find appropriate activity to open for deep link %s.", deepLink));
+                        }
                     }
                 } else
                 {
