@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="35dp"
-              android:background="@color/countrycode_section_background"
-              android:gravity="center_vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="25dp">
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/sectionTextView"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:textColor="@color/countrycode_section_text"
-        android:textSize="14dp"
-        android:paddingLeft="19dp"
-        android:paddingBottom="5dp"
-        android:gravity="bottom"/>
+        android:layout_height="match_parent"
+        android:background="@color/default_background_section_cf2f2f3"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="15dp"
+        android:textColor="@color/default_text_c929292"
+        android:textSize="13dp"/>
 
-</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/default_line_ce7e7e7"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_line_ce7e7e7"/>
+</RelativeLayout>

@@ -232,6 +232,12 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
+    void setExceedBonus(boolean isExceedBonus)
+    {
+
+    }
+
+    @Override
     void onStart(Activity activity)
     {
 

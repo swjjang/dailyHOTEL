@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white">
@@ -10,6 +11,7 @@
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/toolbar">
 
         <LinearLayout
@@ -20,31 +22,33 @@
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bg_comment"
                 android:gravity="left|center_vertical"
                 android:lineSpacingExtra="-2dp"
                 android:text="@string/message_signup_step1_guide"
                 android:textColor="@color/curation_information_text"
-                android:textSize="11dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:textSize="11dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/emailView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/label_email"
                 android:textColor="@drawable/selector_label_textcolor"
-                android:textSize="12dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyEditText
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/selector_edittext_background"
                 android:hint="@string/label_necessary"
@@ -54,25 +58,25 @@
                 android:textColor="@color/curation_information_text"
                 android:textColorHint="@color/search_hint_text"
                 android:textSize="16dp"
-                android:theme="@style/EditTextTheme"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:theme="@style/EditTextTheme"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/nameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/label_name"
                 android:textColor="@drawable/selector_label_textcolor"
-                android:textSize="12dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyEditText
                 android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/selector_edittext_background"
                 android:hint="@string/label_necessary_reservation"
@@ -82,16 +86,14 @@
                 android:textColor="@color/curation_information_text"
                 android:textColorHint="@color/search_hint_text"
                 android:textSize="16dp"
-                android:theme="@style/EditTextTheme"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:theme="@style/EditTextTheme"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -104,11 +106,11 @@
                         android:id="@+id/passwordView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:singleLine="true"
                         android:text="@string/label_password_4over"
                         android:textColor="@drawable/selector_label_textcolor"
-                        android:textSize="12dp"
-                        android:maxLines="1"
-                        android:singleLine="true"/>
+                        android:textSize="12dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyEditText
                         android:id="@+id/passwordEditText"
@@ -119,13 +121,13 @@
                         android:hint="@string/label_necessary"
                         android:inputType="textPassword"
                         android:maxLength="20"
+                        android:maxLines="1"
+                        android:nextFocusDown="@+id/confirmPasswordEditText"
                         android:singleLine="true"
                         android:textColor="@color/curation_information_text"
                         android:textColorHint="@color/search_hint_text"
                         android:textSize="16dp"
-                        android:theme="@style/EditTextTheme"
-                        android:nextFocusDown="@+id/confirmPasswordEditText"
-                        android:maxLines="1"/>
+                        android:theme="@style/EditTextTheme"/>
                 </LinearLayout>
 
                 <View
@@ -137,17 +139,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_weight="1"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/confirmPasswordView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:singleLine="true"
                         android:text="@string/label_confirm_password_4over"
                         android:textColor="@drawable/selector_label_textcolor"
-                        android:textSize="12dp"
-                        android:singleLine="true"
-                        android:maxLines="1"/>
+                        android:textSize="12dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyEditText
                         android:id="@+id/confirmPasswordEditText"
@@ -158,12 +160,12 @@
                         android:hint="@string/label_necessary"
                         android:inputType="textPassword"
                         android:maxLength="20"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/curation_information_text"
                         android:textColorHint="@color/search_hint_text"
                         android:textSize="16dp"
-                        android:theme="@style/EditTextTheme"
-                        android:maxLines="1"/>
+                        android:theme="@style/EditTextTheme"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -171,17 +173,19 @@
                 android:id="@+id/recommenderView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/label_recommender_code"
                 android:textColor="@drawable/selector_label_textcolor"
-                android:textSize="12dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyEditText
                 android:id="@+id/recommenderEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/selector_edittext_background"
                 android:hint="@string/label_select"
@@ -191,22 +195,20 @@
                 android:textColor="@color/curation_information_text"
                 android:textColorHint="@color/search_hint_text"
                 android:textSize="16dp"
-                android:theme="@style/EditTextTheme"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:theme="@style/EditTextTheme"/>
 
             <com.twoheart.dailyhotel.widget.DailyCheckBox
                 android:id="@+id/allAgreementCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:text="@string/label_signup_allagreement"
                 android:textColor="@color/information_title"
                 android:textSize="12dp"
-                android:theme="@style/CheckBoxTheme"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"/>
+                android:theme="@style/CheckBoxTheme"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -265,24 +267,37 @@
                     android:textColor="@color/information_title"
                     android:textSize="12dp"/>
             </RelativeLayout>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/nextStepView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/dh_theme_color"
-                android:gravity="center"
-                android:text="@string/label_next"
-                android:textColor="@android:color/white"
-                android:textSize="17dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="30dp"/>
         </LinearLayout>
     </ScrollView>
 
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/nextStepView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_normal_gradation"
+            android:gravity="center"
+            android:text="@string/label_next"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+    </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="6px"
+        android:layout_height="2dp"
         android:layout_below="@+id/toolbar"
         android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>

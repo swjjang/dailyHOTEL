@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_default"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/textLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="56dp">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/act_credit_line1"
+                android:textColor="@color/information_title"
+                android:textSize="16dp"
+                dailyFont:style="Medium"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/act_credit_line2"
+                android:textColor="@color/curation_title_text"
+                android:textSize="14dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:text="@string/act_credit_line3"
+                android:textColor="@color/information_title"
+                android:textSize="16dp"
+                dailyFont:style="Medium"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/exceedMessageTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/act_credit_line4"
+                android:textColor="@color/information_title"
+                android:textSize="14dp"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/textLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="23dp"
+            android:gravity="center"
+            android:src="@drawable/ic_coin"/>
+
+        <LinearLayout
+            android:id="@+id/noSigninButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="67dp"
+            android:layout_marginLeft="77dp"
+            android:layout_marginRight="77dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/signinTextView"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_normal_gradation"
+                android:gravity="center"
+                android:text="@string/frag_booking_btn_login"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/signupTextView"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_normal_gradation"
+                android:gravity="center"
+                android:text="@string/act_credit_sign_up"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/signinButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="67dp"
+            android:layout_marginLeft="77dp"
+            android:layout_marginRight="77dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:text="@string/label_my_code"
+                android:textColor="@color/curation_title_text"
+                android:textSize="13dp"/>
+
+            <RelativeLayout
+                android:id="@+id/copyCodeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_textview_round"
+                android:gravity="center">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/codeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/curation_information_text"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/copyCodeTextView"
+                    android:layout_width="38dp"
+                    android:layout_height="21dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toRightOf="@+id/codeTextView"
+                    android:background="@drawable/more_btn_padding"
+                    android:gravity="center"
+                    android:text="@string/label_copy"
+                    android:textColor="@color/curation_title_text"
+                    android:textSize="11dp"
+                    android:layout_marginLeft="9dp"/>
+            </RelativeLayout>
+
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/inviteKakaoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/shape_button_kakao_background"
+                android:gravity="center"
+                android:text="@string/act_credit_kakao"
+                android:textColor="@color/kakaotalk_textcolkr"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
+</RelativeLayout>

@@ -29,7 +29,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     private View mCertificationLayout;
     private View mVerificationLayout, mConfirm, mCertificationNumberView;
-    private View mCountryView, mPhoneView, mVerificationView;
+    private View mPhoneView, mVerificationView;
     private EditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextView mGuideTextView;
     private TextWatcher mTextWatcher;
@@ -74,7 +74,6 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     private void initLayoutForm(View view)
     {
         mGuideTextView = (TextView) view.findViewById(R.id.guideTextView);
-        mCountryView = view.findViewById(R.id.countryView);
         mCountryEditText = (EditText) view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);

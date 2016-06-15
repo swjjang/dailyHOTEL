@@ -119,7 +119,7 @@ public class GourmetDetailLayout
         mTicketTypeLayout = activity.findViewById(R.id.ticketTypeLayout);
         mTicketTypeRecyclerView = (RecyclerView) mTicketTypeLayout.findViewById(R.id.ticketTypeRecyclerView);
         mTicketTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        EdgeEffectColor.setEdgeGlowColor(mTicketTypeRecyclerView, activity.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mTicketTypeRecyclerView, activity.getResources().getColor(R.color.default_over_scroll_edge));
         mTicketTypeLayout.setVisibility(View.INVISIBLE);
 
         mBottomLayout = activity.findViewById(R.id.bottomLayout);

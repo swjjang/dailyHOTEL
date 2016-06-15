@@ -268,21 +268,30 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockUI();
+
         try
         {
-            releaseUiComponent();
-
             switch (requestCode)
             {
                 case CODE_REQUEST_ACTIVITY_BOOKING:
                 {
-                    mDontReloadAtOnResume = true;
-
                     setResult(resultCode);
 
-                    if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                    switch (resultCode)
                     {
-                        finish();
+                        case RESULT_OK:
+                        case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                            finish();
+                            break;
+
+                        case CODE_RESULT_ACTIVITY_REFRESH:
+                            mDontReloadAtOnResume = false;
+                            break;
+
+                        default:
+                            mDontReloadAtOnResume = true;
+                            break;
                     }
                     break;
                 }

@@ -19,7 +19,7 @@
         <item name="android:listViewStyle">@style/ListViewDH_Theme</item>
         <item name="android:listViewWhiteStyle">@style/ListViewDH_Theme.White</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemDH_Theme</item>
-        <item name="android:windowBackground">@color/activity_background</item>
+        <item name="android:windowBackground">@color/default_background</item>
     </style>
 
     <style name="Theme.AppCompat.Translucent" parent="AppBaseTheme">

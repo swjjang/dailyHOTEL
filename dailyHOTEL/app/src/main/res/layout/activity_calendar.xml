@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/black_a67">
@@ -137,7 +138,7 @@
             android:id="@+id/calendarScrollLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/confirmView"
+            android:layout_above="@+id/bottomLayout"
             android:layout_below="@+id/lineView"
             android:fadingEdge="none"
             android:orientation="vertical"
@@ -155,11 +156,12 @@
             android:id="@+id/toastLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentBottom="false"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/shape_calendar_toast_background"
             android:padding="15dp"
+            android:layout_above="@+id/bottomLayout"
             android:visibility="gone">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
@@ -179,21 +181,35 @@
             android:id="@+id/cancelView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/confirmView"
+            android:layout_above="@+id/bottomLayout"
             android:layout_alignParentBottom="false"
             android:layout_below="@+id/lineView"
             android:visibility="gone"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/confirmView"
+        <RelativeLayout
+            android:id="@+id/bottomLayout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="64dp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/selector_button_background_color"
-            android:gravity="center"
-            android:text="@string/label_calendar_placelist_confirm_selected_date"
-            android:textColor="@android:color/white"
-            android:textSize="20dp"/>
+            android:background="@color/white">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/default_line_ce7e7e7"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/confirmView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@drawable/selector_button_default_background"
+                android:gravity="center"
+                android:text="@string/label_selected_date"
+                android:textColor="@drawable/selector_button_default_text_color"
+                android:textSize="17dp"
+                dailyFont:style="Medium"/>
+        </RelativeLayout>
     </RelativeLayout>
 
     <View

@@ -88,16 +88,16 @@ public class FinalCheckLayout extends FrameLayout
         mDailySignatureView = (DailySignatureView) view.findViewById(R.id.signatureView);
     }
 
+    public DailySignatureView getDailySignatureView()
+    {
+        return mDailySignatureView;
+    }
+
     public void setOnUserActionListener(DailySignatureView.OnUserActionListener listener)
     {
         if (mDailySignatureView != null)
         {
             mDailySignatureView.setOnUserActionListener(listener);
         }
-    }
-
-    public DailySignatureView getDailySignatureView()
-    {
-        return mDailySignatureView;
     }
 }

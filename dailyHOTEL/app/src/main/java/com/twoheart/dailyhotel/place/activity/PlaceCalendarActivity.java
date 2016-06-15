@@ -56,7 +56,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         ViewGroup calendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
         ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
         View closeView = findViewById(R.id.closeView);
         closeView.setOnClickListener(this);

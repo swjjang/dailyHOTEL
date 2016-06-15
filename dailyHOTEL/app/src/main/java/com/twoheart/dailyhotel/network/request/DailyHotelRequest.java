@@ -28,12 +28,16 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
     private Map<String, String> mParameters;
     private boolean mIsUsedAuthorization;
+    private boolean mIsUsedAccept;
 
     public DailyHotelRequest(Object tag, int method, String url, Map<String, String> parameters, ErrorListener errorListener)
     {
         this(tag, method, url, errorListener);
 
         mParameters = parameters;
+
+        mIsUsedAuthorization = false;
+        mIsUsedAccept = false;
     }
 
     private DailyHotelRequest(Object tag, int method, String url, ErrorListener listener)
@@ -284,6 +288,12 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         map.put("Os-Type", "android");
         map.put("App-Version", DailyHotel.VERSION);
 
+        if (mIsUsedAccept == true)
+        {
+            map.put("accept", "application/json");
+            map.put("content-type", "application/json");
+        }
+
         if (mIsUsedAuthorization == true && Util.isTextEmpty(DailyHotel.AUTHORIZATION) == false)
         {
             map.put("Authorization", DailyHotel.AUTHORIZATION);
@@ -295,6 +305,11 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     public void setUsedAuthorization(boolean isUsed)
     {
         mIsUsedAuthorization = isUsed;
+    }
+
+    public void setIsUsedAccept(boolean isUsed)
+    {
+        mIsUsedAccept = isUsed;
     }
 
     public static void makeUrlEncoder()

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -155,6 +156,8 @@ public class ProfileActivity extends BaseActivity
                 {
                     DailyPreference.getInstance(ProfileActivity.this).clear();
 
+                    DailyHotel.AUTHORIZATION = null;
+
                     try
                     {
                         LoginManager.getInstance().logOut();
@@ -197,7 +200,8 @@ public class ProfileActivity extends BaseActivity
     private ProfileNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new ProfileNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserInformation(String userIndex, String email, String name, String phoneNumber, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+        public void onUserInformation(String userIndex, String email, String name, String phoneNumber//
+            , boolean isVerified, boolean isPhoneVerified, String verifiedDate, boolean isExceedBonus)
         {
             mUserIndex = userIndex;
             String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
@@ -222,6 +226,8 @@ public class ProfileActivity extends BaseActivity
                     DailyPreference.getInstance(ProfileActivity.this).setVerification(false);
                 }
             }
+
+            AnalyticsManager.getInstance(ProfileActivity.this).setExceedBonus(isExceedBonus);
         }
 
         @Override

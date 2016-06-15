@@ -79,7 +79,7 @@ public abstract class PlaceReceiptActivity extends BaseActivity
         if (mIsFullscreen == true)
         {
             mIsFullscreen = false;
-            updateFullscreenStatus(mIsFullscreen);
+            updateFullscreenStatus(false);
         } else
         {
             super.onBackPressed();

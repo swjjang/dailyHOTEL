@@ -15,7 +15,6 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +31,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 public abstract class PlaceSearchActivity extends BaseActivity
 {
@@ -108,9 +106,6 @@ public abstract class PlaceSearchActivity extends BaseActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
 
-        ImageView titleIconView = (ImageView) dialogView.findViewById(R.id.titleIconView);
-        titleIconView.setImageResource(R.drawable.popup_ic_location);
-
         // 상단
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
@@ -131,7 +126,6 @@ public abstract class PlaceSearchActivity extends BaseActivity
         spannableStringBuilder.setSpan(new UnderlineSpan(), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         messageTextView.setText(spannableStringBuilder);
-        messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
         messageTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -161,7 +155,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (dialog != null && dialog.isShowing())
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -177,8 +171,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
             }
         });
 
-        confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
-        confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
+        //        confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
+        //        confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
 
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {

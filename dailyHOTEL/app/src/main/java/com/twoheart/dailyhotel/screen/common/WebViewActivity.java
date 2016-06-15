@@ -115,7 +115,6 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
             } else if (url.contains("facebook.com") || url.contains("naver.com"))
             {
                 browseToExternalBrowser(url);
-
             } else if (url.contains("kakaoplus://"))
             {
 
@@ -138,7 +137,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
                         ExLog.e(e1.toString());
                     }
                 }
-            } else if (url.contains("call://"))
+            } else if (url.contains("call://") == true)
             {
 
             } else

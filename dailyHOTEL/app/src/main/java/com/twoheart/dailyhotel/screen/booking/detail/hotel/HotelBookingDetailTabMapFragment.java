@@ -41,11 +41,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
 public class HotelBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
@@ -101,9 +96,8 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
         hotelGradeTextView.setText(mBookingDetail.grade.getName(getActivity()));
         hotelGradeTextView.setBackgroundResource(mBookingDetail.grade.getColorResId());
 
-        View searchMapView = view.findViewById(R.id.searchMapView);
-        searchMapView.setVisibility(View.VISIBLE);
-        searchMapView.setOnClickListener(new View.OnClickListener()
+        View buttonLayout = view.findViewById(R.id.buttonLayout);
+        buttonLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -114,19 +108,22 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
                     return;
                 }
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                try
+                {
+                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkInDate, "yyMMdd");
+                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkOutDate, "yyMMdd");
 
-                String checkInDay = simpleDateFormat.format(new Date(mBookingDetail.checkInDate));
-                String checkOutDay = simpleDateFormat.format(new Date(mBookingDetail.checkOutDate));
+                    String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
 
-                String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
-
-                Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
-                    , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0//
-                    , AnalyticsManager.Category.BOOKING_STATUS//
-                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
-                    , label);
+                    Util.showShareMapDialog(baseActivity, mBookingDetail.placeName//
+                        , mBookingDetail.latitude, mBookingDetail.longitude, mBookingDetail.isOverseas != 0//
+                        , AnalyticsManager.Category.BOOKING_STATUS//
+                        , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
+                        , label);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
             }
         });
 
@@ -136,23 +133,27 @@ public class HotelBookingDetailTabMapFragment extends BaseFragment implements On
             @Override
             public void onClick(View v)
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
+                try
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                Util.clipText(baseActivity, mBookingDetail.address);
+                    Util.clipText(baseActivity, mBookingDetail.address);
 
-                DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkInDate, "yyMMdd");
+                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mBookingDetail.checkOutDate, "yyMMdd");
 
-                String checkInDay = simpleDateFormat.format(new Date(mBookingDetail.checkInDate));
-                String checkOutDay = simpleDateFormat.format(new Date(mBookingDetail.checkOutDate));
+                    String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
 
-                String label = String.format("Hotel-%s-%s-%s", mBookingDetail.placeName, checkInDay, checkOutDay);
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_ADDRESS_COPY_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_ADDRESS_COPY_CLICKED//
+                        , label, null);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
 
-                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_ADDRESS_COPY_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_ADDRESS_COPY_CLICKED//
-                    , label, null);
             }
         });
 

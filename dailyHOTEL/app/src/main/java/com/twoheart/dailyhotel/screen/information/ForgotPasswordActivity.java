@@ -27,8 +27,7 @@ import org.json.JSONObject;
 
 public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener
 {
-    private TextView btnForgot;
-    private EditText etForgot;
+    private EditText forgotEditText;
     private String mEmail;
 
     @Override
@@ -40,11 +39,12 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         initToolbar();
 
-        etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
-        btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
-        btnForgot.setOnClickListener(this);
-        etForgot.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        etForgot.setOnEditorActionListener(new OnEditorActionListener()
+        forgotEditText = (EditText) findViewById(R.id.et_forgot_pwd);
+        final View forgotView = findViewById(R.id.btn_forgot_pwd);
+        forgotView.setOnClickListener(this);
+
+        forgotEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        forgotEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
 
             @Override
@@ -53,7 +53,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
                 switch (actionId)
                 {
                     case EditorInfo.IME_ACTION_DONE:
-                        btnForgot.performClick();
+                        forgotView.performClick();
                         break;
                 }
                 return false;
@@ -93,7 +93,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         lockUiComponent();
 
-        mEmail = etForgot.getText().toString().trim();
+        mEmail = forgotEditText.getText().toString().trim();
 
         if (Util.isTextEmpty(mEmail) == true)
         {
@@ -142,16 +142,11 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
             try
             {
-                String result = null;
-
-                if (response != null)
-                {
-                    result = response.getString("isSuccess");
-                }
+                String result = response.getString("isSuccess");
 
                 if ("true".equalsIgnoreCase(result) == true)
                 {
-                    etForgot.setText(null);
+                    forgotEditText.setText(null);
 
                     showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
                     {
@@ -197,12 +192,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         {
             try
             {
-                String result = null;
-
-                if (response != null)
-                {
-                    result = response.getString("isSuccess");
-                }
+                String result = response.getString("isSuccess");
 
                 if ("true".equalsIgnoreCase(result) == true)
                 {

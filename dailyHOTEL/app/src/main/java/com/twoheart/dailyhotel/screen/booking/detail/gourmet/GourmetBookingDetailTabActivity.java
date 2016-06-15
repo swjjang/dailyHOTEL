@@ -37,11 +37,8 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -70,7 +67,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
-        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex, mBooking.isUsed);
+        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex);
         fragmentList.add(baseFragment01);
 
         BaseFragment baseFragment02 = GourmetBookingDetailTabInfomationFragment.newInstance(placeBookingDetail);
@@ -138,15 +135,18 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
             case 2:
             {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                try
+                {
+                    String reservationTime = Util.simpleDateFormatISO8601toFormat(mGourmetBookingDetail.reservationTime, "yyMMdd");
+                    String label = String.format("Gourmet-%s-%s", mGourmetBookingDetail.placeName, reservationTime);
 
-                String reservationTime = simpleDateFormat.format(new Date(mGourmetBookingDetail.reservationTime));
-                String label = String.format("Gourmet-%s-%s", mGourmetBookingDetail.placeName, reservationTime);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                    , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
-                    , label, null);
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
+                        , label, null);
+                } catch (ParseException e)
+                {
+                    ExLog.d(e.toString());
+                }
                 break;
             }
         }
@@ -249,9 +249,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         {
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 

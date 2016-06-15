@@ -137,12 +137,8 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
                 // 서울이 아니고 상세 지역 정보가 아닌 경우..지역별 중심값으로 이동.
                 LatLng latlng = new LatLng(35.856899430657805, 127.73446206003428);
-
-                if (latlng != null)
-                {
-                    CameraPosition cp = new CameraPosition.Builder().target(latlng).zoom(6.791876f).build();
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-                }
+                CameraPosition cp = new CameraPosition.Builder().target(latlng).zoom(6.791876f).build();
+                mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
                 mIsCreateView = true;
 

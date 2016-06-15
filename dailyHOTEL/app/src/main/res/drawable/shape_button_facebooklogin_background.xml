@@ -23,7 +23,7 @@
 
     <corners android:radius="@dimen/abc_control_corner_material"/>
 
-    <solid android:color="@color/com_facebook_blue"/>
+    <solid android:color="@color/default_background_facebook"/>
 
     <padding
         android:bottom="@dimen/abc_button_padding_vertical_material"

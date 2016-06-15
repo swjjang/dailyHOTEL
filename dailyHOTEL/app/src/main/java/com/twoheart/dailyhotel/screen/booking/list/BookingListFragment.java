@@ -94,8 +94,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         mListView.setShadowVisible(false);
         mListView.setTag("BookingListFragment");
 
-        mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
-        btnLogin = view.findViewById(R.id.btn_booking_empty_login);
+        mEmptyLayout = (RelativeLayout) view.findViewById(R.id.emptyLayout);
+        btnLogin = view.findViewById(R.id.loginView);
 
         btnLogin.setOnClickListener(this);
     }
@@ -399,10 +399,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                     updateLayout(true, bookingArrayList);
 
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST);
-
                     Map<String, String> params = new HashMap<>();
                     params.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
+
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, params);
                 }
 
                 // 사용자 정보 요청.

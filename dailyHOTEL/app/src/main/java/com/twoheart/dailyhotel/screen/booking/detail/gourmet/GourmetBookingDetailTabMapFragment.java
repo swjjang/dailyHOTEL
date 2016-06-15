@@ -33,10 +33,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.text.ParseException;
 
 public class GourmetBookingDetailTabMapFragment extends BaseFragment implements OnMapClickListener
 {
@@ -104,9 +101,8 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
             placeCateogryTextView.setBackgroundResource(R.drawable.shape_rect_blackcolor);
         }
 
-        View searchMapView = view.findViewById(R.id.searchMapView);
-        searchMapView.setVisibility(View.VISIBLE);
-        searchMapView.setOnClickListener(new View.OnClickListener()
+        View buttonLayout = view.findViewById(R.id.buttonLayout);
+        buttonLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -117,16 +113,19 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
                     return;
                 }
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                try
+                {
+                    String reservationTime = Util.simpleDateFormatISO8601toFormat(gourmetBookingDetail.reservationTime, "yyMMdd");
+                    String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
 
-                String reservationTime = simpleDateFormat.format(new Date(gourmetBookingDetail.reservationTime));
-                String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
-
-                Util.showShareMapDialog(baseActivity, mPlaceBookingDetail.placeName//
-                    , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false, AnalyticsManager.Category.BOOKING_STATUS//
-                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
-                    , label);
+                    Util.showShareMapDialog(baseActivity, mPlaceBookingDetail.placeName//
+                        , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, false, AnalyticsManager.Category.BOOKING_STATUS//
+                        , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_NAVIGATION_APP_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_NAVIGATION_APP_CLICKED//
+                        , label);
+                } catch (ParseException e)
+                {
+                    ExLog.d(e.toString());
+                }
             }
         });
 
@@ -142,15 +141,18 @@ public class GourmetBookingDetailTabMapFragment extends BaseFragment implements 
 
                 DailyToast.showToast(baseActivity, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                try
+                {
+                    String reservationTime = Util.simpleDateFormatISO8601toFormat(gourmetBookingDetail.reservationTime, "yyMMdd");
+                    String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
 
-                String reservationTime = simpleDateFormat.format(new Date(gourmetBookingDetail.reservationTime));
-                String label = String.format("Gourmet-%s-%s", gourmetBookingDetail.placeName, reservationTime);
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                    , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_ADDRESS_COPY_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_ADDRESS_COPY_CLICKED//
-                    , label, null);
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , mIsUsed ? AnalyticsManager.Action.PAST_BOOKING_ADDRESS_COPY_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_ADDRESS_COPY_CLICKED//
+                        , label, null);
+                } catch (ParseException e)
+                {
+                    ExLog.d(e.toString());
+                }
             }
         });
 

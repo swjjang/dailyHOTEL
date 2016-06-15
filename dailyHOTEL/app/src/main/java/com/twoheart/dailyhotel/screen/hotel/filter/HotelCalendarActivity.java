@@ -27,7 +27,6 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
     private Day mCheckInDay;
     private Day mCheckOutDay;
     private TextView mConfirmTextView;
-    private TextView mToastTextView;
     private String mCallByScreen;
 
     private boolean mIsAnimation;
@@ -57,6 +56,12 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         mIsAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
+
+        if (saleTime == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
 
         initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
@@ -100,10 +105,10 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
         } else
         {
             // 문구 내용을 변경한다.
-            mToastTextView = (TextView) mToastView.findViewById(R.id.toastTextView);
+            TextView toastTextView = (TextView) mToastView.findViewById(R.id.toastTextView);
 
             mConfirmTextView.setText(R.string.label_calendar_search_selected_date);
-            mToastTextView.setText(R.string.message_calendar_search_reset);
+            toastTextView.setText(R.string.message_calendar_search_reset);
         }
     }
 

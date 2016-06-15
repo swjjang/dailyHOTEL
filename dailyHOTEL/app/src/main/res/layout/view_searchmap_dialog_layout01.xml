@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/popup_bg_white_full"
+              android:orientation="vertical"
+              android:paddingBottom="10dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:paddingTop="24dp">
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_horizontal"
+        android:text="@string/label_map_searchmap"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="17dp"
+        dailyFont:style="Medium"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="40dp"
+        android:layout_marginTop="33dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/kakaoMapLayout"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center"
+            android:drawablePadding="1dp"
+            android:drawableTop="@drawable/ic_daum"
+            android:gravity="center"
+            android:text="@string/label_share_daum_map"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"
+            android:visibility="visible"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/naverMapLayout"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:drawablePadding="1dp"
+            android:drawableTop="@drawable/ic_naver"
+            android:gravity="center"
+            android:text="@string/label_share_naver_map"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"
+            android:visibility="visible"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/googleMapLayout"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:drawablePadding="1dp"
+            android:drawableTop="@drawable/ic_google"
+            android:gravity="center"
+            android:text="@string/label_share_google_map"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"
+            />
+    </LinearLayout>
+</LinearLayout>

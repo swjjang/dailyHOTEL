@@ -27,7 +27,7 @@
     <View
         android:id="@+id/toolbarUnderline"
         android:layout_width="match_parent"
-        android:layout_height="6px"
+        android:layout_height="2dp"
         android:background="@drawable/navibar_gradation"
         android:layout_below="@+id/tabLayout"/>
 </RelativeLayout>

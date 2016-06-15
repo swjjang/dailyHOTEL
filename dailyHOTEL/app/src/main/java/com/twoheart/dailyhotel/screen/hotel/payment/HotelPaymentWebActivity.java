@@ -173,10 +173,22 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("payment_type", hotelPaymentInformation.paymentType.name());
         builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
         builder.add("nights", String.valueOf(saleRoomInformation.nights));
-        builder.add("bonus", String.valueOf(hotelPaymentInformation.isEnabledBonus ? hotelPaymentInformation.bonus : 0));
+
+        switch (hotelPaymentInformation.discountType)
+        {
+            case BONUS:
+                builder.add("bonus", Integer.toString(hotelPaymentInformation.bonus));
+                break;
+
+            case COUPON:
+                builder.add("user_coupon_code", hotelPaymentInformation.getCoupon().userCouponCode);
+                break;
+        }
+
         builder.add("guest_name", guest.name);
         builder.add("guest_phone", guest.phone.replace("-", ""));
         builder.add("guest_email", guest.email);
+        builder.add("guest_msg", guest.message);
 
         String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)//
             + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);

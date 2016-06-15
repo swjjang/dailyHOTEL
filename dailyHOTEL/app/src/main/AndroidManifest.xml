@@ -183,6 +183,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".screen.information.terms.BonusTermActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.hotel.payment.HotelPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -249,7 +253,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.bonus.BonusListActivity"
+            android:name=".screen.information.bonus.InviteFriendsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -284,6 +288,23 @@
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
             android:name=".screen.information.bonus.BonusActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.information.coupon.CouponListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.information.coupon.CouponHistoryActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.information.coupon.SelectCouponDialogActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+        <activity
+            android:name=".screen.information.coupon.CouponTermActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -351,11 +372,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screen.common.push.PushDialogActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
-        <activity
             android:name=".screen.common.push.PushLockDialogActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
@@ -377,7 +393,14 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>
-
+        <activity
+            android:name="com.appboy.ui.AppboyWebViewActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.appboy.ui.activities.AppboyFeedActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyACc8hv-TecbnEBvl8Z758hBMP1ssqo4gQ"/>

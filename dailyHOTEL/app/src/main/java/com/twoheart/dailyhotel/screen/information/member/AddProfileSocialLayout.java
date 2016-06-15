@@ -79,7 +79,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     private void initLayoutForm(View view)
     {
         ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mPhoneLayout = view.findViewById(R.id.phoneLayout);
         mEmailLayout = view.findViewById(R.id.emailLayout);

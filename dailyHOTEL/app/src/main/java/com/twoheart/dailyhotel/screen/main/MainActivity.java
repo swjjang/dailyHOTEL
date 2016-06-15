@@ -27,12 +27,19 @@ import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AppboyManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -47,6 +54,7 @@ public class MainActivity extends BaseActivity implements Constants
     private View mSplashLayout;
 
     private boolean mIsInitialization;
+    private boolean mIsBenefitAlarm;
     private Handler mDelayTimeHandler = new Handler()
     {
         @Override
@@ -139,7 +147,8 @@ public class MainActivity extends BaseActivity implements Constants
         // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
         mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
 
-        if (DailyPreference.getInstance(this).isAllowPush() == true)
+        // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
+        if (DailyPreference.getInstance(this).isUserBenefitAlarm() == true)
         {
             AppboyManager.setPushEnabled(this, true);
         } else
@@ -187,14 +196,13 @@ public class MainActivity extends BaseActivity implements Constants
         {
             if (VolleyHttpClient.isAvailableNetwork(this) == false)
             {
+                mDelayTimeHandler.removeMessages(0);
+
                 showDisabledNetworkPopup();
             }
         } else
         {
-            if (mIsInitialization == false)
-            {
-                mNetworkController.requestEvent();
-            }
+            mNetworkController.requestCommonDatetime();
         }
     }
 
@@ -215,6 +223,9 @@ public class MainActivity extends BaseActivity implements Constants
         {
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
                 mNetworkController.requestGourmetIsExistRating();
+                break;
+
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
                 break;
 
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
@@ -410,7 +421,7 @@ public class MainActivity extends BaseActivity implements Constants
         mDelayTimeHandler.removeMessages(0);
         mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
         mIsInitialization = false;
-        mNetworkController.requestEvent();
+        mNetworkController.requestCommonDatetime();
     }
 
     private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
@@ -470,15 +481,18 @@ public class MainActivity extends BaseActivity implements Constants
     private MainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new MainNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void updateNewEvent()
+        public void updateNewEvent(boolean isNewEvent, boolean isNewCoupon)
         {
-            if (DailyPreference.getInstance(MainActivity.this).hasNewEvent() == true)
-            {
-                mMenuBarLayout.setNewIconVisible(true);
-            } else
+            if (isNewEvent == false && isNewCoupon == false)
             {
                 mMenuBarLayout.setNewIconVisible(false);
+            } else
+            {
+                mMenuBarLayout.setNewIconVisible(true);
             }
+
+            DailyPreference.getInstance(MainActivity.this).setNewEvent(isNewEvent);
+            DailyPreference.getInstance(MainActivity.this).setNewCoupon(isNewCoupon);
 
             LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(BROADCAST_EVENT_UPDATE));
         }
@@ -711,7 +725,11 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT);
                 } else if (DailyDeepLink.getInstance().isEventView() == true//
-                    || DailyDeepLink.getInstance().isBonusView() == true)
+                    || DailyDeepLink.getInstance().isBonusView() == true//
+                    || DailyDeepLink.getInstance().isEventDetailView() == true//
+                    || DailyDeepLink.getInstance().isCouponView() == true //
+                    || DailyDeepLink.getInstance().isInformationView() == true //
+                    || DailyDeepLink.getInstance().isRecommendFriendView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)
@@ -756,6 +774,7 @@ public class MainActivity extends BaseActivity implements Constants
                     mNetworkController.requestUserInformation();
                 } else
                 {
+                    // GCM 등록
                     Util.requestGoogleCloudMessaging(MainActivity.this, new Util.OnGoogleCloudMessagingListener()
                     {
                         @Override
@@ -769,8 +788,136 @@ public class MainActivity extends BaseActivity implements Constants
                             mNetworkController.registerNotificationId(registrationId, null);
                         }
                     });
+
+                    // 헤택이 Off 되어있는 경우 On으로 수정
+                    if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == false//
+                        && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
+                    {
+                        mNetworkController.requestNoticeAgreement(false);
+                    }
                 }
             }
+        }
+
+        @Override
+        public void onNoticeAgreement(String message, boolean isFirstTimeBuyer)
+        {
+            if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == true)
+            {
+                return;
+            }
+
+            final boolean isLogined = Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false;
+
+            if (isLogined == true)
+            {
+                if (isFirstTimeBuyer == true && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarmFirstBuyer() == false)
+                {
+                    DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarmFirstBuyer(true);
+                } else if (DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
+                {
+
+                } else
+                {
+                    return;
+                }
+            } else
+            {
+                if (DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == true)
+                {
+                    return;
+                }
+            }
+
+            // 혜택
+            showSimpleDialogType01(getString(R.string.label_setting_alarm), message, getString(R.string.label_now_setting_alarm), getString(R.string.label_after_setting_alarm)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mIsBenefitAlarm = true;
+                        mNetworkController.requestNoticeAgreementResult(isLogined, true);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mIsBenefitAlarm = false;
+                        mNetworkController.requestNoticeAgreementResult(isLogined, false);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        mIsBenefitAlarm = false;
+                        mNetworkController.requestNoticeAgreementResult(isLogined, false);
+                    }
+                }, null, true);
+        }
+
+        @Override
+        public void onNoticeAgreementResult(final String agreeMessage, final String cancelMessage)
+        {
+            DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
+            DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(mIsBenefitAlarm);
+            AppboyManager.setPushEnabled(MainActivity.this, mIsBenefitAlarm);
+
+            if (mIsBenefitAlarm == true)
+            {
+                showSimpleDialog(getString(R.string.label_setting_alarm), agreeMessage, getString(R.string.dialog_btn_text_confirm), null);
+            } else
+            {
+                showSimpleDialog(getString(R.string.label_setting_alarm), cancelMessage, getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }
+
+        @Override
+        public void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime)
+        {
+            try
+            {
+                // 요청하면서 CS운영시간도 같이 받아온다.
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                String text = getString(R.string.dialog_message_cs_operating_time //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(openDateTime))) //
+                    , Integer.parseInt(simpleDateFormat.format(new Date(closeDateTime))));
+
+                DailyPreference.getInstance(MainActivity.this).setOperationTimeMessage(text);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            String viewedEventTime = DailyPreference.getInstance(MainActivity.this).getViewedEventTime();
+            String viewedCouponTime = DailyPreference.getInstance(MainActivity.this).getViewedCouponTime();
+
+            currentDateTime -= 3600 * 1000 * 9;
+
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+            calendar.setTimeInMillis(currentDateTime);
+
+            String lastestTime = Util.getISO8601String(calendar.getTime());
+
+            DailyPreference.getInstance(MainActivity.this).setLastestEventTime(lastestTime);
+            DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(lastestTime);
+
+            if (Util.isTextEmpty(viewedEventTime) == true)
+            {
+                viewedEventTime = Util.getISO8601String(new Date(0L));
+            }
+
+            if (Util.isTextEmpty(viewedCouponTime) == true)
+            {
+                viewedCouponTime = Util.getISO8601String(new Date(0L));
+            }
+
+            mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime);
         }
     };
 }

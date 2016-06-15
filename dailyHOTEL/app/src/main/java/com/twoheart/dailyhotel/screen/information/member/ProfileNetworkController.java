@@ -7,17 +7,17 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class ProfileNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onUserInformation(String userIndex, String email, String name, String phoneNumber, boolean isVerified, boolean isPhoneVerified, String verifiedDate);
+        void onUserInformation(String userIndex, String email, String name, String phoneNumber//
+            , boolean isVerified, boolean isPhoneVerified, String verifiedDate, boolean isExceedBonus);
     }
 
     public ProfileNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -59,19 +59,20 @@ public class ProfileNetworkController extends BaseNetworkController
                 String userIndex = response.getString("idx");
                 boolean isVerified = response.getBoolean("is_verified");
                 boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+                boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
+
+                DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
 
                 String verifiedDate = null;
 
                 if (isVerified == true && isPhoneVerified == true)
                 {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
-                    Date date = simpleDateFormat.parse(response.getString("phone_verified_at"));
-
-                    SimpleDateFormat verifiedSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
-                    verifiedDate = verifiedSimpleDateFormat.format(date);
+                    verifiedDate = Util.simpleDateFormatISO8601toFormat( //
+                        response.getString("phone_verified_at"), "yyyy.MM.dd");
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone, isVerified, isPhoneVerified, verifiedDate);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex//
+                    , email, name, phone, isVerified, isPhoneVerified, verifiedDate, isExceedBonus);
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);

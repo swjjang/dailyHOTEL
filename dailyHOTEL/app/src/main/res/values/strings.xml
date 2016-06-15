@@ -7,6 +7,8 @@
     <string name="homepage">http://dailyhotel.kr</string>
     <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
+    <string name="currency_format">###,##0원</string>
+    <string name="currency_format_prefix">₩ ###,##0</string>
     <string name="label_map">지도</string>
     <string name="label_list">목록</string>
     <string name="label_dailychoice">데일리초이스</string>
@@ -31,13 +33,14 @@
     <string name="label_on">ON</string>
     <string name="label_off">OFF</string>
     <string name="label_version">Version %1$s</string>
-    <string name="label_share_kakao_map">다음 지도에서 보기</string>
-    <string name="label_share_naver_map">네이버 지도에서 보기</string>
-    <string name="label_share_google_map">구글 지도에서 보기</string>
+    <string name="label_share_daum_map">다음맵</string>
+    <string name="label_share_naver_map">네이버맵</string>
+    <string name="label_share_google_map">구글맵</string>
     <string name="label_completed">완료</string>
     <string name="label_copy_address">주소복사</string>
     <string name="label_copy_account_number">계좌번호 복사</string>
     <string name="label_restaurant_information">레스토랑 정보</string>
+    <string name="label_register_card">카드 등록하기</string>
     <string name="label_manager">관리</string>
 
     <string name="label_cardcd01">외환</string>
@@ -95,6 +98,7 @@
     <string name="actionbar_title_gourmet_list_frag">데일리고메</string>
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
+    <string name="actionbar_title_invite_friends">친구 초대하기</string>
     <string name="actionbar_title_reg_creditcard">결제카드 추가하기</string>
     <string name="actionbar_title_setting_frag">더보기</string>
     <string name="actionbar_title_error_frag">DAILYHOTEL</string>
@@ -114,16 +118,21 @@
     <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
     <string name="actionbar_title_term_activity">이용약관</string>
+    <string name="actionbar_title_bonus_term_activity">적립금 유의사항</string>
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
     <string name="actionbar_title_creditcard_activity">결제카드 관리</string>
     <string name="actionbar_title_hoteldetailinfo_activity">호텔 정보</string>
-    <string name="actionbar_title_event_list_frag">이벤트 및 공지사항</string>
+    <string name="actionbar_title_event_list_frag">이벤트</string>
     <string name="actionbar_title_edit_email">이메일 설정</string>
     <string name="actionbar_title_edit_name">이름 설정</string>
     <string name="actionbar_title_edit_password">비밀번호 설정</string>
     <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
+    <string name="actionbar_title_coupon_list">할인쿠폰함</string>
+    <string name="actionbar_title_coupon_history">쿠폰 사용내역</string>
+    <string name="actionbar_title_common_coupon_term_activity">할인쿠폰 공통 유의사항</string>
+    <string name="actionbar_title_each_coupon_term_activity">할인쿠폰별 유의사항</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -197,37 +206,39 @@
     <string name="dialog_msg_do_not_support_dailyhotel">데일리호텔앱은 Android  2.3.x 버전 이하 운영체제를 지원하지 않습니다.</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
     <string name="dialog_msg_hotel_payment_message01">선택하신 상품의 &lt;b&gt;취소, 환불 규정을 다시 한번 확인&lt;/b&gt;해주시기 바랍니다.</string>
-    <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'타입을 구매 하신 경우 2인 기준의 더블 또는 트윈 객실로 랜덤 배정 해드려요.</string>
+    <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'의 경우 베드 타입을 보장하지 않으며 2인이 투숙할 수 있는 객실로 배정됩니다.</string>
     <string name="dialog_msg_hotel_payment_message03">미성년자는 보호자 동반시 투숙 가능합니다.</string>
     <string name="dialog_msg_hotel_payment_message04">휴대폰 결제는 월 30만원이 한도입니다.</string>
     <string name="dialog_msg_hotel_payment_message05">발급된 가상 계좌번호로 10분 안에 입금해주세요. 미입금 시, 자동으로 예약이 취소됩니다.</string>
     <string name="dialog_msg_hotel_payment_message06">취소 불가 등 위 내용에 동의하시면 버튼을 눌러 결제를 진행해 주세요.</string>
-    <string name="dialog_msg_hotel_payment_message07">취소 불가 등 위 내용에 동의하시면 서명 후 결제완료 버튼을 눌러주세요.</string>
-    <string name="dialog_msg_hotel_payment_message08">간편결제 시 일시불만 가능하므로 할부를 원하실 경우 일반결제를 선택해주세요.</string>
+    <string name="dialog_msg_hotel_payment_message07">취소 불가 등 위 내용에 동의하시면 서명 후 결제 완료 버튼을 눌러주세요.</string>
+    <string name="dialog_msg_hotel_payment_message08">간편 결제 시, 일시불만 가능하므로 할부를 원하실 경우 일반 결제를 선택해주세요.</string>
     <string name="dialog_msg_hotel_payment_message09">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 30분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 15분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
+    <string name="dialog_msg_hotel_payment_message10">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 30분 내 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message11">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message12">결제 완료 시 &lt;b&gt;예약 대기 상태&lt;/b&gt;로, 내일 오전 10시까지 예약 확정 여부가 결정되어 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message13">이곳에 서명해주세요.</string>
     <string name="dialog_msg_hotel_payment_message14">환불 불가 표시 상품의 경우 규정과 상관없이 취소, 변경, 환불이 &lt;b&gt;절대 불가&lt;/b&gt;합니다.</string>
+    <string name="dialog_msg_hotel_payment_message15">펜션 특성 상, 상기 이미지와 다른 객실로 배정될 수 있습니다.</string>
 
-    <string name="dialog_msg_gourmet_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품이에요!</string>
-    <string name="dialog_msg_gourmet_payment_message02">특정 좌석과 뷰를 보장해드리기 어려운 점 양해 부탁드려요.</string>
-    <string name="dialog_msg_gourmet_payment_message03">주류 상품을 이용할 시, 신분증 확인이 요구됩니다. </string>
+    <string name="dialog_msg_gourmet_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품입니다.</string>
+    <string name="dialog_msg_gourmet_payment_message02">특정 좌석과 뷰를 보장해드리기 어려운 점 양해 부탁드립니다.</string>
+    <string name="dialog_msg_gourmet_payment_message03">주류 상품을 이용할 시, 신분증 확인이 요구됩니다.</string>
     <string name="dialog_msg_gourmet_payment_message04">휴대폰 결제는 월 30만원이 한도입니다.</string>
     <string name="dialog_msg_gourmet_payment_message05">발급된 가상 계좌번호로 10분 안에 입금해주세요. 미입금 시, 자동으로 예약이 취소됩니다.</string>
     <string name="dialog_msg_gourmet_payment_message06">취소 불가 등 위 내용에 동의하시면 버튼을 눌러 결제를 진행해 주세요.</string>
-    <string name="dialog_msg_gourmet_payment_message07">취소 불가 등 위 내용에 동의하시면 서명 후 결제완료 버튼을 눌러주세요.</string>
+    <string name="dialog_msg_gourmet_payment_message07">취소 불가 등 위 내용에 동의하시면 서명 후 결제 완료 버튼을 눌러주세요.</string>
     <string name="dialog_msg_gourmet_payment_message08">간편결제 시 일시불만 가능하므로 할부를 원하실 경우 일반결제를 선택해주세요.</string>
 
     <string name="dialog_btn_call">전화 연결</string>
     <string name="dialog_msg_call">데일리 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_title_payment_confirm">확인 사항</string>
-    <string name="dialog_btn_payment_no_reserve">이벤트 호텔의 경우\n적립금 사용을 할 수 없습니다.</string>
+    <string name="dialog_btn_payment_no_reserve">%1$s 이상 상품만 적립금 사용을 할 수 있습니다.</string>
     <string name="dialog_btn_text_update">업데이트</string>
     <string name="dialog_btn_text_complete">완료</string>
     <string name="dialog_btn_text_confirm">확인</string>
+    <string name="dialog_btn_text_select">선택</string>
     <string name="dialog_btn_text_cancel">취소</string>
     <string name="dialog_btn_text_retry">재시도</string>
     <string name="dialog_btn_text_setting">설정</string>
@@ -271,6 +282,7 @@
     <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_issuing_account">가상계좌가 발급되었습니다.\n입금 대기 내역을 확인해주세요.</string>
     <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n아침 %1$d시 ~ 익일 새벽 %2$d시입니다.</string>
+    <string name="dialog_message_coupon_list_login">쿠폰함 확인을 위해\n데일리호텔 앱 로그인이 필요합니다.\n로그인 할까요?</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="menu_item_title_hotel">데일리호텔</string>
@@ -292,8 +304,8 @@
     <!-- KaKaoLink Message -->
     <string name="kakaolink_msg_prefix">좋은 어플 추천해 드려요~\n오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.추천인코드 : </string>
     <string name="kakaolink_msg_suffix">을 입력하면 5,000원 바로 할인!</string>
-    <string name="kakaolink_msg_invited_friend">%1$s님이 데일리호텔 적립금 5,000원을 보내셨습니다!\n\n회원가입시 추천인코드 [ %2$s ] 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n데일리호텔에서 4,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 가격으로 즐겨보세요!\n\n추천인코드: [ %3$s ]</string>
-    <string name="kakaolink_msg_none_name_invited_friend">데일리호텔이 적립금 5,000원을 보내셨습니다!\n\n회원가입시 추천인코드 [ %1$s ] 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n데일리호텔에서 4,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 가격으로 즐겨보세요!\n\n추천인코드: [ %2$s ]</string>
+    <string name="kakaolink_msg_invited_friend">%1$s님이 추천하는\nNo.1 호텔예약앱 데일리호텔!\n\n회원가입시 추천인코드 [ %2$s ]를 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n추천인코드: [ %3$s ]\n\n데일리호텔에서 5,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 특가에 만나보세요!</string>
+    <string name="kakaolink_msg_none_name_invited_friend">No.1 호텔예약앱 데일리호텔!\n\n회원가입시 추천인코드 [ %1$s ]를 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n추천인코드: [ %2$s ]\n\n데일리호텔에서 5,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 특가에 만나보세요!</string>
 
     <!-- Alarm Message -->
     <string name="alarm_title">DAILYHOTEL</string>
@@ -316,14 +328,25 @@
     <string name="frag_notice">공지사항</string>
     <string name="frag_faqs">자주 묻는 질문</string>
     <string name="frag_info">소개</string>
-    <string name="frag_about">데일리호텔 소개</string>
+    <string name="frag_about">데일리호텔이란?</string>
     <string name="frag_app">앱</string>
     <string name="frag_version_info">앱 버전정보</string>
-    <string name="frag_push_alert">앱 알림설정</string>
+    <string name="frag_push_alert">혜택 알림 받기</string>
+    <string name="frag_push_alert_subtext">할인쿠폰, 이벤트 등의 특별한 혜택 및 상품 정보를 받아보실 수 있어요!\n수신 거부 시, 사용 가능 쿠폰 및 예약 알림 등의 알림도 발송되지 않습니다.</string>
     <string name="label_agree_sms">SMS 수신 동의</string>
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>
+    <string name="frag_need_login">로그인 해주세요!</string>
+    <string name="frag_signup">회원가입</string>
+    <string name="frag_edit_profile">내정보 수정</string>
+    <string name="frag_login_message">데일리호텔 회원가입하시고 다양한 혜택을 누리세요!</string>
+    <string name="frag_coupon_box">할인쿠폰함</string>
+    <string name="frag_view_bonus">적립금</string>
+    <string name="frag_view_creditcard">결제카드 관리</string>
+    <string name="frag_count_decimal_format">(###,##0개)</string>
+    <string name="frag_currency_decimal_format">(###,##0원)</string>
+    <string name="frag_recommend_text">친구추천하고 5,000원 받기</string>
     <string name="frag_about_business_license01">(주)데일리 ㅣ 대표 %1$s ㅣ 사업자등록번호 : %2$sㅣ 대표연락처 : %3$s</string>
     <string name="frag_about_business_license02">통신판매업 신고번호 : %1$s</string>
     <string name="frag_about_business_license03">개인정보담당자 : %1$s</string>
@@ -343,27 +366,35 @@
     <string name="act_login_facebook">페이스북으로 로그인</string>
     <string name="act_login_kakao">카카오계정으로 로그인</string>
 
-    <!-- Credit Activity -->
-    <string name="act_credit_recom">좋은 건 나눠야죠!</string>
-    <string name="act_credit_line1">친구가 내 추천코드를 넣고 회원가입을 하면\n친구는 5,000원을 선물받고!\n친구가 첫 결제를 하면 나도 5,000원 받고!</string>
+    <!-- Bonus Activity -->
+    <string name="act_credit_line1">친구에게 데일리호텔을 추천하고\n5,000원을 선물하세요!</string>
+    <string name="act_credit_line2">(친구가 회원가입시 내 추천코드를 입력하면 됩니다.)</string>
+    <string name="act_credit_line3">친구가 데일리호텔에서 첫 예약을 하면\n5,000원을 받을 수 있어요!</string>
+    <string name="act_credit_line4">(최대 10만원까지 적립할 수 있습니다.)</string>
+    <string name="act_credit_line4_is_exceed_bonus">(최대 10만원을 이미 적립하였습니다.)</string>
     <string name="act_credit_btn_login">기존 회원 로그인</string>
     <string name="act_credit_sign_up">회원 가입하고 친구 초대하기</string>
     <string name="act_credit_view_credit">적립금</string>
-    <string name="act_credit_current_credit">현재 적립금</string>
-    <string name="act_credit_history">적립금내역 보기</string>
+    <string name="act_credit_current_credit">보유 적립금</string>
+    <string name="act_credit_history">적립금내역</string>
     <string name="act_credit_recom_code">추천코드</string>
     <string name="act_credit_my_recom_code">나의 추천코드</string>
-    <string name="act_credit_line4">친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!\n*최대 10만원까지 적립 가능</string>
-    <string name="act_credit_kakao">카카오톡 친구 초대</string>
-    <string name="label_copy_recommendar_code">추천코드 복사</string>
-    <string name="message_copy_recommendar_code">추천코드가 복사되었습니다.</string>
+    <string name="act_credit_kakao">카카오톡으로 친구 초대하기</string>
+    <string name="label_invite_friends">친구 초대하기</string>
+    <string name="label_copy">복사</string>
+    <string name="label_my_code">내 추천코드</string>
+    <string name="label_bonus_guide">적립금 사용시 유의사항 안내</string>
+    <string name="message_no_history_bonus">적립금 내역이 없습니다.</string>
+    <string name="message_daily_recommended_hotel_to_friend">친구에게 데일리호텔을 추천하고\n최대 10만원까지 적립금을 쌓아보세요!</string>
+    <string name="message_copy_recommender_code">추천코드가 복사되었습니다.</string>
+
 
     <!-- Credit List Activity -->
     <string name="act_history_no_details">적립금 내역이 없습니다.</string>
 
     <!-- Booking List Fragment -->
     <string name="frag_booking_no_hotels">예약된 내역이 없습니다!</string>
-    <string name="frag_booking_line">당신의 파라다이스가\n기다리고 있어요.</string>
+    <string name="frag_booking_line">당신의 파라다이스가 기다리고 있어요.</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
     <string name="frag_booking_wait_account">입금 대기</string>
     <string name="frag_booking_complete_payment">결제 완료</string>
@@ -403,12 +434,6 @@
     <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 등록을 해주세요.</string>
     <string name="message_invalid_verification">다른 디바이스에서 휴대폰 번호가 인증처리되었습니다.\n프로필 정보에서 휴대폰 번호를 다시 확인해주세요.</string>
 
-    <!-- WaitTimer Fragment -->
-    <string name="frag_wait_timer_off">알람 끄기</string>
-    <string name="frag_wait_timer_on">알람 받기</string>
-    <string name="frag_wait_timer_set">알람이 설정되었습니다</string>
-    <string name="frag_wait_timer_cancel">알람이 취소되었습니다</string>
-
     <!-- Booking Activity -->
     <string name="act_toast_payment_success">결제가 정상적으로 이루어졌습니다.</string>
     <string name="act_toast_payment_soldout">모든 객실이 판매되었습니다\n다음에 이용해주세요.</string>
@@ -427,11 +452,12 @@
     <string name="act_booking_reserver">투숙자</string>
     <string name="act_booking_mobile">연락처</string>
     <string name="act_booking_email">이메일</string>
-    <string name="act_booking_payment">결제</string>
+    <string name="act_booking_payment">결제 정보</string>
+    <string name="act_booking_select_payment_type">결제 수단 선택</string>
     <string name="act_booking_credit_use">적립금 사용</string>
-    <string name="act_booking_price">비용</string>
-    <string name="act_booking_credit_discount">적립금 할인</string>
-    <string name="act_booking_price_real">결제금액(VAT 포함)</string>
+    <string name="act_booking_price">예약 금액</string>
+    <string name="act_booking_credit_discount">할인 금액</string>
+    <string name="act_booking_price_real">총 결제금액(VAT 포함)</string>
     <string name="act_booking_pay_card">결제카드 일반결제</string>
     <string name="act_booking_pay_mobile">휴대폰</string>
     <string name="act_booking_pay_account">계좌이체</string>
@@ -442,6 +468,9 @@
     <string name="act_booking_payment_info03">으로 전화주세요.</string>
     <string name="action_booking_cardmanager">카드관리</string>
     <string name="label_booking_easypayment">결제카드 간편결제</string>
+    <string name="label_booking_used_bonus">적립금 사용</string>
+    <string name="label_booking_used_coupon">할인쿠폰 사용</string>
+    <string name="label_booking_select_coupon">할인쿠폰 선택</string>
     <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>
     <string name="label_booking_confirm_signature">고객님, 확인하셨나요?</string>
     <string name="label_booking_room_info">객실 정보</string>
@@ -456,10 +485,16 @@
     <string name="label_booking_count">%1$d개</string>
     <string name="label_booking_select">선택하세요</string>
     <string name="label_booking_corporate_card">(법인카드 가능)</string>
+    <string name="label_booking_own_bonus">(보유: %1$s)</string>
     <string name="label_booking_memo">예약시 요청사항</string>
+    <string name="label_booking_discount_information">할인 정보</string>
     <string name="message_guide_name_memo">투숙자명은 여권기재 영문명으로 입력 ex) Hong Gil Dong</string>
+    <string name="message_discount_memo">적립금, 할인 쿠폰은 중복 사용 할 수 없습니다.</string>
     <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
     <string name="message_gourmet_please_input_guest">예약자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
+    <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
+    <string name="message_booking_cancel_bonus">적립금 적용을 취소할까요?</string>
+    <string name="message_over_coupon_price">할인쿠폰 금액이\n총결제금액 보다 %1$s 더 많습니다.\n그대로 적용할까요?</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -519,7 +554,7 @@
     <string name="frag_booking_tab_chkout">체크아웃</string>
     <string name="frag_booking_tab_name">투숙자명</string>
     <string name="label_booking_reservation_name">예약자명</string>
-    <string name="label_booking_guest_information">투숙자 정보</string>
+    <string name="label_booking_guest_information">투숙객 정보</string>
     <string name="frag_booking_tab_mobile">투숙자 전화번호</string>
     <string name="frag_hotel_tab_add">주소</string>
     <string name="frag_hotel_tab_bed_type">베드타입</string>
@@ -529,6 +564,7 @@
     <string name="label_booking_ticketcount">수량</string>
     <string name="label_booking_date">날짜</string>
     <string name="label_reservation_contact">예약자 전화번호</string>
+    <string name="label_booking_payment_date">결제일</string>
 
     <!-- RatingHotel Fragment -->
     <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>
@@ -611,13 +647,18 @@
     <!-- Wait Payment Activity -->
     <string name="act_wait_payment_payinfo">결제 정보 (가상계좌)</string>
     <string name="act_wait_payment_accounts_no">계좌번호</string>
-    <string name="act_wait_payment_name">입금주명</string>
-    <string name="act_wait_payment_price">금액</string>
+    <string name="act_wait_payment_name">예금주명</string>
+    <string name="label_wait_payment_price">예약 금액</string>
+    <string name="label_wait_payment_used_bonus">적립금 사용</string>
+    <string name="label_wait_payment_used_coupon">할인쿠폰 사용</string>
+    <string name="label_wait_payment_total_price">총 입금 금액(VAT 포함)</string>
     <string name="act_wait_payment_limit">입금기한</string>
     <string name="act_wait_payment_confirm">확인사항</string>
     <string name="act_wait_payment_msg1">입금이 완료되면</string>
     <string name="act_wait_payment_msg2">10분이내에 예약완료 문자가 도착합니다.</string>
+    <string name="label_wait_payment_price_information">결제 금액 정보</string>
     <string name="message__wait_payment03">입금이 완료되면 자동으로 예약이 완료됩니다.</string>
+
 
     <!-- Facebook -->
     <string name="com_facebook_dialogloginactivity_ok_button">확인</string>
@@ -673,7 +714,9 @@
     <string name="label_receipt_supplyvalue">소계</string>
     <string name="label_receipt_vat">세금 및 수수료</string>
     <string name="label_receipt_discount">총금액</string>
-    <string name="label_receipt_payment">지불 금액</string>
+    <string name="label_receipt_total_payment">총 결제 금액(부가세 포함)</string>
+    <string name="label_receipt_bonus">적립금 사용</string>
+    <string name="label_receipt_coupon">할인쿠폰 사용</string>
     <string name="label_receipt_paymenttype">지불 방식</string>
     <string name="label_receipt_provider">공급자</string>
     <string name="label_receipt_business_license">상호 | %1$s</string>
@@ -782,6 +825,40 @@
     <string name="label_searchresult_research">다시 검색하기</string>
     <string name="label_searchresult_call_customercenter">고객센터로 전화하기</string>
     <string name="label_map_searchmap">지도앱에서 길찾기</string>
+    <string name="label_googlemap">구글 지도</string>
+
+    <!-- Coupon -->
+    <string name="coupon_notice_text">주의사항\n확인하기</string>
+    <string name="coupon_duedate_text">(%1$s일 남음)</string>
+    <string name="coupon_today_text">(오늘까지)</string>
+    <string name="coupon_available_item_text">사용가능처: %1$s</string>
+    <string name="coupon_download_text">다운로드</string>
+    <string name="coupon_useable_text">사용가능</string>
+    <string name="coupon_min_price_text">%1$s 이상 사용가능</string>
+    <string name="coupon_header_text">사용가능한 쿠폰이 %1$d장 있습니다</string>
+    <string name="coupon_use_notice_text">쿠폰 사용시 유의사항 안내</string>
+    <string name="coupon_history_empty_message">쿠폰 사용내역이 없습니다</string>
+    <string name="coupon_list_empty_message">사용가능한 할인 쿠폰이 없습니다</string>
+    <string name="coupon_history_header_text">최근 6개월 간 사용 정보가 제공됩니다</string>
+    <string name="coupon_history_use_text">결제시 사용</string>
+    <string name="coupon_history_expire_text">유효기간만료</string>
+    <string name="label_select_coupon">할인쿠폰 선택</string>
+    <string name="message_select_coupon_selected">사용하실 쿠폰을 선택해 주세요.</string>
+    <string name="message_select_coupon_empty">사용 가능한 할인 쿠폰이 없습니다.</string>
+    <string name="message_select_coupon_download">다운로드 받기</string>
+
+    <!-- Benefit Alarm -->
+    <string name="label_setting_alarm">알림 설정</string>
+    <string name="label_after_setting_alarm">나중에 설정</string>
+    <string name="label_now_setting_alarm">알림 설정하고 혜택받기</string>
+    <string name="message_benefit_alarm_off">수신 거부 시\n특별 할인쿠폰, 다양한 상품 정보 등의\n주요 혜택 알림 메시지를 받을 수 없습니다.\n그래도 알림을 끄시겠어요?</string>
+    <string name="message_benefit_alarm_off_confirm_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보 등\n혜택 알림 수신에 동의하지 않으셨습니다.\n\n%s</string>
+    <string name="message_benefit_alarm_on_confirm_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보 등\n혜택 알림 수신에 동의하였습니다.\n\n%s</string>
+
+    <!-- Event Web -->
+    <string name="label_eventweb_now_used">지금 사용하기</string>
+    <string name="message_eventweb_do_login_download_coupon">할인쿠폰 다운로드를 위해 데일리호텔 앱 로그인이 필요합니다. 로그인 할까요?</string>
+    <string name="message_eventweb_download_coupon">할인쿠폰을 다운로드 받았습니다.\n유효기간 : %1$s - %2$s\n(다운로드 받은 할인쿠폰은\n더보기 > 쿠폰함에서 확인해보세요!)</string>
     //
     <!-- Search Calendar -->
     <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>

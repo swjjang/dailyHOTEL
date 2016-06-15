@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -32,29 +33,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <!-- 결제 -->
+            <!-- 예약 메모 -->
+            <include
+                layout="@layout/layout_booking_memo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 결제 정보 -->
             <include
                 layout="@layout/layout_booking_gourmet_payment_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- 결제 수단 선택 -->
+            <include
+                layout="@layout/layout_booking_gourmet_select_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <!-- 결제 버튼 -->
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/payButton"
+            <RelativeLayout
+                android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="@color/dh_theme_color"
-                android:gravity="center"
-                android:text="@string/act_booking_btn_pay"
-                android:textColor="@android:color/white"
-                android:textSize="20dp"/>
+                android:layout_height="64dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/default_line_ce7e7e7"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/doPaymentView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/btn_normal_gradation"
+                    android:gravity="center"
+                    android:text="@string/act_booking_btn_pay"
+                    android:textColor="@color/white"
+                    android:textSize="17dp"
+                    dailyFont:style="Medium"/>
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="6px"
+        android:layout_height="2dp"
         android:layout_below="@+id/toolbar"
         android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>

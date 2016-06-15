@@ -383,22 +383,19 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                     GourmetCurationOption curationOption = (GourmetCurationOption) placeCurationOption;
 
-                    if (curationOption != null)
+                    mOnCommunicateListener.setScrollListTop(true);
+
+                    mCurationOption.setSortType(curationOption.getSortType());
+                    mCurationOption.setFilterMap(curationOption.getFilterMap());
+                    mCurationOption.flagTimeFilter = curationOption.flagTimeFilter;
+                    mCurationOption.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
+
+                    if (curationOption.getSortType() == SortType.DISTANCE)
                     {
-                        mOnCommunicateListener.setScrollListTop(true);
-
-                        mCurationOption.setSortType(curationOption.getSortType());
-                        mCurationOption.setFilterMap(curationOption.getFilterMap());
-                        mCurationOption.flagTimeFilter = curationOption.flagTimeFilter;
-                        mCurationOption.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
-
-                        if (curationOption.getSortType() == SortType.DISTANCE)
-                        {
-                            searchMyLocation();
-                        } else
-                        {
-                            curationCurrentFragment();
-                        }
+                        searchMyLocation();
+                    } else
+                    {
+                        curationCurrentFragment();
                     }
                 }
                 break;
@@ -426,7 +423,17 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             {
                 if (mIsDeepLink == false)
                 {
-                    mDontReloadAtOnResume = true;
+                    switch (resultCode)
+                    {
+                        case CODE_RESULT_ACTIVITY_REFRESH:
+                        case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                            mDontReloadAtOnResume = false;
+                            break;
+
+                        default:
+                            mDontReloadAtOnResume = true;
+                            break;
+                    }
                 } else
                 {
                     mIsDeepLink = false;

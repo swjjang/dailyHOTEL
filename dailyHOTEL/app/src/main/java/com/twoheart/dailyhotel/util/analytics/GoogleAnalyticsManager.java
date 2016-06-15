@@ -33,23 +33,16 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(context);
         googleAnalytics.setLocalDispatchPeriod(60);
 
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mClientId = googleAnalytics.getClientId();
-
-                if (listener != null)
-                {
-                    listener.onResponseClientId(mClientId);
-                }
-            }
-        }).start();
-
         mGoogleAnalyticsTracker = googleAnalytics.newTracker(GA_PROPERTY_ID);
         mGoogleAnalyticsTracker.enableAdvertisingIdCollection(true);
         mGoogleAnalyticsTracker.set("&cu", "KRW");
+
+        mClientId = mGoogleAnalyticsTracker.get("&cid");
+
+        if (listener != null)
+        {
+            listener.onResponseClientId(mClientId);
+        }
     }
 
     public String getClientId()
@@ -97,7 +90,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     {
         long value = 0L;
 
-        if (Util.isTextEmpty(category, action, label) == true)
+        if (Util.isTextEmpty(category, action) == true)
         {
             return;
         }
@@ -139,6 +132,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         {
             mGoogleAnalyticsTracker.set("&uid", index);
         }
+    }
+
+    @Override
+    void setExceedBonus(boolean isExceedBonus)
+    {
+
     }
 
     @Override

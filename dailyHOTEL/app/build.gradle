@@ -10,10 +10,12 @@ buildscript {
     }
 }
 
+apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-//apply plugin: 'com.android.application'
 
 repositories {
+    jcenter()
+
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
     maven { url "http://appboy.github.io/appboy-android-sdk/sdk" }
@@ -31,11 +33,11 @@ android {
 
     defaultConfig {
         applicationId "com.twoheart.dailyhotel"
-        minSdkVersion 10
+        minSdkVersion 15
         targetSdkVersion 22
-        versionCode 86
-        versionName "1.8.6"
-//        multiDexEnabled true
+        versionCode 87
+        versionName "1.8.7"
+        multiDexEnabled true
 
         resConfigs "ko"
 //        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
@@ -51,18 +53,18 @@ android {
         }
     }
 
-//    dexOptions {
-//        javaMaxHeapSize "4g"
-//        preDexLibraries false
-//    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries false
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:23.+'
-    compile 'com.android.support:appcompat-v7:23.+'
-    compile 'com.android.support:gridlayout-v7:23.+'
-    compile 'com.android.support:design:23.+'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:gridlayout-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
     compile 'com.facebook.fresco:fresco:0.10.0@aar'
@@ -70,13 +72,14 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.10.0'
     compile 'com.kakao.sdk:kakaolink:1.1.10'
     compile 'com.kakao.sdk:kakaotalk:1.1.10'
-    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
     compile 'com.appboy:android-sdk-ui:1.13.+'
-//    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.1'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
 
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
@@ -84,11 +87,11 @@ dependencies {
     compile files('libs/MobileAppTracker.jar')
     compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')
 
-    compile 'com.google.android.gms:play-services-base:8.4.0'
-    compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.google.android.gms:play-services-location:8.4.0'
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
-    compile 'com.google.android.gms:play-services-analytics:8.4.0'
+    compile 'com.google.android.gms:play-services-base:9.0.2'
+    compile 'com.google.android.gms:play-services-maps:9.0.2'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
+    compile 'com.google.android.gms:play-services-gcm:9.0.2'
+    compile 'com.google.android.gms:play-services-analytics:9.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

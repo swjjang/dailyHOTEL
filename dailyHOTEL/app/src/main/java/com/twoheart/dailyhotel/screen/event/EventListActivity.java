@@ -10,8 +10,10 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -37,6 +39,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         mEventListNetworkController = new EventListNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         DailyPreference.getInstance(this).setNewEvent(false);
+        DailyPreference.getInstance(this).setViewedEventTime(DailyPreference.getInstance(this).getLastestEventTime());
 
         initToolbar();
         initLayout();
@@ -62,7 +65,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         mEmptyView = findViewById(R.id.emptyLayout);
 
         mListView = (ListView) findViewById(R.id.listView);
-        EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));
         mListView.setOnItemClickListener(this);
     }
 
@@ -72,6 +75,16 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         AnalyticsManager.getInstance(this).recordScreen(Screen.EVENT_LIST);
 
         super.onStart();
+
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        {
+            if (DailyDeepLink.getInstance().isEventDetailView() == true)
+            {
+                startEventWeb(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getEventName());
+            }
+
+            DailyDeepLink.getInstance().clear();
+        }
     }
 
     @Override
@@ -81,6 +94,13 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         lockUI();
         mEventListNetworkController.requestEventList();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
     @Override
@@ -97,6 +117,17 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         mEventListNetworkController.requestEventPageUrl(mSelectedEvent);
     }
 
+    private void startEventWeb(String url, String eventName)
+    {
+        if (Util.isTextEmpty(url) == true)
+        {
+            return;
+        }
+
+        Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, url, eventName, null);
+        startActivity(intent);
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // User Action Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,8 +137,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         @Override
         public void processEventPage(String eventUrl)
         {
-            Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, eventUrl, mSelectedEvent.name, null);
-            startActivity(intent);
+            startEventWeb(eventUrl, mSelectedEvent.name);
 
             AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.EVENT_CLICKED, mSelectedEvent.name, null);

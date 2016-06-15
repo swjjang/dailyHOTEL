@@ -42,10 +42,10 @@ public class AvailableNetwork
 
     private boolean get3GState(Context context)
     {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if (ni != null && ni.isConnected())
+        if (networkInfo != null && networkInfo.isConnected())
         {
             return true;
         }

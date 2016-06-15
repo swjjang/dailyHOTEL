@@ -509,7 +509,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     {
         if (view == null)
         {
-            return view;
+            return null;
         }
 
         view.setBackgroundColor(mFragmentActivity.getResources().getColor(R.color.white));

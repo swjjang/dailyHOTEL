@@ -152,7 +152,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                 if (convertView == null)
                 {
                     LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = layoutInflater.inflate(R.layout.list_row_booking_section, parent, false);
+                    convertView = layoutInflater.inflate(R.layout.list_row_default_section, parent, false);
                     convertView.setTag(Booking.TYPE_SECTION);
                 }
 
@@ -177,8 +177,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
         TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);
         ImageView bookingIconImageView = (ImageView) view.findViewById(R.id.bookingIconImageView);
-        TextView name = (TextView) view.findViewById(R.id.tv_booking_row_name);
-        TextView day = (TextView) view.findViewById(R.id.tv_booking_row_day);
+        TextView name = (TextView) view.findViewById(R.id.placeNameTextView);
+        TextView day = (TextView) view.findViewById(R.id.bookingDateTextView);
         View deleteView = view.findViewById(R.id.deleteView);
 
         name.setText(booking.placeName);
@@ -258,7 +258,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             return view;
         }
 
-        TextView sectionName = (TextView) view.findViewById(R.id.bookingSectionName);
+        TextView sectionName = (TextView) view;
 
         sectionName.setText(booking.placeName);
 

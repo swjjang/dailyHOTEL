@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.place.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
@@ -80,6 +81,20 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
         }
 
         baseActivity.onErrorPopupMessage(msgCode, message);
+    }
+
+    protected void onErrorPopupMessage(int msgCode, String message, View.OnClickListener listener)
+    {
+        unLockUI();
+
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.onErrorPopupMessage(msgCode, message, listener);
     }
 
     protected void onErrorToastMessage(String message)

@@ -19,9 +19,8 @@ interface IDailyNetwork
      *
      * @param tag
      * @param listener
-     * @param errorListener
      */
-    void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCheckServer(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * common/ver_dual
@@ -29,7 +28,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestCommonVer(Object tag, DailyHotelJsonResponseListener listener);
 
     /**
      * api/common/code/review
@@ -100,7 +99,9 @@ interface IDailyNetwork
 
     /**
      * @param tag
-     * @param params
+     * @param userIdx
+     * @param changedRegistrationId
+     * @param uid
      * @param listener
      * @param errorListener
      */
@@ -340,7 +341,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestDepositWaitDetailInformation(Object tag, int payType, String tid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestDepositWaitDetailInformation(Object tag, String tid, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
 
     /**
@@ -414,7 +415,7 @@ interface IDailyNetwork
      *
      * @return
      */
-    void requestEventNewCount(Object tag, String timeMillis, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, DailyHotelJsonResponseListener listener);
 
     /**
      * api/daily/event/page
@@ -518,4 +519,85 @@ interface IDailyNetwork
      * @param errorListener
      */
     void requestKakaoUserSignin(Object tag, Map<String, String> params, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     * /api/v3/users/coupons
+     * 자신이 소유한 Coupon List
+     *
+     * @param tag
+     * @param listener
+     */
+    void requestCouponList(Object tag, DailyHotelJsonResponseListener listener);
+
+    /**
+     * /api/v3/users/coupons
+     * 결제화면에서 사용되는 자신이 소유한 Coupon List
+     *
+     * @param tag
+     * @param hotelIdx
+     * @param roomIdx
+     * @param checkIn  ISO-8601
+     * @param checkOut ISO-8601
+     * @param listener
+     */
+    void requestCouponList(Object tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, DailyHotelJsonResponseListener listener);
+
+    /**
+     * /api/v3/users/coupons/history
+     * 자신이 소유한 Coupon List
+     *
+     * @param tag
+     * @param listener
+     * @param errorListener
+     */
+    void requestCouponHistoryList(Object tag, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
+    /**
+     * 혜택 알림을 받아야 하는지 알려준다.
+     *
+     * @param tag
+     * @param isAuthorization
+     * @param listener
+     */
+    void requestNoticeAgreement(Object tag, boolean isAuthorization, DailyHotelJsonResponseListener listener);
+
+    /**
+     * 혜택 알림을 받아야 하는지 알려준다.
+     *
+     * @param tag
+     * @param isAuthorization
+     * @param listener
+     */
+    void requestNoticeAgreementResult(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener);
+
+    /**
+     * api/v1/notice/benefit - GET
+     *
+     * @param tag
+     * @param listener
+     */
+    void requestBenefitMessage(Object tag, DailyHotelJsonResponseListener listener);
+
+    /**
+     * @param tag
+     * @param couponCode
+     * @param listener
+     */
+    void requestDownloadCoupon(Object tag, String userCouponCode, DailyHotelJsonResponseListener listener);
+
+    /**
+     * @param tag
+     * @param couponCode
+     * @param listener
+     */
+    void requestDownloadEventCoupon(Object tag, String couponCode, DailyHotelJsonResponseListener listener);
+
+    /**
+     * api/v1/notice/benefit - PUT
+     *
+     * @param tag
+     * @param isAgreed required
+     * @param listener
+     */
+    void requestUpdateBenefitAgreement(Object tag, boolean isAuthorization, boolean isAgree, DailyHotelJsonResponseListener listener);
 }

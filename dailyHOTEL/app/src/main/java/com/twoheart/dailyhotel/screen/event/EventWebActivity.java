@@ -12,19 +12,26 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -38,6 +45,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
     private SourceType mSourceType;
     private SaleTime mSaleTime;
     private String mEventName;
+
+    private String mCouponCode;
+    private String mDeepLinkUrl;
+    private String mConfirmText;
 
     public enum SourceType
     {
@@ -77,6 +88,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         Intent intent = getIntent();
 
         String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
+        //        url = "http://mobile.dailyhotel.co.kr/link_test.html";
 
         try
         {
@@ -186,6 +198,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    downloadCoupon(mCouponCode, mDeepLinkUrl);
+                }
+                break;
+            }
         }
     }
 
@@ -195,25 +216,45 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
-            int index = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             long dailyTime = saleTime.getDailyTime();
             int nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
 
             String date = DailyDeepLink.getInstance().getDate();
-            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-            Date schemeDate = format.parse(date);
-            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+            int datePlus = DailyDeepLink.getInstance().getDatePlus();
+            int dailyDayOfDays = 0;
 
-            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-            if (nights <= 0 || dailyDayOfDays < 0)
+            if (Util.isTextEmpty(date) == true)
             {
-                throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+                if (datePlus >= 0)
+                {
+                    dailyDayOfDays = datePlus;
+
+                    if (nights <= 0 || dailyDayOfDays < 0)
+                    {
+                        throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+                    }
+                } else
+                {
+                    throw new NullPointerException("datePlus < 0");
+                }
+            } else
+            {
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date schemeDate = format.parse(date);
+                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+                dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                if (nights <= 0 || dailyDayOfDays < 0)
+                {
+                    throw new NullPointerException("nights <= 0 || dailyDayOfDays < 0");
+                }
             }
 
             Intent intent = new Intent(EventWebActivity.this, HotelDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, index);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
@@ -237,25 +278,40 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         try
         {
-            int index = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             long dailyTime = saleTime.getDailyTime();
             int nights = 1;
 
             String date = DailyDeepLink.getInstance().getDate();
-            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
-            Date schemeDate = format.parse(date);
-            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+            int datePlus = DailyDeepLink.getInstance().getDatePlus();
+            int dailyDayOfDays = 0;
 
-            int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
-            if (dailyDayOfDays < 0)
+            if (Util.isTextEmpty(date) == true)
             {
-                throw new NullPointerException("dailyDayOfDays < 0");
+                if (datePlus >= 0)
+                {
+                    dailyDayOfDays = datePlus;
+                } else
+                {
+                    throw new NullPointerException("datePlus < 0");
+                }
+            } else
+            {
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                Date schemeDate = format.parse(date);
+                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+                dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                if (dailyDayOfDays < 0)
+                {
+                    throw new NullPointerException("dailyDayOfDays < 0");
+                }
             }
 
             Intent intent = new Intent(EventWebActivity.this, GourmetDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, fnbIndex);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
@@ -271,6 +327,104 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
 
         return result;
+    }
+
+    private void startLogin()
+    {
+        showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(EventWebActivity.this, LoginActivity.class);
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+            }
+        }, null);
+    }
+
+    private void downloadCoupon(String couponCode, final String deepLink)
+    {
+        if (Util.isTextEmpty(couponCode, deepLink) == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        DailyNetworkAPI.getInstance(this).requestDownloadEventCoupon(mNetworkTag, couponCode, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                try
+                {
+                    int msgCode = response.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        if (Util.isTextEmpty(mConfirmText) == true)
+                        {
+                            mConfirmText = getString(R.string.label_eventweb_now_used);
+                        }
+
+                        JSONObject dataJSONObject = response.getJSONObject("data");
+
+                        String validFrom = dataJSONObject.getString("validFrom");
+                        String validTo = dataJSONObject.getString("validTo");
+
+                        String message = getString(R.string.message_eventweb_download_coupon//
+                            , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
+                            , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
+
+                        showSimpleDialog(null, message, mConfirmText, getString(R.string.dialog_btn_text_close), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                DailyDeepLink dailyDeepLink = DailyDeepLink.getInstance();
+                                dailyDeepLink.setDeepLink(Uri.parse(deepLink));
+
+                                if (dailyDeepLink.isHotelDetailView() == true)
+                                {
+                                    if (deepLinkHotelDetail(mSaleTime) == true)
+                                    {
+                                        return;
+                                    }
+                                } else if (dailyDeepLink.isGourmetDetailView() == true)
+                                {
+                                    if (deepLinkGourmetDetail(mSaleTime) == true)
+                                    {
+                                        return;
+                                    }
+                                } else
+                                {
+                                    Intent intent = new Intent(EventWebActivity.this, LauncherActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setData(Uri.parse(deepLink));
+
+                                    startActivity(intent);
+                                }
+                            }
+                        }, null);
+                    } else
+                    {
+                        String message = response.getString("msg");
+                        onErrorPopupMessage(msgCode, message, null);
+                    }
+                } catch (Exception e)
+                {
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+                EventWebActivity.this.onErrorResponse(volleyError);
+            }
+        });
     }
 
     /**
@@ -364,6 +518,27 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     finish();
                 }
             });
+        }
+
+        @JavascriptInterface
+        public void downloadCoupon(String couponCode, String deepLink, String confirmText)
+        {
+            if (Util.isTextEmpty(couponCode, deepLink) == true)
+            {
+                return;
+            }
+
+            mCouponCode = couponCode;
+            mDeepLinkUrl = deepLink;
+            mConfirmText = confirmText;
+
+            if (Util.isTextEmpty(DailyPreference.getInstance(EventWebActivity.this).getAuthorization()) == true)
+            {
+                startLogin();
+            } else
+            {
+                EventWebActivity.this.downloadCoupon(couponCode, deepLink);
+            }
         }
     }
 }

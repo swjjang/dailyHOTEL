@@ -37,11 +37,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
@@ -69,7 +65,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 
-        BaseFragment baseFragment01 = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex, mBooking.isUsed);
+        BaseFragment baseFragment01 = HotelBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mBooking.reservationIndex);
         fragmentList.add(baseFragment01);
 
         BaseFragment baseFragment02 = HotelBookingDetailTabInfomationFragment.newInstance(placeBookingDetail);
@@ -137,20 +133,23 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
             case 2:
             {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                try
+                {
+                    // Check In
+                    String checkInDay = Util.simpleDateFormatISO8601toFormat(mHotelBookingDetail.checkInDate, "yyMMdd");
 
-                // Check In
-                String checkInDay = simpleDateFormat.format(new Date(mHotelBookingDetail.checkInDate));
+                    // Check Out
+                    String checkOutDay = Util.simpleDateFormatISO8601toFormat(mHotelBookingDetail.checkOutDate, "yyMMdd");
 
-                // Check Out
-                String checkOutDay = simpleDateFormat.format(new Date(mHotelBookingDetail.checkOutDate));
+                    String label = String.format("Hotel-%s-%s-%s", mHotelBookingDetail.placeName, checkInDay, checkOutDay);
 
-                String label = String.format("Hotel-%s-%s-%s", mHotelBookingDetail.placeName, checkInDay, checkOutDay);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                    , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
-                    , label, null);
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , mBooking.isUsed ? AnalyticsManager.Action.PAST_BOOKING_MAP_VIEW_CLICKED : AnalyticsManager.Action.UPCOMING_BOOKING_MAP_VIEW_CLICKED//
+                        , label, null);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
                 break;
             }
         }
@@ -255,9 +254,9 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         {
             try
             {
-                int msgCode = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msgCode == 0)
+                if (msgCode == 100)
                 {
                     JSONObject jsonObject = response.getJSONObject("data");
 

@@ -122,7 +122,7 @@ public class HotelDetailLayout
         mRoomTypeLayout = activity.findViewById(R.id.roomTypeLayout);
         mRoomTypeRecyclerView = (RecyclerView) mRoomTypeLayout.findViewById(R.id.roomTypeRecyclerView);
         mRoomTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        EdgeEffectColor.setEdgeGlowColor(mRoomTypeRecyclerView, mActivity.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mRoomTypeRecyclerView, mActivity.getResources().getColor(R.color.default_over_scroll_edge));
         mRoomTypeLayout.setVisibility(View.INVISIBLE);
 
         mBottomLayout = activity.findViewById(R.id.bottomLayout);

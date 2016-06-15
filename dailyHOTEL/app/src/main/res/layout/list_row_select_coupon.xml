@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/upperDivider"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"/>
+
+    <RelativeLayout
+        android:id="@+id/listItemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="79dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/coupon_popup_dimmed">
+
+        <RelativeLayout
+            android:id="@+id/selectLayout"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/iconImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/leftTextLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@id/iconImageView"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/priceTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/coupon_red_wine_text"
+                    android:textSize="13dp"
+                    dailyFont:style="Bold"
+                    />
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/downloadTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/message_select_coupon_download"
+                    android:textColor="@color/coupon_red_wine_text"
+                    android:textSize="10dp"
+                    android:visibility="gone"
+                    dailyFont:style="Medium"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/vericalLine"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/selectLayout"
+            android:background="@color/default_line_cd0d0d0"/>
+
+        <LinearLayout
+            android:id="@+id/rightTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/vericalLine"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/expireTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="10dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/minPriceTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="10dp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"/>
+
+</LinearLayout>

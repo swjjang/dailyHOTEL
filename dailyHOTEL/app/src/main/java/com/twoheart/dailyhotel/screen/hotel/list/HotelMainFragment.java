@@ -423,24 +423,21 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         return;
                     }
 
-                    HotelCurationOption curationOption = (HotelCurationOption) placeCurationOption;
+                    HotelCurationOption hotelCurationOption = (HotelCurationOption) placeCurationOption;
 
-                    if (curationOption != null)
+                    mOnCommunicateListener.setScrollListTop(true);
+
+                    mCurationOption.setSortType(hotelCurationOption.getSortType());
+                    mCurationOption.person = hotelCurationOption.person;
+                    mCurationOption.flagBedTypeFilters = hotelCurationOption.flagBedTypeFilters;
+                    mCurationOption.flagAmenitiesFilters = hotelCurationOption.flagAmenitiesFilters;
+
+                    if (hotelCurationOption.getSortType() == SortType.DISTANCE)
                     {
-                        mOnCommunicateListener.setScrollListTop(true);
-
-                        mCurationOption.setSortType(curationOption.getSortType());
-                        mCurationOption.person = curationOption.person;
-                        mCurationOption.flagBedTypeFilters = curationOption.flagBedTypeFilters;
-                        mCurationOption.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
-
-                        if (curationOption.getSortType() == SortType.DISTANCE)
-                        {
-                            searchMyLocation();
-                        } else
-                        {
-                            curationCurrentFragment();
-                        }
+                        searchMyLocation();
+                    } else
+                    {
+                        curationCurrentFragment();
                     }
                 }
                 break;
@@ -468,7 +465,17 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 if (mIsDeepLink == false)
                 {
-                    mDontReloadAtOnResume = true;
+                    switch (resultCode)
+                    {
+                        case CODE_RESULT_ACTIVITY_REFRESH:
+                        case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                            mDontReloadAtOnResume = false;
+                            break;
+
+                        default:
+                            mDontReloadAtOnResume = true;
+                            break;
+                    }
                 } else
                 {
                     mIsDeepLink = false;

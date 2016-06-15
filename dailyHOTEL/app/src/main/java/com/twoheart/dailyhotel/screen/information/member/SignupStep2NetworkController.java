@@ -12,7 +12,6 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
@@ -27,9 +26,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
         void onSignUp(int notificationUid, String gcmRegisterId);
 
-        void onLogin(String authorization);
-
-        void onUserInformation(String userIndex, String email, String name, String phoneNumber);
+        void onLogin(String authorization, String userIndex, String email, String name, String recommender, String userType, String phoneNumber);
 
         void onAlreadyVerification(String phoneNumber);
 
@@ -69,11 +66,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
         params.put("user_type", Constants.DAILY_USER);
 
         DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
-    }
-
-    public void requestUserInformation()
-    {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
     }
 
     public void requestGoogleCloudMessagingId()
@@ -184,26 +176,41 @@ public class SignupStep2NetworkController extends BaseNetworkController
                 int msgCode = jsonObject.getInt("msgCode");
                 String message = jsonObject.getString("msg");
 
-                if (volleyError.networkResponse.statusCode == 422)
+                switch (volleyError.networkResponse.statusCode)
                 {
-                    switch (msgCode)
+                    case 422:
                     {
-                        // 동일한 전화번호로 인증 받은 사용자가
-                        case 2001:
+                        switch (msgCode)
                         {
-                            JSONObject dataJONObject = jsonObject.getJSONObject("data");
-                            String phoneNumber = dataJONObject.getString("phone");
+                            // 동일한 전화번호로 인증 받은 사용자가
+                            case 2001:
+                            {
+                                JSONObject dataJONObject = jsonObject.getJSONObject("data");
+                                String phoneNumber = dataJONObject.getString("phone");
 
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
-                            return;
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onAlreadyVerification(phoneNumber);
+                                return;
+                            }
+
+                            // 전화번호가 유효하지 않을 때
+                            case 2003:
+                            {
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                return;
+                            }
                         }
+                        break;
+                    }
 
-                        // 전화번호가 유효하지 않을 때
-                        case 2003:
+                    case 400:
+                    {
+                        switch (msgCode)
                         {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
-                            return;
+                            case 2004:
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onInvalidPhoneNumber(message);
+                                break;
                         }
+                        break;
                     }
                 }
 
@@ -305,9 +312,9 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
                 if (msgCode == 0)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject dataJSONObject = response.getJSONObject("data");
 
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
+                    boolean isSignin = dataJSONObject.getBoolean("is_signin");
 
                     if (isSignin == true)
                     {
@@ -315,7 +322,15 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         String accessToken = tokenJSONObject.getString("access_token");
                         String tokenType = tokenJSONObject.getString("token_type");
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken));
+                        JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
+                        String userIndex = userJSONObject.getString("idx");
+                        String email = userJSONObject.getString("email");
+                        String name = userJSONObject.getString("name");
+                        String rndnum = userJSONObject.getString("rndnum");
+                        String userType = userJSONObject.getString("userType");
+                        String phoneNumber = userJSONObject.getString("phone");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken), userIndex, email, name, rndnum, userType, phoneNumber);
                         return;
                     }
                 }
@@ -332,42 +347,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 mOnNetworkControllerListener.onError(e);
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                String userIndex = String.valueOf(response.getInt("idx"));
-
-                AnalyticsManager.getInstance(mContext).setUserIndex(userIndex);
-
-                String name = response.getString("name");
-                String email = response.getString("email");
-                String phone = response.getString("phone");
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(userIndex, email, name, phone);
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onError(e);
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            try
-            {
-                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                mOnNetworkControllerListener.onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"));
-            } catch (Exception e)
-            {
-                mOnNetworkControllerListener.onErrorResponse(volleyError);
             }
         }
     };

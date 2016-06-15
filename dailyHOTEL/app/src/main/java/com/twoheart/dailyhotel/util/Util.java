@@ -54,7 +54,12 @@ import com.twoheart.dailyhotel.widget.FontManager;
 import net.simonvt.numberpicker.NumberPicker;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -63,6 +68,8 @@ import okhttp3.OkHttpClient;
 public class Util implements Constants
 {
     public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
+
+    private static final String ISO_8601_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     private static String MEMORY_CLEAR;
 
@@ -103,14 +110,6 @@ public class Util implements Constants
         }
 
         Fresco.initialize(context, imagePipelineConfig);
-
-        try
-        {
-            Fresco.getImagePipelineFactory().getMainFileCache().clearAll();
-        } catch (UnsatisfiedLinkError e)
-        {
-            ExLog.e(e.toString());
-        }
     }
 
     public static void requestImageResize(Context context, com.facebook.drawee.view.SimpleDraweeView simpleDraweeView, String imageUrl)
@@ -770,10 +769,7 @@ public class Util implements Constants
 
         // 버튼
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
-        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
         View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
-
-        twoButtonLayout.setVisibility(View.GONE);
         oneButtonLayout.setVisibility(View.VISIBLE);
 
         TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
@@ -784,7 +780,7 @@ public class Util implements Constants
             @Override
             public void onClick(View v)
             {
-                if (dialog != null && dialog.isShowing())
+                if (dialog.isShowing() == true)
                 {
                     dialog.dismiss();
                 }
@@ -971,100 +967,129 @@ public class Util implements Constants
             return;
         }
 
-        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_searchmapdialog_layout, null, false);
-
+        View dialogView;
         final Dialog dialog = new Dialog(baseActivity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(true);
 
-        // 버튼
-        View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
-        View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
-        View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (isOverseas == true)
+        if (isOverseas == false)
         {
-            // 해외
-            kakaoMapLayoutLayout.setVisibility(View.GONE);
-            naverMapLayout.setVisibility(View.GONE);
+            dialogView = layoutInflater.inflate(R.layout.view_searchmap_dialog_layout01, null, false);
+
+            // 버튼
+            View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
+            View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
+            View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+
+            kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+
+            naverMapLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+
+            googleMapLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
+        } else
+        {
+            dialogView = layoutInflater.inflate(R.layout.view_searchmap_dialog_layout02, null, false);
+
+            // 버튼
+            View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+
+            googleMapLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog.isShowing() == true)
+                    {
+                        dialog.dismiss();
+                    }
+
+                    Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
+
+                    if (Util.isTextEmpty(gaCategory) == false)
+                    {
+                        if (Util.isTextEmpty(gaLabel) == true)
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
+                        } else
+                        {
+                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
+                        }
+                    }
+                }
+            });
         }
-
-        kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
-
-                if (Util.isTextEmpty(gaCategory) == false)
-                {
-                    if (Util.isTextEmpty(gaLabel) == true)
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
-                    }
-                }
-            }
-        });
-
-        naverMapLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
-
-                if (Util.isTextEmpty(gaCategory) == false)
-                {
-                    if (Util.isTextEmpty(gaLabel) == true)
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
-                    }
-                }
-            }
-        });
-
-        googleMapLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
-
-                if (Util.isTextEmpty(gaCategory) == false)
-                {
-                    if (Util.isTextEmpty(gaLabel) == true)
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
-                    }
-                }
-            }
-        });
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
         {
@@ -1128,5 +1153,190 @@ public class Util implements Constants
                 DailyToast.showToast(context, R.string.toast_message_failed_install, Toast.LENGTH_SHORT);
             }
         }
+    }
+
+    public static String getPriceFormat(Context context, int price, boolean isPrefixType)
+    {
+        if (isPrefixType == true)
+        {
+            DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format_prefix));
+            return decimalFormat.format(price);
+        } else
+        {
+            DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format));
+            return decimalFormat.format(price);
+        }
+    }
+
+    public static Date getISO8601Date(String time) throws ParseException, NullPointerException
+    {
+        if (isTextEmpty(time) == true)
+        {
+            throw new NullPointerException("time is empty");
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+        return simpleDateFormat.parse(time);
+    }
+
+    public static String getISO8601String(long time)
+    {
+        Date date = new Date(time);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+        String formatString = simpleDateFormat.format(date);
+
+        return checkISO8601TimeZone(formatString);
+    }
+
+    public static String simpleDateFormatISO8601toFormat(String iso8601, String format) throws ParseException, NullPointerException
+    {
+        if (Util.isTextEmpty(iso8601, format) == true)
+        {
+            throw new NullPointerException("iso8601, format is empty");
+        }
+
+        iso8601 = checkISO8601TimeZone(iso8601);
+
+        Date date = getISO8601Date(iso8601);
+
+        return simpleDateFormat(date, format);
+    }
+
+    public static String simpleDateFormat(Date date, String format)
+    {
+        if (date == null || Util.isTextEmpty(format) == true)
+        {
+            return null;
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+        return simpleDateFormat.format(date);
+    }
+
+    public static String getISO8601String(Date date)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+        String formatString = simpleDateFormat.format(date);
+
+        return checkISO8601TimeZone(formatString);
+    }
+
+    private static String checkISO8601TimeZone(String iso8601) throws NullPointerException
+    {
+        if (Util.isTextEmpty(iso8601) == true)
+        {
+            throw new NullPointerException("iso8601, format is empty");
+        }
+
+        if (iso8601.contains("GMT"))
+        {
+            iso8601 = iso8601.replaceAll("GMT", "");
+        }
+
+        int length = iso8601.length();
+
+        // 우선 GMT 기준으로 + 인 시간 찾고 없으면 - 인 시간 확인!
+        int index = iso8601.lastIndexOf("+");
+        if (index == -1)
+        {
+            int timeIndex = iso8601.lastIndexOf("T");
+            index = iso8601.lastIndexOf("-");
+
+            if (timeIndex >= index)
+            {
+                // 타임 값보다 적은 경우 인덱스 초기화
+                index = -1;
+            }
+        }
+
+        if (index != -1)
+        {
+            if (index < length - 1)
+            {
+                String timeZone = iso8601.substring(index + 1);
+                if (timeZone.contains(":"))
+                {
+                    // 정상
+                    ExLog.d("iso8601 is good format");
+                } else if (timeZone.length() == 4)
+                {
+                    iso8601 = iso8601.substring(0, index + 1) + //
+                        timeZone.substring(0, 2) + ":" + //
+                        timeZone.substring(2);
+                } else
+                {
+                    // 비정상 텍스트
+                    ExLog.d("iso8601 is wrong format");
+                }
+            } else
+            {
+                // 비정상 텍스트
+                ExLog.d("iso8601 is wrong format, timezone size zero,  set text '+09:00'");
+                iso8601 = iso8601.substring(0, index) + "+09:00";
+
+            }
+        } else
+        {
+            // 비정상 텍스트
+            ExLog.d("iso8601 is wrong format, not find character '+' or '-', so add text '+09:00'");
+            iso8601 = iso8601.replaceAll("Z", "") + "+09:00";
+
+        }
+
+        return iso8601;
+    }
+
+    /**
+     * String value 값 중 "true", "1", "Y", "y" 값을 true로 바꿔 주는 메소드
+     *
+     * @param value
+     * @return boolean value
+     */
+    public static boolean parseBoolean(String value)
+    {
+        if (isTextEmpty(value) == true)
+        {
+            return false;
+        }
+
+        value = value.toLowerCase();
+
+        if ("true".equalsIgnoreCase(value))
+        {
+            return true;
+        } else if ("1".equalsIgnoreCase(value))
+        {
+            return true;
+        } else if ("Y".equalsIgnoreCase(value))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * int value 값을 true로 바꿔 주는 메소드
+     *
+     * @param value int value
+     * @return boolean value
+     */
+    public static boolean parseBoolean(int value)
+    {
+        if (1 == value)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

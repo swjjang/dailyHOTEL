@@ -91,115 +91,130 @@ public class AnalyticsManager
         }
     }
 
-    public void onStart(Activity activity)
+    public void setExceedBonus(boolean isExceedBonus)
     {
         try
         {
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
-                analyticsManager.onStart(activity);
+                analyticsManager.setExceedBonus(isExceedBonus);
             }
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
+        }
+    }
+
+    public void onStart(Activity activity)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onStart(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
         }
     }
 
     public void onStop(Activity activity)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.onStop(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void onResume(Activity activity)
     {
-        try
+
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.onResume(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void onPause(Activity activity)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.onPause(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void recordScreen(String screen)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.recordScreen(screen);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void recordScreen(String screen, Map<String, String> params)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.recordScreen(screen, params);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.recordEvent(category, action, label, params);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void recordEvent(Map<String, String> params)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.recordEvent(params);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -209,71 +224,71 @@ public class AnalyticsManager
 
     public void currentAppVersion(String version)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.currentAppVersion(version);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void addCreditCard(String cardType)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.addCreditCard(cardType);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void updateCreditCard(String cardTypes)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.updateCreditCard(cardTypes);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void singUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType, recommender);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -283,7 +298,13 @@ public class AnalyticsManager
         {
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
-                analyticsManager.purchaseCompleteHotel(transId, params);
+                try
+                {
+                    analyticsManager.purchaseCompleteHotel(transId, params);
+                } catch (Exception e)
+                {
+                    ExLog.d(TAG + e.toString());
+                }
             }
 
             String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
@@ -300,7 +321,13 @@ public class AnalyticsManager
         {
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
-                analyticsManager.purchaseCompleteGourmet(transId, params);
+                try
+                {
+                    analyticsManager.purchaseCompleteGourmet(transId, params);
+                } catch (Exception e)
+                {
+                    ExLog.d(TAG + e.toString());
+                }
             }
 
             String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
@@ -401,6 +428,17 @@ public class AnalyticsManager
         public static final String MENU_SETPROFILE_NAME = "Menu_SetProfileName";
         public static final String MENU_SETPROFILE_PASSWORD = "Menu_SetProfilePassword";
         public static final String MENU_SETPROFILE_PHONENUMBER = "Menu_SetProfilePhoneNumber";
+
+
+        public static final String MENU_COUPON_BOX = "Menu_CouponBox";
+        public static final String MENU_INVITE_FRIENDS_BEFORE_LOGIN = "Menu_InviteFriends_BeforeLogIn";
+        public static final String MENU_INVITE_FRIENDS = "Menu_InviteFriends";
+        public static final String MENU_COUPON_HISTORY = "Menu_CouponHistory";
+        public static final String MENU_COUPON_GENERAL_TERMS_OF_USE = "Menu_CouponGeneralTermsofUse";
+        public static final String MENU_COUPON_INDIVIDUAL_TERMS_OF_USE = "Menu_CouponIndividualTermsofUse";
+        public static final String DAILY_HOTEL_AVAILABLE_COUPON_LIST = "DailyHotel_AvailableCouponList";
+        public static final String DAILY_HOTEL_UNAVAILABLE_COUPON_LIST = "DailyHotel_UnavailableCouponList";
+
     }
 
     public static class Action
@@ -517,6 +555,16 @@ public class AnalyticsManager
         //
         public static final String HOTEL_BOOKING_DATE_CONFIRMED = "HotelBookingDateConfirmed";
         public static final String HOTEL_BOOKING_DATE_CHANGED = "HotelBookingDateChanged";
+        //
+        public static final String NOTIFICATION_SETTING_CLICKED = "NotificationSettingClicked";
+        public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
+        public static final String COUPON_DOWNLOAD_CLICKED = "CouponDownloadClicked";
+        public static final String REFERRAL_CODE_COPIED = "ReferralCodeCopied";
+        public static final String KAKAO_FRIEND_INVITED = "KakaoFriendInvited";
+        public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
+        public static final String HOTEL_COUPON_SELECTED = "HotelCouponSelected";
+        public static final String HOTEL_USING_COUPON_CANCEL_CLICKED = "HotelUsingCouponCancelClicked";
+        public static final String HOTEL_COUPON_NOT_FOUND = "HotelCouponNotFound";
     }
 
     public static class Category
@@ -528,6 +576,8 @@ public class AnalyticsManager
         public static final String HOTEL_SEARCH = "HotelSearches";
         public static final String GOURMET_SEARCH = "GourmetSearches";
         public static final String BOOKING_STATUS = "BookingStatus";
+        public static final String COUPON_BOX = "CouponBox";
+        public static final String INVITE_FRIEND = "InviteFriend";
     }
 
     public static class Label
@@ -553,7 +603,6 @@ public class AnalyticsManager
         public static final String AGREE_AND_REGISTER = "AgreeAndRegister";
         public static final String ADDING_CARD_ICON_CLICKED = "AddingCardIconClicked";
         public static final String ADDING_CARD_BUTTON_CLICKED = "AddingCardButtonClicked";
-        public static final String CREDIT_HISTORY_VIEW = "CreditHistoryView";
         //
         public static final String HOTEL_SATISFACTION = "HotelSatisfaction";
         public static final String HOTEL_DISSATISFACTION = "HotelDissatisfaction";
@@ -619,6 +668,15 @@ public class AnalyticsManager
         public static final String GOURMET_SEARCH_AGAIN_CLICKED = "GourmetSearchAgainClicked";
         public static final String CALL_KEYWORD_HOTEL = "Call-KeywordHotel";
         public static final String CALL_KEYWORD_GOURMET = "Call-KeywordGourmet";
+        //
+        public static final String CREDIT_MANAGEMENT = "CreditManagement";
+        public static final String INVITE_FRIENDS = "InviteFriends";
+        public static final String ON = "On";
+        public static final String OFF = "Off";
+        public static final String REFERRAL_CODE_COPIED = "ReferralCodeCopied";
+        public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
+        public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
+        public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
     }
 
     public static class UserType
@@ -688,6 +746,14 @@ public class AnalyticsManager
         public static final String POPUP_STATUS = "popup_status";
         public static final String SELECTED_RESPONSE_ITEM = "selected_response_Item";
         public static final String SCREEN = "screen";
+        public static final String SORTING = "sorting";
+        public static final String COUPON_REDEEM = "coupon_redeem";
+        public static final String COUPON_NAME = "coupon_name";
+        public static final String COUPON_AVAILABLE_ITEM = "coupon_available_item";
+        public static final String PRICE_OFF = "price_off";
+        public static final String EXPIRATION_DATE = "expiration_date";
+        public static final String DOWNLOAD_DATE = "download_date";
+
     }
 
     public static class ValueType

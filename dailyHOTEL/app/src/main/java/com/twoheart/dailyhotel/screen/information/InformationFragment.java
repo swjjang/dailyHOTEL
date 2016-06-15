@@ -11,20 +11,17 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
 import com.twoheart.dailyhotel.screen.information.bonus.BonusActivity;
+import com.twoheart.dailyhotel.screen.information.bonus.InviteFriendsActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
@@ -40,75 +37,23 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.analytics.AppboyManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import org.json.JSONObject;
-
-public class InformationFragment extends BaseFragment implements Constants, OnClickListener
+public class InformationFragment extends BaseFragment implements Constants
 {
-    private View mProfileLayout, mCreditcardLayout;
-    private View mNewEventIconView;
+    private InformationLayout mInformationLayout;
+    private InformationNetworkController mNetworkController;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     private boolean mIsAttach;
-    private View mDailyInformationView, mInformationScrollView, mInformationLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_information, container, false);
+        mInformationLayout = new InformationLayout(getActivity(), mOnEventListener);
+        mNetworkController = new InformationNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
 
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        initToolbar(baseActivity, view);
-
-        mInformationScrollView = view.findViewById(R.id.informationScrollView);
-        mInformationLayout = view.findViewById(R.id.informationLayout);
-        mDailyInformationView = view.findViewById(R.id.dailyInformationView);
-
-        mProfileLayout = view.findViewById(R.id.profileLayout);
-        mCreditcardLayout = view.findViewById(R.id.creditcardLayout);
-        View bonusLayout = view.findViewById(R.id.bonusLayout);
-        View eventLayout = view.findViewById(R.id.eventLayout);
-        View callLayout = view.findViewById(R.id.callLayout);
-        View mailLayout = view.findViewById(R.id.mailLayout);
-        View aboutLayout = view.findViewById(R.id.aboutLayout);
-
-        mProfileLayout.setOnClickListener(this);
-        mCreditcardLayout.setOnClickListener(this);
-        bonusLayout.setOnClickListener(this);
-        eventLayout.setOnClickListener(this);
-        callLayout.setOnClickListener(this);
-        mailLayout.setOnClickListener(this);
-        aboutLayout.setOnClickListener(this);
-
-        mNewEventIconView = eventLayout.findViewById(R.id.newIconView);
-
-        TextView pushTextView = (TextView) view.findViewById(R.id.pushTextView);
-
-        if (DailyPreference.getInstance(baseActivity).isAllowPush() == true)
-        {
-            pushTextView.setText(R.string.label_on);
-        } else
-        {
-            pushTextView.setText(R.string.label_off);
-        }
-
-        pushTextView.setOnClickListener(this);
-
-        setSigninLayout(false);
-        initSnsLayout(view);
-        initBusinessLayout(baseActivity, view);
-        initTermsLayout(baseActivity, view);
-
-        TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
-        versionTextView.setText(getString(R.string.label_version, DailyHotel.VERSION));
-
-        updateNewIconView(baseActivity);
-
-        return view;
+        return mInformationLayout.onCreateView(R.layout.fragment_information);
     }
 
     @Override
@@ -119,94 +64,6 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
         mIsAttach = true;
     }
 
-    private void initToolbar(BaseActivity baseActivity, View view)
-    {
-        View toolbar = view.findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_setting_frag), null, false);
-    }
-
-    private void initSnsLayout(View view)
-    {
-        View viewFacebook = view.findViewById(R.id.facebookLinkView);
-        View viewInstagram = view.findViewById(R.id.instagramLinkView);
-        View viewNaver = view.findViewById(R.id.naverLinkView);
-
-        viewFacebook.setOnClickListener(this);
-        viewInstagram.setOnClickListener(this);
-        viewNaver.setOnClickListener(this);
-    }
-
-    private void initBusinessLayout(BaseActivity baseActivity, View view)
-    {
-        TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
-        TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
-        TextView business3TextView = (TextView) view.findViewById(R.id.business3TextView);
-
-        business1TextView.setText(getString(R.string.frag_about_business_license01//
-            , DailyPreference.getInstance(baseActivity).getCompanyCEO()//
-            , DailyPreference.getInstance(baseActivity).getCompanyBizRegNumber()//
-            , DailyPreference.getInstance(baseActivity).getCompanyPhoneNumber()));
-
-        if (Util.getLCDWidth(baseActivity) < 720)
-        {
-            String text = DailyPreference.getInstance(baseActivity).getCompanyAddress() + '\n'//
-                + getString(R.string.frag_about_business_license02//
-                , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber());
-
-            business2TextView.setText(text);
-        } else
-        {
-            String text = DailyPreference.getInstance(baseActivity).getCompanyAddress() + " | "//
-                + getString(R.string.frag_about_business_license02//
-                , DailyPreference.getInstance(baseActivity).getCompanyItcRegNumber());
-
-            business2TextView.setText(text);
-        }
-
-        business3TextView.setText(getString(R.string.frag_about_business_license03//
-            , DailyPreference.getInstance(baseActivity).getCompanyPrivacyEmail()));
-    }
-
-    private void initTermsLayout(BaseActivity baseActivity, View view)
-    {
-        LinearLayout termsLayout = (LinearLayout) view.findViewById(R.id.termsLayout);
-
-        if (Util.getLCDWidth(baseActivity) < 720)
-        {
-            termsLayout.setOrientation(LinearLayout.VERTICAL);
-        }
-
-        View termsView = view.findViewById(R.id.termsView);
-        View personalView = view.findViewById(R.id.personalView);
-        View locationTermsView = view.findViewById(R.id.locationTermsView);
-        View protectChildTermsView = view.findViewById(R.id.protectChildTermsView);
-
-        termsView.setOnClickListener(this);
-        personalView.setOnClickListener(this);
-        locationTermsView.setOnClickListener(this);
-        protectChildTermsView.setOnClickListener(this);
-    }
-
-    private void setSigninLayout(boolean isSignin)
-    {
-        TextView profileTextView = (TextView) mProfileLayout.findViewById(R.id.profileTextView);
-
-        mProfileLayout.setTag(isSignin);
-
-        if (isSignin == true)
-        {
-            profileTextView.setText(R.string.frag_profile);
-            mCreditcardLayout.setVisibility(View.VISIBLE);
-        } else
-        {
-            profileTextView.setText(R.string.frag_login);
-            mCreditcardLayout.setVisibility(View.GONE);
-        }
-
-        updateTermsLayoutHeight();
-    }
-
     @Override
     public void onStart()
     {
@@ -214,18 +71,35 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         super.onStart();
 
+        boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
+        boolean hasNewCoupon = DailyPreference.getInstance(getContext()).hasNewCoupon();
+
+        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
+
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
             if (DailyDeepLink.getInstance().isEventView() == true)
             {
-                startActivity(new Intent(getContext(), EventListActivity.class));
+                mOnEventListener.startEvent();
             } else if (DailyDeepLink.getInstance().isBonusView() == true)
             {
-                startActivity(new Intent(getContext(), BonusActivity.class));
+                mOnEventListener.startBonusList();
             } else if (DailyDeepLink.getInstance().isSingUpView() == true)
             {
-                Intent intent = SignupStep1Activity.newInstance(getContext(), DailyDeepLink.getInstance().getRecommenderCode());
-                startActivity(intent);
+                startSignUp(DailyDeepLink.getInstance().getRecommenderCode());
+            } else if (DailyDeepLink.getInstance().isCouponView() == true)
+            {
+                mOnEventListener.startCouponList();
+            } else if (DailyDeepLink.getInstance().isEventDetailView() == true)
+            {
+                mOnEventListener.startEvent();
+                return;
+            } else if (DailyDeepLink.getInstance().isInformationView() == true)
+            {
+
+            } else if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
+            {
+                mOnEventListener.startInviteFriend();
             }
 
             DailyDeepLink.getInstance().clear();
@@ -237,21 +111,31 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     {
         super.onResume();
 
-        unLockUI();
-
-        if (Util.isTextEmpty(DailyPreference.getInstance(getActivity()).getAuthorization()) == true)
-        {
-            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNOUT);
-
-            setSigninLayout(false);
-        } else
-        {
-            AnalyticsManager.getInstance(getContext()).recordScreen(Screen.INFORMATION_SIGNIN);
-
-            setSigninLayout(true);
-        }
+        checkInformation();
 
         registerReceiver();
+
+        boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
+
+        if (isLogin == true)
+        {
+            // 적립금 및 쿠폰 개수 가져와야 함
+            lockUI();
+
+            mNetworkController.requestUserInformation();
+
+        } else
+        {
+            // 비로그인 상태
+            unLockUI();
+
+            mInformationLayout.updateLoginLayout(false, false);
+            mInformationLayout.updateAccountLayout(false, 0, 0);
+        }
+
+        // 혜택 알림 메세지 가져오기
+        mNetworkController.requestPushBenefitText();
+
     }
 
     @Override
@@ -263,7 +147,20 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     }
 
     @Override
-    public void onClick(View v)
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQEUST_ACTIVITY_SIGNUP:
+            {
+                break;
+            }
+        }
+    }
+
+    private void startSignUp(String recommenderCode)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {
@@ -274,268 +171,479 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        switch (v.getId())
+        Intent intent;
+
+        if (Util.isTextEmpty(recommenderCode) == true)
         {
-            case R.id.profileLayout:
-            {
-                Boolean isSignin = (Boolean) mProfileLayout.getTag();
-
-                if (isSignin == null || isSignin == false)
-                {
-                    baseActivity.startActivity(new Intent(baseActivity, LoginActivity.class));
-                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
-                } else
-                {
-                    startActivity(new Intent(baseActivity, ProfileActivity.class));
-                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                    //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
-                }
-                break;
-            }
-
-            case R.id.creditcardLayout:
-            {
-                startActivity(new Intent(baseActivity, CreditCardListActivity.class));
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.CARD_MANAGEMENT_CLICKED, null);
-                break;
-            }
-
-            case R.id.bonusLayout:
-            {
-                startActivity(new Intent(baseActivity, BonusActivity.class));
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
-                break;
-            }
-
-            case R.id.eventLayout:
-            {
-                startActivity(new Intent(baseActivity, EventListActivity.class));
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
-                break;
-            }
-
-            case R.id.callLayout:
-            {
-                showCallDialog(baseActivity);
-
-                //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.CALL_CS, 0L);
-                break;
-            }
-
-            case R.id.mailLayout:
-            {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
-                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
-                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
-
-                //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
-                break;
-            }
-
-            case R.id.aboutLayout:
-            {
-                startActivity(new Intent(baseActivity, AboutActivity.class));
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-                //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
-                break;
-            }
-
-            case R.id.pushTextView:
-            {
-                if (DailyPreference.getInstance(baseActivity).isAllowPush() == true)
-                {
-                    DailyPreference.getInstance(baseActivity).setAllowPush(false);
-                    ((TextView) v).setText(R.string.label_off);
-
-                    AppboyManager.setPushEnabled(baseActivity, false);
-                } else
-                {
-                    DailyPreference.getInstance(baseActivity).setAllowPush(true);
-                    ((TextView) v).setText(R.string.label_on);
-
-                    AppboyManager.setPushEnabled(baseActivity, true);
-                }
-
-                releaseUiComponent();
-                break;
-            }
-
-            case R.id.facebookLinkView:
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-
-                try
-                {
-                    intent.setData(Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/Dailyhotel.Korea"));
-                    startActivity(intent);
-                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                } catch (Exception e)
-                {
-                    try
-                    {
-                        intent.setData(Uri.parse("http://www.facebook.com/dailyhotel"));
-                        startActivity(intent);
-                        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                    } catch (ActivityNotFoundException e1)
-                    {
-
-                    }
-                }
-                break;
-            }
-
-            case R.id.instagramLinkView:
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-
-                try
-                {
-                    intent.setData(Uri.parse("instagram://user?username=dailyhotel"));
-                    startActivity(intent);
-                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                } catch (Exception e)
-                {
-                    try
-                    {
-                        intent.setData(Uri.parse("http://www.instagram.com/dailyhotel"));
-                        startActivity(intent);
-                        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                    } catch (ActivityNotFoundException e1)
-                    {
-                    }
-                }
-                break;
-            }
-
-            case R.id.naverLinkView:
-            {
-                try
-                {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("http://blog.naver.com/dailyhotels"));
-                    startActivity(intent);
-                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                } catch (ActivityNotFoundException e)
-                {
-
-                }
-                break;
-            }
-
-            case R.id.termsView:
-            {
-                Intent intent = new Intent(baseActivity, TermActivity.class);
-                startActivity(intent);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                break;
-            }
-
-            case R.id.personalView:
-            {
-                Intent intent = new Intent(baseActivity, PrivacyActivity.class);
-                startActivity(intent);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                break;
-            }
-
-            case R.id.locationTermsView:
-            {
-                Intent intent = new Intent(baseActivity, LocationTermsActivity.class);
-                startActivity(intent);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                break;
-            }
-
-            case R.id.protectChildTermsView:
-            {
-                Intent intent = new Intent(baseActivity, ProtectYouthTermsActivity.class);
-                startActivity(intent);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                break;
-            }
-
-            default:
-                releaseUiComponent();
-                break;
-        }
-    }
-
-    private void updateNewIconView(Context context)
-    {
-        if (mNewEventIconView == null)
-        {
-            return;
-        }
-
-        if (DailyPreference.getInstance(context).hasNewEvent() == true)
-        {
-            mNewEventIconView.setVisibility(View.VISIBLE);
+            intent = SignupStep1Activity.newInstance(baseActivity);
         } else
         {
-            mNewEventIconView.setVisibility(View.INVISIBLE);
+            intent = SignupStep1Activity.newInstance(baseActivity, recommenderCode);
         }
+
+        startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
-    private void updateTermsLayoutHeight()
+    private void checkInformation()
     {
-        mDailyInformationView.post(new Runnable()
+        String benefitMessage = DailyPreference.getInstance(getContext()).getBenefitAlarmMessage();
+
+        if (Util.isTextEmpty(benefitMessage) == true)
         {
-            @Override
-            public void run()
-            {
-                int defaultHeight = Util.dpToPx(getContext(), 140);
+            benefitMessage = getResources().getString(R.string.frag_push_alert_subtext);
+            DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(benefitMessage);
+        }
 
-                if (mInformationScrollView.getHeight() > mInformationLayout.getHeight())
-                {
-                    int height = mInformationScrollView.getHeight() - mInformationLayout.getHeight();
+        mInformationLayout.updatePushText(benefitMessage);
 
-                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
+        boolean hasNewEvent = DailyPreference.getInstance(getContext()).hasNewEvent();
+        boolean hasNewCoupon = DailyPreference.getInstance(getContext()).hasNewCoupon();
 
-                    if (layoutParams != null)
-                    {
-                        layoutParams.height = mDailyInformationView.getHeight() + height;
-                        mDailyInformationView.setLayoutParams(layoutParams);
-                    }
-
-                } else if (mInformationScrollView.getHeight() < mInformationLayout.getHeight())
-                {
-                    int height = (mInformationLayout.getHeight() - mInformationScrollView.getHeight());
-
-                    ViewGroup.LayoutParams layoutParams = mDailyInformationView.getLayoutParams();
-
-                    if (layoutParams != null)
-                    {
-                        layoutParams.height = mDailyInformationView.getHeight() - height;
-
-                        if (layoutParams.height < defaultHeight)
-                        {
-                            layoutParams.height = defaultHeight;
-                        }
-
-                        mDailyInformationView.setLayoutParams(layoutParams);
-                    }
-                }
-
-                mDailyInformationView.setMinimumHeight(defaultHeight);
-            }
-        });
+        mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
     }
+
+    /////////////////////////////////////////////////////////////////
+    // EventListener
+    /////////////////////////////////////////////////////////////////
+
+    private InformationLayout.OnEventListener mOnEventListener = new InformationLayout.OnEventListener()
+    {
+        @Override
+        public void startLogin()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            baseActivity.startActivity(new Intent(baseActivity, LoginActivity.class));
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
+        }
+
+        @Override
+        public void startSignUp()
+        {
+            InformationFragment.this.startSignUp(null);
+        }
+
+        @Override
+        public void startEditProfile()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            startActivity(new Intent(baseActivity, ProfileActivity.class));
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
+        }
+
+        @Override
+        public void startCouponList()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            startActivity(new Intent(baseActivity, CouponListActivity.class));
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
+                Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
+
+        }
+
+        @Override
+        public void startBonusList()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            startActivity(new Intent(baseActivity, BonusActivity.class));
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
+        }
+
+        @Override
+        public void startCreditCardList()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            startActivity(new Intent(baseActivity, CreditCardListActivity.class));
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.CARD_MANAGEMENT_CLICKED, null);
+        }
+
+        @Override
+        public void startInviteFriend()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (Util.isTextEmpty(DailyPreference.getInstance(baseActivity).getAuthorization()) == true)
+            {
+                startActivity(InviteFriendsActivity.newInstance(baseActivity));
+            } else
+            {
+                String recommeder = DailyPreference.getInstance(baseActivity).getUserRecommender();
+                String name = DailyPreference.getInstance(baseActivity).getUserName();
+
+                startActivity(InviteFriendsActivity.newInstance(baseActivity, recommeder, name));
+            }
+
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.INVITE_FRIENDS, null);
+        }
+
+        @Override
+        public void startEvent()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            startActivity(new Intent(baseActivity, EventListActivity.class));
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
+        }
+
+        @Override
+        public void startCall()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            showCallDialog(baseActivity);
+
+            //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.CALL_CS, 0L);
+
+        }
+
+        @Override
+        public void startEmail()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
+
+            //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
+
+        }
+
+        @Override
+        public void startAbout()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            startActivity(new Intent(baseActivity, AboutActivity.class));
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
+
+        }
+
+        @Override
+        public void onPushClick(View v)
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            final BaseActivity baseActivity = (BaseActivity) getActivity();
+            boolean isBenefitAlarm = DailyPreference.getInstance(baseActivity).isUserBenefitAlarm(); // 클릭이므로 상태값 변경!
+            boolean onOff = !isBenefitAlarm; // 클릭이므로 상태값 변경!
+            final boolean isAuthorization = Util.isTextEmpty(DailyPreference.getInstance(baseActivity).getAuthorization()) == false;
+
+            if (onOff == true)
+            {
+                mNetworkController.requestPushBenefit(isAuthorization, true);
+            } else
+            {
+                String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
+                final String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_off);
+                String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_yes);
+                String negative = baseActivity.getResources().getString(R.string.dialog_btn_text_no);
+
+                baseActivity.showSimpleDialog(title, message, positive, negative, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mNetworkController.requestPushBenefit(isAuthorization, false);
+                    }
+                }, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        releaseUiComponent();
+                    }
+                }, true);
+            }
+
+        }
+
+        @Override
+        public void startFacebook()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+
+            try
+            {
+                intent.setData(Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/Dailyhotel.Korea"));
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            } catch (Exception e)
+            {
+                try
+                {
+                    intent.setData(Uri.parse("http://www.facebook.com/dailyhotel"));
+                    startActivity(intent);
+                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                } catch (ActivityNotFoundException e1)
+                {
+
+                }
+            }
+        }
+
+        @Override
+        public void startInstagram()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+
+            try
+            {
+                intent.setData(Uri.parse("instagram://user?username=dailyhotel"));
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            } catch (Exception e)
+            {
+                try
+                {
+                    intent.setData(Uri.parse("http://www.instagram.com/dailyhotel"));
+                    startActivity(intent);
+                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                } catch (ActivityNotFoundException e1)
+                {
+                }
+            }
+        }
+
+        @Override
+        public void startNaverBlog()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            try
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            } catch (ActivityNotFoundException e)
+            {
+
+            }
+        }
+
+        @Override
+        public void startYouTube()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            try
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://www.youtube.com/channel/UCNJASbBThd0TFo3qLgl1wuw"));
+                startActivity(intent);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            } catch (ActivityNotFoundException e)
+            {
+
+            }
+        }
+
+        @Override
+        public void startTerms()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            Intent intent = new Intent(baseActivity, TermActivity.class);
+            startActivity(intent);
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+        }
+
+        @Override
+        public void startPersonal()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = new Intent(baseActivity, PrivacyActivity.class);
+            startActivity(intent);
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+        }
+
+        @Override
+        public void startLocationTerms()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            Intent intent = new Intent(baseActivity, LocationTermsActivity.class);
+            startActivity(intent);
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+        }
+
+        @Override
+        public void startProtectChildTerms()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            Intent intent = new Intent(baseActivity, ProtectYouthTermsActivity.class);
+            startActivity(intent);
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+        }
+
+        @Override
+        public void finish()
+        {
+            //do nothing.
+        }
+    };
 
     private void showCallDialog(final BaseActivity baseActivity)
     {
@@ -594,7 +702,10 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
                     return;
                 }
 
-                updateNewIconView(context);
+                boolean hasNewEvent = DailyPreference.getInstance(context).hasNewEvent();
+                boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
+
+                mInformationLayout.updateNewIconView(hasNewEvent, hasNewCoupon);
             }
         };
 
@@ -616,37 +727,123 @@ public class InformationFragment extends BaseFragment implements Constants, OnCl
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mSocialUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    /**
+     * 유저 정보 리스너
+     */
+    private InformationNetworkController.OnNetworkControllerListener mNetworkControllerListener //
+        = new InformationNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onUserInformation(String type, String email, String name, String recommender, //
+                                      int bonus, int couponTotalCount, boolean isAgreedBenefit, boolean isExceedBonus)
         {
+            DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
 
+            boolean isLogin = Util.isTextEmpty(DailyPreference.getInstance(getContext()).getAuthorization()) == false;
+
+            if (isLogin == true)
+            {
+                DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
+                AppboyManager.setPushEnabled(getContext(), isAgreedBenefit);
+
+                mInformationLayout.updatePushIcon(isAgreedBenefit);
+            }
+
+            if (bonus < 0)
+            {
+                bonus = 0;
+            }
+
+            mInformationLayout.updateLoginLayout(isLogin, false);
+            mInformationLayout.updateAccountLayout(isLogin, bonus, couponTotalCount);
+
+            AnalyticsManager.getInstance(getContext()).setExceedBonus(isExceedBonus);
+
+            unLockUI();
         }
 
         @Override
-        public void onResponse(String url, JSONObject response)
+        public void onPushBenefitMessage(String message)
         {
-            try
-            {
-                JSONObject jsonObject = response.getJSONObject("data");
+            DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(message);
 
-                boolean result = jsonObject.getBoolean("is_success");
-                int msgCode = response.getInt("msg_code");
+            mInformationLayout.updatePushText(message);
 
-                if (result == true)
-                {
-                } else
-                {
-                    DailyToast.showToast(getContext(), response.getString("msg"), Toast.LENGTH_LONG);
-                }
-            } catch (Exception e)
+            unLockUI();
+        }
+
+        @Override
+        public void onBenefitAgreement(final boolean isAgree, String updateDate)
+        {
+            lockUiComponent();
+
+            final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgree);
+            mInformationLayout.updatePushIcon(isAgree);
+            AppboyManager.setPushEnabled(baseActivity, isAgree);
+
+            if (isAgree == true)
             {
-                onError(e);
-            } finally
+                // 혜택 알림 설정이 off --> on 일때
+                String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
+                String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
+                String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);
+
+                baseActivity.showSimpleDialog(title, message, positive, null, null, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        releaseUiComponent();
+                    }
+                }, true);
+
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                    Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
+            } else
             {
-                unLockUI();
+                // 혜택 알림 설정이 on --> off 일때
+                String title = baseActivity.getResources().getString(R.string.label_setting_alarm);
+                String message = baseActivity.getResources().getString(R.string.message_benefit_alarm_off_confirm_format, updateDate);
+                String positive = baseActivity.getResources().getString(R.string.dialog_btn_text_confirm);
+
+                baseActivity.showSimpleDialog(title, message, positive, null, null, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        releaseUiComponent();
+                    }
+                }, true);
+
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                    Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            InformationFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            InformationFragment.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            InformationFragment.this.onErrorPopupMessage(msgCode, message, null);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            InformationFragment.this.onErrorToastMessage(message);
         }
     };
 }

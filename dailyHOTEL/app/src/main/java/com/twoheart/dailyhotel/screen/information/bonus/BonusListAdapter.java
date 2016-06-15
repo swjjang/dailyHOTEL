@@ -22,8 +22,8 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
     {
         super(context, resourceId, list);
 
-        mBonusList = list;
         mContext = context;
+        mBonusList = list;
     }
 
     @Override
@@ -44,13 +44,32 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
         TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
         TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
         TextView expireTextView = (TextView) view.findViewById(R.id.expireTextView);
+        View underLineView = view.findViewById(R.id.underLineView);
 
-        DecimalFormat comma = new DecimalFormat("###,##0");
+        String format = null;
+
+        if (bonus.bonus > 0)
+        {
+            format = "+ ###,##0";
+        } else
+        {
+            format = "- ###,##0";
+        }
+
+        DecimalFormat comma = new DecimalFormat(format);
         String strBonus = comma.format(bonus.bonus);
 
         bonusTextView.setText(strBonus + mContext.getString(R.string.currency));
         contentTextView.setText(bonus.content);
         expireTextView.setText(mContext.getString(R.string.prefix_expire_time) + " : " + bonus.expires);
+
+        if (position == mBonusList.size() - 1)
+        {
+            underLineView.setVisibility(View.VISIBLE);
+        } else
+        {
+            underLineView.setVisibility(View.GONE);
+        }
 
         return view;
     }

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
@@ -23,25 +22,18 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class GourmetBookingDetailTabBookingFragment extends BaseFragment implements Constants
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
     private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
-    private static final String KEY_BUNDLE_ARGUMENTS_ISUSED = "isUsed";
 
     private GourmetBookingDetail mBookingDetail;
     private int mReservationIndex;
-    private boolean mIsUsed;
 
-    public static GourmetBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex, boolean isUsed)
+    public static GourmetBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
         GourmetBookingDetailTabBookingFragment newFragment = new GourmetBookingDetailTabBookingFragment();
 
@@ -49,7 +41,6 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         Bundle arguments = new Bundle();
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL, bookingDetail);
         arguments.putInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX, reservationIndex);
-        arguments.putBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED, isUsed);
 
         newFragment.setArguments(arguments);
 
@@ -67,7 +58,6 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         {
             mBookingDetail = bundle.getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
             mReservationIndex = bundle.getInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX);
-            mIsUsed = bundle.getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
         }
     }
 
@@ -84,53 +74,31 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         View view = inflater.inflate(R.layout.fragment_courmetbooking_tab_booking, container, false);
 
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
         initGourmetInformationLayout(view, mBookingDetail);
         initGuestInformationLayout(view, mBookingDetail);
+        initPaymentInformationLayout(view, mBookingDetail);
 
         // 영수증 발급
-        TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
-
-        if (DEBUG == true)
+        View confirmView = view.findViewById(R.id.buttonLayout);
+        confirmView.setOnClickListener(new View.OnClickListener()
         {
-            mIsUsed = true;
-        }
-
-        if (mIsUsed == true)
-        {
-            viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
-            viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
-            viewReceiptTextView.setOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
+                BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                    if (baseActivity == null)
-                    {
-                        return;
-                    }
-
-                    Intent intent = new Intent(baseActivity, GourmetReceiptActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
-                    startActivity(intent);
-                }
-            });
-        } else
-        {
-            viewReceiptTextView.setTextColor(getResources().getColor(R.color.hoteldetail_soldout_text));
-            viewReceiptTextView.setBackgroundResource(R.color.hoteldetail_soldout_background);
-            viewReceiptTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
+                if (baseActivity == null)
                 {
-                    DailyToast.showToast(getActivity(), R.string.message_cant_issuing_ticketreceipt, Toast.LENGTH_SHORT);
+                    return;
                 }
-            });
-        }
+
+                Intent intent = new Intent(baseActivity, GourmetReceiptActivity.class);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
@@ -148,10 +116,13 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         ticketTypeTextView.setText(bookingDetail.ticketName);
         ticketCountTextView.setText(getString(R.string.label_booking_count, bookingDetail.ticketCount));
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        dateTextView.setText(simpleDateFormat.format(new Date(bookingDetail.reservationTime)));
+        try
+        {
+            dateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.reservationTime, "yyyy.MM.dd(EEE) HH:mm"));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void initGuestInformationLayout(View view, GourmetBookingDetail bookingDetail)
@@ -161,5 +132,33 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         userNameTextView.setText(bookingDetail.guestName);
         userPhoneTextView.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
+    }
+
+    private void initPaymentInformationLayout(View view, GourmetBookingDetail bookingDetail)
+    {
+        TextView paymentDateTextView = (TextView) view.findViewById(R.id.paymentDateTextView);
+        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+
+        View bonusLayout = view.findViewById(R.id.bonusLayout);
+        View couponLayout = view.findViewById(R.id.couponLayout);
+        TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
+        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
+        TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
+
+        try
+        {
+            paymentDateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.paymentDate, "yyyy.MM.dd"));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        String price = Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false);
+
+        priceTextView.setText(price);
+        totalPriceTextView.setText(price);
+
+        bonusLayout.setVisibility(View.GONE);
+        couponLayout.setVisibility(View.GONE);
     }
 }

@@ -4,42 +4,31 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/popup_bg_white_full"
-              android:gravity="center_horizontal"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:paddingBottom="10dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:paddingTop="24dp"
+              android:gravity="center_horizontal">
 
-    <LinearLayout
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="22dp"
-        android:layout_marginTop="22dp"
-        android:gravity="center">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:src="@drawable/popup_ic_share"
-            android:layout_marginLeft="10dp"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:paddingRight="16dp"
-            android:text="@string/label_doshare"
-            android:textColor="@color/dialog_title_text"
-            android:textSize="17dp"
-            dailyFont:style="Bold"/>
-    </LinearLayout>
+        android:gravity="center_horizontal"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="17dp"
+        dailyFont:style="Medium"
+        android:text="@string/label_doshare"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
     <FrameLayout
         android:id="@+id/kakaoShareLayout"
-        android:layout_width="280dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@color/kakaotalk_background">
+        android:layout_width="292dp"
+        android:layout_height="38dp"
+        android:background="@color/default_background_kakao"
+        android:layout_marginTop="24dp">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="wrap_content"
@@ -48,8 +37,9 @@
             android:drawableLeft="@drawable/ic_detail_share_kakao"
             android:drawablePadding="5dp"
             android:gravity="center"
+            dailyFont:style="Medium"
             android:text="@string/label_share_kakao"
-            android:textColor="@color/kakaotalk_textcolkr"
-            android:textSize="15dp"/>
+            android:textColor="@color/default_text_kakao"
+            android:textSize="14dp"/>
     </FrameLayout>
 </LinearLayout>

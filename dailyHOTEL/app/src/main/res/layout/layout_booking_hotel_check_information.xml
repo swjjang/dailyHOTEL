@@ -19,23 +19,23 @@
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
-                android:background="@color/calendar_month_line"
+                android:background="@color/default_background_section_cf2f2f3"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="15dp"
                 android:text="@string/act_booking_chkin"
-                android:textColor="@color/curation_title_text"
+                android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/curation_information_line"/>
+                android:background="@color/default_line_ce7e7e7"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_alignParentBottom="true"
-                android:background="@color/curation_information_line"/>
+                android:background="@color/default_line_ce7e7e7"/>
         </RelativeLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -69,23 +69,23 @@
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
-                android:background="@color/calendar_month_line"
+                android:background="@color/default_background_section_cf2f2f3"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="15dp"
                 android:text="@string/act_booking_chkout"
-                android:textColor="@color/curation_title_text"
+                android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/curation_information_line"/>
+                android:background="@color/default_line_ce7e7e7"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_alignParentBottom="true"
-                android:background="@color/curation_information_line"/>
+                android:background="@color/default_line_ce7e7e7"/>
         </RelativeLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView

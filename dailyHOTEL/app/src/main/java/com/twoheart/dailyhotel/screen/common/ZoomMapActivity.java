@@ -180,7 +180,6 @@ public class ZoomMapActivity extends BaseActivity
             }
         });
 
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
 
         mapFragment.getMapAsync(new OnMapReadyCallback()

@@ -32,6 +32,7 @@ public class DailySignatureView extends View
     private Canvas mCanvas;
     private ArrayList<Point> mArrayList;
     private RectF mRectF;
+    private Rect mDstRect;
     private OnUserActionListener mOnUserActionListener;
 
     private int mTouchAction;
@@ -68,6 +69,7 @@ public class DailySignatureView extends View
     private void initLayout(Context context)
     {
         mRectF = new RectF();
+        mDstRect = new Rect();
 
         mArrayList = new ArrayList<>(100);
 
@@ -110,12 +112,6 @@ public class DailySignatureView extends View
         }
 
         canvas.drawColor(getContext().getResources().getColor(R.color.white));
-
-        Paint paint = new Paint();
-        paint.setStrokeWidth(1);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(getResources().getColor(R.color.search_text));
-        canvas.drawRect(0, 0, canvas.getWidth() - paint.getStrokeWidth(), canvas.getHeight() - paint.getStrokeWidth(), paint);
     }
 
     @Override
@@ -132,21 +128,21 @@ public class DailySignatureView extends View
                 clearCanvas(mCanvas);
 
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.payment_sign_hint);
-                Rect dstRect;
 
                 if (Util.getLCDWidth(getContext()) < 720)
                 {
                     int dstLeft = (mBitmap.getWidth() - bitmap.getWidth()) / 2;
                     int dstTop = mBitmap.getHeight() - Util.dpToPx(getContext(), 10) - bitmap.getHeight();
-                    dstRect = new Rect(dstLeft, dstTop, dstLeft + bitmap.getWidth(), dstTop + bitmap.getHeight());
+
+                    mDstRect.set(dstLeft, dstTop, dstLeft + bitmap.getWidth(), dstTop + bitmap.getHeight());
                 } else
                 {
                     int dstLeft = (mBitmap.getWidth() - bitmap.getWidth()) / 2;
                     int dstTop = mBitmap.getHeight() - Util.dpToPx(getContext(), 15) - bitmap.getHeight();
-                    dstRect = new Rect(dstLeft, dstTop, dstLeft + bitmap.getWidth(), dstTop + bitmap.getHeight());
+                    mDstRect.set(dstLeft, dstTop, dstLeft + bitmap.getWidth(), dstTop + bitmap.getHeight());
                 }
 
-                mCanvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), dstRect, new Paint());
+                mCanvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), mDstRect, new Paint());
 
                 bitmap.recycle();
                 bitmap = null;

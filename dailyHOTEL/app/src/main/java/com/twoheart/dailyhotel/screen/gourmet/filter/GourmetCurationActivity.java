@@ -207,7 +207,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN ? true : false;
 
-
         for (String key : keyList)
         {
             DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categroyCodeMap.get(key)), isSingleLine);
@@ -606,8 +605,26 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     @Override
     protected void onComplete()
     {
+        Map<String, String> eventParmas = new HashMap<>();
+        Province province = mGourmetCurationOption.getProvince();
+
+        eventParmas.put(AnalyticsManager.KeyType.SORTING, mGourmetCurationOption.getSortType().name());
+
+        if (province instanceof Area)
+        {
+            Area area = (Area) province;
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+        } else
+        {
+            eventParmas.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+            eventParmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+            eventParmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+        }
+
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, mGourmetCurationOption.toString(), null);
+            , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, mGourmetCurationOption.toString(), eventParmas);
 
         if (DEBUG == true)
         {

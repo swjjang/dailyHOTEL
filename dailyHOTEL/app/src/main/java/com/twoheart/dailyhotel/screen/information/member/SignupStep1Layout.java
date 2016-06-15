@@ -67,7 +67,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private void initLayoutForm(View view)
     {
         ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mEmailView = view.findViewById(R.id.emailView);
         mEmailEditText = (EditText) view.findViewById(R.id.emailEditText);
@@ -103,7 +103,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mRecommenderEditText.setFilters(fArray);
 
         View nextStepView = view.findViewById(R.id.nextStepView);
-
         nextStepView.setOnClickListener(this);
 
         mEmailView.requestFocus();

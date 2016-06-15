@@ -158,16 +158,6 @@ public class SignupStep1Activity extends BaseActivity
         }
     }
 
-    public void storeUserInformation(String email, String name)
-    {
-        if (Util.isTextEmpty(email, name) == true)
-        {
-            return;
-        }
-
-        DailyPreference.getInstance(SignupStep1Activity.this).setUserInformation(Constants.DAILY_USER, email, name);
-    }
-
     public void removeUserInformation()
     {
         DailyPreference.getInstance(SignupStep1Activity.this).removeUserInformation();
@@ -249,8 +239,6 @@ public class SignupStep1Activity extends BaseActivity
 
             mSignupParams.put("market_type", RELEASE_STORE.getName());
 
-            storeUserInformation(email, name);
-
             DailyNetworkAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationListener);
         }
 
@@ -307,8 +295,6 @@ public class SignupStep1Activity extends BaseActivity
 
                     Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), mSignupParams.get("recommender"));
                     startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
-
-                    storeUserInformation(mSignupParams.get("email"), mSignupParams.get("name"));
                 } else
                 {
                     onErrorPopupMessage(msgCode, response.getString("msg"), null);

@@ -35,6 +35,8 @@ public class DailyDeepLink
     private static final String PARAM_V4_DATE_PLUS = "dp"; // 오늘 날짜에 더해줄 일
     private static final String PARAM_V4_SORTING = "s"; // lp (낮은 가격). hp (높은 가격), r (만족도)
 
+    private static final String PARAM_V5_EVENT_NAME = "en"; // 이벤트 이름
+
     private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
     private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
     private static final String VALUE_V4_SORTING_SATISFACTION = "r";
@@ -53,8 +55,14 @@ public class DailyDeepLink
 
     private static final String SINGUP_V4 = "su"; // 회원 가입 화면
 
+    private static final String COUPON_V5_LIST = "cl";
+    private static final String EVENT_V5_DETAIL = "ed";
+    private static final String INFORMATION_V5 = "m"; // 더보기 화면
+    private static final String RECOMMEND_FRIEND_V5 = "rf"; // 친구 추천하기 화면
+
     private static final String V3 = "3";
     private static final String V4 = "4";
+    private static final String V5 = "5";
 
     private static DailyDeepLink mInstance;
 
@@ -118,6 +126,10 @@ public class DailyDeepLink
             {
                 mVersionCode = 4;
                 decodingLinkV4(uri);
+            } else if (V5.equalsIgnoreCase(versionCode) == true)
+            {
+                mVersionCode = 5;
+                decodingLinkV5(uri);
             } else
             {
                 clear();
@@ -144,6 +156,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V3_VIEW);
                 break;
 
@@ -163,6 +176,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return HOTEL_V3_LIST.equalsIgnoreCase(view)//
                     || HOTEL_V3_DETAIL.equalsIgnoreCase(view)//
                     || HOTEL_V3_REGION_LIST.equalsIgnoreCase(view)//
@@ -181,6 +195,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return HOTEL_V3_LIST.equalsIgnoreCase(view);
 
             default:
@@ -196,6 +211,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return HOTEL_V3_DETAIL.equalsIgnoreCase(view);
 
             default:
@@ -216,6 +232,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return HOTEL_V3_REGION_LIST.equalsIgnoreCase(view);
 
             default:
@@ -231,6 +248,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return HOTEL_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view);
 
             default:
@@ -246,6 +264,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return GOURMET_V3_LIST.equalsIgnoreCase(view)//
                     || GOURMET_V3_DETAIL.equalsIgnoreCase(view)//
                     || GOURMET_V3_REGION_LIST.equalsIgnoreCase(view)//
@@ -264,6 +283,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return GOURMET_V3_LIST.equalsIgnoreCase(view);
 
             default:
@@ -279,6 +299,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return GOURMET_V3_DETAIL.equalsIgnoreCase(view);
 
             default:
@@ -298,6 +319,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return GOURMET_V3_REGION_LIST.equalsIgnoreCase(view);
 
             default:
@@ -313,6 +335,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return GOURMET_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view);
 
             default:
@@ -328,6 +351,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return BOOKING_V3_LIST.equalsIgnoreCase(view);
 
             default:
@@ -343,6 +367,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return BONUS_V3.equalsIgnoreCase(view);
 
             default:
@@ -358,6 +383,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 return EVENT_V3_LIST.equalsIgnoreCase(view);
 
             default:
@@ -372,7 +398,64 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 4:
+            case 5:
                 return SINGUP_V4.equalsIgnoreCase(view);
+
+            default:
+                return false;
+        }
+    }
+
+    public boolean isCouponView()
+    {
+        String view = getView();
+
+        switch (mVersionCode)
+        {
+            case 5:
+                return COUPON_V5_LIST.equalsIgnoreCase(view);
+
+            default:
+                return false;
+        }
+    }
+
+    public boolean isEventDetailView()
+    {
+        String view = getView();
+
+        switch (mVersionCode)
+        {
+            case 5:
+                return EVENT_V5_DETAIL.equalsIgnoreCase(view);
+
+            default:
+                return false;
+        }
+    }
+
+    public boolean isInformationView()
+    {
+        String view = getView();
+
+        switch (mVersionCode)
+        {
+            case 5:
+                return INFORMATION_V5.equalsIgnoreCase(view);
+
+            default:
+                return false;
+        }
+    }
+
+    public boolean isRecommendFriendView()
+    {
+        String view = getView();
+
+        switch (mVersionCode)
+        {
+            case 5:
+                return RECOMMEND_FRIEND_V5.equalsIgnoreCase(view);
 
             default:
                 return false;
@@ -387,6 +470,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V3_INDEX);
                 break;
 
@@ -406,6 +490,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V3_NIGHTS);
                 break;
 
@@ -425,6 +510,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V3_DATE);
                 break;
 
@@ -444,6 +530,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V3_URL);
                 break;
 
@@ -463,6 +550,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V3_PROVINCE_INDEX);
                 break;
 
@@ -482,6 +570,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V3_AREA_INDEX);
                 break;
 
@@ -501,6 +590,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 String isOverseas = mParams.get(PARAM_V3_REGION_ISOVERSEA);
                 if ("0".equalsIgnoreCase(isOverseas) == true)
                 {
@@ -527,6 +617,7 @@ public class DailyDeepLink
         {
             case 3:
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V3_CATEGORY_CODE);
                 break;
 
@@ -545,6 +636,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V4_RECOMMENDER_CODE);
                 break;
 
@@ -563,6 +655,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V4_DATE_PLUS);
 
                 if (Util.isTextEmpty(value) == false)
@@ -584,6 +677,24 @@ public class DailyDeepLink
         return -1;
     }
 
+    public String getEventName()
+    {
+        String value;
+
+        switch (mVersionCode)
+        {
+            case 5:
+                value = mParams.get(PARAM_V5_EVENT_NAME);
+                break;
+
+            default:
+                value = null;
+                break;
+        }
+
+        return value;
+    }
+
     public Constants.SortType getSorting()
     {
         String value;
@@ -591,6 +702,7 @@ public class DailyDeepLink
         switch (mVersionCode)
         {
             case 4:
+            case 5:
                 value = mParams.get(PARAM_V4_SORTING);
 
                 if (Util.isTextEmpty(value) == false)
@@ -615,30 +727,47 @@ public class DailyDeepLink
         return Constants.SortType.DEFAULT;
     }
 
-    private void decodingLinkV4(Uri uri)
+    private boolean decodingLinkV5(Uri uri)
     {
-        decodingLinkV3(uri);
+        if (decodingLinkV4(uri) == false)
+        {
+            return false;
+        }
+
+        putParams(uri, PARAM_V5_EVENT_NAME);
+
+        return true;
+    }
+
+    private boolean decodingLinkV4(Uri uri)
+    {
+        if (decodingLinkV3(uri) == false)
+        {
+            return false;
+        }
 
         putParams(uri, PARAM_V4_RECOMMENDER_CODE);
         putParams(uri, PARAM_V4_DATE_PLUS);
         putParams(uri, PARAM_V4_SORTING);
+
+        return true;
     }
 
-    private void decodingLinkV3(Uri uri)
+    private boolean decodingLinkV3(Uri uri)
     {
         mParams.clear();
 
         if (uri == null)
         {
             clear();
-            return;
+            return false;
         }
 
         if (putParams(uri, PARAM_V3_VIEW) == false)
         {
             // view는 기본요소라서 없으면 안된다
             clear();
-            return;
+            return false;
         }
 
         putParams(uri, PARAM_V3_DATE);
@@ -649,6 +778,8 @@ public class DailyDeepLink
         putParams(uri, PARAM_V3_AREA_INDEX);
         putParams(uri, PARAM_V3_REGION_ISOVERSEA);
         putParams(uri, PARAM_V3_CATEGORY_CODE);
+
+        return true;
     }
 
     private void decodingLinkV2(Uri uri)

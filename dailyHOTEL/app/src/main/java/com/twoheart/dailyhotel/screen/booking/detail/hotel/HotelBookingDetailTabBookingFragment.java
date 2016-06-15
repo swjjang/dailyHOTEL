@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelBookingDetail;
@@ -23,25 +22,18 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class HotelBookingDetailTabBookingFragment extends BaseFragment implements Constants
 {
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
     private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
-    private static final String KEY_BUNDLE_ARGUMENTS_ISUSED = "isUsed";
 
     private HotelBookingDetail mBookingDetail;
     private int mReservationIndex;
-    private boolean mIsUsed;
 
-    public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex, boolean isUsed)
+    public static HotelBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
         HotelBookingDetailTabBookingFragment newFragment = new HotelBookingDetailTabBookingFragment();
 
@@ -49,7 +41,6 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         Bundle arguments = new Bundle();
         arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL, bookingDetail);
         arguments.putInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX, reservationIndex);
-        arguments.putBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED, isUsed);
 
         newFragment.setArguments(arguments);
 
@@ -67,7 +58,6 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         {
             mBookingDetail = bundle.getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL);
             mReservationIndex = bundle.getInt(KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX);
-            mIsUsed = bundle.getBoolean(KEY_BUNDLE_ARGUMENTS_ISUSED);
         }
     }
 
@@ -84,54 +74,32 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         View view = inflater.inflate(R.layout.fragment_booking_tab_booking, container, false);
 
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
         initHotelInformationLayout(view, mBookingDetail);
         initCheckInOutInformationLayout(view, mBookingDetail);
         initGuestInformationLayout(view, mBookingDetail);
+        initPaymentInformationLayout(view, mBookingDetail);
 
         // 영수증 발급
-        TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
-
-        if (DEBUG == true)
+        View confirmView = view.findViewById(R.id.buttonLayout);
+        confirmView.setOnClickListener(new View.OnClickListener()
         {
-            mIsUsed = true;
-        }
-
-        if (mIsUsed == true)
-        {
-            viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
-            viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
-            viewReceiptTextView.setOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
+                BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                    if (baseActivity == null)
-                    {
-                        return;
-                    }
-
-                    Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
-                    startActivity(intent);
-                }
-            });
-        } else
-        {
-            viewReceiptTextView.setTextColor(getResources().getColor(R.color.hoteldetail_soldout_text));
-            viewReceiptTextView.setBackgroundResource(R.color.hoteldetail_soldout_background);
-            viewReceiptTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
+                if (baseActivity == null)
                 {
-                    DailyToast.showToast(getActivity(), R.string.message_cant_issuing_receipt, Toast.LENGTH_SHORT);
+                    return;
                 }
-            });
-        }
+
+                Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
@@ -162,17 +130,21 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
         TextView tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
         TextView tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        try
+        {
+            // Check In
+            String checkInDay = Util.simpleDateFormatISO8601toFormat(bookingDetail.checkInDate, "yyyy.MM.dd(EEE) HH:mm");
 
-        // Check In
-        String checkInDay = simpleDateFormat.format(new Date(bookingDetail.checkInDate));
+            // Check Out
+            String checkOutDay = Util.simpleDateFormatISO8601toFormat(bookingDetail.checkOutDate, "yyyy.MM.dd(EEE) HH:mm");
 
-        // Check Out
-        String checkOutDay = simpleDateFormat.format(new Date(bookingDetail.checkOutDate));
-
-        tvCheckIn.setText(checkInDay);
-        tvCheckOut.setText(checkOutDay);
+            tvCheckIn.setText(checkInDay);
+            tvCheckOut.setText(checkOutDay);
+        } catch (Exception e)
+        {
+            tvCheckIn.setText(null);
+            tvCheckOut.setText(null);
+        }
     }
 
     private void initGuestInformationLayout(View view, HotelBookingDetail bookingDetail)
@@ -182,5 +154,48 @@ public class HotelBookingDetailTabBookingFragment extends BaseFragment implement
 
         tvCustomerName.setText(bookingDetail.guestName);
         tvCustomerPhone.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
+    }
+
+    private void initPaymentInformationLayout(View view, HotelBookingDetail bookingDetail)
+    {
+        TextView paymentDateTextView = (TextView) view.findViewById(R.id.paymentDateTextView);
+        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+
+        View bonusLayout = view.findViewById(R.id.bonusLayout);
+        View couponLayout = view.findViewById(R.id.couponLayout);
+        TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
+        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
+        TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
+
+        try
+        {
+            paymentDateTextView.setText(Util.simpleDateFormatISO8601toFormat(bookingDetail.paymentDate, "yyyy.MM.dd"));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        priceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.price, false));
+
+
+        if (bookingDetail.bonus > 0)
+        {
+            bonusLayout.setVisibility(View.VISIBLE);
+            bonusTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.bonus, false));
+        } else
+        {
+            bonusLayout.setVisibility(View.GONE);
+        }
+
+        if (bookingDetail.coupon > 0)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+            couponTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.coupon, false));
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
+
+        totalPriceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false));
     }
 }
