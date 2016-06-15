@@ -1213,10 +1213,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             case 302:
                             case 303:
                             case 304:
+                            case 1010:
                             {
                                 // 쿠폰 취소
                                 mPaymentInformation.setCoupon(null);
                                 setCouponSelected(false);
+                                setBonusSelected(false);
 
                                 posListener = new OnClickListener()
                                 {
