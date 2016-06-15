@@ -257,7 +257,7 @@ public class CouponListActivity extends BaseActivity
                 paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
 
                 AnalyticsManager.getInstance(CouponListActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
-                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "CouponBox" + coupon.title, paramsMap);
+                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "CouponBox-" + coupon.title, paramsMap);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

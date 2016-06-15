@@ -131,7 +131,7 @@ public class SelectCouponDialogActivity extends BaseActivity
         } else
         {
             AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
-                AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CLICKED, null);
+                AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL, null);
         }
     }
 
@@ -250,7 +250,7 @@ public class SelectCouponDialogActivity extends BaseActivity
                 paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
 
                 AnalyticsManager.getInstance(SelectCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
-                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Booking" + coupon.title, paramsMap);
+                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Booking-" + coupon.title, paramsMap);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
