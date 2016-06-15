@@ -1210,6 +1210,25 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                                 break;
                             }
 
+                            case 300:
+                            case 302:
+                            case 303:
+                            case 304:
+                            {
+                                // 쿠폰 취소
+                                mPaymentInformation.setCoupon(null);
+                                setCouponSelected(false);
+
+                                posListener = new OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                    }
+                                };
+                                break;
+                            }
+
                             case 1000:
                             {
                                 recordAnalyticsPaymentComplete(mPaymentInformation);
