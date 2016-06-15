@@ -87,6 +87,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceType.HOTEL.name());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         return intent;
     }
@@ -104,6 +105,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceType.FNB.name());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         return intent;
     }
