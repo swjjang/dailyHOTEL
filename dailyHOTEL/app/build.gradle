@@ -72,7 +72,7 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.10.0'
     compile 'com.kakao.sdk:kakaolink:1.1.10'
     compile 'com.kakao.sdk:kakaotalk:1.1.10'
-    compile 'com.appboy:android-sdk-ui:1.13.4'
+    compile 'com.appboy:android-sdk-ui:1.13.+'
     compile 'com.android.support:multidex:1.0.1'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {

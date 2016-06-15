@@ -1500,7 +1500,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                     setBonusSelected(false);
 
                     String title = getString(R.string.dialog_notice2);
-                    String msg = getString(R.string.dialog_btn_payment_no_reserve);
+                    String msg = getString(R.string.dialog_btn_payment_no_reserve, Util.getPriceFormat(this, DEFAULT_AVAILABLE_RESERVES, false));
                     String buttonText = getString(R.string.dialog_btn_payment_confirm);
 
                     showSimpleDialog(title, msg, buttonText, new OnClickListener()

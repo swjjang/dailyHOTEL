@@ -178,31 +178,6 @@ public class AppboyManager extends BaseAnalyticsManager
             searchCustomEvent(EventName.SEARCH_TERM, ValueName.DAILYGOURMET, params);
         } else if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true)
         {
-            //            if (AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
-            //            {
-            //                if (AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
-            //                {
-            //                    curationCustomEvent(EventName.LOWTOHIGH_PRICE_SORTED, ValueName.DAILYHOTEL, params);
-            //                } else if (AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE.equalsIgnoreCase(label) == true)
-            //                {
-            //                    curationCustomEvent(EventName.HIGHTOLOW_PRICE_SORTED, ValueName.DAILYHOTEL, params);
-            //                } else if (AnalyticsManager.Label.SORTFILTER_RATING.equalsIgnoreCase(label) == true)
-            //                {
-            //                    curationCustomEvent(EventName.RATING_SORTED, ValueName.DAILYHOTEL, params);
-            //                }
-            //            } else if (AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED.equalsIgnoreCase(action) == true//
-            //                && AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
-            //            {
-            //                if (AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE.equalsIgnoreCase(label) == true)
-            //                {
-            //                    curationCustomEvent(EventName.LOWTOHIGH_PRICE_SORTED, ValueName.DAILYGOURMET, params);
-            //                } else if (AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE.equalsIgnoreCase(label) == true)
-            //                {
-            //                    curationCustomEvent(EventName.HIGHTOLOW_PRICE_SORTED, ValueName.DAILYGOURMET, params);
-            //                } else if (AnalyticsManager.Label.SORTFILTER_RATING.equalsIgnoreCase(label) == true)
-            //                {
-            //                    curationCustomEvent(EventName.RATING_SORTED, ValueName.DAILYGOURMET, params);
-            //                }
             if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
             {
                 satisfactionCustomEvent(label);
@@ -571,6 +546,19 @@ public class AppboyManager extends BaseAnalyticsManager
     @Override
     void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
+        AppboyProperties appboyProperties = new AppboyProperties();
+
+        appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, userIndex);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.TYPE_OF_REGISTRATION, userType);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.REGISTRATION_DATE, new Date());
+        appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, AnalyticsManager.ValueType.EMPTY);
+
+        mAppboy.logCustomEvent(EventName.REGISTER_COMPLETED, appboyProperties);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + " : " + EventName.REGISTER_COMPLETED + ", " + appboyProperties.forJsonPut().toString());
+        }
     }
 
     @Override

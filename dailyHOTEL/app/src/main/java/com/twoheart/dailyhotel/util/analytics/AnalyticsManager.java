@@ -107,113 +107,114 @@ public class AnalyticsManager
 
     public void onStart(Activity activity)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.onStart(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void onStop(Activity activity)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.onStop(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void onResume(Activity activity)
     {
-        try
+
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.onResume(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void onPause(Activity activity)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.onPause(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void recordScreen(String screen)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.recordScreen(screen);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void recordScreen(String screen, Map<String, String> params)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.recordScreen(screen, params);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.recordEvent(category, action, label, params);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void recordEvent(Map<String, String> params)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.recordEvent(params);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -223,71 +224,71 @@ public class AnalyticsManager
 
     public void currentAppVersion(String version)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.currentAppVersion(version);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void addCreditCard(String cardType)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.addCreditCard(cardType);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void updateCreditCard(String cardTypes)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.updateCreditCard(cardTypes);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void singUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
     public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender)
     {
-        try
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            try
             {
                 analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType, recommender);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
             }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
         }
     }
 
@@ -297,7 +298,13 @@ public class AnalyticsManager
         {
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
-                analyticsManager.purchaseCompleteHotel(transId, params);
+                try
+                {
+                    analyticsManager.purchaseCompleteHotel(transId, params);
+                } catch (Exception e)
+                {
+                    ExLog.d(TAG + e.toString());
+                }
             }
 
             String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
@@ -314,7 +321,13 @@ public class AnalyticsManager
         {
             for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
             {
-                analyticsManager.purchaseCompleteGourmet(transId, params);
+                try
+                {
+                    analyticsManager.purchaseCompleteGourmet(transId, params);
+                } catch (Exception e)
+                {
+                    ExLog.d(TAG + e.toString());
+                }
             }
 
             String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);

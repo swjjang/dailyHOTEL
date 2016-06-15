@@ -234,7 +234,7 @@
     <string name="dialog_msg_call">데일리 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_title_payment_confirm">확인 사항</string>
-    <string name="dialog_btn_payment_no_reserve">이벤트 호텔의 경우\n적립금 사용을 할 수 없습니다.</string>
+    <string name="dialog_btn_payment_no_reserve">%1$s 이상 상품만 적립금 사용을 할 수 있습니다.</string>
     <string name="dialog_btn_text_update">업데이트</string>
     <string name="dialog_btn_text_complete">완료</string>
     <string name="dialog_btn_text_confirm">확인</string>
