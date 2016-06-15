@@ -139,6 +139,8 @@ public class SignupStep1Activity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockUI();
+
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode)
