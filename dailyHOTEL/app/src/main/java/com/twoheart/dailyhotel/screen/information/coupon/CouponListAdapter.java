@@ -176,7 +176,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             expireTextView.setText(Coupon.getAvailableDatesString(coupon.validFrom, coupon.validTo));
 
             int dueDate = Coupon.getDueDateCount(coupon);
-            if (dueDate > 0)
+            if (dueDate > 1)
             {
                 dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
                 dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
