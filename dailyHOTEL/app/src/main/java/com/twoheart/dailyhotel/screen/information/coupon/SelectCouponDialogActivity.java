@@ -192,22 +192,14 @@ public class SelectCouponDialogActivity extends BaseActivity
         }
 
         @Override
-        public void onDownloadCoupon(boolean isSuccess, String userCouponCode)
+        public void onDownloadCoupon(String userCouponCode)
         {
+            lockUI();
 
-            if (isSuccess == true)
-            {
-                lockUI();
+            Coupon coupon = mLayout.getCoupon(userCouponCode);
+            recordAnalytics(coupon);
 
-                Coupon coupon = mLayout.getCoupon(userCouponCode);
-                recordAnalytics(coupon);
-
-                mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
-
-            } else
-            {
-                unLockUI();
-            }
+            mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
         }
 
         @Override

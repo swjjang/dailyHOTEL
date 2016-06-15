@@ -29,9 +29,9 @@ public class CouponListNetworkController extends BaseNetworkController
         /**
          * 쿠폰 다운로드 결과
          *
-         * @param isSuccess 성공 여부
+         * @param userCouponCode 사용자 쿠폰 고유코드
          */
-        void onDownloadCoupon(boolean isSuccess, String userCouponCode);
+        void onDownloadCoupon(String userCouponCode);
     }
 
     /**
@@ -119,19 +119,19 @@ public class CouponListNetworkController extends BaseNetworkController
         {
             try
             {
-                boolean isSuccess = false;
-
                 int msgCode = response.getInt("msgCode");
 
                 if (msgCode == 100)
                 {
-                    isSuccess = true;
+                    Uri uri = Uri.parse(url);
+                    String userCouponCode = uri.getQueryParameter("userCouponCode");
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(userCouponCode);
+                } else
+                {
+                    String message = response.getString("msg");
+                    mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
-
-                Uri uri = Uri.parse(url);
-                String userCouponCode = uri.getQueryParameter("userCouponCode");
-
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(isSuccess, userCouponCode);
 
             } catch (Exception e)
             {

@@ -197,20 +197,14 @@ public class CouponListActivity extends BaseActivity
     private CouponListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new CouponListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onDownloadCoupon(boolean isSuccess, String userCouponCode)
+        public void onDownloadCoupon(String userCouponCode)
         {
-            if (isSuccess == true)
-            {
-                lockUI();
+            lockUI();
 
-                Coupon coupon = mCouponListLayout.getCoupon(userCouponCode);
-                recordAnalytics(coupon);
+            Coupon coupon = mCouponListLayout.getCoupon(userCouponCode);
+            recordAnalytics(coupon);
 
-                mCouponListNetworkController.requestCouponList();
-            } else
-            {
-                unLockUI();
-            }
+            mCouponListNetworkController.requestCouponList();
         }
 
         @Override
