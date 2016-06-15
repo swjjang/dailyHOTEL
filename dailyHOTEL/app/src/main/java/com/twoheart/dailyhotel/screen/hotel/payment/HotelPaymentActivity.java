@@ -1136,7 +1136,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                  * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약
                  * 리스트 갱신 후 최상단 아이템 인텐트
                  */
-                DailyPreference.getInstance(this).setVirtuaAccountHotelInformation(this, (HotelPaymentInformation) mPaymentInformation, mCheckInSaleTime);
                 DailyPreference.getInstance(HotelPaymentActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 
                 msg = getString(R.string.dialog_msg_issuing_account);

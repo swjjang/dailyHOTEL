@@ -130,8 +130,6 @@ public class GcmIntentService extends IntentService implements Constants
                         String paidPrice = jsonMsg.getString("paidPrice");
 
                         sendPush(messageType, type, title, msg, imageUrl, null);
-
-                        recordAnalytics(this, tid, hotelName, paidPrice);
                         break;
                     }
 
@@ -165,35 +163,6 @@ public class GcmIntentService extends IntentService implements Constants
             {
                 ExLog.e(e.toString());
             }
-        }
-    }
-
-    private void recordAnalytics(Context context, String tid, String name, String price)
-    {
-        try
-        {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-            Date date = new Date();
-            String strDate = dateFormat.format(date);
-            String userIndex = DailyPreference.getInstance(context).getVBankUserIndex();
-            String transId = strDate + "_" + userIndex;
-            String placeType = DailyPreference.getInstance(context).getVBankPlaceType();
-
-            if (AnalyticsManager.Label.HOTEL.equalsIgnoreCase(placeType) == true)
-            {
-                Map<String, String> params = DailyPreference.getInstance(context).getVirtuaAccountHotelInformation();
-                AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteHotel(transId, params);
-            } else if (AnalyticsManager.Label.GOURMET.equalsIgnoreCase(placeType) == true)
-            {
-                Map<String, String> params = DailyPreference.getInstance(context).getVirtuaAccountGourmetInformation();
-                AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteGourmet(transId, params);
-            }
-
-            // 가상계좌 내용 정리
-            DailyPreference.getInstance(context).removeVirtualAccountInformation();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
         }
     }
 
