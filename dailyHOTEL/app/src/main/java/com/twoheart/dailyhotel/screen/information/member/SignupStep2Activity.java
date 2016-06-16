@@ -309,7 +309,7 @@ public class SignupStep2Activity extends BaseActivity
                     {
                         mNetworkController.requestLogin(mEmail, mPassword);
                     }
-                }, 300);
+                }, 500);
           }
         }
 
