@@ -264,7 +264,7 @@ public class AnalyticsManager
         }
     }
 
-    public void singUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
+    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {

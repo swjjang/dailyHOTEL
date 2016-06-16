@@ -611,6 +611,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             });
         } else
         {
+            // 소셜 신규 가입인 경우
+            if (mIsSocialSignUp == true)
+            {
+                AnalyticsManager.getInstance(LoginActivity.this).signUpSocialUser(//
+                    mStoreParams.get("user_idx"), mStoreParams.get("email"), mStoreParams.get("name")//
+                    , mStoreParams.get("gender"), null, mStoreParams.get("user_type"));
+            }
+
             DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
             setResult(RESULT_OK);
             finish();
@@ -778,6 +786,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                 unLockUI();
                 mStoreParams.clear();
+                mIsSocialSignUp = false;
 
                 String msg = response.getString("msg");
 
@@ -887,16 +896,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     // 소셜 신규 가입인 경우
                     if (mIsSocialSignUp == true)
                     {
-                        mIsSocialSignUp = false;
-
-                        AnalyticsManager.getInstance(LoginActivity.this).singUpSocialUser(//
-                            userIndex, mStoreParams.get("email"), mStoreParams.get("name")//
-                            , mStoreParams.get("gender"), null, userType);
+                        mStoreParams.put("user_idx", userIndex);
+                        mStoreParams.put("user_type", userType);
                     }
 
                     requestGoogleCloudMessagingId(userIndex);
                 } else
                 {
+                    mIsSocialSignUp = false;
+
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
                     if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                     {
