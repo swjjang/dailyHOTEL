@@ -163,7 +163,16 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
                     }
                 } else
                 {
-                    String message = response.getString("msg");
+                    String message;
+
+                    if (response.has("msg") == false)
+                    {
+                        message = mContext.getString(R.string.act_base_network_connect);
+                    } else
+                    {
+                        message = response.getString("msg");
+                    }
+
                     mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                 }
             } catch (JSONException e)
