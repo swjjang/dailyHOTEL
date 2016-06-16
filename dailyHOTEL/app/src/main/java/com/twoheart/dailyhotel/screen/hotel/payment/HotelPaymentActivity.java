@@ -1894,6 +1894,27 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
             params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
 
+            if (mProvince == null)
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
+            } else
+            {
+                if (mProvince instanceof Area)
+                {
+                    Area area = (Area) mProvince;
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                }
+
+                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+            }
+
             AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_PAYMENT, params);
         } catch (Exception e)
         {

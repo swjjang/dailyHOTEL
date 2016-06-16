@@ -732,7 +732,7 @@ public class DailyNetworkAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, DailyHotelJsonResponseListener listener)
+    public void requestEventNCouponNewCount(Object tag, String eventLatestDate, String couponLatestDate, boolean isAuthorization, DailyHotelJsonResponseListener listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/new" : "MTEkMzkkMTAkNjUkNjMk$NUVFNTc3QjOcLxODZEMzc0RjM3MDU0NzY2MEZCRjAFEMUREOTNBRTY3MTI1NDNEKRkUFERThFMEM5RTY3MEE2RjFDMg==$";
 
@@ -740,7 +740,7 @@ public class DailyNetworkAPI implements IDailyNetwork
 
         DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.GET, URL_DAILYHOTEL_SERVER + URL + params, null, listener);
         dailyHotelJsonRequest.setIsUsedAccept(true);
-        dailyHotelJsonRequest.setUsedAuthorization(true);
+        dailyHotelJsonRequest.setUsedAuthorization(isAuthorization);
 
         mQueue.add(dailyHotelJsonRequest);
     }
