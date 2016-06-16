@@ -118,7 +118,6 @@
     <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
     <string name="actionbar_title_term_activity">이용약관</string>
-    <string name="actionbar_title_bonus_term_activity">적립금 유의사항</string>
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
@@ -131,8 +130,6 @@
     <string name="actionbar_title_edit_phone">휴대폰 번호 설정</string>
     <string name="actionbar_title_coupon_list">할인쿠폰함</string>
     <string name="actionbar_title_coupon_history">쿠폰 사용내역</string>
-    <string name="actionbar_title_common_coupon_term_activity">할인쿠폰 공통 유의사항</string>
-    <string name="actionbar_title_each_coupon_term_activity">할인쿠폰별 유의사항</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -828,10 +825,9 @@
     <string name="label_googlemap">구글 지도</string>
 
     <!-- Coupon -->
-    <string name="coupon_notice_text">주의사항\n확인하기</string>
+    <string name="coupon_notice_text">할인쿠폰\n상세 정보</string>
     <string name="coupon_duedate_text">(%1$s일 남음)</string>
     <string name="coupon_today_text">(오늘까지)</string>
-    <string name="coupon_available_item_text">사용가능처: %1$s</string>
     <string name="coupon_download_text">다운로드</string>
     <string name="coupon_useable_text">사용가능</string>
     <string name="coupon_min_price_text">%1$s 이상 사용가능</string>

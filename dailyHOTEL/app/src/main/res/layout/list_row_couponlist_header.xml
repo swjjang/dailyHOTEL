@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="42dp">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="42dp">
 
-	<com.twoheart.dailyhotel.widget.DailyTextView
-		android:id="@+id/couponUseNoticeTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:layout_marginRight="16dp"
-		android:text="@string/coupon_use_notice_text"
-		android:textColor="@color/coupon_use_notice_text"
-		android:textSize="12dp"/>
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/couponUseNoticeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:text="@string/coupon_use_notice_text"
+        android:textColor="@color/coupon_use_notice_text"
+        android:textSize="12dp"/>
 
 </RelativeLayout>

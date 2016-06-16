@@ -25,7 +25,7 @@ public class BonusTermActivity extends WebViewActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_bonus_term_activity), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.label_bonus_guide), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
