@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -34,6 +35,9 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
         // SMS에서 받은 코드
         void onInvalidVerificationNumber(String message);
+
+        void onRetryDailyUserSignIn();
+
     }
 
     public SignupStep2NetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -65,7 +69,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
         params.put("social_id", "0");
         params.put("user_type", Constants.DAILY_USER);
 
-        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginJsonResponseListener, mDailyUserLoginJsonResponseListener);
     }
 
     public void requestGoogleCloudMessagingId()
@@ -300,6 +304,15 @@ public class SignupStep2NetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
+
+            if (volleyError.networkResponse.statusCode == 422)
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onRetryDailyUserSignIn();
+                Crashlytics.logException(volleyError);
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(volleyError);
+            }
 
         }
 

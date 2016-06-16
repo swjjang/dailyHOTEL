@@ -142,7 +142,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView descriptionTextView;
         TextView expireTextView;
         DailyTextView dueDateTextView;
-        TextView useablePlaceTextView;
         TextView minPriceTextView;
         TextView useIconView;
         TextView downloadIconView;
@@ -158,7 +157,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
             dueDateTextView = (DailyTextView) itemView.findViewById(R.id.dueDateTextView);
-            useablePlaceTextView = (TextView) itemView.findViewById(R.id.useablePlaceTextView);
             minPriceTextView = (TextView) itemView.findViewById(R.id.minPriceTextView);
             useIconView = (TextView) itemView.findViewById(R.id.useIconView);
             downloadIconView = (TextView) itemView.findViewById(R.id.downloadIconView);
@@ -201,18 +199,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             {
                 minPriceTextView.setText("");
             }
-
-            if (Util.isTextEmpty(coupon.availableItem))
-            {
-                useablePlaceTextView.setText("");
-            } else
-            {
-                String availableText = mContext.getResources().getString( //
-                    R.string.coupon_available_item_text, coupon.availableItem);
-
-                useablePlaceTextView.setText(availableText);
-            }
-
 
             if (coupon.isDownloaded == true)
             {

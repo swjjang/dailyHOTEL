@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -31,6 +33,8 @@ public class SignupStep2Activity extends BaseActivity
     private SignupStep2NetworkController mNetworkController;
     private String mCountryCode;
     private String mSignupKey, mEmail, mPassword, mRecommender;
+
+    private Handler mRetryHandler;
 
     public static Intent newInstance(Context context, String singupKey, String email, String password, String recommmender)
     {
@@ -288,6 +292,25 @@ public class SignupStep2Activity extends BaseActivity
             unLockUI();
 
             showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+        }
+
+        @Override
+        public void onRetryDailyUserSignIn()
+        {
+            if (mRetryHandler != null) {
+                mRetryHandler = null;
+                ExLog.d("mRetryHandler already run");
+            } else {
+                mRetryHandler = new Handler();
+                mRetryHandler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mNetworkController.requestLogin(mEmail, mPassword);
+                    }
+                }, 300);
+          }
         }
 
         @Override

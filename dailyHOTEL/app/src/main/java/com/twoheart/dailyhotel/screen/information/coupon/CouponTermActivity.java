@@ -77,10 +77,10 @@ public class CouponTermActivity extends WebViewActivity
 
         if (Util.isTextEmpty(mCouponIdx) == false)
         {
-            titleString = R.string.actionbar_title_each_coupon_term_activity;
+            titleString = R.string.coupon_notice_text;
         } else
         {
-            titleString = R.string.actionbar_title_common_coupon_term_activity;
+            titleString = R.string.coupon_use_notice_text;
         }
 
         View toolbar = findViewById(R.id.toolbar);
