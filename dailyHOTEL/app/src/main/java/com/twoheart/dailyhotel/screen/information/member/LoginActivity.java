@@ -740,6 +740,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         // 회원가입에 성공하면 이제 로그인 절차
                         mIsSocialSignUp = true;
 
+                        DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(false);
+                        DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
+                        DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
+                        DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+                        AppboyManager.setPushEnabled(LoginActivity.this, false);
+
                         HashMap<String, String> params = new HashMap<>();
 
                         if (mStoreParams.containsKey("email") == true)
