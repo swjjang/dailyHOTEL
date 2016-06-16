@@ -96,6 +96,9 @@ public class TuneManager extends BaseAnalyticsManager
 
             MATEventItem matEventItem = getMATEventItem(params);
 
+            matEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.GRADE));
+            matEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
+
             List<MATEventItem> list = new ArrayList<>();
             list.add(matEventItem);
             matEvent.withEventItems(list);
@@ -113,6 +116,8 @@ public class TuneManager extends BaseAnalyticsManager
             MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_DETAIL, params, false);
 
             MATEventItem matEventItem = getMATEventItem(params);
+            matEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.CATEGORY));
+            matEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
 
             List<MATEventItem> list = new ArrayList<>();
             list.add(matEventItem);
@@ -131,6 +136,8 @@ public class TuneManager extends BaseAnalyticsManager
             MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_PAYMENT, params, true);
 
             MATEventItem matEventItem = getMATEventItem(params);
+            matEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.GRADE));
+            matEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
 
             List<MATEventItem> list = new ArrayList<>();
             list.add(matEventItem);
@@ -149,6 +156,8 @@ public class TuneManager extends BaseAnalyticsManager
             MATEvent matEvent = getMATEvent(TuneEventId.DAILYGOURMET_PAYMENT, params, true);
 
             MATEventItem matEventItem = getMATEventItem(params);
+            matEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.CATEGORY));
+            matEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
 
             List<MATEventItem> list = new ArrayList<>();
             list.add(matEventItem);
@@ -408,6 +417,8 @@ public class TuneManager extends BaseAnalyticsManager
         }
 
         MATEventItem matEventItem = getMATEventItem(params);
+        matEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.GRADE));
+        matEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
 
         List<MATEventItem> list = new ArrayList<>();
         list.add(matEventItem);
@@ -450,6 +461,8 @@ public class TuneManager extends BaseAnalyticsManager
         }
 
         MATEventItem matEventItem = getMATEventItem(params);
+        matEventItem.withAttribute4(params.get(AnalyticsManager.KeyType.CATEGORY));
+        matEventItem.withAttribute5(params.get(AnalyticsManager.KeyType.PROVINCE));
 
         List<MATEventItem> list = new ArrayList<>();
         list.add(matEventItem);

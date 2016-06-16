@@ -98,14 +98,14 @@ public class MainNetworkController extends BaseNetworkController
         }, null);
     }
 
-    protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime)
+    protected void requestEventNCouponNewCount(String lastEventTime, String lastCouponTime, boolean isAuthorization)
     {
         if (Util.isTextEmpty(lastEventTime, lastCouponTime) == true)
         {
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, mDailyEventCountJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestEventNCouponNewCount(mNetworkTag, lastEventTime, lastCouponTime, isAuthorization, mDailyEventCountJsonResponseListener);
     }
 
     protected void requestGourmetIsExistRating()

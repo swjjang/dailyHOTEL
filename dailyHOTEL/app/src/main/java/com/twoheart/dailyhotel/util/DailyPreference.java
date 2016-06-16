@@ -6,21 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
-import com.twoheart.dailyhotel.model.HotelPaymentInformation;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
 
 /**
  */
