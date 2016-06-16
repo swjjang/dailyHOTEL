@@ -304,8 +304,37 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             String userName = DailyPreference.getInstance(mContext).getUserName();
             String userEmail = DailyPreference.getInstance(mContext).getUserEmail();
-            profileTextView.setText(userName);
-            loginMessageTextView.setText(userEmail);
+
+            boolean isEmptyName = Util.isTextEmpty(userName) == true;
+            boolean isEmptyEmail = Util.isTextEmpty(userEmail) == true;
+
+            if (isEmptyName == true && isEmptyEmail == true)
+            {
+                profileTextView.setVisibility(View.GONE);
+                loginMessageTextView.setText(R.string.information_empty_name_n_email_after_login);
+                loginMessageTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+            } else
+            {
+                profileTextView.setVisibility(View.VISIBLE);
+
+                if (isEmptyName == true)
+                {
+                    profileTextView.setText(R.string.act_profile_input_name);
+                } else
+                {
+                    profileTextView.setText(userName);
+                }
+
+                if (isEmptyEmail == true)
+                {
+                    loginMessageTextView.setText(R.string.act_profile_input_email);
+                } else
+                {
+                    loginMessageTextView.setText(userEmail);
+                }
+
+                loginMessageTextView.setTextColor(mContext.getResources().getColor(R.color.curation_title_text));
+            }
 
             loginView.setVisibility(View.GONE);
             signUpView.setVisibility(View.GONE);
@@ -321,6 +350,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             profileTextView.setText(R.string.frag_need_login);
             loginMessageTextView.setText(R.string.frag_login_message);
+            loginMessageTextView.setTextColor(mContext.getResources().getColor(R.color.curation_title_text));
 
             loginView.setVisibility(View.VISIBLE);
             signUpView.setVisibility(View.VISIBLE);
