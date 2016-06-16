@@ -861,4 +861,6 @@
     <string name="message_calendar_placelist_reset">방문하실 날짜를 확인해 주세요.\n재설정을 하시려면 다른 날짜를 선택해주세요.</string>
     <string name="label_calendar_search_selected_date">선택 날짜로 검색하기</string>
     <string name="message_calendar_search_reset">검색하실 날짜를 확인해 주세요.\n재설정을 하시려면 다른 날짜를 선택해주세요.</string>
+
+    <string name="information_empty_name_n_email_after_login">신속한 예약 확인 및 안내를 위해\n고객님의 이름과 이메일을 등록해주세요.</string>
 </resources>
