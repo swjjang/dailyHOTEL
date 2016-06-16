@@ -917,7 +917,9 @@ public class MainActivity extends BaseActivity implements Constants
                 viewedCouponTime = Util.getISO8601String(new Date(0L));
             }
 
-            mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime);
+            boolean isAuthorization = Util.isTextEmpty(DailyPreference.getInstance(MainActivity.this).getAuthorization()) == false;
+
+            mNetworkController.requestEventNCouponNewCount(viewedEventTime, viewedCouponTime, isAuthorization);
         }
     };
 }
