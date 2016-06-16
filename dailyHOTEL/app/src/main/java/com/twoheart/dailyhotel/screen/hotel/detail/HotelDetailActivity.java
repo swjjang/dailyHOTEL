@@ -386,7 +386,14 @@ public class HotelDetailActivity extends BaseActivity
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
             params.put(AnalyticsManager.KeyType.ADDRESS, mHotelDetail.address);
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mHotelDetail.categoryCode);
+
+            if (Util.isTextEmpty(mHotelDetail.categoryCode) == true)
+            {
+                params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, AnalyticsManager.ValueType.EMPTY);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mHotelDetail.categoryCode);
+            }
 
             if (mProvince == null)
             {
