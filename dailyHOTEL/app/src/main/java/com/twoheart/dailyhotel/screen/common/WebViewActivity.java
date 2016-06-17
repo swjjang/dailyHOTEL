@@ -28,12 +28,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class WebViewActivity extends BaseActivity implements OnLongClickListener
 {
@@ -62,7 +65,12 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         webView.setLongClickable(false);
         webView.setWebViewClient(webViewClient);
         webView.setWebChromeClient(webChromeClient);
-        webView.loadUrl(url);
+
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Os-Type", "android");
+        headerMap.put("App-Version", DailyHotel.VERSION);
+
+        webView.loadUrl(url, headerMap);
     }
 
     @Override
