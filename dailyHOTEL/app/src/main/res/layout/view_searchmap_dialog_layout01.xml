@@ -5,9 +5,6 @@
               android:layout_height="wrap_content"
               android:background="@drawable/popup_bg_white_full"
               android:orientation="vertical"
-              android:paddingBottom="10dp"
-              android:paddingLeft="10dp"
-              android:paddingRight="10dp"
               android:paddingTop="24dp">
 
     <com.twoheart.dailyhotel.widget.DailyTextView
@@ -24,11 +21,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="40dp"
-        android:layout_marginTop="33dp"
+        android:layout_height="120dp"
         android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/kakaoMapLayout"
@@ -36,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_gravity="center"
-            android:drawablePadding="1dp"
+            android:drawablePadding="5dp"
             android:drawableTop="@drawable/ic_daum"
             android:gravity="center"
             android:text="@string/label_share_daum_map"
@@ -50,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:drawablePadding="1dp"
+            android:drawablePadding="5dp"
             android:drawableTop="@drawable/ic_naver"
             android:gravity="center"
             android:text="@string/label_share_naver_map"
@@ -64,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_gravity="center"
-            android:drawablePadding="1dp"
+            android:drawablePadding="5dp"
             android:drawableTop="@drawable/ic_google"
             android:gravity="center"
             android:text="@string/label_share_google_map"
