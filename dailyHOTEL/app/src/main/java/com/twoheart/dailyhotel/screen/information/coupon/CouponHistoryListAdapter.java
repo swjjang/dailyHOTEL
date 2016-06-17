@@ -98,7 +98,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
             if (coupon.isRedeemed == true)
             {
-                builder.append("사용일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.redeemedAt, "yyyy.MM.dd"));
+                builder.append("사용일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.disabledAt, "yyyy.MM.dd"));
             } else
             {
                 builder.append("만료일: ").append(Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyy.MM.dd"));
