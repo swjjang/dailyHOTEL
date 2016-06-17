@@ -478,13 +478,20 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
     {
         String priceFormat = Util.getPriceFormat(this, bonus, false);
         String text = getString(R.string.label_booking_own_bonus, priceFormat);
-        int startIndex = text.indexOf(priceFormat);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.default_text_c323232)), //
-            startIndex, text.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (bonus > 0)
+        {
+            int startIndex = text.indexOf(priceFormat);
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
-        mBonusTextView.setText(spannableStringBuilder);
+            spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.default_text_c323232)), //
+                startIndex, text.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            mBonusTextView.setText(spannableStringBuilder);
+        } else
+        {
+            mBonusTextView.setText(text);
+        }
     }
 
     private void setBonusSelected(boolean isSelected)
