@@ -54,13 +54,13 @@ public class Coupon implements Parcelable
     public static final String AVAILABLE_ITEM = "availableItem";
 
     // coupon object type
-    public static final String IS_INVALID_DATE = "isInvalidDate";
+    public static final String IS_EXPIRED = "isExpired";
 
     // coupon object type
     public static final String IS_REDEEMED = "isRedeemed";
 
     // coupon object type
-    public static final String REDEEMED_AT = "redeemedAt";
+    public static final String DISABLED_AT = "disabledAt";
 
     // coupon object type
     public static final String COUPON_CODE = "couponCode";
@@ -75,9 +75,9 @@ public class Coupon implements Parcelable
     public boolean isDownloaded; // 상태표시 ,,
     public String availableItem; // 사용가능처 ,,
     public String serverDate; // 서버시간 ,,
-    public boolean isInvalidDate; // 유효기간 만료 여부 ,
+    public boolean isExpired; // 유효기간 만료 여부 ,
     public boolean isRedeemed; // 사용 여부 ,
-    public String redeemedAt; // 사용한 날짜 (ISO-8601) ,
+    public String disabledAt; // 사용한 날짜 (ISO-8601) ,
     public String couponCode; // 이벤트 웹뷰, 쿠폰주의사항 사용용 쿠폰 코드
 
 
@@ -88,7 +88,7 @@ public class Coupon implements Parcelable
 
     public Coupon(String userCouponCode, int amount, String title, String validFrom, //
                   String validTo, int amountMinimum, boolean isDownloaded, String availableItem, //
-                  String serverDate, boolean isInvalidDate, boolean isRedeemed, String redeemedAt, String couponCode)
+                  String serverDate, boolean isExpired, boolean isRedeemed, String disabledAt, String couponCode)
     {
         this.userCouponCode = userCouponCode;
         this.amount = amount;
@@ -99,9 +99,9 @@ public class Coupon implements Parcelable
         this.isDownloaded = isDownloaded;
         this.availableItem = availableItem;
         this.serverDate = serverDate;
-        this.isInvalidDate = isInvalidDate;
+        this.isExpired = isExpired;
         this.isRedeemed = isRedeemed;
-        this.redeemedAt = redeemedAt;
+        this.disabledAt = disabledAt;
         this.couponCode = couponCode;
     }
 
@@ -135,15 +135,24 @@ public class Coupon implements Parcelable
         int dayCount = -1;
         Date serverDate;
         Date endDate;
+
         try
         {
             serverDate = Util.getISO8601Date(coupon.serverDate);
-            endDate = Util.getISO8601Date(coupon.validTo);
         } catch (Exception e)
         {
             ExLog.e(e.getMessage());
 
             serverDate = new Date();
+        }
+
+        try
+        {
+            endDate = Util.getISO8601Date(coupon.validTo);
+        } catch (Exception e)
+        {
+            ExLog.e(e.getMessage());
+
             endDate = new Date();
         }
 
@@ -205,9 +214,9 @@ public class Coupon implements Parcelable
         String userCouponCode = null; // 유저 쿠폰 코드 (이벤트 페이지의 쿠폰코드와 틀림),,
         boolean isDownloaded = false; // 상태표시 ,,
         String availableItem = null; // 사용가능처 ,,
-        boolean isInvalidDate = false; // 유효기간 만료 여부 ,
+        boolean isExpired = false; // 유효기간 만료 여부 ,
         boolean isRedeemed = false; // 사용 여부 ,
-        String redeemedAt = null; // 사용한 날짜 (ISO-8601) ,
+        String disabledAt = null; // 사용한 날짜 (ISO-8601) ,
         String couponCode = null; // 이벤트 웹뷰, 쿠폰사용주의사항 용 쿠폰 코드
 
         try
@@ -241,9 +250,9 @@ public class Coupon implements Parcelable
             }
 
             // 쿠폰 사용내역만 사용
-            if (jsonObject.has(Coupon.IS_INVALID_DATE))
+            if (jsonObject.has(Coupon.IS_EXPIRED))
             {
-                isInvalidDate = jsonObject.getBoolean(Coupon.IS_INVALID_DATE); // 유효기간 만료 여부
+                isExpired = jsonObject.getBoolean(Coupon.IS_EXPIRED); // 유효기간 만료 여부
             }
 
             // 쿠폰 사용내역만 사용
@@ -253,9 +262,9 @@ public class Coupon implements Parcelable
             }
 
             // 쿠폰 사용내역만 사용
-            if (jsonObject.has(Coupon.REDEEMED_AT))
+            if (jsonObject.has(Coupon.DISABLED_AT))
             {
-                redeemedAt = jsonObject.getString(Coupon.REDEEMED_AT); // 사용한 날짜 (ISO-8601)
+                disabledAt = jsonObject.getString(Coupon.DISABLED_AT); // 사용한 날짜 (ISO-8601)
             }
 
             //
@@ -265,8 +274,8 @@ public class Coupon implements Parcelable
             }
 
             coupon = new Coupon(userCouponCode, amount, title, validFrom, validTo, amountMinimum, //
-                isDownloaded, availableItem, serverDate, isInvalidDate, //
-                isRedeemed, redeemedAt, couponCode);
+                isDownloaded, availableItem, serverDate, isExpired, //
+                isRedeemed, disabledAt, couponCode);
 
         } catch (Exception e)
         {
@@ -289,9 +298,9 @@ public class Coupon implements Parcelable
         dest.writeInt(isDownloaded == true ? 1 : 0);
         dest.writeString(availableItem);
         dest.writeString(serverDate);
-        dest.writeInt(isInvalidDate == true ? 1 : 0);
+        dest.writeInt(isExpired == true ? 1 : 0);
         dest.writeInt(isRedeemed == true ? 1 : 0);
-        dest.writeString(redeemedAt);
+        dest.writeString(disabledAt);
         dest.writeString(couponCode);
     }
 
@@ -306,9 +315,9 @@ public class Coupon implements Parcelable
         isDownloaded = in.readInt() == 1 ? true : false;
         availableItem = in.readString();
         serverDate = in.readString();
-        isInvalidDate = in.readInt() == 1 ? true : false;
+        isExpired = in.readInt() == 1 ? true : false;
         isRedeemed = in.readInt() == 1 ? true : false;
-        redeemedAt = in.readString();
+        disabledAt = in.readString();
         couponCode = in.readString();
     }
 
