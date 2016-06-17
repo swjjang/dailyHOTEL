@@ -35,7 +35,7 @@ public class InformationNetworkController extends BaseNetworkController
 
     public void requestUserInformation()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
+        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
     }
 
     public void requestPushBenefitText()
@@ -60,6 +60,11 @@ public class InformationNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -82,12 +87,6 @@ public class InformationNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onError(e);
             }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            InformationNetworkController.this.onErrorResponse(volleyError);
         }
     };
 

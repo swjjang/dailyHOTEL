@@ -215,6 +215,7 @@ public class Hotel implements Parcelable
         condo(R.string.grade_condo, R.color.grade_resort_pension_condo, R.drawable.bg_hotel_price_pension),
         //
         boutique(R.string.grade_boutique, R.color.grade_boutique, R.drawable.bg_hotel_price_boutique),
+        motel(R.string.grade_motel, R.color.grade_boutique, R.drawable.bg_hotel_price_boutique),
         //
         design(R.string.grade_design, R.color.grade_design, R.drawable.bg_hotel_price_design),
         //

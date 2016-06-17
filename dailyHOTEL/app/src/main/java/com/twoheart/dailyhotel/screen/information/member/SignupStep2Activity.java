@@ -297,10 +297,12 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void onRetryDailyUserSignIn()
         {
-            if (mRetryHandler != null) {
+            if (mRetryHandler != null)
+            {
                 mRetryHandler = null;
                 ExLog.d("mRetryHandler already run");
-            } else {
+            } else
+            {
                 mRetryHandler = new Handler();
                 mRetryHandler.postDelayed(new Runnable()
                 {
@@ -310,7 +312,7 @@ public class SignupStep2Activity extends BaseActivity
                         mNetworkController.requestLogin(mEmail, mPassword);
                     }
                 }, 500);
-          }
+            }
         }
 
         @Override
