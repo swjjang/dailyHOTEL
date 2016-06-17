@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class HotelRegionListActivity extends PlaceRegionListActivity
 {
@@ -271,7 +272,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
                 String previousLabel = convertLabelFormatAnalytics(previousProvince);
                 String selectedLabel = convertLabelFormatAnalytics(selectedProvince);
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분", Locale.KOREA);
 
                 String checkInDate = checkInTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
                 String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");

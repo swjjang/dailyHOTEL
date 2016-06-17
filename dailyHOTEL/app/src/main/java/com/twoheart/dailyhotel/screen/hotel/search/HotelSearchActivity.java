@@ -20,6 +20,7 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class HotelSearchActivity extends PlaceSearchActivity
 {
@@ -327,7 +328,7 @@ public class HotelSearchActivity extends PlaceSearchActivity
             String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
 
             Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
 
             return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
         }

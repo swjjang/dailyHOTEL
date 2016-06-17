@@ -271,7 +271,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         //        params.put(Label.TYPE, String.valueOf(item.payType));
         //        params.put(Label.ISUSED, String.valueOf(item.isUsed));
         //
-        //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
         //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         //
         //        params.put(Label.CHECK_IN, simpleDateFormat.format(item.checkinTime));

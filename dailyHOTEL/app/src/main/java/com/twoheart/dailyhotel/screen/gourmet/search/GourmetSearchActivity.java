@@ -20,6 +20,7 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class GourmetSearchActivity extends PlaceSearchActivity
 {
@@ -313,7 +314,7 @@ public class GourmetSearchActivity extends PlaceSearchActivity
             String saleDate = gourmetSearchActivity.mSaleTime.getDayOfDaysDateFormat("yyMMdd");
 
             Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
 
             return String.format("%s-%s", saleDate, simpleDateFormat.format(calendar.getTime()));
         }
