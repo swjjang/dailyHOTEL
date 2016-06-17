@@ -406,7 +406,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 }
 
                 // 사용자 정보 요청.
-                DailyNetworkAPI.getInstance(baseActivity).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, null);
+                DailyNetworkAPI.getInstance(baseActivity).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
             } catch (Exception e)
             {
                 updateLayout(true, null);

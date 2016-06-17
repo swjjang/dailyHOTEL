@@ -445,7 +445,13 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+            if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 401)
+            {
+                MainNetworkController.this.onErrorResponse(volleyError);
+            } else
+            {
+                mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
+            }
         }
     };
 

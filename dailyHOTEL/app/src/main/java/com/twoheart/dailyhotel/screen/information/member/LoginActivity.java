@@ -839,7 +839,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         String userIndex = storeLoginInformation(response);
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
-                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
+                        DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
 
                         requestGoogleCloudMessagingId(userIndex);
                         return;
@@ -891,7 +891,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     String userIndex = storeLoginInformation(response);
 
                     DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
-                    DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
+                    DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
 
                     // 소셜 신규 가입인 경우
                     if (mIsSocialSignUp == true)
@@ -925,6 +925,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+        }
+
+        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -937,11 +942,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             {
                 ExLog.d(e.toString());
             }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
         }
     };
 }
