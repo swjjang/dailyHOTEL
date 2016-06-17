@@ -135,15 +135,24 @@ public class Coupon implements Parcelable
         int dayCount = -1;
         Date serverDate;
         Date endDate;
+
         try
         {
             serverDate = Util.getISO8601Date(coupon.serverDate);
-            endDate = Util.getISO8601Date(coupon.validTo);
         } catch (Exception e)
         {
             ExLog.e(e.getMessage());
 
             serverDate = new Date();
+        }
+
+        try
+        {
+            endDate = Util.getISO8601Date(coupon.validTo);
+        } catch (Exception e)
+        {
+            ExLog.e(e.getMessage());
+
             endDate = new Date();
         }
 
