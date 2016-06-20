@@ -95,7 +95,6 @@ public class TuneManager extends BaseAnalyticsManager
             MATEvent matEvent = getMATEvent(TuneEventId.DAILYHOTEL_DETAIL, params, false);
 
             MATEventItem matEventItem = getMATEventItem(params);
-
             matEventItem.withAttribute2(params.get(AnalyticsManager.KeyType.GRADE));
             matEventItem.withAttribute3(params.get(AnalyticsManager.KeyType.PROVINCE));
 

@@ -87,6 +87,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
 
         return intent;
     }
