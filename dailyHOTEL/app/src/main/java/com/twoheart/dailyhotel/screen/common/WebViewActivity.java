@@ -176,7 +176,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
                     }
                     return true;
                 }
-            }
+            } else
             {
                 view.loadUrl(url);
             }
