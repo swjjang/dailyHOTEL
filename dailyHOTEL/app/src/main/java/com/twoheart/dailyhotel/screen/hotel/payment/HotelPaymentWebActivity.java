@@ -190,7 +190,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("guest_email", guest.email);
         builder.add("guest_msg", guest.message);
 
-        String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER)//
+        String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SERVER)//
             + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
 
         WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
