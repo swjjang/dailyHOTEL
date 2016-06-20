@@ -175,19 +175,32 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             expireTextView.setText(CouponUtil.getAvailableDatesString(coupon.validFrom, coupon.validTo));
 
             int dueDate = CouponUtil.getDueDateCount(coupon.serverDate, coupon.validTo);
+            String strDueDate;
+
             if (dueDate > 1)
             {
-                dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
-                dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
-                String strDueDate = mContext.getResources().getString(R.string.coupon_duedate_text, dueDate);
-                dueDateTextView.setText(strDueDate);
+                // 2일 남음 이상
+                strDueDate = mContext.getResources().getString(R.string.coupon_duedate_text, dueDate);
             } else
             {
                 // 오늘까지
+                strDueDate = mContext.getResources().getString(R.string.coupon_today_text);
+            }
+
+            if (dueDate > 7)
+            {
+                // 8일 남음 이상
+                dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+                dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_expire_text));
+
+            } else
+            {
+                // 7일 남음 부터 오늘까지
                 dueDateTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
                 dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
-                dueDateTextView.setText(mContext.getResources().getString(R.string.coupon_today_text));
             }
+
+            dueDateTextView.setText(strDueDate);
 
             if (coupon.amountMinimum > 0)
             {
