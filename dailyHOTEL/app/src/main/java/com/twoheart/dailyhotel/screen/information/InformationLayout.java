@@ -292,6 +292,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View loginView = mProfileLayout.findViewById(R.id.loginTextView);
         View signUpView = mProfileLayout.findViewById(R.id.signupTextView);
         View editProfileView = mProfileLayout.findViewById(R.id.editProfileTextView);
+        View profileLayoutBottomLine = mProfileLayout.findViewById(R.id.profileLayoutBottomLine);
 
         ImageView profileImageView = (ImageView) mProfileLayout.findViewById(R.id.iconImageView);
 
@@ -340,6 +341,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             signUpView.setVisibility(View.GONE);
             editProfileView.setVisibility(View.VISIBLE);
 
+            profileLayoutBottomLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cdcdcdd));
+
             profileImageView.setImageResource(R.drawable.more_ic_mydaily_02_login);
         } else
         {
@@ -355,6 +358,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             loginView.setVisibility(View.VISIBLE);
             signUpView.setVisibility(View.VISIBLE);
             editProfileView.setVisibility(View.GONE);
+
+            profileLayoutBottomLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cf0f0f0));
 
             profileImageView.setImageResource(R.drawable.more_ic_mydaily_01_logout);
         }

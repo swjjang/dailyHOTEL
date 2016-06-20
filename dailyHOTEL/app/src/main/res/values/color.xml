@@ -205,10 +205,8 @@
     <!-- Information -->
     <color name="information_background">#f8f8f9</color>
     <color name="information_title">#323232</color>
-    <color name="information_underline">#dcdcdd</color>
     <color name="information_push_subtext">#929292</color>
     <color name="information_count_text">#900034</color>
-    <color name="information_round">#f0f0f0</color>
 
     <!-- Etc -->
     <color name="c181818">#181818</color>
@@ -267,6 +265,7 @@
     <color name="default_line_ce6e6e6">#e6e6e6</color>
     <color name="default_line_cd0d0d0">#d0d0d0</color>
     <color name="default_line_c323232">#323232</color>
+    <color name="default_line_cf0f0f0">#f0f0f0</color>
 
     <color name="over_scroll_edge">#dcdcdc</color>
 
