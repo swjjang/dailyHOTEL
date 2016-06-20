@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.CouponUtil;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
@@ -75,16 +76,10 @@ public class SelectCouponNetworkController extends BaseNetworkController
         {
             try
             {
-                ArrayList<Coupon> list = new ArrayList<>();
                 int msgCode = response.getInt("msgCode");
-
                 if (msgCode == 100)
                 {
-                    JSONObject data = response.getJSONObject("data");
-                    if (data != null)
-                    {
-                        list = Coupon.makeCouponList(data);
-                    }
+                    ArrayList<Coupon> list = CouponUtil.getCouponList(response);
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list);
                 } else
                 {

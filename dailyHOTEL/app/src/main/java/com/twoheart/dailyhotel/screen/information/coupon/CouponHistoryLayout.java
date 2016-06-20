@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -70,7 +70,7 @@ public class CouponHistoryLayout extends BaseLayout
 
     }
 
-    public void setData(List<Coupon> list)
+    public void setData(List<CouponHistory> list)
     {
         if (list != null && list.size() != 0)
         {
@@ -78,7 +78,7 @@ public class CouponHistoryLayout extends BaseLayout
             mEmptyView.setVisibility(View.GONE);
         } else
         {
-            mListAdapter = new CouponHistoryListAdapter(mContext, new ArrayList<Coupon>());
+            mListAdapter = new CouponHistoryListAdapter(mContext, new ArrayList<CouponHistory>());
             mEmptyView.setVisibility(View.VISIBLE);
         }
 

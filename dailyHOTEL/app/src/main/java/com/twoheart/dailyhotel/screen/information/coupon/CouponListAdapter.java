@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.CouponUtil;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -171,9 +172,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             couponPriceTextView.setText(strAmount);
 
             descriptionTextView.setText(coupon.title);
-            expireTextView.setText(Coupon.getAvailableDatesString(coupon.validFrom, coupon.validTo));
+            expireTextView.setText(CouponUtil.getAvailableDatesString(coupon.validFrom, coupon.validTo));
 
-            int dueDate = Coupon.getDueDateCount(coupon);
+            int dueDate = CouponUtil.getDueDateCount(coupon.serverDate, coupon.validTo);
             if (dueDate > 1)
             {
                 dueDateTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());

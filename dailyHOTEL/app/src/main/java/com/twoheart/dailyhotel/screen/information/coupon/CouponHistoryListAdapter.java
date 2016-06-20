@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.model.CouponHistory;
+import com.twoheart.dailyhotel.util.CouponUtil;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -20,9 +21,9 @@ import java.util.List;
 public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistoryListAdapter.CouponViewHolder>
 {
     private Context mContext;
-    private List<Coupon> mCouponList;
+    private List<CouponHistory> mCouponList;
 
-    public CouponHistoryListAdapter(Context context, List<Coupon> list)
+    public CouponHistoryListAdapter(Context context, List<CouponHistory> list)
     {
         mContext = context;
 
@@ -40,7 +41,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
      * @param position 실제 포지션에서 -1 된 값(헤더 사이즈 뺀값)
      * @return
      */
-    public Coupon getItem(int position)
+    public CouponHistory getItem(int position)
     {
         return mCouponList.get(position);
     }
@@ -61,7 +62,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     @Override
     public void onBindViewHolder(CouponViewHolder holder, int position)
     {
-        Coupon coupon = getItem(position);
+        CouponHistory coupon = getItem(position);
 
         String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
@@ -82,7 +83,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         holder.stateTextView.setText(resId);
 
         // 사용기간 및 사용일자 또는 만료일자 구현 필요
-        String strExpire = Coupon.getAvailableDatesString(coupon.validFrom, coupon.validTo);
+        String strExpire = CouponUtil.getAvailableDatesString(coupon.validFrom, coupon.validTo);
 
         StringBuilder builder = new StringBuilder();
 
