@@ -168,6 +168,12 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
 
                     if (response.has("msg") == false)
                     {
+                        if (Constants.DEBUG == false)
+                        {
+                            String exceptionMessage = url + " : " + response.toString();
+                            Crashlytics.logException(new JSONException(exceptionMessage));
+                        }
+
                         message = mContext.getString(R.string.act_base_network_connect);
                     } else
                     {
@@ -243,6 +249,12 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
 
                     if (response.has("msg") == false)
                     {
+                        if (Constants.DEBUG == false)
+                        {
+                            String exceptionMessage = url + " : " + response.toString();
+                            Crashlytics.logException(new JSONException(exceptionMessage));
+                        }
+
                         message = mContext.getString(R.string.act_base_network_connect);
                     } else
                     {
