@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class HotelSearchResultActivity extends PlaceSearchResultActivity
@@ -266,7 +267,7 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
             String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyMMdd");
 
             Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm", Locale.KOREA);
 
             return String.format("%s-%s-%s", checkInDate, checkOutDate, simpleDateFormat.format(calendar.getTime()));
         }

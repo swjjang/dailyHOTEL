@@ -57,6 +57,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -1750,7 +1751,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
                     calendar.setTimeInMillis(eventBanner.checkInTime);
 
-                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
                     Date schemeDate = format.parse(format.format(calendar.getTime()));
                     Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 

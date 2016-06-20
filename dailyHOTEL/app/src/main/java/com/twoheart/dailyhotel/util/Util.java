@@ -1175,9 +1175,8 @@ public class Util implements Constants
             throw new NullPointerException("time is empty");
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
         return simpleDateFormat.parse(time);
     }
 
@@ -1185,7 +1184,7 @@ public class Util implements Constants
     {
         Date date = new Date(time);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
         String formatString = simpleDateFormat.format(date);
@@ -1214,7 +1213,7 @@ public class Util implements Constants
             return null;
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.KOREA);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
         return simpleDateFormat.format(date);
@@ -1222,7 +1221,7 @@ public class Util implements Constants
 
     public static String getISO8601String(Date date)
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_FORMAT_STRING, Locale.KOREA);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
         String formatString = simpleDateFormat.format(date);

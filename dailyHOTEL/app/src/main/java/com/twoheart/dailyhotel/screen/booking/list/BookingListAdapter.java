@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
@@ -190,7 +191,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         {
             case HOTEL:
             {
-                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd");
+                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
                 sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
                 String period = String.format("%s - %s", sFormat.format(checkinDate), sFormat.format(checkOutDate));
                 day.setText(period);
@@ -199,7 +200,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
             case FNB:
             {
-                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd");
+                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
                 sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
                 String period = sFormat.format(checkinDate);
                 day.setText(period);
