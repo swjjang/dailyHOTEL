@@ -215,6 +215,19 @@ public class AppboyManager extends BaseAnalyticsManager
             } else if (AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
             {
                 curationCustomEvent(EventName.GOURMET_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);
+            } else if (AnalyticsManager.Action.FIRST_NOTIFICATION_SETTING_CLICKED.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                if (AnalyticsManager.Label.ON.equalsIgnoreCase(label) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.FIRST_NOTIFICATION_POPUP_ON, appboyProperties);
+                } else
+                {
+                    mAppboy.logCustomEvent(EventName.FIRST_NOTIFICATION_POPUP_OFF, appboyProperties);
+                }
             }
         } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
@@ -731,6 +744,9 @@ public class AppboyManager extends BaseAnalyticsManager
 
         public static final String STAY_COUPON_REDEEMED = "stay_coupon_redeemed";
         public static final String COUPON_DOWNLOADED = "coupon_downloaded";
+
+        public static final String FIRST_NOTIFICATION_POPUP_ON = "first_notification_popup_on";
+        public static final String FIRST_NOTIFICATION_POPUP_OFF = "first_notification_popup_off";
     }
 
     private static final class ValueName

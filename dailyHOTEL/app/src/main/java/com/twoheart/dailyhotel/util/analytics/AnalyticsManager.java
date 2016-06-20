@@ -565,6 +565,8 @@ public class AnalyticsManager
         public static final String HOTEL_COUPON_SELECTED = "HotelCouponSelected";
         public static final String HOTEL_USING_COUPON_CANCEL_CLICKED = "HotelUsingCouponCancelClicked";
         public static final String HOTEL_COUPON_NOT_FOUND = "HotelCouponNotFound";
+        //
+        public static final String FIRST_NOTIFICATION_SETTING_CLICKED = "FirstNotificationSettingClicked";
     }
 
     public static class Category
