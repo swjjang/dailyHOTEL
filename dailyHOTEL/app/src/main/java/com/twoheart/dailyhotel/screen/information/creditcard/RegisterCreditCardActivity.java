@@ -68,7 +68,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
             }
         }); // 롱클릭 에러 방지.
 
-        String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SESSION_SERVER) + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_REGISTER_CREDIT_CARD);
+        String url = DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_DAILYHOTEL_SERVER) + DailyHotelRequest.getUrlDecoderEx(DailyNetworkAPI.URL_REGISTER_CREDIT_CARD);
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");
