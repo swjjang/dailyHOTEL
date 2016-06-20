@@ -11,7 +11,6 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +28,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     private View mDialogLayout;
     private DailyTextView mMessageTextView;
+    private View mListLayout;
     private View mOneButtonLayout;
     private View mTwoButtonLayout;
     private View mPositiveView;
@@ -52,6 +52,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mDialogLayout = view.findViewById(R.id.dialogLayout);
 
         mMessageTextView = (DailyTextView) view.findViewById(R.id.messageTextView);
+        mListLayout = view.findViewById(R.id.listLayout);
         mOneButtonLayout = view.findViewById(R.id.oneButtonLayout);
         mTwoButtonLayout = view.findViewById(R.id.twoButtonLayout);
         View negativeView = view.findViewById(R.id.negativeTextView);
@@ -76,10 +77,12 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     private void updateLayout(List<Coupon> list)
     {
-        boolean isEmpty = isEmpty(list);
+        boolean isEmpty = isEmpty(list) == true;
 
         updateMessageView(isEmpty);
         updateButtonLayout(isEmpty);
+
+        mListLayout.setVisibility((isEmpty == true) ? View.GONE : View.VISIBLE);
     }
 
     private boolean isEmpty(List<Coupon> list)
@@ -120,12 +123,6 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     public void setData(List<Coupon> list)
     {
-
-        if (isEmpty(list) == true)
-        {
-            list = new ArrayList<>();
-        }
-
         updateDialogLayout(true);
         updateLayout(list);
 
