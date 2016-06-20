@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/information_background">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/information_background">
 
-	<include layout="@layout/toolbar_default"/>
+    <include layout="@layout/toolbar_default"/>
 
-	<RelativeLayout
-		android:id="@+id/couponHistoryLayout"
-		android:layout_width="match_parent"
-		android:layout_height="76dp"
-		android:layout_below="@id/toolbar"
-		android:layout_marginTop="10dp"
-		android:layout_marginBottom="10dp"
-		android:background="@color/white">
+    <RelativeLayout
+        android:id="@+id/couponHistoryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_below="@id/toolbar"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white">
 
-		<com.twoheart.dailyhotel.widget.DailyTextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:drawablePadding="4dp"
-			android:drawableTop="@drawable/more_ic_coupon_03"
-			android:text="@string/coupon_history_header_text"
-			android:textColor="@color/information_title"
-			android:textSize="12dp"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="4dp"
+            android:drawableTop="@drawable/more_ic_coupon_03"
+            android:text="@string/coupon_history_header_text"
+            android:textColor="@color/information_title"
+            android:textSize="12dp"/>
 
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1px"
-			android:background="@color/default_line_cf0f0f0"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_cf0f0f0"/>
 
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1px"
-			android:layout_alignParentBottom="true"
-			android:background="@color/default_line_cf0f0f0"/>
-	</RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/default_line_cf0f0f0"/>
+    </RelativeLayout>
 
 
-	<android.support.v7.widget.RecyclerView
-		android:id="@+id/couponHistoryRecyclerView"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/couponHistoryLayout"
-		android:scrollbars="vertical"
-		/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/couponHistoryRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/couponHistoryLayout"
+        android:scrollbars="vertical"
+        />
 
-	<RelativeLayout
-		android:id="@+id/emptyView"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/toolbar"
-		android:background="@color/information_background"
-		android:visibility="gone">
+    <RelativeLayout
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:background="@color/information_background"
+        android:visibility="gone">
 
-		<com.twoheart.dailyhotel.widget.DailyTextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:drawablePadding="20dp"
-			android:drawableTop="@drawable/no_coupon_ic"
-			android:gravity="center"
-			android:text="@string/coupon_history_empty_message"
-			android:textColor="@color/information_title"
-			android:textSize="18dp"
-			dailyFont:style="Medium"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="20dp"
+            android:drawableTop="@drawable/no_coupon_ic"
+            android:gravity="center"
+            android:text="@string/coupon_history_empty_message"
+            android:textColor="@color/information_title"
+            android:textSize="18dp"
+            dailyFont:style="Medium"/>
 
-	</RelativeLayout>
+    </RelativeLayout>
 
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="2dp"
-		android:layout_below="@id/toolbar"
-		android:background="@drawable/navibar_gradation"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/navibar_gradation"/>
 </RelativeLayout>
