@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -81,7 +81,7 @@ public class CouponHistoryActivity extends BaseActivity
     {
 
         @Override
-        public void onCouponHistoryList(List<Coupon> list)
+        public void onCouponHistoryList(List<CouponHistory> list)
         {
             mCouponHistoryLayout.setData(list);
 

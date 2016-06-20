@@ -3,12 +3,12 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.CouponUtil;
 
 import org.json.JSONObject;
 
@@ -22,7 +22,7 @@ public class CouponHistoryNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onCouponHistoryList(List<Coupon> list);
+        void onCouponHistoryList(List<CouponHistory> list);
 
     }
 
@@ -49,25 +49,12 @@ public class CouponHistoryNetworkController extends BaseNetworkController
         {
             try
             {
-                ArrayList<Coupon> list = new ArrayList<>();
-                int msgCode = response.getInt("msgCode");
+                ArrayList<CouponHistory> list = new ArrayList<>();
 
+                int msgCode = response.getInt("msgCode");
                 if (msgCode == 100)
                 {
-                    boolean hasData = response.has("data");
-
-                    if (hasData == true)
-                    {
-                        JSONObject data = response.getJSONObject("data");
-                        if (data != null)
-                        {
-                            list = Coupon.makeCouponList(data);
-                        }
-
-                    } else
-                    {
-                        ExLog.d("response has not data");
-                    }
+                    list = CouponUtil.getCouponHistoryList(response);
 
                 } else
                 {

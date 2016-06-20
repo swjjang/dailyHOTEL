@@ -10,7 +10,7 @@
         android:layout_height="1px"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@color/information_underline"/>
+        android:background="@color/default_line_cdcdcdd"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,6 +55,6 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_alignParentBottom="true"
-        android:background="@color/information_round"
+        android:background="@color/default_line_cf0f0f0"
         android:visibility="gone"/>
 </RelativeLayout>
