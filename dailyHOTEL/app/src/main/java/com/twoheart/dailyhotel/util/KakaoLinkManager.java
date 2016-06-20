@@ -61,7 +61,9 @@ public class KakaoLinkManager implements Constants
             String date = checkInSaleTime.getDailyDateFormat("yyyyMMdd");
             String schemeParams = String.format("view=hotel&idx=%d&date=%s&nights=%d", hotelIndex, date, nights);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), //
+                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
+                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
