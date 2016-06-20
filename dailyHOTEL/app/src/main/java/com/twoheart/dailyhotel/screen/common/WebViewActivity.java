@@ -12,6 +12,7 @@
  */
 package com.twoheart.dailyhotel.screen.common;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -101,6 +102,11 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 
     public class DailyHotelWebViewClient extends WebViewClient
     {
+        public static final String INTENT_PROTOCOL_START = "intent:";
+        public static final String INTENT_PROTOCOL_INTENT = "#Intent;";
+        public static final String INTENT_PROTOCOL_END = ";end;";
+        public static final String GOOGLE_PLAY_STORE_PREFIX = "market://details?id=";
+
         @JavascriptInterface
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, final String url)
@@ -125,7 +131,6 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
                 browseToExternalBrowser(url);
             } else if (url.contains("kakaoplus://"))
             {
-
                 try
                 {
                     PackageManager pm = getPackageManager();
@@ -148,7 +153,30 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
             } else if (url.contains("call://") == true)
             {
 
-            } else
+            } else if (url.startsWith(INTENT_PROTOCOL_START))
+            {
+                final int customUrlStartIndex = INTENT_PROTOCOL_START.length();
+                final int customUrlEndIndex = url.indexOf(INTENT_PROTOCOL_INTENT);
+                if (customUrlEndIndex < 0)
+                {
+                    return false;
+                } else
+                {
+                    final String customUrl = url.substring(customUrlStartIndex, customUrlEndIndex);
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(customUrl)));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        final int packageStartIndex = customUrlEndIndex + INTENT_PROTOCOL_INTENT.length();
+                        final int packageEndIndex = url.indexOf(INTENT_PROTOCOL_END);
+
+                        final String packageName = url.substring(packageStartIndex, packageEndIndex < 0 ? url.length() : packageEndIndex);
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_STORE_PREFIX + packageName)));
+                    }
+                    return true;
+                }
+            }
             {
                 view.loadUrl(url);
             }
