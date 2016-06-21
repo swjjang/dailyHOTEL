@@ -5,7 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -87,10 +90,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         initEditTextsLayout();
         initButtonsLayout();
 
-        if (Util.isOverAPI23() == true && hasPermission() == false)
-        {
-            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
-        }
+        setPermissionForOverAPI23();
     }
 
     private void initToolbar()
@@ -219,28 +219,46 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             case Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    if (hasPermission() == false)
-                    {
-                        finish();
-                    }
+                    // 권한 승인
+                } else
+                {
+                    // 권한 거부
+                    finish();
                 }
                 break;
         }
     }
 
-    private boolean hasPermission()
+    private void setPermissionForOverAPI23()
     {
-        if (Util.isOverAPI23() == true)
+        if (Util.isOverAPI23() == false)
         {
-            String deviceId = Util.getDeviceId(this);
-
-            if (deviceId == null)
-            {
-                return false;
-            }
+            return;
         }
 
-        return true;
+        // Activity에서 실행하는경우
+        int check = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if (PackageManager.PERMISSION_GRANTED != check)
+        {
+            // 이 권한을 필요한 이유를 설명해야하는가?
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE))
+            {
+                // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
+                // 해당 설명이 끝난뒤 requestPermissions()함수를 호출하여 권한허가를 요청해야 합니다
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS) //
+                    .setData(Uri.parse("package:com.twoheart.dailyhotel"));
+                startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
+
+            } else
+            {
+                requestPermissions( //
+                    new String[]{Manifest.permission.READ_PHONE_STATE}, //
+                    Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
+
+                // 필요한 권한과 요청 코드를 넣어서 권한허가요청에 대한 결과를 받아야 합니다
+
+            }
+        }
     }
 
     private void registerFacebookUser(String id, String name, String email, String gender)
