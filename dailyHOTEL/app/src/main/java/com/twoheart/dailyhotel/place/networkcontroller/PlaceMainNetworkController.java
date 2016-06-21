@@ -3,7 +3,9 @@ package com.twoheart.dailyhotel.place.networkcontroller;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -21,7 +23,7 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
 
         void onEventBanner(List<EventBanner> eventBannerList);
 
-        void onRegionList();
+        void onRegionList(List<Province> provinceList, List<Area> areaList);
     }
 
     public abstract void requestEventBanner();

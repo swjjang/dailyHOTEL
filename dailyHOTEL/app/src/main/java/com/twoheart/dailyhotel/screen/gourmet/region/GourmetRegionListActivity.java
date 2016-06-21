@@ -27,6 +27,8 @@ import java.util.List;
 
 public class GourmetRegionListActivity extends PlaceRegionListActivity
 {
+    public static final String INTENT_EXTRA_DATA_PROVINCE_INDEX = "provinceIndex";
+    public static final String INTENT_EXTRA_DATA_AREA_INDEX = "areaIndex";
     private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
 
     private static final int GOURMET_TAB_COUNT = 1;
@@ -43,6 +45,16 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     {
         Intent intent = new Intent(context, GourmetRegionListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, int provinceIndex, int areaIndex, SaleTime saleTime)
+    {
+        Intent intent = new Intent(context, GourmetRegionListActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_PROVINCE_INDEX, provinceIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_AREA_INDEX, areaIndex);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
 
         return intent;
