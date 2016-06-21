@@ -103,12 +103,9 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 
     private void setMobileNumber(String number)
     {
-        String[] countryMobile;
+        String[] countryMobile = null;
 
-        if (number == null)
-        {
-            countryMobile = Util.getValidatePhoneNumber(Util.getLine1Number(this));
-        } else
+        if (Util.isTextEmpty(number) == false)
         {
             number = number.replace("-", "");
 
