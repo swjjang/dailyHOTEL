@@ -25,6 +25,13 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray>
         mListener = listener;
     }
 
+    public DailyHotelJsonArrayRequest(Object object, int method, String url, Map<String, String> parameters, DailyHotelJsonArrayResponseListener listener)
+    {
+        super(object, method, url, parameters, listener);
+
+        mListener = listener;
+    }
+
     @Override
     protected void deliverResponse(JSONArray response)
     {

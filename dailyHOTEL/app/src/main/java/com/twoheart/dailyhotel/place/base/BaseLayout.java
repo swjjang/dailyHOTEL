@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.place.base;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 public abstract class BaseLayout
 {
@@ -26,6 +27,15 @@ public abstract class BaseLayout
     public final View onCreateView(int layoutResID)
     {
         mRootView = LayoutInflater.from(mContext).inflate(layoutResID, null, false);
+
+        initLayout(mRootView);
+
+        return mRootView;
+    }
+
+    public final View onCreateView(int layoutResID, ViewGroup viewGroup)
+    {
+        mRootView = LayoutInflater.from(mContext).inflate(layoutResID, viewGroup, false);
 
         initLayout(mRootView);
 

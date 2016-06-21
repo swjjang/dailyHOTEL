@@ -48,12 +48,6 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     public void requestSearchResultList(SaleTime saleTime, String keyword, int offset, int count)
     {
         String encodeKeyword;
@@ -66,14 +60,14 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
             encodeKeyword = keyword;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, encodeKeyword, offset, count, mGourmetSearchListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, encodeKeyword, offset, count, mGourmetSearchListJsonResponseListener, mGourmetSearchListJsonResponseListener);
     }
 
     public void requestSearchResultList(SaleTime saleTime, Location location, int offset, int count)
     {
         requestAddress(location, mLocationToAddressListener);
 
-        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, location, offset, count, mGourmetLocationSearchListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, saleTime, location, offset, count, mGourmetLocationSearchListJsonResponseListener, mGourmetLocationSearchListJsonResponseListener);
     }
 
     private ArrayList<PlaceViewItem> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -119,12 +113,6 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mGourmetSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -195,16 +183,16 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
                 mOnNetworkControllerListener.onError(e);
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
     };
 
     private DailyHotelJsonResponseListener mGourmetLocationSearchListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -275,16 +263,16 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
                 mOnNetworkControllerListener.onError(e);
             }
         }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
     };
 
     private DailyHotelJsonResponseListener mLocationToAddressListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -439,6 +427,12 @@ public class GourmetSearchResultNetworkController extends BaseNetworkController
             }
 
             return false;
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 

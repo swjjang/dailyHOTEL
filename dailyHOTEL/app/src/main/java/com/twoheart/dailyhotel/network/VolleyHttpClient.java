@@ -91,27 +91,6 @@ public class VolleyHttpClient implements Constants
         private OkUrlFactory mOkUrlFactory;
         private OkHttpClient mOkHttpClient;
 
-        class HttpsTrustManager implements X509TrustManager
-        {
-            private final X509Certificate[] x509Certificate = new X509Certificate[]{};
-
-            @Override
-            public void checkClientTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws java.security.cert.CertificateException
-            {
-            }
-
-            @Override
-            public void checkServerTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws java.security.cert.CertificateException
-            {
-            }
-
-            @Override
-            public X509Certificate[] getAcceptedIssuers()
-            {
-                return x509Certificate;
-            }
-        }
-
         public OkHttpStack(Context context)
         {
             mOkHttpClient = new OkHttpClient();

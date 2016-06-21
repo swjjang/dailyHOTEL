@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.region;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +34,8 @@ import java.util.Locale;
 
 public class HotelRegionListActivity extends PlaceRegionListActivity
 {
+    public static final String INTENT_EXTRA_DATA_PROVINCE_INDEX = "provinceIndex";
+    public static final String INTENT_EXTRA_DATA_AREA_INDEX = "areaIndex";
     public static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     public static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
@@ -53,6 +56,17 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
     {
         Intent intent = new Intent(context, HotelRegionListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, int provinceIndex, int areaIndex, SaleTime saleTime, int nights)
+    {
+        Intent intent = new Intent(context, HotelRegionListActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_PROVINCE_INDEX, provinceIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_AREA_INDEX, areaIndex);
         intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
 
@@ -340,7 +354,7 @@ public class HotelRegionListActivity extends PlaceRegionListActivity
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
                             intent.putExtra(INTENT_EXTRA_DATA_SALETIME, mSaleTime);
                             intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, mNights);
-                            setResult(RESULT_FIRST_USER, intent);
+                            setResult(RESULT_CHANGED_DATE, intent);
 
                             recordEvent(province);
                             finish();

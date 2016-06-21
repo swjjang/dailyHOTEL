@@ -1,0 +1,303 @@
+package com.twoheart.dailyhotel.place.fragment;
+
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.Util;
+
+public abstract class PlaceMainFragment extends BaseFragment
+{
+    protected boolean mDontReloadAtOnResume, mIsDeepLink;
+    protected ViewType mViewType = ViewType.LIST;
+
+    protected PlaceMainLayout mPlaceMainLayout;
+    protected PlaceMainNetworkController mPlaceMainNetworkController;
+
+    protected BaseActivity mBaseActivity;
+
+
+    protected abstract PlaceMainLayout getPlaceMainLayout(Context context, PlaceMainLayout.OnEventListener listener);
+
+    protected abstract PlaceMainNetworkController getPlaceMainNetworkController(Context context, PlaceMainNetworkController.OnNetworkControllerListener listener);
+
+    protected abstract void onRegionActivityResult(int requestCode, int resultCode, Intent data);
+
+    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+
+    protected abstract void onCurationActivityResult(int requestCode, int resultCode, Intent data);
+
+    protected abstract void onSettingLocationActivityResult(int requestCode, int resultCode, Intent data);
+
+    protected abstract void onLocationFailed();
+
+    protected abstract void onLocationProviderDisabled();
+
+    protected abstract void onLocationChanged(Location location);
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        mBaseActivity = (BaseActivity) getActivity();
+
+        mPlaceMainLayout = getPlaceMainLayout(mBaseActivity, null);
+        mPlaceMainNetworkController = getPlaceMainNetworkController(mBaseActivity, null);
+
+        return mPlaceMainLayout.onCreateView(R.layout.fragment_place_main, container);
+    }
+
+    @Override
+    public void onResume()
+    {
+        if (mDontReloadAtOnResume == true)
+        {
+            mDontReloadAtOnResume = false;
+        } else
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            lockUI();
+            mPlaceMainNetworkController.requestDateTime();
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        unLockUI();
+
+        switch (requestCode)
+        {
+            // 지역을 선택한 후에 되돌아 온경우.
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
+            {
+                if (mIsDeepLink == false)
+                {
+                    mDontReloadAtOnResume = true;
+                } else
+                {
+                    mIsDeepLink = false;
+                }
+
+                onRegionActivityResult(requestCode, resultCode, data);
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_CALENDAR:
+            {
+                mDontReloadAtOnResume = true;
+
+                onCalendarActivityResult(requestCode, resultCode, data);
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_HOTELCURATION:
+            {
+                mDontReloadAtOnResume = true;
+
+                onCurationActivityResult(requestCode, resultCode, data);
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_GOURMETCURATION:
+            {
+                mDontReloadAtOnResume = true;
+
+                onCurationActivityResult(requestCode, resultCode, data);
+                break;
+            }
+
+            case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                mDontReloadAtOnResume = true;
+
+                onSettingLocationActivityResult(requestCode, resultCode, data);
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_EVENTWEB:
+            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_SEARCH:
+            {
+                if (mIsDeepLink == false)
+                {
+                    switch (resultCode)
+                    {
+                        case CODE_RESULT_ACTIVITY_REFRESH:
+                        case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                            break;
+
+                        default:
+                            mDontReloadAtOnResume = true;
+                            break;
+                    }
+                } else
+                {
+                    mIsDeepLink = false;
+                }
+                break;
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void searchMyLocation()
+    {
+        if (isFinishing() || isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUI();
+
+        DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(mBaseActivity, null, new DailyLocationFactory.LocationListenerEx()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                if (Util.isOverAPI23() == true)
+                {
+                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                }
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                if (Util.isOverAPI23() == true)
+                {
+                    mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps_android6)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                            }
+                        }, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                onLocationFailed();
+                            }
+                        }, true);
+                } else
+                {
+                    onLocationFailed();
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            onLocationProviderDisabled();
+                        }
+                    }, false);
+            }
+
+            @Override
+            public void onLocationChanged(Location location)
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                PlaceMainFragment.this.onLocationChanged(location);
+            }
+        });
+    }
+}

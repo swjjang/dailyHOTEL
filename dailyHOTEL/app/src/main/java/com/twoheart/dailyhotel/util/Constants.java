@@ -14,6 +14,8 @@
  */
 package com.twoheart.dailyhotel.util;
 
+import android.app.Activity;
+
 import com.twoheart.dailyhotel.BuildConfig;
 
 public interface Constants
@@ -130,6 +132,9 @@ public interface Constants
     public static final String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
     public static final String PACKAGE_NAME_KFTC = "com.kftc.bankpay.android";
     public static final String PACKAGE_NAME_MPOCKET = "kr.co.samsungcard.mpocket";
+
+    // Activity Result
+    public static final int RESULT_CHANGED_DATE = Activity.RESULT_FIRST_USER + 1;
 
     // Event
     // Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.

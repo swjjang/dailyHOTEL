@@ -31,12 +31,6 @@ public class GourmetSearchNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     public void requestAutoComplete(SaleTime saleTime, String keyword)
     {
         if (saleTime == null || Util.isTextEmpty(keyword) == true)
@@ -45,7 +39,7 @@ public class GourmetSearchNetworkController extends BaseNetworkController
         }
 
         DailyNetworkAPI.getInstance(mContext).requestGourmetSearchAutoCompleteList(mNetworkTag//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteListener, mGourmetearchAutoCompleteErrorListener);
+            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteListener, mGourmetSearchAutoCompleteListener);
     }
 
     private DailyHotelJsonArrayResponseListener mGourmetSearchAutoCompleteListener = new DailyHotelJsonArrayResponseListener()
@@ -72,10 +66,7 @@ public class GourmetSearchNetworkController extends BaseNetworkController
 
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(url.substring(startIndex + 1), keywordList);
         }
-    };
 
-    private Response.ErrorListener mGourmetearchAutoCompleteErrorListener = new Response.ErrorListener()
-    {
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {

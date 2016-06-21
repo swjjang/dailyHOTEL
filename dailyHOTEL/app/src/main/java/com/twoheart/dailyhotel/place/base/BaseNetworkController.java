@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Response;
 
-public abstract class BaseNetworkController implements Response.ErrorListener
+public abstract class BaseNetworkController
 {
     protected String mNetworkTag;
     protected Context mContext;

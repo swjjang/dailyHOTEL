@@ -44,12 +44,6 @@ public class MainNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     protected void requestCheckServer()
     {
         // 서버 상태 체크
@@ -447,7 +441,7 @@ public class MainNetworkController extends BaseNetworkController
         {
             if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 401)
             {
-                MainNetworkController.this.onErrorResponse(volleyError);
+                mOnNetworkControllerListener.onErrorResponse(volleyError);
             } else
             {
                 mOnNetworkControllerListener.onErrorPopupMessage(-1, mContext.getString(R.string.act_base_network_connect));
@@ -457,12 +451,6 @@ public class MainNetworkController extends BaseNetworkController
 
     private DailyHotelJsonResponseListener mNoticeAgreementJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -486,16 +474,16 @@ public class MainNetworkController extends BaseNetworkController
             {
             }
         }
-    };
 
-    private DailyHotelJsonResponseListener mNoticeAgreementResultJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
             mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
+    };
 
+    private DailyHotelJsonResponseListener mNoticeAgreementResultJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -524,6 +512,12 @@ public class MainNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

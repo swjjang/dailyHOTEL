@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.place.base;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -197,5 +198,13 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
         }
 
         baseActivity.releaseUiComponent();
+    }
+
+    protected boolean isFinishing()
+    {
+        Activity activity = getActivity();
+
+        return (isAdded() == false || activity == null//
+            || activity.isFinishing() == true);
     }
 }

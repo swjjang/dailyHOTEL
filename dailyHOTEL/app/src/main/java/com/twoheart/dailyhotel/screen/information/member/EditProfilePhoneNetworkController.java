@@ -34,12 +34,6 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     public void requestDailyUserVerification(String phoneNumber, boolean force)
     {
         DailyNetworkAPI.getInstance(mContext).requestDailyUserVerfication(mNetworkTag, phoneNumber.replaceAll("-", ""), force, mDailUserVerificationJsonResponseListener);
@@ -56,7 +50,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         params.put("user_idx", userIndex);
         params.put("user_phone", phoneNumber.replaceAll("-", ""));
 
-        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialJsonResponseListener, mUserUpdateSocialJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,12 +187,6 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mUserUpdateSocialJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -219,6 +207,12 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

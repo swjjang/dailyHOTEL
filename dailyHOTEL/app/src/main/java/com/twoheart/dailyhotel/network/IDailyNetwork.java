@@ -440,7 +440,7 @@ interface IDailyNetwork
      * @param listener
      * @param errorListener
      */
-    void requestEventBannerList(Object tag, String place, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+    void requestEventBannerList(Object tag, String place, DailyHotelJsonResponseListener listener);
 
     /**
      * @param tag

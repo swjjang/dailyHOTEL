@@ -19,8 +19,6 @@ import java.util.List;
 
 public class EventListNetworkController extends BaseNetworkController
 {
-    private OnNetworkControllerListener mListener;
-
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void processEventPage(String eventUrl);
@@ -31,19 +29,11 @@ public class EventListNetworkController extends BaseNetworkController
     public EventListNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
-
-        mListener = listener;
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mListener.onErrorResponse(volleyError);
     }
 
     public void requestEventList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestEventList(mNetworkTag, mDailyEventListJsonResponseListener, mDailyEventListJsonResponseListener);
     }
 
     public void requestEventPageUrl(Event event)
@@ -58,7 +48,7 @@ public class EventListNetworkController extends BaseNetworkController
             store = "skt";
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener, mDailyEventListJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,12 +58,6 @@ public class EventListNetworkController extends BaseNetworkController
     private DailyHotelJsonResponseListener mDailyEventListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
         public void onResponse(String url, JSONObject response)
         {
             try
@@ -86,24 +70,24 @@ public class EventListNetworkController extends BaseNetworkController
                     {
                         String message = response.getString("msg");
 
-                        mListener.onErrorPopupMessage(msgCode, message);
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
 
-                    mListener.onEventListResponse(null);
+                    ((OnNetworkControllerListener)mOnNetworkControllerListener).onEventListResponse(null);
                 } else
                 {
                     JSONArray eventJSONArray = response.getJSONArray("data");
 
                     if (eventJSONArray == null)
                     {
-                        mListener.onEventListResponse(null);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                     } else
                     {
                         int length = eventJSONArray.length();
 
                         if (length == 0)
                         {
-                            mListener.onEventListResponse(null);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                         } else
                         {
                             ArrayList<Event> eventList = new ArrayList<>(length);
@@ -113,26 +97,26 @@ public class EventListNetworkController extends BaseNetworkController
                                 eventList.add(new Event(eventJSONArray.getJSONObject(i)));
                             }
 
-                            mListener.onEventListResponse(eventList);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(eventList);
                         }
                     }
                 }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
-                mListener.onEventListResponse(null);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 
     private DailyHotelJsonResponseListener mDailyEventPageJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -145,17 +129,23 @@ public class EventListNetworkController extends BaseNetworkController
                     if (response.has("msg") == true)
                     {
                         String message = response.getString("msg");
-                        mListener.onErrorPopupMessage(msgCode, message);
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
                 } else
                 {
                     String eventUrl = response.getJSONObject("data").getString("url");
-                    mListener.processEventPage(eventUrl);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).processEventPage(eventUrl);
                 }
             } catch (Exception e)
             {
-                mListener.onError(e);
+                mOnNetworkControllerListener.onError(e);
             }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }
