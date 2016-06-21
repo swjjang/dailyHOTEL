@@ -1,9 +1,13 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
@@ -495,7 +499,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         {
             if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
             {
-                searchMyLocation();
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    searchMyLocation();
+                } else
+                {
+                    // 퍼미션 허락하지 않음.
+                }
             }
         } else if (mViewType == ViewType.MAP)
         {
@@ -864,7 +874,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private void searchMyLocation()
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
 
         if (baseActivity == null || isLockUiComponent() == true)
         {
@@ -878,12 +888,22 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onRequirePermission()
             {
+                unLockUI();
+
                 if (Util.isOverAPI23() == true)
                 {
-                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                }
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
+                    {
+                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
 
-                unLockUI();
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    } else
+                    {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    }
+                }
             }
 
             @Override
@@ -891,42 +911,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 unLockUI();
 
-                //                recordAnalyticsSortTypeEvent(getContext(), mCurationOption.getSortType());
-
-                if (Util.isOverAPI23() == true)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null || baseActivity.isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                        , getString(R.string.dialog_msg_used_gps_android6)//
-                        , getString(R.string.dialog_btn_text_dosetting)//
-                        , getString(R.string.dialog_btn_text_cancel)//
-                        , new View.OnClickListener()//
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                            }
-                        }, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                mCurationOption.setSortType(SortType.DEFAULT);
-                                curationCurrentFragment();
-                            }
-                        }, true);
-                } else
-                {
-                    mCurationOption.setSortType(SortType.DEFAULT);
-                    curationCurrentFragment();
-                }
+                mCurationOption.setSortType(SortType.DEFAULT);
+                curationCurrentFragment();
             }
 
             @Override

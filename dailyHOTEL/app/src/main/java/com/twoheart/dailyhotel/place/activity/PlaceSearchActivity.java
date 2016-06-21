@@ -1,13 +1,18 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -91,6 +96,21 @@ public abstract class PlaceSearchActivity extends BaseActivity
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+        {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                searchMyLocation();
+            } else
+            {
+                // 퍼미션 허락하지 않음.
+            }
+        }
+    }
+
     protected void showTermsOfLocationDialog()
     {
         if (isFinishing())
@@ -171,9 +191,6 @@ public abstract class PlaceSearchActivity extends BaseActivity
             }
         });
 
-        //        confirmTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_signature_ok, 0, 0, 0);
-        //        confirmTextView.setCompoundDrawablePadding(Util.dpToPx(this, 15));
-
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
             @Override
@@ -237,9 +254,18 @@ public abstract class PlaceSearchActivity extends BaseActivity
                 break;
             }
 
-            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
             {
-                searchMyLocation();
+                if (Util.isOverAPI23() == true)
+                {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    {
+                        searchMyLocation();
+                    } else
+                    {
+
+                    }
+                }
                 break;
             }
         }
@@ -254,39 +280,28 @@ public abstract class PlaceSearchActivity extends BaseActivity
             @Override
             public void onRequirePermission()
             {
+                unLockUI();
+
                 if (Util.isOverAPI23() == true)
                 {
-                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                }
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
+                    {
+                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
 
-                unLockUI();
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    } else
+                    {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    }
+                }
             }
 
             @Override
             public void onFailed()
             {
                 unLockUI();
-
-                if (Util.isOverAPI23() == true)
-                {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                        , getString(R.string.dialog_msg_used_gps_android6)//
-                        , getString(R.string.dialog_btn_text_dosetting)//
-                        , getString(R.string.dialog_btn_text_cancel)//
-                        , new View.OnClickListener()//
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                            }
-                        }, null, true);
-                }
             }
 
             @Override

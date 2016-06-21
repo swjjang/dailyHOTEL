@@ -1,9 +1,13 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -249,14 +253,13 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
     {
         if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-                return;
+                searchMyLocation();
+            } else
+            {
+                // 퍼미션 허락하지 않음.
             }
-
-            searchMyLocation(baseActivity);
         }
     }
 
@@ -818,16 +821,35 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         }
     }
 
-    private void searchMyLocation(BaseActivity baseActivity)
+    private void searchMyLocation()
     {
-        DailyLocationFactory.getInstance(baseActivity).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance((BaseActivity) getActivity()).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
             {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                baseActivity.unLockUI();
+
                 if (Util.isOverAPI23() == true)
                 {
-                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
+                    {
+                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
+
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    } else
+                    {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    }
                 }
             }
 
@@ -842,22 +864,6 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 }
 
                 baseActivity.unLockUI();
-
-                if (Util.isOverAPI23() == true)
-                {
-                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                        , getString(R.string.dialog_msg_used_gps_android6)//
-                        , getString(R.string.dialog_btn_text_dosetting)//
-                        , getString(R.string.dialog_btn_text_cancel)//
-                        , new View.OnClickListener()//
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                            }
-                        }, null, true);
-                }
             }
 
             @Override
@@ -1024,14 +1030,12 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         @Override
         public void onClick(View v)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || mGoogleMap == null)
+            if (mGoogleMap == null)
             {
                 return;
             }
 
-            searchMyLocation(baseActivity);
+            searchMyLocation();
         }
     };
 

@@ -1,10 +1,14 @@
 package com.twoheart.dailyhotel.screen.common;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -210,7 +214,13 @@ public class ZoomMapActivity extends BaseActivity
     {
         if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
         {
-            searchMyLocation(this);
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                searchMyLocation();
+            } else
+            {
+                // 퍼미션 허락하지 않음.
+            }
         }
     }
 
@@ -277,23 +287,35 @@ public class ZoomMapActivity extends BaseActivity
         }
     }
 
-    private void searchMyLocation(BaseActivity baseActivity)
+    private void searchMyLocation()
     {
-        DailyLocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance(this).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
             {
+                unLockUI();
+
                 if (Util.isOverAPI23() == true)
                 {
-                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
+                    {
+                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
+
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    } else
+                    {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    }
                 }
             }
 
             @Override
             public void onFailed()
             {
-
+                unLockUI();
             }
 
             @Override
@@ -377,7 +399,7 @@ public class ZoomMapActivity extends BaseActivity
                 return;
             }
 
-            searchMyLocation(ZoomMapActivity.this);
+            searchMyLocation();
         }
     };
 }

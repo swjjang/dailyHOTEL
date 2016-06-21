@@ -242,7 +242,7 @@ public class CouponUtil
      * 남은 날 수를 리턴하는 메소드
      *
      * @param serverDate 리스트에서 받은 현재 서버시간 serverDate
-     * @param validTo     리스트에서 받은 종료 일자
+     * @param validTo    리스트에서 받은 종료 일자
      * @return -1 기간만료, 0 당일만료, 그 이외 숫자 남은 일자
      */
     public static int getDueDateCount(String serverDate, String validTo)

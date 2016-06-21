@@ -1,16 +1,19 @@
 package com.twoheart.dailyhotel.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
@@ -152,6 +155,19 @@ public class DailyLocationFactory
             return;
         }
 
+        if (Util.isOverAPI23() == true)
+        {
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            {
+                if (listener != null)
+                {
+                    listener.onRequirePermission();
+                }
+
+                return;
+            }
+        }
+
         if (mIsMeasuringLocation)
         {
             return;
@@ -171,6 +187,7 @@ public class DailyLocationFactory
         mLocationListener = listener;
         mMyLocationView = myLocation;
 
+
         if (mMyLocationView != null)
         {
             mMyLocationDrawable = mMyLocationView.getBackground();
@@ -187,15 +204,6 @@ public class DailyLocationFactory
             }
             return;
         }
-
-        //        if (hasPermission() == false)
-        //        {
-        //            if (mLocationListener != null)
-        //            {
-        //                mLocationListener.onRequirePermission();
-        //            }
-        //            return;
-        //        }
 
         mIsMeasuringLocation = true;
 
