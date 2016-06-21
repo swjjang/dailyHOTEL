@@ -29,9 +29,9 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected BaseActivity mBaseActivity;
 
 
-    protected abstract PlaceMainLayout getPlaceMainLayout(Context context, PlaceMainLayout.OnEventListener listener);
+    protected abstract PlaceMainLayout getPlaceMainLayout(Context context);
 
-    protected abstract PlaceMainNetworkController getPlaceMainNetworkController(Context context, PlaceMainNetworkController.OnNetworkControllerListener listener);
+    protected abstract PlaceMainNetworkController getPlaceMainNetworkController(Context context);
 
     protected abstract void onRegionActivityResult(int requestCode, int resultCode, Intent data);
 
@@ -52,8 +52,8 @@ public abstract class PlaceMainFragment extends BaseFragment
     {
         mBaseActivity = (BaseActivity) getActivity();
 
-        mPlaceMainLayout = getPlaceMainLayout(mBaseActivity, null);
-        mPlaceMainNetworkController = getPlaceMainNetworkController(mBaseActivity, null);
+        mPlaceMainLayout = getPlaceMainLayout(mBaseActivity);
+        mPlaceMainNetworkController = getPlaceMainNetworkController(mBaseActivity);
 
         return mPlaceMainLayout.onCreateView(R.layout.fragment_place_main, container);
     }
