@@ -256,7 +256,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         }
 
         @Override
-        public void onRegionList()
+        public void onRegionList(List<Province> provinceList, List<Area> areaList)
         {
 
         }
@@ -284,7 +284,6 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         {
 
         }
-
 
         private boolean processDeepLink(BaseActivity baseActivity)
         {
@@ -327,18 +326,18 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         {
             // 신규 타입의 화면이동
             SaleTime saleTime = GourmetCurationManager.getInstance().getSaleTime();
-            int fnbIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+            int gourmetIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
             long dailyTime = saleTime.getDailyTime();
-            int nights = 1;
 
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
 
+            // date가 비어 있는 경우
             if (Util.isTextEmpty(date) == true)
             {
                 if (datePlus >= 0)
                 {
-                    mOnCommunicateListener.selectPlace(fnbIndex, dailyTime, datePlus, nights);
+                    mOnCommunicateListener.selectPlace(gourmetIndex, dailyTime, datePlus, 1);
                 } else
                 {
                     throw new NullPointerException("datePlus < 0");
@@ -356,7 +355,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                     throw new NullPointerException("dailyDayOfDays < 0");
                 }
 
-                mOnCommunicateListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
+                mOnCommunicateListener.selectPlace(gourmetIndex, dailyTime, dailyDayOfDays, nights);
             }
 
             DailyDeepLink.getInstance().clear();
@@ -391,7 +390,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         }
     }
 
-    private boolean moveDeepLinkRegionList(BaseActivity baseActivity, ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    private boolean moveDeepLinkRegionList(BaseActivity baseActivity)
     {
         int provinceIndex = -1;
         int areaIndex = -1;
