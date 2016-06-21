@@ -756,6 +756,7 @@ public class AnalyticsManager
         public static final String EXPIRATION_DATE = "expiration_date";
         public static final String DOWNLOAD_DATE = "download_date";
         public static final String DOWNLOAD_FROM = "download_from";
+        public static final String COUPON_CODE = "coupon_code";
 
     }
 

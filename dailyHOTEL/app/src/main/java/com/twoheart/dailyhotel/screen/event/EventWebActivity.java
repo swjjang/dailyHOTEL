@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class EventWebActivity extends WebViewActivity implements Constants
@@ -343,7 +344,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }, null);
     }
 
-    private void downloadCoupon(String couponCode, final String deepLink)
+    private void downloadCoupon(final String couponCode, final String deepLink)
     {
         if (Util.isTextEmpty(couponCode, deepLink) == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -352,6 +353,27 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         DailyNetworkAPI.getInstance(this).requestDownloadEventCoupon(mNetworkTag, couponCode, new DailyHotelJsonResponseListener()
         {
+            private void recordAnalytics(String couponCode, String validTo)
+            {
+                try
+                {
+                    Map<String, String> paramsMap = new HashMap<>();
+                    paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, AnalyticsManager.ValueType.EMPTY);
+                    paramsMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, AnalyticsManager.ValueType.EMPTY);
+                    paramsMap.put(AnalyticsManager.KeyType.PRICE_OFF, "0");
+                    paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
+                    paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(validTo, "yyyyMMddHHmm"));
+                    paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "event");
+                    paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, couponCode);
+
+                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
+                        , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Event-NULL", paramsMap);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+
             @Override
             public void onResponse(String url, JSONObject response)
             {
@@ -374,6 +396,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         String message = getString(R.string.message_eventweb_download_coupon//
                             , Util.simpleDateFormatISO8601toFormat(validFrom, "yyyy.MM.dd")//
                             , Util.simpleDateFormatISO8601toFormat(validTo, "yyyy.MM.dd"));
+
+                        recordAnalytics(couponCode, validTo);
 
                         showSimpleDialog(null, message, mConfirmText, getString(R.string.dialog_btn_text_close), new View.OnClickListener()
                         {
