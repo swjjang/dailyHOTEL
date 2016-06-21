@@ -653,13 +653,6 @@ public class Util implements Constants
         return pattern01.matcher(mobile01).matches() == false && pattern02.matcher(mobile02).matches() && pattern03.matcher(mobile03).matches();
     }
 
-
-    public static String getLine1Number(Context context)
-    {
-        TelephonyManager telManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return telManager.getLine1Number();
-    }
-
     public static String[] getValidatePhoneNumber(String phonenumber)
     {
         if (Util.isTextEmpty(phonenumber) == true)
