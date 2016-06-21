@@ -97,13 +97,14 @@
                 android:layout_below="@+id/rl_hotel_upper"
                 android:layout_gravity="top"
                 android:layout_marginLeft="5dp"
-                android:drawablePadding="5dp"
-                android:drawableRight="@drawable/ic_copy"
+                android:background="@drawable/more_btn_padding"
                 android:freezesText="true"
+                android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/label_copy_address"
                 android:textColor="@color/menu_text_default"
                 android:textSize="12dp"/>
+
         </RelativeLayout>
 
         <RelativeLayout

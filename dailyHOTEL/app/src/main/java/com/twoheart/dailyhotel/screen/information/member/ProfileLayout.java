@@ -98,9 +98,6 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_daily_small, 0, 0, 0);
         mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
 
-        View emailArrowImage = mEmailLayout.findViewById(R.id.emailArrowImage);
-        emailArrowImage.setVisibility(View.INVISIBLE);
-
         // 이름
         mNameTextView.setText(name);
 
@@ -128,18 +125,14 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
     private void updateSocialUserInformation(String userType, String email, String name, String phone)
     {
         // 이메일
-        View emailArrowImage = mEmailLayout.findViewById(R.id.emailArrowImage);
-
         if (Util.isTextEmpty(email) == true)
         {
             mEmailTextView.setText(null);
             mEmailLayout.setOnClickListener(this);
-            emailArrowImage.setVisibility(View.VISIBLE);
         } else
         {
             mEmailTextView.setText(email);
             mEmailLayout.setOnClickListener(null);
-            emailArrowImage.setVisibility(View.INVISIBLE);
 
             if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
             {

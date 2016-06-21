@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:fresco="http://schemas.android.com/apk/res-auto"
               xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              xmlns:fresco="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
@@ -9,10 +9,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginTop="10dp">
 
         <ImageView
             android:id="@+id/addressIconView"
@@ -24,9 +24,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
-            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/copyAddressView"
             android:layout_toRightOf="@+id/addressIconView"
-            android:layout_toLeftOf="@+id/copyAddressView">
+            android:orientation="vertical">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/hotelAddressTextView01"
@@ -66,16 +66,17 @@
             android:id="@+id/copyAddressView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="top"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/more_btn_padding"
             android:freezesText="true"
+            android:gravity="center"
             android:maxLines="1"
             android:text="@string/label_copy_address"
             android:textColor="@color/menu_text_default"
-            android:drawableRight="@drawable/ic_copy"
-            android:textSize="12dp"
-            android:drawablePadding="5dp"
-            android:layout_gravity="top"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="5dp"/>
+            android:textSize="12dp"/>
+
     </RelativeLayout>
 
     <View

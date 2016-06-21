@@ -312,14 +312,6 @@
                     android:textColor="@color/information_title"
                     android:textSize="15dp"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="18dp"
-                    android:src="@drawable/more_ic_next"/>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
@@ -346,22 +338,12 @@
                     android:textSize="15dp"/>
 
                 <ImageView
-                    android:id="@+id/rightArrowIconView"
+                    android:id="@+id/newIconView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="18dp"
-                    android:src="@drawable/more_ic_next"/>
-
-                <ImageView
-                    android:id="@+id/newIconView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="false"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="18dp"
-                    android:layout_toLeftOf="@+id/rightArrowIconView"
+                    android:layout_marginRight="15dp"
                     android:src="@drawable/tapbar_ic_n"
                     android:visibility="invisible"/>
 
@@ -399,14 +381,6 @@
                     android:textColor="@color/information_title"
                     android:textSize="15dp"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="18dp"
-                    android:src="@drawable/more_ic_next"/>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
@@ -432,14 +406,6 @@
                     android:textColor="@color/information_title"
                     android:textSize="15dp"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="18dp"
-                    android:src="@drawable/more_ic_next"/>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
@@ -464,14 +430,6 @@
                     android:text="@string/frag_about"
                     android:textColor="@color/information_title"
                     android:textSize="15dp"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="18dp"
-                    android:src="@drawable/more_ic_next"/>
 
                 <View
                     android:layout_width="match_parent"

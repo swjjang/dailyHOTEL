@@ -25,7 +25,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/emailArrowImage"
                 android:orientation="vertical">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
@@ -41,21 +40,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:maxLength="50"
                     android:hint="@string/act_profile_input_email"
+                    android:maxLength="50"
                     android:singleLine="true"
                     android:textColor="@color/curation_title_text"
                     android:textSize="16dp"/>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/emailArrowImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/more_ic_next"/>
         </RelativeLayout>
 
         <View
@@ -72,7 +63,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/nameArrowImage"
                 android:orientation="vertical">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
@@ -94,14 +84,6 @@
                     android:textSize="16dp"/>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/nameArrowImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/more_ic_next"/>
         </RelativeLayout>
 
         <View
@@ -117,8 +99,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/phoneArrowImage">
+                android:layout_centerVertical="true">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/phoneView"
@@ -132,12 +113,12 @@
                     android:id="@+id/phoneVerifyView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
                     android:layout_toRightOf="@+id/phoneView"
                     android:text="@string/label_dont_verification"
                     android:textColor="@color/dh_theme_color"
                     android:textSize="12dp"
-                    android:visibility="gone"
-                    android:layout_marginLeft="2dp"/>
+                    android:visibility="gone"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/phoneTextView"
@@ -151,14 +132,6 @@
                     android:textSize="16dp"/>
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/phoneArrowImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/more_ic_next"/>
         </RelativeLayout>
 
         <View
@@ -176,7 +149,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/passwordArrowImage"
                 android:orientation="vertical">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
@@ -199,15 +171,6 @@
                     android:textSize="16dp"/>
             </LinearLayout>
 
-
-            <ImageView
-                android:id="@+id/passwordArrowImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/more_ic_next"/>
         </RelativeLayout>
 
         <View
@@ -221,14 +184,14 @@
         android:id="@+id/logoutView"
         android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
         android:background="@drawable/btn_normal_gradation"
         android:gravity="center"
         android:text="@string/act_profile_btn_logout"
         android:textColor="@color/white"
         android:textSize="17dp"
-        dailyFont:style="Medium"
-        android:layout_alignParentBottom="true"/>
+        dailyFont:style="Medium"/>
 
     <View
         android:layout_width="match_parent"
