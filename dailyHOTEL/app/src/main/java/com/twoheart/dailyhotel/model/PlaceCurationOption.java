@@ -10,9 +10,6 @@ public abstract class PlaceCurationOption implements Parcelable
 {
     private Constants.SortType sortType = Constants.SortType.DEFAULT;
 
-    private Province mProvince;
-    private Location mLocation; // Not Parcelable
-
     public void clear()
     {
         sortType = Constants.SortType.DEFAULT;
@@ -33,37 +30,15 @@ public abstract class PlaceCurationOption implements Parcelable
         return sortType;
     }
 
-    public Province getProvince()
-    {
-        return mProvince;
-    }
-
-    public void setProvince(Province province)
-    {
-        mProvince = province;
-    }
-
-    public Location getLocation()
-    {
-        return mLocation;
-    }
-
-    public void setLocation(Location location)
-    {
-        mLocation = location;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(sortType.name());
-        dest.writeParcelable(mProvince, flags);
     }
 
     protected void readFromParcel(Parcel in)
     {
         sortType = Constants.SortType.valueOf(in.readString());
-        mProvince = in.readParcelable(Province.class.getClassLoader());
     }
 
     @Override

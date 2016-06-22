@@ -1,16 +1,20 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -21,19 +25,25 @@ import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
+import com.twoheart.dailyhotel.screen.gourmet.search.GourmetSearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GourmetMainFragment_v2 extends PlaceMainFragment
 {
@@ -52,7 +62,21 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
     @Override
     protected void onRegionActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if (resultCode == Activity.RESULT_OK && data != null)
+        {
+            if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
+            {
+                Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+                GourmetCurationManager.getInstance().setProvince(province);
 
+                mPlaceMainLayout.setToolbarRegionText(province.name);
+
+                DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+                DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.FNB, province.name);
+
+                refreshCurrentFragment();
+            }
+        }
     }
 
     @Override
@@ -172,6 +196,21 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         refreshCurrentFragment(mEventBannerList);
     }
 
+    private void refreshCurrentFragment()
+    {
+        if(isFinishing() == true)
+        {
+            return;
+        }
+
+        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+        if(placeListFragment != null)
+        {
+            placeListFragment.refreshList();
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // EventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +220,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         @Override
         public void onCategoryTabSelected(TabLayout.Tab tab)
         {
-
+            // stay는 현재 카테고리 상태를 저장한다.
         }
 
         @Override
@@ -199,7 +238,27 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         @Override
         public void onSearchClick()
         {
+            Intent intent = GourmetSearchActivity.newInstance(mBaseActivity, GourmetCurationManager.getInstance().getSaleTime());
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
+            switch (mViewType)
+            {
+                case LIST:
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LIST, null);
+
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.GOURMET_LIST, null);
+                    break;
+
+                case MAP:
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.GOURMET_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_MAP, null);
+
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.GOURMET_MAP, null);
+                    break;
+            }
         }
 
         @Override
@@ -211,19 +270,125 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         @Override
         public void onRegionClick()
         {
+            SaleTime saleTime = GourmetCurationManager.getInstance().getSaleTime();
+            Province province = GourmetCurationManager.getInstance().getProvince();
 
+            Intent intent = GourmetRegionListActivity.newInstance(getContext(), province, saleTime);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
         }
 
         @Override
         public void onViewTypeClick()
         {
+            // 리스트
 
+            // 맵
+
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
+            GourmetListFragment_v2 gourmetListFragment = (GourmetListFragment_v2)mPlaceMainLayout.getCurrentPlaceListFragment();
+
+            switch (mViewType)
+            {
+                case LIST:
+                {
+                    // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
+                    if (gourmetListFragment.hasSalesPlace() == false)
+                    {
+                        unLockUI();
+
+                        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                        if (baseActivity == null)
+                        {
+                            return;
+                        }
+
+                        DailyToast.showToast(baseActivity, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    mViewType = ViewType.MAP;
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
+                    break;
+                }
+
+                case MAP:
+                {
+                    mViewType = ViewType.LIST;
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST);
+
+                    Map<String, String> parmas = new HashMap<>();
+                    Province province = GourmetCurationManager.getInstance().getProvince();
+
+                    if (province instanceof Area)
+                    {
+                        Area area = (Area) province;
+                        parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                    } else
+                    {
+                        parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                    }
+
+                    AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST, parmas);
+                    break;
+                }
+            }
+
+            for (GourmetListFragment placeListFragment : mFragmentPagerAdapter.getFragmentList())
+            {
+                boolean isCurrentFragment = placeListFragment == currentFragment;
+
+                placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            }
+
+            currentFragment.curationList(mViewType, mCurationOption);
+
+            unLockUI();
         }
 
         @Override
         public void onFilterClick()
         {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            Province province = GourmetCurationManager.getInstance().getProvince();
+
+            if (province == null)
+            {
+                releaseUiComponent();
+                return;
+            }
+
+            Intent intent = GourmetCurationActivity.newInstance(mBaseActivity, province.isOverseas, mViewType);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
+
+            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+
+            switch (mViewType)
+            {
+                case LIST:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+                    break;
+
+                case MAP:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+                    break;
+            }
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }
 
         @Override
@@ -246,14 +411,16 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 // 딥링크 이동
             } else
             {
-                mPlaceMainNetworkController.requestRegionList();
+                mPlaceMainNetworkController.requestEventBanner();
             }
         }
 
         @Override
         public void onEventBanner(List<EventBanner> eventBannerList)
         {
+            GourmetEventBannerManager.getInstance().setList(eventBannerList);
 
+            mPlaceMainNetworkController.requestRegionList();
         }
 
         @Override
@@ -427,6 +594,20 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         }
     };
 
+    private GourmetListFragment_v2.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetListFragment_v2.OnGourmetListFragmentListener()
+    {
+        @Override
+        public void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime)
+        {
+
+        }
+
+        @Override
+        public void onEventBannerClick(EventBanner eventBanner)
+        {
+
+        }
+    };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Deep Link

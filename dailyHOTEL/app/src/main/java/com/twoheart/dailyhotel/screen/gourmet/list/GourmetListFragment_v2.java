@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -45,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GourmetListFragment_v2 extends BaseFragment implements Constants
+public class GourmetListFragment_v2 extends PlaceListFragment
 {
     protected PinnedSectionRecyclerView mGourmetRecyclerView;
     protected GourmetListAdapter mGourmetAdapter;
@@ -62,6 +63,13 @@ public class GourmetListFragment_v2 extends BaseFragment implements Constants
     protected GourmetMainFragment.OnCommunicateListener mOnCommunicateListener;
 
     protected List<Gourmet> mGourmetList = new ArrayList<>();
+
+    public interface OnGourmetListFragmentListener
+    {
+        void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime);
+
+        void onEventBannerClick(EventBanner eventBanner);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -130,6 +138,12 @@ public class GourmetListFragment_v2 extends BaseFragment implements Constants
                 mGourmetMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
+    }
+
+    @Override
+    public void refreshList()
+    {
+
     }
 
     public boolean canScrollUp()
