@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -303,6 +304,8 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             } else
             {
                 // 리스트 요청하면 됨.
+                String dateText = GourmetCurationManager.getInstance().getSaleTime().getDayOfDaysDateFormat("M.d(EEE)");
+                mPlaceMainLayout.setToolbarDateText(dateText);
             }
         }
 
@@ -581,6 +584,10 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 {
                     SaleTime deepLinkSaleTime = saleTime.getClone(dailyDayOfDays);
 
+                    // 리스트 요청하면 됨.
+                    String dateText = deepLinkSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+                    mPlaceMainLayout.setToolbarDateText(dateText);
+
                     // 특정 날짜 고메 리스트 요청
                     mOnCommunicateListener.selectDay(deepLinkSaleTime, true);
                 } else
@@ -598,6 +605,10 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             try
             {
                 SaleTime deepLinkSaleTime = saleTime.getClone(datePlus);
+
+                // 리스트 요청하면 됨.
+                String dateText = deepLinkSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+                mPlaceMainLayout.setToolbarDateText(dateText);
 
                 mOnCommunicateListener.selectDay(deepLinkSaleTime, true);
             } catch (Exception e)
