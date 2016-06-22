@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
@@ -240,7 +241,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             GourmetCurationManager.getInstance().setSaleTime(currentDateTime, dailyDateTime);
 
             if (DailyDeepLink.getInstance().isValidateLink() == true //
-                && processDeepLink(mBaseActivity) == true)
+                && processDeepLinkByDateTime(mBaseActivity) == true)
             {
                 // 딥링크 이동
             } else
@@ -258,50 +259,97 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         @Override
         public void onRegionList(List<Province> provinceList, List<Area> areaList)
         {
+            if(provinceList == null || areaList == null)
+            {
+                return;
+            }
 
+            Province selectedProvince = GourmetCurationManager.getInstance().getProvince();
+
+            if (selectedProvince == null)
+            {
+                selectedProvince = searchLastRegion(mBaseActivity, provinceList, areaList);
+            }
+
+            // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
+            if (selectedProvince == null)
+            {
+                selectedProvince = provinceList.get(0);
+            }
+
+            boolean mIsProvinceSetting = DailyPreference.getInstance(mBaseActivity).isSettingRegion(PlaceType.FNB);
+            DailyPreference.getInstance(mBaseActivity).setSettingRegion(PlaceType.FNB, true);
+
+            // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
+            if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+            {
+                int provinceIndex = selectedProvince.getProvinceIndex();
+
+                for (Province province : provinceList)
+                {
+                    if (province.getProvinceIndex() == provinceIndex)
+                    {
+                        selectedProvince = province;
+                        break;
+                    }
+                }
+            }
+
+            GourmetCurationManager.getInstance().setProvince(selectedProvince);
+
+            if (DailyDeepLink.getInstance().isValidateLink() == true//
+                && processDeepLinkByRegionList(mBaseActivity, provinceList, areaList) == true)
+            {
+
+            } else
+            {
+                // 리스트 요청하면 됨.
+                String dateText = GourmetCurationManager.getInstance().getSaleTime().getDayOfDaysDateFormat("M.d(EEE)");
+                mPlaceMainLayout.setToolbarDateText(dateText);
+            }
         }
 
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            mBaseActivity.onErrorResponse(volleyError);
         }
 
         @Override
         public void onError(Exception e)
         {
-
+            mBaseActivity.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-
+            mBaseActivity.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-
+            mBaseActivity.onErrorToastMessage(message);
         }
 
-        private boolean processDeepLink(BaseActivity baseActivity)
+        private boolean processDeepLinkByDateTime(BaseActivity baseActivity)
         {
             if (DailyDeepLink.getInstance().isGourmetDetailView() == true)
             {
                 unLockUI();
-                moveDeepLinkDetail(baseActivity);
-                return true;
+
+                return moveDeepLinkDetail(baseActivity);
             } else if (DailyDeepLink.getInstance().isGourmetEventBannerWebView() == true)
             {
                 unLockUI();
-                moveDeepLinkEventBannerWeb(baseActivity);
-                return true;
+
+                return moveDeepLinkEventBannerWeb(baseActivity);
             } else if (DailyDeepLink.getInstance().isGourmetRegionListView() == true)
             {
                 unLockUI();
-                moveDeepLinkRegionList(baseActivity);
-                return true;
+
+                return moveDeepLinkRegionList(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.
@@ -312,6 +360,70 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             }
 
             return false;
+        }
+
+        private boolean processDeepLinkByRegionList(BaseActivity baseActivity, List<Province> provinceList, List<Area> areaList)
+        {
+            if (DailyDeepLink.getInstance().isGourmetListView() == true)
+            {
+                unLockUI();
+
+                return moveDeepLinkGourmetList(provinceList, areaList);
+            } else
+            {
+                DailyDeepLink.getInstance().clear();
+            }
+
+            return false;
+        }
+
+        private Province searchLastRegion(BaseActivity baseActivity, List<Province> provinceList, List<Area> areaList)
+        {
+            Province selectedProvince = null;
+
+            // 마지막으로 선택한 지역을 가져온다.
+            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
+
+            if (Util.isTextEmpty(regionName) == true)
+            {
+                selectedProvince = provinceList.get(0);
+            }
+
+            if (selectedProvince == null)
+            {
+                for (Province province : provinceList)
+                {
+                    if (province.name.equals(regionName) == true)
+                    {
+                        selectedProvince = province;
+                        break;
+                    }
+                }
+
+                if (selectedProvince == null)
+                {
+                    for (Area area : areaList)
+                    {
+                        if (area.name.equals(regionName) == true)
+                        {
+                            for (Province province : provinceList)
+                            {
+                                if (area.getProvinceIndex() == province.index)
+                                {
+                                    area.isOverseas = province.isOverseas;
+                                    area.setProvince(province);
+                                    break;
+                                }
+                            }
+
+                            selectedProvince = area;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return selectedProvince;
         }
     };
 
@@ -379,7 +491,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
 
         if (Util.isTextEmpty(url) == false)
         {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null, mTodaySaleTime);
+            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null, GourmetCurationManager.getInstance().getSaleTime());
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             mIsDeepLink = true;
 
@@ -419,11 +531,11 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         return true;
     }
 
-    private void moveDeepLinkGourmetList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    private boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
-        mCurationOption.setSortType(DailyDeepLink.getInstance().getSorting());
+        GourmetCurationManager.getInstance().setSortType(DailyDeepLink.getInstance().getSorting());
 
         int provinceIndex;
         int areaIndex;
@@ -449,145 +561,76 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
 
         if (selectedProvince == null)
         {
-            selectedProvince = getProvince();
+            selectedProvince = GourmetCurationManager.getInstance().getProvince();
         }
 
-        setProvince(selectedProvince);
-
-        mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
-        mDailyToolbarLayout.setToolbarMenuVisibility(true);
+        GourmetCurationManager.getInstance().setProvince(selectedProvince);
+        mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
+        DailyDeepLink.getInstance().clear();
 
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
             try
             {
-                mTabLayout.setOnTabSelectedListener(null);
-                mTabLayout.setScrollPosition(2, 0f, true);
-                mViewPager.setCurrentItem(2);
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-                DailyDeepLink.getInstance().clear();
-
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
+                SaleTime saleTime = GourmetCurationManager.getInstance().getSaleTime();
                 Date schemeDate = format.parse(date);
-                Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+                Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
                 int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 
                 if (dailyDayOfDays >= 0)
                 {
-                    SaleTime selectedSaleTime = mTodaySaleTime.getClone(dailyDayOfDays);
+                    SaleTime deepLinkSaleTime = saleTime.getClone(dailyDayOfDays);
 
-                    deepLinkRefreshBanner(selectedSaleTime);
+                    // 리스트 요청하면 됨.
+                    String dateText = deepLinkSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+                    mPlaceMainLayout.setToolbarDateText(dateText);
+
+                    // 특정 날짜 고메 리스트 요청
+                    mOnCommunicateListener.selectDay(deepLinkSaleTime, true);
                 } else
                 {
-                    DailyDeepLink.getInstance().clear();
-                    refreshEventBanner();
+                    return false;
                 }
             } catch (Exception e)
             {
-                mTabLayout.setOnTabSelectedListener(null);
-                mTabLayout.setScrollPosition(0, 0f, true);
-                mViewPager.setCurrentItem(0);
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-
-                DailyDeepLink.getInstance().clear();
-                refreshEventBanner();
+                return false;
             }
         } else if (datePlus >= 0)
         {
+            SaleTime saleTime = GourmetCurationManager.getInstance().getSaleTime();
+
             try
             {
-                mTabLayout.setOnTabSelectedListener(null);
-                mTabLayout.setScrollPosition(2, 0f, true);
-                mViewPager.setCurrentItem(2);
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-                DailyDeepLink.getInstance().clear();
+                SaleTime deepLinkSaleTime = saleTime.getClone(datePlus);
 
-                SaleTime selectedSaleTime = mTodaySaleTime.getClone(datePlus);
+                // 리스트 요청하면 됨.
+                String dateText = deepLinkSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+                mPlaceMainLayout.setToolbarDateText(dateText);
 
-                deepLinkRefreshBanner(selectedSaleTime);
+                mOnCommunicateListener.selectDay(deepLinkSaleTime, true);
             } catch (Exception e)
             {
-                mTabLayout.setOnTabSelectedListener(null);
-                mTabLayout.setScrollPosition(0, 0f, true);
-                mViewPager.setCurrentItem(0);
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-
-                DailyDeepLink.getInstance().clear();
-                refreshEventBanner();
+                return false;
             }
         } else
         {
-            DailyDeepLink.getInstance().clear();
-            refreshEventBanner();
-        }
-    }
-
-    private Province searchDeeLinkRegion(ArrayList<Province> provinceList, ArrayList<Area> areaList)
-    {
-        Province selectedProvince = null;
-
-        try
-        {
-            int provinceIndex = Integer.parseInt(DailyDeepLink.getInstance().getProvinceIndex());
-            int areaIndex = -1;
-
-            try
-            {
-                areaIndex = Integer.parseInt(DailyDeepLink.getInstance().getAreaIndex());
-            } catch (Exception e)
-            {
-            }
-
-            if (areaIndex == -1)
-            {
-                // 전체 지역으로 이동
-                for (Province province : provinceList)
-                {
-                    if (province.index == provinceIndex)
-                    {
-                        selectedProvince = province;
-                        break;
-                    }
-                }
-            } else
-            {
-                // 소지역으로 이동
-                for (Area area : areaList)
-                {
-                    if (area.index == areaIndex)
-                    {
-                        for (Province province : provinceList)
-                        {
-                            if (area.getProvinceIndex() == province.index)
-                            {
-                                area.setProvince(province);
-                                break;
-                            }
-                        }
-
-                        selectedProvince = area;
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
+            return false;
         }
 
-        return selectedProvince;
+        return true;
     }
 
-    private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, List<Province> provinceList, List<Area> areaList)
     {
-        Province selectedProvince = null;
-
         if (provinceIndex < 0 && areaIndex < 0)
         {
-            return searchDeeLinkRegion(provinceList, areaList);
+            return null;
         }
+
+        Province selectedProvince = null;
 
         try
         {
