@@ -1,76 +1,44 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.HotelCurationOption;
-import com.twoheart.dailyhotel.model.PlaceCurationOption;
-import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 public class StayMainFragment extends PlaceMainFragment
 {
-    private SaleTime mTodaySaleTime;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        mTodaySaleTime = new SaleTime();
-
-        return view;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
@@ -81,161 +49,13 @@ public class StayMainFragment extends PlaceMainFragment
     @Override
     protected PlaceMainLayout getPlaceMainLayout(Context context)
     {
-        return new StayMainLayout(mBaseActivity, new PlaceMainLayout.OnEventListener()
-        {
-            @Override
-            public void onCategoryTabSelected(TabLayout.Tab tab)
-            {
-
-            }
-
-            @Override
-            public void onCategoryTabUnselected(TabLayout.Tab tab)
-            {
-
-            }
-
-            @Override
-            public void onCategoryTabReselected(TabLayout.Tab tab)
-            {
-
-            }
-
-            @Override
-            public void onSearchClick()
-            {
-
-            }
-
-            @Override
-            public void onDateClick()
-            {
-
-            }
-
-            @Override
-            public void onRegionClick()
-            {
-
-            }
-
-            @Override
-            public void onViewTypeClick()
-            {
-
-            }
-
-            @Override
-            public void onFilterClick()
-            {
-
-            }
-
-            @Override
-            public void finish()
-            {
-
-            }
-        });
+        return new StayMainLayout(mBaseActivity, mOnEventListener);
     }
 
     @Override
     protected PlaceMainNetworkController getPlaceMainNetworkController(Context context)
     {
-        return new StayMainNetworkController(mBaseActivity, mNetworkTag, new PlaceMainNetworkController.OnNetworkControllerListener()
-        {
-            @Override
-            public void onDateTime(long currentDateTime, long dailyDateTime)
-            {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    mTodaySaleTime.setCurrentTime(currentDateTime);
-                    mTodaySaleTime.setDailyTime(dailyDateTime);
-
-                    if (DailyDeepLink.getInstance().isValidateLink() == true //
-                        && processDeepLink(baseActivity) == true)
-                    {
-
-                    } else
-                    {
-                        // 지역 리스트를 가져온다
-                        DailyNetworkAPI.getInstance(baseActivity).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-                    unLockUI();
-                }
-            }
-
-            @Override
-            public void onEventBanner(List<EventBanner> eventBannerList)
-            {
-
-            }
-
-            @Override
-            public void onRegionList()
-            {
-
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-
-            }
-
-            @Override
-            public void onError(Exception e)
-            {
-
-            }
-
-            @Override
-            public void onErrorPopupMessage(int msgCode, String message)
-            {
-
-            }
-
-            @Override
-            public void onErrorToastMessage(String message)
-            {
-
-            }
-
-            private boolean processDeepLink(BaseActivity baseActivity)
-            {
-                if (DailyDeepLink.getInstance().isHotelDetailView() == true)
-                {
-                    unLockUI();
-                    deepLinkDetail(baseActivity);
-                    return true;
-                } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
-                {
-                    unLockUI();
-                    deepLinkEventBannerWeb(baseActivity);
-                    return true;
-                } else
-                {
-                    // 더이상 진입은 없다.
-                    if (DailyDeepLink.getInstance().isHotelListView() == false//
-                        && DailyDeepLink.getInstance().isHotelRegionListView() == false)
-                    {
-                        DailyDeepLink.getInstance().clear();
-                    }
-                }
-
-                return false;
-            }
-        });
+        return new StayMainNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -501,7 +321,7 @@ public class StayMainFragment extends PlaceMainFragment
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void deepLinkDetail(BaseActivity baseActivity)
+    private boolean deepLinkDetail(BaseActivity baseActivity)
     {
         try
         {
@@ -574,7 +394,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
     }
 
-    private Province searchDeeLinkRegion(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    private Province searchDeeLinkRegion(List<Province> provinceList, List<Area> areaList)
     {
         Province selectedProvince = null;
 
@@ -683,26 +503,40 @@ public class StayMainFragment extends PlaceMainFragment
         return selectedProvince;
     }
 
-    private void deepLinkRegionList(BaseActivity baseActivity, ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    private boolean moveDeepLinkRegionList(BaseActivity baseActivity)
     {
-        Province selectedProvince = searchDeeLinkRegion(provinceList, areaList);
+        int provinceIndex = -1;
+        int areaIndex = -1;
 
-        if (selectedProvince == null)
+        try
         {
-            selectedProvince = getProvince();
+            provinceIndex = Integer.parseInt(DailyDeepLink.getInstance().getProvinceIndex());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
 
-        setProvince(selectedProvince);
+        try
+        {
+            areaIndex = Integer.parseInt(DailyDeepLink.getInstance().getAreaIndex());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
-        mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
-        mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
-        Intent intent = HotelRegionListActivity.newInstance(baseActivity, selectedProvince, mTodaySaleTime, 1);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+        int night = StayCurationManager.getInstance().getCheckInSaleTime().getOffsetDailyDay();
 
-        DailyDeepLink.getInstance().clear();
-        mIsDeepLink = true;
-    }
+
+        Intent intent = HotelRegionListActivity.newInstance(mBaseActivity, provinceIndex, areaIndex, SaleTime saleTime, 1);
+        {
+
+            Intent intent = HotelRegionListActivity.newInstance(baseActivity, selectedProvince, mTodaySaleTime, 1);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+            DailyDeepLink.getInstance().clear();
+            mIsDeepLink = true;
+        }
 
     private void deepLinkRefreshBanner(final SaleTime checkInSaleTime, final SaleTime checkOutSaleTime)
     {
@@ -792,6 +626,8 @@ public class StayMainFragment extends PlaceMainFragment
             }
         }
 
+        DailyDeepLink.getInstance().clear();
+
         // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
         if (Util.isTextEmpty(date) == false)
         {
@@ -821,8 +657,7 @@ public class StayMainFragment extends PlaceMainFragment
                     deepLinkRefreshBanner(checkInSaleTime, checkOutSaleTime);
                 } else
                 {
-                    DailyDeepLink.getInstance().clear();
-                    refreshEventBanner();
+                    return false;
                 }
             } catch (Exception e)
             {
@@ -912,5 +747,281 @@ public class StayMainFragment extends PlaceMainFragment
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    PlaceMainLayout.OnEventListener mOnEventListener = new PlaceMainLayout.OnEventListener()
+    {
+        @Override
+        public void onCategoryTabSelected(TabLayout.Tab tab)
+        {
+
+        }
+
+        @Override
+        public void onCategoryTabUnselected(TabLayout.Tab tab)
+        {
+
+        }
+
+        @Override
+        public void onCategoryTabReselected(TabLayout.Tab tab)
+        {
+
+        }
+
+        @Override
+        public void onSearchClick()
+        {
+
+        }
+
+        @Override
+        public void onDateClick()
+        {
+
+        }
+
+        @Override
+        public void onRegionClick()
+        {
+
+        }
+
+        @Override
+        public void onViewTypeClick()
+        {
+
+        }
+
+        @Override
+        public void onFilterClick()
+        {
+
+        }
+
+        @Override
+        public void finish()
+        {
+
+        }
+    };
+
+    PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onDateTime(long currentDateTime, long dailyDateTime)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                StayCurationManager.getInstance().setCheckInSaleTime(currentDateTime, dailyDateTime);
+                StayCurationManager.getInstance().setCheckOutSaleTime(StayCurationManager.getInstance().getCheckInSaleTime().getClone(1));
+
+                if (DailyDeepLink.getInstance().isValidateLink() == true //
+                    && processDeepLinkByDateTime(mBaseActivity) == true)
+                {
+
+                } else
+                {
+                    mPlaceMainNetworkController.requestEventBanner();
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                unLockUI();
+            }
+        }
+
+        @Override
+        public void onEventBanner(List<EventBanner> eventBannerList)
+        {
+            StayEventBannerManager.getInstance().setList(eventBannerList);
+
+            mPlaceMainNetworkController.requestRegionList();
+        }
+
+        @Override
+        public void onRegionList(List<Province> provinceList, List<Area> areaList)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            Province selectedProvince = StayCurationManager.getInstance().getProvince();
+
+            if (selectedProvince == null)
+            {
+                selectedProvince = searchLastRegion(mBaseActivity, provinceList, areaList);
+            }
+
+            // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
+            if (selectedProvince == null)
+            {
+                selectedProvince = provinceList.get(0);
+            }
+
+            // 처음 시작시에는 지역이 Area로 저장된 경우 Province로 변경하기 위한 저장값.
+            boolean mIsProvinceSetting = DailyPreference.getInstance(mBaseActivity).isSettingRegion(PlaceType.HOTEL);
+            DailyPreference.getInstance(mBaseActivity).setSettingRegion(PlaceType.HOTEL, true);
+
+            // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
+            if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+            {
+                int provinceIndex = selectedProvince.getProvinceIndex();
+
+                for (Province province : provinceList)
+                {
+                    if (province.getProvinceIndex() == provinceIndex)
+                    {
+                        selectedProvince = province;
+                        break;
+                    }
+                }
+            }
+
+            StayCurationManager.getInstance().setProvince(selectedProvince);
+
+            if (DailyDeepLink.getInstance().isValidateLink() == true//
+                && processDeepLinkForOnReginLink(mBaseActivity, provinceList, areaList) == true)
+            {
+
+            } else
+            {
+                // stay list refresh
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            StayMainFragment.this.onErrorResponse(volleyError);
+        }
+
+        @Override
+        public void onError(Exception e)
+        {
+            StayMainFragment.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            StayMainFragment.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            StayMainFragment.this.onErrorToastMessage(message);
+        }
+
+        private Province searchLastRegion(BaseActivity baseActivity, //
+                                          List<Province> provinceList, //
+                                          List<Area> areaList)
+        {
+            Province selectedProvince = null;
+
+            // 마지막으로 선택한 지역을 가져온다.
+            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
+
+            if (Util.isTextEmpty(regionName) == true)
+            {
+                selectedProvince = provinceList.get(0);
+            }
+
+            if (selectedProvince == null)
+            {
+                for (Province province : provinceList)
+                {
+                    if (province.name.equals(regionName) == true)
+                    {
+                        selectedProvince = province;
+                        break;
+                    }
+                }
+
+                if (selectedProvince == null)
+                {
+                    for (Area area : areaList)
+                    {
+                        if (area.name.equals(regionName) == true)
+                        {
+                            for (Province province : provinceList)
+                            {
+                                if (area.getProvinceIndex() == province.index)
+                                {
+                                    area.isOverseas = province.isOverseas;
+                                    area.setProvince(province);
+                                    break;
+                                }
+                            }
+
+                            selectedProvince = area;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return selectedProvince;
+        }
+
+        // onRegionList
+        private boolean processDeepLinkForOnReginLink(BaseActivity baseActivity, //
+                                                      List<Province> provinceList, //
+                                                      List<Area> areaList)
+        {
+            if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
+            {
+                unLockUI();
+                deepLinkRegionList(baseActivity, provinceList, areaList);
+                return true;
+            } else if (DailyDeepLink.getInstance().isHotelListView() == true)
+            {
+                unLockUI();
+                deepLinkHotelList(provinceList, areaList);
+                return true;
+            } else
+            {
+                DailyDeepLink.getInstance().clear();
+            }
+
+            return false;
+        }
+
+        // onDateTime
+        private boolean processDeepLinkByDateTime(BaseActivity baseActivity)
+        {
+            if (DailyDeepLink.getInstance().isHotelDetailView() == true)
+            {
+                unLockUI();
+
+                return mvoeDeepLinkDetail(baseActivity);
+            } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
+            {
+                unLockUI();
+
+                return deepLinkEventBannerWeb(baseActivity);
+            } else if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
+            {
+                unLockUI();
+
+                return moveDeepLinkRegionList(mBaseActivity);
+            } else
+            {
+                // 더이상 진입은 없다.
+                if (DailyDeepLink.getInstance().isHotelListView() == false)
+                {
+                    DailyDeepLink.getInstance().clear();
+                }
+            }
+
+            return false;
+        }
+    };
 
 }

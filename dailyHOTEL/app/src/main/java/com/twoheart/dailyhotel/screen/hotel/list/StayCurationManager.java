@@ -1,13 +1,12 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.location.Location;
-import android.os.Parcel;
 
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.HotelFilter;
 import com.twoheart.dailyhotel.model.HotelFilters;
-import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -30,7 +29,31 @@ public class StayCurationManager
 
     private ArrayList<HotelFilters> mHotelFiltersList;
 
-    public synchronized StayCurationManager getInstance()
+    private SaleTime mCheckInSaleTime;
+    private SaleTime mCheckOutSaleTime;
+
+    public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
+    {
+        mCheckInSaleTime.setCurrentTime(currentDateTime);
+        mCheckInSaleTime.setDailyTime(dailyDateTime);
+    }
+
+    public void setCheckInSaleTime(SaleTime saleTime)
+    {
+        mCheckInSaleTime = saleTime;
+    }
+
+    public void setCheckOutSaleTime(SaleTime saleTime)
+    {
+        mCheckOutSaleTime = saleTime;
+    }
+
+    public SaleTime getCheckInSaleTime()
+    {
+        return mCheckInSaleTime;
+    }
+
+    public static synchronized StayCurationManager getInstance()
     {
         if(mInstance == null)
         {
@@ -44,6 +67,10 @@ public class StayCurationManager
     {
         mCategory = Category.ALL;
         mHotelFiltersList = new ArrayList<>();
+
+        mCheckInSaleTime = new SaleTime();
+        mCheckOutSaleTime = new SaleTime();
+
 
         clear();
     }

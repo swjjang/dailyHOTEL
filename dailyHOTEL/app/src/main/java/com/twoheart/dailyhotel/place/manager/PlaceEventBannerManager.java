@@ -12,23 +12,11 @@ import java.util.List;
 /**
  * Created by sheldon on 2016. 6. 17..
  */
-public class PlaceEventBannerManager
+public abstract class PlaceEventBannerManager
 {
-    private static PlaceEventBannerManager mInstance;
+    private List<EventBanner> mEventBannerList;
 
-    public List<EventBanner> mEventBannerList;
-
-    public synchronized PlaceEventBannerManager getInstance()
-    {
-        if(mInstance == null)
-        {
-            mInstance = new PlaceEventBannerManager();
-        }
-
-        return mInstance;
-    }
-
-    private PlaceEventBannerManager()
+    public PlaceEventBannerManager()
     {
         mEventBannerList = new ArrayList<>();
     }
