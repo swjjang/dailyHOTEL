@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
+import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
@@ -59,60 +62,222 @@ public class StayMainFragment extends PlaceMainFragment
 {
     private SaleTime mTodaySaleTime;
 
-    private StayMainLayout mStayMainLayout;
-    private StayMainNetworkController mStayMainNetworkController;
-    private BaseActivity mBaseActivity;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        mBaseActivity = (BaseActivity) getActivity();
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        mStayMainLayout = new StayMainLayout(mBaseActivity, null);
-        mStayMainNetworkController = new StayMainNetworkController(mBaseActivity, mNetworkTag, null);
-
-        mViewType = ViewType.LIST;
         mTodaySaleTime = new SaleTime();
 
-        return mStayMainLayout.onCreateView(R.layout.fragment_hotel_main, container);
-    }
-
-    @Override
-    public void onResume()
-    {
-        if (mDontReloadAtOnResume == true)
-        {
-            mDontReloadAtOnResume = false;
-        } else
-        {
-            if (mBaseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            lockUI();
-
-            mStayMainNetworkController.requestDateTime();
-        }
-
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
+        return view;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
+        // 아마도 위치 정보
+    }
+
+    @Override
+    protected PlaceMainLayout getPlaceMainLayout(Context context)
+    {
+        return new StayMainLayout(mBaseActivity, new PlaceMainLayout.OnEventListener()
+        {
+            @Override
+            public void onCategoryTabSelected(TabLayout.Tab tab)
+            {
+
+            }
+
+            @Override
+            public void onCategoryTabUnselected(TabLayout.Tab tab)
+            {
+
+            }
+
+            @Override
+            public void onCategoryTabReselected(TabLayout.Tab tab)
+            {
+
+            }
+
+            @Override
+            public void onSearchClick()
+            {
+
+            }
+
+            @Override
+            public void onDateClick()
+            {
+
+            }
+
+            @Override
+            public void onRegionClick()
+            {
+
+            }
+
+            @Override
+            public void onViewTypeClick()
+            {
+
+            }
+
+            @Override
+            public void onFilterClick()
+            {
+
+            }
+
+            @Override
+            public void finish()
+            {
+
+            }
+        });
+    }
+
+    @Override
+    protected PlaceMainNetworkController getPlaceMainNetworkController(Context context)
+    {
+        return new StayMainNetworkController(mBaseActivity, mNetworkTag, new PlaceMainNetworkController.OnNetworkControllerListener()
+        {
+            @Override
+            public void onDateTime(long currentDateTime, long dailyDateTime)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null)
+                {
+                    return;
+                }
+
+                try
+                {
+                    mTodaySaleTime.setCurrentTime(currentDateTime);
+                    mTodaySaleTime.setDailyTime(dailyDateTime);
+
+                    if (DailyDeepLink.getInstance().isValidateLink() == true //
+                        && processDeepLink(baseActivity) == true)
+                    {
+
+                    } else
+                    {
+                        // 지역 리스트를 가져온다
+                        DailyNetworkAPI.getInstance(baseActivity).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
+                    }
+                } catch (Exception e)
+                {
+                    onError(e);
+                    unLockUI();
+                }
+            }
+
+            @Override
+            public void onEventBanner(List<EventBanner> eventBannerList)
+            {
+
+            }
+
+            @Override
+            public void onRegionList()
+            {
+
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+
+            }
+
+            @Override
+            public void onErrorPopupMessage(int msgCode, String message)
+            {
+
+            }
+
+            @Override
+            public void onErrorToastMessage(String message)
+            {
+
+            }
+
+            private boolean processDeepLink(BaseActivity baseActivity)
+            {
+                if (DailyDeepLink.getInstance().isHotelDetailView() == true)
+                {
+                    unLockUI();
+                    deepLinkDetail(baseActivity);
+                    return true;
+                } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
+                {
+                    unLockUI();
+                    deepLinkEventBannerWeb(baseActivity);
+                    return true;
+                } else
+                {
+                    // 더이상 진입은 없다.
+                    if (DailyDeepLink.getInstance().isHotelListView() == false//
+                        && DailyDeepLink.getInstance().isHotelRegionListView() == false)
+                    {
+                        DailyDeepLink.getInstance().clear();
+                    }
+                }
+
+                return false;
+            }
+        });
+    }
+
+    @Override
+    protected void onRegionActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onSettingLocationActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onLocationFailed()
+    {
+
+    }
+
+    @Override
+    protected void onLocationProviderDisabled()
+    {
+
+    }
+
+    @Override
+    protected void onLocationChanged(Location location)
+    {
+
     }
 
     private String makeTabDateFormat(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
@@ -138,8 +303,6 @@ public class StayMainFragment extends PlaceMainFragment
 
     private void curationCurrentFragment()
     {
-        updateFilteredFloatingActionButton();
-
         HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
         currentFragment.curationList(mViewType, mCurationOption);
     }
@@ -148,11 +311,6 @@ public class StayMainFragment extends PlaceMainFragment
     {
         HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
         currentFragment.refreshList(list);
-    }
-
-    private void refreshEventBanner()
-    {
-        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, mEventBannerListJsonResponseListener);
     }
 
     private void refreshCurrentFragment(Province province)
@@ -343,7 +501,7 @@ public class StayMainFragment extends PlaceMainFragment
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private boolean moveDeepLinkDetail(BaseActivity baseActivity)
+    private void deepLinkDetail(BaseActivity baseActivity)
     {
         try
         {
@@ -366,7 +524,7 @@ public class StayMainFragment extends PlaceMainFragment
                 }
             } else
             {
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
@@ -382,16 +540,21 @@ public class StayMainFragment extends PlaceMainFragment
 
             DailyDeepLink.getInstance().clear();
             mIsDeepLink = true;
-            return true;
         } catch (Exception e)
         {
+            ExLog.d(e.toString());
 
+            DailyDeepLink.getInstance().clear();
+
+            //탭에 들어갈 날짜를 만든다.
+            makeDateTabLayout();
+
+            // 지역 리스트를 가져온다
+            DailyNetworkAPI.getInstance(baseActivity).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
         }
-
-        return false;
     }
 
-    private boolean moveDeepLinkEventBannerWeb(BaseActivity baseActivity)
+    private void deepLinkEventBannerWeb(BaseActivity baseActivity)
     {
         String url = DailyDeepLink.getInstance().getUrl();
         DailyDeepLink.getInstance().clear();
@@ -401,11 +564,13 @@ public class StayMainFragment extends PlaceMainFragment
             Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, null, mTodaySaleTime);
             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
             mIsDeepLink = true;
-
-            return true;
         } else
         {
-            return false;
+            //탭에 들어갈 날짜를 만든다.
+            makeDateTabLayout();
+
+            // 지역 리스트를 가져온다
+            DailyNetworkAPI.getInstance(baseActivity).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
         }
     }
 
@@ -518,49 +683,25 @@ public class StayMainFragment extends PlaceMainFragment
         return selectedProvince;
     }
 
-    private boolean moveDeepLinkRegionList(BaseActivity baseActivity)
+    private void deepLinkRegionList(BaseActivity baseActivity, ArrayList<Province> provinceList, ArrayList<Area> areaList)
     {
-        int provinceIndex = -1;
-        int areaIndex = -1;
+        Province selectedProvince = searchDeeLinkRegion(provinceList, areaList);
 
-        try
+        if (selectedProvince == null)
         {
-            provinceIndex = Integer.parseInt(DailyDeepLink.getInstance().getProvinceIndex());
-
-            if (provinceIndex < 0)
-            {
-                return false;
-            }
-        } catch (Exception e)
-        {
-            return false;
+            selectedProvince = getProvince();
         }
 
-        try
-        {
-            areaIndex = Integer.parseInt(DailyDeepLink.getInstance().getAreaIndex());
+        setProvince(selectedProvince);
 
-            if (areaIndex < 0)
-            {
-                return false;
-            }
-        } catch (Exception e)
-        {
+        mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
+        mDailyToolbarLayout.setToolbarMenuVisibility(true);
 
-        }
-
-        boolean isOverseas = DailyDeepLink.getInstance().getIsOverseas();
-
-
-        //        mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
-        //        mDailyToolbarLayout.setToolbarMenuVisibility(true);
-
-        Intent intent = HotelRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, mTodaySaleTime, 1);
+        Intent intent = HotelRegionListActivity.newInstance(baseActivity, selectedProvince, mTodaySaleTime, 1);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         DailyDeepLink.getInstance().clear();
         mIsDeepLink = true;
-        return true;
     }
 
     private void deepLinkRefreshBanner(final SaleTime checkInSaleTime, final SaleTime checkOutSaleTime)
@@ -585,7 +726,7 @@ public class StayMainFragment extends PlaceMainFragment
         DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", deepLinkEventListener, deepLinkEventListener);
     }
 
-    private boolean moveDeepLinkHotelList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    private void deepLinkHotelList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
     {
         String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
         String date = DailyDeepLink.getInstance().getDate();
@@ -662,7 +803,7 @@ public class StayMainFragment extends PlaceMainFragment
                 mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
                 DailyDeepLink.getInstance().clear();
 
-                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
                 Date schemeDate = format.parse(date);
                 Date dailyDate = format.parse(mTodaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
@@ -725,6 +866,46 @@ public class StayMainFragment extends PlaceMainFragment
         {
             DailyDeepLink.getInstance().clear();
             refreshEventBanner();
+        }
+    }
+
+    private void setEventBannerJson(JSONObject jsonObject)
+    {
+        try
+        {
+            int msgCode = jsonObject.getInt("msgCode");
+
+            if (msgCode == 100)
+            {
+                JSONObject dataJSONObject = jsonObject.getJSONObject("data");
+
+                String baseUrl = dataJSONObject.getString("imgUrl");
+
+                JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
+
+                if (mEventBannerList == null)
+                {
+                    mEventBannerList = new ArrayList<>();
+                }
+
+                mEventBannerList.clear();
+
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    try
+                    {
+                        EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
+                        mEventBannerList.add(eventBanner);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 

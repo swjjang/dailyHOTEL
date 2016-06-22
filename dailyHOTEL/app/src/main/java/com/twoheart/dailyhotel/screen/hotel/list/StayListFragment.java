@@ -116,6 +116,8 @@ public class StayListFragment extends BaseFragment implements Constants
         }
     }
 
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {

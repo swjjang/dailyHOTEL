@@ -134,7 +134,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     {
         int count = mCategoryTabLayout.getTabCount();
 
-        for(int i = 0; i< count)
+//        for(int i = 0; i< count)
     }
 
     public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//

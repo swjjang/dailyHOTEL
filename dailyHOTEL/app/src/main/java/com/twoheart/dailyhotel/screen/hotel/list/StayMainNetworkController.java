@@ -1,68 +1,29 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.HotelCurationOption;
-import com.twoheart.dailyhotel.model.PlaceCurationOption;
-import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.place.manager.PlaceEventBannerManager;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.event.EventWebActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
-import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
-import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.widget.DailyFloatingActionButtonBehavior;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 public class StayMainNetworkController extends PlaceMainNetworkController
 {
@@ -73,12 +34,12 @@ public class StayMainNetworkController extends PlaceMainNetworkController
 
     public void requestEventBanner()
     {
-
+        DailyNetworkAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener);
     }
 
     public void requestRegionList()
     {
-
+        DailyNetworkAPI.getInstance(mContext).requestHotelRegionList(mNetworkTag, mRegionListJsonResponseListener, baseActivity);
     }
 
 
