@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -831,14 +830,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
     private void refreshEventBanner()
     {
-        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                refreshCurrentFragment(getProvince());
-            }
-        });
+        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", mEventBannerListJsonResponseListener);
     }
 
     private void refreshCurrentFragment(Province province)
@@ -1227,7 +1219,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             }
         };
 
-        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", deepLinkEventListener, deepLinkEventListener);
+        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", deepLinkEventListener);
     }
 
     private void deepLinkHotelList(ArrayList<Province> provinceList, ArrayList<Area> areaList)

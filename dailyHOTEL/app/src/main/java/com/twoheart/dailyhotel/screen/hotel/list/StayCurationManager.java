@@ -53,9 +53,14 @@ public class StayCurationManager
         return mCheckInSaleTime;
     }
 
+    public SaleTime getCheckOutSaleTime()
+    {
+        return mCheckOutSaleTime;
+    }
+
     public static synchronized StayCurationManager getInstance()
     {
-        if(mInstance == null)
+        if (mInstance == null)
         {
             mInstance = new StayCurationManager();
         }

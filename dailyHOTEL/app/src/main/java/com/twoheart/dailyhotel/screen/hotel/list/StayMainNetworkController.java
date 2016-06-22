@@ -57,7 +57,6 @@ public class StayMainNetworkController extends PlaceMainNetworkController
             try
             {
                 int msgCode = response.getInt("msgCode");
-
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
