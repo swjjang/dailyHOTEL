@@ -858,8 +858,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         DailyNetworkAPI.getInstance(LoginActivity.this).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
-
-                        requestGoogleCloudMessagingId(userIndex);
                         return;
                     }
                 }
@@ -917,8 +915,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         mStoreParams.put("user_idx", userIndex);
                         mStoreParams.put("user_type", userType);
                     }
-
-                    requestGoogleCloudMessagingId(userIndex);
                 } else
                 {
                     mIsSocialSignUp = false;
@@ -956,6 +952,21 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                 DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
                 AppboyManager.setPushEnabled(LoginActivity.this, isAgreedBenefit);
+
+                String userIndex = response.getString("idx");
+                boolean isVerified = response.getBoolean("is_verified");
+                boolean isPhoneVerified = response.getBoolean("is_phone_verified");
+
+                if (isVerified == true && isPhoneVerified == true)
+                {
+                    DailyPreference.getInstance(LoginActivity.this).setVerification(true);
+                } else if (isVerified == true && isPhoneVerified == false)
+                {
+                    // 로그인시에 인증이 해지된 경우 알림 팝업을 띄운다.
+                    mCertifyingTermination = true;
+                }
+
+                requestGoogleCloudMessagingId(userIndex);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
