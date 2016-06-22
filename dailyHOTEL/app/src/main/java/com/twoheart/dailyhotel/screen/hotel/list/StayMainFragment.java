@@ -602,13 +602,12 @@ public class StayMainFragment extends PlaceMainFragment
 
         if (selectedProvince == null)
         {
-            selectedProvince = getProvince();
+            selectedProvince = StayCurationManager.getInstance().getProvince();
         }
 
-        setProvince(selectedProvince);
+        StayCurationManager.getInstance().setProvince(selectedProvince);
 
-        mDailyToolbarLayout.setToolbarRegionText(selectedProvince.name);
-        mDailyToolbarLayout.setToolbarMenuVisibility(true);
+        mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
 
         // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
         if (Util.isTextEmpty(categoryCode) == false)
@@ -617,7 +616,7 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 if (category.code.equalsIgnoreCase(categoryCode) == true)
                 {
-                    setCategory(category);
+                    StayCurationManager.getInstance().setCategory(category);
                     break;
                 }
             }
@@ -630,12 +629,6 @@ public class StayMainFragment extends PlaceMainFragment
         {
             try
             {
-                mTabLayout.setOnTabSelectedListener(null);
-                mTabLayout.setScrollPosition(2, 0f, true);
-                mViewPager.setCurrentItem(2);
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-                DailyDeepLink.getInstance().clear();
-
                 SaleTime todaySaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
 
                 SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
@@ -650,35 +643,22 @@ public class StayMainFragment extends PlaceMainFragment
                     SaleTime checkInSaleTime = todaySaleTime.getClone(dailyDayOfDays);
                     SaleTime checkOutSaleTime = todaySaleTime.getClone(dailyDayOfDays + night);
 
-                    HotelDaysListFragment hotelListFragment = (HotelDaysListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+                    StayListFragment hotelListFragment = (StayListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
                     hotelListFragment.setCheckInSaleTime(checkInSaleTime);
                     hotelListFragment.setCheckOutSaleTime(checkOutSaleTime);
 
-                    deepLinkRefreshBanner(checkInSaleTime, checkOutSaleTime);
                 } else
                 {
                     return false;
                 }
             } catch (Exception e)
             {
-                mTabLayout.setOnTabSelectedListener(null);
-                mTabLayout.setScrollPosition(0, 0f, true);
-                mViewPager.setCurrentItem(0);
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-
-                DailyDeepLink.getInstance().clear();
-                refreshEventBanner();
+                return false;
             }
         } else if (datePlus >= 0)
         {
             try
             {
-                mTabLayout.setOnTabSelectedListener(null);
-                mTabLayout.setScrollPosition(2, 0f, true);
-                mViewPager.setCurrentItem(2);
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-                DailyDeepLink.getInstance().clear();
-
                 SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(datePlus);
                 SaleTime checkOutSaleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(datePlus + night);
 
@@ -686,21 +666,13 @@ public class StayMainFragment extends PlaceMainFragment
                 hotelListFragment.setCheckInSaleTime(checkInSaleTime);
                 hotelListFragment.setCheckOutSaleTime(checkOutSaleTime);
 
-                deepLinkRefreshBanner(checkInSaleTime, checkOutSaleTime);
             } catch (Exception e)
             {
-                mTabLayout.setOnTabSelectedListener(null);
-                mTabLayout.setScrollPosition(0, 0f, true);
-                mViewPager.setCurrentItem(0);
-                mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-
-                DailyDeepLink.getInstance().clear();
-                refreshEventBanner();
+                return false;
             }
         } else
         {
-            DailyDeepLink.getInstance().clear();
-            refreshEventBanner();
+            return false;
         }
     }
 
