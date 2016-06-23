@@ -15,10 +15,29 @@
  */
 package com.twoheart.dailyhotel.place.fragment;
 
+import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 
 public abstract class PlaceListFragment extends BaseFragment implements Constants
 {
+    private OnPlaceListFragmentListener mOnPlaceListFragmentListener;
+
+    public interface OnPlaceListFragmentListener
+    {
+        void onPlaceClick(PlaceViewItem placeViewItem, SaleTime saleTime);
+
+        void onEventBannerClick(EventBanner eventBanner);
+    }
+
     public abstract void refreshList();
+
+    public abstract void setVisibility(ViewType viewType, boolean isCurrentPage);
+
+    public void setListFragmentListener(OnPlaceListFragmentListener listener)
+    {
+        mOnPlaceListFragmentListener = listener;
+    }
 }

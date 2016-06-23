@@ -126,6 +126,12 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
     private void updateLayout(boolean isLogin)
     {
+        if (mSigninButtonLayout == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         if (isLogin == true)
         {
             mSigninButtonLayout.setVisibility(View.VISIBLE);

@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PlaceMainLayout extends BaseLayout implements View.OnClickListener
@@ -219,6 +220,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     public PlaceListFragment getCurrentPlaceListFragment()
     {
         return (PlaceListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+    }
+
+    public ArrayList<PlaceListFragment> getPlaceListFragment()
+    {
+        return mFragmentPagerAdapter.getFragmentList();
     }
 
     @Override

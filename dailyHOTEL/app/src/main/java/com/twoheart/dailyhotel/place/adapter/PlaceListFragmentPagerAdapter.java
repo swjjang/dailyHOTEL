@@ -5,15 +5,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.ArrayList;
 
-public class PlaceListFragmentPagerAdapter extends FragmentStatePagerAdapter
+public class PlaceListFragmentPagerAdapter<T> extends FragmentStatePagerAdapter
 {
     private ArrayList<PlaceListFragment> mFragmentList;
     private int mTabCount;
+    protected Class<T> classT;
 
-    public PlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, PlaceListFragment.OnListFragmentListener listener)
+    public PlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         super(fragmentManager);
 
@@ -24,9 +26,18 @@ public class PlaceListFragmentPagerAdapter extends FragmentStatePagerAdapter
 
         for (int i = 0; i < count; i++)
         {
-            placeListFragment = new PlaceListFragment();
-            placeListFragment.setListFragmentListener(listener);
-            mFragmentList.add(placeListFragment);
+            try
+            {
+                placeListFragment = (PlaceListFragment)classT.newInstance();
+                placeListFragment.setListFragmentListener(listener);
+                mFragmentList.add(placeListFragment);
+            } catch (InstantiationException e)
+            {
+                ExLog.d(e.toString());
+            } catch (IllegalAccessException e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     }
 
