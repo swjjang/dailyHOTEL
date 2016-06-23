@@ -29,6 +29,12 @@ public abstract class PlaceEventBannerManager
     public void setList(List<EventBanner> eventBannerList)
     {
         clear();
+
+        if (mEventBannerList == null)
+        {
+            mEventBannerList = new ArrayList<>();
+        }
+
         mEventBannerList.addAll(eventBannerList);
     }
 
@@ -55,7 +61,7 @@ public abstract class PlaceEventBannerManager
 
                 int length = jsonArray.length();
 
-                if(length > 0)
+                if (length > 0)
                 {
                     eventBannerList = new ArrayList<>();
 

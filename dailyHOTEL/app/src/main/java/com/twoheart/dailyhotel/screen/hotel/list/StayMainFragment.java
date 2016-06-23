@@ -149,7 +149,7 @@ public class StayMainFragment extends PlaceMainFragment
 
         StayCurationManager.getInstance().setProvince(province);
 
-        mDailyToolbarLayout.setToolbarRegionText(province.name); // TODO : 레이아웃에서 처리 필요!
+        mPlaceMainLayout.setToolbarRegionText(province.name);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
         String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
@@ -452,7 +452,7 @@ public class StayMainFragment extends PlaceMainFragment
     }
 
     private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, boolean isOverseas, //
-                                         ArrayList<Province> provinceList, ArrayList<Area> areaList)
+                                         List<Province> provinceList, List<Area> areaList)
     {
         Province selectedProvince = null;
 
@@ -536,29 +536,7 @@ public class StayMainFragment extends PlaceMainFragment
         return true;
     }
 
-    private void deepLinkRefreshBanner(final SaleTime checkInSaleTime, final SaleTime checkOutSaleTime)
-    {
-        DailyHotelJsonResponseListener deepLinkEventListener = new DailyHotelJsonResponseListener()
-        {
-            @Override
-            public void onResponse(String url, JSONObject response)
-            {
-                setEventBannerJson(response);
-
-                mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                mOnCommunicateListener.selectDay(checkInSaleTime, checkOutSaleTime, true);
-            }
-        };
-
-        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "hotel", deepLinkEventListener, deepLinkEventListener);
-    }
-
-    private boolean moveDeepLinkStayList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    private boolean moveDeepLinkStayList(List<Province> provinceList, List<Area> areaList)
     {
         String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
         String date = DailyDeepLink.getInstance().getDate();
@@ -674,46 +652,8 @@ public class StayMainFragment extends PlaceMainFragment
         {
             return false;
         }
-    }
 
-    private void setEventBannerJson(JSONObject jsonObject)
-    {
-        try
-        {
-            int msgCode = jsonObject.getInt("msgCode");
-
-            if (msgCode == 100)
-            {
-                JSONObject dataJSONObject = jsonObject.getJSONObject("data");
-
-                String baseUrl = dataJSONObject.getString("imgUrl");
-
-                JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
-
-                if (mEventBannerList == null)
-                {
-                    mEventBannerList = new ArrayList<>();
-                }
-
-                mEventBannerList.clear();
-
-                int length = jsonArray.length();
-                for (int i = 0; i < length; i++)
-                {
-                    try
-                    {
-                        EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
-                        mEventBannerList.add(eventBanner);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        return true;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
