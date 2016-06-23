@@ -61,23 +61,12 @@ public class StayMainFragment extends PlaceMainFragment
     @Override
     protected void onRegionActivityResult(int requestCode, int resultCode, Intent data)
     {
-
-    }
-
-    @Override
-    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
-    {
+        // 지역 선택하고 돌아온 경우
 
     }
 
     @Override
     protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
-    {
-
-    }
-
-    @Override
-    protected void onSettingLocationActivityResult(int requestCode, int resultCode, Intent data)
     {
 
     }
@@ -121,15 +110,9 @@ public class StayMainFragment extends PlaceMainFragment
         return String.format(tabDateFormat, checkInDay, checkOutDay);
     }
 
-    private void curationCurrentFragment()
-    {
-        HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-        currentFragment.curationList(mViewType, StayCurationManager.getInstance());
-    }
-
     private void refreshCurrentFragment(List<EventBanner> list)
     {
-        HotelListFragment currentFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
+        StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
         currentFragment.refreshList(list);
     }
 
