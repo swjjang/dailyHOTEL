@@ -140,8 +140,6 @@ public class StayMainFragment extends PlaceMainFragment
             return;
         }
 
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
         if (isFinishing() == true)
         {
             return;
@@ -152,168 +150,15 @@ public class StayMainFragment extends PlaceMainFragment
         mPlaceMainLayout.setToolbarRegionText(province.name);
 
         // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        String savedRegion = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
+        String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
 
         if (province.name.equalsIgnoreCase(savedRegion) == false)
         {
-            DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-            DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+            DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+            DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
         }
 
         refreshCurrentFragment(StayEventBannerManager.getInstance().getList());
-    }
-
-    private void searchMyLocation()
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (isFinishing() == true || isLockUiComponent() == true)
-        {
-            return;
-        }
-
-        lockUI();
-
-        DailyLocationFactory.getInstance(baseActivity).startLocationMeasure(baseActivity, null, new DailyLocationFactory.LocationListenerEx()
-        {
-            @Override
-            public void onRequirePermission()
-            {
-                if (Util.isOverAPI23() == true)
-                {
-                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                }
-
-                unLockUI();
-            }
-
-            @Override
-            public void onFailed()
-            {
-                unLockUI();
-
-                //                recordAnalyticsSortTypeEvent(getContext(), StayCurationManager.getInstance().getSortType());
-
-                if (Util.isOverAPI23() == true)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                        , getString(R.string.dialog_msg_used_gps_android6)//
-                        , getString(R.string.dialog_btn_text_dosetting)//
-                        , getString(R.string.dialog_btn_text_cancel)//
-                        , new View.OnClickListener()//
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                            }
-                        }, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                StayCurationManager.getInstance().setSortType(SortType.DEFAULT);
-                                curationCurrentFragment();
-                            }
-                        }, true);
-                } else
-                {
-                    StayCurationManager.getInstance().setSortType(SortType.DEFAULT);
-                    curationCurrentFragment();
-                }
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
-            {
-                unLockUI();
-
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
-
-                baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                    , getString(R.string.dialog_msg_used_gps)//
-                    , getString(R.string.dialog_btn_text_dosetting)//
-                    , getString(R.string.dialog_btn_text_cancel)//
-                    , new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }
-                    }, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            StayCurationManager.getInstance().setSortType(SortType.DEFAULT);
-                            curationCurrentFragment();
-
-                            //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
-                        }
-                    }, false);
-            }
-
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (isFinishing() == true)
-                {
-                    unLockUI();
-                    return;
-                }
-
-                DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
-
-                if (location == null)
-                {
-                    StayCurationManager.getInstance().setSortType(SortType.DEFAULT);
-                    curationCurrentFragment();
-                } else
-                {
-                    StayCurationManager.getInstance().setLocation(location);
-
-                    if (StayCurationManager.getInstance().getSortType() == SortType.DISTANCE)
-                    {
-                        curationCurrentFragment();
-                    }
-                }
-
-                unLockUI();
-            }
-        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
