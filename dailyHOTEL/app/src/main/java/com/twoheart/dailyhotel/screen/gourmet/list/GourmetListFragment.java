@@ -280,8 +280,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
     public void fetchList()
     {
-        GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
-        fetchList(gourmetCurationOption.getProvince(), mSaleTime, null);
+        fetchList(GourmetCurationManager.getInstance().getProvince(), mSaleTime, null);
     }
 
     public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
@@ -318,7 +317,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             return gourmetViewItemList;
         }
 
-        final Location location = gourmetCurationOption.getLocation();
+        final Location location = GourmetCurationManager.getInstance().getLocation();
 
         switch (gourmetCurationOption.getSortType())
         {
@@ -565,7 +564,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                 Map<String, String> parmas = new HashMap<>();
                 GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
-                Province province = gourmetCurationOption.getProvince();
+                Province province = GourmetCurationManager.getInstance().getProvince();
 
                 if (province instanceof Area)
                 {

@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.model.GourmetFilter;
 import com.twoheart.dailyhotel.model.GourmetFilters;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -550,7 +551,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         Map<String, String> eventParmas = new HashMap<>();
-        Province province = mGourmetCurationOption.getProvince();
+        Province province = GourmetCurationManager.getInstance().getProvince();
 
         if (province instanceof Area)
         {
@@ -606,7 +607,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     protected void onComplete()
     {
         Map<String, String> eventParmas = new HashMap<>();
-        Province province = mGourmetCurationOption.getProvince();
+        Province province = GourmetCurationManager.getInstance().getProvince();
 
         eventParmas.put(AnalyticsManager.KeyType.SORTING, mGourmetCurationOption.getSortType().name());
 

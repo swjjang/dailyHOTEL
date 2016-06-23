@@ -142,29 +142,37 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        if (mViewType == ViewType.LIST)
+        switch(mViewType)
         {
-            if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+            case LIST:
             {
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
                 {
-                    searchMyLocation();
-                } else
-                {
-                    // 퍼미션 허락하지 않음.
+                    if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    {
+                        searchMyLocation();
+                    } else
+                    {
+                        // 퍼미션 허락하지 않음.
+                    }
                 }
+                break;
             }
-        } else if (mViewType == ViewType.MAP)
-        {
-            PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
 
-            if (placeListFragment != null)
+            case MAP:
             {
-                placeListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
-        }
+                PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
 
-        ArrayList
+                if (placeListFragment != null)
+                {
+                    placeListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                }
+                break;
+            }
+
+            case GONE:
+                break;
+        }
     }
 
     private void refreshCurrentFragment()
@@ -283,14 +291,14 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                     }
 
                     mViewType = ViewType.MAP;
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
+                    AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP);
                     break;
                 }
 
                 case MAP:
                 {
                     mViewType = ViewType.LIST;
-                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST);
+                    AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST);
 
                     Map<String, String> parmas = new HashMap<>();
                     Province province = GourmetCurationManager.getInstance().getProvince();
@@ -338,7 +346,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 return;
             }
 
-            Intent intent = GourmetCurationActivity.newInstance(mBaseActivity, province.isOverseas, mViewType);
+            Intent intent = GourmetCurationActivity.newInstance(mBaseActivity, province.isOverseas, mViewType, GourmetCurationManager.getInstance().getGourmetCurationOption());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -561,10 +569,10 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         }
     };
 
-    private GourmetListFragment_v2.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetListFragment_v2.OnGourmetListFragmentListener()
+    private PlaceListFragment.OnPlaceListFragmentListener mOnPlaceListFragmentListener = new PlaceListFragment.OnPlaceListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime)
+        public void onPlaceClick(PlaceViewItem placeViewItem, SaleTime saleTime)
         {
 
         }
@@ -582,7 +590,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
 
     private void startGourmetDetailByDeepLink(int gourmetIndex, long dailyTime, int dailyDayOfDays)
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
+        BaseActivity baseActivity = (BaseActivity) mBaseActivity;
 
         if (baseActivity == null || gourmetIndex < 0)
         {
