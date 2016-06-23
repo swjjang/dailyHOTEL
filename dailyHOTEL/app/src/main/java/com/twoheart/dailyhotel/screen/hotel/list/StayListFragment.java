@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -263,7 +264,7 @@ public class StayListFragment extends PlaceListFragment
         mScrollListTop = scrollListTop;
     }
 
-    private ArrayList<PlaceViewItem> curationSorting(List<Hotel> hotelList, HotelCurationOption hotelCurationOption)
+    private ArrayList<PlaceViewItem> curationSorting(List<Hotel> hotelList, StayCurationOption stayCurationOption)
     {
         ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
 
@@ -272,9 +273,9 @@ public class StayListFragment extends PlaceListFragment
             return hotelListViewItemList;
         }
 
-        final Location location = hotelCurationOption.getLocation();
+        final Location location = stayCurationOption.getLocation();
 
-        switch (hotelCurationOption.getSortType())
+        switch (stayCurationOption.getSortType())
         {
             case DEFAULT:
                 return makeSectionHotelList(hotelList);
@@ -283,7 +284,7 @@ public class StayListFragment extends PlaceListFragment
             {
                 if (location == null)
                 {
-                    hotelCurationOption.setSortType(SortType.DEFAULT);
+                    stayCurationOption.setSortType(SortType.DEFAULT);
                     DailyToast.showToast(getContext(), R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
                     return makeSectionHotelList(hotelList);
                 }
@@ -420,17 +421,17 @@ public class StayListFragment extends PlaceListFragment
         return hotelListViewItemList;
     }
 
-    public void curationList(ViewType viewType, HotelCurationOption curationOption)
+    public void curationList(ViewType viewType, Category category, StayCurationOption curationOption)
     {
         mScrollListTop = true;
 
-        ArrayList<PlaceViewItem> placeViewItemList = curationList(mHotelList, curationOption);
+        ArrayList<PlaceViewItem> placeViewItemList = curationList(mHotelList, category, curationOption);
         setHotelListViewItemList(viewType, placeViewItemList, curationOption.getSortType());
     }
 
-    private ArrayList<PlaceViewItem> curationList(List<Hotel> list, HotelCurationOption curationOption)
+    private ArrayList<PlaceViewItem> curationList(List<Hotel> list, Category category, StayCurationOption curationOption)
     {
-        List<Hotel> hotelList = curationCategory(list, curationOption.getCategory());
+        List<Hotel> hotelList = curationCategory(list, category);
 
         hotelList = curationFiltering(hotelList, curationOption);
 
@@ -460,7 +461,7 @@ public class StayListFragment extends PlaceListFragment
         return filteredCategoryList;
     }
 
-    private List<Hotel> curationFiltering(List<Hotel> list, HotelCurationOption curationOption)
+    private List<Hotel> curationFiltering(List<Hotel> list, StayCurationOption curationOption)
     {
         int size = list.size();
         Hotel hotel;

@@ -151,7 +151,7 @@ public class Hotel implements Parcelable
         return true;
     }
 
-    public boolean isFiltered(HotelCurationOption curationOption)
+    public boolean isFiltered(StayCurationOption curationOption)
     {
         if (mHotelFilters == null)
         {

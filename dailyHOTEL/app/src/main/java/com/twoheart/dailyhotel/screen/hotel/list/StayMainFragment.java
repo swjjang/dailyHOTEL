@@ -1,39 +1,35 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.view.View;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.HotelCurationOption;
+import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetCurationManager;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -62,13 +58,47 @@ public class StayMainFragment extends PlaceMainFragment
     protected void onRegionActivityResult(int requestCode, int resultCode, Intent data)
     {
         // 지역 선택하고 돌아온 경우
-
+        if (resultCode == Activity.RESULT_OK && data != null)
+        {
+            if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
+            {
+                Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+                refreshCurrentFragment(province);
+            }
+        }
     }
 
     @Override
     protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if (resultCode == Activity.RESULT_OK && data != null)
+        {
+            PlaceCurationOption placeCurationOption = data.getParcelableExtra(GourmetCurationActivity.INTENT_EXTRA_DATA_CURATION_OPTIONS);
 
+            if (placeCurationOption instanceof HotelCurationOption == false)
+            {
+                return;
+            }
+
+            StayCurationOption changeCurationOption = (StayCurationOption) placeCurationOption;
+            StayCurationOption stayCurationOption = StayCurationManager.getInstance().getStayCurationOption();
+
+            stayCurationOption.setSortType(changeCurationOption.getSortType());
+            stayCurationOption.setFiltersList(changeCurationOption.getFiltersList());
+
+            stayCurationOption.person = changeCurationOption.person;
+            stayCurationOption.flagBedTypeFilters = changeCurationOption.flagBedTypeFilters;
+            stayCurationOption.flagAmenitiesFilters = changeCurationOption.flagAmenitiesFilters;
+
+            if (changeCurationOption.getSortType() == SortType.DISTANCE)
+            {
+                searchMyLocation();
+            } else
+            {
+                Category category = StayCurationManager.getInstance().getCategory();
+                refreshCurrentFragmentByCuration(category, stayCurationOption);
+            }
+        }
     }
 
     @Override
@@ -114,6 +144,12 @@ public class StayMainFragment extends PlaceMainFragment
     {
         StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
         currentFragment.refreshList(list);
+    }
+
+    private void refreshCurrentFragmentByCuration(Category category, StayCurationOption stayCurationOption)
+    {
+        StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+        currentFragment.curationList(mViewType, category, stayCurationOption);
     }
 
     private void refreshCurrentFragment(Province province)
