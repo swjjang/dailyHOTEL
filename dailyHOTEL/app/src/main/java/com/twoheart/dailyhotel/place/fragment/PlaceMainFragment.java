@@ -1,15 +1,18 @@
 package com.twoheart.dailyhotel.place.fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
@@ -35,11 +38,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected abstract void onRegionActivityResult(int requestCode, int resultCode, Intent data);
 
-    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
-
     protected abstract void onCurationActivityResult(int requestCode, int resultCode, Intent data);
-
-    protected abstract void onSettingLocationActivityResult(int requestCode, int resultCode, Intent data);
 
     protected abstract void onLocationFailed();
 
@@ -115,7 +114,12 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 mDontReloadAtOnResume = true;
 
-                onCalendarActivityResult(requestCode, resultCode, data);
+                PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+                if (placeListFragment != null)
+                {
+                    placeListFragment.onActivityResult(requestCode, resultCode, data);
+                }
                 break;
             }
 
@@ -139,7 +143,14 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 mDontReloadAtOnResume = true;
 
-                onSettingLocationActivityResult(requestCode, resultCode, data);
+                if (mViewType == ViewType.MAP)
+                {
+                    PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+                    placeListFragment.onActivityResult(requestCode, resultCode, data);
+                } else
+                {
+                    searchMyLocation();
+                }
                 break;
             }
 
@@ -171,6 +182,42 @@ public abstract class PlaceMainFragment extends BaseFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        switch (mViewType)
+        {
+            case LIST:
+            {
+                if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+                {
+                    if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    {
+                        searchMyLocation();
+                    } else
+                    {
+                        // 퍼미션 허락하지 않음.
+                    }
+                }
+                break;
+            }
+
+            case MAP:
+            {
+                PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+                if (placeListFragment != null)
+                {
+                    placeListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                }
+                break;
+            }
+
+            case GONE:
+                break;
+        }
+    }
+
     protected void searchMyLocation()
     {
         if (isFinishing() || isLockUiComponent() == true)
@@ -194,7 +241,17 @@ public abstract class PlaceMainFragment extends BaseFragment
 
                 if (Util.isOverAPI23() == true)
                 {
-                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
+                    {
+                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
+
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    } else
+                    {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    }
                 }
             }
 
@@ -208,31 +265,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                     return;
                 }
 
-                if (Util.isOverAPI23() == true)
-                {
-                    mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                        , getString(R.string.dialog_msg_used_gps_android6)//
-                        , getString(R.string.dialog_btn_text_dosetting)//
-                        , getString(R.string.dialog_btn_text_cancel)//
-                        , new View.OnClickListener()//
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                            }
-                        }, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                onLocationFailed();
-                            }
-                        }, true);
-                } else
-                {
-                    onLocationFailed();
-                }
+                onLocationFailed();
             }
 
             @Override

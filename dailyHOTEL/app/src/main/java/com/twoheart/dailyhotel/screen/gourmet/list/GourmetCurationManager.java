@@ -42,6 +42,11 @@ public class GourmetCurationManager
         mSaleTime = null;
     }
 
+    public GourmetCurationOption getGourmetCurationOption()
+    {
+        return mGourmetCurationOption;
+    }
+
     public void setSaleTime(long currentDateTime, long dailyDateTime)
     {
         if (mSaleTime == null)

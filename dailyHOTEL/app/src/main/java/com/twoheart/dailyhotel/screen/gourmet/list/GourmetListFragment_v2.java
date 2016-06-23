@@ -64,13 +64,6 @@ public class GourmetListFragment_v2 extends PlaceListFragment
 
     protected List<Gourmet> mGourmetList = new ArrayList<>();
 
-    public interface OnGourmetListFragmentListener
-    {
-        void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime);
-
-        void onEventBannerClick(EventBanner eventBanner);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
