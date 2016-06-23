@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
+import com.twoheart.dailyhotel.model.Stay.HotelGrade;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -15,7 +15,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public String checkInDate;
     public String checkOutDate;
     public String hotelPhone;
-    public Hotel.HotelGrade grade;
+    public Stay.HotelGrade grade;
     public String roomName;
 
     public HotelBookingDetail()

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
@@ -93,14 +93,14 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
 
     private void onBindViewHolder(HoltelViewHolder holder, PlaceViewItem placeViewItem)
     {
-        final Hotel hotel = placeViewItem.getItem();
+        final Stay stay = placeViewItem.getItem();
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        String strPrice = comma.format(hotel.price);
-        String strDiscount = comma.format(hotel.averageDiscountPrice);
+        String strPrice = comma.format(stay.price);
+        String strDiscount = comma.format(stay.averageDiscountPrice);
 
-        String address = hotel.addressSummary;
+        String address = stay.addressSummary;
 
         int barIndex = address.indexOf('|');
         if (barIndex >= 0)
@@ -112,11 +112,11 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
         }
 
         holder.hotelAddressView.setText(address);
-        holder.hotelNameView.setText(hotel.name);
+        holder.hotelNameView.setText(stay.name);
 
         String currency = mContext.getResources().getString(R.string.currency);
 
-        if (hotel.price <= 0 || hotel.price <= hotel.averageDiscountPrice)
+        if (stay.price <= 0 || stay.price <= stay.averageDiscountPrice)
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
             holder.hotelPriceView.setText(null);
@@ -128,16 +128,16 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
         }
 
         // 만족도
-        if (hotel.satisfaction > 0)
+        if (stay.satisfaction > 0)
         {
             holder.satisfactionView.setVisibility(View.VISIBLE);
-            holder.satisfactionView.setText(hotel.satisfaction + "%");
+            holder.satisfactionView.setText(stay.satisfaction + "%");
         } else
         {
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        if (hotel.nights > 1)
+        if (stay.nights > 1)
         {
             holder.averageView.setVisibility(View.VISIBLE);
         } else
@@ -157,13 +157,13 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
         }
 
         // grade
-        holder.hotelGradeView.setText(hotel.getGrade().getName(mContext));
-        holder.hotelGradeView.setBackgroundResource(hotel.getGrade().getColorResId());
+        holder.hotelGradeView.setText(stay.getGrade().getName(mContext));
+        holder.hotelGradeView.setBackgroundResource(stay.getGrade().getColorResId());
 
-        Util.requestImageResize(mContext, holder.hotelImageView, hotel.imageUrl);
+        Util.requestImageResize(mContext, holder.hotelImageView, stay.imageUrl);
 
         // SOLD OUT 표시
-        if (hotel.isSoldOut == true)
+        if (stay.isSoldOut == true)
         {
             holder.hotelSoldOutView.setVisibility(View.VISIBLE);
         } else
@@ -171,10 +171,10 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (Util.isTextEmpty(hotel.dBenefitText) == false)
+        if (Util.isTextEmpty(stay.dBenefitText) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
-            holder.dBenefitTextView.setText(hotel.dBenefitText);
+            holder.dBenefitTextView.setText(stay.dBenefitText);
         } else
         {
             holder.dBenefitLayout.setVisibility(View.GONE);
@@ -183,7 +183,7 @@ public class HotelSearchResultListAdapter extends PlaceListAdapter
         if (mSortType == Constants.SortType.DISTANCE)
         {
             holder.distanceTextView.setVisibility(View.VISIBLE);
-            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(hotel.distance / 1000) + "km)");
+            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance / 1000) + "km)");
         } else
         {
             holder.distanceTextView.setVisibility(View.GONE);

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -217,14 +217,14 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Hotel hotel = placeViewItem.getItem();
+            Stay stay = placeViewItem.getItem();
 
             Intent intent = new Intent(HotelSearchResultActivity.this, HotelDetailActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotel.index);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, hotel.nights);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotel.name);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, hotel.imageUrl);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
         }
@@ -421,15 +421,15 @@ public class HotelSearchResultActivity extends PlaceSearchResultActivity
         {
             ((HotelSearchResultLayout) mPlaceSearchResultLayout).setSortType(SortType.DISTANCE);
 
-            Hotel hotel;
+            Stay stay;
             float[] results = new float[3];
 
             for (PlaceViewItem placeViewItem : placeViewItemList)
             {
-                hotel = placeViewItem.getItem();
+                stay = placeViewItem.getItem();
 
-                Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel.latitude, hotel.longitude, results);
-                hotel.distance = results[0];
+                Location.distanceBetween(location.getLatitude(), location.getLongitude(), stay.latitude, stay.longitude, results);
+                stay.distance = results[0];
             }
         }
 

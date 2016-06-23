@@ -21,7 +21,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -1622,29 +1622,29 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 case PlaceViewItem.TYPE_ENTRY:
                 {
-                    Hotel hotel = placeViewItem.getItem();
+                    Stay stay = placeViewItem.getItem();
 
                     String region = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
                     DailyPreference.getInstance(baseActivity).setGASelectedRegion(region);
-                    DailyPreference.getInstance(baseActivity).setGAHotelName(hotel.name);
+                    DailyPreference.getInstance(baseActivity).setGAHotelName(stay.name);
 
                     Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotel.index);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, hotel.nights);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotel.name);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, hotel.imageUrl);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, hotel.categoryCode);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, stay.nights);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, stay.categoryCode);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mCurationOption.getProvince());
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, hotel.averageDiscountPrice);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, stay.averageDiscountPrice);
 
-                    String[] area = hotel.addressSummary.split("\\||l|ㅣ|I");
+                    String[] area = stay.addressSummary.split("\\||l|ㅣ|I");
 
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
 
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
-                    String label = String.format("%s-%s", hotel.categoryCode, hotel.name);
+                    String label = String.format("%s-%s", stay.categoryCode, stay.name);
                     AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , Action.HOTEL_ITEM_CLICKED, label, null);
                     break;

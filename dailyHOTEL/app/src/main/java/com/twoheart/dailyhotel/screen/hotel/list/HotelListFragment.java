@@ -32,7 +32,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.HotelFilters;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -79,7 +79,7 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected boolean mScrollListTop;
     protected HotelMainFragment.OnCommunicateListener mOnCommunicateListener;
 
-    protected List<Hotel> mHotelList = new ArrayList<>();
+    protected List<Stay> mStayList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -356,11 +356,11 @@ public class HotelListFragment extends BaseFragment implements Constants
         mScrollListTop = scrollListTop;
     }
 
-    private ArrayList<PlaceViewItem> curationSorting(List<Hotel> hotelList, HotelCurationOption hotelCurationOption)
+    private ArrayList<PlaceViewItem> curationSorting(List<Stay> stayList, HotelCurationOption hotelCurationOption)
     {
         ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
 
-        if (hotelList == null || hotelList.size() == 0)
+        if (stayList == null || stayList.size() == 0)
         {
             return hotelListViewItemList;
         }
@@ -370,7 +370,7 @@ public class HotelListFragment extends BaseFragment implements Constants
         switch (hotelCurationOption.getSortType())
         {
             case DEFAULT:
-                return makeSectionHotelList(hotelList);
+                return makeSectionHotelList(stayList);
 
             case DISTANCE:
             {
@@ -378,13 +378,13 @@ public class HotelListFragment extends BaseFragment implements Constants
                 {
                     hotelCurationOption.setSortType(SortType.DEFAULT);
                     DailyToast.showToast(getContext(), R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                    return makeSectionHotelList(hotelList);
+                    return makeSectionHotelList(stayList);
                 }
 
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<Hotel> comparator = new Comparator<Hotel>()
+                Comparator<Stay> comparator = new Comparator<Stay>()
                 {
-                    public int compare(Hotel hotel1, Hotel hotel2)
+                    public int compare(Stay hotel1, Stay hotel2)
                     {
                         float[] results1 = new float[3];
                         Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel1.latitude, hotel1.longitude, results1);
@@ -398,16 +398,16 @@ public class HotelListFragment extends BaseFragment implements Constants
                     }
                 };
 
-                if (hotelList.size() == 1)
+                if (stayList.size() == 1)
                 {
-                    Hotel hotel = hotelList.get(0);
+                    Stay stay = stayList.get(0);
 
                     float[] results1 = new float[3];
-                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), hotel.latitude, hotel.longitude, results1);
-                    hotel.distance = results1[0];
+                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), stay.latitude, stay.longitude, results1);
+                    stay.distance = results1[0];
                 } else
                 {
-                    Collections.sort(hotelList, comparator);
+                    Collections.sort(stayList, comparator);
                 }
                 break;
             }
@@ -415,62 +415,62 @@ public class HotelListFragment extends BaseFragment implements Constants
             case LOW_PRICE:
             {
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<Hotel> comparator = new Comparator<Hotel>()
+                Comparator<Stay> comparator = new Comparator<Stay>()
                 {
-                    public int compare(Hotel hotel1, Hotel hotel2)
+                    public int compare(Stay hotel1, Stay hotel2)
                     {
                         return hotel1.averageDiscountPrice - hotel2.averageDiscountPrice;
                     }
                 };
 
-                Collections.sort(hotelList, comparator);
+                Collections.sort(stayList, comparator);
                 break;
             }
 
             case HIGH_PRICE:
             {
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<Hotel> comparator = new Comparator<Hotel>()
+                Comparator<Stay> comparator = new Comparator<Stay>()
                 {
-                    public int compare(Hotel hotel1, Hotel hotel2)
+                    public int compare(Stay hotel1, Stay hotel2)
                     {
                         return hotel2.averageDiscountPrice - hotel1.averageDiscountPrice;
                     }
                 };
 
-                Collections.sort(hotelList, comparator);
+                Collections.sort(stayList, comparator);
                 break;
             }
 
             case SATISFACTION:
             {
                 // 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-                Comparator<Hotel> comparator = new Comparator<Hotel>()
+                Comparator<Stay> comparator = new Comparator<Stay>()
                 {
-                    public int compare(Hotel hotel1, Hotel hotel2)
+                    public int compare(Stay hotel1, Stay hotel2)
                     {
                         return hotel2.satisfaction - hotel1.satisfaction;
                     }
                 };
 
-                Collections.sort(hotelList, comparator);
+                Collections.sort(stayList, comparator);
                 break;
             }
         }
 
-        for (Hotel hotel : hotelList)
+        for (Stay stay : stayList)
         {
-            hotelListViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel));
+            hotelListViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
         }
 
         return hotelListViewItemList;
     }
 
-    private ArrayList<PlaceViewItem> makeSectionHotelList(List<Hotel> hotelList)
+    private ArrayList<PlaceViewItem> makeSectionHotelList(List<Stay> stayList)
     {
         ArrayList<PlaceViewItem> hotelListViewItemList = new ArrayList<>();
 
-        if (hotelList == null || hotelList.size() == 0)
+        if (stayList == null || stayList.size() == 0)
         {
             return hotelListViewItemList;
         }
@@ -478,16 +478,16 @@ public class HotelListFragment extends BaseFragment implements Constants
         String previousRegion = null;
         boolean hasDailyChoice = false;
 
-        for (Hotel hotel : hotelList)
+        for (Stay stay : stayList)
         {
-            String region = hotel.detailRegion;
+            String region = stay.detailRegion;
 
             if (Util.isTextEmpty(region) == true)
             {
                 continue;
             }
 
-            if (hotel.isDailyChoice == true)
+            if (stay.isDailyChoice == true)
             {
                 if (hasDailyChoice == false)
                 {
@@ -507,7 +507,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                 }
             }
 
-            hotelListViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel));
+            hotelListViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
         }
 
         return hotelListViewItemList;
@@ -517,22 +517,22 @@ public class HotelListFragment extends BaseFragment implements Constants
     {
         mScrollListTop = true;
 
-        ArrayList<PlaceViewItem> placeViewItemList = curationList(mHotelList, curationOption);
+        ArrayList<PlaceViewItem> placeViewItemList = curationList(mStayList, curationOption);
         setHotelListViewItemList(viewType, placeViewItemList, curationOption.getSortType());
     }
 
-    private ArrayList<PlaceViewItem> curationList(List<Hotel> list, HotelCurationOption curationOption)
+    private ArrayList<PlaceViewItem> curationList(List<Stay> list, HotelCurationOption curationOption)
     {
-        List<Hotel> hotelList = curationCategory(list, curationOption.getCategory());
+        List<Stay> stayList = curationCategory(list, curationOption.getCategory());
 
-        hotelList = curationFiltering(hotelList, curationOption);
+        stayList = curationFiltering(stayList, curationOption);
 
-        return curationSorting(hotelList, curationOption);
+        return curationSorting(stayList, curationOption);
     }
 
-    private List<Hotel> curationCategory(List<Hotel> list, Category category)
+    private List<Stay> curationCategory(List<Stay> list, Category category)
     {
-        List<Hotel> filteredCategoryList = new ArrayList<>(list.size());
+        List<Stay> filteredCategoryList = new ArrayList<>(list.size());
 
         if (category == null || Category.ALL.code.equalsIgnoreCase(category.code) == true)
         {
@@ -541,11 +541,11 @@ public class HotelListFragment extends BaseFragment implements Constants
             return filteredCategoryList;
         } else
         {
-            for (Hotel hotel : list)
+            for (Stay stay : list)
             {
-                if (category.code.equalsIgnoreCase(hotel.categoryCode) == true)
+                if (category.code.equalsIgnoreCase(stay.categoryCode) == true)
                 {
-                    filteredCategoryList.add(hotel);
+                    filteredCategoryList.add(stay);
                 }
             }
         }
@@ -553,16 +553,16 @@ public class HotelListFragment extends BaseFragment implements Constants
         return filteredCategoryList;
     }
 
-    private List<Hotel> curationFiltering(List<Hotel> list, HotelCurationOption curationOption)
+    private List<Stay> curationFiltering(List<Stay> list, HotelCurationOption curationOption)
     {
         int size = list.size();
-        Hotel hotel;
+        Stay stay;
 
         for (int i = size - 1; i >= 0; i--)
         {
-            hotel = list.get(i);
+            stay = list.get(i);
 
-            if (hotel.isFiltered(curationOption) == false)
+            if (stay.isFiltered(curationOption) == false)
             {
                 list.remove(i);
             }
@@ -743,7 +743,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                         length = hotelJSONArray.length();
                     }
 
-                    mHotelList.clear();
+                    mStayList.clear();
 
                     if (length == 0)
                     {
@@ -761,14 +761,14 @@ public class HotelListFragment extends BaseFragment implements Constants
                         String imageUrl = dataJSONObject.getString("imgUrl");
                         int nights = dataJSONObject.getInt("lengthStay");
 
-                        ArrayList<Hotel> hotelList = makeHotelList(hotelJSONArray, imageUrl, nights);
+                        ArrayList<Stay> stayList = makeHotelList(hotelJSONArray, imageUrl, nights);
                         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-                        setFilterInformation(hotelList, hotelCurationOption);
+                        setFilterInformation(stayList, hotelCurationOption);
 
                         // 기본적으로 보관한다.
-                        mHotelList.addAll(hotelList);
+                        mStayList.addAll(stayList);
 
-                        ArrayList<PlaceViewItem> placeViewItemList = curationList(hotelList, hotelCurationOption);
+                        ArrayList<PlaceViewItem> placeViewItemList = curationList(stayList, hotelCurationOption);
 
                         setHotelListViewItemList(mViewType, placeViewItemList, hotelCurationOption.getSortType());
                     }
@@ -791,19 +791,19 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         /**
          * 미리 필터 정보를 저장하여 Curation시에 사용하도록 한다.(개수 정보 노출)
-         * @param hotelList
+         * @param stayList
          * @param curationOption
          */
-        private void setFilterInformation(ArrayList<Hotel> hotelList, HotelCurationOption curationOption)
+        private void setFilterInformation(ArrayList<Stay> stayList, HotelCurationOption curationOption)
         {
             // 필터 정보 넣기
-            ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(hotelList.size());
+            ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(stayList.size());
 
             HotelFilters hotelFilters;
 
-            for (Hotel hotel : hotelList)
+            for (Stay stay : stayList)
             {
-                hotelFilters = hotel.getFilters();
+                hotelFilters = stay.getFilters();
 
                 if (hotelFilters != null)
                 {
@@ -814,7 +814,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             curationOption.setFiltersList(hotelFiltersList);
         }
 
-        private ArrayList<Hotel> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        private ArrayList<Stay> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
         {
             if (jsonArray == null)
             {
@@ -822,23 +822,23 @@ public class HotelListFragment extends BaseFragment implements Constants
             }
 
             int length = jsonArray.length();
-            ArrayList<Hotel> hotelList = new ArrayList<>(length);
+            ArrayList<Stay> stayList = new ArrayList<>(length);
             JSONObject jsonObject;
-            Hotel hotel;
+            Stay stay;
 
             for (int i = 0; i < length; i++)
             {
                 jsonObject = jsonArray.getJSONObject(i);
 
-                hotel = new Hotel();
+                stay = new Stay();
 
-                if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
+                if (stay.setHotel(jsonObject, imageUrl, nights) == true)
                 {
-                    hotelList.add(hotel); // 추가.
+                    stayList.add(stay); // 추가.
                 }
             }
 
-            return hotelList;
+            return stayList;
         }
     };
 }

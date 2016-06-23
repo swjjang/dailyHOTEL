@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Util;
@@ -38,7 +38,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         PlaceViewItem item = mPlaceViewItemList.get(position);
 
-        makeLayout(view, item.<Hotel>getItem());
+        makeLayout(view, item.<Stay>getItem());
 
         container.addView(view, 0);
 
@@ -50,7 +50,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         mOnUserActionListener = listener;
     }
 
-    private void makeLayout(View view, final Hotel hotel)
+    private void makeLayout(View view, final Stay stay)
     {
         View gradientView = view.findViewById(R.id.gradientView);
         com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
@@ -67,7 +67,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        String address = hotel.addressSummary;
+        String address = stay.addressSummary;
 
         if (address.indexOf('|') >= 0)
         {
@@ -78,13 +78,13 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         }
 
         addressTextView.setText(address);
-        name.setText(hotel.name);
+        name.setText(stay.name);
 
         // D.benefit
-        if (Util.isTextEmpty(hotel.dBenefitText) == false)
+        if (Util.isTextEmpty(stay.dBenefitText) == false)
         {
             dBenefitLayout.setVisibility(View.VISIBLE);
-            dBenefitTextView.setText(hotel.dBenefitText);
+            dBenefitTextView.setText(stay.dBenefitText);
         } else
         {
             dBenefitLayout.setVisibility(View.GONE);
@@ -92,7 +92,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         String currency = mContext.getResources().getString(R.string.currency);
 
-        if (hotel.price <= 0)
+        if (stay.price <= 0)
         {
             priceTextView.setVisibility(View.INVISIBLE);
 
@@ -101,21 +101,21 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(comma.format(hotel.price) + currency);
+            priceTextView.setText(comma.format(stay.price) + currency);
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         // 만족도
-        if (hotel.satisfaction > 0)
+        if (stay.satisfaction > 0)
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(hotel.satisfaction + "%");
+            satisfactionView.setText(stay.satisfaction + "%");
         } else
         {
             satisfactionView.setVisibility(View.GONE);
         }
 
-        if (hotel.nights > 1)
+        if (stay.nights > 1)
         {
             averageTextView.setVisibility(View.VISIBLE);
         } else
@@ -123,15 +123,15 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             averageTextView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(comma.format(hotel.averageDiscountPrice) + currency);
+        discountTextView.setText(comma.format(stay.averageDiscountPrice) + currency);
 
         name.setSelected(true); // Android TextView marquee bug
 
         // grade
-        grade.setText(hotel.getGrade().getName(mContext));
-        grade.setBackgroundResource(hotel.getGrade().getColorResId());
+        grade.setText(stay.getGrade().getName(mContext));
+        grade.setBackgroundResource(stay.getGrade().getColorResId());
 
-        Util.requestImageResize(mContext, hotelImageView, hotel.imageUrl);
+        Util.requestImageResize(mContext, hotelImageView, stay.imageUrl);
 
         closeView.setOnClickListener(new View.OnClickListener()
         {
@@ -152,7 +152,7 @@ public class HotelMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             {
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.onInfoWindowClickListener(hotel);
+                    mOnUserActionListener.onInfoWindowClickListener(stay);
                 }
             }
         });

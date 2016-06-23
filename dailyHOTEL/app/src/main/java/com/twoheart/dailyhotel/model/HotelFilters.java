@@ -32,6 +32,25 @@ public class HotelFilters implements Parcelable
         }
     }
 
+    public boolean isFiltered(StayCurationOption curationOption)
+    {
+        for (HotelFilter hotelFilter : mHotelFilterArray)
+        {
+            if (hotelFilter.isPersonFiltered(curationOption.person) == true//
+                && hotelFilter.isBedTypeFiltered(curationOption.flagBedTypeFilters) == true//
+                && hotelFilter.isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
+
+        //        return (isPersonFiltered(curationOption.person) == true//
+        //            && isBedTypeFiltered(curationOption.flagBedTypeFilters) == true//
+        //            && isAmenitiesFiltered(curationOption.flagAmenitiesFilters) == true);
+    }
+
     public boolean isFiltered(HotelCurationOption curationOption)
     {
         for (HotelFilter hotelFilter : mHotelFilterArray)

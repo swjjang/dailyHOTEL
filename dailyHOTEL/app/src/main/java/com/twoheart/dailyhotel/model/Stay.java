@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-public class Hotel implements Parcelable
+public class Stay implements Parcelable
 {
     public int index;
     public int averageDiscountPrice;
@@ -35,12 +35,12 @@ public class Hotel implements Parcelable
     protected HotelGrade mGrade;
     protected HotelFilters mHotelFilters;
 
-    public Hotel()
+    public Stay()
     {
         super();
     }
 
-    public Hotel(Parcel in)
+    public Stay(Parcel in)
     {
         readFromParcel(in);
     }
@@ -161,6 +161,16 @@ public class Hotel implements Parcelable
         return mHotelFilters.isFiltered(curationOption);
     }
 
+    public boolean isFiltered(HotelCurationOption curationOption)
+    {
+        if (mHotelFilters == null)
+        {
+            return false;
+        }
+
+        return mHotelFilters.isFiltered(curationOption);
+    }
+
     public HotelFilters getFilters()
     {
         return mHotelFilters;
@@ -260,15 +270,15 @@ public class Hotel implements Parcelable
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public Hotel createFromParcel(Parcel in)
+        public Stay createFromParcel(Parcel in)
         {
-            return new Hotel(in);
+            return new Stay(in);
         }
 
         @Override
-        public Hotel[] newArray(int size)
+        public Stay[] newArray(int size)
         {
-            return new Hotel[size];
+            return new Stay[size];
         }
 
     };

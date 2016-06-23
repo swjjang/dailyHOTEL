@@ -161,7 +161,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
 
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
-        // Add Hotel Info ViewPager
+        // Add Stay Info ViewPager
         if (mViewPager != null)
         {
             return;

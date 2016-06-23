@@ -18,7 +18,7 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.HotelFilters;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -76,13 +76,6 @@ public class StayListNetworkController extends BaseNetworkController
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
             try
             {
                 int msgCode = response.getInt("msgCode");
@@ -125,14 +118,14 @@ public class StayListNetworkController extends BaseNetworkController
                         String imageUrl = dataJSONObject.getString("imgUrl");
                         int nights = dataJSONObject.getInt("lengthStay");
 
-                        ArrayList<Hotel> hotelList = makeHotelList(hotelJSONArray, imageUrl, nights);
+                        ArrayList<Stay> stayList = makeHotelList(hotelJSONArray, imageUrl, nights);
                         HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-                        setFilterInformation(hotelList, hotelCurationOption);
+                        setFilterInformation(stayList, hotelCurationOption);
 
                         // 기본적으로 보관한다.
-                        mHotelList.addAll(hotelList);
+                        mHotelList.addAll(stayList);
 
-                        ArrayList<PlaceViewItem> placeViewItemList = curationList(hotelList, hotelCurationOption);
+                        ArrayList<PlaceViewItem> placeViewItemList = curationList(stayList, hotelCurationOption);
 
                         setHotelListViewItemList(mViewType, placeViewItemList, hotelCurationOption.getSortType());
                     }
@@ -155,19 +148,19 @@ public class StayListNetworkController extends BaseNetworkController
 
         /**
          * 미리 필터 정보를 저장하여 Curation시에 사용하도록 한다.(개수 정보 노출)
-         * @param hotelList
+         * @param stayList
          * @param curationOption
          */
-        private void setFilterInformation(ArrayList<Hotel> hotelList, HotelCurationOption curationOption)
+        private void setFilterInformation(ArrayList<Stay> stayList, HotelCurationOption curationOption)
         {
             // 필터 정보 넣기
-            ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(hotelList.size());
+            ArrayList<HotelFilters> hotelFiltersList = new ArrayList<>(stayList.size());
 
             HotelFilters hotelFilters;
 
-            for (Hotel hotel : hotelList)
+            for (Stay stay : stayList)
             {
-                hotelFilters = hotel.getFilters();
+                hotelFilters = stay.getFilters();
 
                 if (hotelFilters != null)
                 {
@@ -178,7 +171,7 @@ public class StayListNetworkController extends BaseNetworkController
             curationOption.setFiltersList(hotelFiltersList);
         }
 
-        private ArrayList<Hotel> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        private ArrayList<Stay> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
         {
             if (jsonArray == null)
             {
@@ -186,23 +179,23 @@ public class StayListNetworkController extends BaseNetworkController
             }
 
             int length = jsonArray.length();
-            ArrayList<Hotel> hotelList = new ArrayList<>(length);
+            ArrayList<Stay> stayList = new ArrayList<>(length);
             JSONObject jsonObject;
-            Hotel hotel;
+            Stay stay;
 
             for (int i = 0; i < length; i++)
             {
                 jsonObject = jsonArray.getJSONObject(i);
 
-                hotel = new Hotel();
+                stay = new Stay();
 
-                if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
+                if (stay.setHotel(jsonObject, imageUrl, nights) == true)
                 {
-                    hotelList.add(hotel); // 추가.
+                    stayList.add(stay); // 추가.
                 }
             }
 
-            return hotelList;
+            return stayList;
         }
     };
 }

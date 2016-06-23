@@ -29,7 +29,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.HotelClusterItem;
 import com.twoheart.dailyhotel.model.HotelClusterRenderer;
 import com.twoheart.dailyhotel.model.HotelClusterRenderer.OnSelectedClusterItemListener;
@@ -67,7 +67,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
     private PlaceViewItem mSelectedHotelViewItem;
     private boolean mIsOpenMakrer; // 마커를 선택한 경우.
-    private HashMap<String, ArrayList<Hotel>> mDuplicateHotel;
+    private HashMap<String, ArrayList<Stay>> mDuplicateHotel;
 
     private ClusterManager<HotelClusterItem> mClusterManager;
     private HotelClusterRenderer mHotelClusterRenderer;
@@ -78,7 +78,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
     public interface OnUserActionListener
     {
-        void onInfoWindowClickListener(Hotel hotel);
+        void onInfoWindowClickListener(Stay stay);
 
         void onCloseInfoWindowClickListener();
     }
@@ -161,7 +161,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
     private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
-        // Add Hotel Info ViewPager
+        // Add Stay Info ViewPager
         if (mViewPager != null)
         {
             return;
@@ -380,8 +380,8 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
         if (mIsOpenMakrer == true && mSelectedHotelViewItem != null)
         {
-            latitude = mSelectedHotelViewItem.<Hotel>getItem().latitude;
-            longitude = mSelectedHotelViewItem.<Hotel>getItem().longitude;
+            latitude = mSelectedHotelViewItem.<Stay>getItem().latitude;
+            longitude = mSelectedHotelViewItem.<Stay>getItem().longitude;
         }
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -409,20 +409,20 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
         for (PlaceViewItem hotelListViewItem : mHotelArrangeArrayList)
         {
-            Hotel hotel = hotelListViewItem.getItem();
+            Stay stay = hotelListViewItem.getItem();
 
             count++;
 
-            HotelClusterItem hotelClusterItem = new HotelClusterItem(hotel);
+            HotelClusterItem hotelClusterItem = new HotelClusterItem(stay);
             mClusterManager.addItem(hotelClusterItem);
 
-            LatLng latlng = new LatLng(hotel.latitude, hotel.longitude);
+            LatLng latlng = new LatLng(stay.latitude, stay.longitude);
             builder.include(latlng);
 
             // 기존의 마커 정보 창을 보여준다.
             if (mIsOpenMakrer == true)
             {
-                if (latitude == hotel.latitude && longitude == hotel.longitude)
+                if (latitude == stay.latitude && longitude == stay.longitude)
                 {
                     isOpenMarker = true;
 
@@ -567,7 +567,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
      * @param hashMap
      * @return
      */
-    private List<PlaceViewItem> searchDuplicateLocateion(List<PlaceViewItem> hotelArrayList, HashMap<String, ArrayList<Hotel>> hashMap)
+    private List<PlaceViewItem> searchDuplicateLocateion(List<PlaceViewItem> hotelArrayList, HashMap<String, ArrayList<Stay>> hashMap)
     {
         List<PlaceViewItem> arrangeList = new ArrayList<>(hotelArrayList);
 
@@ -584,7 +584,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
                 arrangeList.remove(i);
             } else
             {
-                if (hotelListViewItem.<Hotel>getItem().isSoldOut == true)
+                if (hotelListViewItem.<Stay>getItem().isSoldOut == true)
                 {
                     arrangeList.remove(i);
                 }
@@ -598,8 +598,8 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
             public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                Hotel item01 = placeViewItem1.getItem();
-                Hotel item02 = placeViewItem2.getItem();
+                Stay item01 = placeViewItem1.getItem();
+                Stay item02 = placeViewItem2.getItem();
 
                 float[] results1 = new float[3];
                 Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -618,8 +618,8 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
         // 중복된 호텔들은 낮은 가격을 노출하도록 한다.
         if (size > 1)
         {
-            Hotel item01;
-            Hotel item02;
+            Stay item01;
+            Stay item02;
 
             for (int i = size - 1; i > 0; i--)
             {
@@ -643,25 +643,25 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
                     if (hashMap.containsKey(key) == true)
                     {
-                        ArrayList<Hotel> dulicateHotelArrayList = hashMap.get(key);
+                        ArrayList<Stay> dulicateStayArrayList = hashMap.get(key);
 
-                        if (dulicateHotelArrayList.contains(item01) == false)
+                        if (dulicateStayArrayList.contains(item01) == false)
                         {
-                            dulicateHotelArrayList.add(item01);
+                            dulicateStayArrayList.add(item01);
                         }
 
-                        if (dulicateHotelArrayList.contains(item02) == false)
+                        if (dulicateStayArrayList.contains(item02) == false)
                         {
-                            dulicateHotelArrayList.add(item02);
+                            dulicateStayArrayList.add(item02);
                         }
                     } else
                     {
-                        ArrayList<Hotel> dulicateHotelArrayList = new ArrayList<>();
+                        ArrayList<Stay> dulicateStayArrayList = new ArrayList<>();
 
-                        dulicateHotelArrayList.add(item01);
-                        dulicateHotelArrayList.add(item02);
+                        dulicateStayArrayList.add(item01);
+                        dulicateStayArrayList.add(item02);
 
-                        hashMap.put(key, dulicateHotelArrayList);
+                        hashMap.put(key, dulicateStayArrayList);
                     }
                 }
             }
@@ -687,13 +687,13 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
         for (int i = 0; i < size; i++)
         {
             PlaceViewItem hotelListViewItem = mHotelArrangeArrayList.get(i);
-            Hotel hotel = hotelListViewItem.getItem();
+            Stay stay = hotelListViewItem.getItem();
 
-            if (latlng.latitude == hotel.latitude && latlng.longitude == hotel.longitude)
+            if (latlng.latitude == stay.latitude && latlng.longitude == stay.longitude)
             {
                 position = i;
 
-                HotelRenderer hotelRenderer = new HotelRenderer(baseActivity, hotel);
+                HotelRenderer hotelRenderer = new HotelRenderer(baseActivity, stay);
                 BitmapDescriptor icon = hotelRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -745,8 +745,8 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
         {
             public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                Hotel item01 = placeViewItem1.getItem();
-                Hotel item02 = placeViewItem2.getItem();
+                Stay item01 = placeViewItem1.getItem();
+                Stay item02 = placeViewItem2.getItem();
 
                 float[] results1 = new float[3];
                 Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -763,7 +763,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
         if (mHotelMapViewPagerAdapter == null)
         {
             mHotelMapViewPagerAdapter = new HotelMapViewPagerAdapter(baseActivity);
-            mHotelMapViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
+            mHotelMapViewPagerAdapter.setOnUserActionListener((HotelMapFragment.OnUserActionListener) mOnInfoWindowUserActionListener);
         }
 
         mHotelMapViewPagerAdapter.setData(mHotelArrangeArrayList);
@@ -778,13 +778,13 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
         for (int i = 0; i < size; i++)
         {
             PlaceViewItem hotelListViewItem = mHotelArrangeArrayList.get(i);
-            Hotel hotel = hotelListViewItem.getItem();
+            Stay stay = hotelListViewItem.getItem();
 
-            if (latlng.latitude == hotel.latitude && latlng.longitude == hotel.longitude)
+            if (latlng.latitude == stay.latitude && latlng.longitude == stay.longitude)
             {
                 position = i;
 
-                HotelRenderer hotelRenderer = new HotelRenderer(baseActivity, hotel);
+                HotelRenderer hotelRenderer = new HotelRenderer(baseActivity, stay);
                 BitmapDescriptor icon = hotelRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -997,11 +997,11 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
             PlaceViewItem hotelListViewItem = mHotelArrangeArrayList.get(page);
 
-            Hotel hotel = hotelListViewItem.getItem();
+            Stay stay = hotelListViewItem.getItem();
 
-            if (hotel != null)
+            if (stay != null)
             {
-                HotelClusterItem hotelClusterItem = new HotelClusterItem(hotel);
+                HotelClusterItem hotelClusterItem = new HotelClusterItem(stay);
                 mHotelClusterRenderer.setSelectedClusterItem(hotelClusterItem);
 
                 onMarkerTempClick(hotelClusterItem.getPosition());
@@ -1072,7 +1072,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
     private OnUserActionListener mOnInfoWindowUserActionListener = new OnUserActionListener()
     {
         @Override
-        public void onInfoWindowClickListener(Hotel selectedHotel)
+        public void onInfoWindowClickListener(Stay selectedStay)
         {
             if (getActivity() == null)
             {
@@ -1088,9 +1088,9 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
                         continue;
                     }
 
-                    Hotel hotel = hotelListViewItem.getItem();
+                    Stay stay = hotelListViewItem.getItem();
 
-                    if (hotel.equals(selectedHotel) == true)
+                    if (stay.equals(selectedStay) == true)
                     {
                         mSelectedHotelViewItem = hotelListViewItem;
                         mOnCommunicateListener.selectHotel(hotelListViewItem, mSaleTime);

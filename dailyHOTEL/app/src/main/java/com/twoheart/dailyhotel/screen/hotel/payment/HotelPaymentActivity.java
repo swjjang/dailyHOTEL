@@ -44,7 +44,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.Province;
@@ -1548,8 +1548,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             {
                                 HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-                                Hotel.HotelGrade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
-                                if (Hotel.HotelGrade.pension == hotelGrade || Hotel.HotelGrade.fullvilla == hotelGrade)
+                                Stay.HotelGrade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
+                                if (Stay.HotelGrade.pension == hotelGrade || Stay.HotelGrade.fullvilla == hotelGrade)
                                 {
                                     lockUI();
 
@@ -1570,8 +1570,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         });
                     } else
                     {
-                        Hotel.HotelGrade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
-                        if (Hotel.HotelGrade.pension == hotelGrade | Hotel.HotelGrade.fullvilla == hotelGrade)
+                        Stay.HotelGrade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
+                        if (Stay.HotelGrade.pension == hotelGrade | Stay.HotelGrade.fullvilla == hotelGrade)
                         {
                             lockUI();
 

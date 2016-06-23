@@ -5,13 +5,13 @@ import com.google.maps.android.clustering.ClusterItem;
 
 public class HotelClusterItem implements ClusterItem
 {
-    private final Hotel mHotel;
+    private final Stay mStay;
     private final LatLng mPosition;
 
-    public HotelClusterItem(Hotel hotel)
+    public HotelClusterItem(Stay stay)
     {
-        mHotel = hotel;
-        mPosition = new LatLng(hotel.latitude, hotel.longitude);
+        mStay = stay;
+        mPosition = new LatLng(stay.latitude, stay.longitude);
     }
 
     @Override
@@ -20,8 +20,8 @@ public class HotelClusterItem implements ClusterItem
         return mPosition;
     }
 
-    public Hotel getHotel()
+    public Stay getHotel()
     {
-        return mHotel;
+        return mStay;
     }
 }

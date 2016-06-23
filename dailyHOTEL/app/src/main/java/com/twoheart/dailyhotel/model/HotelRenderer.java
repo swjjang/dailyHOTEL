@@ -15,13 +15,13 @@ public class HotelRenderer
     private int mMarkerResId;
     private HotelIconGenerator mIconGenerator;
 
-    public HotelRenderer(Context context, Hotel hotel)
+    public HotelRenderer(Context context, Stay stay)
     {
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        mPrice = comma.format(hotel.averageDiscountPrice) + context.getString(R.string.currency);
+        mPrice = comma.format(stay.averageDiscountPrice) + context.getString(R.string.currency);
 
-        mMarkerResId = hotel.getGrade().getMarkerResId();
+        mMarkerResId = stay.getGrade().getMarkerResId();
 
         mIconGenerator = new HotelIconGenerator(context);
         mIconGenerator.setTextColor(context.getResources().getColor(R.color.white));
