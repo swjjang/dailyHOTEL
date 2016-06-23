@@ -207,7 +207,7 @@ public class GourmetListFragment_v2 extends PlaceListFragment
         }
     }
 
-    protected void setVisibility(ViewType viewType, boolean isCurrentPage)
+    public void setVisibility(ViewType viewType, boolean isCurrentPage)
     {
         switch (viewType)
         {
@@ -288,7 +288,7 @@ public class GourmetListFragment_v2 extends PlaceListFragment
     public void fetchList()
     {
         GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
-        fetchList(gourmetCurationOption.getProvince(), mSaleTime, null);
+        fetchList(GourmetCurationManager.getInstance().getProvince(), mSaleTime, null);
     }
 
     public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
@@ -325,7 +325,7 @@ public class GourmetListFragment_v2 extends PlaceListFragment
             return gourmetViewItemList;
         }
 
-        final Location location = gourmetCurationOption.getLocation();
+        final Location location = GourmetCurationManager.getInstance().getLocation();
 
         switch (gourmetCurationOption.getSortType())
         {
@@ -572,7 +572,7 @@ public class GourmetListFragment_v2 extends PlaceListFragment
 
                 Map<String, String> parmas = new HashMap<>();
                 GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
-                Province province = gourmetCurationOption.getProvince();
+                Province province = GourmetCurationManager.getInstance().getProvince();
 
                 if (province instanceof Area)
                 {

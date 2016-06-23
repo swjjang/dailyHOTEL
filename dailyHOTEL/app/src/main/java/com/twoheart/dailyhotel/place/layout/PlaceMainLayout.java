@@ -139,7 +139,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     }
 
     public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//
-        , Category selectedCategory, PlaceListFragment.OnListFragmentListener listener)
+        , Category selectedCategory, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         if (categoryList == null)
         {

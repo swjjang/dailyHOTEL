@@ -564,7 +564,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             return;
         }
 
-        mCurationOption.setProvince(province);
+        GourmetCurationManager.getInstance().setProvince(province);
     }
 
     private Province getProvince()
@@ -574,7 +574,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             return null;
         }
 
-        return mCurationOption.getProvince();
+        return GourmetCurationManager.getInstance().getProvince();
     }
 
     private void clearCurationOption()
@@ -614,14 +614,14 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
     private void refreshEventBanner()
     {
-        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError volleyError)
-            {
-                refreshCurrentFragment(getProvince());
-            }
-        });
+//        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", mEventBannerListJsonResponseListener, new Response.ErrorListener()
+//        {
+//            @Override
+//            public void onErrorResponse(VolleyError volleyError)
+//            {
+//                refreshCurrentFragment(getProvince());
+//            }
+//        });
     }
 
     private void refreshCurrentFragment(Province province)
@@ -771,7 +771,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     curationCurrentFragment();
                 } else
                 {
-                    mCurationOption.setLocation(location);
+                    GourmetCurationManager.getInstance().setLocation(location);
 
                     if (mCurationOption.getSortType() == SortType.DISTANCE)
                     {
@@ -1008,7 +1008,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             }
         };
 
-        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", deepLinkEventListener, deepLinkEventListener);
+//        DailyNetworkAPI.getInstance(getContext()).requestEventBannerList(mNetworkTag, "gourmet", deepLinkEventListener, deepLinkEventListener);
     }
 
     private void deepLinkGourmetList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
@@ -1355,7 +1355,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mCurationOption.getProvince());
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, GourmetCurationManager.getInstance().getProvince());
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.discountPrice);
 
                     String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
@@ -1523,7 +1523,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                     Map<String, String> parmas = new HashMap<>();
                     GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
-                    Province province = gourmetCurationOption.getProvince();
+                    Province province = GourmetCurationManager.getInstance().getProvince();
 
                     if (province instanceof Area)
                     {
