@@ -45,12 +45,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     public void requestVerfication(String signupKey, String phoneNumber, boolean force)
     {
         DailyNetworkAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, mVerificationJsonResponseListener);

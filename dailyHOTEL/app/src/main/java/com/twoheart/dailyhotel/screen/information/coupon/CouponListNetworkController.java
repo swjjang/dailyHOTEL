@@ -60,12 +60,6 @@ public class CouponListNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     DailyHotelJsonResponseListener mCouponListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override

@@ -63,12 +63,6 @@ public class SelectCouponNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     DailyHotelJsonResponseListener mCouponListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -96,7 +90,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            SelectCouponNetworkController.this.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 
@@ -131,7 +125,7 @@ public class SelectCouponNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            SelectCouponNetworkController.this.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

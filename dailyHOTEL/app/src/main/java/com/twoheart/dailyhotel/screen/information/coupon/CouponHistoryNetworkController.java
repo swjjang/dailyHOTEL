@@ -28,18 +28,12 @@ public class CouponHistoryNetworkController extends BaseNetworkController
 
     public void requestCouponHistoryList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, mCouponHistoryJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, mCouponHistoryJsonResponseListener, mCouponHistoryJsonResponseListener);
     }
 
     public CouponHistoryNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
     DailyHotelJsonResponseListener mCouponHistoryJsonResponseListener = new DailyHotelJsonResponseListener()
@@ -72,7 +66,7 @@ public class CouponHistoryNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

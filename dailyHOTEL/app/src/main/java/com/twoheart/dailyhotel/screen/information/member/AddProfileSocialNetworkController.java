@@ -26,12 +26,6 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender)
     {
         Map<String, String> params = new HashMap<>();
@@ -57,7 +51,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
             params.put("recommendation_code", recommender);
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookJsonResponseListener, mUserUpdateFacebookJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

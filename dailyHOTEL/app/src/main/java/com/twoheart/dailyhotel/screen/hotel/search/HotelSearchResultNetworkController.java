@@ -48,12 +48,6 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
-
     public void requestSearchResultList(SaleTime saleTime, int nights, String keyword, int offset, int count)
     {
         String encodeKeyword;
@@ -66,14 +60,14 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
             encodeKeyword = keyword;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestHotelSearchList(mNetworkTag, saleTime, nights, encodeKeyword, offset, count, mHotelSearchListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestHotelSearchList(mNetworkTag, saleTime, nights, encodeKeyword, offset, count, mHotelSearchListJsonResponseListener, mHotelSearchListJsonResponseListener);
     }
 
     public void requestSearchResultList(SaleTime saleTime, int nights, Location location, int offset, int count)
     {
         requestAddress(location, mLocationToAddressListener);
 
-        DailyNetworkAPI.getInstance(mContext).requestHotelSearchList(mNetworkTag, saleTime, nights, location, offset, count, mHotelLocationSearchListJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestHotelSearchList(mNetworkTag, saleTime, nights, location, offset, count, mHotelLocationSearchListJsonResponseListener, mHotelLocationSearchListJsonResponseListener);
     }
 
     private ArrayList<PlaceViewItem> makeHotelList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
@@ -122,7 +116,7 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
 
         @Override

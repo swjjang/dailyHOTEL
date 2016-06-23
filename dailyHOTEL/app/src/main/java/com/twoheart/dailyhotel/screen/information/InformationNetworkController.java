@@ -35,7 +35,7 @@ public class InformationNetworkController extends BaseNetworkController
 
     public void requestUserInformation()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, this);
+        DailyNetworkAPI.getInstance(mContext).requestUserInformation(mNetworkTag, mUserInformationJsonResponseListener, mUserInformationJsonResponseListener);
     }
 
     public void requestPushBenefitText()
@@ -46,12 +46,6 @@ public class InformationNetworkController extends BaseNetworkController
     public void requestPushBenefit(boolean isAuthorization, boolean isAgree)
     {
         DailyNetworkAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAuthorization, isAgree, mUpdateBenefitJsonResponseListener);
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
     }
 
     /**
@@ -119,7 +113,7 @@ public class InformationNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            InformationNetworkController.this.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 
@@ -159,7 +153,7 @@ public class InformationNetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            InformationNetworkController.this.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
         }
     };
 }

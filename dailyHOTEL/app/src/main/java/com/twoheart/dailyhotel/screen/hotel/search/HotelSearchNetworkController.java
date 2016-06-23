@@ -31,11 +31,11 @@ public class HotelSearchNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError volleyError)
-    {
-        mOnNetworkControllerListener.onErrorResponse(volleyError);
-    }
+    //    @Override
+    //    public void onErrorResponse(VolleyError volleyError)
+    //    {
+    //        mOnNetworkControllerListener.onErrorResponse(volleyError);
+    //    }
 
     public void requestAutoComplete(SaleTime saleTime, int lengthStay, String keyword)
     {
@@ -50,6 +50,13 @@ public class HotelSearchNetworkController extends BaseNetworkController
 
     private DailyHotelJsonArrayResponseListener mHotelSearchAutoCompleteListener = new DailyHotelJsonArrayResponseListener()
     {
+
+        @Override
+        public void onErrorResponse(VolleyError volleyError)
+        {
+            mOnNetworkControllerListener.onErrorResponse(volleyError);
+        }
+
         @Override
         public void onResponse(String url, JSONArray response)
         {
@@ -72,6 +79,8 @@ public class HotelSearchNetworkController extends BaseNetworkController
 
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(url.substring(startIndex + 1), keywordList);
         }
+
+
     };
 
     private Response.ErrorListener mHotelSearchAutoCompleteErrorListener = new Response.ErrorListener()
