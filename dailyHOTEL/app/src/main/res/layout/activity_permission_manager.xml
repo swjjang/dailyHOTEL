@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/snackDialogLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_a67">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/titleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center_horizontal"
+                android:text="@string/label_guide_permission"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="17dp"
+                dailyFont:style="Medium"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/messageTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/message_guide_permission_read_phone_state"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"
+                android:gravity="center"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/confirmTextView"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/selector_dialog_button01"
+                android:gravity="center"
+                android:text="@string/label_do_setting_permission"
+                android:textColor="@drawable/selector_dialog_text_color01"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+        </LinearLayout>
+    </FrameLayout>
+</RelativeLayout>

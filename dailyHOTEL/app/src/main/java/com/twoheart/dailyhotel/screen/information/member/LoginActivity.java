@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.information.ForgotPasswordActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -89,8 +90,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         initTopLayout();
         initEditTextsLayout();
         initButtonsLayout();
-
-        setPermissionForOverAPI23();
     }
 
     private void initToolbar()
@@ -191,6 +190,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mLoginView.setOnClickListener(this);
         mFacebookLoginView.setOnClickListener(this);
+
+        Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
+        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
     }
 
     @Override
@@ -207,58 +209,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         super.onDestroy();
 
         Session.getCurrentSession().removeCallback(mKakaoSessionCallback);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode)
-        {
-            case Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    // 권한 승인
-                } else
-                {
-                    // 권한 거부
-                    finish();
-                }
-                break;
-        }
-    }
-
-    private void setPermissionForOverAPI23()
-    {
-        if (Util.isOverAPI23() == false)
-        {
-            return;
-        }
-
-        // Activity에서 실행하는경우
-        int check = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-        if (PackageManager.PERMISSION_GRANTED != check)
-        {
-            // 이 권한을 필요한 이유를 설명해야하는가?
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE))
-            {
-                // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
-                // 해당 설명이 끝난뒤 requestPermissions()함수를 호출하여 권한허가를 요청해야 합니다
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS) //
-                    .setData(Uri.parse("package:com.twoheart.dailyhotel"));
-                startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
-
-            } else
-            {
-                requestPermissions( //
-                    new String[]{Manifest.permission.READ_PHONE_STATE}, //
-                    Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
-
-                // 필요한 권한과 요청 코드를 넣어서 권한허가요청에 대한 결과를 받아야 합니다
-
-            }
-        }
     }
 
     private void registerFacebookUser(String id, String name, String email, String gender)
@@ -491,33 +441,50 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CODE_REQEUST_ACTIVITY_SIGNUP)
+        switch(requestCode)
         {
-            if (resultCode == RESULT_OK)
+            case Constants.CODE_REQEUST_ACTIVITY_SIGNUP:
             {
-                setResult(RESULT_OK);
-                finish();
-            }
-        } else
-        {
-            lockUI();
-
-            try
-            {
-                if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data) == true)
+                if (resultCode == RESULT_OK)
                 {
-                    return;
+                    setResult(RESULT_OK);
+                    finish();
                 }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
+                break;
             }
 
-            unLockUI();
-
-            if (mCallbackManager != null)
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
-                mCallbackManager.onActivityResult(requestCode, resultCode, data);
+                if(resultCode == RESULT_CANCELED)
+                {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+                break;
+            }
+
+            default:
+            {
+                lockUI();
+
+                try
+                {
+                    if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data) == true)
+                    {
+                        return;
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                unLockUI();
+
+                if (mCallbackManager != null)
+                {
+                    mCallbackManager.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
             }
         }
     }

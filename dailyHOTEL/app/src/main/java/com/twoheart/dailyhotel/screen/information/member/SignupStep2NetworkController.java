@@ -304,7 +304,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-
             if (volleyError.networkResponse.statusCode == 422)
             {
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onRetryDailyUserSignIn();

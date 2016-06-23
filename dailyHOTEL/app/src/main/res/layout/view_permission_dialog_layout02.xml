@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/popup_bg_white_full"
+              android:orientation="vertical"
+              android:paddingBottom="10dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:paddingTop="24dp">
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_horizontal"
+        android:text="@string/label_guide_permission"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="17dp"
+        dailyFont:style="Medium"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:text="@string/message_guide_dialog_permission01"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_rect_cd0d0d0">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="128dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/label_denied_permission"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="15dp"/>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/textView01"
+            android:background="@color/default_line_cd0d0d0"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/permissionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="false"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="1px"
+                android:layout_toRightOf="@+id/textView01"
+                android:drawableLeft="@drawable/navibar_ic_call"
+                android:gravity="center_vertical"
+                android:text="@string/label_phone"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="15dp"/>
+        </FrameLayout>
+    </LinearLayout>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/messageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/message_guide_dialog_permission_read_phone_state"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_rect_cd0d0d0"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/com_facebook_profile_picture_blank_square"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/message_guide_dialog_permission02"
+            android:textColor="@color/default_text_cc5c5c5"
+            android:textSize="13dp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:id="@+id/twoButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/negativeTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_dialog_button02"
+                android:gravity="center"
+                android:text="@string/dialog_btn_text_close"
+                android:textColor="@drawable/selector_dialog_text_color02"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="match_parent"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/positiveTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/label_do_setting_permission"
+                android:background="@drawable/selector_dialog_button01"
+                android:gravity="center"
+                android:textColor="@drawable/selector_dialog_text_color01"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
