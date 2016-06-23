@@ -62,6 +62,25 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         mPermissionType = PermissionType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_PERMISSION));
 
+        switch (mPermissionType)
+        {
+            case READ_PHONE_STATE:
+                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+                {
+                    finish(RESULT_OK);
+                    return;
+                }
+                break;
+
+            case ACCESS_FINE_LOCATION:
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                {
+                    finish(RESULT_OK);
+                    return;
+                }
+                break;
+        }
+
         initLayout(mPermissionType);
     }
 
@@ -142,6 +161,16 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         switch (requestCode)
         {
             case Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE:
+            {
+                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+                {
+                    finish(RESULT_OK);
+                } else
+                {
+                    finish(RESULT_CANCELED);
+                }
+                break;
+            }
             case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
             {
                 if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
