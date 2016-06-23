@@ -90,6 +90,12 @@ public class StayListFragment extends PlaceListFragment
             }
         } else
         {
+            if (mHotelRecyclerView == null)
+            {
+                Util.restartApp(getContext());
+                return;
+            }
+
             switch (requestCode)
             {
                 case CODE_REQUEST_ACTIVITY_CALENDAR:

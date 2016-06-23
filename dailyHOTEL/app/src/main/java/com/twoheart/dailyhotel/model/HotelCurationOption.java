@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -16,6 +17,9 @@ public class HotelCurationOption extends PlaceCurationOption
     private Category mCategory;
 
     private ArrayList<HotelFilters> mHotelFiltersList;
+
+    private Province mProvince; // Not Parcelable
+    private Location mLocation; // Not Parcelable
 
     public HotelCurationOption()
     {
@@ -80,6 +84,26 @@ public class HotelCurationOption extends PlaceCurationOption
         }
 
         return true;
+    }
+
+    public Province getProvince()
+    {
+        return mProvince;
+    }
+
+    public void setProvince(Province province)
+    {
+        mProvince = province;
+    }
+
+    public Location getLocation()
+    {
+        return mLocation;
+    }
+
+    public void setLocation(Location location)
+    {
+        mLocation = location;
     }
 
     public String toString()

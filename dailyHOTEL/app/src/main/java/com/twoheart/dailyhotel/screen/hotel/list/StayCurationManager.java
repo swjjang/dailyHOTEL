@@ -126,6 +126,9 @@ public class StayCurationManager
         mCheckInSaleTime = new SaleTime();
         mCheckOutSaleTime = new SaleTime();
 
+        mProvince = null;
+        mLocation = null;
+
     }
 
 }
