@@ -427,7 +427,8 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                     searchMyLocation();
                 } else
                 {
-                    mCurationOption.setSortType(SortType.DEFAULT);
+                    mCurationOption.clear();
+                    curationCurrentFragment();
                 }
                 break;
             }
@@ -667,7 +668,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
             {
                 unLockUI();
 
-                mCurationOption.setSortType(SortType.DEFAULT);
+                mCurationOption.clear();
                 curationCurrentFragment();
             }
 
@@ -710,7 +711,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
                         @Override
                         public void onClick(View v)
                         {
-                            mCurationOption.setSortType(SortType.DEFAULT);
+                            mCurationOption.clear();
                             curationCurrentFragment();
 
                             //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
@@ -727,7 +728,7 @@ public class GourmetMainFragment extends BaseFragment implements AppBarLayout.On
 
                 if (location == null)
                 {
-                    mCurationOption.setSortType(SortType.DEFAULT);
+                    mCurationOption.clear();
                     curationCurrentFragment();
                 } else
                 {

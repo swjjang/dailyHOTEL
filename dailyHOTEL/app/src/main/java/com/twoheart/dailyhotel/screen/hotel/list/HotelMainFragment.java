@@ -469,7 +469,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                     searchMyLocation();
                 } else
                 {
-                    mCurationOption.setSortType(SortType.DEFAULT);
+                    mCurationOption.clear();
+                    curationCurrentFragment();
                 }
                 break;
             }
@@ -884,7 +885,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 unLockUI();
 
-                mCurationOption.setSortType(SortType.DEFAULT);
+                mCurationOption.clear();
                 curationCurrentFragment();
             }
 
@@ -927,7 +928,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         @Override
                         public void onClick(View v)
                         {
-                            mCurationOption.setSortType(SortType.DEFAULT);
+                            mCurationOption.clear();
                             curationCurrentFragment();
 
                             //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
@@ -944,7 +945,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
 
                 if (location == null)
                 {
-                    mCurationOption.setSortType(SortType.DEFAULT);
+                    mCurationOption.clear();
                     curationCurrentFragment();
                 } else
                 {

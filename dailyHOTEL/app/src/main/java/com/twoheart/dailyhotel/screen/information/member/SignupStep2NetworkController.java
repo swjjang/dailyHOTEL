@@ -304,7 +304,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
         @Override
         public void onErrorResponse(VolleyError volleyError)
         {
-            if (volleyError.networkResponse.statusCode == 422)
+            if (volleyError != null && volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 422)
             {
                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onRetryDailyUserSignIn();
                 Crashlytics.logException(volleyError);
@@ -312,7 +312,6 @@ public class SignupStep2NetworkController extends BaseNetworkController
             {
                 mOnNetworkControllerListener.onErrorResponse(volleyError);
             }
-
         }
 
         @Override
