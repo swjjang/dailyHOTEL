@@ -220,7 +220,6 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_ZOOMMAP = 35;
     public static final int CODE_REQUEST_ACTIVITY_SHAREKAKAO = 36;
     public static final int CODE_REQUEST_ACTIVITY_GOURMETCURATION = 37;
-    public static final int CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER = 38;
 
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
