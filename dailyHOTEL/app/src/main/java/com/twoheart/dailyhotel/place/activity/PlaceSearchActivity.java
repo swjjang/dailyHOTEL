@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
@@ -93,21 +94,6 @@ public abstract class PlaceSearchActivity extends BaseActivity
         {
             mShowSearchKeyboard = false;
             mPlaceSearchLayout.showSearchKeyboard();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
-        {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                searchMyLocation();
-            } else
-            {
-                // 퍼미션 허락하지 않음.
-            }
         }
     }
 
@@ -184,7 +170,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
 
                 mPlaceSearchLayout.updateTermsOfLocationLayout();
 
-                searchMyLocation();
+                Intent intent = PermissionManagerActivity.newInstance(PlaceSearchActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
 
                 //                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                 //                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.AGREE_AND_SEARCH, null);
@@ -254,17 +241,17 @@ public abstract class PlaceSearchActivity extends BaseActivity
                 break;
             }
 
-            case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             {
-                if (Util.isOverAPI23() == true)
-                {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    {
-                        searchMyLocation();
-                    } else
-                    {
+                searchMyLocation();
+                break;
+            }
 
-                    }
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                if(resultCode == RESULT_OK)
+                {
+                    searchMyLocation();
                 }
                 break;
             }
@@ -282,20 +269,8 @@ public abstract class PlaceSearchActivity extends BaseActivity
             {
                 unLockUI();
 
-                if (Util.isOverAPI23() == true)
-                {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
-                    {
-                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
-
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
-                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                    } else
-                    {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                    }
-                }
+                Intent intent = PermissionManagerActivity.newInstance(PlaceSearchActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
             }
 
             @Override

@@ -90,6 +90,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         initTopLayout();
         initEditTextsLayout();
         initButtonsLayout();
+
+        Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
+        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
     }
 
     private void initToolbar()
@@ -190,9 +193,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mLoginView.setOnClickListener(this);
         mFacebookLoginView.setOnClickListener(this);
-
-        Intent intent = PermissionManagerActivity.newInstance(this, PermissionManagerActivity.PermissionType.READ_PHONE_STATE);
-        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
     }
 
     @Override

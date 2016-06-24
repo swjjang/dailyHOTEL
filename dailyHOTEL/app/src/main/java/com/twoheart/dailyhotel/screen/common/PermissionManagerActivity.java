@@ -308,6 +308,11 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View v)
             {
+                if(mDialog != null && mDialog.isShowing() == true)
+                {
+                    mDialog.dismiss();
+                }
+
                 requestPermissions(permissionType);
             }
         });
@@ -378,6 +383,11 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View v)
             {
+                if(mDialog != null && mDialog.isShowing() == true)
+                {
+                    mDialog.dismiss();
+                }
+
                 startSettingDetailsActivity(permissionType);
             }
         });
@@ -387,6 +397,11 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View v)
             {
+                if(mDialog != null && mDialog.isShowing() == true)
+                {
+                    mDialog.dismiss();
+                }
+
                 finish(RESULT_CANCELED);
             }
         });

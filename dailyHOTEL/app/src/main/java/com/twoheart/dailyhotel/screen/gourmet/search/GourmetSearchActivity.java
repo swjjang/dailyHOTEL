@@ -11,7 +11,9 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -171,7 +173,8 @@ public class GourmetSearchActivity extends PlaceSearchActivity
                 return;
             }
 
-            searchMyLocation();
+            Intent intent = PermissionManagerActivity.newInstance(GourmetSearchActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
         @Override
