@@ -61,8 +61,6 @@ public class HotelSearchActivity extends PlaceSearchActivity
         mNetworkController = new HotelSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setDateText(mSaleTime, mNights);
-
-        mOnEventListener.onShowCalendar(false);
     }
 
     @Override

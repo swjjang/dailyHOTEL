@@ -57,8 +57,6 @@ public class GourmetSearchActivity extends PlaceSearchActivity
         mNetworkController = new GourmetSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setDateText(mSaleTime);
-
-        mOnEventListener.onShowCalendar(false);
     }
 
     @Override
