@@ -316,6 +316,31 @@ public class DailyNetworkAPI implements IDailyNetwork
         mQueue.add(dailyHotelJsonRequest);
     }
 
+//    @Override
+//    public void requestStayList(Object tag, Province province, Location mLocation, //
+//                                Category mCategory, SaleTime saleTime, int nights, StayCurationOption stayCurationOption,
+//                                DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
+//    {
+//        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales" : "";
+//
+//        String params;
+//
+//        if (province instanceof Area)
+//        {
+//            Area area = (Area) province;
+//
+//            params = String.format("?provinceIdx=%d&areaIdx=%d&dateCheckIn=%s&lengthStay=%d", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+//        } else
+//        {
+//            params = String.format("?provinceIdx=%d&dateCheckIn=%s&lengthStay=%d", province.getProvinceIndex(), saleTime.getDayOfDaysDateFormat("yyMMdd"), nights);
+//        }
+//
+//        DailyHotelJsonRequest dailyHotelJsonRequest = new DailyHotelJsonRequest(tag, Request.Method.POST, URL_DAILYHOTEL_SERVER + URL + params, null, listener, errorListener);
+//
+//        mQueue.add(dailyHotelJsonRequest);
+//    }
+
+
     @Override
     public void requestHotelSearchList(Object tag, SaleTime saleTime, int nights, String text, int offeset, int count, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener)
     {

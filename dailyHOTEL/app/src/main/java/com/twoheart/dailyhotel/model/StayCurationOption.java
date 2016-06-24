@@ -11,7 +11,7 @@ public class StayCurationOption extends PlaceCurationOption
 {
     public int person;
     public int flagBedTypeFilters;
-    public int flagAmenitiesFilters;
+    public int flagAmenitiesFilters; // luxuries
 
     private ArrayList<HotelFilters> mStayFiltersList;
 

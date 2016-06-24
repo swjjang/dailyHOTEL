@@ -158,6 +158,14 @@ interface IDailyNetwork
      */
     void requestHotelList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
+//    /**
+//     * api/sale/hotel_list
+//     * 호텔 리스트를 요청한다
+//     *
+//     * @return
+//     */
+//    void requestStayList(Object tag, Province province, SaleTime saleTime, int nights, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+
     /**
      * @param tag
      * @param saleTime
