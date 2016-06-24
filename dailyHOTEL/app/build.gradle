@@ -35,8 +35,8 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 87
-        versionName "1.8.7"
+        versionCode 88
+        versionName "1.8.8"
         multiDexEnabled true
 
         resConfigs "ko"
