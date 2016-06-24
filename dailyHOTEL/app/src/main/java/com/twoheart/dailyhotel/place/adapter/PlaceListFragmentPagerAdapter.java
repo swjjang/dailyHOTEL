@@ -9,11 +9,12 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.ArrayList;
 
-public class PlaceListFragmentPagerAdapter<T> extends FragmentStatePagerAdapter
+public abstract class PlaceListFragmentPagerAdapter extends FragmentStatePagerAdapter
 {
     private ArrayList<PlaceListFragment> mFragmentList;
     private int mTabCount;
-    protected Class<T> classT;
+
+    protected abstract void makePlaceListFragment(ArrayList<PlaceListFragment> list, int count, PlaceListFragment.OnPlaceListFragmentListener listener);
 
     public PlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
@@ -22,23 +23,7 @@ public class PlaceListFragmentPagerAdapter<T> extends FragmentStatePagerAdapter
         mTabCount = count;
         mFragmentList = new ArrayList<>(count);
 
-        PlaceListFragment placeListFragment;
-
-        for (int i = 0; i < count; i++)
-        {
-            try
-            {
-                placeListFragment = (PlaceListFragment)classT.newInstance();
-                placeListFragment.setListFragmentListener(listener);
-                mFragmentList.add(placeListFragment);
-            } catch (InstantiationException e)
-            {
-                ExLog.d(e.toString());
-            } catch (IllegalAccessException e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
+        makePlaceListFragment(mFragmentList, count, listener);
     }
 
     @Override

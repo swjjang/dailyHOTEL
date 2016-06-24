@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceCurationOption;
@@ -56,6 +57,8 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
     {
         return new GourmetMainNetworkController(context, mNetworkTag, mOnNetworkControllerListener);
     }
+
+
 
     @Override
     protected void onRegionActivityResult(int requestCode, int resultCode, Intent data)
@@ -448,6 +451,26 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 // 리스트 요청하면 됨.
                 String dateText = GourmetCurationManager.getInstance().getSaleTime().getDayOfDaysDateFormat("M.d(EEE)");
                 mPlaceMainLayout.setToolbarDateText(dateText);
+                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), new ArrayList<Category>(), null, new PlaceListFragment.OnPlaceListFragmentListener()
+                {
+                    @Override
+                    public void onPlaceClick(PlaceViewItem placeViewItem, SaleTime saleTime)
+                    {
+
+                    }
+
+                    @Override
+                    public void onEventBannerClick(EventBanner eventBanner)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAttach()
+                    {
+                        mPlaceMainLayout.getCurrentPlaceListFragment().refreshList();
+                    }
+                });
             }
         }
 
@@ -579,6 +602,12 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
 
         @Override
         public void onEventBannerClick(EventBanner eventBanner)
+        {
+
+        }
+
+        @Override
+        public void onAttach()
         {
 
         }

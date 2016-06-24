@@ -57,18 +57,26 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/underLine"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/toolbarLayout"
+        android:background="@color/tab_underline"
+        android:visibility="gone"/>
+
     <android.support.design.widget.TabLayout
         android:id="@+id/categoryTabLayout"
         android:layout_width="match_parent"
         android:layout_height="38dp"
+        android:layout_below="@+id/underLine"
         android:visibility="gone"
         app:tabIndicatorHeight="0dp"
         app:tabMinWidth="80dp"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/tab_selected"
         app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
-        app:tabTextColor="@color/tab_text"
-        android:layout_below="@+id/toolbarLayout"/>
+        app:tabTextColor="@color/tab_text"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
@@ -81,9 +89,9 @@
         android:id="@+id/bottomOptionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/viewTypeOptionImageView"
