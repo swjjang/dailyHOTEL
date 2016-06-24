@@ -18,13 +18,17 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
+import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -33,7 +37,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StayMainFragment extends PlaceMainFragment
 {
@@ -106,19 +112,38 @@ public class StayMainFragment extends PlaceMainFragment
     @Override
     protected void onLocationFailed()
     {
-
+        StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+        refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
+            StayCurationManager.getInstance().getStayCurationOption());
     }
 
     @Override
     protected void onLocationProviderDisabled()
     {
-
+        StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+        refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
+            StayCurationManager.getInstance().getStayCurationOption());
     }
 
     @Override
     protected void onLocationChanged(Location location)
     {
+        if (location == null)
+        {
+            StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
+            refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
+                StayCurationManager.getInstance().getStayCurationOption());
+        } else
+        {
+            StayCurationManager.getInstance().setLocation(location);
 
+            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
+            if (StayCurationManager.getInstance().getStayCurationOption().getSortType() == SortType.DISTANCE)
+            {
+                refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
+                    StayCurationManager.getInstance().getStayCurationOption());
+            }
+        }
     }
 
     private String makeTabDateFormat(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
@@ -563,7 +588,6 @@ public class StayMainFragment extends PlaceMainFragment
                 Date dailyDate = format.parse(todaySaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
 
                 int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-
                 if (dailyDayOfDays >= 0)
                 {
 
@@ -614,55 +638,201 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onCategoryTabSelected(TabLayout.Tab tab)
         {
+            Category category = (Category) tab.getTag();
+            StayCurationManager.getInstance().setCategory(category);
 
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category.name, null);
+
+            refreshCurrentFragmentByCuration(category, StayCurationManager.getInstance().getStayCurationOption());
         }
 
         @Override
         public void onCategoryTabUnselected(TabLayout.Tab tab)
         {
-
+            // do nothing!
         }
 
         @Override
         public void onCategoryTabReselected(TabLayout.Tab tab)
         {
-
+            // do nothing!
         }
 
         @Override
         public void onSearchClick()
         {
+            StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
 
+            Intent intent = HotelSearchActivity.newInstance(mBaseActivity //
+                , currentFragment.getCheckInSaleTime(), currentFragment.getNights());
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+
+            switch (mViewType)
+            {
+                case LIST:
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.HOTEL_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_LIST, null);
+
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.HOTEL_LIST, null);
+                    break;
+
+                case MAP:
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.HOTEL_SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_MAP, null);
+
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_POPPEDUP, AnalyticsManager.Label.HOTEL_MAP, null);
+                    break;
+            }
         }
 
         @Override
         public void onDateClick()
         {
+            if (isFinishing() == true || isLockUiComponent() == true)
+            {
+                return;
+            }
 
+            lockUiComponent();
+
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
+
+            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+            int nights = StayCurationManager.getInstance().getCheckOutSaleTime().getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+
+            Intent intent = HotelCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, true, true);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 
         @Override
         public void onRegionClick()
         {
+            if (isFinishing() == true || isLockUiComponent() == true)
+            {
+                return;
+            }
 
+            lockUiComponent();
+
+            StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+
+            Intent intent = HotelRegionListActivity.newInstance(getContext(), //
+                StayCurationManager.getInstance().getProvince(), //
+                currentFragment.getCheckInSaleTime(), currentFragment.getNights());
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
         }
 
         @Override
         public void onViewTypeClick()
         {
+            if (isFinishing() == true || isLockUiComponent() == true)
+            {
+                return;
+            }
 
+            lockUI();
+
+            switch (mViewType)
+            {
+                case LIST:
+                    mViewType = ViewType.MAP;
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+                    break;
+
+                case MAP:
+                {
+                    mViewType = ViewType.LIST;
+                    AnalyticsManager.getInstance(getActivity()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+
+                    Map<String, String> parmas = new HashMap<>();
+                    Province province = StayCurationManager.getInstance().getProvince();
+
+                    if (province == null)
+                    {
+                        Util.restartApp(getContext());
+                        return;
+                    }
+
+                    if (province instanceof Area)
+                    {
+                        Area area = (Area) province;
+                        parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                    } else
+                    {
+                        parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                        parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                    }
+
+                    AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, parmas);
+                    break;
+                }
+            }
+
+            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+            StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+
+            for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
+            {
+                boolean isCurrentFragment = (placeListFragment == currentFragment) ? true : false;
+
+                placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            }
+
+            refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
+                StayCurationManager.getInstance().getStayCurationOption());
+
+            unLockUI();
         }
 
         @Override
         public void onFilterClick()
         {
 
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Province province = StayCurationManager.getInstance().getProvince();
+            if (province == null)
+            {
+                releaseUiComponent();
+                return;
+            }
+
+            Intent intent = HotelCurationActivity.newInstance(mBaseActivity, //
+                province.isOverseas, mViewType, //
+                StayCurationManager.getInstance().getStayCurationOption());
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELCURATION);
+
+            String viewType;
+            if (ViewType.MAP.equals(mViewType))
+            {
+                viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+            } else
+            {
+                viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+            }
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }
 
         @Override
         public void finish()
         {
-
+            mBaseActivity.finish();
         }
     };
 

@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.HotelFilter;
 import com.twoheart.dailyhotel.model.HotelFilters;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -52,6 +53,16 @@ public class HotelCurationActivity extends PlaceCurationActivity implements Radi
         intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, hotelCurationOption);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, boolean isGlobal, ViewType viewType, StayCurationOption stayCurationOption)
+    {
+        Intent intent = new Intent(context, HotelCurationActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, isGlobal);
+        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CURATION_OPTIONS, stayCurationOption);
 
         return intent;
     }

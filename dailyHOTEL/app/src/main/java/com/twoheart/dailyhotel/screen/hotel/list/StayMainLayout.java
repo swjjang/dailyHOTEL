@@ -16,7 +16,7 @@ public class StayMainLayout extends PlaceMainLayout
     @Override
     public void onClick(View v)
     {
-
+        super.onClick(v);
     }
 
 
