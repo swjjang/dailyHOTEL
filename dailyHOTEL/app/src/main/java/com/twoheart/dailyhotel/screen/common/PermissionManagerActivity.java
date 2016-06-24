@@ -9,6 +9,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +28,7 @@ import com.twoheart.dailyhotel.util.Util;
 public class PermissionManagerActivity extends BaseActivity implements Constants
 {
     private static final String INTENT_EXTRA_DATA_PERMISSION = "permission";
+    private static final String CHANGE_STYLE_TEXT = "\'허용\'";
 
     private PermissionType mPermissionType;
     private Dialog mDialog;
@@ -281,15 +287,17 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         switch (permissionType)
         {
             case READ_PHONE_STATE:
-                messageTextView.setText(R.string.message_guide_dialog_permission_read_phone_state);
+                messageTextView.setText(changedSpannableColorBoldString(getString(R.string.message_guide_dialog_permission_read_phone_state), CHANGE_STYLE_TEXT));
                 permissionTextView.setText(R.string.label_phone);
-                permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.navibar_ic_call, 0, 0, 0);
+                permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_call, 0, 0, 0);
+                permissionTextView.setCompoundDrawablePadding(Util.dpToPx(this, 5));
                 break;
 
             case ACCESS_FINE_LOCATION:
-                messageTextView.setText(R.string.message_guide_dialog_permission_access_fine_location);
+                messageTextView.setText(changedSpannableColorBoldString(getString(R.string.message_guide_dialog_permission_access_fine_location), CHANGE_STYLE_TEXT));
                 permissionTextView.setText(R.string.label_location);
-                permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.navibar_ic_call, 0, 0, 0);
+                permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_map, 0, 0, 0);
+                permissionTextView.setCompoundDrawablePadding(Util.dpToPx(this, 5));
                 break;
         }
 
@@ -331,23 +339,36 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         View view = LayoutInflater.from(this).inflate(R.layout.view_permission_dialog_layout02, null, false);
 
-        TextView messageTextView = (TextView) view.findViewById(R.id.messageTextView);
+        TextView messageTextView01 = (TextView) view.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = (TextView) view.findViewById(R.id.messageTextView02);
+        TextView messageTextView03 = (TextView) view.findViewById(R.id.messageTextView03);
         TextView permissionTextView = (TextView) view.findViewById(R.id.permissionTextView);
 
         switch (permissionType)
         {
             case READ_PHONE_STATE:
-                messageTextView.setText(R.string.message_guide_dialog_denied_permission_read_phone_state);
+            {
+                messageTextView01.setText(R.string.message_guide_dialog_denied_permission01);
+                messageTextView02.setText(changedSpannableColorBoldString(getString(R.string.message_guide_dialog_denied_permission_read_phone_state), CHANGE_STYLE_TEXT));
                 permissionTextView.setText(R.string.label_phone);
-                permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.navibar_ic_call, 0, 0, 0);
+                permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_call, 0, 0, 0);
+                permissionTextView.setCompoundDrawablePadding(Util.dpToPx(this, 5));
                 break;
+            }
 
             case ACCESS_FINE_LOCATION:
-                messageTextView.setText(R.string.message_guide_dialog_denied_permission_access_fine_location);
+            {
+                messageTextView01.setText(R.string.message_guide_dialog_denied_permission01);
+                messageTextView02.setText(changedSpannableColorBoldString(getString(R.string.message_guide_dialog_denied_permission_access_fine_location), CHANGE_STYLE_TEXT));
                 permissionTextView.setText(R.string.label_location);
-                permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.navibar_ic_call, 0, 0, 0);
+                permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_map, 0, 0, 0);
+                permissionTextView.setCompoundDrawablePadding(Util.dpToPx(this, 5));
                 break;
+            }
         }
+
+        messageTextView03.setText(Html.fromHtml("<font color = '#323232'>" + getString(R.string.message_guide_dialog_permission02) + "</font>"//
+            + ' ' + "<font color = '#929292'>" + getString(R.string.message_guide_dialog_permission03) + "</font>"));
 
         View positiveTextView = view.findViewById(R.id.positiveTextView);
         View negativeTextView = view.findViewById(R.id.negativeTextView);
@@ -387,5 +408,26 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         {
             ExLog.d(e.toString());
         }
+    }
+
+    private SpannableStringBuilder changedSpannableColorBoldString(String text, String targetText)
+    {
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
+
+        if (Util.isTextEmpty(text) == true)
+        {
+            return spannableStringBuilder;
+        }
+
+        int startIndex = text.indexOf(targetText);
+        int endIndex = startIndex + targetText.length();
+
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.default_text_c900034)), //
+            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableStringBuilder;
     }
 }
