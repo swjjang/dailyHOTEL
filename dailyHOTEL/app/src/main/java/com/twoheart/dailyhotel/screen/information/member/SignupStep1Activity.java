@@ -1,13 +1,8 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -128,7 +123,7 @@ public class SignupStep1Activity extends BaseActivity
 
             case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
-                if(resultCode == RESULT_CANCELED)
+                if (resultCode == RESULT_CANCELED)
                 {
                     setResult(RESULT_CANCELED);
                     finish();

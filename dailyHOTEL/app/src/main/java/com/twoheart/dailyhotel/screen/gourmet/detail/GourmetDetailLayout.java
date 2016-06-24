@@ -505,6 +505,12 @@ public class GourmetDetailLayout
             return;
         }
 
+        if (mPlaceDetail == null)
+        {
+            Util.restartApp(mActivity);
+            return;
+        }
+
         setBookingStatus(STATUS_NONE);
 
         if (Util.isOverAPI12() == true)

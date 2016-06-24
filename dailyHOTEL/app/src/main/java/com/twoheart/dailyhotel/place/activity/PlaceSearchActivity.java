@@ -1,18 +1,13 @@
 package com.twoheart.dailyhotel.place.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -34,7 +29,6 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -249,7 +243,7 @@ public abstract class PlaceSearchActivity extends BaseActivity
 
             case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
-                if(resultCode == RESULT_OK)
+                if (resultCode == RESULT_OK)
                 {
                     searchMyLocation();
                 }
@@ -324,9 +318,10 @@ public abstract class PlaceSearchActivity extends BaseActivity
             @Override
             public void onLocationChanged(Location location)
             {
+                unLockUI();
+
                 if (isFinishing() == true)
                 {
-                    unLockUI();
                     return;
                 }
 
@@ -340,8 +335,6 @@ public abstract class PlaceSearchActivity extends BaseActivity
                     // 서버
                     onSearch(location);
                 }
-
-                unLockUI();
             }
         });
     }

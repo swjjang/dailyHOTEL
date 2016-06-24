@@ -308,7 +308,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View v)
             {
-                if(mDialog != null && mDialog.isShowing() == true)
+                if (mDialog != null && mDialog.isShowing() == true)
                 {
                     mDialog.dismiss();
                 }
@@ -383,7 +383,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View v)
             {
-                if(mDialog != null && mDialog.isShowing() == true)
+                if (mDialog != null && mDialog.isShowing() == true)
                 {
                     mDialog.dismiss();
                 }
@@ -397,7 +397,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View v)
             {
-                if(mDialog != null && mDialog.isShowing() == true)
+                if (mDialog != null && mDialog.isShowing() == true)
                 {
                     mDialog.dismiss();
                 }

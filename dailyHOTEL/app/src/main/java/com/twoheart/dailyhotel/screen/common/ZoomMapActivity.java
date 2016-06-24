@@ -1,14 +1,10 @@
 package com.twoheart.dailyhotel.screen.common;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -226,7 +222,7 @@ public class ZoomMapActivity extends BaseActivity
 
             case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
-                if(resultCode == RESULT_OK)
+                if (resultCode == RESULT_OK)
                 {
                     searchMyLocation();
                 }
@@ -336,6 +332,8 @@ public class ZoomMapActivity extends BaseActivity
             @Override
             public void onProviderDisabled(String provider)
             {
+                unLockUI();
+
                 if (isFinishing() == true)
                 {
                     return;
@@ -358,6 +356,8 @@ public class ZoomMapActivity extends BaseActivity
             @Override
             public void onLocationChanged(Location location)
             {
+                unLockUI();
+
                 if (isFinishing() == true || mGoogleMap == null)
                 {
                     return;
