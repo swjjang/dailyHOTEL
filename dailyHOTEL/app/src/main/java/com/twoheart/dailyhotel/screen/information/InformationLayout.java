@@ -355,6 +355,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             loginMessageTextView.setText(R.string.frag_login_message);
             loginMessageTextView.setTextColor(mContext.getResources().getColor(R.color.curation_title_text));
 
+            profileTextView.setVisibility(View.VISIBLE);
             loginView.setVisibility(View.VISIBLE);
             signUpView.setVisibility(View.VISIBLE);
             editProfileView.setVisibility(View.GONE);
