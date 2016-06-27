@@ -102,119 +102,118 @@ public class StayListFragment extends PlaceListFragment
 
 
         DailyNetworkAPI.getInstance(mBaseActivity).requestHotelList(mNetworkTag, //
-            StayCurationManager.getInstance().getProvince(), checkInSaleTime, nights,
-            mHotelListJsonResponseListener, mHotelListJsonResponseListener);
+            StayCurationManager.getInstance().getProvince(), checkInSaleTime, nights, mHotelListJsonResponseListener, mHotelListJsonResponseListener);
     }
 
-    public boolean hasSalesPlace() {
+    public boolean hasSalesPlace()
+    {
         return mStayListLayout.hasSalesPlace();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-//        if (mViewType == ViewType.MAP)
-//        {
-//            if (mHotelMapFragment != null)
-//            {
-//                mHotelMapFragment.onActivityResult(requestCode, resultCode, data);
-//            }
-//        } else
-//        {
-//            if (mStayRecyclerView == null)
-//            {
-//                Util.restartApp(getContext());
-//                return;
-//            }
-//
-//            switch (requestCode)
-//            {
-//                case CODE_REQUEST_ACTIVITY_CALENDAR:
-//                {
-//                    if (resultCode == Activity.RESULT_OK && data != null)
-//                    {
-//                        mCheckInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
-//                        mCheckOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
-//
-//                        mOnCommunicateListener.selectDay(mCheckInSaleTime, mCheckOutSaleTime, true);
-//                    } else
-//                    {
-//                        if (mStayRecyclerView.getVisibility() == View.VISIBLE && mStayRecyclerView.getAdapter() != null)
-//                        {
-//                            if (mStayRecyclerView.getAdapter().getItemCount() == 0)
-//                            {
-//                                fetchList();
-//                            }
-//                        }
-//                    }
-//                    break;
-//                }
-//            }
-//        }
+        //        if (mViewType == ViewType.MAP)
+        //        {
+        //            if (mHotelMapFragment != null)
+        //            {
+        //                mHotelMapFragment.onActivityResult(requestCode, resultCode, data);
+        //            }
+        //        } else
+        //        {
+        //            if (mStayRecyclerView == null)
+        //            {
+        //                Util.restartApp(getContext());
+        //                return;
+        //            }
+        //
+        //            switch (requestCode)
+        //            {
+        //                case CODE_REQUEST_ACTIVITY_CALENDAR:
+        //                {
+        //                    if (resultCode == Activity.RESULT_OK && data != null)
+        //                    {
+        //                        mCheckInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+        //                        mCheckOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+        //
+        //                        mOnCommunicateListener.selectDay(mCheckInSaleTime, mCheckOutSaleTime, true);
+        //                    } else
+        //                    {
+        //                        if (mStayRecyclerView.getVisibility() == View.VISIBLE && mStayRecyclerView.getAdapter() != null)
+        //                        {
+        //                            if (mStayRecyclerView.getAdapter().getItemCount() == 0)
+        //                            {
+        //                                fetchList();
+        //                            }
+        //                        }
+        //                    }
+        //                    break;
+        //                }
+        //            }
+        //        }
     }
-
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-//        if (mViewType == ViewType.MAP)
-//        {
-//            if (mHotelMapFragment != null)
-//            {
-//                mHotelMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//            }
-//        }
+        //        if (mViewType == ViewType.MAP)
+        //        {
+        //            if (mHotelMapFragment != null)
+        //            {
+        //                mHotelMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //            }
+        //        }
     }
 
     public void onRefreshComplete()
     {
-//        mOnCommunicateListener.refreshCompleted();
-//
-//        mSwipeRefreshLayout.setRefreshing(false);
-//
-//        if (mViewType == ViewType.MAP)
-//        {
-//            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
-//            mOnCommunicateListener.showFloatingActionButton();
-//        } else
-//        {
-//            Object objectTag = mSwipeRefreshLayout.getTag();
-//
-//            if (objectTag == null)
-//            {
-//                mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
-//
-//                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-//                animation.setDuration(300);
-//                animation.setAnimationListener(new Animation.AnimationListener()
-//                {
-//                    @Override
-//                    public void onAnimationStart(Animation animation)
-//                    {
-//                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation)
-//                    {
-//                        mSwipeRefreshLayout.setAnimation(null);
-//                        mOnCommunicateListener.showFloatingActionButton();
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation)
-//                    {
-//
-//                    }
-//                });
-//
-//                mSwipeRefreshLayout.startAnimation(animation);
-//            } else
-//            {
-//                mOnCommunicateListener.showFloatingActionButton();
-//            }
-//        }
+        //        mOnCommunicateListener.refreshCompleted();
+        //
+        //        mSwipeRefreshLayout.setRefreshing(false);
+        //
+        //        if (mViewType == ViewType.MAP)
+        //        {
+        //            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
+        //            mOnCommunicateListener.showFloatingActionButton();
+        //        } else
+        //        {
+        //            Object objectTag = mSwipeRefreshLayout.getTag();
+        //
+        //            if (objectTag == null)
+        //            {
+        //                mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
+        //
+        //                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        //                animation.setDuration(300);
+        //                animation.setAnimationListener(new Animation.AnimationListener()
+        //                {
+        //                    @Override
+        //                    public void onAnimationStart(Animation animation)
+        //                    {
+        //                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+        //                    }
+        //
+        //                    @Override
+        //                    public void onAnimationEnd(Animation animation)
+        //                    {
+        //                        mSwipeRefreshLayout.setAnimation(null);
+        //                        mOnCommunicateListener.showFloatingActionButton();
+        //                    }
+        //
+        //                    @Override
+        //                    public void onAnimationRepeat(Animation animation)
+        //                    {
+        //
+        //                    }
+        //                });
+        //
+        //                mSwipeRefreshLayout.startAnimation(animation);
+        //            } else
+        //            {
+        //                mOnCommunicateListener.showFloatingActionButton();
+        //            }
+        //        }
     }
 
     @Override
@@ -279,30 +278,30 @@ public class StayListFragment extends PlaceListFragment
 
     protected void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-//        BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//        if (province == null || checkInSaleTime == null || checkOutSaleTime == null)
-//        {
-//            Util.restartApp(baseActivity);
-//            return;
-//        }
-//
-//        lockUI();
-//
-//        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-//
-//        if (nights <= 0)
-//        {
-//            unLockUI();
-//            return;
-//        }
-//
-//        //        if (DEBUG == true && this instanceof HotelDaysListFragment)
-//        //        {
-//        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
-//        //        }
-//
-//        DailyNetworkAPI.getInstance(baseActivity).requestHotelList(mNetworkTag, province, checkInSaleTime, nights, mHotelListJsonResponseListener, baseActivity);
+        //        BaseActivity baseActivity = (BaseActivity) getActivity();
+        //
+        //        if (province == null || checkInSaleTime == null || checkOutSaleTime == null)
+        //        {
+        //            Util.restartApp(baseActivity);
+        //            return;
+        //        }
+        //
+        //        lockUI();
+        //
+        //        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+        //
+        //        if (nights <= 0)
+        //        {
+        //            unLockUI();
+        //            return;
+        //        }
+        //
+        //        //        if (DEBUG == true && this instanceof HotelDaysListFragment)
+        //        //        {
+        //        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
+        //        //        }
+        //
+        //        DailyNetworkAPI.getInstance(baseActivity).requestHotelList(mNetworkTag, province, checkInSaleTime, nights, mHotelListJsonResponseListener, baseActivity);
     }
 
     public void setScrollListTop(boolean scrollListTop)
@@ -472,7 +471,7 @@ public class StayListFragment extends PlaceListFragment
         mScrollListTop = true;
 
         ArrayList<PlaceViewItem> placeViewItemList = curationList(mStayList, category, curationOption);
-        setHotelListViewItemList(viewType, placeViewItemList, curationOption.getSortType());
+        mStayListLayout.setList(getChildFragmentManager(), viewType, placeViewItemList, curationOption.getSortType());
     }
 
     private ArrayList<PlaceViewItem> curationList(List<Stay> list, Category category, StayCurationOption curationOption)
@@ -525,132 +524,63 @@ public class StayListFragment extends PlaceListFragment
         return list;
     }
 
-    private void setHotelListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> hotelListViewItemList, SortType sortType)
-    {
-//        if (mStayListAdapter == null)
-//        {
-//            Util.restartApp(getContext());
-//            return;
-//        }
-//
-//        mStayListAdapter.clear();
-//
-//        if (hotelListViewItemList == null || hotelListViewItemList.size() == 0)
-//        {
-//            mStayListAdapter.notifyDataSetChanged();
-//
-//            setVisibility(ViewType.GONE, true);
-//
-//            mOnCommunicateListener.expandedAppBar(true, true);
-//        } else
-//        {
-//            setVisibility(viewType, true);
-//
-//            if (viewType == ViewType.MAP)
-//            {
-//                mHotelMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-//                mHotelMapFragment.setHotelViewItemList(hotelListViewItemList, mCheckInSaleTime, mScrollListTop);
-//
-//                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST_MAP);
-//            } else
-//            {
-//                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST);
-//
-//                Map<String, String> parmas = new HashMap<>();
-//                HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-//                Province province = hotelCurationOption.getProvince();
-//
-//                if (province instanceof Area)
-//                {
-//                    Area area = (Area) province;
-//                    parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-//                    parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-//
-//                } else
-//                {
-//                    parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-//                    parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-//                }
-//
-//                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST, parmas);
-//            }
-//
-//            if (sortType == SortType.DEFAULT)
-//            {
-//                if (mEventBannerList != null && mEventBannerList.size() > 0)
-//                {
-//                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
-//                    hotelListViewItemList.add(0, placeViewItem);
-//                }
-//            }
-//
-//            mStayListAdapter.addAll(hotelListViewItemList, sortType);
-//            mStayListAdapter.notifyDataSetChanged();
-//
-//            if (mScrollListTop == true)
-//            {
-//                mScrollListTop = false;
-//                mStayRecyclerView.scrollToPosition(0);
-//            }
-//        }
-    }
-//
-//    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//    //
-//    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
-//    {
-//        @Override
-//        public void onClick(View view)
-//        {
-//            BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//            if (baseActivity == null)
-//            {
-//                return;
-//            }
-//
-//            int position = mStayRecyclerView.getChildAdapterPosition(view);
-//
-//            if (position < 0)
-//            {
-//                fetchList();
-//                return;
-//            }
-//
-//            PlaceViewItem placeViewItem = mStayListAdapter.getItem(position);
-//
-//            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
-//            {
-//                mOnCommunicateListener.selectHotel(placeViewItem, mCheckInSaleTime);
-//            }
-//        }
-//    };
-//
-//    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
-//    {
-//        @Override
-//        public void onClick(View view)
-//        {
-//            BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//            if (baseActivity == null)
-//            {
-//                return;
-//            }
-//
-//            Integer index = (Integer) view.getTag(view.getId());
-//
-//            if (index != null)
-//            {
-//                EventBanner eventBanner = mEventBannerList.get(index);
-//
-//                mOnCommunicateListener.selectEventBanner(eventBanner);
-//            }
-//        }
-//    };
-//
+    //
+    //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //    //
+    //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
+    //    {
+    //        @Override
+    //        public void onClick(View view)
+    //        {
+    //            BaseActivity baseActivity = (BaseActivity) getActivity();
+    //
+    //            if (baseActivity == null)
+    //            {
+    //                return;
+    //            }
+    //
+    //            int position = mStayRecyclerView.getChildAdapterPosition(view);
+    //
+    //            if (position < 0)
+    //            {
+    //                fetchList();
+    //                return;
+    //            }
+    //
+    //            PlaceViewItem placeViewItem = mStayListAdapter.getItem(position);
+    //
+    //            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+    //            {
+    //                mOnCommunicateListener.selectHotel(placeViewItem, mCheckInSaleTime);
+    //            }
+    //        }
+    //    };
+    //
+    //    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
+    //    {
+    //        @Override
+    //        public void onClick(View view)
+    //        {
+    //            BaseActivity baseActivity = (BaseActivity) getActivity();
+    //
+    //            if (baseActivity == null)
+    //            {
+    //                return;
+    //            }
+    //
+    //            Integer index = (Integer) view.getTag(view.getId());
+    //
+    //            if (index != null)
+    //            {
+    //                EventBanner eventBanner = mEventBannerList.get(index);
+    //
+    //                mOnCommunicateListener.selectEventBanner(eventBanner);
+    //            }
+    //        }
+    //    };
+    //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -674,7 +604,6 @@ public class StayListFragment extends PlaceListFragment
             try
             {
                 int msgCode = response.getInt("msgCode");
-
                 if (msgCode == 100)
                 {
                     JSONObject dataJSONObject = response.getJSONObject("data");
@@ -703,7 +632,7 @@ public class StayListFragment extends PlaceListFragment
                     {
                         stayCurationOption.setFiltersList(null);
 
-                        mStayListLayout.setList(getChildFragmentManager(), mViewType, mStayList, stayCurationOption.getSortType());
+                        mStayListLayout.setList(getChildFragmentManager(), mViewType, null, stayCurationOption.getSortType());
 
                         setVisibility(ViewType.GONE, true);
 
@@ -718,9 +647,11 @@ public class StayListFragment extends PlaceListFragment
                         // 기본적으로 보관한다.
                         mStayList.addAll(stayList);
 
-                        ArrayList<PlaceViewItem> placeViewItemList = curationList(stayList, hotelCurationOption);
+                        ArrayList<PlaceViewItem> placeViewItemList = curationList(stayList, //
+                            StayCurationManager.getInstance().getCategory(), stayCurationOption);
 
-                        setHotelListViewItemList(mViewType, placeViewItemList, hotelCurationOption.getSortType());
+                        mStayListLayout.setList(getChildFragmentManager(), mViewType, //
+                            placeViewItemList, stayCurationOption.getSortType());
                     }
 
                     // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
@@ -791,7 +722,6 @@ public class StayListFragment extends PlaceListFragment
             return stayList;
         }
     };
-
 
 
     /////////////////////////////////////////////////////////////////////////////////

@@ -26,7 +26,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
@@ -252,8 +251,6 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
     {
         mStayListAdapter.clear();
     }
-
-    public void notify
 
     //    public SaleTime getCheckInSaleTime()
     //    {
@@ -563,7 +560,7 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
     //    }
     //
     public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                        List<Stay> stayViewItemList, Constants.SortType sortType)
+                        ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {
         if (mStayListAdapter == null)
         {
@@ -573,7 +570,7 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
 
         mStayListAdapter.clear();
 
-        if (stayViewItemList == null || stayViewItemList.size() == 0)
+        if (list == null || list.size() == 0)
         {
             mStayListAdapter.notifyDataSetChanged();
 
@@ -586,30 +583,29 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
             if (viewType == Constants.ViewType.MAP)
             {
                 mStayMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-                mStayMapFragment.setHotelViewItemList(stayViewItemList, mCheckInSaleTime, mScrollListTop);
+                mStayMapFragment.setHotelViewItemList(list, StayCurationManager.getInstance().getCheckInSaleTime(), mScrollListTop);
 
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
             } else
             {
                 AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
 
-                Map<String, String> parmas = new HashMap<>();
-                HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-                Province province = hotelCurationOption.getProvince();
+                Map<String, String> params = new HashMap<>();
+                Province province = StayCurationManager.getInstance().getProvince();
 
                 if (province instanceof Area)
                 {
                     Area area = (Area) province;
-                    parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
 
                 } else
                 {
-                    parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
                 }
 
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, parmas);
+                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, params);
             }
 
             if (sortType == Constants.SortType.DEFAULT)
@@ -617,11 +613,11 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
                 if (mEventBannerList != null && mEventBannerList.size() > 0)
                 {
                     PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
-                    stayViewItemList.add(0, placeViewItem);
+                    list.add(0, placeViewItem);
                 }
             }
 
-            mStayListAdapter.addAll(stayViewItemList, sortType);
+            mStayListAdapter.addAll(list, sortType);
             mStayListAdapter.notifyDataSetChanged();
 
             if (mScrollListTop == true)
