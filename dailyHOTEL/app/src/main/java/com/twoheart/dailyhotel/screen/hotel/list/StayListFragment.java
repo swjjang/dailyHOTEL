@@ -34,7 +34,9 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
@@ -55,8 +57,9 @@ public class StayListFragment extends PlaceListFragment
 
     protected List<Stay> mStayList = new ArrayList<>();
 
-    private StayListLayout mHotelCategoryListLayout;
+    private StayListLayout mStayListLayout;
     private BaseActivity mBaseActivity;
+    private HotelMapFragment mHotelMapFragment;
 
 
     @Override
@@ -64,11 +67,11 @@ public class StayListFragment extends PlaceListFragment
     {
         mBaseActivity = (BaseActivity) getActivity();
 
-        mHotelCategoryListLayout = new StayListLayout(getContext(), null);
+        mStayListLayout = new StayListLayout(getContext(), mEventListener);
 
         mViewType = ViewType.LIST;
 
-        return mHotelCategoryListLayout.onCreateView(R.layout.fragment_hotel_list, container);
+        return mStayListLayout.onCreateView(R.layout.fragment_hotel_list, container);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +87,50 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void setVisibility(ViewType viewType, boolean isCurrentPage)
     {
+        switch (viewType)
+        {
+            case LIST:
+                mViewType = Constants.ViewType.LIST;
 
+                mStayListLayout.setEmptyViewVisibility(View.GONE);
+                mStayListLayout.setMapLayoutVisibility(View.GONE);
+
+                if (mHotelMapFragment != null)
+                {
+                    getChildFragmentManager().beginTransaction().remove(mHotelMapFragment).commitAllowingStateLoss();
+                    mStayListLayout.removeAllViewOfMapLayout();
+                    mHotelMapFragment = null;
+                }
+
+                mStayListLayout.setSwipeRefreshLayoutVisibility(View.VISIBLE);
+                break;
+
+            case MAP:
+                mViewType = Constants.ViewType.MAP;
+
+                mStayListLayout.setEmptyViewVisibility(View.GONE);
+                mStayListLayout.setMapLayoutVisibility(View.VISIBLE);
+
+
+                if (isCurrentPage == true && mHotelMapFragment == null)
+                {
+                    mHotelMapFragment = new HotelMapFragment();
+//                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelMapFragment).commitAllowingStateLoss();
+                }
+
+                mStayListLayout.setSwipeRefreshLayoutVisibility(View.INVISIBLE);
+                break;
+
+            case GONE:
+                mStayListLayout.setEmptyViewVisibility(View.VISIBLE);
+                mStayListLayout.setMapLayoutVisibility(View.GONE);
+
+
+                mStayListLayout.setSwipeRefreshLayoutVisibility(View.INVISIBLE);
+
+                AnalyticsManager.getInstance(mBaseActivity).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY);
+                break;
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -765,4 +811,25 @@ public class StayListFragment extends PlaceListFragment
 //            return hotelList;
 //        }
 //    };
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////   Listener   //////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
+
+    private StayListLayout.OnEventListener mEventListener = new StayListLayout.OnEventListener()
+    {
+        @Override
+        public void setVisibility(ViewType viewType, boolean isCurrentPage)
+        {
+            setVisibility(viewType, isCurrentPage);
+        }
+
+        @Override
+        public void finish()
+        {
+
+        }
+    };
 }

@@ -51,7 +51,6 @@ public interface Constants
         DISTANCE,
         LOW_PRICE,
         HIGH_PRICE,
-        SortType,
         SATISFACTION
     }
 

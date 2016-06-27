@@ -17,14 +17,19 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
@@ -37,7 +42,7 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
 
     private View mEmptyView;
     private ViewGroup mMapLayout;
-    private HotelMapFragment mHotelMapFragment;
+//    private HotelMapFragment mHotelMapFragment;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<EventBanner> mEventBannerList;
 
@@ -49,53 +54,72 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void setVisibility(Constants.ViewType viewType, boolean isCurrentPage);
     }
 
-    public StayListLayout(Context context, OnEventListener mOnEventListener)
+    public StayListLayout(Context context, OnEventListener eventListener)
     {
-        super(context, mOnEventListener);
+        super(context, eventListener);
     }
 
     @Override
     protected void initLayout(View view)
     {
-//        mHotelRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
-//        mHotelRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//
-//        EdgeEffectColor.setEdgeGlowColor(mHotelRecyclerView, getResources().getColor(R.color.default_over_scroll_edge));
-//
-//        BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//        mHotelAdapter = new HotelListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
-//        mHotelRecyclerView.setAdapter(mHotelAdapter);
-//
-//        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-//        mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
-//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-//        {
-//            @Override
-//            public void onRefresh()
-//            {
-//                if (mOnCommunicateListener == null)
-//                {
-//                    return;
-//                }
-//
-//                mOnCommunicateListener.expandedAppBar(true, true);
-//                mOnCommunicateListener.refreshAll(false);
-//            }
-//        });
-//
-//        mEmptyView = view.findViewById(R.id.emptyLayout);
-//
-//        mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
-//
-//        mViewType = Constants.ViewType.LIST;
-//
-//        setVisibility(mViewType, true);
-//
-//        mHotelRecyclerView.setShadowVisible(false);
+        mHotelRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
+        mHotelRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+        EdgeEffectColor.setEdgeGlowColor(mHotelRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
+        mHotelAdapter = new HotelListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
+        mHotelRecyclerView.setAdapter(mHotelAdapter);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                if (mOnCommunicateListener == null)
+                {
+                    return;
+                }
+
+                mOnCommunicateListener.expandedAppBar(true, true);
+                mOnCommunicateListener.refreshAll(false);
+            }
+        });
+
+        mEmptyView = view.findViewById(R.id.emptyLayout);
+
+        mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
+
+        mViewType = Constants.ViewType.LIST;
+
+        ((OnEventListener) mOnEventListener).setVisibility(mViewType, true);
+
+        mHotelRecyclerView.setShadowVisible(false);
     }
+
+    public void setEmptyViewVisibility(int visibility) {
+        mEmptyView.setVisibility(visibility);
+    }
+
+    public void setMapLayoutVisibility(int visibility) {
+        mMapLayout.setVisibility(visibility);
+    }
+
+    public void setSwipeRefreshLayoutVisibility(int visibility) {
+        mSwipeRefreshLayout.setVisibility(visibility);
+    }
+
+    public void removeAllViewOfMapLayout() {
+        mMapLayout.removeAllViews();
+    }
+
+//    public View getMapLayout() {
+//        return
+//    }
 
     public boolean canScrollUp()
     {
@@ -165,52 +189,6 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
 //        }
     }
 
-//    protected void setVisibility(ViewType viewType, boolean isCurrentPage)
-//    {
-//        switch (viewType)
-//        {
-//            case LIST:
-//                mViewType = ViewType.LIST;
-//
-//                mEmptyView.setVisibility(View.GONE);
-//                mMapLayout.setVisibility(View.GONE);
-//
-//                if (mHotelMapFragment != null)
-//                {
-//                    getChildFragmentManager().beginTransaction().remove(mHotelMapFragment).commitAllowingStateLoss();
-//                    mMapLayout.removeAllViews();
-//                    mHotelMapFragment = null;
-//                }
-//
-//                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-//                break;
-//
-//            case MAP:
-//                mViewType = ViewType.MAP;
-//
-//                mEmptyView.setVisibility(View.GONE);
-//                mMapLayout.setVisibility(View.VISIBLE);
-//
-//                if (isCurrentPage == true && mHotelMapFragment == null)
-//                {
-//                    mHotelMapFragment = new HotelMapFragment();
-//                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelMapFragment).commitAllowingStateLoss();
-//                }
-//
-//                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-//                break;
-//
-//            case GONE:
-//                mEmptyView.setVisibility(View.VISIBLE);
-//                mMapLayout.setVisibility(View.GONE);
-//
-//                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-//
-//                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYHOTEL_LIST_EMPTY);
-//                break;
-//        }
-//    }
-//
 //    public SaleTime getCheckInSaleTime()
 //    {
 //        return mCheckInSaleTime;
@@ -625,29 +603,27 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
         }
     };
 
-//    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
-//    {
-//        @Override
-//        public void onClick(View view)
-//        {
-//            BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//            if (baseActivity == null)
-//            {
-//                return;
-//            }
-//
-//            Integer index = (Integer) view.getTag(view.getId());
-//
-//            if (index != null)
-//            {
-//                EventBanner eventBanner = mEventBannerList.get(index);
-//
-//                mOnCommunicateListener.selectEventBanner(eventBanner);
-//            }
-//        }
-//    };
-//
+    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            BaseActivity baseActivity = (BaseActivity) mContext;
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            Integer index = (Integer) view.getTag(view.getId());
+            if (index != null)
+            {
+                EventBanner eventBanner = mEventBannerList.get(index);
+
+                mOnCommunicateListener.selectEventBanner(eventBanner);
+            }
+        }
+    };
+
 //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //    // Listener
 //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
