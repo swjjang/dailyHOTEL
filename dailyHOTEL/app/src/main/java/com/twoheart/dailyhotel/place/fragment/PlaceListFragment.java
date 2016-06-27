@@ -28,10 +28,9 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     protected OnPlaceListFragmentListener mOnPlaceListFragmentListener;
     private boolean mIsAttached;
 
+    // onPlaceClick 부분이 있는데 이부분은 고메와 호텔은 서로 상속받아서 사용한다.
     public interface OnPlaceListFragmentListener
     {
-        void onPlaceClick(PlaceViewItem placeViewItem, SaleTime saleTime);
-
         void onEventBannerClick(EventBanner eventBanner);
 
         void onAttach(PlaceListFragment placeListFragment);

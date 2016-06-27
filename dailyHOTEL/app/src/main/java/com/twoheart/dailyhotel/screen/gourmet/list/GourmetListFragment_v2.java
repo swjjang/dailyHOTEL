@@ -22,19 +22,29 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class GourmetListFragment_v2 extends PlaceListFragment
 {
@@ -45,37 +55,17 @@ public class GourmetListFragment_v2 extends PlaceListFragment
     protected List<Gourmet> mGourmetList = new ArrayList<>();
     private GourmetListLayout mGourmetListLayout;
 
+    public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
+    {
+        void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         mBaseActivity = (BaseActivity) getActivity();
 
-        mGourmetListLayout = new GourmetListLayout(mBaseActivity, new GourmetListLayout.OnEventListener()
-        {
-            @Override
-            public void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime)
-            {
-
-            }
-
-            @Override
-            public void onEventBannerClick(EventBanner eventBanner)
-            {
-
-            }
-
-            @Override
-            public void onRefreshAll(boolean isShowProgress)
-            {
-
-            }
-
-            @Override
-            public void finish()
-            {
-
-            }
-        });
+        mGourmetListLayout = new GourmetListLayout(mBaseActivity, mOnEventListener);
 
         mViewType = ViewType.LIST;
 
@@ -85,13 +75,6 @@ public class GourmetListFragment_v2 extends PlaceListFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        //        if (mViewType == ViewType.MAP)
-        //        {
-        //            if (mGourmetMapFragment != null)
-        //            {
-        //                mGourmetMapFragment.onActivityResult(requestCode, resultCode, data);
-        //            }
-        //        }
     }
 
     @Override
@@ -359,6 +342,33 @@ public class GourmetListFragment_v2 extends PlaceListFragment
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private GourmetListLayout.OnEventListener mOnEventListener = new GourmetListLayout.OnEventListener()
+    {
+        @Override
+        public void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime)
+        {
+            ((OnGourmetListFragmentListener)mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, saleTime);
+        }
+
+        @Override
+        public void onEventBannerClick(EventBanner eventBanner)
+        {
+            mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
+        }
+
+        @Override
+        public void onRefreshAll(boolean isShowProgress)
+        {
+
+        }
+
+        @Override
+        public void finish()
+        {
+            mBaseActivity.finish();
+        }
+    };
 
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {

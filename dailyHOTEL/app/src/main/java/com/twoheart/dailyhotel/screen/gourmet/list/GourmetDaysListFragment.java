@@ -43,7 +43,7 @@ public class GourmetDaysListFragment extends GourmetListFragment
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    mSaleTime = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                    mSaleTime = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_SALETIME);
 
                     mOnCommunicateListener.selectDay(mSaleTime, true);
                 } else

@@ -39,6 +39,8 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected abstract void onRegionActivityResult(int requestCode, int resultCode, Intent data);
 
+    protected abstract void onCalendarActivityResult(int requestCode, int resultCode, Intent data);
+
     protected abstract void onCurationActivityResult(int requestCode, int resultCode, Intent data);
 
     protected abstract void onLocationFailed();
@@ -115,12 +117,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             {
                 mDontReloadAtOnResume = true;
 
-                PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-                if (placeListFragment != null)
-                {
-                    placeListFragment.onActivityResult(requestCode, resultCode, data);
-                }
+                onCalendarActivityResult(requestCode, resultCode, data);
                 break;
             }
 

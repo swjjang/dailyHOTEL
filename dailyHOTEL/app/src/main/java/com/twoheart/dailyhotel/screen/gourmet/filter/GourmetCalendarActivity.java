@@ -190,7 +190,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                     , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + date + "-" + phoneDate, params);
 
                 Intent intent = new Intent();
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mDay.dayTime);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDay.dayTime);
 
                 setResult(RESULT_OK, intent);
                 hideAnimation();

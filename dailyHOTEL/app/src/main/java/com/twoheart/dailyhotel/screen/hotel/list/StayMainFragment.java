@@ -71,6 +71,12 @@ public class StayMainFragment extends PlaceMainFragment
     }
 
     @Override
+    protected void onCalendarActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
     protected void onCurationActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
