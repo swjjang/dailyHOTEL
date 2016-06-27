@@ -90,7 +90,14 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         if (resultCode == Activity.RESULT_OK && data != null)
         {
             SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+
+            if(saleTime == null)
+            {
+                return;
+            }
+
             GourmetCurationManager.getInstance().setSaleTime(saleTime);
+            ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(saleTime);
 
             PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
             placeListFragment.refreshList();
@@ -406,9 +413,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 // 딥링크 이동
             } else
             {
-
-                String dateText = GourmetCurationManager.getInstance().getSaleTime().getDayOfDaysDateFormat("M.d(EEE)");
-                mPlaceMainLayout.setToolbarDateText(dateText);
+                ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(GourmetCurationManager.getInstance().getSaleTime());
 
                 mPlaceMainNetworkController.requestEventBanner();
             }
@@ -887,12 +892,8 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 if (dailyDayOfDays >= 0)
                 {
                     SaleTime deepLinkSaleTime = saleTime.getClone(dailyDayOfDays);
-
-                    // 리스트 요청하면 됨.
-                    String dateText = deepLinkSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
-                    mPlaceMainLayout.setToolbarDateText(dateText);
-
                     GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
+                    ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
 
                     // 특정 날짜 고메 리스트 요청
                     refreshCurrentFragment();
@@ -911,12 +912,8 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             try
             {
                 SaleTime deepLinkSaleTime = saleTime.getClone(datePlus);
-
-                // 리스트 요청하면 됨.
-                String dateText = deepLinkSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
-                mPlaceMainLayout.setToolbarDateText(dateText);
-
                 GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
+                ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
 
                 refreshCurrentFragment();
             } catch (Exception e)
