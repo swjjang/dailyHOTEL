@@ -201,7 +201,9 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() + " , email : " + getUserEmail();
+            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
+                + " , email : " + getUserEmail();
+
             Crashlytics.log(msg);
             Crashlytics.logException(e);
         }
@@ -222,9 +224,20 @@ public class DailyPreference
     {
         boolean result = defaultValue;
 
-        if (sharedPreferences != null)
+        try
         {
-            result = sharedPreferences.getBoolean(key, defaultValue);
+            if (sharedPreferences != null)
+            {
+                result = sharedPreferences.getBoolean(key, defaultValue);
+            }
+
+        } catch (ClassCastException e)
+        {
+            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
+                + " , email : " + getUserEmail();
+
+            Crashlytics.log(msg);
+            Crashlytics.logException(e);
         }
 
         return result;
@@ -243,9 +256,20 @@ public class DailyPreference
     {
         long result = defaultValue;
 
-        if (sharedPreferences != null)
+        try
         {
-            result = sharedPreferences.getLong(key, defaultValue);
+            if (sharedPreferences != null)
+            {
+                result = sharedPreferences.getLong(key, defaultValue);
+            }
+
+        } catch (ClassCastException e)
+        {
+            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
+                + " , email : " + getUserEmail();
+
+            Crashlytics.log(msg);
+            Crashlytics.logException(e);
         }
 
         return result;
@@ -264,9 +288,20 @@ public class DailyPreference
     {
         int result = defaultValue;
 
-        if (sharedPreferences != null)
+        try
         {
-            result = sharedPreferences.getInt(key, defaultValue);
+            if (sharedPreferences != null)
+            {
+                result = sharedPreferences.getInt(key, defaultValue);
+            }
+
+        } catch (ClassCastException e)
+        {
+            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() //
+                + " , email : " + getUserEmail();
+
+            Crashlytics.log(msg);
+            Crashlytics.logException(e);
         }
 
         return result;

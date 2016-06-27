@@ -69,7 +69,9 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
         AUTHORIZATION = DailyPreference.getInstance(getApplicationContext()).getAuthorization();
 
-        String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
+        String preferenceVersion = DailyPreference.getInstance( //
+            getApplicationContext()).getFirstAppVersion();
+
         if (Util.isTextEmpty(preferenceVersion) == true)
         {
             DailyPreference.getInstance(getApplicationContext()).setFirstAppVersion(VERSION);
