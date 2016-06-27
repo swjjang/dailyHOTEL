@@ -76,7 +76,7 @@ public class StayListFragment extends PlaceListFragment
     //////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void refreshList()
+    public void refreshList(boolean isShowProgress)
     {
 
     }

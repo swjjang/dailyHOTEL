@@ -36,7 +36,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         void onAttach(PlaceListFragment placeListFragment);
     }
 
-    public abstract void refreshList();
+    public abstract void refreshList(boolean isShowProgress);
 
     public abstract void setVisibility(ViewType viewType, boolean isCurrentPage);
 
