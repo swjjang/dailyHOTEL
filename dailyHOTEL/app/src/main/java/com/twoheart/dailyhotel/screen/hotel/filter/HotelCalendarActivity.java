@@ -185,6 +185,12 @@ public class HotelCalendarActivity extends PlaceCalendarActivity
                     return;
                 }
 
+                if(mCheckInDay == null || mCheckInDay.dayTime == null)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
                 String checkInDate = mCheckInDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
                 String checkOutDate = mCheckOutDay.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 

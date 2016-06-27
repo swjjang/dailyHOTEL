@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -57,9 +58,9 @@ public class InformationFragment extends BaseFragment implements Constants
     }
 
     @Override
-    public void onAttach(Context context)
+    public void onAttach(Activity activity)
     {
-        super.onAttach(context);
+        super.onAttach(activity);
 
         mIsAttach = true;
     }

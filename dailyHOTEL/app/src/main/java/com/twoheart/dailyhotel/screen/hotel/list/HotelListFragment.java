@@ -18,6 +18,8 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -63,6 +65,8 @@ import java.util.Map;
 
 public class HotelListFragment extends BaseFragment implements Constants
 {
+    private static final int MESSAGE_NOTIFYDATASETCHANGED = 1;
+
     protected PinnedSectionRecyclerView mHotelRecyclerView;
     protected HotelListAdapter mHotelAdapter;
 
@@ -80,6 +84,23 @@ public class HotelListFragment extends BaseFragment implements Constants
     protected HotelMainFragment.OnCommunicateListener mOnCommunicateListener;
 
     protected List<Hotel> mHotelList = new ArrayList<>();
+
+    private Handler mDateChangedHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case MESSAGE_NOTIFYDATASETCHANGED:
+                    if (mHotelAdapter != null)
+                    {
+                        mHotelAdapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -583,7 +604,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
         if (hotelListViewItemList == null || hotelListViewItemList.size() == 0)
         {
-            mHotelAdapter.notifyDataSetChanged();
+            mDateChangedHandler.sendEmptyMessage(MESSAGE_NOTIFYDATASETCHANGED);
 
             setVisibility(ViewType.GONE, true);
 
@@ -631,7 +652,7 @@ public class HotelListFragment extends BaseFragment implements Constants
             }
 
             mHotelAdapter.addAll(hotelListViewItemList, sortType);
-            mHotelAdapter.notifyDataSetChanged();
+            mDateChangedHandler.sendEmptyMessage(MESSAGE_NOTIFYDATASETCHANGED);
 
             if (mScrollListTop == true)
             {
@@ -751,7 +772,7 @@ public class HotelListFragment extends BaseFragment implements Constants
                         hotelCurationOption.setFiltersList(null);
 
                         mHotelAdapter.clear();
-                        mHotelAdapter.notifyDataSetChanged();
+                        mDateChangedHandler.sendEmptyMessage(MESSAGE_NOTIFYDATASETCHANGED);
 
                         setVisibility(ViewType.GONE, true);
 

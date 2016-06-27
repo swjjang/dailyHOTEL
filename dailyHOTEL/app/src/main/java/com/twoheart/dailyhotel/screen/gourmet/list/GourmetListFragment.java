@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -47,6 +49,8 @@ import java.util.Map;
 
 public class GourmetListFragment extends BaseFragment implements Constants
 {
+    private static final int MESSAGE_NOTIFYDATASETCHANGED = 1;
+
     protected PinnedSectionRecyclerView mGourmetRecyclerView;
     protected GourmetListAdapter mGourmetAdapter;
     protected SaleTime mSaleTime;
@@ -62,6 +66,23 @@ public class GourmetListFragment extends BaseFragment implements Constants
     protected GourmetMainFragment.OnCommunicateListener mOnCommunicateListener;
 
     protected List<Gourmet> mGourmetList = new ArrayList<>();
+
+    private Handler mDateChangedHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case MESSAGE_NOTIFYDATASETCHANGED:
+                    if (mGourmetAdapter != null)
+                    {
+                        mGourmetAdapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -527,7 +548,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
         if (gourmetListViewItemList == null || gourmetListViewItemList.size() == 0)
         {
-            mGourmetAdapter.notifyDataSetChanged();
+            mDateChangedHandler.sendEmptyMessage(MESSAGE_NOTIFYDATASETCHANGED);
 
             setVisibility(ViewType.GONE, true);
 
@@ -592,7 +613,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             }
 
             mGourmetAdapter.addAll(gourmetListViewItemList, sortType);
-            mGourmetAdapter.notifyDataSetChanged();
+            mDateChangedHandler.sendEmptyMessage(MESSAGE_NOTIFYDATASETCHANGED);
 
             if (mScrollListTop == true)
             {
@@ -737,7 +758,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
                         gourmetCurationOption.setFiltersList(null);
 
                         mGourmetAdapter.clear();
-                        mGourmetAdapter.notifyDataSetChanged();
+                        mDateChangedHandler.sendEmptyMessage(MESSAGE_NOTIFYDATASETCHANGED);
 
                         setVisibility(ViewType.GONE, true);
 

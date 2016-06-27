@@ -517,7 +517,7 @@ public class HotelDetailLayout
             return;
         }
 
-        if(mHotelDetail == null)
+        if (mHotelDetail == null)
         {
             Util.restartApp(mActivity);
             return;
