@@ -2,57 +2,28 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.base.BaseLayout;
-import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class GourmetListLayout extends BaseLayout
+public class GourmetListLayout extends PlaceListLayout
 {
-    protected PinnedSectionRecyclerView mGourmetRecyclerView;
-    protected GourmetListAdapter mGourmetAdapter;
-
-    private View mEmptyView;
-    private ViewGroup mMapLayout;
     private GourmetListMapFragment mGourmetListMapFragment;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    protected boolean mScrollListTop;
-
-    public interface OnEventListener extends OnBaseEventListener
-    {
-        void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime);
-
-        void onEventBannerClick(EventBanner eventBanner);
-
-        void onRefreshAll(boolean isShowProgress);
-    }
 
     public GourmetListLayout(Context context, OnEventListener mOnEventListener)
     {
@@ -60,70 +31,9 @@ public class GourmetListLayout extends BaseLayout
     }
 
     @Override
-    protected void initLayout(View view)
+    protected PlaceListAdapter getPlacetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
-        mGourmetRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
-        mGourmetRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mGourmetRecyclerView.setTag("GourmetListFragment");
-        EdgeEffectColor.setEdgeGlowColor(mGourmetRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-
-        mGourmetAdapter = new GourmetListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
-        mGourmetRecyclerView.setAdapter(mGourmetAdapter);
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                ((OnEventListener) mOnEventListener).onRefreshAll(false);
-            }
-        });
-
-        // edgeglow을 보이게 하기 위해서
-        mGourmetRecyclerView.addOnScrollListener(new OnScrollListener()
-        {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (dy <= 0)
-                {
-                    View firstView = recyclerView.findChildViewUnder(recyclerView.getLeft() + 1, recyclerView.getTop() + 1);
-                    int firstVisibleItem = recyclerView.getChildAdapterPosition(firstView);
-
-                    if (firstVisibleItem == 0)
-                    {
-                        mSwipeRefreshLayout.setEnabled(true);
-                    } else
-                    {
-                        mSwipeRefreshLayout.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        mEmptyView = view.findViewById(R.id.emptyLayout);
-        mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
-        mGourmetRecyclerView.setShadowVisible(false);
-    }
-
-    public boolean canScrollUp()
-    {
-        if (mSwipeRefreshLayout != null)
-        {
-            return mSwipeRefreshLayout.canChildScrollUp();
-        }
-
-        return true;
-    }
-
-    public void onPageSelected(String tabText)
-    {
-    }
-
-    public void onPageUnSelected()
-    {
+        return new GourmetListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
     }
 
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
@@ -178,24 +88,19 @@ public class GourmetListLayout extends BaseLayout
         return false;
     }
 
-    public void setScrollListTop(boolean scrollListTop)
-    {
-        mScrollListTop = scrollListTop;
-    }
-
     public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {
-        if (mGourmetAdapter == null)
+        if (mPlacetListAdapter == null)
         {
             Util.restartApp(mContext);
             return;
         }
 
-        mGourmetAdapter.clear();
+        mPlacetListAdapter.clear();
 
         if (list == null || list.size() == 0)
         {
-            mGourmetAdapter.notifyDataSetChanged();
+            mPlacetListAdapter.notifyDataSetChanged();
 
             setVisibility(fragmentManager, Constants.ViewType.GONE, true);
         } else
@@ -209,7 +114,7 @@ public class GourmetListLayout extends BaseLayout
                     @Override
                     public void onInformationClick(PlaceViewItem placeViewItem)
                     {
-                        ((OnEventListener) mOnEventListener).onGourmetClick(placeViewItem, GourmetCurationManager.getInstance().getSaleTime());
+                        ((OnEventListener) mOnEventListener).onPlaceClick(placeViewItem);
                     }
                 });
 
@@ -249,52 +154,20 @@ public class GourmetListLayout extends BaseLayout
                 }
             }
 
-            mGourmetAdapter.addAll(list, sortType);
-            mGourmetAdapter.notifyDataSetChanged();
+            ((GourmetListAdapter) mPlacetListAdapter).addAll(list, sortType);
+            mPlacetListAdapter.notifyDataSetChanged();
 
             if (mScrollListTop == true)
             {
                 mScrollListTop = false;
-                mGourmetRecyclerView.scrollToPosition(0);
+                mPlaceRecyclerView.scrollToPosition(0);
             }
         }
     }
 
     public boolean hasSalesPlace()
     {
-        return hasSalesPlace(mGourmetAdapter.getAll());
-    }
-
-    private boolean hasSalesPlace(List<PlaceViewItem> gourmetListViewItemList)
-    {
-        if (gourmetListViewItemList == null || gourmetListViewItemList.size() == 0)
-        {
-            return false;
-        }
-
-        boolean hasPlace = false;
-
-        for (PlaceViewItem placeViewItem : gourmetListViewItemList)
-        {
-            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
-                && placeViewItem.<Gourmet>getItem().isSoldOut == false)
-            {
-                hasPlace = true;
-                break;
-            }
-        }
-
-        return hasPlace;
-    }
-
-    public void setSwipeRefreshing(boolean refreshing)
-    {
-        if (mSwipeRefreshLayout == null)
-        {
-            return;
-        }
-
-        mSwipeRefreshLayout.setRefreshing(refreshing);
+        return hasSalesPlace(mPlacetListAdapter.getAll());
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -306,19 +179,19 @@ public class GourmetListLayout extends BaseLayout
         @Override
         public void onClick(View view)
         {
-            int position = mGourmetRecyclerView.getChildAdapterPosition(view);
+            int position = mPlaceRecyclerView.getChildAdapterPosition(view);
 
             if (position < 0)
             {
-                ((OnEventListener) mOnEventListener).onGourmetClick(null, GourmetCurationManager.getInstance().getSaleTime());
+                ((OnEventListener) mOnEventListener).onPlaceClick(null);
                 return;
             }
 
-            PlaceViewItem gourmetViewItem = mGourmetAdapter.getItem(position);
+            PlaceViewItem gourmetViewItem = mPlacetListAdapter.getItem(position);
 
             if (gourmetViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                ((OnEventListener) mOnEventListener).onGourmetClick(gourmetViewItem, GourmetCurationManager.getInstance().getSaleTime());
+                ((OnEventListener) mOnEventListener).onPlaceClick(gourmetViewItem);
             }
         }
     };

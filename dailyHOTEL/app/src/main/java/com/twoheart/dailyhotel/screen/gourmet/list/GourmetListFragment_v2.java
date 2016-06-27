@@ -86,14 +86,6 @@ public class GourmetListFragment_v2 extends PlaceListFragment
             , GourmetCurationManager.getInstance().getSaleTime(), mGourmetListJsonResponseListener, mBaseActivity);
     }
 
-    public void onPageSelected(String tabText)
-    {
-    }
-
-    public void onPageUnSelected()
-    {
-    }
-
     public boolean hasSalesPlace()
     {
         return mGourmetListLayout.hasSalesPlace();
@@ -336,9 +328,9 @@ public class GourmetListFragment_v2 extends PlaceListFragment
     private GourmetListLayout.OnEventListener mOnEventListener = new GourmetListLayout.OnEventListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime)
+        public void onPlaceClick(PlaceViewItem placeViewItem)
         {
-            ((OnGourmetListFragmentListener)mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, saleTime);
+            ((OnGourmetListFragmentListener)mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, GourmetCurationManager.getInstance().getSaleTime());
         }
 
         @Override
