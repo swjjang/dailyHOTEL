@@ -15,32 +15,51 @@
  */
 package com.twoheart.dailyhotel.place.fragment;
 
+import android.app.Activity;
+
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 
 public abstract class PlaceListFragment extends BaseFragment implements Constants
 {
     protected OnPlaceListFragmentListener mOnPlaceListFragmentListener;
+    private boolean mIsAttached;
 
+    // onPlaceClick 부분이 있는데 이부분은 고메와 호텔은 서로 상속받아서 사용한다.
     public interface OnPlaceListFragmentListener
     {
-        void onPlaceClick(PlaceViewItem placeViewItem, SaleTime saleTime);
-
         void onEventBannerClick(EventBanner eventBanner);
 
-        void onAttach();
+        void onAttach(PlaceListFragment placeListFragment);
     }
 
     public abstract void refreshList();
 
     public abstract void setVisibility(ViewType viewType, boolean isCurrentPage);
 
+    @Override
+    public void onAttach(Activity activity)
+    {
+        super.onAttach(activity);
+
+        mIsAttached = true;
+
+        if (mOnPlaceListFragmentListener != null)
+        {
+            mOnPlaceListFragmentListener.onAttach(this);
+        }
+    }
+
     public void setListFragmentListener(OnPlaceListFragmentListener listener)
     {
         mOnPlaceListFragmentListener = listener;
+    }
+
+    public boolean isAttached()
+    {
+        return mIsAttached;
     }
 }

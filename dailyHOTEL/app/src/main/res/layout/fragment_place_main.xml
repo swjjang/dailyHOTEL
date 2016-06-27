@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height_has_tab">
@@ -20,6 +20,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:drawableLeft="@drawable/navibar_ic_search_black"
+            android:text="@string/label_search"
             android:paddingLeft="15dp"
             android:singleLine="true"
             android:textColor="@color/actionbar_title"
@@ -29,22 +31,23 @@
             android:id="@+id/regionTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="false"
             android:drawablePadding="6dp"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:maxLines="1"
             android:paddingLeft="15dp"
             android:singleLine="true"
             android:textColor="@color/actionbar_title"
-            android:textSize="18dp"/>
+            android:textSize="18dp"
+            android:layout_toRightOf="@+id/searchTextView"
+            android:layout_toLeftOf="@+id/dateTextView"
+            android:gravity="center"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/dateTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentLeft="false"
             android:layout_centerVertical="true"
             android:drawablePadding="6dp"
             android:ellipsize="end"
@@ -53,9 +56,9 @@
             android:paddingLeft="15dp"
             android:singleLine="true"
             android:textColor="@color/actionbar_title"
-            android:textSize="18dp"/>
-
-    </LinearLayout>
+            android:textSize="18dp"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
 
     <View
         android:id="@+id/underLine"

@@ -81,7 +81,7 @@ public class GourmetSearchActivity extends PlaceSearchActivity
             {
                 if (resultCode == RESULT_OK && data != null)
                 {
-                    SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                    SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
                     setDateText(saleTime);
 
