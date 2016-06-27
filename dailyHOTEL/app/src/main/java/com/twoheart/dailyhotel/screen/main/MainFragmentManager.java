@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainFragment;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainFragment_v2;
 import com.twoheart.dailyhotel.screen.hotel.list.HotelMainFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -72,7 +73,7 @@ public class MainFragmentManager
             case INDEX_HOTEL_FRAGMENT:
                 return new HotelMainFragment();
             case INDEX_GOURMET_FRAGMENT:
-                return new GourmetMainFragment();
+                return new GourmetMainFragment_v2();
             case INDEX_BOOKING_FRAGMENT:
                 return new BookingListFragment();
             case INDEX_INFORMATION_FRAGMENT:

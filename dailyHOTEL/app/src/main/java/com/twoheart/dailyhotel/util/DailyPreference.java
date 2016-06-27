@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
@@ -44,6 +45,7 @@ public class DailyPreference
     private static final String KEY_SHOW_BENEFIT_ALARM = "24";
     private static final String KEY_BENEFIT_ALARM_MESSAGE = "25";
     private static final String KEY_FIRST_BUYER = "26";
+    private static final String KEY_FIRST_APP_VERSION = "27";
 
     private static final String KEY_COMPANY_NAME = "100";
     private static final String KEY_COMPANY_CEO = "101";
@@ -190,9 +192,18 @@ public class DailyPreference
     {
         String result = defaultValue;
 
-        if (sharedPreferences != null)
+        try
         {
-            result = sharedPreferences.getString(key, defaultValue);
+            if (sharedPreferences != null)
+            {
+                result = sharedPreferences.getString(key, defaultValue);
+            }
+
+        } catch (ClassCastException e)
+        {
+            String msg = "key : " + key + "firstAppVersion : " + getFirstAppVersion() + " , email : " + getUserEmail();
+            Crashlytics.log(msg);
+            Crashlytics.logException(e);
         }
 
         return result;
@@ -552,6 +563,16 @@ public class DailyPreference
     public boolean isShowBenefitAlarmFirstBuyer()
     {
         return getValue(mPreferences, KEY_FIRST_BUYER, false);
+    }
+
+    public void setFirstAppVersion(String value)
+    {
+        setValue(mEditor, KEY_FIRST_APP_VERSION, value);
+    }
+
+    public String getFirstAppVersion()
+    {
+        return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

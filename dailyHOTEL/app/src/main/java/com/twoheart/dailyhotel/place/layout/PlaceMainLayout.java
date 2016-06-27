@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment_v2;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -54,6 +55,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         void onFilterClick();
     }
 
+    protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, PlaceListFragment.OnPlaceListFragmentListener listener);
+
     public PlaceMainLayout(Context context, OnEventListener mOnEventListener)
     {
         super(context, mOnEventListener);
@@ -63,6 +66,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     protected void initLayout(View view)
     {
         initToolbar(view);
+        initCategoryTabLayout(view);
+        initCategoryTabLayout(view);
         initOptionLayout(view);
     }
 
@@ -156,7 +161,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             size = 1;
             setCategoryTabLayoutVisibility(View.GONE);
 
-            mFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager, size, listener);
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, listener);
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
@@ -204,7 +209,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 selectedTab.select();
             }
 
-            mFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager, size, listener);
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, listener);
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);

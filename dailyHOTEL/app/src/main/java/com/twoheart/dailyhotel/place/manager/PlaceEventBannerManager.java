@@ -26,16 +26,26 @@ public abstract class PlaceEventBannerManager
         return mEventBannerList;
     }
 
+    public int getCount()
+    {
+        return mEventBannerList.size();
+    }
+
     public void setList(List<EventBanner> eventBannerList)
     {
         clear();
 
-        if (mEventBannerList == null)
+        if(eventBannerList == null)
         {
-            mEventBannerList = new ArrayList<>();
+            return;
         }
 
         mEventBannerList.addAll(eventBannerList);
+    }
+
+    public EventBanner getEventBanner(int index)
+    {
+        return mEventBannerList.get(index);
     }
 
     public void clear()
