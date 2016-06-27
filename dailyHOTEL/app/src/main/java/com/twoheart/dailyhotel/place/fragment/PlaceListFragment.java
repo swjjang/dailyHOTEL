@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.util.Constants;
 public abstract class PlaceListFragment extends BaseFragment implements Constants
 {
     protected OnPlaceListFragmentListener mOnPlaceListFragmentListener;
+    private boolean mIsAttached;
 
     public interface OnPlaceListFragmentListener
     {
@@ -33,7 +34,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
         void onEventBannerClick(EventBanner eventBanner);
 
-        void onAttach();
+        void onAttach(PlaceListFragment placeListFragment);
     }
 
     public abstract void refreshList();
@@ -45,14 +46,21 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     {
         super.onAttach(activity);
 
+        mIsAttached = true;
+
         if (mOnPlaceListFragmentListener != null)
         {
-            mOnPlaceListFragmentListener.onAttach();
+            mOnPlaceListFragmentListener.onAttach(this);
         }
     }
 
     public void setListFragmentListener(OnPlaceListFragmentListener listener)
     {
         mOnPlaceListFragmentListener = listener;
+    }
+
+    public boolean isAttached()
+    {
+        return mIsAttached;
     }
 }

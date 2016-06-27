@@ -143,7 +143,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        switch(mViewType)
+        switch (mViewType)
         {
             case LIST:
             {
@@ -452,26 +452,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             {
                 // 리스트 요청하면 됨.
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
-                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), new ArrayList<Category>(), null, new PlaceListFragment.OnPlaceListFragmentListener()
-                {
-                    @Override
-                    public void onPlaceClick(PlaceViewItem placeViewItem, SaleTime saleTime)
-                    {
-
-                    }
-
-                    @Override
-                    public void onEventBannerClick(EventBanner eventBanner)
-                    {
-
-                    }
-
-                    @Override
-                    public void onAttach()
-                    {
-                        mPlaceMainLayout.getCurrentPlaceListFragment().refreshList();
-                    }
-                });
+                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), new ArrayList<Category>(), null, mOnPlaceListFragmentListener);
             }
         }
 
@@ -608,9 +589,19 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         }
 
         @Override
-        public void onAttach()
+        public void onAttach(PlaceListFragment placeListFragment)
         {
+            if (mPlaceMainLayout == null || placeListFragment == null)
+            {
+                return;
+            }
 
+            PlaceListFragment currentPlaceListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+            if (currentPlaceListFragment == placeListFragment)
+            {
+                currentPlaceListFragment.refreshList();
+            }
         }
     };
 
