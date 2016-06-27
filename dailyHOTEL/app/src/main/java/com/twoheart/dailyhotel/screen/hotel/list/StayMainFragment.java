@@ -71,7 +71,20 @@ public class StayMainFragment extends PlaceMainFragment
             if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
             {
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-                refreshCurrentFragment(province);
+                StayCurationManager.getInstance().setProvince(province);
+
+                mPlaceMainLayout.setToolbarRegionText(province.name);
+
+                // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+                String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
+
+                if (province.name.equalsIgnoreCase(savedRegion) == false)
+                {
+                    DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+                    DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+                }
+
+                refreshCurrentFragment();
             }
         }
     }
@@ -103,8 +116,7 @@ public class StayMainFragment extends PlaceMainFragment
                 searchMyLocation();
             } else
             {
-                Category category = StayCurationManager.getInstance().getCategory();
-                refreshCurrentFragmentByCuration(category, stayCurationOption);
+                refreshCurrentFragment();
             }
         }
     }
@@ -113,16 +125,14 @@ public class StayMainFragment extends PlaceMainFragment
     protected void onLocationFailed()
     {
         StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
-        refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
-            StayCurationManager.getInstance().getStayCurationOption());
+        refreshCurrentFragment();
     }
 
     @Override
     protected void onLocationProviderDisabled()
     {
         StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
-        refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
-            StayCurationManager.getInstance().getStayCurationOption());
+        refreshCurrentFragment();
     }
 
     @Override
@@ -131,8 +141,7 @@ public class StayMainFragment extends PlaceMainFragment
         if (location == null)
         {
             StayCurationManager.getInstance().getStayCurationOption().setSortType(SortType.DEFAULT);
-            refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
-                StayCurationManager.getInstance().getStayCurationOption());
+            refreshCurrentFragment();
         } else
         {
             StayCurationManager.getInstance().setLocation(location);
@@ -140,8 +149,7 @@ public class StayMainFragment extends PlaceMainFragment
             // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
             if (StayCurationManager.getInstance().getStayCurationOption().getSortType() == SortType.DISTANCE)
             {
-                refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
-                    StayCurationManager.getInstance().getStayCurationOption());
+                refreshCurrentFragment();
             }
         }
     }
@@ -167,45 +175,48 @@ public class StayMainFragment extends PlaceMainFragment
         return String.format(tabDateFormat, checkInDay, checkOutDay);
     }
 
-    private void refreshCurrentFragment(List<EventBanner> list)
+    private void refreshCurrentFragment()
     {
-        StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
-        currentFragment.refreshList(list);
-    }
-
-    private void refreshCurrentFragmentByCuration(Category category, StayCurationOption stayCurationOption)
-    {
-        StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
-        currentFragment.curationList(mViewType, category, stayCurationOption);
-    }
-
-    private void refreshCurrentFragment(Province province)
-    {
-        if (province == null)
-        {
-            return;
-        }
-
         if (isFinishing() == true)
         {
             return;
         }
 
-        StayCurationManager.getInstance().setProvince(province);
+        PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
 
-        mPlaceMainLayout.setToolbarRegionText(province.name);
-
-        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
-
-        if (province.name.equalsIgnoreCase(savedRegion) == false)
+        if (placeListFragment != null)
         {
-            DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-            DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+            placeListFragment.refreshList();
         }
-
-        refreshCurrentFragment(StayEventBannerManager.getInstance().getList());
     }
+
+//    private void refreshCurrentFragment(Province province)
+//    {
+//        if (province == null)
+//        {
+//            return;
+//        }
+//
+//        if (isFinishing() == true)
+//        {
+//            return;
+//        }
+//
+//        StayCurationManager.getInstance().setProvince(province);
+//
+//        mPlaceMainLayout.setToolbarRegionText(province.name);
+//
+//        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+//        String savedRegion = DailyPreference.getInstance(mBaseActivity).getSelectedRegion(PlaceType.HOTEL);
+//
+//        if (province.name.equalsIgnoreCase(savedRegion) == false)
+//        {
+//            DailyPreference.getInstance(mBaseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+//            DailyPreference.getInstance(mBaseActivity).setSelectedRegion(PlaceType.HOTEL, province.name);
+//        }
+//
+//        refreshCurrentFragment();
+//    }
 
     public void startStayDetail(PlaceViewItem placeViewItem, SaleTime checkSaleTime)
     {
@@ -644,7 +655,7 @@ public class StayMainFragment extends PlaceMainFragment
             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category.name, null);
 
-            refreshCurrentFragmentByCuration(category, StayCurationManager.getInstance().getStayCurationOption());
+            refreshCurrentFragment();
         }
 
         @Override
@@ -780,12 +791,10 @@ public class StayMainFragment extends PlaceMainFragment
             for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
             {
                 boolean isCurrentFragment = (placeListFragment == currentFragment) ? true : false;
-
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
             }
 
-            refreshCurrentFragmentByCuration(StayCurationManager.getInstance().getCategory(), //
-                StayCurationManager.getInstance().getStayCurationOption());
+            refreshCurrentFragment();
 
             unLockUI();
         }
@@ -924,10 +933,30 @@ public class StayMainFragment extends PlaceMainFragment
             {
                 String dateText = makeTabDateFormat(StayCurationManager.getInstance().getCheckInSaleTime(), //
                     StayCurationManager.getInstance().getCheckOutSaleTime());
+
                 mPlaceMainLayout.setToolbarDateText(dateText);
 
-                // stay list refresh
-                refreshCurrentFragment(StayCurationManager.getInstance().getProvince());
+                mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), selectedProvince.getCategoryList(), //
+                    StayCurationManager.getInstance().getCategory(), new PlaceListFragment.OnPlaceListFragmentListener()
+                {
+                    @Override
+                    public void onPlaceClick(PlaceViewItem placeViewItem, SaleTime saleTime)
+                    {
+
+                    }
+
+                    @Override
+                    public void onEventBannerClick(EventBanner eventBanner)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAttach()
+                    {
+                        refreshCurrentFragment();
+                    }
+                });
             }
         }
 
