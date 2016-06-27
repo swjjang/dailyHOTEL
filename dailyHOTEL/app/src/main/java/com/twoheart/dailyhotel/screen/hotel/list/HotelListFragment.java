@@ -651,6 +651,9 @@ public class HotelListFragment extends BaseFragment implements Constants
                 }
             }
 
+            PlaceViewItem placeViewFooterItem = new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null);
+            hotelListViewItemList.add(hotelListViewItemList.size(), placeViewFooterItem);
+
             mHotelAdapter.addAll(hotelListViewItemList, sortType);
             mDateChangedHandler.sendEmptyMessage(MESSAGE_NOTIFYDATASETCHANGED);
 

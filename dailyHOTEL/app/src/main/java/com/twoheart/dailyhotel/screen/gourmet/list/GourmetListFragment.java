@@ -612,6 +612,9 @@ public class GourmetListFragment extends BaseFragment implements Constants
                 }
             }
 
+            PlaceViewItem placeViewFooterItem = new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null);
+            gourmetListViewItemList.add(gourmetListViewItemList.size(), placeViewFooterItem);
+
             mGourmetAdapter.addAll(gourmetListViewItemList, sortType);
             mDateChangedHandler.sendEmptyMessage(MESSAGE_NOTIFYDATASETCHANGED);
 
