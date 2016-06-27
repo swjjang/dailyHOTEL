@@ -78,9 +78,9 @@ public class GourmetListFragment_v2 extends PlaceListFragment
     }
 
     @Override
-    public void refreshList()
+    public void refreshList(boolean isShowProgress)
     {
-        lockUI();
+        lockUI(isShowProgress);
 
         DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, GourmetCurationManager.getInstance().getProvince()
             , GourmetCurationManager.getInstance().getSaleTime(), mGourmetListJsonResponseListener, mBaseActivity);
@@ -360,7 +360,7 @@ public class GourmetListFragment_v2 extends PlaceListFragment
         @Override
         public void onRefreshAll(boolean isShowProgress)
         {
-
+            refreshList(isShowProgress);
         }
 
         @Override
@@ -446,6 +446,7 @@ public class GourmetListFragment_v2 extends PlaceListFragment
             } finally
             {
                 unLockUI();
+                mGourmetListLayout.setSwipeRefreshing(false);
             }
         }
 

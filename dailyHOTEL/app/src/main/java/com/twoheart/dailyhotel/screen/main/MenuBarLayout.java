@@ -19,6 +19,7 @@ public class MenuBarLayout implements View.OnClickListener
     private int mSelectedMenuIndex;
     private OnMenuBarSelectedListener mOnMenuBarSelectedListener;
     private BaseActivity mBaseActivity;
+    private ViewGroup mViewGroup;
 
     public static class MenuBarLayoutOnPageChangeListener
     {
@@ -49,6 +50,7 @@ public class MenuBarLayout implements View.OnClickListener
         mBaseActivity = baseActivity;
         mOnMenuBarSelectedListener = listener;
 
+        mViewGroup = viewGroup;
         initLayout(viewGroup);
     }
 
@@ -126,6 +128,11 @@ public class MenuBarLayout implements View.OnClickListener
                 mOnMenuBarSelectedListener.onMenuSelected(index);
             }
         }
+    }
+
+    public void setVisibility(int visibility)
+    {
+        mViewGroup.setVisibility(visibility);
     }
 
     public void setNewIconVisible(boolean isVisible)

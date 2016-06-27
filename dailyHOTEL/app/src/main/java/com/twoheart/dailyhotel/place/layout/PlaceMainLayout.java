@@ -91,6 +91,9 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         // 하단 지도 필터
         mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
         mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
+
+        mViewTypeOptionImageView.setOnClickListener(this);
+        mFilterOptionImageView.setOnClickListener(this);
     }
 
     private void initCategoryTabLayout(View view)

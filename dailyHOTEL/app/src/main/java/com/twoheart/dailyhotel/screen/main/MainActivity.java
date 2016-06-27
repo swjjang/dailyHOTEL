@@ -763,7 +763,7 @@ public class MainActivity extends BaseActivity implements Constants
                         mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
                     } else
                     {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT);
                     }
                 }
 

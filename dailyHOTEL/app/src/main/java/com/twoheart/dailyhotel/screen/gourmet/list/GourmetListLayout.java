@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -78,10 +80,30 @@ public class GourmetListLayout extends BaseLayout
             }
         });
 
+        // edgeglow을 보이게 하기 위해서
+        mGourmetRecyclerView.addOnScrollListener(new OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (dy <= 0)
+                {
+                    View firstView = recyclerView.findChildViewUnder(recyclerView.getLeft() + 1, recyclerView.getTop() + 1);
+                    int firstVisibleItem = recyclerView.getChildAdapterPosition(firstView);
+
+                    if (firstVisibleItem == 0)
+                    {
+                        mSwipeRefreshLayout.setEnabled(true);
+                    } else
+                    {
+                        mSwipeRefreshLayout.setEnabled(false);
+                    }
+                }
+            }
+        });
+
         mEmptyView = view.findViewById(R.id.emptyLayout);
-
         mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
-
         mGourmetRecyclerView.setShadowVisible(false);
     }
 
@@ -262,6 +284,16 @@ public class GourmetListLayout extends BaseLayout
         }
 
         return hasPlace;
+    }
+
+    public void setSwipeRefreshing(boolean refreshing)
+    {
+        if (mSwipeRefreshLayout == null)
+        {
+            return;
+        }
+
+        mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

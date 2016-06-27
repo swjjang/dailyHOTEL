@@ -100,7 +100,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(saleTime);
 
             PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-            placeListFragment.refreshList();
+            placeListFragment.refreshList(true);
         }
     }
 
@@ -213,7 +213,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
 
         if (placeListFragment != null)
         {
-            placeListFragment.refreshList();
+            placeListFragment.refreshList(true);
         }
     }
 
@@ -707,7 +707,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
 
             if (currentPlaceListFragment == placeListFragment)
             {
-                currentPlaceListFragment.refreshList();
+                currentPlaceListFragment.refreshList(true);
             }
         }
     };
