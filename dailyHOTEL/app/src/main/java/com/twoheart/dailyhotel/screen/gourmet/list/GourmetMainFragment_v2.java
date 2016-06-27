@@ -58,8 +58,6 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         return new GourmetMainNetworkController(context, mNetworkTag, mOnNetworkControllerListener);
     }
 
-
-
     @Override
     protected void onRegionActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -389,6 +387,10 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 // 딥링크 이동
             } else
             {
+
+                String dateText = GourmetCurationManager.getInstance().getSaleTime().getDayOfDaysDateFormat("M.d(EEE)");
+                mPlaceMainLayout.setToolbarDateText(dateText);
+
                 mPlaceMainNetworkController.requestEventBanner();
             }
         }
@@ -449,8 +451,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             } else
             {
                 // 리스트 요청하면 됨.
-                String dateText = GourmetCurationManager.getInstance().getSaleTime().getDayOfDaysDateFormat("M.d(EEE)");
-                mPlaceMainLayout.setToolbarDateText(dateText);
+                mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
                 mPlaceMainLayout.setCategoryTabLayout(getFragmentManager(), new ArrayList<Category>(), null, new PlaceListFragment.OnPlaceListFragmentListener()
                 {
                     @Override

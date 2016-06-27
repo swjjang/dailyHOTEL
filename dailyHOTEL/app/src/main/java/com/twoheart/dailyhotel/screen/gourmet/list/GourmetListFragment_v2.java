@@ -83,14 +83,6 @@ public class GourmetListFragment_v2 extends PlaceListFragment
     }
 
     @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-
-        mOnPlaceListFragmentListener.onAttach();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         //        if (mViewType == ViewType.MAP)

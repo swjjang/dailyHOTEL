@@ -15,10 +15,11 @@
  */
 package com.twoheart.dailyhotel.place.fragment;
 
+import android.app.Activity;
+
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -38,6 +39,17 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     public abstract void refreshList();
 
     public abstract void setVisibility(ViewType viewType, boolean isCurrentPage);
+
+    @Override
+    public void onAttach(Activity activity)
+    {
+        super.onAttach(activity);
+
+        if (mOnPlaceListFragmentListener != null)
+        {
+            mOnPlaceListFragmentListener.onAttach();
+        }
+    }
 
     public void setListFragmentListener(OnPlaceListFragmentListener listener)
     {
