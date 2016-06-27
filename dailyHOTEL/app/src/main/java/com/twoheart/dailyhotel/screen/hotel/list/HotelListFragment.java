@@ -832,7 +832,7 @@ public class HotelListFragment extends BaseFragment implements Constants
 
                 stay = new Stay();
 
-                if (stay.setHotel(jsonObject, imageUrl, nights) == true)
+                if (stay.setStay(jsonObject, imageUrl, nights) == true)
                 {
                     stayList.add(stay); // 추가.
                 }

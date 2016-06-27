@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- * <p>
+ * <p/>
  * HotelListFragment (호텔 목록 화면)
- * <p>
+ * <p/>
  * 어플리케이션의 가장 주가 되는 화면으로서 호텔들의 목록을 보여주는 화면이다.
  * 호텔 리스트는 따로 커스텀되어 구성되어 있으며, 액션바의 네비게이션을 이용
  * 하여 큰 지역을 분리하고 리스트뷰 헤더를 이용하여 세부 지역을 나누어 표시
@@ -23,24 +23,31 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
+import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StayListLayout extends BaseLayout implements View.OnClickListener
 {
     protected PinnedSectionRecyclerView mStayRecyclerView;
-    protected HotelListAdapter mHotelAdapter;
+    protected StayListAdapter mStayListAdapter;
 
     private View mEmptyView;
     private ViewGroup mMapLayout;
@@ -74,8 +81,8 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
 
         EdgeEffectColor.setEdgeGlowColor(mStayRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mHotelAdapter = new HotelListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
-        mStayRecyclerView.setAdapter(mHotelAdapter);
+        mStayListAdapter = new StayListAdapter(mContext, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
+        mStayRecyclerView.setAdapter(mStayListAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
@@ -89,7 +96,6 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
                     return;
                 }
 
-                mOnCommunicateListener.expandedAppBar(true, true);
                 mOnCommunicateListener.refreshAll(false);
             }
         });
@@ -216,6 +222,38 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
                 break;
         }
     }
+
+    public boolean hasSalesPlace()
+    {
+        return hasSalesPlace(mStayListAdapter.getAll());
+    }
+
+    private boolean hasSalesPlace(List<PlaceViewItem> placeViewItemList)
+    {
+        boolean hasSalesPlace = false;
+
+        if (placeViewItemList != null)
+        {
+            for (PlaceViewItem placeViewItem : placeViewItemList)
+            {
+                if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
+                    && placeViewItem.<Gourmet>getItem().isSoldOut == false)
+                {
+                    hasSalesPlace = true;
+                    break;
+                }
+            }
+        }
+
+        return hasSalesPlace;
+    }
+
+    public void clear()
+    {
+        mStayListAdapter.clear();
+    }
+
+    public void notify
 
     //    public SaleTime getCheckInSaleTime()
     //    {
@@ -524,76 +562,76 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
     //        return list;
     //    }
     //
-    //    private void setHotelListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> hotelListViewItemList, SortType sortType)
-    //    {
-    //        if (mHotelAdapter == null)
-    //        {
-    //            Util.restartApp(getContext());
-    //            return;
-    //        }
-    //
-    //        mHotelAdapter.clear();
-    //
-    //        if (hotelListViewItemList == null || hotelListViewItemList.size() == 0)
-    //        {
-    //            mHotelAdapter.notifyDataSetChanged();
-    //
-    //            setVisibility(ViewType.GONE, true);
-    //
-    //            mOnCommunicateListener.expandedAppBar(true, true);
-    //        } else
-    //        {
-    //            setVisibility(viewType, true);
-    //
-    //            if (viewType == ViewType.MAP)
-    //            {
-    //                mStayMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-    //                mStayMapFragment.setHotelViewItemList(hotelListViewItemList, mCheckInSaleTime, mScrollListTop);
-    //
-    //                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST_MAP);
-    //            } else
-    //            {
-    //                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST);
-    //
-    //                Map<String, String> parmas = new HashMap<>();
-    //                HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
-    //                Province province = hotelCurationOption.getProvince();
-    //
-    //                if (province instanceof Area)
-    //                {
-    //                    Area area = (Area) province;
-    //                    parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-    //                    parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-    //
-    //                } else
-    //                {
-    //                    parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-    //                    parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-    //                }
-    //
-    //                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYHOTEL_LIST, parmas);
-    //            }
-    //
-    //            if (sortType == SortType.DEFAULT)
-    //            {
-    //                if (mEventBannerList != null && mEventBannerList.size() > 0)
-    //                {
-    //                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
-    //                    hotelListViewItemList.add(0, placeViewItem);
-    //                }
-    //            }
-    //
-    //            mHotelAdapter.addAll(hotelListViewItemList, sortType);
-    //            mHotelAdapter.notifyDataSetChanged();
-    //
-    //            if (mScrollListTop == true)
-    //            {
-    //                mScrollListTop = false;
-    //                mStayRecyclerView.scrollToPosition(0);
-    //            }
-    //        }
-    //    }
-    //
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, //
+                        List<Stay> stayViewItemList, Constants.SortType sortType)
+    {
+        if (mStayListAdapter == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
+        mStayListAdapter.clear();
+
+        if (stayViewItemList == null || stayViewItemList.size() == 0)
+        {
+            mStayListAdapter.notifyDataSetChanged();
+
+            setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+
+        } else
+        {
+            setVisibility(fragmentManager, viewType, true);
+
+            if (viewType == Constants.ViewType.MAP)
+            {
+                mStayMapFragment.setOnCommunicateListener(mOnCommunicateListener);
+                mStayMapFragment.setHotelViewItemList(stayViewItemList, mCheckInSaleTime, mScrollListTop);
+
+                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP);
+            } else
+            {
+                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST);
+
+                Map<String, String> parmas = new HashMap<>();
+                HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
+                Province province = hotelCurationOption.getProvince();
+
+                if (province instanceof Area)
+                {
+                    Area area = (Area) province;
+                    parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+
+                } else
+                {
+                    parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                }
+
+                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST, parmas);
+            }
+
+            if (sortType == Constants.SortType.DEFAULT)
+            {
+                if (mEventBannerList != null && mEventBannerList.size() > 0)
+                {
+                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
+                    stayViewItemList.add(0, placeViewItem);
+                }
+            }
+
+            mStayListAdapter.addAll(stayViewItemList, sortType);
+            mStayListAdapter.notifyDataSetChanged();
+
+            if (mScrollListTop == true)
+            {
+                mScrollListTop = false;
+                mStayRecyclerView.scrollToPosition(0);
+            }
+        }
+    }
+
     //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //    //
     //    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -622,7 +660,7 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
             //                return;
             //            }
             //
-            //            PlaceViewItem placeViewItem = mHotelAdapter.getItem(position);
+            //            PlaceViewItem placeViewItem = mStayListAdapter.getItem(position);
             //
             //            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             //            {
@@ -705,12 +743,11 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
     //                        HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
     //                        hotelCurationOption.setFiltersList(null);
     //
-    //                        mHotelAdapter.clear();
-    //                        mHotelAdapter.notifyDataSetChanged();
+    //                        mStayListAdapter.clear();
+    //                        mStayListAdapter.notifyDataSetChanged();
     //
     //                        setVisibility(ViewType.GONE, true);
     //
-    //                        mOnCommunicateListener.expandedAppBar(true, true);
     //                    } else
     //                    {
     //                        String imageUrl = dataJSONObject.getString("imgUrl");
@@ -787,7 +824,7 @@ public class StayListLayout extends BaseLayout implements View.OnClickListener
     //
     //                stay = new Stay();
     //
-    //                if (stay.setHotel(jsonObject, imageUrl, nights) == true)
+    //                if (stay.setStay(jsonObject, imageUrl, nights) == true)
     //                {
     //                    stayList.add(stay); // 추가.
     //                }

@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 public class HotelSearch extends Stay
 {
-    public boolean setHotel(JSONObject jsonObject, String imageUrl, int nights)
+    public boolean setStay(JSONObject jsonObject, String imageUrl, int nights)
     {
         this.nights = nights;
 

@@ -87,7 +87,7 @@ public class HotelSearchResultNetworkController extends BaseNetworkController
 
             HotelSearch hotel = new HotelSearch();
 
-            if (hotel.setHotel(jsonObject, imageUrl, nights) == true)
+            if (hotel.setStay(jsonObject, imageUrl, nights) == true)
             {
                 PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, hotel);
                 placeViewItemList.add(placeViewItem);

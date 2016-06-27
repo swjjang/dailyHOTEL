@@ -98,8 +98,8 @@ public class StayListNetworkController extends BaseNetworkController
 //                        HotelCurationOption hotelCurationOption = mOnCommunicateListener.getCurationOption();
 //                        hotelCurationOption.setFiltersList(null);
 //
-//                        mHotelAdapter.clear();
-//                        mHotelAdapter.notifyDataSetChanged();
+//                        mStayListAdapter.clear();
+//                        mStayListAdapter.notifyDataSetChanged();
 //
 //                        setVisibility(Constants.ViewType.GONE, true);
 //
@@ -180,7 +180,7 @@ public class StayListNetworkController extends BaseNetworkController
 
                 stay = new Stay();
 
-                if (stay.setHotel(jsonObject, imageUrl, nights) == true)
+                if (stay.setStay(jsonObject, imageUrl, nights) == true)
                 {
                     stayList.add(stay); // 추가.
                 }
