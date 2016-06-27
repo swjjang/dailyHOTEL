@@ -14,11 +14,13 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -38,11 +40,10 @@ public class GourmetListLayout extends BaseLayout
 
     private View mEmptyView;
     private ViewGroup mMapLayout;
-    private GourmetMapFragment mGourmetMapFragment;
+    private GourmetListMapFragment mGourmetListMapFragment;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     protected boolean mScrollListTop;
-    protected List<Gourmet> mGourmetList = new ArrayList<>();
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -133,11 +134,11 @@ public class GourmetListLayout extends BaseLayout
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.GONE);
 
-                if (mGourmetMapFragment != null)
+                if (mGourmetListMapFragment != null)
                 {
-                    fragmentManager.beginTransaction().remove(mGourmetMapFragment).commitAllowingStateLoss();
+                    fragmentManager.beginTransaction().remove(mGourmetListMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
-                    mGourmetMapFragment = null;
+                    mGourmetListMapFragment = null;
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -147,10 +148,10 @@ public class GourmetListLayout extends BaseLayout
                 mEmptyView.setVisibility(View.GONE);
                 mMapLayout.setVisibility(View.VISIBLE);
 
-                if (isCurrentPage == true && mGourmetMapFragment == null)
+                if (isCurrentPage == true && mGourmetListMapFragment == null)
                 {
-                    mGourmetMapFragment = new GourmetMapFragment();
-                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mGourmetMapFragment).commitAllowingStateLoss();
+                    mGourmetListMapFragment = new GourmetListMapFragment();
+                    fragmentManager.beginTransaction().add(mMapLayout.getId(), mGourmetListMapFragment).commitAllowingStateLoss();
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
@@ -169,9 +170,9 @@ public class GourmetListLayout extends BaseLayout
 
     public boolean isShowInformationAtMapView(Constants.ViewType viewType)
     {
-        if (viewType == Constants.ViewType.MAP && mGourmetMapFragment != null)
+        if (viewType == Constants.ViewType.MAP && mGourmetListMapFragment != null)
         {
-            return mGourmetMapFragment.isShowInformation();
+            return mGourmetListMapFragment.isShowInformation();
         }
 
         return false;
@@ -203,20 +204,18 @@ public class GourmetListLayout extends BaseLayout
 
             if (viewType == Constants.ViewType.MAP)
             {
-                //                if (hasSalesPlace(list) == false)
-                //                {
-                //                    unLockUI();
-                //
-                //                    DailyToast.showToast(mContext, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
-                //
-                //                    mOnCommunicateListener.toggleViewType();
-                //                    return;
-                //                }
-                //
-                //                mGourmetMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-                //                mGourmetMapFragment.setPlaceViewItemList(list, mSaleTime, mScrollListTop);
-                //
-                //                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
+                mGourmetListMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
+                {
+                    @Override
+                    public void onInformationClick(PlaceViewItem placeViewItem)
+                    {
+                        ((OnEventListener) mOnEventListener).onGourmetClick(placeViewItem, GourmetCurationManager.getInstance().getSaleTime());
+                    }
+                });
+
+                mGourmetListMapFragment.setPlaceViewItemList(list, mScrollListTop);
+
+                AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
             } else
             {
                 AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST);
@@ -268,18 +267,20 @@ public class GourmetListLayout extends BaseLayout
 
     private boolean hasSalesPlace(List<PlaceViewItem> gourmetListViewItemList)
     {
+        if (gourmetListViewItemList == null || gourmetListViewItemList.size() == 0)
+        {
+            return false;
+        }
+
         boolean hasPlace = false;
 
-        if (gourmetListViewItemList != null)
+        for (PlaceViewItem placeViewItem : gourmetListViewItemList)
         {
-            for (PlaceViewItem placeViewItem : gourmetListViewItemList)
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
+                && placeViewItem.<Gourmet>getItem().isSoldOut == false)
             {
-                if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
-                    && placeViewItem.<Gourmet>getItem().isSoldOut == false)
-                {
-                    hasPlace = true;
-                    break;
-                }
+                hasPlace = true;
+                break;
             }
         }
 

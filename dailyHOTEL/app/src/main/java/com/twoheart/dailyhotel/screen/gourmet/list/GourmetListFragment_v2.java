@@ -86,16 +86,6 @@ public class GourmetListFragment_v2 extends PlaceListFragment
             , GourmetCurationManager.getInstance().getSaleTime(), mGourmetListJsonResponseListener, mBaseActivity);
     }
 
-    public boolean canScrollUp()
-    {
-        //        if (mSwipeRefreshLayout != null)
-        //        {
-        //            return mSwipeRefreshLayout.canChildScrollUp();
-        //        }
-
-        return true;
-    }
-
     public void onPageSelected(String tabText)
     {
     }

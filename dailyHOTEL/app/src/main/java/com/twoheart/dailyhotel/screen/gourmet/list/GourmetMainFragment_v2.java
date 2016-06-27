@@ -99,8 +99,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             GourmetCurationManager.getInstance().setSaleTime(saleTime);
             ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(saleTime);
 
-            PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-            placeListFragment.refreshList(true);
+            refreshCurrentFragment();
         }
     }
 
@@ -129,7 +128,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 searchMyLocation();
             } else
             {
-                refreshCurrentFragment();
+                curationCurrentFragment();
             }
         }
     }
@@ -214,6 +213,21 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         if (placeListFragment != null)
         {
             placeListFragment.refreshList(true);
+        }
+    }
+
+    private void curationCurrentFragment()
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        GourmetListFragment_v2 gourmetListFragment = (GourmetListFragment_v2)mPlaceMainLayout.getCurrentPlaceListFragment();
+
+        if (gourmetListFragment != null)
+        {
+            gourmetListFragment.curationList(mViewType, GourmetCurationManager.getInstance().getGourmetCurationOption());
         }
     }
 
@@ -347,6 +361,8 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 }
             }
 
+            // 고메는 리스트를 한번에 받기 때문에 계속 요청할 필요는 없다.
+
             for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
             {
                 boolean isCurrentFragment = placeListFragment == gourmetListFragment;
@@ -354,7 +370,9 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
             }
 
-            refreshCurrentFragment();
+            curationCurrentFragment();
+
+            unLockUI();
         }
 
         @Override
@@ -703,12 +721,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 return;
             }
 
-            PlaceListFragment currentPlaceListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-            if (currentPlaceListFragment == placeListFragment)
-            {
-                currentPlaceListFragment.refreshList(true);
-            }
+            refreshCurrentFragment();
         }
     };
 

@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 
 import java.util.ArrayList;
@@ -14,6 +15,14 @@ public abstract class PlaceMapViewPagerAdapter extends PagerAdapter
 {
     protected Context mContext;
     protected ArrayList<PlaceViewItem> mPlaceViewItemList;
+    protected OnPlaceMapViewPagerAdapterListener mOnPlaceMapViewPagerAdapterListener;
+
+    public interface OnPlaceMapViewPagerAdapterListener
+    {
+        void onInformationClick(Place place);
+
+        void onCloseClick();
+    }
 
     public PlaceMapViewPagerAdapter(Context context)
     {
@@ -64,5 +73,10 @@ public abstract class PlaceMapViewPagerAdapter extends PagerAdapter
         {
             mPlaceViewItemList.addAll(list);
         }
+    }
+
+    public void setOnPlaceMapViewPagerAdapterListener(OnPlaceMapViewPagerAdapterListener listener)
+    {
+        mOnPlaceMapViewPagerAdapterListener = listener;
     }
 }
