@@ -124,7 +124,7 @@ public class StayCurationManager
         mStayCurationOption.clear();
         
         mCheckInSaleTime = new SaleTime();
-        mCheckOutSaleTime = new SaleTime();
+        mCheckOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + 1);
 
         mProvince = null;
         mLocation = null;
