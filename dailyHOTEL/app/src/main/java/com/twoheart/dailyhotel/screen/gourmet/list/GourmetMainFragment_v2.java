@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -91,13 +92,13 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         {
             SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
-            if(saleTime == null)
+            if (saleTime == null)
             {
                 return;
             }
 
             GourmetCurationManager.getInstance().setSaleTime(saleTime);
-            ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(saleTime);
+            ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(saleTime);
 
             refreshCurrentFragment();
         }
@@ -223,7 +224,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             return;
         }
 
-        GourmetListFragment_v2 gourmetListFragment = (GourmetListFragment_v2)mPlaceMainLayout.getCurrentPlaceListFragment();
+        GourmetListFragment_v2 gourmetListFragment = (GourmetListFragment_v2) mPlaceMainLayout.getCurrentPlaceListFragment();
 
         if (gourmetListFragment != null)
         {
@@ -431,7 +432,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 // 딥링크 이동
             } else
             {
-                ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(GourmetCurationManager.getInstance().getSaleTime());
+                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(GourmetCurationManager.getInstance().getSaleTime());
 
                 mPlaceMainNetworkController.requestEventBanner();
             }
@@ -723,6 +724,18 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
 
             refreshCurrentFragment();
         }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+            if (dy > 0)
+            {
+
+            } else if (dy < 0)
+            {
+                mPlaceMainLayout.hideBottomLayout(true);
+            }
+        }
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -731,28 +744,21 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
 
     private void startGourmetDetailByDeepLink(int gourmetIndex, long dailyTime, int dailyDayOfDays)
     {
-        BaseActivity baseActivity = (BaseActivity) mBaseActivity;
-
-        if (baseActivity == null || gourmetIndex < 0)
-        {
-            return;
-        }
-
-        if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
+        if (isFinishing() || gourmetIndex < 0 || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
         lockUI();
 
-        Intent intent = new Intent(baseActivity, GourmetDetailActivity.class);
+        Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
 
-        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
     }
 
     private boolean moveDeepLinkDetail(BaseActivity baseActivity)
@@ -906,7 +912,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
                 {
                     SaleTime deepLinkSaleTime = saleTime.getClone(dailyDayOfDays);
                     GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
-                    ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
+                    ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
 
                     // 특정 날짜 고메 리스트 요청
                     refreshCurrentFragment();
@@ -926,7 +932,7 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
             {
                 SaleTime deepLinkSaleTime = saleTime.getClone(datePlus);
                 GourmetCurationManager.getInstance().setSaleTime(deepLinkSaleTime);
-                ((GourmetMainLayout)mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
+                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(deepLinkSaleTime);
 
                 refreshCurrentFragment();
             } catch (Exception e)

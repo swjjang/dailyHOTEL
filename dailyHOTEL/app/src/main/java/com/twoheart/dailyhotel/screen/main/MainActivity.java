@@ -183,7 +183,7 @@ public class MainActivity extends BaseActivity implements Constants
         mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
 
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
-        mMainFragmentManager = new MainFragmentManager(this, contentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
+        mMainFragmentManager = new MainFragmentManager(this, contentLayout, mMenuBarLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
         mBackButtonHandler = new CloseOnBackPressed(this);
     }
 

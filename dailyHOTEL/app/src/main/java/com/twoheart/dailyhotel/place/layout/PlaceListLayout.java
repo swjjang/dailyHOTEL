@@ -41,6 +41,8 @@ public abstract class PlaceListLayout extends BaseLayout
 
         void onEventBannerClick(EventBanner eventBanner);
 
+        void onScrolled(RecyclerView recyclerView, int dx, int dy);
+
         void onRefreshAll(boolean isShowProgress);
     }
 
@@ -99,15 +101,6 @@ public abstract class PlaceListLayout extends BaseLayout
                     {
                         mSwipeRefreshLayout.setEnabled(false);
                     }
-                }
-
-
-                if (dy < 0)
-                {
-
-                } else if (dy > 0)
-                {
-
                 }
             }
         });

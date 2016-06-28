@@ -15,9 +15,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/menubar_height"
-        android:background="@drawable/tapbar_gradation"/>
+        android:background="@drawable/tapbar_gradation"
+        android:layout_above="@+id/bottomMenuBarLayout"/>
 
     <RelativeLayout
         android:id="@+id/splashLayout"

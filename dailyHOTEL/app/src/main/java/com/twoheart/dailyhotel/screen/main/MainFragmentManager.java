@@ -6,8 +6,11 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainFragment_v2;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
@@ -29,9 +32,10 @@ public class MainFragmentManager
     private int mIndexMainLastFragment; // 호텔, 고메
 
     private BaseActivity mBaseActivity;
+    private MenuBarLayout mMenuBarLayout;
     private MenuBarLayout.MenuBarLayoutOnPageChangeListener mMenuBarLayoutOnPageChangeListener;
 
-    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
+    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, MenuBarLayout menuBarLayout, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
     {
         if (activity == null || viewGroup == null)
         {
@@ -41,6 +45,7 @@ public class MainFragmentManager
         mBaseActivity = activity;
         mFragmentManager = activity.getSupportFragmentManager();
         mContentLayout = viewGroup;
+        mMenuBarLayout = menuBarLayout;
         mMenuBarLayoutOnPageChangeListener = listener;
     }
 
@@ -70,9 +75,21 @@ public class MainFragmentManager
         switch (index)
         {
             case INDEX_HOTEL_FRAGMENT:
-                return new StayMainFragment();
+            {
+                PlaceMainFragment placeMainFragment = new StayMainFragment();
+                placeMainFragment.setMenuBarLayout(mMenuBarLayout);
+
+                return placeMainFragment;
+            }
+
             case INDEX_GOURMET_FRAGMENT:
-                return new GourmetMainFragment_v2();
+            {
+                PlaceMainFragment placeMainFragment = new GourmetMainFragment_v2();
+                placeMainFragment.setMenuBarLayout(mMenuBarLayout);
+
+                return placeMainFragment;
+            }
+
             case INDEX_BOOKING_FRAGMENT:
                 return new BookingListFragment();
             case INDEX_INFORMATION_FRAGMENT:

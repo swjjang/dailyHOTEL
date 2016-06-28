@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
+import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.Util;
@@ -31,7 +32,7 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected PlaceMainNetworkController mPlaceMainNetworkController;
 
     protected BaseActivity mBaseActivity;
-
+    private MenuBarLayout mMenuBarLayout;
 
     protected abstract PlaceMainLayout getPlaceMainLayout(Context context);
 
@@ -56,6 +57,8 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         mPlaceMainLayout = getPlaceMainLayout(mBaseActivity);
         mPlaceMainNetworkController = getPlaceMainNetworkController(mBaseActivity);
+
+        mPlaceMainLayout.setMenuBarLayout(mMenuBarLayout);
 
         return mPlaceMainLayout.onCreateView(R.layout.fragment_place_main, container);
     }
@@ -214,6 +217,15 @@ public abstract class PlaceMainFragment extends BaseFragment
             case GONE:
                 break;
         }
+    }
+
+    /**
+     * 호출 시점에는 아직 GUI가 만들어진 상태가 아니다.
+     * @param menuBarLayout
+     */
+    public void setMenuBarLayout(MenuBarLayout menuBarLayout)
+    {
+        mMenuBarLayout = menuBarLayout;
     }
 
     protected void searchMyLocation()

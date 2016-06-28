@@ -16,6 +16,7 @@
 package com.twoheart.dailyhotel.place.fragment;
 
 import android.app.Activity;
+import android.support.v7.widget.RecyclerView;
 
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -34,6 +35,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         void onEventBannerClick(EventBanner eventBanner);
 
         void onAttach(PlaceListFragment placeListFragment);
+
+        void onScrolled(RecyclerView recyclerView, int dx, int dy);
     }
 
     public abstract void refreshList(boolean isShowProgress);

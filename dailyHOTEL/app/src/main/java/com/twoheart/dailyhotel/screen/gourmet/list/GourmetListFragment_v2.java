@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -337,6 +338,12 @@ public class GourmetListFragment_v2 extends PlaceListFragment
         public void onEventBannerClick(EventBanner eventBanner)
         {
             mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+            mOnPlaceListFragmentListener.onScrolled(recyclerView, dx, dy);
         }
 
         @Override

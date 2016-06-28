@@ -1,11 +1,15 @@
 package com.twoheart.dailyhotel.place.layout;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -14,7 +18,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment_v2;
+import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -24,10 +28,13 @@ import java.util.List;
 
 public abstract class PlaceMainLayout extends BaseLayout implements View.OnClickListener
 {
+    private static final int ANIMATION_DEALY = 200;
+
     private TextView mSearchTextView;
     private TextView mRegionTextView;
     private TextView mDateTextView;
 
+    private View mBottomOptionLayout;
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
 
@@ -35,6 +42,12 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private View mUnderLine;
     private ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
+
+    private MenuBarLayout mMenuBarLayout;
+
+    private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+    private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
+    private ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -88,6 +101,18 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     private void initOptionLayout(View view)
     {
+        mBottomOptionLayout = view.findViewById(R.id.bottomOptionLayout);
+        mBottomOptionLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Rect rect = new Rect();
+                mBottomOptionLayout.getGlobalVisibleRect(rect);
+                mBottomOptionLayout.setTag(Util.getLCDHeight(mContext) - rect.top);
+            }
+        });
+
         // 하단 지도 필터
         mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
         mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
@@ -103,6 +128,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
     }
 
+    public void setMenuBarLayout(MenuBarLayout menuBarLayout)
+    {
+        mMenuBarLayout = menuBarLayout;
+    }
+
     public void setToolbarRegionText(String region)
     {
         mRegionTextView.setText(region);
@@ -115,7 +145,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void setOptionViewTypeView(Constants.ViewType viewType)
     {
-        switch(viewType)
+        switch (viewType)
         {
             case LIST:
                 break;
@@ -130,7 +160,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void setOptionFilterView()
     {
-//        mFilterOptionImageView
+        //        mFilterOptionImageView
     }
 
     public void setCategoryTabLayoutVisibility(int visibility)
@@ -143,7 +173,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     {
         int count = mCategoryTabLayout.getTabCount();
 
-//        for(int i = 0; i< count)
+        //        for(int i = 0; i< count)
     }
 
     public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//
@@ -259,6 +289,183 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             case R.id.filterOptionImageView:
                 ((PlaceMainLayout.OnEventListener) mOnEventListener).onFilterClick();
                 break;
+        }
+    }
+
+    private void setBottomTranslationY(int value)
+    {
+        int height = (Integer) mBottomOptionLayout.getTag();
+        int translationY = height * 100 * value;
+
+        mBottomOptionLayout.setTranslationY(translationY);
+        mMenuBarLayout.setTranslationY(translationY);
+    }
+
+    public void showBottomLayout(boolean isAnimation)
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        final float y = mBottomOptionLayout.getBottom();
+
+        if (mValueAnimator != null)
+        {
+            if (mValueAnimator.isRunning() == true)
+            {
+                mValueAnimator.cancel();
+                mValueAnimator.removeAllListeners();
+            }
+
+            mValueAnimator = null;
+        }
+
+        int height = mBottomOptionLayout.getHeight() + mMenuBarLayout.getHeight() + Util.dpToPx(mContext, 10);
+
+        mValueAnimator = ValueAnimator.ofInt(0, 100);
+        mValueAnimator.setInterpolator(new AccelerateInterpolator());
+        mValueAnimator.setDuration(ANIMATION_DEALY);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (Integer) animation.getAnimatedValue();
+
+                setBottomTranslationY(value);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                //                if (mAnimationLayout.getVisibility() != View.VISIBLE)
+                //                {
+                //                    mAnimationLayout.setVisibility(View.VISIBLE);
+                //                }
+                //
+                //                setTouchEnabled(false);
+
+                mAnimationState = Constants.ANIMATION_STATE.START;
+                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                {
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                    mAnimationState = Constants.ANIMATION_STATE.END;
+                }
+
+                //                setTouchEnabled(true);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+
+                //                setTouchEnabled(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
+    public void hideBottomLayout(boolean isAnimation)
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            if (mValueAnimator.isRunning() == true)
+            {
+                mValueAnimator.cancel();
+                mValueAnimator.removeAllListeners();
+            }
+
+            mValueAnimator = null;
+        }
+
+        if (isAnimation == true)
+        {
+            int height = mBottomOptionLayout.getHeight() + mMenuBarLayout.getHeight() + Util.dpToPx(mContext, 10);
+
+            mValueAnimator = ValueAnimator.ofInt(0, -100);
+            mValueAnimator.setInterpolator(new AccelerateInterpolator());
+            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+            {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation)
+                {
+                    int value = (Integer) animation.getAnimatedValue();
+
+                    setBottomTranslationY(value);
+                }
+            });
+
+            mValueAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    //                if (mAnimationLayout.getVisibility() != View.VISIBLE)
+                    //                {
+                    //                    mAnimationLayout.setVisibility(View.VISIBLE);
+                    //                }
+                    //
+                    //                setTouchEnabled(false);
+
+                    mAnimationState = Constants.ANIMATION_STATE.START;
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                        mAnimationState = Constants.ANIMATION_STATE.END;
+                    }
+
+                    //                setTouchEnabled(true);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+
+                    //                setTouchEnabled(true);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mValueAnimator.start();
+        } else
+        {
+
         }
     }
 

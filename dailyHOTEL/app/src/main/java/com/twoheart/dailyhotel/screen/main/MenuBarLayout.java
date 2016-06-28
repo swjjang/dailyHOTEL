@@ -135,6 +135,16 @@ public class MenuBarLayout implements View.OnClickListener
         mViewGroup.setVisibility(visibility);
     }
 
+    public void setTranslationY(float translationY)
+    {
+        mViewGroup.setTranslationY(translationY);
+    }
+
+    public int getHeight()
+    {
+        return mViewGroup.getHeight();
+    }
+
     public void setNewIconVisible(boolean isVisible)
     {
         mMenuView[MENU_INFORMATIONL_INDEX].findViewById(R.id.newEventIcon).setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
