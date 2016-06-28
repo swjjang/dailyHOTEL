@@ -151,6 +151,12 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
     private void setRecommendCodeText(String recommendCode)
     {
+        if(mRecommendCodeTextView == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         mRecommendCodeTextView.setText(recommendCode);
     }
 

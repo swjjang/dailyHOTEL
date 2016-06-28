@@ -43,6 +43,8 @@ public abstract class PlaceListLayout extends BaseLayout
 
         void onScrolled(RecyclerView recyclerView, int dx, int dy);
 
+        void onScrollStateChanged(RecyclerView recyclerView, int newState);
+
         void onRefreshAll(boolean isShowProgress);
     }
 
@@ -102,6 +104,14 @@ public abstract class PlaceListLayout extends BaseLayout
                         mSwipeRefreshLayout.setEnabled(false);
                     }
                 }
+
+                ((OnEventListener)mOnEventListener).onScrolled(recyclerView, dx, dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                ((OnEventListener)mOnEventListener).onScrollStateChanged(recyclerView, newState);
             }
         });
 

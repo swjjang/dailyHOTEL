@@ -728,12 +728,25 @@ public class GourmetMainFragment_v2 extends PlaceMainFragment
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-            if (dy > 0)
-            {
+            mPlaceMainLayout.calculationMenuBarLayoutTranslationY(dy);
+        }
 
-            } else if (dy < 0)
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+            switch(newState)
             {
-                mPlaceMainLayout.hideBottomLayout(true);
+                case RecyclerView.SCROLL_STATE_IDLE:
+                {
+                    mPlaceMainLayout.animationMenuBarLayout();
+                    break;
+                }
+
+                case RecyclerView.SCROLL_STATE_DRAGGING:
+                    break;
+
+                case RecyclerView.SCROLL_STATE_SETTLING:
+                    break;
             }
         }
     };
