@@ -329,6 +329,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
+            android:name=".screen.hotel.filter.StayCalendarActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+        <activity
             android:name=".screen.hotel.search.HotelSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
