@@ -32,38 +32,6 @@ public class DailyToolbarLayout
         return textView;
     }
 
-    public void initToolbarRegion(View.OnClickListener listener)
-    {
-        TextView textView = getTitleTextView(mContext);
-        textView.setText(null);
-        textView.setCompoundDrawables(null, null, null, null);
-        textView.setOnClickListener(listener);
-    }
-
-    public void resizeToolbarRegionText()
-    {
-        mToolbar.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                TextView textView = getTitleTextView(mContext);
-                View view = mToolbar.findViewById(R.id.biImageView);
-
-                textView.setMaxWidth(view.getLeft() - textView.getLeft() - Util.dpToPx(mContext, 5));
-            }
-        });
-    }
-
-    public void initToolbarRegionMenu(View.OnClickListener listener)
-    {
-        setToolbarMenu(R.drawable.navibar_ic_map, R.drawable.navibar_ic_search_black);
-
-        setToolbarMenuClickListener(listener);
-
-        setToolbarMenuVisibility(false);
-    }
-
     public void initToolbar(String title, View.OnClickListener backPressedListener)
     {
         initToolbar(title, backPressedListener, false);

@@ -20,7 +20,6 @@ public class MenuBarLayout implements View.OnClickListener
     private OnMenuBarSelectedListener mOnMenuBarSelectedListener;
     private BaseActivity mBaseActivity;
     private ViewGroup mViewGroup;
-    private View mMenuBarLine;
     private boolean mEnabled;
 
     public static class MenuBarLayoutOnPageChangeListener
@@ -47,13 +46,12 @@ public class MenuBarLayout implements View.OnClickListener
         void onMenuReselected(int intdex);
     }
 
-    public MenuBarLayout(BaseActivity baseActivity, ViewGroup viewGroup, View lineView, OnMenuBarSelectedListener listener)
+    public MenuBarLayout(BaseActivity baseActivity, ViewGroup viewGroup, OnMenuBarSelectedListener listener)
     {
         mBaseActivity = baseActivity;
         mOnMenuBarSelectedListener = listener;
         mEnabled = true;
         mViewGroup = viewGroup;
-        mMenuBarLine = lineView;
         initLayout(viewGroup);
     }
 
@@ -141,13 +139,11 @@ public class MenuBarLayout implements View.OnClickListener
     public void setVisibility(int visibility)
     {
         mViewGroup.setVisibility(visibility);
-        mMenuBarLine.setVisibility(visibility);
     }
 
     public void setTranslationY(float translationY)
     {
         mViewGroup.setTranslationY(translationY);
-        mMenuBarLine.setTranslationY(translationY);
     }
 
     public int getHeight()
