@@ -235,38 +235,6 @@ public class StayListFragment extends PlaceListFragment
     ////////////////////////           Ovrride method     end    /////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
 
-    public SaleTime getCheckInSaleTime()
-    {
-        return mCheckInSaleTime;
-    }
-
-    public SaleTime getCheckOutSaleTime()
-    {
-        return mCheckOutSaleTime;
-    }
-
-    public void setCheckInSaleTime(SaleTime saleTime)
-    {
-        mCheckInSaleTime = saleTime;
-    }
-
-    public void setCheckOutSaleTime(SaleTime saleTime)
-    {
-        mCheckOutSaleTime = saleTime;
-    }
-
-    public int getNights()
-    {
-        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
-        {
-            Util.restartApp(getContext());
-            return 1;
-        }
-
-        return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-    }
-
-
     protected void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
         //        BaseActivity baseActivity = (BaseActivity) getActivity();

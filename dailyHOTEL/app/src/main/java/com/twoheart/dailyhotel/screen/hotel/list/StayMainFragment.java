@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
+import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -556,13 +557,11 @@ public class StayMainFragment extends PlaceMainFragment
                 int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
                 if (dailyDayOfDays >= 0)
                 {
-
                     SaleTime checkInSaleTime = todaySaleTime.getClone(dailyDayOfDays);
                     SaleTime checkOutSaleTime = todaySaleTime.getClone(dailyDayOfDays + night);
 
-                    StayListFragment stayListFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
-                    stayListFragment.setCheckInSaleTime(checkInSaleTime);
-                    stayListFragment.setCheckOutSaleTime(checkOutSaleTime);
+                    StayCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
+                    StayCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);
 
                 } else
                 {
@@ -579,9 +578,8 @@ public class StayMainFragment extends PlaceMainFragment
                 SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(datePlus);
                 SaleTime checkOutSaleTime = StayCurationManager.getInstance().getCheckInSaleTime().getClone(datePlus + night);
 
-                StayListFragment stayListFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
-                stayListFragment.setCheckInSaleTime(checkInSaleTime);
-                stayListFragment.setCheckOutSaleTime(checkOutSaleTime);
+                StayCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
+                StayCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);
 
             } catch (Exception e)
             {
@@ -628,10 +626,10 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onSearchClick()
         {
-            StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+            int night = StayCurationManager.getInstance().getNight();
 
-            Intent intent = HotelSearchActivity.newInstance(mBaseActivity //
-                , currentFragment.getCheckInSaleTime(), currentFragment.getNights());
+            Intent intent = HotelSearchActivity.newInstance(mBaseActivity, checkInSaleTime, night);
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
@@ -684,11 +682,11 @@ public class StayMainFragment extends PlaceMainFragment
 
             lockUiComponent();
 
-            StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+            SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
+            int night = StayCurationManager.getInstance().getNight();
 
-            Intent intent = HotelRegionListActivity.newInstance(getContext(), //
-                StayCurationManager.getInstance().getProvince(), //
-                currentFragment.getCheckInSaleTime(), currentFragment.getNights());
+            Intent intent = StayRegionListActivity.newInstance(getContext(), //
+                StayCurationManager.getInstance().getProvince(), checkInSaleTime, night);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
         }
 

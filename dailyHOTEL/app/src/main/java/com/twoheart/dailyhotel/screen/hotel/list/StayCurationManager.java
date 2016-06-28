@@ -54,6 +54,16 @@ public class StayCurationManager
         return mCheckOutSaleTime;
     }
 
+    public int getNight()
+    {
+        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+        {
+            return 1;
+        }
+
+        return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+    }
+
     public static synchronized StayCurationManager getInstance()
     {
         if (mInstance == null)

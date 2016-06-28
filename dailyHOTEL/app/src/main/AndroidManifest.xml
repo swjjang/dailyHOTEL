@@ -275,6 +275,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".screen.hotel.region.StayRegionListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".screen.common.SatisfactionActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
