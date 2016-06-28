@@ -406,6 +406,7 @@ public class MainNetworkController extends BaseNetworkController
         {
             try
             {
+
                 final String userIndex = response.getString("idx");
                 boolean isExceedBonus = response.getBoolean("is_exceed_bonus");
 
