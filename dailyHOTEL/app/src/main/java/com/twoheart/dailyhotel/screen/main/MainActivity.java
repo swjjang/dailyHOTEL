@@ -180,7 +180,8 @@ public class MainActivity extends BaseActivity implements Constants
         mSplashLayout = findViewById(R.id.splashLayout);
 
         ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
-        mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
+        View menuBarLine = findViewById(R.id.menuBarLine);
+        mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, menuBarLine, onMenuBarSelectedListener);
 
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, contentLayout, mMenuBarLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));

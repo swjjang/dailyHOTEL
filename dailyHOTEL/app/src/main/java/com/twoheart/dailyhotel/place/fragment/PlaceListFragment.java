@@ -37,6 +37,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         void onAttach(PlaceListFragment placeListFragment);
 
         void onScrolled(RecyclerView recyclerView, int dx, int dy);
+
+        void onScrollStateChanged(RecyclerView recyclerView, int newState);
     }
 
     public abstract void refreshList(boolean isShowProgress);

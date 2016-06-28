@@ -1217,6 +1217,12 @@ public class StayMainFragment extends PlaceMainFragment
 
         }
 
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+
+        }
+
     };
 
 }

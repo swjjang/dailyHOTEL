@@ -347,6 +347,12 @@ public class GourmetListFragment_v2 extends PlaceListFragment
         }
 
         @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+            mOnPlaceListFragmentListener.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
         public void onRefreshAll(boolean isShowProgress)
         {
             refreshList(isShowProgress);
