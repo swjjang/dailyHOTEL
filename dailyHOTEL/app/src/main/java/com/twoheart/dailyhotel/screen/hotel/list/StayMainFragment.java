@@ -29,8 +29,8 @@ import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.HotelCurationActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.HotelRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.search.HotelSearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -97,15 +97,13 @@ public class StayMainFragment extends PlaceMainFragment
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-            int nights = data.getIntExtra(HotelRegionListActivity.INTENT_EXTRA_DATA_NIGHTS, 1);
+            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+            SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
 
-            if (checkInSaleTime == null)
+            if (checkInSaleTime == null || checkOutSaleTime == null)
             {
                 return;
             }
-
-            SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
 
             StayCurationManager.getInstance().setCheckInSaleTime(checkInSaleTime);
             StayCurationManager.getInstance().setCheckOutSaleTime(checkOutSaleTime);
@@ -672,7 +670,7 @@ public class StayMainFragment extends PlaceMainFragment
             SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
             int nights = StayCurationManager.getInstance().getCheckOutSaleTime().getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
 
-            Intent intent = HotelCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, true, true);
+            Intent intent = StayCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, AnalyticsManager.ValueType.LIST, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 
