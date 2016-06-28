@@ -25,6 +25,11 @@ public class StayCurationManager
 
     public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
     {
+        if (mCheckInSaleTime == null)
+        {
+            mCheckInSaleTime = new SaleTime();
+        }
+
         mCheckInSaleTime.setCurrentTime(currentDateTime);
         mCheckInSaleTime.setDailyTime(dailyDateTime);
     }
@@ -122,9 +127,9 @@ public class StayCurationManager
         mCategory = Category.ALL;
 
         mStayCurationOption.clear();
-        
-        mCheckInSaleTime = new SaleTime();
-        mCheckOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + 1);
+
+        mCheckInSaleTime = null;
+        mCheckOutSaleTime = null;
 
         mProvince = null;
         mLocation = null;
