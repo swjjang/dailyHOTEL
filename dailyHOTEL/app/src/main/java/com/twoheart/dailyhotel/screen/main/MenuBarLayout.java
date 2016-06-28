@@ -168,7 +168,7 @@ public class MenuBarLayout implements View.OnClickListener
                 return mBaseActivity.getString(R.string.menu_item_title_hotel);
 
             case MENU_GOURMET_INDEX:
-                return mBaseActivity.getString(R.string.menu_item_title_fnb);
+                return mBaseActivity.getString(R.string.menu_item_title_gourmet);
 
             case MENU_BOOKINGL_INDEX:
                 return mBaseActivity.getString(R.string.menu_item_title_bookings);

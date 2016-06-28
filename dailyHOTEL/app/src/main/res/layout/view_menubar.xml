@@ -1,132 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+    >
 
     <LinearLayout
         android:id="@+id/bottomMenuBarLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/menubar_height"
-        android:background="@color/white"
+        android:layout_alignParentBottom="true"
         android:baselineAligned="false"
-        android:layout_alignParentBottom="true">
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/hotelLayout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce7e7e7"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/hotelView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="2dp"
-                android:gravity="center_horizontal"
-                android:text="@string/menu_item_title_hotel"
-                android:textColor="@drawable/selector_menu_textcolor"
-                android:textSize="9dp"
-                dailyFont:style="Regular"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white">
 
-            <ImageView
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/hotelLayout"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/hotelView"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_menu_hotel"
-                android:paddingTop="2dp"/>
-        </RelativeLayout>
+                android:layout_weight="1">
 
-        <RelativeLayout
-            android:id="@+id/gourmetLayout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/hotelImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/selector_menu_hotel"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/gourmetView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="2dp"
-                android:gravity="center_horizontal"
-                android:text="@string/menu_item_title_fnb"
-                android:textColor="@drawable/selector_menu_textcolor"
-                android:textSize="9dp"
-                dailyFont:style="Regular"/>
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/hotelView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/hotelImageView"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center"
+                    android:text="@string/menu_item_title_hotel"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/gourmetLayout"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/gourmetView"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_menu_gourmet"
-                android:paddingTop="2dp"/>
-        </RelativeLayout>
+                android:layout_weight="1">
 
-        <RelativeLayout
-            android:id="@+id/bookingLayout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/gourmetImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/selector_menu_gourmet"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/bookingView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="2dp"
-                android:gravity="center_horizontal"
-                android:text="@string/menu_item_title_bookings"
-                android:textColor="@drawable/selector_menu_textcolor"
-                android:textSize="9dp"
-                dailyFont:style="Regular"/>
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/gourmetView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/gourmetImageView"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center"
+                    android:text="@string/menu_item_title_gourmet"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/bookingLayout"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/bookingView"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_menu_bookings"
-                android:paddingTop="2dp"/>
-        </RelativeLayout>
+                android:layout_weight="1">
 
-        <RelativeLayout
-            android:id="@+id/informationLayout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/bookingImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/selector_menu_bookings"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/informationView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="2dp"
-                android:gravity="center_horizontal"
-                android:text="@string/menu_item_title_information"
-                android:textColor="@drawable/selector_menu_textcolor"
-                android:textSize="9dp"
-                dailyFont:style="Regular"/>
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/bookingView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/bookingImageView"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center"
+                    android:text="@string/menu_item_title_bookings"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/informationLayout"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/informationView"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_menu_information"
-                android:paddingTop="2dp"/>
+                android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/newEventIcon"
-                android:layout_width="match_parent"
-                android:layout_height="16dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="6dp"
-                android:paddingLeft="28dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/tapbar_ic_n"
-                android:visibility="invisible"/>
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/informationImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/selector_menu_information"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/informationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/informationImageView"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center"
+                    android:text="@string/menu_item_title_information"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+
+                <ImageView
+                    android:id="@+id/newEventIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="6dp"
+                    android:paddingLeft="28dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/tapbar_ic_n"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 </merge>

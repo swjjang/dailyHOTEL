@@ -73,7 +73,7 @@ public class EventListNetworkController extends BaseNetworkController
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
 
-                    ((OnNetworkControllerListener)mOnNetworkControllerListener).onEventListResponse(null);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                 } else
                 {
                     JSONArray eventJSONArray = response.getJSONArray("data");

@@ -91,12 +91,16 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         // 지역 이름
         // 날짜
         mSearchTextView = (TextView) view.findViewById(R.id.searchTextView);
+
+        View regionTextLayout = view.findViewById(R.id.regionTextLayout);
         mRegionTextView = (TextView) view.findViewById(R.id.regionTextView);
+
+        View dateTextLayout = view.findViewById(R.id.dateTextLayout);
         mDateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
         mSearchTextView.setOnClickListener(this);
-        mRegionTextView.setOnClickListener(this);
-        mDateTextView.setOnClickListener(this);
+        regionTextLayout.setOnClickListener(this);
+        dateTextLayout.setOnClickListener(this);
     }
 
     private void initOptionLayout(View view)
@@ -274,11 +278,11 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 ((PlaceMainLayout.OnEventListener) mOnEventListener).onSearchClick();
                 break;
 
-            case R.id.regionTextView:
+            case R.id.regionTextLayout:
                 ((PlaceMainLayout.OnEventListener) mOnEventListener).onRegionClick();
                 break;
 
-            case R.id.dateTextView:
+            case R.id.dateTextLayout:
                 ((PlaceMainLayout.OnEventListener) mOnEventListener).onDateClick();
                 break;
 

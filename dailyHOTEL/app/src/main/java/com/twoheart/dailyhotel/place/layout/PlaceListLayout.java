@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
@@ -105,13 +104,13 @@ public abstract class PlaceListLayout extends BaseLayout
                     }
                 }
 
-                ((OnEventListener)mOnEventListener).onScrolled(recyclerView, dx, dy);
+                ((OnEventListener) mOnEventListener).onScrolled(recyclerView, dx, dy);
             }
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState)
             {
-                ((OnEventListener)mOnEventListener).onScrollStateChanged(recyclerView, newState);
+                ((OnEventListener) mOnEventListener).onScrollStateChanged(recyclerView, newState);
             }
         });
 

@@ -21,12 +21,12 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.HotelCurationOption;
 import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -139,7 +139,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height_has_tab);
+        TOOLBAR_HEIGHT = (int) baseActivity.getResources().getDimension(R.dimen.toolbar_height);
 
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
         final View toolbar = view.findViewById(R.id.toolbar);

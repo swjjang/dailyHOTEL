@@ -24,11 +24,11 @@ public class GourmetListFragmentPagerAdapter extends PlaceListFragmentPagerAdapt
 
         list.clear();
 
-        GourmetListFragment_v2 gourmetListFragment;
+        GourmetListFragment gourmetListFragment;
 
         for (int i = 0; i < count; i++)
         {
-            gourmetListFragment = new GourmetListFragment_v2();
+            gourmetListFragment = new GourmetListFragment();
             gourmetListFragment.setListFragmentListener(listener);
             list.add(gourmetListFragment);
         }

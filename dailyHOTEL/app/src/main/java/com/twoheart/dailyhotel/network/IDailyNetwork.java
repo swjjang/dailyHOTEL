@@ -168,8 +168,7 @@ interface IDailyNetwork
      */
     void requestStayList(Object tag, Province province, Location mLocation, //
                          Category mCategory, SaleTime saleTime, int nights, //
-                         StayCurationOption stayCurationOption,
-                         DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
+                         StayCurationOption stayCurationOption, DailyHotelJsonResponseListener listener, Response.ErrorListener errorListener);
 
     /**
      * @param tag

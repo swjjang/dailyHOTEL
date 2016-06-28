@@ -9,7 +9,7 @@ public class StayMapListManager
 
     public synchronized StayMapListManager getInstance()
     {
-        if(mInstance == null)
+        if (mInstance == null)
         {
             mInstance = new StayMapListManager();
         }

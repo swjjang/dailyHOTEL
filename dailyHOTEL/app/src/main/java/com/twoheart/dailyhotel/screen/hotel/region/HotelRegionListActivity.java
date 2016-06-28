@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.hotel.region;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;

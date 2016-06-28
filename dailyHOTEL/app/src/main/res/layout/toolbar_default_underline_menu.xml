@@ -3,7 +3,7 @@
     android:id="@+id/toolbar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbar_height_has_tab"
+    android:layout_height="@dimen/toolbar_height"
     android:background="@color/white">
 
     <ImageView
@@ -50,9 +50,8 @@
         android:textSize="18dp"/>
 
     <View
-        android:id="@+id/underLine"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/tab_underline"/>
+        android:background="@color/default_line_ce7e7e7"/>
 </RelativeLayout>

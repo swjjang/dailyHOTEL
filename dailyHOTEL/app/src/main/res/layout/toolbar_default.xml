@@ -27,4 +27,10 @@
         android:textColor="@color/actionbar_title"
         android:textSize="18dp"
         android:layout_toRightOf="@+id/backImageView"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_ce7e7e7"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

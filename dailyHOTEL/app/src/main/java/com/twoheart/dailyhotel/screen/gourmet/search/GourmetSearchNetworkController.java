@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmet.search;
 
 import android.content.Context;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;

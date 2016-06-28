@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/shape_fillrect_ca6a6a8"
+                    android:background="@drawable/shape_fillrect_ba6a6a8"
                     android:gravity="center"
                     android:paddingLeft="3dp"
                     android:paddingRight="3dp"

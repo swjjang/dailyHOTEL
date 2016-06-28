@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.place.base;
 
 import android.content.Context;
 
-import com.android.volley.Response;
-
 public abstract class BaseNetworkController
 {
     protected String mNetworkTag;

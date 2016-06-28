@@ -6,12 +6,10 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainFragment_v2;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -84,7 +82,7 @@ public class MainFragmentManager
 
             case INDEX_GOURMET_FRAGMENT:
             {
-                PlaceMainFragment placeMainFragment = new GourmetMainFragment_v2();
+                PlaceMainFragment placeMainFragment = new GourmetMainFragment();
                 placeMainFragment.setMenuBarLayout(mMenuBarLayout);
 
                 return placeMainFragment;

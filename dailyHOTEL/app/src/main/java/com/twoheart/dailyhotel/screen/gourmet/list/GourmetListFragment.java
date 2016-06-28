@@ -3,18 +3,14 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -25,14 +21,9 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,267 +36,72 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GourmetListFragment extends BaseFragment implements Constants
+public class GourmetListFragment extends PlaceListFragment
 {
-    protected PinnedSectionRecyclerView mGourmetRecyclerView;
-    protected GourmetListAdapter mGourmetAdapter;
-    protected SaleTime mSaleTime;
-
-    private View mEmptyView;
-    private ViewGroup mMapLayout;
-    private GourmetMapFragment mGourmetMapFragment;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private List<EventBanner> mEventBannerList;
-
+    protected BaseActivity mBaseActivity;
     private ViewType mViewType;
     protected boolean mScrollListTop;
-    protected GourmetMainFragment.OnCommunicateListener mOnCommunicateListener;
 
     protected List<Gourmet> mGourmetList = new ArrayList<>();
+    private GourmetListLayout mGourmetListLayout;
+
+    public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
+    {
+        void onGourmetClick(PlaceViewItem placeViewItem, SaleTime saleTime);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_gourmet_list, container, false);
+        mBaseActivity = (BaseActivity) getActivity();
 
-        mGourmetRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
-        mGourmetRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mGourmetRecyclerView.setTag("GourmetListFragment");
-        EdgeEffectColor.setEdgeGlowColor(mGourmetRecyclerView, getResources().getColor(R.color.default_over_scroll_edge));
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        mGourmetAdapter = new GourmetListAdapter(baseActivity, new ArrayList<PlaceViewItem>(), mOnItemClickListener, mOnEventBannerItemClickListener);
-        mGourmetRecyclerView.setAdapter(mGourmetAdapter);
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                if (mOnCommunicateListener == null)
-                {
-                    return;
-                }
-
-                mOnCommunicateListener.expandedAppBar(true, true);
-                mOnCommunicateListener.refreshAll(false);
-            }
-        });
-
-        mEmptyView = view.findViewById(R.id.emptyLayout);
-
-        mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
+        mGourmetListLayout = new GourmetListLayout(mBaseActivity, mOnEventListener);
 
         mViewType = ViewType.LIST;
 
-        setVisibility(mViewType, true);
-
-        mGourmetRecyclerView.setShadowVisible(false);
-
-        return view;
+        return mGourmetListLayout.onCreateView(R.layout.fragment_gourmet_list, container);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (mViewType == ViewType.MAP)
-        {
-            if (mGourmetMapFragment != null)
-            {
-                mGourmetMapFragment.onActivityResult(requestCode, resultCode, data);
-            }
-        }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    public void refreshList(boolean isShowProgress)
     {
-        if (mViewType == ViewType.MAP)
-        {
-            if (mGourmetMapFragment != null)
-            {
-                mGourmetMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
-        }
+        lockUI(isShowProgress);
+
+        DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, GourmetCurationManager.getInstance().getProvince(), GourmetCurationManager.getInstance().getSaleTime(), mGourmetListJsonResponseListener, mBaseActivity);
     }
 
-    public boolean canScrollUp()
+    public boolean hasSalesPlace()
     {
-        if (mSwipeRefreshLayout != null)
-        {
-            return mSwipeRefreshLayout.canChildScrollUp();
-        }
-
-        return true;
+        return mGourmetListLayout.hasSalesPlace();
     }
 
-    public void onPageSelected(String tabText)
+    public void setVisibility(ViewType viewType, boolean isCurrentPage)
     {
-    }
-
-    public void onPageUnSelected()
-    {
-    }
-
-    public void onRefreshComplete()
-    {
-        mOnCommunicateListener.refreshCompleted();
-
-        mSwipeRefreshLayout.setRefreshing(false);
-
-        if (mViewType == ViewType.MAP)
-        {
-            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
-            mOnCommunicateListener.showFloatingActionButton();
-        } else
-        {
-            Object objectTag = mSwipeRefreshLayout.getTag();
-
-            if (objectTag == null)
-            {
-                mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
-
-                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-                animation.setDuration(300);
-                animation.setAnimationListener(new Animation.AnimationListener()
-                {
-                    @Override
-                    public void onAnimationStart(Animation animation)
-                    {
-                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation)
-                    {
-                        mSwipeRefreshLayout.setAnimation(null);
-                        mOnCommunicateListener.showFloatingActionButton();
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation)
-                    {
-
-                    }
-                });
-
-                mSwipeRefreshLayout.startAnimation(animation);
-            } else
-            {
-                mOnCommunicateListener.showFloatingActionButton();
-            }
-        }
-    }
-
-    protected void setVisibility(ViewType viewType, boolean isCurrentPage)
-    {
-        switch (viewType)
-        {
-            case LIST:
-                mViewType = ViewType.LIST;
-
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.GONE);
-
-                if (mGourmetMapFragment != null)
-                {
-                    getChildFragmentManager().beginTransaction().remove(mGourmetMapFragment).commitAllowingStateLoss();
-                    mMapLayout.removeAllViews();
-                    mGourmetMapFragment = null;
-                }
-
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                break;
-
-            case MAP:
-                mViewType = ViewType.MAP;
-
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.VISIBLE);
-
-                if (isCurrentPage == true && mGourmetMapFragment == null)
-                {
-                    mGourmetMapFragment = new GourmetMapFragment();
-                    getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mGourmetMapFragment).commitAllowingStateLoss();
-                }
-
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-                break;
-
-            case GONE:
-                AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY);
-
-                mEmptyView.setVisibility(View.VISIBLE);
-                mMapLayout.setVisibility(View.GONE);
-
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-                break;
-        }
-    }
-
-    protected SaleTime getSaleTime()
-    {
-        return mSaleTime;
-    }
-
-    public void setSaleTime(SaleTime saleTime)
-    {
-        mSaleTime = saleTime;
-    }
-
-    public void setOnCommunicateListener(GourmetMainFragment.OnCommunicateListener listener)
-    {
-        mOnCommunicateListener = listener;
-    }
-
-    public boolean isShowInformationAtMapView()
-    {
-        if (mViewType == ViewType.MAP && mGourmetMapFragment != null)
-        {
-            return mGourmetMapFragment.isShowInformation();
-        }
-
-        return false;
-    }
-
-    public void refreshList(List<EventBanner> list)
-    {
-        mEventBannerList = list;
-
-        fetchList();
+        mViewType = viewType;
+        mGourmetListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
     }
 
     public void fetchList()
     {
-        fetchList(GourmetCurationManager.getInstance().getProvince(), mSaleTime, null);
+        fetchList(GourmetCurationManager.getInstance().getProvince(), GourmetCurationManager.getInstance().getSaleTime(), null);
     }
 
     public void fetchList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
         if (province == null || checkInSaleTime == null)
         {
-            Util.restartApp(baseActivity);
+            Util.restartApp(mBaseActivity);
             return;
         }
 
         lockUI();
 
-        //        if (DEBUG == true && this instanceof GourmetDaysListFragment)
-        //        {
-        //            baseActivity.showSimpleDialog(null, mSaleTime.toString() + "\n" + params, getString(R.string.dialog_btn_text_confirm), null);
-        //        }
-
-        DailyNetworkAPI.getInstance(baseActivity).requestGourmetList(mNetworkTag, province, checkInSaleTime, mGourmetListJsonResponseListener, baseActivity);
-    }
-
-    public void setScrollListTop(boolean scrollListTop)
-    {
-        mScrollListTop = scrollListTop;
+        DailyNetworkAPI.getInstance(mBaseActivity).requestGourmetList(mNetworkTag, province, checkInSaleTime, mGourmetListJsonResponseListener, mBaseActivity);
     }
 
     private ArrayList<PlaceViewItem> curationSorting(List<Gourmet> gourmetList, GourmetCurationOption gourmetCurationOption)
@@ -461,7 +257,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         mScrollListTop = true;
 
         ArrayList<PlaceViewItem> placeViewItemList = curationList(mGourmetList, curationOption);
-        setGourmetListViewItemList(type, placeViewItemList, curationOption.getSortType());
+        mGourmetListLayout.setList(getChildFragmentManager(), type, placeViewItemList, curationOption.getSortType());
     }
 
     private ArrayList<PlaceViewItem> curationList(List<Gourmet> list, GourmetCurationOption curationOption)
@@ -514,177 +310,48 @@ public class GourmetListFragment extends BaseFragment implements Constants
         return list;
     }
 
-    private void setGourmetListViewItemList(ViewType viewType, ArrayList<PlaceViewItem> gourmetListViewItemList, SortType sortType)
-    {
-        if (mGourmetAdapter == null)
-        {
-            Util.restartApp(getContext());
-            return;
-        }
-
-        mGourmetAdapter.clear();
-
-        if (gourmetListViewItemList == null || gourmetListViewItemList.size() == 0)
-        {
-            mGourmetAdapter.notifyDataSetChanged();
-
-            setVisibility(ViewType.GONE, true);
-
-            mOnCommunicateListener.expandedAppBar(true, true);
-        } else
-        {
-            setVisibility(viewType, true);
-
-            if (viewType == ViewType.MAP)
-            {
-                if (hasSalesPlace(gourmetListViewItemList) == false)
-                {
-                    unLockUI();
-
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null)
-                    {
-                        return;
-                    }
-
-                    DailyToast.showToast(baseActivity, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
-
-                    mOnCommunicateListener.toggleViewType();
-                    return;
-                }
-
-                mGourmetMapFragment.setOnCommunicateListener(mOnCommunicateListener);
-                mGourmetMapFragment.setPlaceViewItemList(gourmetListViewItemList, mSaleTime, mScrollListTop);
-
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST_MAP);
-            } else
-            {
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST);
-
-                Map<String, String> parmas = new HashMap<>();
-                GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
-                Province province = GourmetCurationManager.getInstance().getProvince();
-
-                if (province instanceof Area)
-                {
-                    Area area = (Area) province;
-                    parmas.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    parmas.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-
-                } else
-                {
-                    parmas.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    parmas.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                }
-
-                AnalyticsManager.getInstance(getContext()).recordScreen(Screen.DAILYGOURMET_LIST, parmas);
-            }
-
-            if (sortType == SortType.DEFAULT)
-            {
-                if (mEventBannerList != null && mEventBannerList.size() > 0)
-                {
-                    PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, mEventBannerList);
-                    gourmetListViewItemList.add(0, placeViewItem);
-                }
-            }
-
-            mGourmetAdapter.addAll(gourmetListViewItemList, sortType);
-            mGourmetAdapter.notifyDataSetChanged();
-
-            if (mScrollListTop == true)
-            {
-                mScrollListTop = false;
-                mGourmetRecyclerView.scrollToPosition(0);
-            }
-        }
-    }
-
-    public boolean hasSalesPlace()
-    {
-        return hasSalesPlace(mGourmetAdapter.getAll());
-    }
-
-    private boolean hasSalesPlace(List<PlaceViewItem> gourmetListViewItemList)
-    {
-        boolean hasPlace = false;
-
-        if (gourmetListViewItemList != null)
-        {
-            for (PlaceViewItem placeViewItem : gourmetListViewItemList)
-            {
-                if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
-                    && placeViewItem.<Gourmet>getItem().isSoldOut == false)
-                {
-                    hasPlace = true;
-                    break;
-                }
-            }
-        }
-
-        return hasPlace;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View view)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            int position = mGourmetRecyclerView.getChildAdapterPosition(view);
-
-            if (position < 0)
-            {
-                fetchList();
-                return;
-            }
-
-            PlaceViewItem gourmetViewItem = mGourmetAdapter.getItem(position);
-
-            if (gourmetViewItem.mType == PlaceViewItem.TYPE_ENTRY)
-            {
-                mOnCommunicateListener.selectPlace(gourmetViewItem, mSaleTime);
-            }
-        }
-    };
-
-    private View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View view)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            Integer index = (Integer) view.getTag(view.getId());
-
-            if (index != null)
-            {
-                EventBanner eventBanner = mEventBannerList.get(index);
-
-                mOnCommunicateListener.selectEventBanner(eventBanner);
-            }
-        }
-    };
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private GourmetListLayout.OnEventListener mOnEventListener = new GourmetListLayout.OnEventListener()
+    {
+        @Override
+        public void onPlaceClick(PlaceViewItem placeViewItem)
+        {
+            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(placeViewItem, GourmetCurationManager.getInstance().getSaleTime());
+        }
+
+        @Override
+        public void onEventBannerClick(EventBanner eventBanner)
+        {
+            mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+            mOnPlaceListFragmentListener.onScrolled(recyclerView, dx, dy);
+        }
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+            mOnPlaceListFragmentListener.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onRefreshAll(boolean isShowProgress)
+        {
+            refreshList(isShowProgress);
+        }
+
+        @Override
+        public void finish()
+        {
+            mBaseActivity.finish();
+        }
+    };
 
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -697,9 +364,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
+            if (isFinishing() == true)
             {
                 return;
             }
@@ -730,23 +395,20 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                     mGourmetList.clear();
 
+                    GourmetCurationOption gourmetCurationOption = GourmetCurationManager.getInstance().getGourmetCurationOption();
+
                     if (length == 0)
                     {
-                        GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
                         gourmetCurationOption.setFiltersList(null);
 
-                        mGourmetAdapter.clear();
-                        mGourmetAdapter.notifyDataSetChanged();
+                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, null, gourmetCurationOption.getSortType());
 
                         setVisibility(ViewType.GONE, true);
-
-                        mOnCommunicateListener.expandedAppBar(true, true);
                     } else
                     {
                         String imageUrl = dataJSONObject.getString("imgUrl");
 
                         ArrayList<Gourmet> gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
-                        GourmetCurationOption gourmetCurationOption = mOnCommunicateListener.getCurationOption();
                         setFilterInformation(gourmetList, gourmetCurationOption);
 
                         // 기본적으로 보관한다.
@@ -754,11 +416,8 @@ public class GourmetListFragment extends BaseFragment implements Constants
 
                         ArrayList<PlaceViewItem> placeViewItemList = curationList(gourmetList, gourmetCurationOption);
 
-                        setGourmetListViewItemList(mViewType, placeViewItemList, gourmetCurationOption.getSortType());
+                        mGourmetListLayout.setList(getChildFragmentManager(), mViewType, placeViewItemList, gourmetCurationOption.getSortType());
                     }
-
-                    // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
-                    onRefreshComplete();
                 } else
                 {
                     String message = response.getString("msg");
@@ -770,6 +429,7 @@ public class GourmetListFragment extends BaseFragment implements Constants
             } finally
             {
                 unLockUI();
+                mGourmetListLayout.setSwipeRefreshing(false);
             }
         }
 

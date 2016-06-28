@@ -789,7 +789,7 @@ public class GourmetDetailLayout
                 return;
             }
 
-            final int TOOLBAR_HEIGHT = Util.dpToPx(mActivity, 50);
+            final int TOOLBAR_HEIGHT = mActivity.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
             float max = ((float) mImageHeight - TOOLBAR_HEIGHT) / 2;
             float offset = rect.top - mStatusBarHeight - TOOLBAR_HEIGHT;
             float alphaFactor = offset / max;

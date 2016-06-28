@@ -9,9 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="#ffffff"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:background="#ffffff">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/titleTextView"
@@ -25,7 +23,8 @@
             android:singleLine="true"
             android:text="@string/label_completed_payment"
             android:textColor="@color/actionbar_title"
-            android:textSize="18dp"/>
+            android:textSize="18dp"
+            android:layout_marginLeft="15dp"/>
 
         <ImageView
             android:id="@+id/closeView"
@@ -33,7 +32,14 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:paddingLeft="10dp"
-            android:src="@drawable/navibar_ic_search_x"/>
+            android:src="@drawable/navibar_ic_search_x"
+            android:paddingRight="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce7e7e7"
+            android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 
     <com.facebook.drawee.view.SimpleDraweeView

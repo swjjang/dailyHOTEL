@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.model;
 
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 

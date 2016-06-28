@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.adapter.PlaceBannerViewPagerAdapter;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;

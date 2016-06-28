@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
@@ -221,6 +220,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     /**
      * 호출 시점에는 아직 GUI가 만들어진 상태가 아니다.
+     *
      * @param menuBarLayout
      */
     public void setMenuBarLayout(MenuBarLayout menuBarLayout)

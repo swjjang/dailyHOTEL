@@ -270,7 +270,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
     }
 
-    public void setPlaceViewItemList(List<PlaceViewItem> arrayList,boolean isChangedRegion)
+    public void setPlaceViewItemList(List<PlaceViewItem> arrayList, boolean isChangedRegion)
     {
         mPlaceViewItemList = arrayList;
 

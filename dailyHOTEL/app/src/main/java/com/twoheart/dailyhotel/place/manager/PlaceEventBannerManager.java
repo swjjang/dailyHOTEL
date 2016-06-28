@@ -35,7 +35,7 @@ public abstract class PlaceEventBannerManager
     {
         clear();
 
-        if(eventBannerList == null)
+        if (eventBannerList == null)
         {
             return;
         }

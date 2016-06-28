@@ -17,8 +17,6 @@ import java.text.DecimalFormat;
 
 public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 {
-    private GourmetMapFragment.OnUserActionListener mOnUserActionListener;
-
     public GourmetMapViewPagerAdapter(Context context)
     {
         super(context);
@@ -43,11 +41,6 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         container.addView(view, 0);
 
         return view;
-    }
-
-    public void setOnUserActionListener(GourmetMapFragment.OnUserActionListener listener)
-    {
-        mOnUserActionListener = listener;
     }
 
     private void makeLayout(View view, final Gourmet gourmet)
@@ -136,9 +129,9 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener != null)
+                if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnUserActionListener.onCloseInfoWindowClickListener();
+                    mOnPlaceMapViewPagerAdapterListener.onCloseClick();
                 }
             }
         });
@@ -148,9 +141,9 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener != null)
+                if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnUserActionListener.onInfoWindowClickListener(gourmet);
+                    mOnPlaceMapViewPagerAdapterListener.onInformationClick(gourmet);
                 }
             }
         });

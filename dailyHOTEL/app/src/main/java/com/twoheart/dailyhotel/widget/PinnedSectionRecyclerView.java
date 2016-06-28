@@ -82,7 +82,7 @@ public class PinnedSectionRecyclerView extends RecyclerView
             int lastVisibleItem = getChildAdapterPosition(lastView);
             int visibleItemCount = lastVisibleItem - firstVisibleItem + 1;
 
-            if (firstVisibleItem < 0)
+            if (firstVisibleItem < 0 || firstVisibleItem >= adapter.getItemCount())
             {
                 return;
             }

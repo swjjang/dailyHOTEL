@@ -43,6 +43,7 @@
     <string name="label_register_card">카드 등록하기</string>
     <string name="label_manager">관리</string>
     <string name="label_search">검색</string>
+    <string name="label_filter">필터</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -285,7 +286,7 @@
 
     <!-- Main Drawer Menu Titles -->
     <string name="menu_item_title_hotel">데일리호텔</string>
-    <string name="menu_item_title_fnb">데일리고메</string>
+    <string name="menu_item_title_gourmet">데일리고메</string>
     <string name="menu_item_title_bookings">예약내역</string>
     <string name="menu_item_title_information">더보기</string>
 

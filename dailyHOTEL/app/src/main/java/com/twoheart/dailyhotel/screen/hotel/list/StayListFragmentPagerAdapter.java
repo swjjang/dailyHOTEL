@@ -4,7 +4,6 @@ import android.support.v4.app.FragmentManager;
 
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment_v2;
 
 import java.util.ArrayList;
 
