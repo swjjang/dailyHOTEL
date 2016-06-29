@@ -134,28 +134,6 @@ public abstract class PlaceListLayout extends BaseLayout
         mScrollListTop = scrollListTop;
     }
 
-    protected boolean hasSalesPlace(List<PlaceViewItem> list)
-    {
-        if (list == null || list.size() == 0)
-        {
-            return false;
-        }
-
-        boolean hasPlace = false;
-
-        for (PlaceViewItem placeViewItem : list)
-        {
-            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
-                && placeViewItem.<Gourmet>getItem().isSoldOut == false)
-            {
-                hasPlace = true;
-                break;
-            }
-        }
-
-        return hasPlace;
-    }
-
     public void setSwipeRefreshing(boolean refreshing)
     {
         if (mSwipeRefreshLayout == null)
