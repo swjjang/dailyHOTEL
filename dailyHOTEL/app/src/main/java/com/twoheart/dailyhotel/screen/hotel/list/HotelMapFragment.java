@@ -1,9 +1,9 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +44,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -243,22 +244,18 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
         switch (requestCode)
         {
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-                mOnMyLocationClickListener.onClick(null);
-                break;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
-        {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
                 searchMyLocation();
-            } else
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
-                // 퍼미션 허락하지 않음.
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    searchMyLocation();
+                }
+                break;
             }
         }
     }
@@ -823,18 +820,18 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
 
     private void searchMyLocation()
     {
+        final BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
         DailyLocationFactory.getInstance((BaseActivity) getActivity()).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null || baseActivity.isFinishing() == true)
-                {
-                    return;
-                }
-
                 baseActivity.unLockUI();
 
                 if (Util.isOverAPI23() == true)
@@ -856,13 +853,6 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             @Override
             public void onFailed()
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null || baseActivity.isFinishing() == true)
-                {
-                    return;
-                }
-
                 baseActivity.unLockUI();
             }
 
@@ -883,12 +873,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             @Override
             public void onProviderDisabled(String provider)
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null || baseActivity.isFinishing() == true)
-                {
-                    return;
-                }
+                baseActivity.unLockUI();
 
                 // Fragment가 added가 되지 않은 상태에서 터치가 될경우.
                 if (isAdded() == false)
@@ -913,12 +898,7 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
             @Override
             public void onLocationChanged(Location location)
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null)
-                {
-                    return;
-                }
+                baseActivity.unLockUI();
 
                 DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
@@ -1035,7 +1015,8 @@ public class HotelMapFragment extends com.google.android.gms.maps.SupportMapFrag
                 return;
             }
 
-            searchMyLocation();
+            Intent intent = PermissionManagerActivity.newInstance(getContext(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
     };
 

@@ -11,7 +11,9 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.HotelCalendarActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -59,8 +61,6 @@ public class HotelSearchActivity extends PlaceSearchActivity
         mNetworkController = new HotelSearchNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setDateText(mSaleTime, mNights);
-
-        mOnEventListener.onShowCalendar(false);
     }
 
     @Override
@@ -183,7 +183,8 @@ public class HotelSearchActivity extends PlaceSearchActivity
                 return;
             }
 
-            searchMyLocation();
+            Intent intent = PermissionManagerActivity.newInstance(HotelSearchActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
         @Override

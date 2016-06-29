@@ -1,13 +1,9 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
@@ -31,6 +27,7 @@ import com.twoheart.dailyhotel.network.DailyNetworkAPI;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.HotelDetailActivity;
@@ -281,7 +278,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             mDailyFloatingActionButtonBehavior = (DailyFloatingActionButtonBehavior) layoutParams.getBehavior();
         }
 
-        mDailyFloatingActionButtonBehavior.setScale(mFloatingActionView, ((float) verticalOffset) / TOOLBAR_HEIGHT);
+//        mDailyFloatingActionButtonBehavior.setScale(mFloatingActionView, ((float) verticalOffset) / TOOLBAR_HEIGHT);
     }
 
     @Override
@@ -447,7 +444,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 break;
             }
 
-            case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             {
                 mDontReloadAtOnResume = true;
 
@@ -458,6 +455,21 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                 } else
                 {
                     searchMyLocation();
+                }
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                mDontReloadAtOnResume = true;
+
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    searchMyLocation();
+                } else
+                {
+                    mCurationOption.clear();
+                    curationCurrentFragment();
                 }
                 break;
             }
@@ -489,32 +501,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        if (mViewType == ViewType.LIST)
-        {
-            if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
-            {
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    searchMyLocation();
-                } else
-                {
-                    // 퍼미션 허락하지 않음.
-                }
-            }
-        } else if (mViewType == ViewType.MAP)
-        {
-            HotelListFragment hotelListFragment = (HotelListFragment) mFragmentPagerAdapter.getItem(mViewPager.getCurrentItem());
-
-            if (hotelListFragment != null)
-            {
-                hotelListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
-        }
     }
 
     private void onPrepareOptionsMenu(ViewType viewType)
@@ -882,20 +868,8 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 unLockUI();
 
-                if (Util.isOverAPI23() == true)
-                {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
-                    {
-                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
-
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
-                        startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                    } else
-                    {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
-                    }
-                }
+                Intent intent = PermissionManagerActivity.newInstance(baseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
             }
 
             @Override
@@ -903,7 +877,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 unLockUI();
 
-                mCurationOption.setSortType(SortType.DEFAULT);
+                mCurationOption.clear();
                 curationCurrentFragment();
             }
 
@@ -926,13 +900,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             {
                 unLockUI();
 
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null || baseActivity.isFinishing() == true)
-                {
-                    return;
-                }
-
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
                 DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
@@ -953,7 +920,7 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         @Override
                         public void onClick(View v)
                         {
-                            mCurationOption.setSortType(SortType.DEFAULT);
+                            mCurationOption.clear();
                             curationCurrentFragment();
 
                             //                        recordAnalyticsSortTypeEvent(getContext(), mSortType);
@@ -964,19 +931,13 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
             @Override
             public void onLocationChanged(Location location)
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (baseActivity == null || baseActivity.isFinishing() == true)
-                {
-                    unLockUI();
-                    return;
-                }
+                unLockUI();
 
                 DailyLocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
                 if (location == null)
                 {
-                    mCurationOption.setSortType(SortType.DEFAULT);
+                    mCurationOption.clear();
                     curationCurrentFragment();
                 } else
                 {
@@ -987,8 +948,6 @@ public class HotelMainFragment extends BaseFragment implements AppBarLayout.OnOf
                         curationCurrentFragment();
                     }
                 }
-
-                unLockUI();
             }
         });
     }

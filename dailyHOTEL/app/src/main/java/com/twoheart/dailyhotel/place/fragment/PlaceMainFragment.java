@@ -230,7 +230,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected void searchMyLocation()
     {
-        if (isFinishing() || isLockUiComponent() == true)
+        if (isFinishing() || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
@@ -253,8 +253,6 @@ public abstract class PlaceMainFragment extends BaseFragment
                 {
                     if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) == true)
                     {
-                        // 왜 퍼미션을 세팅해야 하는지 이유를 보여주고 넘기기.
-
                         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
                         startActivityForResult(intent, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
@@ -281,15 +279,14 @@ public abstract class PlaceMainFragment extends BaseFragment
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
-                // TODO Auto-generated method stub
+                unLockUI();
 
             }
 
             @Override
             public void onProviderEnabled(String provider)
             {
-                // TODO Auto-generated method stub
-
+                unLockUI();
             }
 
             @Override

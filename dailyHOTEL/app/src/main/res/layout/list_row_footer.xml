@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="122dp">
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/message_no_more_list"
+        android:textColor="@color/default_text_cd1d1d1"
+        android:textSize="15dp"
+        dailyFont:style="Medium"/>
+</RelativeLayout>

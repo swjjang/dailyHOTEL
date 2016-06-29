@@ -126,7 +126,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
     private void updateLayout(boolean isLogin)
     {
-        if (mSigninButtonLayout == null)
+        if (mSigninButtonLayout == null || mNoSigninButtonLayout == null || mExceedMessageTextView == null)
         {
             Util.restartApp(this);
             return;
