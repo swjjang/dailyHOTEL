@@ -11,7 +11,7 @@ public class HotelDetail
 {
     public int hotelIndex;
     public int nights;
-    public Stay.HotelGrade grade;
+    public Stay.Grade grade;
     public String hotelName;
     public String address;
     public double latitude;
@@ -36,10 +36,10 @@ public class HotelDetail
     {
         try
         {
-            grade = Stay.HotelGrade.valueOf(jsonObject.getString("grade"));
+            grade = Stay.Grade.valueOf(jsonObject.getString("grade"));
         } catch (Exception e)
         {
-            grade = Stay.HotelGrade.etc;
+            grade = Stay.Grade.etc;
         }
 
         hotelName = jsonObject.getString("hotelName");

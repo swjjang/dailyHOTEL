@@ -8,7 +8,7 @@ public class Pay implements Parcelable
     public int credit;
     public int hotelIndex;
     public boolean isDBenefit;
-    public Stay.HotelGrade grade;
+    public Stay.Grade grade;
     private SaleRoomInformation mSaleRoomInformation;
     private Customer mCustomer;
     private int mOriginalPrice;
@@ -56,10 +56,10 @@ public class Pay implements Parcelable
 
         try
         {
-            grade = Stay.HotelGrade.valueOf(in.readString());
+            grade = Stay.Grade.valueOf(in.readString());
         } catch (Exception e)
         {
-            grade = Stay.HotelGrade.etc;
+            grade = Stay.Grade.etc;
         }
     }
 

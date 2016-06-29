@@ -23,10 +23,10 @@ public class HotelSearch extends Stay
 
             try
             {
-                mGrade = HotelGrade.valueOf(jsonObject.getString("grade"));
+                mGrade = Grade.valueOf(jsonObject.getString("grade"));
             } catch (Exception e)
             {
-                mGrade = HotelGrade.etc;
+                mGrade = Grade.etc;
             }
 
             index = jsonObject.getInt("hotel_idx");

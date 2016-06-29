@@ -77,17 +77,16 @@ public class StayListFragment extends PlaceListFragment
         lockUI();
 
         SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
-        SaleTime checkOutSaleTime = StayCurationManager.getInstance().getCheckOutSaleTime();
 
         Province province = StayCurationManager.getInstance().getProvince();
 
-        if (province == null || checkInSaleTime == null || checkOutSaleTime == null)
+        if (province == null || checkInSaleTime == null)
         {
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+        int nights = StayCurationManager.getInstance().getNight();
         if (nights <= 0)
         {
             unLockUI();
@@ -512,9 +511,6 @@ public class StayListFragment extends PlaceListFragment
                         mStayListLayout.setList(getChildFragmentManager(), mViewType, //
                             placeViewItemList, stayCurationOption.getSortType());
                     }
-
-                    // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
-                    onRefreshComplete();
                 } else
                 {
                     String message = response.getString("msg");
@@ -526,6 +522,7 @@ public class StayListFragment extends PlaceListFragment
             } finally
             {
                 unLockUI();
+                mStayListLayout.setSwipeRefreshing(false);
             }
         }
 

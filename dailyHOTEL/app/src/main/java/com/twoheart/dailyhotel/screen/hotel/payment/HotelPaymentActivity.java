@@ -1548,8 +1548,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                             {
                                 HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
 
-                                Stay.HotelGrade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
-                                if (Stay.HotelGrade.pension == hotelGrade || Stay.HotelGrade.fullvilla == hotelGrade)
+                                Stay.Grade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
+                                if (Stay.Grade.pension == hotelGrade || Stay.Grade.fullvilla == hotelGrade)
                                 {
                                     lockUI();
 
@@ -1570,8 +1570,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity implements OnClic
                         });
                     } else
                     {
-                        Stay.HotelGrade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
-                        if (Stay.HotelGrade.pension == hotelGrade | Stay.HotelGrade.fullvilla == hotelGrade)
+                        Stay.Grade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
+                        if (Stay.Grade.pension == hotelGrade | Stay.Grade.fullvilla == hotelGrade)
                         {
                             lockUI();
 

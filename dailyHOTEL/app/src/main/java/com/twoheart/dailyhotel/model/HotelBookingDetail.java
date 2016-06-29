@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.model.Stay.HotelGrade;
+import com.twoheart.dailyhotel.model.Stay.Grade;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -15,7 +15,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public String checkInDate;
     public String checkOutDate;
     public String hotelPhone;
-    public Stay.HotelGrade grade;
+    public Grade grade;
     public String roomName;
 
     public HotelBookingDetail()
@@ -33,10 +33,10 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
         try
         {
-            grade = HotelGrade.valueOf(jsonObject.getString("hotelGrade"));
+            grade = Grade.valueOf(jsonObject.getString("hotelGrade"));
         } catch (Exception e)
         {
-            grade = HotelGrade.etc;
+            grade = Grade.etc;
         }
 
         address = jsonObject.getString("hotelAddress");
@@ -117,7 +117,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
         checkInDate = in.readString();
         checkOutDate = in.readString();
         hotelPhone = in.readString();
-        grade = HotelGrade.valueOf(in.readString());
+        grade = Grade.valueOf(in.readString());
         bonus = in.readInt();
         coupon = in.readInt();
     }

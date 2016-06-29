@@ -18,7 +18,7 @@ public class SaleRoomInformation implements Parcelable
     public int averageDiscount;
     public int totalDiscount;
     public int nights;
-    public Stay.HotelGrade grade;
+    public Stay.Grade grade;
     public String address;
     //
     public String categoryCode; // GA를 위해서 payment로 진행시에 값을 넣는다
@@ -83,10 +83,10 @@ public class SaleRoomInformation implements Parcelable
 
         try
         {
-            grade = Stay.HotelGrade.valueOf(in.readString());
+            grade = Stay.Grade.valueOf(in.readString());
         } catch (Exception e)
         {
-            grade = Stay.HotelGrade.etc;
+            grade = Stay.Grade.etc;
         }
 
         address = in.readString();

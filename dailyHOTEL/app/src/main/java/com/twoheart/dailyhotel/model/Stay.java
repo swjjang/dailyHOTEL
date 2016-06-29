@@ -21,7 +21,7 @@ public class Stay extends Place
     public float distance; // 정렬시에 보여주는 내용
     public String categoryCode;
 
-    protected HotelGrade mGrade;
+    protected Grade mGrade;
     protected HotelFilters mHotelFilters;
 
     public Stay()
@@ -50,12 +50,12 @@ public class Stay extends Place
         super.readFromParcel(in);
 
         averageDiscountPrice = in.readInt();
-        mGrade = (HotelGrade) in.readSerializable();
+        mGrade = (Grade) in.readSerializable();
         dBenefitText = in.readString();
         categoryCode = in.readString();
     }
 
-    public HotelGrade getGrade()
+    public Grade getGrade()
     {
         return mGrade;
     }
@@ -73,10 +73,10 @@ public class Stay extends Place
 
             try
             {
-                mGrade = HotelGrade.valueOf(jsonObject.getString("grade"));
+                mGrade = Grade.valueOf(jsonObject.getString("grade"));
             } catch (Exception e)
             {
-                mGrade = HotelGrade.etc;
+                mGrade = Grade.etc;
             }
 
             index = jsonObject.getInt("hotelIdx");
@@ -180,7 +180,7 @@ public class Stay extends Place
         return hotelFilters;
     }
 
-    public enum HotelGrade
+    public enum Grade
     {
         special(R.string.grade_special, R.color.grade_special, R.drawable.bg_hotel_price_special1),
         special1(R.string.grade_special1, R.color.grade_special, R.drawable.bg_hotel_price_special1),
@@ -212,7 +212,7 @@ public class Stay extends Place
         private int mColorResId;
         private int mMarkerResId;
 
-        HotelGrade(int nameResId, int colorResId, int markerResId)
+        Grade(int nameResId, int colorResId, int markerResId)
         {
             mNameResId = nameResId;
             mColorResId = colorResId;
