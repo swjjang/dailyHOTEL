@@ -38,9 +38,6 @@ import java.util.List;
 public class StayListFragment extends PlaceListFragment
 {
     protected SaleTime mCheckInSaleTime;
-    protected SaleTime mCheckOutSaleTime;
-
-    private List<EventBanner> mEventBannerList;
 
     private ViewType mViewType;
 
@@ -48,7 +45,6 @@ public class StayListFragment extends PlaceListFragment
 
     private StayListLayout mStayListLayout;
     private BaseActivity mBaseActivity;
-    private HotelMapFragment mHotelMapFragment;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -154,56 +150,6 @@ public class StayListFragment extends PlaceListFragment
         //            if (mHotelMapFragment != null)
         //            {
         //                mHotelMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        //            }
-        //        }
-    }
-
-    public void onRefreshComplete()
-    {
-        //        mOnCommunicateListener.refreshCompleted();
-        //
-        //        mSwipeRefreshLayout.setRefreshing(false);
-        //
-        //        if (mViewType == ViewType.MAP)
-        //        {
-        //            mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
-        //            mOnCommunicateListener.showFloatingActionButton();
-        //        } else
-        //        {
-        //            Object objectTag = mSwipeRefreshLayout.getTag();
-        //
-        //            if (objectTag == null)
-        //            {
-        //                mSwipeRefreshLayout.setTag(mSwipeRefreshLayout.getId());
-        //
-        //                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        //                animation.setDuration(300);
-        //                animation.setAnimationListener(new Animation.AnimationListener()
-        //                {
-        //                    @Override
-        //                    public void onAnimationStart(Animation animation)
-        //                    {
-        //                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        //                    }
-        //
-        //                    @Override
-        //                    public void onAnimationEnd(Animation animation)
-        //                    {
-        //                        mSwipeRefreshLayout.setAnimation(null);
-        //                        mOnCommunicateListener.showFloatingActionButton();
-        //                    }
-        //
-        //                    @Override
-        //                    public void onAnimationRepeat(Animation animation)
-        //                    {
-        //
-        //                    }
-        //                });
-        //
-        //                mSwipeRefreshLayout.startAnimation(animation);
-        //            } else
-        //            {
-        //                mOnCommunicateListener.showFloatingActionButton();
         //            }
         //        }
     }

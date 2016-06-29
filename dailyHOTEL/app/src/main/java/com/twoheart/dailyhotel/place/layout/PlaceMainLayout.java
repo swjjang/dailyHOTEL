@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.main.MenuBarLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.ArrayList;
@@ -190,11 +189,13 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
     }
 
-    public void setSelectCategory(Category category)
+    public void setSelectCategoryTab(TabLayout.Tab tab)
     {
-        int count = mCategoryTabLayout.getTabCount();
-
-        //        for(int i = 0; i< count)
+        if (mViewPager != null)
+        {
+            mViewPager.setCurrentItem(tab.getPosition());
+            tab.select();
+        }
     }
 
     public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//

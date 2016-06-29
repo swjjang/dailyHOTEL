@@ -741,6 +741,8 @@ public class StayMainFragment extends PlaceMainFragment
             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category.name, null);
 
+            mPlaceMainLayout.setSelectCategoryTab(tab);
+
             refreshCurrentFragment();
         }
 
@@ -934,8 +936,9 @@ public class StayMainFragment extends PlaceMainFragment
             try
             {
                 StayCurationManager.getInstance().setCheckInSaleTime(currentDateTime, dailyDateTime);
+                SaleTime checkInSaleTime = StayCurationManager.getInstance().getCheckInSaleTime();
                 StayCurationManager.getInstance().setCheckOutSaleTime( //
-                    StayCurationManager.getInstance().getCheckInSaleTime().getClone(1));
+                    checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
 
                 if (DailyDeepLink.getInstance().isValidateLink() == true //
                     && processDeepLinkByDateTime(mBaseActivity) == true)
