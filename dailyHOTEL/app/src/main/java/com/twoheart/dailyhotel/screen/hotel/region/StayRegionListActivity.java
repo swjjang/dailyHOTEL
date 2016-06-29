@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -48,7 +50,6 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     private int mNights;
     private Province mSelectedProvince;
     private TabLayout mTabLayout;
-    private View mToolbarUnderline;
     private int mAttachFragmentCount;
 
     public static Intent newInstance(Context context, Province province, SaleTime saleTime, int nights)
@@ -116,7 +117,10 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        mToolbarUnderline = findViewById(R.id.toolbarUnderline);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)mTabLayout.getLayoutParams();
+        layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+
+        mTabLayout.setLayoutParams(layoutParams);
 
         hideTabLayout();
 
@@ -390,7 +394,6 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     {
         mTabLayout.setVisibility(View.GONE);
         mTabLayout.removeTabAt(1);
-        mToolbarUnderline.setVisibility(View.GONE);
         mViewPager.setCurrentItem(0);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.setPagingEnabled(false);
@@ -402,13 +405,11 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     private void showTabLayout()
     {
         mTabLayout.setVisibility(View.VISIBLE);
-        mToolbarUnderline.setVisibility(View.VISIBLE);
     }
 
     private void hideTabLayout()
     {
         mTabLayout.setVisibility(View.INVISIBLE);
-        mToolbarUnderline.setVisibility(View.INVISIBLE);
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()

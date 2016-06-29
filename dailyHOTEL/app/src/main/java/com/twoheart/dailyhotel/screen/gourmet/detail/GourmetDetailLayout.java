@@ -20,7 +20,6 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -34,7 +33,6 @@ import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
@@ -882,13 +880,14 @@ public class GourmetDetailLayout
 
             View magicToolbarView = mListAdapter.getMagicToolbarView();
 
-            if(magicToolbarView != null)
+            if (magicToolbarView != null)
             {
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)magicToolbarView.getLayoutParams();
-                layoutParams.topMargin = mStatusBarHeight - rect.top;
+                if (magicToolbarView.getVisibility() != View.VISIBLE)
+                {
+                    magicToolbarView.setVisibility(View.VISIBLE);
+                }
 
-                magicToolbarView.setLayoutParams(layoutParams);
-                magicToolbarView.invalidate();
+                magicToolbarView.setY(mStatusBarHeight - rect.top);
             }
         }
     };

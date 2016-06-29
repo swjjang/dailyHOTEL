@@ -188,6 +188,12 @@ public class DailyToolbarLayout
         }
     }
 
+    public void setBackImageView(int backResId)
+    {
+        ImageView backView = (ImageView)mToolbar.findViewById(R.id.backImageView);
+        backView.setImageResource(backResId);
+    }
+
     public void setToolbarRegionText(String title)
     {
         // 인덱스 번호는 나중에 바뀜
