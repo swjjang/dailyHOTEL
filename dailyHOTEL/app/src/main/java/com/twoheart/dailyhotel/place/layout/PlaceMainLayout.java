@@ -241,9 +241,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 tab.setTag(category);
                 mCategoryTabLayout.addTab(tab);
 
-//                tabView = ((ViewGroup) mCategoryTabLayout.getChildAt(0)).getChildAt(i);
-//                tabView.setPadding(0, 0, 0, 0);
-
                 if (category.code.equalsIgnoreCase(selectedCategory.code) == true)
                 {
                     selectedTab = tab;
